@@ -1,0 +1,61 @@
+USP to USC (Universal Service Connector)
+
+- transport layer
+
+support several transport protocols like java object stream in a head/body instance.
+head part must be generic (e.g. html meta tags, text based
+body part depends on its content layer
+each transmitted message contains the server time
+
+- protocol layer
+
+protocol layer handles how messages between both parts are transmitted (e.g. like smtp)
+
+- content layer
+
+the content layers packs und unpacks data into the basic head/body instance. the body
+content depends on the underlying serializer/deserializer (e.g. java object stream)
+
+- command layer
+
+every message belongs to a command (command pattern). each command has a key assigned (which
+is part of the message header). each command must belong to a valid service (e.g. servicefactory).
+if no command is assignable, then an exception is thrown. 
+
+- service layer
+
+a service belongs to a scope (e.g. request, session, application). for each scope a context class 
+is assigned. 
+
+services can be:
+
+. publish/subscribe
+. data service (persistence)
+. echo
+. timer
+. log
+. admin
+. sync (with other usc instances)
+
+[any layer is observable (e.g. like servlet filters)]
+
+- kernel
+
+the main usc part is the kernel. the kernel takes care that all partners receive the correct answer
+and all gets informed about their interests. the sum of all interests builds a set. in general a partner
+will address a subset using a filter (or mask).
+
+- exception handling
+
+an exception must be transmittable in any case everywhere.
+
+- runtime 
+
+usc should be runnable in several environments:
+
+. standalone (preferred)
+. web container (e.g. tomcat)
+. osgi (open service gateway) (optional)
+
+
+
