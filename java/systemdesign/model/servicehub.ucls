@@ -1,0 +1,44 @@
+<class-diagram icons="true" always-add-relationships="true" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true" version="0.9.65">  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>  
+  <interface language="java" name="com.stabilit.sc.env.service.IServiceListener" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/env/service/IServiceListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="507" y="115" width="-1" height="-1"/>  
+  </interface>  
+  <interface language="java" name="com.stabilit.sc.env.service.IServiceProvider" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/env/service/IServiceProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="212" y="117" width="-1" height="-1"/>  
+  </interface>  
+  <class language="java" name="com.stabilit.sc.env.service.ServiceHub" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/env/service/ServiceHub.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="361" y="275" width="-1" height="-1"/>  
+  </class>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.env.service.ServiceHub" 
+      file="/systemdesign/src/com/stabilit/sc/env/service/ServiceHub.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.env.service.IServiceListener" 
+      file="/systemdesign/src/com/stabilit/sc/env/service/IServiceListener.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.env.service.ServiceHub" 
+      file="/systemdesign/src/com/stabilit/sc/env/service/ServiceHub.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.env.service.IServiceProvider" 
+      file="/systemdesign/src/com/stabilit/sc/env/service/IServiceProvider.java" binary="false"/>  
+  </dependency>
+</class-diagram>
