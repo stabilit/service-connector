@@ -9,21 +9,21 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.environment.Environment;
 
-public class EnvLogFile {
+public class EnvLog {
 
 	private static final int MS_TO_H = 3600000;
 	private static final int B_TO_MB = 1024 * 1024;
 
-	private Logger log = Logger.getLogger(EnvLogFile.class);
+	private Logger log = Logger.getLogger(EnvLog.class);
 	private String fileName;
 
-	public EnvLogFile(String fileName) {
+	public EnvLog(String fileName) {
 		super();
 		this.fileName = fileName;
 	}
 
 	public static void main(String[] args) {
-		EnvLogFile logFile = new EnvLogFile(args[0]);
+		EnvLog logFile = new EnvLog(args[0]);
 		logFile.createLogFile();
 	}
 

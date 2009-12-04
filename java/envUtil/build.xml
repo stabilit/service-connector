@@ -3,11 +3,16 @@
 	<property name="test.dir" value="test" />
 	<property name="log4j" value="log4j-1.2.15.jar" />
 	<property name="junit" value="junit.jar" />
-	<property name="sigar" value="" />
+	<property name="sig" value="sigar.jar" />
+	<property name="sigamd64dll" value="sigar-amd64-winnt.dll" />
+	<property name="sigx86dll" value="sigar-x86-winnt.dll" />
 
 	<path id="classpath">
 		<pathelement location="${lib.dir}/${log4j}" />
 		<pathelement location="${lib.dir}/${junit}" />
+		<pathelement location="${lib.dir}/${sig}" />
+		<pathelement location="${lib.dir}/${sigamd64dll}" />
+		<pathelement location="${lib.dir}/${sigx86dll}" />
 	</path>
 
 	<target name="clean">
@@ -29,6 +34,7 @@
 	</target>
 
 	<target name="run" depends="jar">
+		<mkdir dir="log"/>
 		<java classname="com.stabilit.environment.log.EnvLogFile" fork="true">
 			<arg value="C:\\stabilit\\projects\\EUREX\\SC\\dev\\eclipse_workspace\\envUtil\\log\\envLog.txt" />
 			<classpath>
@@ -36,6 +42,7 @@
 				<path location="bin/jar/envUtil.jar" />
 			</classpath>
 		</java>
+		<antcall target="junit" />
 	</target>
 
 	<target name="junit" depends="jar">
