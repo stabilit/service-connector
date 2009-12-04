@@ -84,12 +84,12 @@ public class EnvLog {
 					+ env.getNumberOfProcessors());
 			bf.flush();
 		} catch (IOException e) {
-			log.error("File Writer couldn't get instanced.");
+			log.error("File Writer for Logfile (" + fileName + " ) couldn't get instanced.");
 		} finally {
 			try {
 				bf.close();
 			} catch (IOException e) {
-				log.error("File Writer couldn't get closed.");
+				log.error("File Writer for Logfile (" + fileName + " ) couldn't get closed.");
 			}
 		}
 	}

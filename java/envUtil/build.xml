@@ -7,12 +7,16 @@
 	<property name="sigamd64dll" value="sigar-amd64-winnt.dll" />
 	<property name="sigx86dll" value="sigar-x86-winnt.dll" />
 
-	<path id="classpath">
-		<pathelement location="${lib.dir}/${log4j}" />
-		<pathelement location="${lib.dir}/${junit}" />
+	<path id="classpath.base">
 		<pathelement location="${lib.dir}/${sig}" />
 		<pathelement location="${lib.dir}/${sigamd64dll}" />
 		<pathelement location="${lib.dir}/${sigx86dll}" />
+		<pathelement location="${lib.dir}/${log4j}" />
+	</path>
+	<path id="classpath.test">
+		<pathelement location="${lib.dir}/${junit}" />
+		<pathelement location="${test.dir}" />
+		<path refid="classpath.base" />
 	</path>
 
 	<target name="clean">
@@ -21,7 +25,13 @@
 
 	<target name="compile">
 		<mkdir dir="bin/classes" />
-		<javac srcdir="src" destdir="bin/classes" classpathref="classpath" />
+		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" />
+	</target>
+
+	<target name="compile-test">
+		<mkdir dir="bin/classes" />
+		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" />
+		<javac srcdir="test" destdir="bin/classes" classpathref="classpath.test" />
 	</target>
 
 	<target name="jar" depends="compile">
@@ -34,26 +44,27 @@
 	</target>
 
 	<target name="run" depends="jar">
-		<mkdir dir="log"/>
-		<java classname="com.stabilit.environment.log.EnvLogFile" fork="true">
+		<mkdir dir="log" />
+		<java classname="com.stabilit.environment.log.EnvLog" fork="true">
 			<arg value="C:\\stabilit\\projects\\EUREX\\SC\\dev\\eclipse_workspace\\envUtil\\log\\envLog.txt" />
 			<classpath>
-				<path refid="classpath" />
+				<path refid="classpath.base" />
 				<path location="bin/jar/envUtil.jar" />
 			</classpath>
 		</java>
 		<antcall target="junit" />
 	</target>
 
-	<target name="junit" depends="jar">
+	<target name="junit" depends="compile-test, jar">
+		<mkdir dir="log" />
 		<junit printsummary="yes">
 			<classpath>
-				<path refid="classpath" />
+				<path refid="classpath.test" />
 				<path location="bin/jar/envUtil.jar" />
 			</classpath>
 
 			<batchtest fork="yes">
-				<fileset dir="${test.dir}" includes="*Test.java"  />
+				<fileset dir="${test.dir}" includes="**/*Test.java" />
 			</batchtest>
 		</junit>
 	</target>

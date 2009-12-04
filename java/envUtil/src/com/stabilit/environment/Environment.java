@@ -51,6 +51,14 @@ public class Environment {
 	}
 
 	public void loadEnvironment() {
+		try {
+			detectEnv();
+		} catch(Throwable t) {
+			log.error("Environment could not been properly loaded: " + t.getMessage());
+		}
+	}
+	
+	private void detectEnv() {
 		Properties sysprops = System.getProperties();
 
 		javaVersion = sysprops.getProperty(JAVA_VERSION);
@@ -78,14 +86,14 @@ public class Environment {
 			processorSpeed = cpuInfos[0].getMhz();
 			processorType = cpuInfos[0].getModel();
 			numberOfProcessors = cpuInfos[0].getTotalCores();
-		} catch (SigarException e1) {
-			log.error("Processor Information could not be detected, SIGAR didn't work properly!");
+		} catch (SigarException e) {
+			log.error("Processor Information could not be detected, SIGAR didn't work properly: " + e.getMessage());
 		}		
 
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
-			log.error("Local Host Identification could not be detected.");
+			log.error("Local Host Identification could not be detected: " + e.getMessage());
 		}
 	}
 
