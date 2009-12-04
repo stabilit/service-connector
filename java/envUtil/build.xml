@@ -1,12 +1,13 @@
 <project name="envUtil" default="run">
 	<property name="lib.dir" value="lib" />
 	<property name="test.dir" value="test" />
-	<property name="log4j.home" value="log4j-1.2.15.jar" />
-	<property name="junit.home" value="junit.jar" />
+	<property name="log4j" value="log4j-1.2.15.jar" />
+	<property name="junit" value="junit.jar" />
+	<property name="sigar" value="" />
 
 	<path id="classpath">
-		<pathelement location="${lib.dir}/${log4j.home}" />
-		<pathelement location="${lib.dir}/${junit.home}" />
+		<pathelement location="${lib.dir}/${log4j}" />
+		<pathelement location="${lib.dir}/${junit}" />
 	</path>
 
 	<target name="clean">
