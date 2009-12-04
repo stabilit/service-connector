@@ -7,9 +7,10 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
-
-import com.stabilit.jna.Kernel32;
-import com.sun.jna.Native;
+import org.hyperic.sigar.CpuInfo;
+import org.hyperic.sigar.Mem;
+import org.hyperic.sigar.Sigar;
+import org.hyperic.sigar.SigarException;
 
 public class Environment {
 
@@ -39,8 +40,8 @@ public class Environment {
 	private boolean useDST;
 	private long totalPhysMemory;
 	private long availPhysMemory;
-	private String processorInfo;
 	private String processorType;
+	private int processorSpeed;
 
 	private Date localDate;
 
@@ -67,52 +68,19 @@ public class Environment {
 		useDST = zone.useDaylightTime();
 		localDate = new Date(System.currentTimeMillis());
 
-		Kernel32 kernel32 = (Kernel32) Native.loadLibrary("kernel32",
-				Kernel32.class);
+		Sigar sig = new Sigar();
+		try {
+			Mem mem = sig.getMem();
+			totalPhysMemory = mem.getTotal();
+			availPhysMemory = mem.getActualFree();
 
-		Kernel32.MEMORYSTATUS mem = new Kernel32.MEMORYSTATUS();
-		kernel32.GlobalMemoryStatus(mem);
-		totalPhysMemory = mem.dwTotalPhys.longValue();
-		availPhysMemory = mem.dwAvailPhys.longValue();
-
-		Kernel32.SYSTEM_INFO sysInfo = new Kernel32.SYSTEM_INFO();
-		kernel32.GetNativeSystemInfo(sysInfo);
-
-		switch (sysInfo.arch1.arch2.wProcessorArchitecture) {
-		case 0:
-			processorInfo = "x86";
-			break;
-		case 6:
-			processorInfo = "Intel Itanium Processor Family (IPF)";
-			break;
-		case 9:
-			processorInfo = "x64";
-			break;
-		default:
-			processorInfo = "Unknown architecture";
-		}
-		
-		switch (sysInfo.dwProcessorType) {
-		case 386:
-			processorType = "PROCESSOR_INTEL_386";
-			break;
-		case 486:
-			processorType = "PROCESSOR_INTEL_486";
-			break;
-		case 586:
-			processorType = "PROCESSOR_INTEL_PENTIUM";
-			break;
-		case 2200:
-			processorType = "PROCESSOR_INTEL_IA64";
-			break;
-		case 8664:
-			processorType = "PROCESSOR_AMD_X8664";
-			break;
-		default:
-			processorType = "";
-		}
-		
-		numberOfProcessors = sysInfo.dwNumberOfProcessors;
+			CpuInfo[] cpuInfos = sig.getCpuInfoList();
+			processorSpeed = cpuInfos[0].getMhz();
+			processorType = cpuInfos[0].getModel();
+			numberOfProcessors = cpuInfos[0].getTotalCores();
+		} catch (SigarException e1) {
+			log.error("Processor Information could not be detected, SIGAR didn't work properly!");
+		}		
 
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
@@ -257,19 +225,19 @@ public class Environment {
 		this.availPhysMemory = availPhysMemory;
 	}
 
-	public String getProcessorInfo() {
-		return processorInfo;
-	}
-
-	public void setProcessorInfo(String processorInfo) {
-		this.processorInfo = processorInfo;
-	}
-
 	public String getProcessorType() {
 		return processorType;
 	}
 
 	public void setProcessorType(String processorType) {
 		this.processorType = processorType;
+	}
+
+	public int getProcessorSpeed() {
+		return processorSpeed;
+	}
+
+	public void setProcessorSpeed(int processorSpeed) {
+		this.processorSpeed = processorSpeed;
 	}
 }

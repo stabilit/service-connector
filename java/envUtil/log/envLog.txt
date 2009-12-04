@@ -1,14 +1,15 @@
-Thu Dec 03 16:24:28 CET 2009 Detect JRE Version: 1.6.0_07
-Thu Dec 03 16:24:28 CET 2009 Detect VM  Version: 10.0-b23
-Thu Dec 03 16:24:28 CET 2009 Local Host Identification: canto/10.0.0.129
-Thu Dec 03 16:24:28 CET 2009 Total Heap Memory: 63 MB
-Thu Dec 03 16:24:28 CET 2009 Operation System: Windows XP
-Thu Dec 03 16:24:28 CET 2009 Operation Patch Level: Service Pack 3
-Thu Dec 03 16:24:28 CET 2009 CPU Type: x86
-Thu Dec 03 16:24:28 CET 2009 User Directory: C:\stabilit\projects\EUREX\SC\dev\eclipse_workspace\envUtil
-Thu Dec 03 16:24:28 CET 2009 Country Setting: CH
-Thu Dec 03 16:24:28 CET 2009 Timezone / UTC Offset / DST: Europe/Berlin / +1h / true
-Thu Dec 03 16:24:28 CET 2009 Total Phys. Memory: 2047 MB
-Thu Dec 03 16:24:28 CET 2009 Total Avail. Memory: 1521 MB
-Thu Dec 03 16:24:28 CET 2009 Processorinfo: PROCESSOR_INTEL_PENTIUM x86
-Thu Dec 03 16:24:28 CET 2009 Number of Processors: 4
+Fri Dec 04 10:13:14 CET 2009 Detect JRE Version          : 1.6.0_07
+Fri Dec 04 10:13:14 CET 2009 Detect VM  Version          : 10.0-b23
+Fri Dec 04 10:13:14 CET 2009 Local Host Identification   : canto/10.0.0.129
+Fri Dec 04 10:13:14 CET 2009 Total Heap Memory           : 63 MB
+Fri Dec 04 10:13:14 CET 2009 Operation System            : Windows XP
+Fri Dec 04 10:13:14 CET 2009 Operation Patch Level       : Service Pack 3
+Fri Dec 04 10:13:14 CET 2009 CPU Type                    : x86
+Fri Dec 04 10:13:14 CET 2009 User Directory              : C:\stabilit\projects\EUREX\SC\dev\eclipse_workspace\envUtil
+Fri Dec 04 10:13:14 CET 2009 Country Setting             : CH
+Fri Dec 04 10:13:14 CET 2009 Timezone / UTC Offset / DST : Europe/Berlin / +1h / true
+Fri Dec 04 10:13:14 CET 2009 Total Phys. Memory          : 3263 MB
+Fri Dec 04 10:13:14 CET 2009 Total Avail. Memory         : 1115 MB
+Fri Dec 04 10:13:14 CET 2009 Processorinfo               : Core(TM)2 Quad CPU    Q9550  @ 2.83GHz
+Fri Dec 04 10:13:14 CET 2009 Processorspeed              : 2833 MHz
+Fri Dec 04 10:13:14 CET 2009 Number of Processors        : 4
