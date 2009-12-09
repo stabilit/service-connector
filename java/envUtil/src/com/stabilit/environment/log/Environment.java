@@ -15,7 +15,7 @@
  *-----------------------------------------------------------------------------*
 */
 
-package com.stabilit.environment;
+package com.stabilit.environment.log;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

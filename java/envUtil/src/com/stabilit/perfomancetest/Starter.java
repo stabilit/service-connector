@@ -1,4 +1,4 @@
-package com.stabilit.environment.perfomancetest;
+package com.stabilit.perfomancetest;
 
 public class Starter {
 

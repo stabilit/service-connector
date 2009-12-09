@@ -1,4 +1,4 @@
-package com.stabilit.environment.perfomancetest;
+package com.stabilit.perfomancetest;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;

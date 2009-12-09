@@ -1,4 +1,4 @@
-package com.stabilit.environment;
+package com.stabilit.queue;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

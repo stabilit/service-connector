@@ -1,4 +1,4 @@
-package com.stabilit.environment;
+package com.stabilit.queue;
 
 public class QueueProducer implements Runnable {
 

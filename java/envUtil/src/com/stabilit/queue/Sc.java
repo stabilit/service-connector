@@ -1,4 +1,4 @@
-package com.stabilit.environment;
+package com.stabilit.queue;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

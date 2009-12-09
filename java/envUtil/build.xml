@@ -34,7 +34,7 @@
 		<javac srcdir="test" destdir="bin/classes" classpathref="classpath.test" />
 	</target>
 
-	<target name="jar" depends="compile">
+	<target name="jar">
 		<mkdir dir="bin/jar" />
 		<jar destfile="bin/jar/envUtil.jar" basedir="bin/classes">
 			<manifest>
@@ -43,7 +43,7 @@
 		</jar>
 	</target>
 
-	<target name="run" depends="jar">
+	<target name="run" depends="compile, jar">
 		<mkdir dir="log" />
 		<java classname="com.stabilit.environment.log.EnvLog" fork="true">
 			<arg value="C:\\stabilit\\projects\\EUREX\\SC\\dev\\eclipse_workspace\\envUtil\\log\\envLog.txt" />
