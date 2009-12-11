@@ -7,6 +7,21 @@
 	<classpathentry kind="lib" path="lib/sigar.jar"/>
 	<classpathentry kind="lib" path="lib/sigar-amd64-winnt.dll"/>
 	<classpathentry kind="lib" path="lib/sigar-x86-winnt.dll"/>
+	<classpathentry kind="lib" path="lib/mina-core-1.1.7.jar" sourcepath="C:/downloads/mina-1.1.7/mina-core-1.1.7-sources.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-codec-netty-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-compression-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-ssl-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-integration-jmx-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-integration-spring-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/jul-to-slf4j-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-over-slf4j-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-ext-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-migrator-1.5.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/systemdesign"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
