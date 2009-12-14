@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package com.mina.message.server;
+package com.mina.http.server;
 
 import java.net.InetSocketAddress;
 
@@ -27,7 +27,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
-public class EasyMessageServer {
+public class HttpServer {
 	/** Choose your favorite port number. */
 	private static final int PORT = 1234;
 	
@@ -43,7 +43,7 @@ public class EasyMessageServer {
 		config.getFilterChain().addLast("logger", new LoggingFilter());
 
 		// Bind
-		acceptor.bind(new InetSocketAddress("127.0.0.1", 1234), new ServerHandler(), config);
+		acceptor.bind(new InetSocketAddress("127.0.0.1", 1234), new HttpServerHandler(), config);
 
 		System.out.println("Listening on port " + PORT);
 	}

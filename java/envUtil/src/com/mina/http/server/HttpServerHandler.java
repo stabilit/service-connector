@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package com.mina.message.server;
+package com.mina.http.server;
 
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
@@ -31,7 +31,7 @@ import org.apache.mina.util.SessionLog;
  * @author The Apache Directory Project (mina-dev@directory.apache.org)
  * @version $Rev: 555855 $, $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $
  */
-public class ServerHandler extends IoHandlerAdapter {
+public class HttpServerHandler extends IoHandlerAdapter {
     @Override
     public void sessionOpened(IoSession session) {
         // set idle time to 60 seconds
@@ -64,7 +64,7 @@ public class ServerHandler extends IoHandlerAdapter {
 
         if (response != null) {
             session.write(response).join();
-        }
+        }session.close();
     }
 
     @Override

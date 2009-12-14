@@ -17,28 +17,28 @@
  *  under the License.
  *
  */
-package com.mina.message.client;
+package com.mina.http.client;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 
+import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.transport.socket.nio.SocketConnector;
 
-public class EasyMessageClient {
+public class HttpClient {
 	private static final long serialVersionUID = 1538675161745436968L;
-	private EasyMessageHandler handler;
+	private HttpClientHandler handler;
 	private SocketConnector connector;
 	private IoSession session;
-
+	private static final byte[] CRLF = new byte[] { 0x0D, 0x0A };
+	
 	public static void main(String[] args) {
-		EasyMessageClient client = new EasyMessageClient();
+		HttpClient client = new HttpClient();
 		client.run();
 	}
 
@@ -46,12 +46,24 @@ public class EasyMessageClient {
 		connector = new SocketConnector();
 		SocketAddress address = new InetSocketAddress("127.0.0.1", 1234);
 
-		handler = new EasyMessageHandler();
+		handler = new HttpClientHandler();
 		connect(connector, address);
-		String getUrl = "GET /pub/WWW/TheProject.html HTTP/1.1";
-		System.out.println(Charset.defaultCharset());
-		byte[] buffer = getUrl.getBytes(Charset.defaultCharset());
-		session.write(buffer);
+
+		ByteBuffer buf = ByteBuffer.allocate(256);
+		// Enable auto-expand for easier encoding
+		buf.setAutoExpand(true);
+
+		CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
+		try {
+			buf.putString("GET / HTTP/1.1", encoder);
+			buf.put(CRLF);
+			buf.put(CRLF);
+		} catch (CharacterCodingException e) {
+			e.printStackTrace();
+		}
+		buf.flip();
+
+		session.write(buf);
 		session.getCloseFuture().join();
 		session.close();
 	}

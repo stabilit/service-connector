@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package com.mina.message.client;
+package com.mina.http.client;
 
 import org.apache.mina.common.IoFilter;
 import org.apache.mina.common.IoHandlerAdapter;
@@ -26,9 +26,9 @@ import org.apache.mina.filter.LoggingFilter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 
-import com.mina.message.server.HttpServerProtocolCodecFactory;
+import com.mina.http.server.HttpServerProtocolCodecFactory;
 
-public class EasyMessageHandler extends IoHandlerAdapter {
+public class HttpClientHandler extends IoHandlerAdapter {
 
 	private static IoFilter LOGGING_FILTER = new LoggingFilter();
 

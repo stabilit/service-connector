@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package com.mina.message.server;
+package com.mina.http.server;
 
 import java.util.Iterator;
 import java.util.Map;

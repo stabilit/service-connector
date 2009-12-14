@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package com.mina.message.server;
+package com.mina.http.server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class HttpResponseMessage {
     private int responseCode = HTTP_STATUS_SUCCESS;
 
     public HttpResponseMessage() {
-        headers.put("Server", "HttpServer (" + EasyMessageServer.VERSION_STRING + ')');
+        headers.put("Server", "HttpServer (" + HttpServer.VERSION_STRING + ')');
         headers.put("Cache-Control", "private");
         headers.put("Content-Type", "text/html; charset=iso-8859-1");
         headers.put("Connection", "keep-alive");

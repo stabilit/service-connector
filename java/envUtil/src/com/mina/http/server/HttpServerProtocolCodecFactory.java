@@ -17,26 +17,20 @@
  *  under the License. 
  *  
  */
-package com.mina.message.server;
+package com.mina.http.server;
 
-import org.apache.mina.common.IoHandlerAdapter;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.util.SessionLog;
+import org.apache.mina.filter.codec.demux.DemuxingProtocolCodecFactory;
 
-public class EasyMessageHandler extends IoHandlerAdapter {
-
-	public void exceptionCaught(IoSession session, Throwable cause) {
-		SessionLog.error(session, "", cause);
-		session.close();
-	}
-
-	public void messageReceived(IoSession session, Object message) {
-		System.out.println("sysout messageRecieved on server : " + System.currentTimeMillis());
-		session.write((String) message);
-		session.close();
-	}
-
-	public void sessionClosed(IoSession session) throws Exception {
-		System.out.println("Session closed on server : " + System.currentTimeMillis());
-	}
+/**
+ * Provides a protocol codec for HTTP server.
+ * 
+ * @author The Apache Directory Project (mina-dev@directory.apache.org)
+ * @version $Rev: 555855 $, $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $
+ */
+public class HttpServerProtocolCodecFactory extends
+        DemuxingProtocolCodecFactory {
+    public HttpServerProtocolCodecFactory() {
+        super.register(HttpRequestDecoder.class);
+        super.register(HttpResponseEncoder.class);
+    }
 }
