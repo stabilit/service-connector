@@ -26,8 +26,6 @@ import org.apache.mina.filter.LoggingFilter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 
-import com.mina.http.server.HttpServerProtocolCodecFactory;
-
 public class HttpClientHandler extends IoHandlerAdapter {
 
 	private static IoFilter LOGGING_FILTER = new LoggingFilter();

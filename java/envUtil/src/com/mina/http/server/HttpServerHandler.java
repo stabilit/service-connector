@@ -46,22 +46,6 @@ public class HttpServerHandler extends IoHandlerAdapter {
         response.setResponseCode(HttpResponseMessage.HTTP_STATUS_SUCCESS);
         response.appendBody("CONNECTED");
 
-        // msg.setResponseCode(HttpResponseMessage.HTTP_STATUS_SUCCESS);
-        // byte[] b = new byte[ta.buffer.limit()];
-        // ((ByteBuffer)ta.buffer.rewind()).get(b);
-        // msg.appendBody(b);
-        // System.out.println("####################");
-        // System.out.println("  GET_TILE RESPONSE SENT - ATTACHMENT GOOD DIAMOND.SI="+d.si+
-        // ", "+new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss.SSS").format(new java.util.Date()));
-        // System.out.println("#################### - status="+ta.state+", index="+message.getIndex());
-
-        //// Unknown request
-        // response = new HttpResponseMessage();
-        // response.setResponseCode(HttpResponseMessage.HTTP_STATUS_NOT_FOUND);
-        // response.appendBody(String.format(
-        // "<html><body><h1>UNKNOWN REQUEST %d</h1></body></html>",
-        // HttpResponseMessage.HTTP_STATUS_NOT_FOUND));
-
         if (response != null) {
             session.write(response).join();
         }session.close();
