@@ -48,12 +48,13 @@ public class HttpServerHandler extends IoHandlerAdapter {
 
         if (response != null) {
             session.write(response).join();
-        }session.close();
+        }
+        session.close();
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) {
-        SessionLog.info(session, "Disconnecting the idle.");
+        //SessionLog.info(session, "Disconnecting the idle.");
         session.close();
     }
 
