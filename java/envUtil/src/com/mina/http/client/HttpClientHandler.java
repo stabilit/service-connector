@@ -35,19 +35,19 @@ public class HttpClientHandler extends IoHandlerAdapter {
 
 	public void sessionCreated(IoSession session) throws Exception {
 		session.getFilterChain().addLast("codec", CODEC_FILTER);
-		session.getFilterChain().addLast("logger", LOGGING_FILTER);
+		//session.getFilterChain().addLast("logger", LOGGING_FILTER);
 	}
 
 	public void sessionOpened(IoSession session) throws Exception {
-		System.out.println("Session opened on client : " + System.currentTimeMillis());
+//		System.out.println("Session opened on client : " + System.currentTimeMillis());
 	}
 
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		System.out.println("sysout messageRecieved on client: " + (String) message + " : " + System.currentTimeMillis());
+//		System.out.println("sysout messageRecieved on client: " + (String) message + " : " + System.currentTimeMillis());
 	}
 
 	public void sessionClosed(IoSession session) throws Exception {
-		System.out.println("Session closed on client  : " + System.currentTimeMillis());
+//		System.out.println("Session closed on client  : " + System.currentTimeMillis());
 	}
 }

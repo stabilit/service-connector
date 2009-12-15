@@ -40,11 +40,11 @@ public class HttpServer {
 		config.setReuseAddress(true);
 		config.getFilterChain().addLast("protocolFilter",
 				new ProtocolCodecFilter(new HttpServerProtocolCodecFactory()));
-		config.getFilterChain().addLast("logger", new LoggingFilter());
+	//	config.getFilterChain().addLast("logger", new LoggingFilter());
 
 		// Bind
-		acceptor.bind(new InetSocketAddress("127.0.0.1", 1234), new HttpServerHandler(), config);
+		acceptor.bind(new InetSocketAddress("127.0.0.1", PORT), new HttpServerHandler(), config);
 
-		System.out.println("Listening on port " + PORT);
+	//	System.out.println("Listening on port " + PORT);
 	}
 }

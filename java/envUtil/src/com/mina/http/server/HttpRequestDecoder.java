@@ -46,12 +46,7 @@ public class HttpRequestDecoder extends MessageDecoderAdapter {
             .getBytes();
 
     private CharsetDecoder decoder = Charset.defaultCharset().newDecoder();
-
     private HttpRequestMessage request = null;
-
-    public HttpRequestDecoder() {
-    	System.out.println(decoder.charset());
-    }
 
     public MessageDecoderResult decodable(IoSession session, ByteBuffer in) {
         // Return NEED_DATA if the whole header is not read yet.

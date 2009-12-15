@@ -30,42 +30,50 @@ import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.transport.socket.nio.SocketConnector;
 
-public class HttpClient {
+public class HttpClient implements Runnable {
 	private static final long serialVersionUID = 1538675161745436968L;
 	private HttpClientHandler handler;
 	private SocketConnector connector;
 	private IoSession session;
+	private int numberOfConn;
 	private static final byte[] CRLF = new byte[] { 0x0D, 0x0A };
-	
+
+	public HttpClient(int numberOfConn) {
+		this.numberOfConn = numberOfConn;
+	}
+
 	public static void main(String[] args) {
-		HttpClient client = new HttpClient();
+		HttpClient client = new HttpClient(1);
 		client.run();
 	}
 
-	private void run() {
-		connector = new SocketConnector();
-		SocketAddress address = new InetSocketAddress("127.0.0.1", 1234);
+	public void run() {
+		
+		for (int i = 0; i < numberOfConn; i++) {
+			connector = new SocketConnector();
+			SocketAddress address = new InetSocketAddress("127.0.0.1", 1234);
 
-		handler = new HttpClientHandler();
-		connect(connector, address);
+			handler = new HttpClientHandler();
+			connect(connector, address);
 
-		ByteBuffer buf = ByteBuffer.allocate(256);
-		// Enable auto-expand for easier encoding
-		buf.setAutoExpand(true);
+			ByteBuffer buf = ByteBuffer.allocate(256);
+			// Enable auto-expand for easier encoding
+			buf.setAutoExpand(true);
 
-		CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
-		try {
-			buf.putString("GET / HTTP/1.1", encoder);
-			buf.put(CRLF);
-			buf.put(CRLF);
-		} catch (CharacterCodingException e) {
-			e.printStackTrace();
+			CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
+			try {
+				buf.putString("GET / HTTP/1.1", encoder);
+				buf.put(CRLF);
+				buf.put(CRLF);
+			} catch (CharacterCodingException e) {
+				e.printStackTrace();
+			}
+			buf.flip();
+
+			session.write(buf);
+			session.getCloseFuture().join();
+			session.close();
 		}
-		buf.flip();
-
-		session.write(buf);
-		session.getCloseFuture().join();
-		session.close();
 	}
 
 	public boolean connect(SocketConnector connector, SocketAddress address) {
@@ -87,5 +95,4 @@ public class HttpClient {
 			return false;
 		}
 	}
-
 }
