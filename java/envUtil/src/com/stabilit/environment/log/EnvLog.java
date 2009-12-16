@@ -115,6 +115,14 @@ public class EnvLog {
 					+ (env.getAvailPhysMemory() / BYTE_TO_MEGABYTE)
 					+ " Megabyte");
 			bf.newLine();
+			
+			/* TODO For some reason available Disk Memory is in Megabytes instead of bytes -> looks like
+			 * a bug in Sigar. Needs tobe tested for other systems if it is behaving the same way!
+			 */
+			bf.write(currentDT + " Total Avail. Disk Memory    : "
+					+ (env.getAvailDiskMemory() / BYTE_TO_MEGABYTE)
+					+ " Gigabyte");
+			bf.newLine();
 			bf.write(currentDT + " Processorinfo               : "
 					+ env.getProcessorType());
 			bf.newLine();

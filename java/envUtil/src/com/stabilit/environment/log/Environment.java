@@ -25,6 +25,7 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.hyperic.sigar.CpuInfo;
+import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
@@ -62,6 +63,7 @@ public class Environment {
 	private boolean useDST;
 	private long totalPhysMemory;
 	private long availPhysMemory;
+	private long availDiskMemory;
 	private String processorType;
 	private int processorSpeed;
 	private Date localDate;
@@ -107,6 +109,9 @@ public class Environment {
 			processorSpeed = cpuInfos[0].getMhz();
 			processorType = cpuInfos[0].getModel();
 			numberOfProcessors = cpuInfos[0].getTotalCores();
+			
+			FileSystemUsage fileSystem = sig.getFileSystemUsage(userDir);
+			availDiskMemory = fileSystem.getAvail();
 		} catch (SigarException e) {
 			log
 					.error("Processor Information could not be detected, SIGAR didn't work properly: "
@@ -292,5 +297,14 @@ public class Environment {
 	 */
 	public int getProcessorSpeed() {
 		return processorSpeed;
+	}
+	
+	/**
+	 * Returns total free bytes on file system available in bytes.
+	 * 
+	 * @return availDiskMemory
+	 */
+	public long getAvailDiskMemory() {
+		return availDiskMemory;
 	}
 }
