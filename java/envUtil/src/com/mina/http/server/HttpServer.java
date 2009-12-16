@@ -20,10 +20,13 @@
 package com.mina.http.server;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.filter.LoggingFilter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
@@ -43,8 +46,9 @@ public class HttpServer {
 	//	config.getFilterChain().addLast("logger", new LoggingFilter());
 
 		// Bind
+		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(new ThreadPoolExecutor(20,25,1000,TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())));
 		acceptor.bind(new InetSocketAddress("127.0.0.1", PORT), new HttpServerHandler(), config);
 
-	//	System.out.println("Listening on port " + PORT);
+		System.out.println("Listening on port " + PORT);
 	}
 }

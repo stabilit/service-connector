@@ -36,7 +36,7 @@ import org.apache.mina.filter.codec.demux.MessageDecoderAdapter;
 import org.apache.mina.filter.codec.demux.MessageDecoderResult;
 
 /**
- * A {@link org.apache.mina.filter.codec.demux.MessageDecoder} that decodes {@link HttpRequest}.
+ * A {@link org.apache.mina.filter.codec.demux.MessageDecoder} that decodes HttpRequest.
  *
  * @author The Apache Directory Project (mina-dev@directory.apache.org)
  * @version $Rev: 555855 $, $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $

@@ -13,7 +13,7 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 
 package com.stabilit.environment.log;
 
@@ -29,6 +29,11 @@ import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 
+/**
+ * Environment holds and detects current system information.
+ * 
+ * @author JTraber
+ */
 public class Environment {
 
 	private Logger log = Logger.getLogger(Environment.class);
@@ -44,7 +49,7 @@ public class Environment {
 
 	private String javaVersion;
 	private String vmVersion;
-	private String serverIPAdress;
+	private String serverIPAddress;
 	private String localHostId;
 	private long totalHeapMemory;
 	private String os;
@@ -59,23 +64,22 @@ public class Environment {
 	private long availPhysMemory;
 	private String processorType;
 	private int processorSpeed;
-
 	private Date localDate;
-
 	private int numberOfProcessors;
 
-	public Environment() {
-	}
-
+	/**
+	 * Detects current system information.
+	 */
 	public void loadEnvironment() {
 		try {
 			detectEnv();
-		} catch(Throwable t) {
-			log.error("Environment could not been properly loaded: " + t.getMessage());
+		} catch (Throwable t) {
+			log.error("Environment could not been properly loaded: "
+					+ t.getMessage());
 		}
 	}
-	
-	private void detectEnv() {
+
+	private void detectEnv() throws EnvLoadException {
 		Properties sysprops = System.getProperties();
 
 		javaVersion = sysprops.getProperty(JAVA_VERSION);
@@ -104,165 +108,189 @@ public class Environment {
 			processorType = cpuInfos[0].getModel();
 			numberOfProcessors = cpuInfos[0].getTotalCores();
 		} catch (SigarException e) {
-			log.error("Processor Information could not be detected, SIGAR didn't work properly: " + e.getMessage());
-		}		
+			log
+					.error("Processor Information could not be detected, SIGAR didn't work properly: "
+							+ e.getMessage());
+			throw new EnvLoadException(e);
+		}
 
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
-			log.error("Local Host Identification could not be detected: " + e.getMessage());
+			log.error("Local Host Identification could not be detected: "
+					+ e.getMessage());
+			throw new EnvLoadException(e);
 		}
 	}
 
+	/**
+	 * Returns current used java version.
+	 * 
+	 * @return javaVersion
+	 */
 	public String getJavaVersion() {
 		return javaVersion;
 	}
 
-	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
-	}
-
+	/**
+	 * Returns version of current used java virtual machine.
+	 * 
+	 * @return vmVersion
+	 */
 	public String getVmVersion() {
 		return vmVersion;
 	}
 
-	public void setVmVersion(String vmVersion) {
-		this.vmVersion = vmVersion;
+	/**
+	 * Returns server IP address.
+	 * 
+	 * @return serverIPAddress
+	 */
+	public String getServerIPAddress() {
+		return serverIPAddress;
 	}
 
-	public String getServerIPAdress() {
-		return serverIPAdress;
-	}
-
-	public void setServerIPAdress(String serverIPAdress) {
-		this.serverIPAdress = serverIPAdress;
-	}
-
+	/**
+	 * Returns local host identification (hostname / IP).
+	 * 
+	 * @return localHostId.
+	 */
 	public String getLocalHostId() {
 		return localHostId;
 	}
 
-	public void setLocalHostId(String localHostId) {
-		this.localHostId = localHostId;
-	}
-
+	/**
+	 * Returns current operating system.
+	 * 
+	 * @return os
+	 */
 	public String getOs() {
 		return os;
 	}
 
-	public void setOs(String os) {
-		this.os = os;
-	}
-
+	/**
+	 * Returns operation system patch level.
+	 * 
+	 * @return osPatchLevel
+	 */
 	public String getOsPatchLevel() {
 		return osPatchLevel;
 	}
 
-	public void setOsPatchLevel(String osPatchLevel) {
-		this.osPatchLevel = osPatchLevel;
-	}
-
+	/**
+	 * Returns CPU type.
+	 * 
+	 * @return cpuType
+	 */
 	public String getCpuType() {
 		return cpuType;
 	}
 
-	public void setCpuType(String cpuType) {
-		this.cpuType = cpuType;
-	}
-
+	/**
+	 * Returns current user directory.
+	 * 
+	 * @return userDir
+	 */
 	public String getUserDir() {
 		return userDir;
 	}
 
-	public void setUserDir(String userDir) {
-		this.userDir = userDir;
-	}
-
+	/**
+	 * Returns the current country setting.
+	 * 
+	 * @return countrySetting
+	 */
 	public String getCountrySetting() {
 		return countrySetting;
 	}
 
-	public void setCountrySetting(String countrySetting) {
-		this.countrySetting = countrySetting;
-	}
-
+	/**
+	 * Returns the current user time zone.
+	 * 
+	 * @return userTimezone
+	 */
 	public String getUserTimezone() {
 		return userTimezone;
 	}
 
-	public void setUserTimezone(String userTimezone) {
-		this.userTimezone = userTimezone;
-	}
-
+	/**
+	 * Returns the offset to universal time coordinated (UTC).
+	 * 
+	 * @return utcOffset
+	 */
 	public int getUtcOffset() {
 		return utcOffset;
 	}
 
-	public void setUtcOffset(int utcOffset) {
-		this.utcOffset = utcOffset;
-	}
-
+	/**
+	 * Returns true if daylight saving (DST) time is used.
+	 * 
+	 * @return useDST
+	 */
 	public boolean isUseDST() {
 		return useDST;
 	}
 
-	public void setUseDST(boolean useDST) {
-		this.useDST = useDST;
-	}
-
+	/**
+	 * Returns local date.
+	 * 
+	 * @return localDate
+	 */
 	public Date getLocalDate() {
 		return localDate;
 	}
 
-	public void setLocalDate(Date localDate) {
-		this.localDate = localDate;
-	}
-
+	/**
+	 * Returns the number of processors.
+	 * 
+	 * @return numberOfProcessors
+	 */
 	public int getNumberOfProcessors() {
 		return numberOfProcessors;
 	}
 
-	public void setNumberOfProcessors(int numberOfProcessors) {
-		this.numberOfProcessors = numberOfProcessors;
-	}
-
+	/**
+	 * Returns total heap memory in bytes.
+	 * 
+	 * @return totalHeapMemory
+	 */
 	public long getTotalHeapMemory() {
 		return totalHeapMemory;
 	}
 
-	public void setTotalHeapMemory(long totalHeapMemory) {
-		this.totalHeapMemory = totalHeapMemory;
-	}
-
+	/**
+	 * Returns total physical memory in bytes.
+	 * 
+	 * @return totalPhysMemory
+	 */
 	public long getTotalPhysMemory() {
 		return totalPhysMemory;
 	}
 
-	public void setTotalPhysMemory(long totalPhysMemory) {
-		this.totalPhysMemory = totalPhysMemory;
-	}
-
+	/**
+	 * Returns current available physical memory in bytes.
+	 * 
+	 * @return availPhysMemory
+	 */
 	public long getAvailPhysMemory() {
 		return availPhysMemory;
 	}
 
-	public void setAvailPhysMemory(long availPhysMemory) {
-		this.availPhysMemory = availPhysMemory;
-	}
-
+	/**
+	 * Returns processor type.
+	 * 
+	 * @return processorType
+	 */
 	public String getProcessorType() {
 		return processorType;
 	}
 
-	public void setProcessorType(String processorType) {
-		this.processorType = processorType;
-	}
-
+	/**
+	 * Returns processor speed in megahertz.
+	 * 
+	 * @return processorSpeed
+	 */
 	public int getProcessorSpeed() {
 		return processorSpeed;
-	}
-
-	public void setProcessorSpeed(int processorSpeed) {
-		this.processorSpeed = processorSpeed;
 	}
 }

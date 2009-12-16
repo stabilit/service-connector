@@ -6,12 +6,22 @@
 	<property name="sig" value="sigar.jar" />
 	<property name="sigamd64dll" value="sigar-amd64-winnt.dll" />
 	<property name="sigx86dll" value="sigar-x86-winnt.dll" />
+	<property name="mina-core" value="mina-core-1.1.7.jar" />
+	<property name="mina-filter-ssl" value="mina-filter-ssl-1.1.7.jar" />
+	<property name="log4j-api" value="slf4j-api-1.5.10.jar" />
+	<property name="dir.javadoc" value="javadoc" />
+	<!-- Above entries not used yet! -->
+	<property name="log4j-over-slf4j" value="log4j-over-slf4j-1.5.10.jar" />
+	<property name="log4j-jdk" value="slf4j-jdk14-1.5.10.jar" />
 
 	<path id="classpath.base">
 		<pathelement location="${lib.dir}/${sig}" />
 		<pathelement location="${lib.dir}/${sigamd64dll}" />
 		<pathelement location="${lib.dir}/${sigx86dll}" />
 		<pathelement location="${lib.dir}/${log4j}" />
+		<pathelement location="${lib.dir}/${mina-core}" />
+		<pathelement location="${lib.dir}/${mina-filter-ssl}" />
+		<pathelement location="${lib.dir}/${log4j-api}" />
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${lib.dir}/${junit}" />
@@ -21,26 +31,28 @@
 
 	<target name="clean">
 		<delete dir="bin" />
+		<delete dir="dist" />
 	</target>
 
 	<target name="compile">
 		<mkdir dir="bin/classes" />
-		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" />
+		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" excludes="com/stabilit/sc/test/*.java" />
 	</target>
 
 	<target name="compile-test">
 		<mkdir dir="bin/classes" />
-		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" />
+		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" excludes="com/stabilit/sc/test/*.java" />
 		<javac srcdir="test" destdir="bin/classes" classpathref="classpath.test" />
 	</target>
 
 	<target name="jar">
-		<mkdir dir="bin/jar" />
-		<jar destfile="bin/jar/envUtil.jar" basedir="bin/classes">
+		<mkdir dir="dist" />
+		<jar destfile="dist/envUtil.jar" basedir="bin/classes">
 			<manifest>
 				<attribute name="Main-Class" value="com.stabilit.environment.log.EnvLogFile" />
 			</manifest>
 		</jar>
+		<jar destfile="dist/doc.jar" basedir="javadoc" />
 	</target>
 
 	<target name="run" depends="compile, jar">
@@ -49,10 +61,20 @@
 			<arg value="C:\\stabilit\\projects\\EUREX\\SC\\dev\\eclipse_workspace\\envUtil\\log\\envLog.txt" />
 			<classpath>
 				<path refid="classpath.base" />
-				<path location="bin/jar/envUtil.jar" />
+				<path location="dist/envUtil.jar" />
 			</classpath>
 		</java>
-		<antcall target="junit" />
+	</target>
+
+	<target name="test" depends="compile-test, jar, junit">
+		<mkdir dir="log" />
+		<java classname="com.stabilit.environment.log.EnvLog" fork="true">
+			<arg value="C:\\stabilit\\projects\\EUREX\\SC\\dev\\eclipse_workspace\\envUtil\\log\\envLog.txt" />
+			<classpath>
+				<path refid="classpath.base" />
+				<path location="dist/envUtil.jar" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="junit" depends="compile-test, jar">
@@ -60,12 +82,27 @@
 		<junit printsummary="yes">
 			<classpath>
 				<path refid="classpath.test" />
-				<path location="bin/jar/envUtil.jar" />
+				<path location="dist/envUtil.jar" />
 			</classpath>
 
 			<batchtest fork="yes">
 				<fileset dir="${test.dir}" includes="**/*Test.java" />
 			</batchtest>
 		</junit>
+	</target>
+
+	<target name="javadoc">
+		<javadoc excludepackagenames="com.stabilit.sc.test" access="public" destdir="${dir.javadoc}" author="true" version="true" use="true" windowtitle="Stabilit EnvUtil API" classpathref="classpath.base">
+
+			<fileset dir="src" defaultexcludes="yes">
+				<include name="**/*.java" />
+				<exclude name="com/stabilit/sc/test/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="dist" depends="test, clean, javadoc, compile">
+		<antcall target="jar" />
+		<antcall target="run" />
 	</target>
 </project>

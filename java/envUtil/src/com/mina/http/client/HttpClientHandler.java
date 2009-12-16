@@ -44,7 +44,7 @@ public class HttpClientHandler extends IoHandlerAdapter {
 
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-//		System.out.println("sysout messageRecieved on client: " + (String) message + " : " + System.currentTimeMillis());
+		System.out.println("sysout messageRecieved on client: " + (String) message + " : " + System.currentTimeMillis());
 	}
 
 	public void sessionClosed(IoSession session) throws Exception {
