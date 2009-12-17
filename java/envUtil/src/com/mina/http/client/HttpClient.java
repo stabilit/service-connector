@@ -36,19 +36,33 @@ public class HttpClient implements Runnable {
 	private SocketConnector connector;
 	private IoSession session;
 	private int numberOfConn;
+	private int messageSize;
 	private static final byte[] CRLF = new byte[] { 0x0D, 0x0A };
+
+	public HttpClient(int numberOfConn, int messagSize) {
+		this.numberOfConn = numberOfConn;
+		this.messageSize = messagSize;
+	}
 
 	public HttpClient(int numberOfConn) {
 		this.numberOfConn = numberOfConn;
+		messageSize = 256;
 	}
 
 	public static void main(String[] args) {
-		HttpClient client = new HttpClient(1);
+		int anzConnections = 15000;
+		HttpClient client = new HttpClient(anzConnections);
+		long startTime = System.currentTimeMillis();
 		client.run();
+		long neededTime = System.currentTimeMillis() - startTime;
+		System.out.println("Job done in: "
+				+ neededTime + " Ms");
+		double neededSeconds = neededTime / 1000;
+		System.out.println((anzConnections / neededSeconds) + " Connections in 1 second!");
 	}
 
 	public void run() {
-		
+
 		for (int i = 0; i < numberOfConn; i++) {
 			connector = new SocketConnector();
 			SocketAddress address = new InetSocketAddress("127.0.0.1", 1234);
@@ -62,9 +76,23 @@ public class HttpClient implements Runnable {
 
 			CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
 			try {
-				buf.putString("GET / HTTP/1.1", encoder);
+				String httpRequest = "GET / HTTP/1.1";
+
+				int httpLength = httpRequest.getBytes().length;
+
+				buf.putString(httpRequest, encoder);
 				buf.put(CRLF);
 				buf.put(CRLF);
+				httpLength += 4;
+
+				if (httpLength < messageSize) {
+					for (int fill = httpLength; fill < (messageSize - 3); fill++) {
+						buf.put(new byte[] { 0x0D });
+					}
+				}
+				buf.put(new byte[] { 0x0A });
+				buf.put(CRLF);
+
 			} catch (CharacterCodingException e) {
 				e.printStackTrace();
 			}
@@ -72,7 +100,6 @@ public class HttpClient implements Runnable {
 
 			session.write(buf);
 			session.getCloseFuture().join();
-			session.close();
 		}
 	}
 
@@ -84,6 +111,12 @@ public class HttpClient implements Runnable {
 
 		try {
 			ConnectFuture future1 = connector.connect(address, handler);
+			/*
+			 * TODO Default setting is 60 seconds to terminate worker, means the
+			 * client is running even there is nothing to do. The optimal value
+			 * has to be evaluated.
+			 */
+			connector.setWorkerTimeout(0);
 			future1.join();
 			if (!future1.isConnected()) {
 				return false;

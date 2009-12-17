@@ -15,7 +15,7 @@ public class MyHttpHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange t) throws IOException {
-		InputStream is = t.getRequestBody();
+		//InputStream is = t.getRequestBody();
 		// read(is); // .. read the request body
 		Headers responseHeaders = t.getResponseHeaders();
 		responseHeaders.set("Content-Type", "text/plain");
@@ -24,7 +24,7 @@ public class MyHttpHandler implements HttpHandler {
 		responseBody.write(buffer);
 		responseBody.flush();
 		responseBody.close();
-		is.close();
+		//is.close();
 		// t.sendResponseHeaders(200, buffer.length);
 		// OutputStream os = t.getResponseBody();
 		// os.write(buffer);

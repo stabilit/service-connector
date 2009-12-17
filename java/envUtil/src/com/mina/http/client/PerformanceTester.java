@@ -11,42 +11,45 @@ public class PerformanceTester {
 
 	private ThreadPoolExecutor pool;
 	private int numberOfClients;
-	private int maxThreads;
 	private int numberOfConn;
+	private int messageSize;
 	Logger logger = LoggerFactory.getLogger(PerformanceTester.class);
 
-	public PerformanceTester(int numberOfClients, int maxThreads,
-			int numberOfConn) {
+	public PerformanceTester(int numberOfClients,int numberOfConn, int messageSize) {
 		this.numberOfClients = numberOfClients;
-		this.maxThreads = maxThreads;
 		this.numberOfConn = numberOfConn;
+		this.messageSize = messageSize;
 	}
 
 	public static void main(String[] args) {
-		PerformanceTester tester = new PerformanceTester(10, 10, 20);
+		int numberOfClients = 80;
+		int numberOfConn = 1;
+		int messageSize = 128;
+
+		PerformanceTester tester = new PerformanceTester(numberOfClients,
+				numberOfConn, messageSize);
 		tester.doIt();
 	}
 
 	public void doIt() {
-		pool = new ThreadPoolExecutor(2, maxThreads, 10,
+		pool = new ThreadPoolExecutor(numberOfClients, numberOfClients, 10,
 				TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < numberOfClients; i++) {
-			pool.execute(new HttpClient(numberOfConn));
+			pool.execute(new HttpClient(numberOfConn, messageSize));
 		}
 
 		while (pool.getActiveCount() != 0)
 			;
-		System.out.println("is terminated before: " + pool.isTerminated());
-		System.out.println("is shutdown before: " + pool.isShutdown());
 		pool.shutdown();
-		System.out.println("is terminated after: " + pool.isTerminated());
-		System.out.println("is shutdown after: " + pool.isShutdown());
-		pool.shutdownNow();
-		System.out.println("is terminated after2: " + pool.isTerminated());
-		System.out.println("is shutdown after2: " + pool.isShutdown());
+		long neededTime = System.currentTimeMillis() - startTime;
 		System.out.println("Job Done in: "
 				+ (System.currentTimeMillis() - startTime) + " Ms");
+		double neededSeconds = neededTime / 1000;
+		System.out.println((numberOfConn*numberOfClients / neededSeconds) + " Connections in 1 second!");
+		System.out.println("Anzahl clients: " + numberOfClients);
+		System.out.println("Anzahl connections pro client: " + numberOfConn);
+		System.out.println("Nachrichten Grösse: " + messageSize);
 	}
 }

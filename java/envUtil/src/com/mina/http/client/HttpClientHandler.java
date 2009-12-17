@@ -19,6 +19,7 @@
  */
 package com.mina.http.client;
 
+import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoFilter;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
@@ -44,10 +45,11 @@ public class HttpClientHandler extends IoHandlerAdapter {
 
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		System.out.println("sysout messageRecieved on client: " + (String) message + " : " + System.currentTimeMillis());
+		session.close();
+		System.out.println("sysout messageRecieved on client: " + (String) message);
 	}
 
 	public void sessionClosed(IoSession session) throws Exception {
 //		System.out.println("Session closed on client  : " + System.currentTimeMillis());
-	}
+	}	
 }

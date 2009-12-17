@@ -46,9 +46,9 @@ public class HttpServer {
 	//	config.getFilterChain().addLast("logger", new LoggingFilter());
 
 		// Bind
-		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(new ThreadPoolExecutor(20,25,1000,TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())));
+//		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(new ThreadPoolExecutor(2,2,1000,TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())));
 		acceptor.bind(new InetSocketAddress("127.0.0.1", PORT), new HttpServerHandler(), config);
 
-		System.out.println("Listening on port " + PORT);
+//		System.out.println("Listening on port " + PORT);
 	}
 }

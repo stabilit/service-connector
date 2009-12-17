@@ -1,7 +1,7 @@
 package com.stabilit.queue;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Sc {
 
 	private static Sc instance = new Sc();
-	private ConcurrentMap<RequestType, LinkedBlockingQueue<Request>> queues;
+	private Map<RequestType, LinkedBlockingQueue<Request>> queues;
 	private Lock queueLock = new ReentrantLock();
 
 	private Sc() {

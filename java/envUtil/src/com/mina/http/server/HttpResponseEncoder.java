@@ -74,9 +74,9 @@ public class HttpResponseEncoder implements MessageEncoder {
                 break;
             }
             buf.put(CRLF);
-            for (Iterator it = msg.getHeaders().entrySet().iterator(); it
+            for (Iterator<?> it = msg.getHeaders().entrySet().iterator(); it
                     .hasNext();) {
-                Entry entry = (Entry) it.next();
+                Entry<?, ?> entry = (Entry<?, ?>) it.next();
                 buf.putString((String) entry.getKey(), encoder);
                 buf.putString(": ", encoder);
                 buf.putString((String) entry.getValue(), encoder);
@@ -85,13 +85,14 @@ public class HttpResponseEncoder implements MessageEncoder {
             // now the content length is the body length
             buf.putString("Content-Length: ", encoder);
             buf.putString(String.valueOf(msg.getBodyLength()), encoder);
-            buf.put(CRLF);
-            buf.put(CRLF);
             // add body
+            buf.put(CRLF);
             buf.put(msg.getBody());
-            //System.out.println("\n+++++++");
-            //for (int i=0; i<buf.position();i++)System.out.print(new String(new byte[]{buf.get(i)}));
-            //System.out.println("\n+++++++");
+//            System.out.println("\n+++++++");
+//            for (int i=0; i<buf.position();i++)System.out.print(new String(new byte[]{buf.get(i)}));
+//            System.out.println("\n+++++++");
+            buf.put(CRLF);
+            buf.put(CRLF);
         } catch (CharacterCodingException ex) {
             ex.printStackTrace();
         }

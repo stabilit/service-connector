@@ -63,7 +63,7 @@ public class StHttpClient {
 			OutputStream writer = conn.getOutputStream();
 			writer.write(buffer);
 			writer.flush();
-			writer.close();
+			//writer.close();
 			System.out.println("Message number " + messCount + " sent!");
 			InputStreamReader inReader = new InputStreamReader(conn
 					.getInputStream());
@@ -78,8 +78,10 @@ public class StHttpClient {
 			in.close();
 			// System.out.println("Message number " + messCount + " sent!");
 			messCount++;
+			
+			//Thread.sleep(2);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			url = null;

@@ -23,6 +23,7 @@ import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.common.WriteFuture;
 
 /**
  * An {@link IoHandler} for HTTP.
@@ -32,11 +33,6 @@ import org.apache.mina.common.IoSession;
  *          $
  */
 public class HttpServerHandler extends IoHandlerAdapter {
-	@Override
-	public void sessionOpened(IoSession session) {
-		// set idle time to 60 seconds
-		// session.setIdleTime(IdleStatus.BOTH_IDLE, 60);
-	}
 
 	@Override
 	public void messageReceived(IoSession session, Object message) {
@@ -46,13 +42,11 @@ public class HttpServerHandler extends IoHandlerAdapter {
 		response.setResponseCode(HttpResponseMessage.HTTP_STATUS_SUCCESS);
 		response.appendBody("CONNECTED");
 
-		System.out.println("Message Content");
-		System.out.println(message);
-		System.out.println("Message Length: "
-				+ ((HttpRequestMessage) message).getContext());
-
+//		System.out.println(message);
+		WriteFuture writeFuture;
 		if (response != null) {
-			session.write(response).join();
+			writeFuture = session.write(response);
+			writeFuture.join();
 		}
 		session.close();
 	}
@@ -67,4 +61,10 @@ public class HttpServerHandler extends IoHandlerAdapter {
 	public void exceptionCaught(IoSession session, Throwable cause) {
 		session.close();
 	}
+
+	@Override
+	public void sessionClosed(IoSession session) throws Exception {
+		super.sessionClosed(session);
+//		System.out.println("Session closed on server!");
+	}	
 }
