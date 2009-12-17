@@ -29,6 +29,8 @@ public class SCHttpResponse implements IResponse {
 			SCOP scop = new SCOP(jobResult);
 			oos.writeObject(scop);
 			oos.flush();
+			os.close();
+			//oos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

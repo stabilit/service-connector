@@ -20,9 +20,10 @@ public class SCHttpServer {
 	public static void main(String[] args) {
 		int port = 80;
 		HttpServer httpServer = null;
+		System.setProperty("http.keepAlive", "true");
 		try {
 			httpServer = HttpServer.create(new InetSocketAddress(port), 0);
-			httpServer.createContext("/", new SCHttpHandler());
+			httpServer.createContext("/", new SCHttpHandler());			
 			httpServer.start();
 			synchronized (httpServer) {
 				httpServer.wait();
@@ -36,6 +37,7 @@ public class SCHttpServer {
 	}
 
 	static class SCHttpHandler implements HttpHandler {
+		private ICommandFactory commandFactory = new SCCommandFactory();
 
 		public SCHttpHandler() {
 		}
@@ -43,10 +45,9 @@ public class SCHttpServer {
 		@Override
 		public void handle(HttpExchange httpExchange) throws IOException {
 			try {
-				System.out.println("SCHttpHandler.handle()");
+//				System.out.println("SCHttpHandler.handle()");
 				IRequest request = new SCHttpRequest(httpExchange);
 				IResponse response = new SCHttpResponse(httpExchange);
-				ICommandFactory commandFactory = new SCCommandFactory();
 				ICommand command = commandFactory.newCommand(request);
 				command.run(request, response);		
 			} catch (CommandException e) {

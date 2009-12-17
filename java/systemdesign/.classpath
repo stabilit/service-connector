@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="lib/ftplet-api-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/mina-core-2.0.0-M6.jar" sourcepath="/software/mina/mina-2.0.0-M6.zip"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -25,7 +25,7 @@ public class EchoCommand implements ICommand {
 			throws CommandException {
        IJob job = request.getJob();
        IJobResult jobResult = new JobResult(job);
-       System.out.println("EchoCommand.run(): job = " + job.toString());
+//       System.out.println("EchoCommand.run(): job = " + job.toString());
        response.setJobResult(jobResult);
 	}
 
