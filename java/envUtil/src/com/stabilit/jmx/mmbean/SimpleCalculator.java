@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.jmx.dmbean;
+package com.stabilit.jmx.mmbean;
 
 /**
  * 
