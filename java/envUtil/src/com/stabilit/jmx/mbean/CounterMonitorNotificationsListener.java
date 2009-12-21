@@ -1,4 +1,4 @@
-package com.stabilit.mbean;
+package com.stabilit.jmx.mbean;
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
