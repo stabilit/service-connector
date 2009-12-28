@@ -1,13 +1,11 @@
 package com.stabilit.sc.comm.http.sync;
 
-import java.io.IOException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.client.SCClientFactory;
+import com.stabilit.sc.app.client.ClientFactory;
+import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobFactory;
 import com.stabilit.sc.job.IJobResult;
@@ -26,8 +24,8 @@ public class SyncCommTestCase {
 	}
 
 	@Test
-	public void syncEcho() throws IOException {
-		IClient client = SCClientFactory.newInstance(httpEndPoint);
+	public void syncEcho() throws Exception {
+		IClient client = ClientFactory.newInstance(httpEndPoint);
 		client.connect();
 		IJobFactory jobFactory = new JobFactory();
 		IJob job = jobFactory.newJob("echo");

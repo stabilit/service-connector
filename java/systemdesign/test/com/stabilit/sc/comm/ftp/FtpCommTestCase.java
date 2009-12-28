@@ -6,8 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.client.SCClientFactory;
-import com.stabilit.sc.client.ftp.SCFtpClient;
+import com.stabilit.sc.app.client.ClientFactory;
+import com.stabilit.sc.app.client.ftp.SCFtpClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobFactory;
 import com.stabilit.sc.job.IJobResult;
@@ -27,7 +27,7 @@ public class FtpCommTestCase {
 
 	@Test
 	public void ftpGet() throws IOException {
-		SCFtpClient client = (SCFtpClient)SCClientFactory.newInstance(ftpEndPoint);
+		SCFtpClient client = (SCFtpClient)ClientFactory.newInstance(ftpEndPoint);
 		client.setUserid("test");
 		client.setPassword("test");
 		client.connect();
@@ -35,7 +35,7 @@ public class FtpCommTestCase {
 		IJob job = jobFactory.newJob("ftp");
 		job.setAttribute("path", "/com/stabilit/sc/comm/ftp/FtpCommTestCase.java");
 		IJobResult jobResult = client.sendAndReceive(job);
-		byte[] ret = (byte[])jobResult.getAttribute("return");
+		byte[] ret = (byte[])jobResult.getReturn();
 		for (int i = 0; i < ret.length; i++) {
 		   System.out.print((char)ret[i]);
 		}
