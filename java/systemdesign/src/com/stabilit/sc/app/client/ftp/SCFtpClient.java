@@ -1,4 +1,4 @@
-package com.stabilit.sc.client.ftp;
+package com.stabilit.sc.app.client.ftp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -9,7 +9,7 @@ import java.net.URL;
 
 import sun.net.ftp.FtpClient;
 
-import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
 import com.stabilit.sc.job.JobResult;
@@ -27,7 +27,7 @@ public class SCFtpClient implements IClient {
 		this.userid = null;
 		this.password = null;
 	}
-	
+
 	public SCFtpClient(URL endPoint, String userid, String password) {
 		this.endPoint = endPoint;
 		this.userid = userid;
@@ -38,19 +38,19 @@ public class SCFtpClient implements IClient {
 	public String getUserid() {
 		return userid;
 	}
-	
+
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Override
 	public void closeSession() {
 
@@ -79,29 +79,34 @@ public class SCFtpClient implements IClient {
 		if ("ftp".equals(job.getKey()) == false) {
 			throw new IOException("not supported");
 		}
-		String path = (String)job.getAttribute("path");
-	    int lastSlash = path.lastIndexOf('/');
-		String filename = path.substring(lastSlash+1);
-		String directory = path.substring(0,lastSlash);
-	    ftpClient.binary();
-	    ftpClient.cd(directory);
+		String path = (String) job.getAttribute("path");
+		int lastSlash = path.lastIndexOf('/');
+		String filename = path.substring(lastSlash + 1);
+		String directory = path.substring(0, lastSlash);
+		ftpClient.binary();
+		ftpClient.cd(directory);
 
 		InputStream is = ftpClient.get(path);
-	    BufferedInputStream bis = new BufferedInputStream(is);
+		BufferedInputStream bis = new BufferedInputStream(is);
 
-	    ByteArrayOutputStream os = new ByteArrayOutputStream();
-	    BufferedOutputStream bos = new BufferedOutputStream(os);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(os);
 
-	    byte[] buffer = new byte[1024 << 2];
-	    int readCount;	                    
-	    while( (readCount = bis.read(buffer)) > 0) {
-	        bos.write(buffer, 0, readCount);
-	    }
-	    bos.close();
-	    
-	    JobResult jobResult = new JobResult(job);
-	    jobResult.setAttribute("return", os.toByteArray());	    	   
+		byte[] buffer = new byte[1024 << 2];
+		int readCount;
+		while ((readCount = bis.read(buffer)) > 0) {
+			bos.write(buffer, 0, readCount);
+		}
+		bos.close();
+
+		JobResult jobResult = new JobResult(job);
+		jobResult.setAttribute("return", os.toByteArray());
 
 		return jobResult;
+	}
+
+	@Override
+	public void setEndpoint(URL url) {
+		this.endPoint = url;
 	}
 }

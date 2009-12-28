@@ -1,4 +1,4 @@
-package com.stabilit.sc.client.http;
+package com.stabilit.sc.app.client.http;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,17 +8,22 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class SCHttpClient implements IClient {
+public class SunHttpClient implements IClient {
 
 	private URL endPoint;
 	private HttpURLConnection httpConnection;
 
-	public SCHttpClient(URL endPoint) {
+	public SunHttpClient() {
+		this(null);
+	}
+	
+	public SunHttpClient(URL endPoint) {
 		this.endPoint = endPoint;
 		this.httpConnection = null;
 	}
@@ -66,5 +71,18 @@ public class SCHttpClient implements IClient {
 		} catch (ClassNotFoundException e) {
 		}
 		return null;
+	}
+	
+	public URL getEndPoint() {
+		return endPoint;
+	}
+	
+	public void setEndPoint(URL endPoint) {
+		this.endPoint = endPoint;
+	}
+
+	@Override
+	public void setEndpoint(URL url) {
+       this.endPoint = url;		
 	}
 }
