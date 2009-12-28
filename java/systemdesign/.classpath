@@ -4,10 +4,17 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/ftpserver-core-1.0.2.jar" sourcepath="/software/ftpserver/ftpserver-1.0.2-src.zip"/>
 	<classpathentry kind="lib" path="lib/ftplet-api-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/mina-core-2.0.0-M6.jar" sourcepath="/software/mina/mina-2.0.0-M6.zip"/>
+	<classpathentry kind="lib" path="lib/ftpserver-core-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/mina-core-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-core-2.0.0-M6.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-codec-netty-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-compression-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-filter-ssl-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-integration-jmx-1.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mina-integration-spring-1.1.7.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
