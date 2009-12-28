@@ -1,0 +1,242 @@
+<class-diagram icons="true" always-add-relationships="true" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true" version="0.9.65">  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>  
+  <interface language="java" name="com.stabilit.sc.cmd.factory.ICommandFactory" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/factory/ICommandFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="492" y="63" width="-1" height="-1"/>  
+  </interface>  
+  <class language="java" name="com.stabilit.sc.cmd.factory.SCCommandFactory" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="490" y="231" width="-1" height="-1"/>  
+  </class>  
+  <class language="java" name="com.stabilit.sc.cmd.impl.EchoCommand" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="917" y="99" width="-1" height="-1"/>  
+  </class>  
+  <class language="java" name="com.stabilit.sc.cmd.impl.SubscribeCommand" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/impl/SubscribeCommand.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="913" y="274" width="-1" height="-1"/>  
+  </class>  
+  <class language="java" name="com.stabilit.sc.net.http.server.SCHttpServer" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="120" y="86" width="-1" height="-1"/>  
+  </class>  
+  <class language="java" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="123" y="229" width="-1" height="-1"/>  
+  </class>  
+  <interface language="java" name="com.stabilit.sc.io.IRequest" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="242" y="434" width="-1" height="-1"/>  
+  </interface>  
+  <interface language="java" name="com.stabilit.sc.io.IResponse" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/io/IResponse.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="534" y="401" width="-1" height="-1"/>  
+  </interface>  
+  <class language="java" name="com.stabilit.sc.io.SCOP" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/io/SCOP.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="235" y="640" width="-1" height="-1"/>  
+  </class>  
+  <interface language="java" name="com.stabilit.sc.job.IJob" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="520" y="585" width="-1" height="-1"/>  
+  </interface>  
+  <interface language="java" name="com.stabilit.sc.job.IJobFactory" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/job/IJobFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="585" y="728" width="-1" height="-1"/>  
+  </interface>  
+  <class language="java" name="com.stabilit.sc.job.Job" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/job/Job.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="866" y="713" width="-1" height="-1"/>  
+  </class>  
+  <class language="java" name="com.stabilit.sc.job.JobResult" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/job/JobResult.java" binary="false" corner="BOTTOM_RIGHT">    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>    
+    <position x="805" y="494" width="-1" height="-1"/>  
+  </class>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.factory.ICommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/ICommandFactory.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.factory.SCCommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.SubscribeCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/SubscribeCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IResponse" 
+      file="/systemdesign/src/com/stabilit/sc/io/IResponse.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.factory.SCCommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.factory.ICommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/ICommandFactory.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.job.IJobFactory" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJobFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.factory.SCCommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.impl.SubscribeCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/SubscribeCommand.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.EchoCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.EchoCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IResponse" 
+      file="/systemdesign/src/com/stabilit/sc/io/IResponse.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.factory.ICommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/ICommandFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.job.Job" file="/systemdesign/src/com/stabilit/sc/job/Job.java" 
+      binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.factory.SCCommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IResponse" 
+      file="/systemdesign/src/com/stabilit/sc/io/IResponse.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.job.JobResult" 
+      file="/systemdesign/src/com/stabilit/sc/job/JobResult.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.SubscribeCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/SubscribeCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </dependency>  
+  <association>    
+    <display labels="true" multiplicity="true"/>    
+    <source navigable="false" project="systemdesign" name="com.stabilit.sc.job.JobResult" 
+      file="/systemdesign/src/com/stabilit/sc/job/JobResult.java" binary="false">      
+      <attribute name="job"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target navigable="true" project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </association>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.factory.SCCommandFactory" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/factory/SCCommandFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.impl.EchoCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.EchoCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.JobResult" 
+      file="/systemdesign/src/com/stabilit/sc/job/JobResult.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.io.IRequest" 
+      file="/systemdesign/src/com/stabilit/sc/io/IRequest.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.net.http.server.SCHttpServer.SCHttpHandler" 
+      file="/systemdesign/src/com/stabilit/sc/net/http/server/SCHttpServer.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.EchoCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/EchoCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.IJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/IJob.java" binary="false"/>  
+  </dependency>
+</class-diagram>

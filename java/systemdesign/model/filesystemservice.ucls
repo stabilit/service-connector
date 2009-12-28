@@ -1,0 +1,106 @@
+<class-diagram version="0.9.86" automaticImage="PNG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cmd.impl.FileSystemCommand" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/impl/FileSystemCommand.java" binary="false">    
+    <position x="638" y="278" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.job.impl.FileSystemJob" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false">    
+    <position x="396" y="275" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <enumeration corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.job.impl.FileSystemJob.ACTION" 
+    project="systemdesign" file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false">    
+    <position x="397" y="88" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </enumeration>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.comm.ftp.FileSystemTestCase" project="systemdesign" 
+    file="/systemdesign/test/com/stabilit/sc/comm/ftp/FileSystemTestCase.java" binary="false">    
+    <position x="169" y="462" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.client.IClient" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/client/IClient.java" binary="false">    
+    <position x="171" y="275" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.client.SCClientFactory" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/client/SCClientFactory.java" binary="false">    
+    <position x="173" y="107" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cmd.ICommand" project="systemdesign" 
+    file="/systemdesign/src/com/stabilit/sc/cmd/ICommand.java" binary="false">    
+    <position x="640" y="76" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <realization>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.FileSystemCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/FileSystemCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.cmd.ICommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/ICommand.java" binary="false"/>  
+  </realization>  
+  <nesting>    
+    <source project="systemdesign" name="com.stabilit.sc.job.impl.FileSystemJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.impl.FileSystemJob.ACTION" 
+      file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false"/>  
+  </nesting>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.comm.ftp.FileSystemTestCase" 
+      file="/systemdesign/test/com/stabilit/sc/comm/ftp/FileSystemTestCase.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.impl.FileSystemJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.client.SCClientFactory" 
+      file="/systemdesign/src/com/stabilit/sc/client/SCClientFactory.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.client.IClient" 
+      file="/systemdesign/src/com/stabilit/sc/client/IClient.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.comm.ftp.FileSystemTestCase" 
+      file="/systemdesign/test/com/stabilit/sc/comm/ftp/FileSystemTestCase.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.client.IClient" 
+      file="/systemdesign/src/com/stabilit/sc/client/IClient.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.FileSystemCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/FileSystemCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.impl.FileSystemJob.ACTION" 
+      file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="systemdesign" name="com.stabilit.sc.cmd.impl.FileSystemCommand" 
+      file="/systemdesign/src/com/stabilit/sc/cmd/impl/FileSystemCommand.java" binary="false"/>    
+    <target project="systemdesign" name="com.stabilit.sc.job.impl.FileSystemJob" 
+      file="/systemdesign/src/com/stabilit/sc/job/impl/FileSystemJob.java" binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
