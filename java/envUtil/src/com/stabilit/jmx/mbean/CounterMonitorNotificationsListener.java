@@ -10,7 +10,7 @@ import com.sun.jmx.remote.internal.NotificationBufferFilter;
 
 public class CounterMonitorNotificationsListener implements
 		NotificationListener, NotificationBuffer {
-
+	
 	@Override
 	public void handleNotification(Notification notification, Object handback) {
 		MonitorNotification monitorNotification = (MonitorNotification) (notification);

@@ -26,6 +26,7 @@
 	<classpathentry kind="lib" path="lib/spring/org.springframework.aop-3.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/commons-modeler-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/opendmk-1.0-b02-bin-dual-01-Oct-2007_19-17-46.jar"/>
+	<classpathentry kind="lib" path="lib/jdmkrt.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/systemdesign"/>
 	<classpathentry kind="output" path="bin"/>

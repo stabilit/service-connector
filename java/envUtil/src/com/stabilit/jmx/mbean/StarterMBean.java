@@ -26,7 +26,7 @@ public class StarterMBean {
 				new CounterMonitorNotificationsListener(), null, count);
 		cm.start();		
 		mbs.registerMBean(count, new ObjectName("com.stabilit.mbean:type=Counter"));
-		//mbs.registerMBean(count.getCounters(), new ObjectName("com.stabilit.mbean:type=Counter"));
+		mbs.registerMBean(count.getCounters(), new ObjectName("com.stabilit.mbean:type=LinkedBlockingQueue"));
 		count.count();
 	}
 }

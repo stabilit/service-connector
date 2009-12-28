@@ -19,9 +19,9 @@
  */
 package com.stabilit.jmx.modelermbean;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+
 import org.apache.commons.modeler.Registry;
 
 /**
@@ -43,8 +43,13 @@ public class CommonsModelMBeanDemonstrator {
 		registry.setMBeanServer(ManagementFactory.getPlatformMBeanServer());
 		registry.loadMetadata(modelerXmlInputStream);
 		registry.registerComponent(calculator,
-				"modelmbean:type=commons-modeler",
+				"modelmbean:type=commons-modeler-calculator",
 				"com.stabilit.jmx.modelmbean.SimpleCalculator");
+		
+		RegistryController registryController = new RegistryController(registry, modelerMetadataFile);
+		registry.registerComponent(registryController,
+				"modelmbean:type=commons-modeler-registrycontroller",
+				"com.stabilit.jmx.modelmbean.RegistryController");
 	}
 
 	public static void main(final String[] arguments) throws Exception {
