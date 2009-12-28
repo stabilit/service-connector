@@ -23,10 +23,14 @@ public class EchoCommand implements ICommand {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
-       IJob job = request.getJob();
-       IJobResult jobResult = new JobResult(job);
-//       System.out.println("EchoCommand.run(): job = " + job.toString());
-       response.setJobResult(jobResult);
+		IJob job = request.getJob();
+		IJobResult jobResult = new JobResult(job);
+		// System.out.println("EchoCommand.run(): job = " + job.toString());
+		try {
+			response.setJobResult(jobResult);
+		} catch (Exception e) {
+			throw new CommandException(e.toString());
+		}
 	}
 
 }
