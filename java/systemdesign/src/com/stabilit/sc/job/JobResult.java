@@ -45,4 +45,14 @@ public class JobResult implements IJobResult {
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);
 	}
+	
+	@Override
+	public Object getReturn() {
+		return this.attrMap.get("return");
+	}
+	
+	@Override
+	public void setReturn(Object value) {
+        this.attrMap.put("return", value);		
+	}
 }

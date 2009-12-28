@@ -8,4 +8,8 @@ public interface IJobResult extends Serializable {
 	public Object getAttribute(String name);
 
 	public void setAttribute(String name, Object value);
+	
+	public void setReturn(Object value);
+	
+	public Object getReturn();
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.job.impl.EchoJob;
+import com.stabilit.sc.job.impl.FileSystemJob;
 import com.stabilit.sc.job.impl.FtpJob;
 
 public class JobFactory implements IJobFactory {
@@ -15,6 +16,8 @@ public class JobFactory implements IJobFactory {
 		jobMap.put(echoJob.getKey(), echoJob);
 		IJob ftpJob = new FtpJob();
 		jobMap.put(ftpJob.getKey(), ftpJob);
+		IJob fsJob = new FileSystemJob();
+		jobMap.put(fsJob.getKey(), fsJob);
 	}
 	
 	@Override

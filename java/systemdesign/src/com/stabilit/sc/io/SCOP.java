@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class SCOP implements Serializable {
 
+	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 2211653041443557380L;
 	private Map<String, String> metaMap;
 	private Object body;

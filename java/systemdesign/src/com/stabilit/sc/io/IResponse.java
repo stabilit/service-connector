@@ -4,6 +4,6 @@ import com.stabilit.sc.job.IJobResult;
 
 public interface IResponse {
 
-	public void setJobResult(IJobResult jobResult);
+	public void setJobResult(IJobResult jobResult) throws Exception;
 
 }

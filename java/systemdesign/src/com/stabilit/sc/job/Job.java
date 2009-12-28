@@ -3,7 +3,10 @@ package com.stabilit.sc.job;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.stabilit.sc.job.impl.FileSystemJob;
+
 public class Job implements IJob {
+
 
 	/**
 	 * 
@@ -21,7 +24,7 @@ public class Job implements IJob {
 
 	@Override
 	public IJob newInstance() {
-		return new Job(this.key);
+		return new FileSystemJob();
 	}
 	
 	@Override
