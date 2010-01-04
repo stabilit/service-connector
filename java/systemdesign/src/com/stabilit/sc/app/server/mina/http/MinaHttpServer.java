@@ -20,7 +20,7 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 
 public class MinaHttpServer implements IServer {
-	private static final int PORT = 80;
+	private static final int PORT = 85;
 
 	public static final String VERSION_STRING = "$Revision: 555855 $ $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $";
 
@@ -49,7 +49,7 @@ public class MinaHttpServer implements IServer {
 		// acceptor.getFilterChain().addLast("executor", new ExecutorFilter(new
 		// ThreadPoolExecutor(2,2,1000,TimeUnit.MILLISECONDS, new
 		// LinkedBlockingQueue<Runnable>())));
-		acceptor.bind(new InetSocketAddress("127.0.0.1", PORT),
+		acceptor.bind(new InetSocketAddress("192.168.178.23", PORT),
 				new SCHttpHandler(), config);
 		// System.out.println("Listening on port " + PORT);
 	}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.app.client.http.SunHttpClient;
+import com.stabilit.sc.app.client.mina.http.MinaClient;
 import com.stabilit.sc.app.client.socket.http.SocketHttpClient;
 import com.stabilit.sc.app.server.socket.http.SocketHttpServer;
 
@@ -21,6 +22,9 @@ public class ClientFactory {
 		IClient socketHttpClient = new SocketHttpClient(); 
 		clientMap.put(SocketHttpServer.class.getName(), socketHttpClient);
 		clientMap.put("socket.http", socketHttpClient);
+		IClient minaClient = new MinaClient(); 
+		clientMap.put(MinaClient.class.getName(), socketHttpClient);
+		clientMap.put("mina.http", minaClient);
 	}
 	
 	public static IClient newInstance() {

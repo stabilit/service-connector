@@ -10,7 +10,7 @@ import com.stabilit.sc.job.impl.EchoJob;
 public class EchoClientKeepAlive {
 
 	public static void main(String[] args) throws Exception {
-		String sURL = "http://localhost:80/";
+		String sURL = "http://localhost:85/";
         URL url = new URL(sURL);
 		String key = "default";
 		if (args.length > 0) {

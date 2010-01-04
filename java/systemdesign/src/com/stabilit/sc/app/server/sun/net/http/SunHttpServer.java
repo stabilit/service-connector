@@ -20,7 +20,7 @@ public class SunHttpServer implements IServer {
 
 	@Override
 	public void create() throws Exception {
-		int port = 80;
+		int port = 85;
 		httpServer = HttpServer.create(new InetSocketAddress(port), 0);
 		httpServer.createContext("/", new SCHttpHandler());
 	}

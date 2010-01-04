@@ -26,6 +26,8 @@ import org.apache.mina.filter.LoggingFilter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 
+import com.stabilit.sc.app.client.PerformanceOneClient;
+
 public class HttpClientHandler extends IoHandlerAdapter {
 
 	private static IoFilter LOGGING_FILTER = new LoggingFilter();
@@ -45,7 +47,8 @@ public class HttpClientHandler extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
 		session.close();
-		System.out.println("sysout messageRecieved on client: " + (String) message);
+		PerformanceOneClient.getInstance().minaHandlerMethod();
+		//System.out.println("sysout messageRecieved on client: " + (String) message);
 	}
 
 	public void sessionClosed(IoSession session) throws Exception {

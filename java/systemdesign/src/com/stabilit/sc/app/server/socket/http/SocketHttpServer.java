@@ -22,11 +22,11 @@ public class SocketHttpServer implements IServer {
 	private ServerSocket serverSocket;
 	private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
 			THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.MICROSECONDS,
-			new LinkedBlockingQueue());
+			new LinkedBlockingQueue<Runnable>());
 
 	@Override
 	public void create() throws Exception {
-		int port = 80;
+		int port = 85;
 		serverSocket = new ServerSocket(port);
 	}
 
