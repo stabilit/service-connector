@@ -12,6 +12,7 @@ import sun.net.ftp.FtpClient;
 import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.job.ISubscribe;
 import com.stabilit.sc.job.JobResult;
 
 public class SCFtpClient implements IClient {
@@ -28,6 +29,11 @@ public class SCFtpClient implements IClient {
 		this.password = null;
 	}
 
+	@Override
+	public String getSessionId() {
+		return null;
+	}
+	
 	public SCFtpClient(URL endPoint, String userid, String password) {
 		this.endPoint = endPoint;
 		this.userid = userid;
@@ -103,6 +109,11 @@ public class SCFtpClient implements IClient {
 		jobResult.setAttribute("return", os.toByteArray());
 
 		return jobResult;
+	}
+
+	@Override
+	public IJobResult receive(ISubscribe subscribeJob) throws Exception {
+		throw new Exception("not supported");
 	}
 
 	@Override

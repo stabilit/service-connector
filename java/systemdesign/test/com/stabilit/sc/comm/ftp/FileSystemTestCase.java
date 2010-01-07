@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.sc.app.client.IClient;
-import com.stabilit.sc.app.client.ClientFactory;
+import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.job.IJobFactory;
 import com.stabilit.sc.job.IJobResult;
 import com.stabilit.sc.job.JobFactory;
@@ -29,7 +29,7 @@ public class FileSystemTestCase {
 
 	@Test
 	public void listFiles() throws IOException {
-		IClient client = ClientFactory.newInstance(httpEndPoint);
+		IClient client = ClientConnectionFactory.newInstance(httpEndPoint);
 		client.connect();
 		IJobFactory jobFactory = new JobFactory();
 		FileSystemJob job = (FileSystemJob)jobFactory.newJob("filesystem");

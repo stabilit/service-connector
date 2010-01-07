@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.app.client.ClientFactory;
+import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobFactory;
@@ -25,7 +25,7 @@ public class SyncCommTestCase {
 
 	@Test
 	public void syncEcho() throws Exception {
-		IClient client = ClientFactory.newInstance(httpEndPoint);
+		IClient client = ClientConnectionFactory.newInstance(httpEndPoint);
 		client.connect();
 		IJobFactory jobFactory = new JobFactory();
 		IJob job = jobFactory.newJob("echo");

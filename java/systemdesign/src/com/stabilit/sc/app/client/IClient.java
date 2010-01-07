@@ -5,9 +5,12 @@ import java.net.URL;
 
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.job.ISubscribe;
 
 public interface IClient {
 
+	public String getSessionId();
+	
 	public void setEndpoint(URL url);
 	
 	public void connect() throws IOException;
@@ -15,6 +18,8 @@ public interface IClient {
 	public void openSession() throws IOException;
 
 	public IJobResult sendAndReceive(IJob job) throws Exception;
+
+	public IJobResult receive(ISubscribe subscribeJob) throws Exception;
 
 	public void closeSession() throws IOException;
 

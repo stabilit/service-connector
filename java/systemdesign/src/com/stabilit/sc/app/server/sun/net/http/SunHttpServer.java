@@ -3,24 +3,24 @@ package com.stabilit.sc.app.server.sun.net.http;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import com.stabilit.sc.app.server.IServer;
+import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.ICommandFactory;
-import com.stabilit.sc.cmd.factory.SCCommandFactory;
+import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-public class SunHttpServer implements IServer {
+public class SunHttpServer extends ServerApplication {
 
 	private HttpServer httpServer;
 
 	@Override
 	public void create() throws Exception {
-		int port = 85;
+		int port = this.getPort();
 		httpServer = HttpServer.create(new InetSocketAddress(port), 0);
 		httpServer.createContext("/", new SCHttpHandler());
 	}
@@ -40,7 +40,7 @@ public class SunHttpServer implements IServer {
 	
 	static class SCHttpHandler implements HttpHandler {
 
-		ICommandFactory commandFactory = new SCCommandFactory();
+		ICommandFactory commandFactory = CommandFactory.getInstance();
 
 		public SCHttpHandler() {
 		}

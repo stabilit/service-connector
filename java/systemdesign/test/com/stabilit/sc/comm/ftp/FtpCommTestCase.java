@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.app.client.ClientFactory;
+import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.client.ftp.SCFtpClient;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobFactory;
@@ -27,7 +27,7 @@ public class FtpCommTestCase {
 
 	@Test
 	public void ftpGet() throws IOException {
-		SCFtpClient client = (SCFtpClient)ClientFactory.newInstance(ftpEndPoint);
+		SCFtpClient client = (SCFtpClient)ClientConnectionFactory.newInstance(ftpEndPoint);
 		client.setUserid("test");
 		client.setPassword("test");
 		client.connect();

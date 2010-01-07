@@ -19,10 +19,10 @@
  */
 package com.stabilit.sc.app.server.mina.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.HashMap;
@@ -136,8 +136,7 @@ public class HttpRequestDecoder extends MessageDecoderAdapter {
 	private HttpRequestMessage decodeBody(ByteBuffer in) {
 		request = new HttpRequestMessage();
 		try {
-			request.setHeaders(parseRequest(new StringReader(in
-					.getString(decoder))));
+			request.setHeaders(parseRequest(in.asInputStream()));
 			return request;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -146,78 +145,37 @@ public class HttpRequestDecoder extends MessageDecoderAdapter {
 		return null;
 	}
 
-	private Map<String, String[]> parseRequest(Reader is) {
-		Map<String, String[]> map = new HashMap<String, String[]>();
-		BufferedReader rdr = new BufferedReader(is);
-
+	private Map parseRequest(InputStream is) {
+		Map<String, Object[]> map = new HashMap<String, Object[]>();
 		try {
+			DataInputStream dis = new DataInputStream(is);
 			// Get request URL.
-			String line = rdr.readLine();
+			String line = dis.readLine();
 			String[] url = line.split(" ");
-			if (url.length < 3) {
+			if (url.length < 3)
 				return map;
-			}
 
 			map.put("URI", new String[] { line });
 			map.put("Method", new String[] { url[0].toUpperCase() });
 			map.put("Context", new String[] { url[1].substring(1) });
 			map.put("Protocol", new String[] { url[2] });
 			// Read header
-			while ((line = rdr.readLine()) != null && line.length() > 0) {
+			while ((line = dis.readLine()) != null && line.length() > 0) {
 				String[] tokens = line.split(": ");
 				map.put(tokens[0], new String[] { tokens[1] });
 			}
-
-			// If method 'POST' then read Content-Length worth of data
-			if (url[0].equalsIgnoreCase("POST")) {
-				int len = Integer.parseInt(map.get("Content-Length")[0]);
-				char[] buf = new char[len];
-				if (rdr.read(buf) == len) {
-					line = String.copyValueOf(buf);
-				}
-			} else if (url[0].equalsIgnoreCase("GET")) {
-				int idx = url[1].indexOf('?');
-				if (idx != -1) {
-					map.put("Context",
-							new String[] { url[1].substring(1, idx) });
-					line = url[1].substring(idx + 1);
-				} else {
-					line = null;
-				}
-			}
-			if (line != null) {
-				String[] match = line.split("\\&");
-				for (String element : match) {
-					String[] params = new String[1];
-					String[] tokens = element.split("=");
-					switch (tokens.length) {
-					case 0:
-						map.put("@".concat(element), new String[] {});
-						break;
-					case 1:
-						map.put("@".concat(tokens[0]), new String[] {});
-						break;
-					default:
-						String name = "@".concat(tokens[0]);
-						if (map.containsKey(name)) {
-							params = map.get(name);
-							String[] tmp = new String[params.length + 1];
-							for (int j = 0; j < params.length; j++) {
-								tmp[j] = params[j];
-							}
-							params = null;
-							params = tmp;
-						}
-						params[params.length - 1] = tokens[1].trim();
-						map.put(name, params);
-					}
-				}
-			}
-		} catch (IOException ex) {
+			int len = Integer.parseInt((String)map.get("Content-Length")[0]);
+			byte[] bbuf = new byte[len];
+			int readLen = dis.read(bbuf);
+			ByteArrayInputStream bais = new ByteArrayInputStream(bbuf);
+			ObjectInputStream ois = new ObjectInputStream (bais);
+			Object obj = ois.readObject();
+			map.put("object", new Object[] {obj});
+			System.out.println(obj);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 		return map;
 	}
-
 }

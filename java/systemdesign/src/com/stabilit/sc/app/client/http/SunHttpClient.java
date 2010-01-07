@@ -12,12 +12,14 @@ import com.stabilit.sc.app.client.IClient;
 import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
+import com.stabilit.sc.job.ISubscribe;
+import com.stabilit.sc.job.impl.AsyncCallJob;
 
 public class SunHttpClient implements IClient {
 
 	private URL endPoint;
 	private HttpURLConnection httpConnection;
+	private String sessionId;
 
 	public SunHttpClient() {
 		this(null);
@@ -26,6 +28,12 @@ public class SunHttpClient implements IClient {
 	public SunHttpClient(URL endPoint) {
 		this.endPoint = endPoint;
 		this.httpConnection = null;
+		this.sessionId = null;
+	}
+
+	@Override
+	public String getSessionId() {
+		return this.sessionId;
 	}
 
 	@Override
@@ -57,6 +65,7 @@ public class SunHttpClient implements IClient {
 		OutputStream os = httpConnection.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(os);
 		SCOP scop = new SCOP(job);
+		scop.setSessionId(this.sessionId);
 		oos.writeObject(scop);
 		oos.flush();
 		InputStream is = httpConnection.getInputStream();
@@ -66,13 +75,44 @@ public class SunHttpClient implements IClient {
 			obj = ois.readObject();
 			if (obj instanceof SCOP) {
 				SCOP ret = (SCOP) obj;
+				String retSessionID = ret.getSessionId();
+				if (retSessionID != null) {
+					this.sessionId = retSessionID;
+				}
 				return (IJobResult) ret.getBody();
 			}
 		} catch (ClassNotFoundException e) {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public IJobResult receive(ISubscribe subscribeJob) throws IOException {
+		IJob callJob = new AsyncCallJob(subscribeJob);
+		OutputStream os = httpConnection.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		SCOP scop = new SCOP(callJob);
+		scop.setSessionId(this.sessionId);
+		oos.writeObject(scop);
+		oos.flush();
+		InputStream is = httpConnection.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Object obj;
+		try {
+			obj = ois.readObject();
+			if (obj instanceof SCOP) {
+				SCOP ret = (SCOP) obj;
+				String retSessionID = ret.getSessionId();
+				if (retSessionID != null) {
+					this.sessionId = retSessionID;
+				}
+				return (IJobResult) ret.getBody();
+			}
+		} catch (ClassNotFoundException e) {
+		}
+		return null;
+	}
+
 	public URL getEndPoint() {
 		return endPoint;
 	}

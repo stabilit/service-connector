@@ -4,6 +4,7 @@ import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
+import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
 import com.stabilit.sc.job.JobResult;
@@ -27,6 +28,8 @@ public class EchoCommand implements ICommand {
 		IJobResult jobResult = new JobResult(job);
 		// System.out.println("EchoCommand.run(): job = " + job.toString());
 		try {
+			ISession session = request.getSession(true);
+			response.setSession(session);
 			response.setJobResult(jobResult);
 		} catch (Exception e) {
 			throw new CommandException(e.toString());

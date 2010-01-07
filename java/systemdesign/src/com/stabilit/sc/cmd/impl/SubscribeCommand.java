@@ -4,6 +4,12 @@ import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
+import com.stabilit.sc.io.ISession;
+import com.stabilit.sc.job.IJob;
+import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.job.ISubscribe;
+import com.stabilit.sc.job.JobResult;
+import com.stabilit.sc.util.SubscribeQueue;
 
 public class SubscribeCommand implements ICommand {
 
@@ -23,8 +29,16 @@ public class SubscribeCommand implements ICommand {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
-         System.out.println("SubscribeCommand.run()");
+ 		IJob job = request.getJob();
+		IJobResult jobResult = new JobResult(job);
+		try {
+			ISession session = request.getSession(true);
+			response.setSession(session);
+			String subscribeId = SubscribeQueue.subscribe(job);
+			// set initial event queue read position
+			response.setJobResult(jobResult);
+		} catch (Exception e) {
+			throw new CommandException(e.toString());
+		}
 	}
-
-
 }

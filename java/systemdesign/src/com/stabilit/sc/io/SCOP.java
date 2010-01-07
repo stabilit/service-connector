@@ -7,7 +7,11 @@ import java.util.Map;
 
 public class SCOP implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 2211653041443557380L;
+	
 	private Map<String, String> metaMap;
 	private Object body;
 
@@ -28,6 +32,17 @@ public class SCOP implements Serializable {
 		return metaMap.get(name);
 	}
 
+	public String getSessionId() {
+	    return metaMap.get(ISession.SESSION_ID);	
+	}
+	
+	public void setSessionId(String sessionId) {
+		if (sessionId == null) {
+			return;
+		}
+	    metaMap.put(ISession.SESSION_ID, sessionId);			
+	}
+	
 	public void setBody(Object body) {
 		this.body = body;
 	}

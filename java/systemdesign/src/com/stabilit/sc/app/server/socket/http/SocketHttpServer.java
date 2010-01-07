@@ -7,26 +7,27 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.stabilit.sc.app.server.IServer;
+import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.ICommandFactory;
-import com.stabilit.sc.cmd.factory.SCCommandFactory;
+import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
+import com.stabilit.sc.io.ISession;
 
-public class SocketHttpServer implements IServer {
+public class SocketHttpServer extends ServerApplication {
 
 	private static final int THREAD_COUNT = 10;
 
 	private ServerSocket serverSocket;
 	private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
 			THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.MICROSECONDS,
-			new LinkedBlockingQueue<Runnable>());
+			new LinkedBlockingQueue());
 
 	@Override
 	public void create() throws Exception {
-		int port = 85;
+		int port = this.getPort();
 		serverSocket = new ServerSocket(port);
 	}
 
@@ -46,7 +47,7 @@ public class SocketHttpServer implements IServer {
 
 	public static class RequestThread implements Runnable {
 		private Socket requestSocket = null;
-		ICommandFactory commandFactory = new SCCommandFactory();
+		ICommandFactory commandFactory = CommandFactory.getInstance();
 
 		public RequestThread(Socket requestSocket) {
 			this.requestSocket = requestSocket;
