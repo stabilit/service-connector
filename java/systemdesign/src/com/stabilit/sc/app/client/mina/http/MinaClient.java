@@ -1,10 +1,6 @@
 package com.stabilit.sc.app.client.mina.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URL;
@@ -18,7 +14,6 @@ import org.apache.mina.common.IoSession;
 import org.apache.mina.transport.socket.nio.SocketConnector;
 
 import com.stabilit.sc.app.client.IClient;
-import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
 
@@ -73,30 +68,23 @@ public class MinaClient implements IClient {
 	@Override
 	public IJobResult sendAndReceive(IJob job) throws Exception {
 		CharsetEncoder encoder = Charset.defaultCharset().newEncoder();
-		ByteBuffer buf = ByteBuffer.allocate(256);
+		ByteBuffer buf = ByteBuffer.allocate(128);
 		try {			
-			SCOP scop = new SCOP(job);
-			ByteArrayOutputStream bais = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(bais);
-			oos.writeObject(scop);
 			//String httpRequest = "GET / HTTP/1.1 \nContent-Length: " + bais.size() + "\n\n";
-			String httpRequest = "GET / HTTP/1.1 \nContent-Length: " + 1 + "\n\n";
+			String httpRequest = "GET http://www.w3.org/pub/WWW/123456789/123456789/123456789/123456789/123456789/12345/123456789/TheProject.html HTTP/1.1 \n";
 			buf.setAutoExpand(true);
-			buf.putString(httpRequest, encoder);			
-			//buf.put(bais.toByteArray());
-			buf.put(new Byte("s"));
+			buf.putString(httpRequest, encoder);
 			buf.put(CRLF);
 			buf.put(CRLF);
 			buf.put(CRLF);
-
 		} catch (CharacterCodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(buf.capacity()-buf.remaining());
+	//	System.out.println(buf.capacity()-buf.remaining());
 		buf.flip();
 
 		session.write(buf);
-		session.getCloseFuture().join();
+//		session.getCloseFuture().join();
 		return null;
 	}
 

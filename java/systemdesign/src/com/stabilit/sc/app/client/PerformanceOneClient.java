@@ -16,22 +16,16 @@ import com.stabilit.sc.job.impl.EchoJob;
  * The Class PerformanceOneClient.
  */
 public class PerformanceOneClient {
-	
+
 	/** The perf. */
 	private static PerformanceOneClient perf = new PerformanceOneClient();
-	
-	/** The counter mina. */
-	private int counterMina;
-	
-	/** The number of msg mina. */
-	private static int numberOfMsgMina;
-	
+
 	/** The pool. */
 	private ThreadPoolExecutor pool;
-	
+
 	/** The end time. */
 	public long endTime;
-	
+
 	/** The start time. */
 	public long startTime;
 
@@ -53,12 +47,13 @@ public class PerformanceOneClient {
 	/**
 	 * The main method.
 	 * 
-	 * @param args the arguments
+	 * @param args
+	 *            the arguments
 	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		numberOfMsgMina = Integer.valueOf(args[1]);
 		if (args[2].equalsIgnoreCase("keep")) {
 			perf.goKeepAlive(args[0], Integer.valueOf(args[1]));
 		} else {
@@ -69,8 +64,10 @@ public class PerformanceOneClient {
 	/**
 	 * Go.
 	 * 
-	 * @param server the server
-	 * @param numberOfMsg the number of msg
+	 * @param server
+	 *            the server
+	 * @param numberOfMsg
+	 *            the number of msg
 	 */
 	private void go(String server, int numberOfMsg) {
 
@@ -86,8 +83,10 @@ public class PerformanceOneClient {
 	/**
 	 * Go keep alive.
 	 * 
-	 * @param server the server
-	 * @param numberOfMsg the number of msg
+	 * @param server
+	 *            the server
+	 * @param numberOfMsg
+	 *            the number of msg
 	 */
 	private void goKeepAlive(String server, int numberOfMsg) {
 
@@ -107,27 +106,31 @@ public class PerformanceOneClient {
 
 		/** The key. */
 		private String key;
-		
+
 		/** The number of msg. */
 		private int numberOfMsg;
 
 		/**
 		 * Instantiates a new echo client starter.
 		 * 
-		 * @param key the key
-		 * @param numberOfMsg the number of msg
+		 * @param key
+		 *            the key
+		 * @param numberOfMsg
+		 *            the number of msg
 		 */
 		public EchoClientStarter(String key, int numberOfMsg) {
 			this.key = key;
 			this.numberOfMsg = numberOfMsg;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
 		public void run() {
-			String sURL = "http://192.168.178.23:85/";
+			String sURL = "http://localhost:85/";
 			URL url = null;
 			try {
 				url = new URL(sURL);
@@ -158,18 +161,16 @@ public class PerformanceOneClient {
 					e.printStackTrace();
 				}
 			}
-			if (!key.equals("mina.http")) {
-				endTime = System.currentTimeMillis();
-				long neededTime = endTime - startTime;
-				System.out.println("Job Done in: " + neededTime + " Ms");
-				double neededSeconds = neededTime / 1000;
-				System.out.println((numberOfMsg * 1 / neededSeconds)
-						+ " Messages in 1 second!");
-				System.out.println("Anzahl clients: " + 1);
-				System.out
-						.println("Anzahl Messages pro client: " + numberOfMsg);
-			}
+			endTime = System.currentTimeMillis();
+			long neededTime = endTime - startTime;
+			System.out.println("Job Done in: " + neededTime + " Ms");
+			double neededSeconds = neededTime / 1000;
+			System.out.println((numberOfMsg * 1 / neededSeconds)
+					+ " Messages in 1 second!");
+			System.out.println("Anzahl clients: " + 1);
+			System.out.println("Anzahl Messages pro client: " + numberOfMsg);
 		}
+
 	}
 
 	/**
@@ -179,22 +180,26 @@ public class PerformanceOneClient {
 
 		/** The key. */
 		private String key;
-		
+
 		/** The number of msg. */
 		private int numberOfMsg;
 
 		/**
 		 * Instantiates a new echo client keep alive starter.
 		 * 
-		 * @param key the key
-		 * @param numberOfMsg the number of msg
+		 * @param key
+		 *            the key
+		 * @param numberOfMsg
+		 *            the number of msg
 		 */
 		public EchoClientKeepAliveStarter(String key, int numberOfMsg) {
 			this.key = key;
 			this.numberOfMsg = numberOfMsg;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -244,25 +249,6 @@ public class PerformanceOneClient {
 					+ " Messages in 1 second!");
 			System.out.println("Anzahl clients: " + 1);
 			System.out.println("Anzahl Messages pro client: " + numberOfMsg);
-		}
-	}
-
-	/**
-	 * Mina handler method.
-	 */
-	public synchronized void minaHandlerMethod() {
-		counterMina++;
-		//System.out.println(counterMina/13);
-		if (counterMina == (numberOfMsgMina*13)) {
-			endTime = System.currentTimeMillis();
-			long neededTime = endTime - startTime;
-			System.out.println("Job Done in: " + neededTime + " Ms");
-			double neededSeconds = neededTime / 1000;
-			System.out.println((numberOfMsgMina * 1 / neededSeconds)
-					+ " Messages in 1 second!");
-			System.out.println("Anzahl clients: " + 1);
-			System.out
-					.println("Anzahl Messages pro client: " + numberOfMsgMina);
 		}
 	}
 }
