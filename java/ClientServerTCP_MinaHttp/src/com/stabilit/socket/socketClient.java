@@ -50,9 +50,8 @@ public class socketClient {
 		long neededTime = endTime - startTime;
 		System.out.println("Job Done in: " + neededTime + " Ms");
 		double neededSeconds = neededTime / 1000d;
-		System.out.println((numberOfMsg * 1 / neededSeconds)
+		System.out.println((numberOfMsg / neededSeconds)
 				+ " Messages in 1 second!");
-		System.out.println("Anzahl clients: " + 1);
 		System.out
 				.println("Anzahl Messages pro client: " + numberOfMsg);
 	}
