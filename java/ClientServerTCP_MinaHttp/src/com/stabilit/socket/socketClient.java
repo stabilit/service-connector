@@ -39,10 +39,6 @@ public class socketClient {
 				.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
 				clientSocket.getInputStream()));
-		outToServer = new DataOutputStream(clientSocket
-				.getOutputStream());
-		inFromServer = new BufferedReader(new InputStreamReader(
-				clientSocket.getInputStream()));
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < numberOfMsg; i++) {			
 			outToServer.writeBytes(sentence + i + '\n');
