@@ -35,11 +35,11 @@ public class TCPServer {
 		String capitalizedSentence;
 		ServerSocket welcomeSocket = new ServerSocket(6789);
 		Socket connectionSocket = welcomeSocket.accept();
-		while (true) {	
-			BufferedReader inFromClient = new BufferedReader(
-					new InputStreamReader(connectionSocket.getInputStream()));
-			DataOutputStream outToClient = new DataOutputStream(
-					connectionSocket.getOutputStream());
+		BufferedReader inFromClient = new BufferedReader(
+				new InputStreamReader(connectionSocket.getInputStream()));
+		DataOutputStream outToClient = new DataOutputStream(
+				connectionSocket.getOutputStream());
+		while (true) {				
 			clientSentence = inFromClient.readLine();
 			//System.out.println("Received: " + clientSentence);
 			if(clientSentence == null) break;

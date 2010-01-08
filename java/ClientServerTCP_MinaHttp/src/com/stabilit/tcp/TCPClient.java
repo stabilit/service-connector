@@ -39,15 +39,15 @@ public class TCPClient {
 				.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
 				clientSocket.getInputStream()));
+		outToServer = new DataOutputStream(clientSocket
+				.getOutputStream());
+		inFromServer = new BufferedReader(new InputStreamReader(
+				clientSocket.getInputStream()));
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < numberOfMsg; i++) {			
-			outToServer = new DataOutputStream(clientSocket
-					.getOutputStream());
-			inFromServer = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
 			outToServer.writeBytes(sentence + i + '\n');
 			modifiedSentence = inFromServer.readLine();
-			//System.out.println("FROM SERVER: " + modifiedSentence);			
+//			System.out.println("FROM SERVER: " + modifiedSentence);			
 		}
 		clientSocket.close();
 		long endTime = System.currentTimeMillis();
