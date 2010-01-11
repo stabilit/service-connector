@@ -7,6 +7,7 @@ import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.app.client.echo.AsyncDemoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplicationKeepAlive;
+import com.stabilit.sc.app.client.echo.PerformanceApplication;
 
 public class ClientApplicationFactory {
 
@@ -22,6 +23,9 @@ public class ClientApplicationFactory {
 		IApplication asyncDemoClient = new AsyncDemoClientApplication();
 		appMap.put(AsyncDemoClientApplication.class.getName(), asyncDemoClient);
 		appMap.put("async.demo", asyncDemoClient);
+		IApplication performanceApplication = new PerformanceApplication();
+		appMap.put(PerformanceApplication.class.getName(), performanceApplication);
+		appMap.put("perf.client", performanceApplication);
 	}
 	
 	public static IApplication newInstance(String key) {
