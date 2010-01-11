@@ -1,4 +1,4 @@
-package com.stabilit.sc.app.client.http;
+package com.stabilit.sc.app.client.sun.http;
 
 import java.io.IOException;
 import java.io.InputStream;
