@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.app.IApplication;
+import com.stabilit.sc.app.server.jboss.netty.http.NettyHttpServer;
 import com.stabilit.sc.app.server.mina.http.MinaHttpServer;
 import com.stabilit.sc.app.server.socket.http.SocketHttpServer;
 import com.stabilit.sc.app.server.sun.net.http.SunHttpServer;
@@ -26,6 +27,10 @@ public class ServerApplicationFactory {
 		IApplication minaHttpServer = new MinaHttpServer();
 		serverMap.put(MinaHttpServer.class.getName(), minaHttpServer);
 		serverMap.put("mina.http", minaHttpServer);
+		// jboss netty http server
+		IApplication nettyHttpServer = new NettyHttpServer();
+		serverMap.put(NettyHttpServer.class.getName(), nettyHttpServer);
+		serverMap.put("netty.http", nettyHttpServer);
 	}
 	
 	public static IApplication newInstance() {
