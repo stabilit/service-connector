@@ -3,9 +3,10 @@ package com.stabilit.sc.app.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.app.client.http.SunHttpClient;
+import com.stabilit.sc.app.client.jboss.netty.http.NettyHttpClient;
+import com.stabilit.sc.app.client.mina.http.MinaHttpClient;
 import com.stabilit.sc.app.client.socket.http.SocketHttpClient;
-import com.stabilit.sc.app.server.socket.http.SocketHttpServer;
+import com.stabilit.sc.app.client.sun.http.SunHttpClient;
 
 public class ClientConnectionFactory {
 
@@ -19,8 +20,16 @@ public class ClientConnectionFactory {
 		clientMap.put("default", httpClient);
 		// stabilit socket http client
 		IClient socketHttpClient = new SocketHttpClient(); 
-		clientMap.put(SocketHttpServer.class.getName(), socketHttpClient);
+		clientMap.put(SocketHttpClient.class.getName(), socketHttpClient);
 		clientMap.put("socket.http", socketHttpClient);
+		// mina http client
+		IClient minaHttpClient = new MinaHttpClient(); 
+		clientMap.put(MinaHttpClient.class.getName(), minaHttpClient);
+		clientMap.put("mina.http", minaHttpClient);
+		// jboss netty http client
+		IClient nettyHttpClient = new NettyHttpClient(); 
+		clientMap.put(NettyHttpClient.class.getName(), nettyHttpClient);
+		clientMap.put("netty.http", nettyHttpClient);
 	}
 	
 	public static IClient newInstance() {

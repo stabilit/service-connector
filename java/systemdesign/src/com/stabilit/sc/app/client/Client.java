@@ -13,6 +13,7 @@ public class Client {
 		IApplication application = ClientApplicationFactory.newInstance(args[0]);
 		if (application == null) {
 			System.err.println("no application found for given key = " + args[0]);
+			System.exit(1);
 		}
 		IApplicationContext applicationContext = application.getContext();
 		String []arguments = new String[args.length-1];

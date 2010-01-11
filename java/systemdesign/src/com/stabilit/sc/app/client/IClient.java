@@ -13,7 +13,7 @@ public interface IClient {
 	
 	public void setEndpoint(URL url);
 	
-	public void connect() throws IOException;
+	public void connect() throws Exception;
 
 	public void openSession() throws IOException;
 
@@ -23,6 +23,6 @@ public interface IClient {
 
 	public void closeSession() throws IOException;
 
-	public void disconnect() throws IOException;
+	public void disconnect() throws Exception;
 
 }
