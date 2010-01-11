@@ -43,6 +43,17 @@ public class ObjectStreamHttpUtil {
 		return obj;
 	}
 
+	public static Object readObjectOnly(InputStream is) throws Exception {
+		ObjectInputStream ois = new ObjectInputStream(is);
+		return ois.readObject();
+	}
+
+	public static void writeObjectOnly(OutputStream os, Object obj) throws Exception {
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeObject(obj);
+		oos.flush();
+	}
+
 	public static void writeRequestObject(OutputStream os, String path,
 			Object obj) throws Exception {
 		DataOutputStream dos = new DataOutputStream(os);

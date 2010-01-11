@@ -2,20 +2,18 @@ package com.stabilit.sc.app.server.mina.http;
 
 import java.net.InetSocketAddress;
 
-import org.apache.mina.common.IdleStatus;
-import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.common.IoHandlerAdapter;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteFuture;
+import org.apache.mina.core.service.IoAcceptor;
+import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.cmd.factory.CommandFactory;
+import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 
@@ -25,44 +23,38 @@ public class MinaHttpServer extends ServerApplication {
 	public static final String VERSION_STRING = "$Revision: 555855 $ $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $";
 
 	private IoAcceptor acceptor;
-	private SocketAcceptorConfig config;
-
+		
 	public MinaHttpServer() {
 		this.acceptor = null;
-		this.config = null;
 	}
 	
 	@Override
 	public void create() throws Exception {
-		this.acceptor = new SocketAcceptor();
-		this.config = new SocketAcceptorConfig();
+		this.acceptor = new NioSocketAcceptor();
+		acceptor.setHandler(new HttpServerHandler());
 
-		this.config.setReuseAddress(true);
-		this.config.getFilterChain().addLast("protocolFilter",
+		acceptor.getFilterChain().addLast("protocolFilter",
 				new ProtocolCodecFilter(new HttpServerProtocolCodecFactory()));
 		// config.getFilterChain().addLast("logger", new LoggingFilter());
 	}
 
 	@Override
 	public void run() throws Exception {
-		// Bind
-		// acceptor.getFilterChain().addLast("executor", new ExecutorFilter(new
-		// ThreadPoolExecutor(2,2,1000,TimeUnit.MILLISECONDS, new
-		// LinkedBlockingQueue<Runnable>())));
-		acceptor.bind(new InetSocketAddress("127.0.0.1", PORT),
-				new SCHttpHandler(), config);
-		// System.out.println("Listening on port " + PORT);
+		acceptor.bind(new InetSocketAddress("localhost", PORT));
+		synchronized (this) {
+			wait();
+		}
 	}
 
 	@Override
 	public void destroy() throws Exception {
-//		acceptor.unbindAll();
+		acceptor.unbind();
 	}
 
-	public static class SCHttpHandler extends IoHandlerAdapter {
+	public static class HttpServerHandler extends IoHandlerAdapter {
 		private ICommandFactory commandFactory = CommandFactory.getInstance();
 
-		public SCHttpHandler() {
+		public HttpServerHandler() {
 		}
 
 		@Override
@@ -81,11 +73,7 @@ public class MinaHttpServer extends ServerApplication {
 			} catch (CommandException e) {
 				e.printStackTrace();
 			}
-			WriteFuture writeFuture;
-			if (message != null) {
-				writeFuture = session.write(responseMessage);
-				writeFuture.join();
-			}
+			session.write(responseMessage);
 			// session.close();
 		}
 

@@ -25,12 +25,14 @@ import org.apache.mina.filter.codec.demux.DemuxingProtocolCodecFactory;
  * Provides a protocol codec for HTTP server.
  * 
  * @author The Apache Directory Project (mina-dev@directory.apache.org)
- * @version $Rev: 555855 $, $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $
+ * @version $Rev: 555855 $, $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007)
+ *          $
  */
 public class HttpServerProtocolCodecFactory extends
-        DemuxingProtocolCodecFactory {
-    public HttpServerProtocolCodecFactory() {
-        super.register(HttpRequestDecoder.class);
-        super.register(HttpResponseEncoder.class);
-    }
+		DemuxingProtocolCodecFactory {
+	public HttpServerProtocolCodecFactory() {
+		super.addMessageDecoder(new HttpRequestDecoder());
+		super.addMessageEncoder(HttpResponseMessage.class,
+				new HttpResponseEncoder());
+	}
 }

@@ -27,7 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
+
 
 /**
  * A HTTP response message.
@@ -97,8 +98,8 @@ public class HttpResponseMessage {
     	return body;
     }
     
-    public ByteBuffer getBody() {
-        return ByteBuffer.wrap(body.toByteArray());
+    public IoBuffer getBody() {
+        return IoBuffer.wrap(body.toByteArray());
     }
 
     public int getBodyLength() {
