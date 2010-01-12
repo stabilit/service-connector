@@ -74,7 +74,6 @@ public class MinaHttpServer extends ServerApplication {
 				e.printStackTrace();
 			}
 			session.write(responseMessage);
-			// session.close();
 		}
 
 		@Override
