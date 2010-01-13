@@ -10,7 +10,7 @@ public class ServerApplicationContext extends ApplicationContext {
 	public int getPort() {
 		Integer port = (Integer) this.getAttribute("port");
 		if (port == null) {
-			return 80;
+			return 8066;
 		}
 		return port;
 	}
@@ -18,7 +18,7 @@ public class ServerApplicationContext extends ApplicationContext {
 	public void setArgs(String[] args) throws Exception {
 		super.setArgs(args);
 		String sPort = ConsoleUtil.getArg(args, "-port");
-		int port = 80;
+		int port = 8066;
 		try {
 			port = Integer.parseInt(sPort);
 		} catch (NumberFormatException e) {

@@ -21,7 +21,7 @@ public class ClientApplicationContext extends ApplicationContext {
 		super.setArgs(args);
 		String sURL = ConsoleUtil.getArg(args, "-url");
 		if (sURL == null) {
-			sURL = "http://localhost:80/";
+			sURL = "http://localhost:8066/";
 		}
 		try {
 			URL url = new URL(sURL);
