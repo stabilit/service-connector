@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.concurrent.Executors;
 
@@ -28,6 +27,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -36,7 +36,6 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClient;
-import com.stabilit.sc.app.client.mina.http.HttpRequestMessage;
 import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
@@ -152,6 +151,7 @@ public class NettyHttpClient implements IClient {
 		request.setContent(channelBuffer);
 		channel.write(request);
 		waitForResponse();
+		
 		ChannelBuffer content = this.responseMessage.getContent();
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
