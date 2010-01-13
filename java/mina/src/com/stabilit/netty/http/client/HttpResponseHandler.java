@@ -59,7 +59,7 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 		}
 	}
 	
-	private static void sendMessage(Channel channel) {
+	private void sendMessage(Channel channel) {
 		String path = "http://www.w3.org/pub/WWW/123456789/123456789/123456789/123456789/123456789/12345/ThePro.html";
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
 				HttpMethod.GET, path);
