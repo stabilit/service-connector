@@ -18,7 +18,7 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 
 public class MinaHttpServer extends ServerApplication {
-	private static final int PORT = 80;
+	private static final int PORT = 8066;
 
 	public static final String VERSION_STRING = "$Revision: 555855 $ $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $";
 
@@ -74,7 +74,7 @@ public class MinaHttpServer extends ServerApplication {
 				e.printStackTrace();
 			}
 			session.write(responseMessage);
-			// session.close();
+//			session.close();
 		}
 
 		@Override
