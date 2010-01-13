@@ -38,18 +38,21 @@ public class PerformanceApplication extends ClientApplication {
 
 		int index = 0;
 		startTime = System.currentTimeMillis();
+		client.connect();
 		for (int i = 0; i < numberOfMsg; i++) {
-			try {
-				client.connect();
+			try {		
+				
 				IJob job = new EchoJob();
 				job.setAttribute("msg", "hello " + ++index);
 				IJobResult result = client.sendAndReceive(job);
-				// System.out.println(result.getJob());
-				client.disconnect();
+//				System.out.println(result.getJob());
+				
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-		}
+			}			
+		}	
+		client.disconnect();
+		
 		endTime = System.currentTimeMillis();
 		long neededTime = endTime - startTime;
 		System.out.println("Job Done in: " + neededTime + " Ms");
