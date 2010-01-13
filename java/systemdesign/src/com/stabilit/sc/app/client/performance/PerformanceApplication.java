@@ -29,7 +29,7 @@ public class PerformanceApplication extends ClientApplication {
 		URL url = applicationContext.getURL();
 		IClient client = ClientConnectionFactory.newInstance(con);
 		
-		int numberOfMsg = Integer.valueOf(applicationContext.getArgs()[1]);
+		int numberOfMsg = Integer.valueOf(applicationContext.getArgs()[5]);
 		
 		if (client == null) {
 			System.out.println("no client available");
