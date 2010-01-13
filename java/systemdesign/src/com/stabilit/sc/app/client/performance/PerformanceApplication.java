@@ -1,4 +1,4 @@
-package com.stabilit.sc.app.client.echo;
+package com.stabilit.sc.app.client.performance;
 
 import java.net.URL;
 

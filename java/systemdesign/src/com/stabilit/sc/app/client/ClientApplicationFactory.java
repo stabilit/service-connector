@@ -7,7 +7,7 @@ import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.app.client.echo.AsyncDemoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplicationKeepAlive;
-import com.stabilit.sc.app.client.echo.PerformanceApplication;
+import com.stabilit.sc.app.client.performance.PerformanceApplication;
 
 public class ClientApplicationFactory {
 
