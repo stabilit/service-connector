@@ -10,7 +10,7 @@ public abstract class ServerApplication extends Application {
 	}
 	
 	public int getPort() {
-		return 80;
+		return 8066;
 	}
 	
 }

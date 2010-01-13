@@ -35,8 +35,6 @@ import com.stabilit.sc.app.server.ServerApplication;
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
 public class NettyHttpServer extends ServerApplication {
-	
-	private static final int PORT = 8066;
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;
@@ -57,7 +55,7 @@ public class NettyHttpServer extends ServerApplication {
         bootstrap.setPipelineFactory(new HttpServerPipelineFactory());
 	}
 	public void run() throws Exception {
-        this.channel = this.bootstrap.bind(new InetSocketAddress(PORT));
+        this.channel = this.bootstrap.bind(new InetSocketAddress(this.getPort()));
 		synchronized (this) {
 			wait();
 		}
