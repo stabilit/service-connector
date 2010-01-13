@@ -25,9 +25,9 @@ public class PerformanceApplication extends ClientApplication {
 	public void run() throws Exception {
 		
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		String key = applicationContext.getKey();
+		String con = applicationContext.getConnection();
 		URL url = applicationContext.getURL();
-		IClient client = ClientConnectionFactory.newInstance(key);
+		IClient client = ClientConnectionFactory.newInstance(con);
 		
 		int numberOfMsg = Integer.valueOf(applicationContext.getArgs()[1]);
 		
