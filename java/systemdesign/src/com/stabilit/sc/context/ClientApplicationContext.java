@@ -15,7 +15,7 @@ public class ClientApplicationContext extends ApplicationContext {
 	}
 
 	public URL getURL() {
-		String sURL = "http://localhost:80/";
+		String sURL = "http://localhost:8066/";
 		try {
 			URL url = new URL(sURL);
 			String[] args = this.getArgs();
