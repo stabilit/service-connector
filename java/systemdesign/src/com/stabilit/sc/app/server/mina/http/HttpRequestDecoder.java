@@ -172,7 +172,7 @@ public class HttpRequestDecoder extends MessageDecoderAdapter {
 			ObjectInputStream ois = new ObjectInputStream (bais);
 			Object obj = ois.readObject();
 			map.put("object", new Object[] {obj});
-//			System.out.println(obj);
+			System.out.println(obj);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

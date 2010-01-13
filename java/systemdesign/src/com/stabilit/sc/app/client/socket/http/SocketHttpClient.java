@@ -54,6 +54,10 @@ public class SocketHttpClient implements IClient {
 	}
 
 	@Override
+	public void destroy() throws Exception {
+	}
+
+	@Override
 	public void openSession() throws IOException {
 
 	}

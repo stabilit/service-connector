@@ -19,7 +19,7 @@ public class ApplicationContext implements IApplicationContext {
 		return args;
 	}
 	
-    public void setArgs(String[] args) {
+    public void setArgs(String[] args) throws Exception {
 		this.args = args;
 	}
     

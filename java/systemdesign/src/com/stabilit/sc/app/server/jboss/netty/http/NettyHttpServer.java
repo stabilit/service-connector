@@ -23,6 +23,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.app.server.ServerApplication;
+import com.stabilit.sc.context.ServerApplicationContext;
 
 /**
  * An HTTP server that sends back the content of the received HTTP request
@@ -35,7 +36,7 @@ import com.stabilit.sc.app.server.ServerApplication;
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
 public class NettyHttpServer extends ServerApplication {
-
+	
 	private ServerBootstrap bootstrap;
 	private Channel channel;
 	
@@ -55,7 +56,9 @@ public class NettyHttpServer extends ServerApplication {
         bootstrap.setPipelineFactory(new HttpServerPipelineFactory());
 	}
 	public void run() throws Exception {
-        this.channel = this.bootstrap.bind(new InetSocketAddress(this.getPort()));
+		ServerApplicationContext appContext = (ServerApplicationContext) this.getContext();
+		int port = appContext.getPort();
+        this.channel = this.bootstrap.bind(new InetSocketAddress(port));
 		synchronized (this) {
 			wait();
 		}

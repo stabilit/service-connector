@@ -17,7 +17,6 @@ package com.stabilit.sc.app.client.jboss.netty.http;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
-import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
@@ -36,14 +35,6 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
 		HttpResponse response = (HttpResponse) e.getMessage();
-		this.client.setResponseMessage(response);
-		this.client.submitResponse();
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
-			throws Exception {
-		super.exceptionCaught(ctx, e);
-		e.getCause().printStackTrace();
+		this.client.submitResponse(response);
 	}
 }

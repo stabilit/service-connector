@@ -8,6 +8,7 @@ import com.stabilit.sc.app.server.jboss.netty.http.NettyHttpServer;
 import com.stabilit.sc.app.server.mina.http.MinaHttpServer;
 import com.stabilit.sc.app.server.socket.http.SocketHttpServer;
 import com.stabilit.sc.app.server.sun.net.http.SunHttpServer;
+import com.stabilit.sc.util.ConsoleUtil;
 
 public class ServerApplicationFactory {
 
@@ -42,4 +43,11 @@ public class ServerApplicationFactory {
 		return server;
 	}
 
+	public static Object[] getApplications() {
+		return serverMap.keySet().toArray();
+	}
+	
+	public static String getApplicationKey(String[]args) {
+		return ConsoleUtil.getArg(args, "-app");
+	}
 }

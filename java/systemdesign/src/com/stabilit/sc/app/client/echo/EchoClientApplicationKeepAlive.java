@@ -19,9 +19,9 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 	@Override
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		String key = applicationContext.getKey();
+		String con = applicationContext.getConnection();
 		URL url = applicationContext.getURL();
-		IClient client = ClientConnectionFactory.newInstance(key);
+		IClient client = ClientConnectionFactory.newInstance(con);
 		if (client == null) {
 			client = ClientConnectionFactory.newInstance();
 		}
@@ -32,12 +32,16 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 
 		int index = 0;
 		client.connect();
-		while (true) {
+		long start = System.currentTimeMillis();
+		while (index++ < 10000) {
 			IJob job = new EchoJob();
-			job.setAttribute("msg", "hello " + ++index);
+			job.setAttribute("msg", "hello " + index);
 			IJobResult result = client.sendAndReceive(job);
-			System.out.println(result.getJob() + " session = " + client.getSessionId());
+		    System.out.println(result.getJob() + " session = " + client.getSessionId());
 		}
-		// client.disconnect();
+		long end = System.currentTimeMillis();
+		System.out.println(" 10000 calls in time (ms) = " + (end - start));
+		client.disconnect();
+		client.destroy();
 	}
 }

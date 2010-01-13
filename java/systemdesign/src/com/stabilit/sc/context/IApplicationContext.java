@@ -4,5 +4,5 @@ public interface IApplicationContext extends IContext {
 
 	public String[] getArgs();
 	
-	public void setArgs(String[] args);
+	public void setArgs(String[] args) throws Exception;
 }

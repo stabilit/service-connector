@@ -9,6 +9,7 @@ import java.net.URL;
 
 import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -52,10 +53,6 @@ public class MinaHttpClient implements IClient {
 		return this.sessionId;
 	}
 
-	public void setResponseMessage(HttpResponseMessage responseMessage) {
-		this.responseMessage = responseMessage;
-	}
-
 	@Override
 	public void closeSession() throws IOException {
 
@@ -86,6 +83,11 @@ public class MinaHttpClient implements IClient {
 	}
 
 	@Override
+	public void destroy() throws Exception {
+       connector.dispose();		
+	}
+	
+	@Override
 	public void openSession() throws IOException {
 
 	}
@@ -105,7 +107,9 @@ public class MinaHttpClient implements IClient {
 		} catch (ProtocolException e) {
 			e.printStackTrace();
 		}
-		session.write(requestMessage);
+		this.resetResponse();
+		WriteFuture future = session.write(requestMessage);
+		future.await();
 		waitForResponse();
 
 		byte[] content = this.responseMessage.getContent();
@@ -138,7 +142,9 @@ public class MinaHttpClient implements IClient {
 		} catch (ProtocolException e) {
 			e.printStackTrace();
 		}
-		session.write(requestMessage);
+		this.resetResponse();
+		WriteFuture future = session.write(requestMessage);
+		future.await();
 		waitForResponse();
 
 		byte[] content = this.responseMessage.getContent();
@@ -163,8 +169,7 @@ public class MinaHttpClient implements IClient {
 		@Override
 		public void messageReceived(IoSession session, Object message) {
 			HttpResponseMessage responseMessage = (HttpResponseMessage) message;
-			MinaHttpClient.this.setResponseMessage(responseMessage);
-			MinaHttpClient.this.submitResponse();
+			MinaHttpClient.this.submitResponse(responseMessage);
 		}
 
 		@Override
@@ -191,10 +196,18 @@ public class MinaHttpClient implements IClient {
 	}
 
 	private synchronized void waitForResponse() throws InterruptedException {
+		if (this.responseMessage != null) {
+			return;
+		}
 		wait();
 	}
-	
-	private synchronized void submitResponse() {
+
+	private synchronized void resetResponse() {
+		this.responseMessage = null;
+	}
+
+	private synchronized void submitResponse(HttpResponseMessage responseMessage) {
+		this.responseMessage = responseMessage;
 		notify();
 	}
 }

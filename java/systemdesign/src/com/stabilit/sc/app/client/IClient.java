@@ -24,5 +24,7 @@ public interface IClient {
 	public void closeSession() throws IOException;
 
 	public void disconnect() throws Exception;
+	
+	public void destroy() throws Exception;
 
 }

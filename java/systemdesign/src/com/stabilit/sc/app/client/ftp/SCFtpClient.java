@@ -76,6 +76,10 @@ public class SCFtpClient implements IClient {
 	}
 
 	@Override
+	public void destroy() throws Exception {
+	}
+
+	@Override
 	public void openSession() {
 
 	}

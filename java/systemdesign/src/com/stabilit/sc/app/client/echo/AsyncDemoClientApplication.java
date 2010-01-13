@@ -23,9 +23,9 @@ public class AsyncDemoClientApplication extends ClientApplication {
 	@Override
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		String key = applicationContext.getKey();
+		String con = applicationContext.getConnection();
 		URL url = applicationContext.getURL();
-		client = ClientConnectionFactory.newInstance(key);
+		client = ClientConnectionFactory.newInstance(con);
 		if (client == null) {
 			client = ClientConnectionFactory.newInstance();
 		}
@@ -38,7 +38,7 @@ public class AsyncDemoClientApplication extends ClientApplication {
 		SubscribeJob subscribeJob = subscribe();
 
 		int index = 0;
-		while (index++ < 100) {
+		while (index++ < 1000) {
 			try {
 				client.connect();
 				IJobResult result = client.receive(subscribeJob);

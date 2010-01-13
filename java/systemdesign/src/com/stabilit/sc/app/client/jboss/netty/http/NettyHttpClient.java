@@ -27,7 +27,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -36,6 +35,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClient;
+import com.stabilit.sc.app.client.mina.http.HttpResponseMessage;
 import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
@@ -95,12 +95,14 @@ public class NettyHttpClient implements IClient {
 	}
 
 	@Override
-	public String getSessionId() {
-		return this.sessionId;
+	public void destroy() throws Exception {
+		this.channel.close();
+		this.bootstrap.releaseExternalResources();
 	}
 
-	public void setResponseMessage(HttpResponse responseMessage) {
-		this.responseMessage = responseMessage;
+	@Override
+	public String getSessionId() {
+		return this.sessionId;
 	}
 
 	@Override
@@ -120,7 +122,9 @@ public class NettyHttpClient implements IClient {
 		byte[] buffer = baos.toByteArray();
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
-		channel.write(request);
+		this.resetResponse();
+		ChannelFuture future = channel.write(request);
+		future.awaitUninterruptibly();
 		waitForResponse();
 		ChannelBuffer content = this.responseMessage.getContent();
 		buffer = content.array();
@@ -149,9 +153,11 @@ public class NettyHttpClient implements IClient {
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
-		channel.write(request);
+		this.resetResponse();
+		ChannelFuture future = channel.write(request);
+		future.awaitUninterruptibly();
+		//future.awaitUninterruptibly();
 		waitForResponse();
-		
 		ChannelBuffer content = this.responseMessage.getContent();
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
@@ -173,10 +179,18 @@ public class NettyHttpClient implements IClient {
 	}
 
 	private synchronized void waitForResponse() throws InterruptedException {
+		if (this.responseMessage != null) {
+			return;
+		}
 		wait();
 	}
+	
+	private synchronized void resetResponse() {
+		this.responseMessage = null;
+	}
 
-	public synchronized void submitResponse() {
+	public synchronized void submitResponse(HttpResponse responseMessage) {
+		this.responseMessage = responseMessage;
 		notify();
 	}
 

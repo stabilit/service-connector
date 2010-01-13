@@ -93,7 +93,7 @@ public class ObjectStreamHttpUtil {
 		oos.writeObject(obj);
 		oos.flush();
 		byte[] objStream = baos.toByteArray();
-		dos.writeBytes("Content-Length:" + objStream.length + "\r\n");
+		dos.writeBytes("Content-Length: " + objStream.length + "\r\n");
 		dos.writeBytes("\n");
 		dos.write(objStream);
 		dos.flush();

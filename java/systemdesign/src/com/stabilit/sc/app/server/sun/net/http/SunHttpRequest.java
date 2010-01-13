@@ -62,5 +62,4 @@ public class SunHttpRequest implements IRequest {
 		} catch (Exception e) {
 		}
 	}
-
 }

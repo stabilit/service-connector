@@ -63,4 +63,15 @@ public class SCOP implements Serializable {
 		this.metaMap = (Map<String, String>) stream.readObject();
 		this.body = stream.readObject();
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SCOP [metaMap=");
+		builder.append(metaMap);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 }
