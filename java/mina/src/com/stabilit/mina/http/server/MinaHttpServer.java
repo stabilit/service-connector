@@ -1,18 +1,22 @@
 package com.stabilit.mina.http.server;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import com.stabilit.mina.http.client.MinaHttpClient.MSG_SIZE;
 
 public class MinaHttpServer {
-	private static final int PORT = 19555;
+	private static final int PORT = 8066;
 
 	public static final String VERSION_STRING = "$Revision: 555855 $ $Date: 2007-07-13 12:19:00 +0900 (Fri, 13 Jul 2007) $";
 
@@ -30,6 +34,9 @@ public class MinaHttpServer {
 
 		acceptor.getFilterChain().addLast("protocol",
 				new ProtocolCodecFilter(new HttpServerProtocolCodecFactory()));
+		acceptor.getFilterChain().addFirst("threadpool", new ExecutorFilter(new ThreadPoolExecutor(16, 16, 1000,
+								TimeUnit.MILLISECONDS,
+								new LinkedBlockingQueue<Runnable>())));
 	}
 
 	public static void main(String[] args) throws Exception {

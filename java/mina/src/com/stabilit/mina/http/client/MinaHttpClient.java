@@ -54,7 +54,7 @@ public class MinaHttpClient {
 										new URL(
 												"http://www.w3.org/pub/WWW/123456789/123456789/123456789/123456789/123456789/12345/123456789/TheProject.html"))));
 		ConnectFuture future = connector.connect(new InetSocketAddress(
-				"localhost", 19555));
+				"localhost", 8066));
 		future.await();
 		IoSession session = future.getSession();
 		MinaHttpClient.startTime = System.currentTimeMillis();
