@@ -36,7 +36,7 @@ import com.stabilit.sc.app.server.ServerApplication;
  */
 public class NettyHttpServer extends ServerApplication {
 	
-	private static final int PORT = 80;
+	private static final int PORT = 8066;
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;

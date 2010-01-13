@@ -81,6 +81,7 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
 
         // Close the connection after the write operation is done if necessary.
         if (close) {
+        	System.out.println("Close by Server");
             future.addListener(ChannelFutureListener.CLOSE);
         }
     }
