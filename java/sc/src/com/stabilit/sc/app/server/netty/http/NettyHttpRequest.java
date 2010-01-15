@@ -1,4 +1,4 @@
-package com.stabilit.sc.app.server.http.impl;
+package com.stabilit.sc.app.server.netty.http;
 
 import java.io.ByteArrayInputStream;
 

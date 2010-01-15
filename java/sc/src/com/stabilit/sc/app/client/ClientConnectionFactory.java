@@ -3,7 +3,7 @@ package com.stabilit.sc.app.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.app.client.http.impl.NettyHttpClient;
+import com.stabilit.sc.app.client.netty.http.NettyHttpClient;
 
 public class ClientConnectionFactory {
 

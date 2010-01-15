@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.app.server.http.impl;
+package com.stabilit.sc.app.server.netty.http;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.app.IApplication;
-import com.stabilit.sc.app.server.http.impl.NettyHttpServer;
+import com.stabilit.sc.app.server.netty.http.NettyHttpServer;
 import com.stabilit.sc.util.ConsoleUtil;
 
 public class ServerApplicationFactory {
