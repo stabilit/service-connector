@@ -10,19 +10,19 @@ import com.stabilit.sc.message.IMessageResult;
 import com.stabilit.sc.message.MessageResult;
 import com.stabilit.sc.util.SubscribeQueue;
 
-public class SubscribeCommand implements ICommand {
+public class UnSubscribeCommand implements ICommand {
 
-	public SubscribeCommand() {
+	public UnSubscribeCommand() {
 	}
 
 	@Override
 	public String getKey() {
-		return "subscribe";
+		return "unsubscribe";
 	}
 
 	@Override
 	public ICommand newCommand() {
-		return new SubscribeCommand();
+		return new UnSubscribeCommand();
 	}
 
 	@Override
@@ -31,10 +31,8 @@ public class SubscribeCommand implements ICommand {
  		IMessage job = request.getJob();
 		IMessageResult MessageResult = new MessageResult(job);
 		try {
-			ISession session = request.getSession(true);
-			response.setSession(session);
-			String subscribeId = SubscribeQueue.subscribe(job);
-			// set initial event queue read position
+			ISession session = request.getSession(false);
+			SubscribeQueue.unsubscribe(job);			
 			response.setJobResult(MessageResult);
 		} catch (Exception e) {
 			throw new CommandException(e.toString());
