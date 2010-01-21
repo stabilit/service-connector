@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mbeans-descriptors PUBLIC
+   "-//Apache Software Foundation//DTD Model MBeans Configuration File"
+   "http://jakarta.apache.org/commons/dtds/mbeans-descriptors.dtd">
+<mbeans-descriptors>
+	<mbean id="managedSimpleCalculatorBean" name="ManagedSimpleCalculatorBean"
+		description="Applying JMX Model MBean with Apache Commons Modeler"
+		type="com.stabilit.jmx.modelmbean.SimpleCalculator">
+
+		<descriptor>
+			<field id="nameField" name="name" value="ModelMBeanInCommonsModeler" />
+			<field id="descriptorTypeField" name="descriptorType" value="mbean" />
+		</descriptor>
+
+		<operation id="addOperation" name="add" description="Integer Addition"
+			impact="INFO" returnType="int">
+			<parameter id="augendParameter" name="augend"
+				description="The first parameter in the addition (augend)." type="int" />
+			<parameter id="addendParameter" name="addend"
+				description="The second parameter in the addition (addend)." type="int" />
+		</operation>
+
+		<operation id="subtractOperation" name="subtract"
+			description="Integer Subtraction" impact="INFO" returnType="int">
+			<parameter id="minuendParameter" name="minuend"
+				description="The first parameter in the substraction (minuend)."
+				type="int" />
+			<parameter id="subtrahendParameter" name="subtrahend"
+				description="The second parameter in the subtraction (subtrahend)."
+				type="int" />
+		</operation>
+
+		<operation id="multiplyOperation" name="multiply"
+			description="Integer Multiplication" impact="INFO" returnType="int">
+			<parameter id="factor1Parameter" name="factor1"
+				description="The first factor in the multiplication." type="int" />
+			<parameter id="factor2Parameter" name="factor2"
+				description="The second factor in the multiplication." type="int" />
+		</operation>
+
+		<operation id="divideOperation" name="divide" description="Integer Division"
+			impact="INFO" returnType="double">
+			<parameter id="dividendParameter" name="dividend"
+				description="The dividend in the division." type="int" />
+			<parameter id="divisorParameter" name="divisor"
+				description="The divisor in the division." type="int" />
+		</operation>
+
+	</mbean>
+	<mbean id="managedSimpleRegistryBean" name="managedSimpleRegistryBean"
+		description="Applying JMX Model MBean with Apache Commons Modeler"
+		type="RegistryController">
+
+		<descriptor>
+			<field id="nameField" name="name" value="ModelMBeanInCommonsModeler" />
+			<field id="descriptorTypeField" name="descriptorType" value="mbean" />
+		</descriptor>
+
+		<operation id="laodRegistryMetaDateNew" name="laodRegistryMetaDateNew"
+			description="Reload Registry" impact="INFO" returnType="void">
+		</operation>
+	</mbean>
+</mbeans-descriptors>
