@@ -19,9 +19,9 @@
  */
 package com.stabilit.milton;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.bradmcevoy.http.AbstractResponse;
@@ -32,81 +32,46 @@ import com.bradmcevoy.http.AbstractResponse;
  */
 public class HttpResponse extends AbstractResponse {
 	
-	OutputStream out;
-	
-	{
-		try {
-			out = new FileOutputStream("tmp.txt");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	private OutputStream out;
+	private Map<String, String> headers;
+	private Status status;
+		
+	public HttpResponse(OutputStream out) {
+		super();
+		this.out = out;
+		this.headers = new HashMap<String, String>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.bradmcevoy.http.Response#getHeaders()
-	 */
 	@Override
 	public Map<String, String> getHeaders() {
-		// TODO Auto-generated method stub
-		return null;
+		return headers;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.bradmcevoy.http.Response#getNonStandardHeader(java.lang.String)
-	 */
 	@Override
 	public String getNonStandardHeader(String code) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.bradmcevoy.http.Response#getOutputStream()
-	 */
 	@Override
 	public OutputStream getOutputStream() {
 		return out;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.bradmcevoy.http.Response#getStatus()
-	 */
 	@Override
 	public Status getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return status;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.bradmcevoy.http.Response#setNonStandardHeader(java.lang.String,
-	 * java.lang.String)
-	 */
 	@Override
 	public void setNonStandardHeader(String code, String value) {
-		// TODO Auto-generated method stub
-
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.bradmcevoy.http.Response#setStatus(com.bradmcevoy.http.Response.Status
-	 * )
-	 */
+	
 	@Override
 	public void setStatus(Status status) {
-		// TODO Auto-generated method stub
+		this.status = status;
+	}
 
+	@Override
+	public void setAuthenticateHeader(List<String> arg0) {
 	}
 }

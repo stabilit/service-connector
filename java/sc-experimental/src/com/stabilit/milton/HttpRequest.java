@@ -13,110 +13,118 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
 package com.stabilit.milton;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.bradmcevoy.http.AbstractRequest;
 import com.bradmcevoy.http.Auth;
 import com.bradmcevoy.http.FileItem;
 import com.bradmcevoy.http.RequestParseException;
+import com.bradmcevoy.http.Response;
 
 /**
  * @author JTraber
- *
+ * 
  */
 public class HttpRequest extends AbstractRequest {
 
 	private InputStream in;
-	private static HashMap<String,String> headers = new HashMap<String,String>();
-	
-	{
-		headers.put(Header.HOST.code, "localhost");
-		headers.put(Header.RANGE.code, "null");
-		headers.put(Header.IF.code, "null");
-		try {
-			in = new FileInputStream("tmpIn.txt");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	private Map<String, String> headers;
+	private String url;
+	private String userName;
+	private Method method;	
+
+	public HttpRequest(InputStream in, Map<String, String> headers, String url, String userName,
+			Method method) {
+		super();
+		this.in = in;
+		this.headers = headers;
+		this.url = url;
+		this.userName = userName;
+		this.method = method;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.AbstractRequest#getRequestHeader(com.bradmcevoy.http.Request.Header)
-	 */
+
 	@Override
 	public String getRequestHeader(Header header) {
 		return headers.get(header.code);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getAbsoluteUrl()
-	 */
 	@Override
 	public String getAbsoluteUrl() {
-		return "http://localhost/webdav/SocketSniff.cfg";
+		return url;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getAuthorization()
-	 */
 	@Override
 	public Auth getAuthorization() {
-		// TODO Auto-generated method stub
-		return null;
+		if (userName == null)
+			return null;
+		return new Auth(userName);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getFromAddress()
-	 */
 	@Override
 	public String getFromAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		return headers.get(Header.HOST.code);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getHeaders()
-	 */
 	@Override
 	public Map<String, String> getHeaders() {
 		return headers;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getInputStream()
-	 */
 	@Override
 	public InputStream getInputStream() throws IOException {
 		return in;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#getMethod()
-	 */
 	@Override
 	public Method getMethod() {
-		return Method.GET;
+		return method;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bradmcevoy.http.Request#parseRequestParameters(java.util.Map, java.util.Map)
-	 */
 	@Override
-	public void parseRequestParameters(Map<String, String> params,
-			Map<String, FileItem> files) throws RequestParseException {
-		// TODO Auto-generated method stub
+	public void parseRequestParameters(Map<String, String> params, Map<String, FileItem> files)
+			throws RequestParseException {
+		try {
+			if (isMultiPart()) {
+//				UploadListener listener = new UploadListener();
+//				MonitoredDiskFileItemFactory factory = new MonitoredDiskFileItemFactory(listener);
+//				ServletFileUpload upload = new ServletFileUpload(factory);
+//				List items = upload.parseRequest(request);
+//
+//				parseQueryString(params);
+//
+//				for (Object o : items) {
+//					FileItem item = (FileItem) o;
+//					if (item.isFormField()) {
+//						params.put(item.getFieldName(), item.getString());
+//					} else {
+//						files.put(item.getFieldName(), new FileItemWrapper(item));
+//					}
+//				}
+			} else {
+//				for (Enumeration en = request.getParameterNames(); en.hasMoreElements();) {
+//					String nm = (String) en.nextElement();
+//					String val = request.getParameter(nm);
+//					log.debug("..param: " + nm + " = " + val);
+//					params.put(nm, val);
+//				}
+			}
+//		} catch (FileUploadException ex) {
+//			throw new RequestParseException("FileUploadException", ex);
+		} catch (Throwable ex) {
+			throw new RequestParseException(ex.getMessage(), ex);
+		}
 
 	}
 
+	private boolean isMultiPart() {
+		return (headers.get(Header.CONTENT_TYPE.code) == Response.MULTIPART);
+	}
 }
