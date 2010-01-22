@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc;
 
+import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ServiceResponseHandler;
 import com.stabilit.sc.handler.ServiceTimeoutHandler;
 import com.stabilit.sc.service.Service;
@@ -73,7 +74,7 @@ public class ServerScConnection extends ScConnection {
 	 * @see com.stabilit.sc.ScConnection#attach(int, int, int)
 	 */
 	@Override
-	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) {
+	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) throws ScConnectionException {
 	}
 
 	/*

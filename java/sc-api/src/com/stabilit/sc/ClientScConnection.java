@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc;
 
+import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ServiceResponseHandler;
 import com.stabilit.sc.handler.ServiceTimeoutHandler;
 import com.stabilit.sc.service.Service;
@@ -35,7 +36,8 @@ public class ClientScConnection extends ScConnection {
 	 * @param scProtocol
 	 * @param numOfConnections
 	 */
-	public ClientScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
+	public ClientScConnection(String scHost, int scPort, ProtocolType scProtocol,
+			int numOfConnections) {
 		super(scHost, scPort, scProtocol, numOfConnections);
 	}
 
@@ -52,7 +54,7 @@ public class ClientScConnection extends ScConnection {
 			ServiceTimeoutHandler timeoutHandler) {
 		return serviceFactory.createSendService(serviceName, responseHandler, timeoutHandler);
 	}
-	
+
 	/**
 	 * creates new publishService, holds the service in the ScConnection which
 	 * handles communication layer.
@@ -73,7 +75,9 @@ public class ClientScConnection extends ScConnection {
 	 * @see com.stabilit.sc.ScConnection#attach(int, int, int)
 	 */
 	@Override
-	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) {
+	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout)
+			throws ScConnectionException {
+
 	}
 
 	/*
@@ -84,4 +88,5 @@ public class ClientScConnection extends ScConnection {
 	@Override
 	public void detach(int timeout) {
 	}
+
 }
