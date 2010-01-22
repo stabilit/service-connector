@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc;
 
+import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.service.ServiceFactory;
 
 /**
@@ -29,10 +30,10 @@ public abstract class ScConnection {
 
 	private String scHost;
 	private int scPort;
-	private String scProtocol;
+	private ProtocolType scProtocol;
 	protected ServiceFactory serviceFactory;
 
-	public ScConnection(String scHost, int scPort, String scProtocol, int numOfConnections) {
+	public ScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
 		super();
 		this.scHost = scHost;
 		this.scPort = scPort;
@@ -48,11 +49,11 @@ public abstract class ScConnection {
 		return scPort;
 	}
 
-	public String getScProtocol() {
+	public ProtocolType getScProtocol() {
 		return scProtocol;
 	}
 
-	public void setScProtocol(String scProtocol) {
+	public void setScProtocol(ProtocolType scProtocol) {
 		this.scProtocol = scProtocol;
 	}
 
@@ -60,7 +61,7 @@ public abstract class ScConnection {
 	 * doing init stuff for the client - starting keep alive msg if necessary.
 	 * might start up connectin pooling stuff etc.
 	 */
-	public abstract void attach(int timeout, int keepAliveInterval, int keepAliveTimeout);
+	public abstract void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) throws ScConnectionException;
 	
 	/*
 	 * detach Connector from Sc

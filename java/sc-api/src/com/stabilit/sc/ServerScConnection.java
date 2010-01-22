@@ -35,7 +35,7 @@ public class ServerScConnection extends ScConnection {
 	 * @param scProtocol
 	 * @param numOfConnections
 	 */
-	public ServerScConnection(String scHost, int scPort, String scProtocol, int numOfConnections) {
+	public ServerScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
 		super(scHost, scPort, scProtocol, numOfConnections);
 	}
 

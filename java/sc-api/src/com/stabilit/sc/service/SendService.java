@@ -23,7 +23,6 @@ import com.stabilit.sc.handler.ServiceResponseHandler;
 import com.stabilit.sc.handler.ServiceTimeoutHandler;
 import com.stabilit.sc.msg.IRequestMessage;
 import com.stabilit.sc.msg.IResponseMessage;
-import com.stabilit.sc.msg.RoutingInformation;
 
 /**
  * @author JTraber
@@ -46,11 +45,10 @@ public class SendService extends Service implements ISendService {
 	 * 
 	 * @see
 	 * com.stabilit.sc.service.ISendService#send(com.stabilit.sc.msg.IRequestMessage
-	 * , com.stabilit.sc.msg.RoutingInformation, int)
+	 * , int)
 	 */
 	@Override
-	public void send(IRequestMessage requestMessage, RoutingInformation routingInformation,
-			int timeout) {
+	public void send(IRequestMessage requestMessage, int timeout) {
 
 	}
 
@@ -59,11 +57,10 @@ public class SendService extends Service implements ISendService {
 	 * 
 	 * @see
 	 * com.stabilit.sc.service.ISendService#sendAndReceive(com.stabilit.sc.msg
-	 * .IRequestMessage, com.stabilit.sc.msg.RoutingInformation, int)
+	 * .IRequestMessage, int)
 	 */
 	@Override
-	public IResponseMessage sendAndReceive(IRequestMessage requestMessage,
-			RoutingInformation routingInformation, int timeout) {
+	public IResponseMessage sendAndReceive(IRequestMessage requestMessage, int timeout) {
 		return null;
 	}
 }

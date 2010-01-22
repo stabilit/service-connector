@@ -35,7 +35,7 @@ public class ClientScConnection extends ScConnection {
 	 * @param scProtocol
 	 * @param numOfConnections
 	 */
-	public ClientScConnection(String scHost, int scPort, String scProtocol, int numOfConnections) {
+	public ClientScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
 		super(scHost, scPort, scProtocol, numOfConnections);
 	}
 
@@ -62,7 +62,7 @@ public class ClientScConnection extends ScConnection {
 	 * @param timeoutHandler
 	 * @return service
 	 */
-	public Service newPublishService(String serviceName, ServiceResponseHandler responseHandler,
+	public Service newSubscribeService(String serviceName, ServiceResponseHandler responseHandler,
 			ServiceTimeoutHandler timeoutHandler) {
 		return serviceFactory.createSubscribeService(serviceName, responseHandler, timeoutHandler);
 	}

@@ -13,27 +13,17 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.service;
-
-import com.stabilit.sc.msg.IRequestMessage;
-import com.stabilit.sc.msg.IResponseMessage;
+package com.stabilit.sc;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public interface ISendService {
-	/*
-	 * sends msg async
-	 */
-	public void send(IRequestMessage requestMessage, int timeout);
-
-	/*
-	 * sends msg sync
-	 */
-	public IResponseMessage sendAndReceive(IRequestMessage requestMessage, int timeout);
+public enum ProtocolType {
+	
+	HTTP, TLV
 }
