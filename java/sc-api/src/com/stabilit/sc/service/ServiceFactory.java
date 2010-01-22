@@ -37,17 +37,17 @@ public class ServiceFactory {
 		return factory;
 	}
 
-	public Service createSendService(String serviceName, ServiceResponseHandler responseHandler,
+	public ISendService createSendService(String serviceName, ServiceResponseHandler responseHandler,
 			ServiceTimeoutHandler timeoutHandler) {
 		return new SendService(serviceName, responseHandler, timeoutHandler);
 	}
 
-	public Service createPublishService(String serviceName, ServiceResponseHandler responseHandler,
+	public IPublishService createPublishService(String serviceName, ServiceResponseHandler responseHandler,
 			ServiceTimeoutHandler timeoutHandler) {
 		return new PublishService(serviceName, responseHandler, timeoutHandler);
 	}
 	
-	public Service createSubscribeService(String serviceName, ServiceResponseHandler responseHandler,
+	public ISubscribeService createSubscribeService(String serviceName, ServiceResponseHandler responseHandler,
 			ServiceTimeoutHandler timeoutHandler) {
 		return new SubscribeService(serviceName, responseHandler, timeoutHandler);
 	}

@@ -27,7 +27,7 @@ import com.stabilit.sc.handler.ServiceTimeoutHandler;
  * @author JTraber
  *
  */
-public abstract class Service {
+public abstract class Service implements IService{
 	
 	private String serviceName;
 	private ServiceResponseHandler responseHandler;

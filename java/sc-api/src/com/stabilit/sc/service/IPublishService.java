@@ -25,8 +25,8 @@ import com.stabilit.sc.msg.IResponseMessage;
  * @author JTraber
  * 
  */
-public interface IPublishService {
-	
+public interface IPublishService extends IService {
+
 	/*
 	 * publish
 	 */

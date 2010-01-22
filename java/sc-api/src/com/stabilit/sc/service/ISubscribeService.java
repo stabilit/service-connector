@@ -24,7 +24,7 @@ package com.stabilit.sc.service;
  * @author JTraber
  * 
  */
-public interface ISubscribeService {
+public interface ISubscribeService extends IService{
 
 	/*
 	 * subscribe

@@ -19,21 +19,22 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.msg.IRequestMessage;
-import com.stabilit.sc.msg.IResponseMessage;
+import com.stabilit.sc.exception.ServiceException;
 
 /**
  * @author JTraber
  * 
  */
-public interface ISendService extends IService {
-	/*
-	 * sends msg async
-	 */
-	public void send(IRequestMessage requestMessage, int timeout);
+public interface IService {
 
 	/*
-	 * sends msg sync
+	 * connect to service
 	 */
-	public IResponseMessage sendAndReceive(IRequestMessage requestMessage, int timeout);
+	public void connect(int timeout, ConnectionInformation connectionInformation)
+			throws ServiceException;
+
+	/*
+	 * disconnect to service
+	 */
+	public void disconnect(int timeout) throws ServiceException;
 }
