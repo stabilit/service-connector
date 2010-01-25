@@ -46,7 +46,6 @@ public class ServerScConnection extends ScConnection {
 	 * @param serviceName
 	 * @param responseHandler
 	 * @param timeoutHandler
-	 * @return service
 	 */
 	public void register(String serviceName,
 			ServerResponseHandler responseHandler, ServerTimeoutHandler timeoutHandler) {

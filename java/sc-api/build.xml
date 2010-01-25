@@ -1,0 +1,27 @@
+<project name="sc-api" default="javadoc">
+	<property name="dir.javadoc" value="javadoc" />
+	
+	<path id="classpath.base">
+		<!--<pathelement location="${lib.dir}/${log4j-api}" />-->
+	</path>
+
+	<target name="clean">
+		<delete dir="bin" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="bin/classes" />
+		<javac srcdir="src" destdir="bin/classes" classpathref="classpath.base" />
+	</target>
+
+	<target name="javadoc">
+		<javadoc access="public" destdir="${dir.javadoc}" author="true" version="true" use="true" windowtitle="Stabilit API" classpathref="classpath.base">
+
+			<fileset dir="src" defaultexcludes="yes">
+				<include name="**/*.java" />
+				<!--<exclude name="com/stabilit/sc/test/*.java" />-->
+			</fileset>
+		</javadoc>
+	</target>
+</project>

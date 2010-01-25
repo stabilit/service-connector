@@ -21,7 +21,6 @@ package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.handler.ClientResponseHandler;
-import com.stabilit.sc.handler.ServerResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
