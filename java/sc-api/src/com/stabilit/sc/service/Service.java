@@ -20,8 +20,9 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
+import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ServerResponseHandler;
+import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
  * @author JTraber
@@ -30,12 +31,12 @@ import com.stabilit.sc.handler.ServiceTimeoutHandler;
 public abstract class Service implements IService{
 	
 	private String serviceName;
-	private ServiceResponseHandler responseHandler;
-	private ServiceTimeoutHandler timeoutHandler;
+	private ClientResponseHandler responseHandler;
+	private ClientTimeoutHandler timeoutHandler;
 	private ConnectionInformation connectionInformation;
 
-	protected Service(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
+	protected Service(String serviceName, ClientResponseHandler responseHandler,
+			ClientTimeoutHandler timeoutHandler) {
 		this.serviceName = serviceName;
 		this.responseHandler = responseHandler;
 		this.timeoutHandler = timeoutHandler;
@@ -58,11 +59,11 @@ public abstract class Service implements IService{
 		return serviceName;
 	}
 
-	public ServiceResponseHandler getResponseHandler() {
+	public ClientResponseHandler getResponseHandler() {
 		return responseHandler;
 	}
 
-	public ServiceTimeoutHandler getTimeoutHandler() {
+	public ClientTimeoutHandler getTimeoutHandler() {
 		return timeoutHandler;
 	}
 

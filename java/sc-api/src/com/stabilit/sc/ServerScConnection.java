@@ -20,10 +20,8 @@
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
-import com.stabilit.sc.service.IPublishService;
-import com.stabilit.sc.service.ISendService;
+import com.stabilit.sc.handler.ServerResponseHandler;
+import com.stabilit.sc.handler.ServerTimeoutHandler;
 
 /**
  * @author JTraber
@@ -42,20 +40,6 @@ public class ServerScConnection extends ScConnection {
 	}
 
 	/**
-	 * register new sendService, holds the service in the ScConnection which
-	 * handles communication layer.
-	 * 
-	 * @param serviceName
-	 * @param responseHandler
-	 * @param timeoutHandler
-	 * @return service
-	 */
-	public ISendService registerSendService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return serviceFactory.createSendService(serviceName, responseHandler, timeoutHandler);
-	}
-
-	/**
 	 * register new publishService, holds the service in the ScConnection which
 	 * handles communication layer.
 	 * 
@@ -64,9 +48,8 @@ public class ServerScConnection extends ScConnection {
 	 * @param timeoutHandler
 	 * @return service
 	 */
-	public IPublishService registerPublishService(String serviceName,
-			ServiceResponseHandler responseHandler, ServiceTimeoutHandler timeoutHandler) {
-		return serviceFactory.createPublishService(serviceName, responseHandler, timeoutHandler);
+	public void register(String serviceName,
+			ServerResponseHandler responseHandler, ServerTimeoutHandler timeoutHandler) {
 	}
 
 	/*

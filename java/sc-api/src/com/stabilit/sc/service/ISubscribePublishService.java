@@ -19,40 +19,25 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
 
 /**
  * @author JTraber
  * 
  */
-public class SubscribeService extends Service implements ISubscribeService {
-
-	/**
-	 * @param serviceName
-	 * @param responseHandler
-	 * @param timeoutHandler
-	 */
-	protected SubscribeService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		super(serviceName, responseHandler, timeoutHandler);
-	}
+public interface ISubscribePublishService extends IService{
 
 	/*
 	 * subscribe
 	 */
-	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
-	}
+	public void subscribe(SubscriptionMask subscriptionMask, int timeout);
 
 	/*
 	 * unsubscribe
 	 */
-	public void unsubscribe(int timeout) {
-	}
+	public void unsubscribe(int timeout);
 
 	/*
 	 * change subscription mask
 	 */
-	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
-	}
+	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout);
 }

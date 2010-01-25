@@ -19,8 +19,8 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
+import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
  * @author JTraber
@@ -32,23 +32,18 @@ public class ServiceFactory {
 
 	private ServiceFactory() {
 	}
-	
+
 	public static ServiceFactory getInstance() {
 		return factory;
 	}
 
-	public ISendService createSendService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return new SendService(serviceName, responseHandler, timeoutHandler);
+	public IRequestResponseService createRequestResponseService(String serviceName,
+			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+		return new RequestResponseService(serviceName, responseHandler, timeoutHandler);
 	}
 
-	public IPublishService createPublishService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return new PublishService(serviceName, responseHandler, timeoutHandler);
-	}
-	
-	public ISubscribeService createSubscribeService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return new SubscribeService(serviceName, responseHandler, timeoutHandler);
+	public ISubscribePublishService createSubscribePublishService(String serviceName,
+			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+		return new SubscribePublishService(serviceName, responseHandler, timeoutHandler);
 	}
 }

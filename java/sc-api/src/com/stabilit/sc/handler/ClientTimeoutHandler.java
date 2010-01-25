@@ -17,19 +17,19 @@
 /**
  * 
  */
-package com.stabilit.sc.service;
+package com.stabilit.sc.handler;
 
-import com.stabilit.sc.msg.IResponseMessage;
+import com.stabilit.sc.service.Service;
 
 /**
  * @author JTraber
  * 
  */
-public interface IPublishService extends IService {
+public interface ClientTimeoutHandler {
 
-	/*
-	 * publish
-	 */
-	public void publish(IResponseMessage responseMessage, SubscriptionMask subscriptionMask,
-			int timeout);
+	public void writeTimedOut(Service service);
+
+	public void readTimedOut(Service service);
+
+	public void connectTimedOut(Service service);
 }

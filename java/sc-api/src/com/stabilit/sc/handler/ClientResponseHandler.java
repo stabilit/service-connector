@@ -13,17 +13,23 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.msg;
+package com.stabilit.sc.handler;
 
-
+import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.service.Service;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IRequestMessage extends IMessage {
+public interface ClientResponseHandler {
+
+	public void messageReceived(Service service, IMessage response);
+
+	public void exceptionCaught(Service service, ScConnectionException exception);
 }

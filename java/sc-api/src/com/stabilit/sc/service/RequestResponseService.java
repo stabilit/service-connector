@@ -19,48 +19,43 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
-import com.stabilit.sc.msg.IRequestMessage;
-import com.stabilit.sc.msg.IResponseMessage;
+import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ClientTimeoutHandler;
+import com.stabilit.sc.msg.IMessage;
 
 /**
  * @author JTraber
  * 
  */
-public class SendService extends Service implements ISendService {
+public class RequestResponseService extends Service implements IRequestResponseService {
 
 	/**
 	 * @param serviceName
 	 * @param responseHandler
 	 * @param timeoutHandler
 	 */
-	protected SendService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
+	protected RequestResponseService(String serviceName, ClientResponseHandler responseHandler,
+			ClientTimeoutHandler timeoutHandler) {
 		super(serviceName, responseHandler, timeoutHandler);
 	}
 
 	/*
-	 * sends msg
+	 * Sends a message asynchronous to Sc.
 	 * 
-	 * @see
-	 * com.stabilit.sc.service.ISendService#send(com.stabilit.sc.msg.IRequestMessage
-	 * , int)
+	 * @see com.stabilit.sc.service.IRequestResponseService#send(com.stabilit.sc. msg.IMessage, int, boolean)
 	 */
 	@Override
-	public void send(IRequestMessage requestMessage, int timeout) {
-
+	public void send(IMessage message, int timeout, boolean compression) {
 	}
 
 	/*
-	 * sends and recieves msg
+	 * Sends and receives message synchronous to/from Sc.
 	 * 
-	 * @see
-	 * com.stabilit.sc.service.ISendService#sendAndReceive(com.stabilit.sc.msg
-	 * .IRequestMessage, int)
+	 * @see com.stabilit.sc.service.IRequestResponseService#sendAndReceive(com.stabilit .sc.msg.IMessage, int,
+	 * boolean)
 	 */
 	@Override
-	public IResponseMessage sendAndReceive(IRequestMessage requestMessage, int timeout) {
+	public IMessage sendAndReceive(IMessage message, int timeout, boolean compression) {
 		return null;
 	}
 }

@@ -19,35 +19,40 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
-import com.stabilit.sc.msg.IResponseMessage;
+import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
  * @author JTraber
  * 
  */
-public class PublishService extends Service implements IPublishService {
+public class SubscribePublishService extends Service implements ISubscribePublishService {
 
 	/**
 	 * @param serviceName
 	 * @param responseHandler
 	 * @param timeoutHandler
 	 */
-	protected PublishService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
+	protected SubscribePublishService(String serviceName, ClientResponseHandler responseHandler,
+			ClientTimeoutHandler timeoutHandler) {
 		super(serviceName, responseHandler, timeoutHandler);
 	}
 
 	/*
-	 * publish
-	 * 
-	 * @see
-	 * com.stabilit.sc.IPublishService#publish(com.stabilit.sc.SubscriptionMask,
-	 * int)
+	 * subscribe
 	 */
-	@Override
-	public void publish(IResponseMessage responseMessage, SubscriptionMask subscriptionMask,
-			int timeout) {
+	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
+	}
+
+	/*
+	 * unsubscribe
+	 */
+	public void unsubscribe(int timeout) {
+	}
+
+	/*
+	 * change subscription mask
+	 */
+	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
 	}
 }

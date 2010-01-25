@@ -19,21 +19,20 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.msg.IRequestMessage;
-import com.stabilit.sc.msg.IResponseMessage;
+import com.stabilit.sc.msg.IMessage;
 
 /**
  * @author JTraber
  * 
  */
-public interface ISendService extends IService {
+public interface IRequestResponseService extends IService {
 	/*
 	 * sends msg async
 	 */
-	public void send(IRequestMessage requestMessage, int timeout);
+	public void send(IMessage message, int timeout, boolean compression);
 
 	/*
 	 * sends msg sync
 	 */
-	public IResponseMessage sendAndReceive(IRequestMessage requestMessage, int timeout);
+	public IMessage sendAndReceive(IMessage message, int timeout, boolean compression);
 }

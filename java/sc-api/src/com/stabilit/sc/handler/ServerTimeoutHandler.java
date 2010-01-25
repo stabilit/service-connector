@@ -19,16 +19,17 @@
  */
 package com.stabilit.sc.handler;
 
-import com.stabilit.sc.msg.IResponseMessage;
-import com.stabilit.sc.service.Service;
+import com.stabilit.sc.ServerScConnection;
 
 /**
  * @author JTraber
  * 
  */
-public interface ServiceResponseHandler {
+public interface ServerTimeoutHandler {
 
-	public void messageReceived(Service service, IResponseMessage response);
+	public void writeTimedOut(ServerScConnection connection);
 
-	public void exceptionCaught(Service service);
+	public void readTimedOut(ServerScConnection connection);
+
+	public void connectTimedOut(ServerScConnection connection);
 }

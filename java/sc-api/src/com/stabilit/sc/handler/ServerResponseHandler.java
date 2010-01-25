@@ -17,13 +17,21 @@
 /**
  * 
  */
-package com.stabilit.sc.msg;
+package com.stabilit.sc.handler;
+
+import com.stabilit.sc.ServerScConnection;
+import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.msg.IMessage;
 
 /**
  * @author JTraber
  * 
  */
-public enum CompressionType {
+public interface ServerResponseHandler {
 
-	ZIP, GZIP, RAR, NONE
+	public void controlMessageReceived(ServerScConnection connection, IMessage message);
+
+	public void executionMessageReceived(ServerScConnection connection, IMessage message);
+
+	public void exceptionCaught(ServerScConnection connection, ScConnectionException exception);
 }

@@ -20,11 +20,10 @@
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServiceResponseHandler;
-import com.stabilit.sc.handler.ServiceTimeoutHandler;
-import com.stabilit.sc.service.ISendService;
-import com.stabilit.sc.service.ISubscribeService;
-import com.stabilit.sc.service.Service;
+import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ClientTimeoutHandler;
+import com.stabilit.sc.service.IRequestResponseService;
+import com.stabilit.sc.service.ISubscribePublishService;
 
 /**
  * @author JTraber
@@ -44,7 +43,7 @@ public class ClientScConnection extends ScConnection {
 	}
 
 	/**
-	 * creates new sendService, holds the service in the ScConnection which
+	 * creates new RequestResponseService, holds the service in the ScConnection which
 	 * handles communication layer.
 	 * 
 	 * @param serviceName
@@ -52,13 +51,13 @@ public class ClientScConnection extends ScConnection {
 	 * @param timeoutHandler
 	 * @return service
 	 */
-	public ISendService newSendService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return serviceFactory.createSendService(serviceName, responseHandler, timeoutHandler);
+	public IRequestResponseService newRequestResponseService(String serviceName, ClientResponseHandler responseHandler,
+			ClientTimeoutHandler timeoutHandler) {
+		return serviceFactory.createRequestResponseService(serviceName, responseHandler, timeoutHandler);
 	}
 
 	/**
-	 * creates new publishService, holds the service in the ScConnection which
+	 * creates new SubscribePublishService, holds the service in the ScConnection which
 	 * handles communication layer.
 	 * 
 	 * @param serviceName
@@ -66,9 +65,9 @@ public class ClientScConnection extends ScConnection {
 	 * @param timeoutHandler
 	 * @return service
 	 */
-	public ISubscribeService newSubscribeService(String serviceName, ServiceResponseHandler responseHandler,
-			ServiceTimeoutHandler timeoutHandler) {
-		return serviceFactory.createSubscribeService(serviceName, responseHandler, timeoutHandler);
+	public ISubscribePublishService newSubscribePublishService(String serviceName, ClientResponseHandler responseHandler,
+			ClientTimeoutHandler timeoutHandler) {
+		return serviceFactory.createSubscribePublishService(serviceName, responseHandler, timeoutHandler);
 	}
 
 	/*

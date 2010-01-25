@@ -25,21 +25,30 @@ package com.stabilit.sc.msg;
  * @author JTraber
  *
  */
-public abstract class Message implements IMessage{
+public class Message implements IMessage{
 
 	private RoutingInformation routingInformation;
-	private CompressionType compressionType;
+	private String messageBody;
 	
-	public Message(RoutingInformation routingInformation, CompressionType compressionType) {
+	public Message(RoutingInformation routingInformation, String messageBody) {
+		super();
 		this.routingInformation = routingInformation;
-		this.compressionType = compressionType;
+		this.messageBody = messageBody;
 	}
 
 	public RoutingInformation getRoutingInformation() {
 		return routingInformation;
 	}
 
-	public CompressionType getCompressionType() {
-		return compressionType;
+	public void setRoutingInformation(RoutingInformation routingInformation) {
+		this.routingInformation = routingInformation;
+	}
+
+	public String getMessageBody() {
+		return messageBody;
+	}
+
+	public void setMessageBody(String messageBody) {
+		this.messageBody = messageBody;
 	}	
 }
