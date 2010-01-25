@@ -13,17 +13,17 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
-/**
- * 
  */
 package com.stabilit.sc;
 
 /**
+ * ProtocolType, specifies possible protocols for transportation.
+ * 
  * @author JTraber
- *
  */
 public enum ProtocolType {
-	
-	HTTP, TLV
+
+	/** The Hypertext transfer protocol. */
+	HTTP, /** The type length value protocol . */
+	TLV
 }

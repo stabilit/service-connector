@@ -14,9 +14,6 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.handler.ClientResponseHandler;
@@ -24,36 +21,33 @@ import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * @author JTraber
+ * The Class RequestResponseService.
  * 
+ * @author JTraber
  */
 public class RequestResponseService extends Service implements IRequestResponseService {
 
 	/**
+	 * Instantiates a RequestResponseService.
+	 * 
 	 * @param serviceName
+	 *            the service name
 	 * @param responseHandler
+	 *            the response handler
 	 * @param timeoutHandler
+	 *            the timeout handler
 	 */
 	protected RequestResponseService(String serviceName, ClientResponseHandler responseHandler,
 			ClientTimeoutHandler timeoutHandler) {
 		super(serviceName, responseHandler, timeoutHandler);
 	}
 
-	/*
-	 * Sends a message asynchronous to Sc.
-	 * 
-	 * @see com.stabilit.sc.service.IRequestResponseService#send(com.stabilit.sc. msg.IMessage, int, boolean)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void send(IMessage message, int timeout, boolean compression) {
 	}
 
-	/*
-	 * Sends and receives message synchronous to/from Sc.
-	 * 
-	 * @see com.stabilit.sc.service.IRequestResponseService#sendAndReceive(com.stabilit .sc.msg.IMessage, int,
-	 * boolean)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IMessage sendAndReceive(IMessage message, int timeout, boolean compression) {
 		return null;

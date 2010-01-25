@@ -14,9 +14,6 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.handler;
 
 import com.stabilit.sc.ServerScConnection;
@@ -24,14 +21,39 @@ import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * @author JTraber
+ * The Interface ServerResponseHandler.
  * 
+ * @author JTraber
  */
 public interface ServerResponseHandler {
 
-	public void controlMessageReceived(ServerScConnection connection, IMessage message);
+	/**
+	 * Invoked when control message received.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @param message
+	 *            the message
+	 */
+	void controlMessageReceived(ServerScConnection connection, IMessage message);
 
-	public void executionMessageReceived(ServerScConnection connection, IMessage message);
+	/**
+	 * Invoked when execution message received.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @param message
+	 *            the message
+	 */
+	void executionMessageReceived(ServerScConnection connection, IMessage message);
 
-	public void exceptionCaught(ServerScConnection connection, ScConnectionException exception);
+	/**
+	 * Invoked when Exception caught in receiving message process.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @param exception
+	 *            the exception
+	 */
+	void exceptionCaught(ServerScConnection connection, ScConnectionException exception);
 }

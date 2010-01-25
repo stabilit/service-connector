@@ -14,9 +14,6 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
@@ -24,47 +21,48 @@ import com.stabilit.sc.handler.ServerResponseHandler;
 import com.stabilit.sc.handler.ServerTimeoutHandler;
 
 /**
- * @author JTraber
+ * The Class ServerScConnection, represents a connection between a Server and a Sc.
  * 
+ * @author JTraber
  */
 public class ServerScConnection extends ScConnection {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param scHost
+	 *            the sc host
 	 * @param scPort
+	 *            the sc port
 	 * @param scProtocol
+	 *            used protocol
 	 * @param numOfConnections
+	 *            the number of connections used by Sc
 	 */
 	public ServerScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
 		super(scHost, scPort, scProtocol, numOfConnections);
 	}
 
 	/**
-	 * register new publishService, holds the service in the ScConnection which
-	 * handles communication layer.
+	 * register new publishService, holds the service in the ScConnection which handles communication layer.
 	 * 
 	 * @param serviceName
+	 *            the service name
 	 * @param responseHandler
+	 *            the response handler
 	 * @param timeoutHandler
+	 *            the timeout handler
 	 */
-	public void register(String serviceName,
-			ServerResponseHandler responseHandler, ServerTimeoutHandler timeoutHandler) {
+	public void register(String serviceName, ServerResponseHandler responseHandler,
+			ServerTimeoutHandler timeoutHandler) {
 	}
 
-	/*
-	 * Attaches a server to Sc
-	 * 
-	 * @see com.stabilit.sc.ScConnection#attach(int, int, int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) throws ScConnectionException {
 	}
 
-	/*
-	 * Detaches server from Sc
-	 * 
-	 * @see com.stabilit.sc.ScConnection#detach(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void detach(int timeout) {
 	}

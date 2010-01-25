@@ -14,27 +14,41 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.exception.ScConnectionException;
 
 /**
- * @author JTraber
+ * The Interface IService.
  * 
+ * @author JTraber
  */
 public interface IService {
 
-	/*
-	 * connect to service
+	/**
+	 * Connects to Sc.
+	 * 
+	 * @param timeout
+	 *            the timeout
+	 * @param connectionInformation
+	 *            the connection information
+	 * 
+	 * @throws ScConnectionException
+	 *             exception in connection process
 	 */
-	public void connect(int timeout, ConnectionInformation connectionInformation)
-			throws ServiceException;
+	void connect(int timeout, ConnectionInformation connectionInformation) throws ScConnectionException;
 
 	/*
 	 * disconnect to service
 	 */
-	public void disconnect(int timeout) throws ServiceException;
+	/**
+	 * Disconnect from Sc.
+	 * 
+	 * @param timeout
+	 *            the timeout
+	 * 
+	 * @throws ScConnectionException
+	 *             exception in disconnection process
+	 */
+	void disconnect(int timeout) throws ScConnectionException;
 }

@@ -14,9 +14,6 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.handler;
 
 import com.stabilit.sc.exception.ScConnectionException;
@@ -24,12 +21,29 @@ import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.service.Service;
 
 /**
- * @author JTraber
+ * The Interface ClientResponseHandler.
  * 
+ * @author JTraber
  */
 public interface ClientResponseHandler {
 
-	public void messageReceived(Service service, IMessage response);
+	/**
+	 * Invoked when a message object was received from a remote peer.
+	 * 
+	 * @param service
+	 *            the service
+	 * @param response
+	 *            the response
+	 */
+	void messageReceived(Service service, IMessage response);
 
-	public void exceptionCaught(Service service, ScConnectionException exception);
+	/**
+	 * Invoked when a exception occurs in process of receiving a message.
+	 * 
+	 * @param service
+	 *            the service
+	 * @param exception
+	 *            the exception
+	 */
+	void exceptionCaught(Service service, ScConnectionException exception);
 }

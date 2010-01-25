@@ -13,17 +13,13 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
-/**
- * 
  */
 package com.stabilit.sc.msg;
 
 /**
+ * The Class RoutingInformation.
+ * 
  * @author JTraber
- *
  */
 public class RoutingInformation {
-	
-	//routing stuff
 }

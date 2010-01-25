@@ -14,25 +14,47 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
+import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * @author JTraber
+ * The Interface IRequestResponseService.
  * 
+ * @author JTraber
  */
 public interface IRequestResponseService extends IService {
-	/*
-	 * sends msg async
-	 */
-	public void send(IMessage message, int timeout, boolean compression);
 
-	/*
-	 * sends msg sync
+	/**
+	 * Sends a message asynchronous.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param timeout
+	 *            the timeout
+	 * @param compression
+	 *            the compression
+	 * 
+	 * @throws ServiceException
+	 *             exception in sending process
 	 */
-	public IMessage sendAndReceive(IMessage message, int timeout, boolean compression);
+	void send(IMessage message, int timeout, boolean compression) throws ServiceException;
+
+	/**
+	 * Sends and receives message synchronous.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param timeout
+	 *            the timeout
+	 * @param compression
+	 *            the compression
+	 * 
+	 * @return the i message
+	 * 
+	 * @throws ServiceException
+	 *             exception in send and receive process
+	 */
+	IMessage sendAndReceive(IMessage message, int timeout, boolean compression) throws ServiceException;
 }

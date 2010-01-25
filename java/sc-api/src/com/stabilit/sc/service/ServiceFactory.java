@@ -14,34 +14,59 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
- * @author JTraber
+ * The Class ServiceFactory.
  * 
+ * @author JTraber
  */
-public class ServiceFactory {
+public final class ServiceFactory {
 
-	public static ServiceFactory factory = new ServiceFactory();
+	/** The singleton instance. */
+	private static ServiceFactory factory = new ServiceFactory();
 
+	/**
+	 * Instantiates a new service factory.
+	 */
 	private ServiceFactory() {
 	}
 
+	/**
+	 * Gets the single instance of ServiceFactory.
+	 * 
+	 * @return single instance of ServiceFactory
+	 */
 	public static ServiceFactory getInstance() {
 		return factory;
 	}
 
+	/**
+	 * Creates a new RequestResponseService object.
+	 * 
+	 * @param serviceName the service name
+	 * @param responseHandler the response handler
+	 * @param timeoutHandler the timeout handler
+	 * 
+	 * @return the requestresponse service
+	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
 			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return new RequestResponseService(serviceName, responseHandler, timeoutHandler);
 	}
 
+	/**
+	 * Creates a new SubscribePublishService object.
+	 * 
+	 * @param serviceName the service name
+	 * @param responseHandler the response handler
+	 * @param timeoutHandler the timeout handler
+	 * 
+	 * @return the subscribepublish service
+	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
 			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return new SubscribePublishService(serviceName, responseHandler, timeoutHandler);

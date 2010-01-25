@@ -14,15 +14,13 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.example;
 
 
 /**
- * @author JTraber
+ * The Class ExampleServer.
  * 
+ * @author JTraber
  */
 public class ExampleServer {
 

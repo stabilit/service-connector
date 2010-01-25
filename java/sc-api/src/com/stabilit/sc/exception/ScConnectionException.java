@@ -13,25 +13,24 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
-/**
- * 
  */
 package com.stabilit.sc.exception;
 
 /**
- * @author JTraber
- *
+ * ScConnectionException, exceptions from connection sc process.
  */
 public class ScConnectionException extends Exception {
 	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessage() {
 		return super.getMessage();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public StackTraceElement[] getStackTrace() {
 		return super.getStackTrace();

@@ -14,15 +14,11 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.example;
 
 import com.stabilit.sc.ClientScConnection;
 import com.stabilit.sc.ProtocolType;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.msg.IMessage;
@@ -35,16 +31,38 @@ import com.stabilit.sc.service.Service;
 import com.stabilit.sc.service.SubscriptionMask;
 
 /**
- * @author JTraber
+ * Example Client.
  * 
+ * @author JTraber
  */
 public class ExampleClient {
 
-	public void runSendService() {
+	/** The Constant KEEP_ALIVE_TIMEOUT. */
+	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
-		ClientScConnection sc = new ClientScConnection("localhost", 80, ProtocolType.HTTP, 3);
+	/** The Constant KEEP_ALIVE_INTERVAL. */
+	private static final int KEEP_ALIVE_INTERVAL = 2;
+
+	/** The Constant TIMEOUT. */
+	private static final int TIMEOUT = 10;
+
+	/** The Constant NUM_OF_CON. */
+	private static final int NUM_OF_CON = 3;
+
+	/** The Constant PORT. */
+	private static final int PORT = 80;
+
+	/** The Constant HOST. */
+	private static final String HOST = "localhost";
+
+	/**
+	 * Run requestResponse service.
+	 */
+	public void runrequestResponseService() {
+
+		ClientScConnection sc = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
 		try {
-			sc.attach(10, 2, 12);
+			sc.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		}
@@ -80,24 +98,27 @@ public class ExampleClient {
 				});
 
 		try {
-			sendService.connect(10, new ConnectionInformation());
-			sendService.send(new Message(new RoutingInformation(), ""), 12, false);
+			sendService.connect(TIMEOUT, new ConnectionInformation());
+			sendService.send(new Message(new RoutingInformation(), ""), TIMEOUT, false);
 
-			IMessage response = sendService.sendAndReceive(
-					new Message(new RoutingInformation(), ""), 12, false);
+			IMessage response = sendService.sendAndReceive(new Message(new RoutingInformation(), ""),
+					TIMEOUT, false);
 			System.out.println(response);
-			sendService.disconnect(10);
-		} catch (ServiceException e) {
+			sendService.disconnect(TIMEOUT);
+			sc.detach(TIMEOUT);
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		sc.detach(10);
+		}	
 	}
 
+	/**
+	 * Run subscribe service.
+	 */
 	public void runSubscribeService() {
 
-		ClientScConnection sc = new ClientScConnection("localhost", 80, ProtocolType.HTTP, 3);
+		ClientScConnection sc = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
 		try {
-			sc.attach(10, 2, 12);
+			sc.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		}
@@ -130,14 +151,14 @@ public class ExampleClient {
 				});
 
 		try {
-			sendService.connect(10, new ConnectionInformation());
-			sendService.subscribe(new SubscriptionMask(), 10);
-			sendService.changeSubscription(new SubscriptionMask(), 10);
-			sendService.unsubscribe(10);
-			sendService.disconnect(10);
-		} catch (ServiceException e) {
+			sendService.connect(TIMEOUT, new ConnectionInformation());
+			sendService.subscribe(new SubscriptionMask(), TIMEOUT);
+			sendService.changeSubscription(new SubscriptionMask(), TIMEOUT);
+			sendService.unsubscribe(TIMEOUT);
+			sendService.disconnect(TIMEOUT);
+			sc.detach(TIMEOUT);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		sc.detach(10);
 	}
 }

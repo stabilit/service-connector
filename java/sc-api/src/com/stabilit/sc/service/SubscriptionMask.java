@@ -13,15 +13,11 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
-/**
- * 
  */
 package com.stabilit.sc.service;
 
 /**
- * @author JTraber
- *
+ * SubscriptionMask, defines subscription to several services.
  */
 public class SubscriptionMask {
 

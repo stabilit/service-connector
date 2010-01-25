@@ -14,15 +14,13 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
 */
-/**
- * 
- */
 package com.stabilit.sc.msg;
 
 
 /**
+ * The Interface IMessage.
+ * 
  * @author JTraber
- *
  */
 public interface IMessage {
 }

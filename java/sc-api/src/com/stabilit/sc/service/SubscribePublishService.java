@@ -14,45 +14,45 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
- * @author JTraber
+ * The Class SubscribePublishService.
  * 
+ * @author JTraber
  */
 public class SubscribePublishService extends Service implements ISubscribePublishService {
 
 	/**
+	 * Instantiates a new subscribePublish service.
+	 * 
 	 * @param serviceName
+	 *            the service name
 	 * @param responseHandler
+	 *            the response handler
 	 * @param timeoutHandler
+	 *            the timeout handler
 	 */
 	protected SubscribePublishService(String serviceName, ClientResponseHandler responseHandler,
 			ClientTimeoutHandler timeoutHandler) {
 		super(serviceName, responseHandler, timeoutHandler);
 	}
 
-	/*
-	 * subscribe
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
 	}
 
-	/*
-	 * unsubscribe
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void unsubscribe(int timeout) {
 	}
 
-	/*
-	 * change subscription mask
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
 	}
 }

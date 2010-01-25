@@ -14,30 +14,51 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.service;
 
+import com.stabilit.sc.exception.ServiceException;
 
 /**
- * @author JTraber
+ * The Interface ISubscribePublishService.
  * 
+ * @author JTraber
  */
-public interface ISubscribePublishService extends IService{
+public interface ISubscribePublishService extends IService {
 
-	/*
-	 * subscribe
+	/**
+	 * Subscribe to Services.
+	 * 
+	 * @param subscriptionMask
+	 *            the subscription mask
+	 * @param timeout
+	 *            the timeout
+	 * 
+	 * @throws ServiceException
+	 *             exception in subscribe process
 	 */
-	public void subscribe(SubscriptionMask subscriptionMask, int timeout);
+	void subscribe(SubscriptionMask subscriptionMask, int timeout) throws ServiceException;
 
-	/*
-	 * unsubscribe
+	/**
+	 * Unsubscribe from services.
+	 * 
+	 * @param timeout
+	 *            the timeout
+	 * 
+	 * @throws ServiceException
+	 *             exception in unsubscribe process
 	 */
-	public void unsubscribe(int timeout);
+	void unsubscribe(int timeout) throws ServiceException;
 
-	/*
-	 * change subscription mask
+	/**
+	 * Change subscription.
+	 * 
+	 * @param newSubscriptionMask
+	 *            the new subscription mask
+	 * @param timeout
+	 *            the timeout
+	 * 
+	 * @throws ServiceException
+	 *             exception in changeSubscription process
 	 */
-	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout);
+	void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) throws ServiceException;
 }

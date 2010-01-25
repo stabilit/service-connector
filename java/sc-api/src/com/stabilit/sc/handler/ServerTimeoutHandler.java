@@ -14,22 +14,38 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.handler;
 
 import com.stabilit.sc.ServerScConnection;
 
 /**
- * @author JTraber
+ * The Interface ServerTimeoutHandler.
  * 
+ * @author JTraber
  */
 public interface ServerTimeoutHandler {
 
-	public void writeTimedOut(ServerScConnection connection);
+	/**
+	 * Invoked when time run out in write process.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
+	void writeTimedOut(ServerScConnection connection);
 
-	public void readTimedOut(ServerScConnection connection);
+	/**
+	 * Invoked when time run out in read process.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
+	void readTimedOut(ServerScConnection connection);
 
-	public void connectTimedOut(ServerScConnection connection);
+	/**
+	 * Invoked when time run out in connect process.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
+	void connectTimedOut(ServerScConnection connection);
 }

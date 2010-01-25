@@ -14,22 +14,38 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.handler;
 
 import com.stabilit.sc.service.Service;
 
 /**
- * @author JTraber
+ * The Interface ClientTimeoutHandler.
  * 
+ * @author JTraber
  */
 public interface ClientTimeoutHandler {
 
-	public void writeTimedOut(Service service);
+	/**
+	 * Invoked when time run out in write process.
+	 * 
+	 * @param service
+	 *            the service
+	 */
+	void writeTimedOut(Service service);
 
-	public void readTimedOut(Service service);
+	/**
+	 * Invoked when time run out in read process.
+	 * 
+	 * @param service
+	 *            the service
+	 */
+	void readTimedOut(Service service);
 
-	public void connectTimedOut(Service service);
+	/**
+	 * Invoked when time run out in connect process.
+	 * 
+	 * @param service
+	 *            the service
+	 */
+	void connectTimedOut(Service service);
 }
