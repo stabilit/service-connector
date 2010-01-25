@@ -1,9 +1,0 @@
-com.mina.chat.client
-com.mina.chat.server
-com.mina.http.client
-com.mina.http.server
-com.stabilit.environment.log
-com.stabilit.http.client
-com.stabilit.http.server
-com.stabilit.perfomancetest
-com.stabilit.queue
