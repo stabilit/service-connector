@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="lib/sigar-x86-winnt.dll"/>
 	<classpathentry kind="lib" path="lib/sigar.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="lib/netty-3.2.0.ALPHA2.jar"/>
+	<classpathentry kind="lib" path="lib/netty-3.2.0.ALPHA2.jar" sourcepath="lib/netty-3.1.5.GA-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
