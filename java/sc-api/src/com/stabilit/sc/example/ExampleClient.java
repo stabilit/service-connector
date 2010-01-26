@@ -60,14 +60,14 @@ public class ExampleClient {
 	 */
 	public void runrequestResponseService() {
 
-		ClientScConnection sc = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
+		ClientScConnection con = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
 		try {
-			sc.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
+			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		}
 
-		IRequestResponseService sendService = sc.newRequestResponseService("serviceName",
+		IRequestResponseService requestResponse = con.newRequestResponseService("serviceName",
 				new ClientResponseHandler() {
 
 					@Override
@@ -98,32 +98,32 @@ public class ExampleClient {
 				});
 
 		try {
-			sendService.connect(TIMEOUT, new ConnectionInformation());
-			sendService.send(new Message(new RoutingInformation(), ""), TIMEOUT, false);
+			requestResponse.connect(TIMEOUT, new ConnectionInformation());
+			requestResponse.send(new Message(new RoutingInformation(), ""), TIMEOUT, false);
 
-			IMessage response = sendService.sendAndReceive(new Message(new RoutingInformation(), ""),
+			IMessage response = requestResponse.sendAndReceive(new Message(new RoutingInformation(), ""),
 					TIMEOUT, false);
 			System.out.println(response);
-			sendService.disconnect(TIMEOUT);
-			sc.detach(TIMEOUT);
+			requestResponse.disconnect(TIMEOUT);
+			con.detach(TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
 	}
 
 	/**
-	 * Run subscribe service.
+	 * Run subscribePublish service.
 	 */
-	public void runSubscribeService() {
+	public void runSubscribePublishService() {
 
-		ClientScConnection sc = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
+		ClientScConnection con = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
 		try {
-			sc.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
+			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		}
 
-		ISubscribePublishService sendService = sc.newSubscribePublishService("serviceName",
+		ISubscribePublishService subscribePublishService = con.newSubscribePublishService("serviceName",
 				new ClientResponseHandler() {
 
 					@Override
@@ -151,12 +151,12 @@ public class ExampleClient {
 				});
 
 		try {
-			sendService.connect(TIMEOUT, new ConnectionInformation());
-			sendService.subscribe(new SubscriptionMask(), TIMEOUT);
-			sendService.changeSubscription(new SubscriptionMask(), TIMEOUT);
-			sendService.unsubscribe(TIMEOUT);
-			sendService.disconnect(TIMEOUT);
-			sc.detach(TIMEOUT);
+			subscribePublishService.connect(TIMEOUT, new ConnectionInformation());
+			subscribePublishService.subscribe(new SubscriptionMask(), TIMEOUT);
+			subscribePublishService.changeSubscription(new SubscriptionMask(), TIMEOUT);
+			subscribePublishService.unsubscribe(TIMEOUT);
+			subscribePublishService.disconnect(TIMEOUT);
+			con.detach(TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

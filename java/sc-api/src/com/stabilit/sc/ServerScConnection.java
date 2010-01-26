@@ -19,6 +19,7 @@ package com.stabilit.sc;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ServerResponseHandler;
 import com.stabilit.sc.handler.ServerTimeoutHandler;
+import com.stabilit.sc.msg.IMessage;
 
 /**
  * The Class ServerScConnection, represents a connection between a Server and a Sc.
@@ -55,6 +56,20 @@ public class ServerScConnection extends ScConnection {
 	 */
 	public void register(String serviceName, ServerResponseHandler responseHandler,
 			ServerTimeoutHandler timeoutHandler) {
+	}
+
+	/**
+	 * Publish message.
+	 * 
+	 * @param responseMessage
+	 *            the response message
+	 * @param compression
+	 *            the compression
+	 * 
+	 * @throws ScConnectionException
+	 *             connection exception in publish process
+	 */
+	public void publish(IMessage responseMessage, boolean compression) throws ScConnectionException {
 	}
 
 	/** {@inheritDoc} */
