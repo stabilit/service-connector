@@ -24,20 +24,18 @@ package com.stabilit.sc.msg;
 public class Message implements IMessage {
 
 	/** The routing information. */
-	private RoutingInformation routingInformation;
-
+	private String routingInformation;
+	
 	/** The message body. */
 	private String messageBody;
 
 	/**
 	 * Instantiates a new message.
 	 * 
-	 * @param routingInformation
-	 *            the routing information
-	 * @param messageBody
-	 *            the message body
+	 * @param routingInformation the routing information
+	 * @param messageBody the message body
 	 */
-	public Message(RoutingInformation routingInformation, String messageBody) {
+	public Message(String routingInformation, String messageBody) {
 		super();
 		this.routingInformation = routingInformation;
 		this.messageBody = messageBody;
@@ -48,17 +46,16 @@ public class Message implements IMessage {
 	 * 
 	 * @return the routing information
 	 */
-	public RoutingInformation getRoutingInformation() {
+	public String getRoutingInformation() {
 		return routingInformation;
 	}
 
 	/**
 	 * Sets the routing information.
 	 * 
-	 * @param routingInformation
-	 *            the new routing information
+	 * @param routingInformation the new routing information
 	 */
-	public void setRoutingInformation(RoutingInformation routingInformation) {
+	public void setRoutingInformation(String routingInformation) {
 		this.routingInformation = routingInformation;
 	}
 
@@ -74,8 +71,7 @@ public class Message implements IMessage {
 	/**
 	 * Sets the message body.
 	 * 
-	 * @param messageBody
-	 *            the new message body
+	 * @param messageBody the new message body
 	 */
 	public void setMessageBody(String messageBody) {
 		this.messageBody = messageBody;

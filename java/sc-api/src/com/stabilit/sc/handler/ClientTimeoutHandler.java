@@ -16,7 +16,7 @@
  */
 package com.stabilit.sc.handler;
 
-import com.stabilit.sc.service.Service;
+import com.stabilit.sc.service.IService;
 
 /**
  * The Interface ClientTimeoutHandler.
@@ -31,7 +31,7 @@ public interface ClientTimeoutHandler {
 	 * @param service
 	 *            the service
 	 */
-	void writeTimedOut(Service service);
+	void writeTimedOut(IService service);
 
 	/**
 	 * Invoked when time run out in read process.
@@ -39,7 +39,7 @@ public interface ClientTimeoutHandler {
 	 * @param service
 	 *            the service
 	 */
-	void readTimedOut(Service service);
+	void readTimedOut(IService service);
 
 	/**
 	 * Invoked when time run out in connect process.
@@ -47,5 +47,5 @@ public interface ClientTimeoutHandler {
 	 * @param service
 	 *            the service
 	 */
-	void connectTimedOut(Service service);
+	void connectTimedOut(IService service);
 }

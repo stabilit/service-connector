@@ -14,12 +14,48 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.msg;
+/**
+ * 
+ */
+package com.stabilit.sc.service;
 
 /**
- * The Class RoutingInformation.
+ * The Class ServiceCtx, represents the context of a service.
  * 
  * @author JTraber
  */
-public class RoutingInformation {
+public class ServiceCtx {
+
+	/** The service name. */
+	private String serviceName;
+
+	/**
+	 * Instantiates a new service context.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
+	public ServiceCtx(String serviceName) {
+		super();
+		this.serviceName = serviceName;
+	}
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
 }

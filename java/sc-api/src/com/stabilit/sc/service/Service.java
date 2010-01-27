@@ -27,51 +27,44 @@ import com.stabilit.sc.handler.ClientTimeoutHandler;
  */
 public abstract class Service implements IService {
 
-	/** The service name. */
-	private String serviceName;
-	
 	/** The response handler. */
 	private ClientResponseHandler responseHandler;
-	
+
 	/** The timeout handler. */
 	private ClientTimeoutHandler timeoutHandler;
-	
-	/** The connection information. */
-	private ConnectionInformation connectionInformation;
+
+	/** The connection context. */
+	private ConnectionCtx connectionCtx;
+
+	/** The service context. */
+	private ServiceCtx serviceCtx;
 
 	/**
 	 * Instantiates a new service.
 	 * 
-	 * @param serviceName the service name
-	 * @param responseHandler the response handler
-	 * @param timeoutHandler the timeout handler
+	 * @param serviceName
+	 *            the service name
+	 * @param responseHandler
+	 *            the response handler
+	 * @param timeoutHandler
+	 *            the timeout handler
 	 */
 	protected Service(String serviceName, ClientResponseHandler responseHandler,
 			ClientTimeoutHandler timeoutHandler) {
-		this.serviceName = serviceName;
+		this.serviceCtx = new ServiceCtx(serviceName);
 		this.responseHandler = responseHandler;
 		this.timeoutHandler = timeoutHandler;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void connect(int timeout, ConnectionInformation connectionInformation)
-			throws ScConnectionException {
-		this.connectionInformation = connectionInformation;
+	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
+		this.connectionCtx = connectionCtx;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect(int timeout) throws ScConnectionException {
-	}
-
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the service name
-	 */
-	public String getServiceName() {
-		return serviceName;
 	}
 
 	/**
@@ -93,20 +86,30 @@ public abstract class Service implements IService {
 	}
 
 	/**
-	 * Gets the connection information.
+	 * Gets the connection context.
 	 * 
-	 * @return the connection information
+	 * @return the connection context
 	 */
-	public ConnectionInformation getConnectionInformation() {
-		return connectionInformation;
+	public ConnectionCtx getConnectionCtx() {
+		return connectionCtx;
 	}
 
 	/**
-	 * Sets the connection information.
+	 * Sets the connection context.
 	 * 
-	 * @param connectionInformation the new connection information
+	 * @param connectionCtx
+	 *            the new connection context
 	 */
-	public void setConnectionInformation(ConnectionInformation connectionInformation) {
-		this.connectionInformation = connectionInformation;
+	public void setConnectionInformation(ConnectionCtx connectionCtx) {
+		this.connectionCtx = connectionCtx;
+	}
+
+	/**
+	 * Gets the service ctx.
+	 * 
+	 * @return the service ctx
+	 */
+	public ServiceCtx getServiceCtx() {
+		return serviceCtx;
 	}
 }

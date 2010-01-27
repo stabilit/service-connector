@@ -17,11 +17,11 @@
 package com.stabilit.sc.service;
 
 /**
- * The Class ConnectionInformation.
+ * The Class ConnectionCtx, represents the context of a connection.
  * 
  * @author JTraber
  */
-public class ConnectionInformation {
+public class ConnectionCtx {
 
 	/** The user name. */
 	private String userName;

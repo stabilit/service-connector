@@ -23,4 +23,18 @@ package com.stabilit.sc.msg;
  * @author JTraber
  */
 public interface IMessage {
+	
+	/**
+	 * Gets the routing information.
+	 * 
+	 * @return the routing information
+	 */
+	String getRoutingInformation();
+	
+	/**
+	 * Gets the message body.
+	 * 
+	 * @return the message body
+	 */
+	String getMessageBody();
 }

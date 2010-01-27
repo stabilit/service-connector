@@ -23,7 +23,7 @@ package com.stabilit.sc;
  */
 public enum ProtocolType {
 
-	/** The Hypertext transfer protocol. */
-	HTTP, /** The type length value protocol . */
-	TLV
+	/** The hypertext transfer protocol. */
+	HTTP, /** The transport protocol . */
+	TCP
 }

@@ -23,11 +23,10 @@ import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.RoutingInformation;
-import com.stabilit.sc.service.ConnectionInformation;
+import com.stabilit.sc.service.ConnectionCtx;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ISubscribePublishService;
-import com.stabilit.sc.service.Service;
+import com.stabilit.sc.service.IService;
 import com.stabilit.sc.service.SubscriptionMask;
 
 /**
@@ -71,44 +70,43 @@ public class ExampleClient {
 				new ClientResponseHandler() {
 
 					@Override
-					public void exceptionCaught(Service service, ScConnectionException exception) {
+					public void exceptionCaught(IService service, ScConnectionException exception) {
 					}
 
 					@Override
-					public void messageReceived(Service service, IMessage response) {
+					public void messageReceived(IService service, IMessage response) {
 					}
 
 				}, new ClientTimeoutHandler() {
 
 					@Override
-					public void connectTimedOut(Service service) {
+					public void connectTimedOut(IService service) {
 
 					}
 
 					@Override
-					public void readTimedOut(Service service) {
+					public void readTimedOut(IService service) {
 
 					}
 
 					@Override
-					public void writeTimedOut(Service service) {
+					public void writeTimedOut(IService service) {
 
 					}
 
 				});
 
 		try {
-			requestResponse.connect(TIMEOUT, new ConnectionInformation());
-			requestResponse.send(new Message(new RoutingInformation(), ""), TIMEOUT, false);
+			requestResponse.connect(TIMEOUT, new ConnectionCtx());
+			requestResponse.send(new Message("routingInf", ""), TIMEOUT, false);
 
-			IMessage response = requestResponse.sendAndReceive(new Message(new RoutingInformation(), ""),
-					TIMEOUT, false);
+			IMessage response = requestResponse.sendAndReceive(new Message("routingInf", ""), TIMEOUT, false);
 			System.out.println(response);
 			requestResponse.disconnect(TIMEOUT);
 			con.detach(TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	/**
@@ -127,31 +125,31 @@ public class ExampleClient {
 				new ClientResponseHandler() {
 
 					@Override
-					public void exceptionCaught(Service service, ScConnectionException exception) {
+					public void exceptionCaught(IService service, ScConnectionException exception) {
 					}
 
 					@Override
-					public void messageReceived(Service service, IMessage response) {
+					public void messageReceived(IService service, IMessage response) {
 					}
 
 				}, new ClientTimeoutHandler() {
 
 					@Override
-					public void connectTimedOut(Service service) {
+					public void connectTimedOut(IService service) {
 					}
 
 					@Override
-					public void readTimedOut(Service service) {
+					public void readTimedOut(IService service) {
 					}
 
 					@Override
-					public void writeTimedOut(Service service) {
+					public void writeTimedOut(IService service) {
 					}
 
 				});
 
 		try {
-			subscribePublishService.connect(TIMEOUT, new ConnectionInformation());
+			subscribePublishService.connect(TIMEOUT, new ConnectionCtx());
 			subscribePublishService.subscribe(new SubscriptionMask(), TIMEOUT);
 			subscribePublishService.changeSubscription(new SubscriptionMask(), TIMEOUT);
 			subscribePublishService.unsubscribe(TIMEOUT);

@@ -36,11 +36,8 @@ public interface IService {
 	 * @throws ScConnectionException
 	 *             exception in connection process
 	 */
-	void connect(int timeout, ConnectionInformation connectionInformation) throws ScConnectionException;
+	void connect(int timeout, ConnectionCtx connectionInformation) throws ScConnectionException;
 
-	/*
-	 * disconnect to service
-	 */
 	/**
 	 * Disconnect from Sc.
 	 * 
