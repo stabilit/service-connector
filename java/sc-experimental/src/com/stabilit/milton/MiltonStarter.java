@@ -47,9 +47,8 @@ import com.ettrema.http.fs.FileSystemResourceFactory;
  */
 public class MiltonStarter {
 
-	private static Map<String, String> headers = new HashMap<String, String>();
+	private static Map<Header, String> headers = new HashMap<Header, String>();
 	private InputStream in;
-	private InputStream inFolder;
 	private OutputStream out;
 	private HttpManager manager;
 
@@ -60,41 +59,41 @@ public class MiltonStarter {
 
 	public void run() {
 		try {
-			
-			out = new FileOutputStream("webdav/nothing.txt");
-			File test = new File("webdav/in/");
-			System.out.println(test.isDirectory());
-			// inFolder = new FileInputStream(test);
-			manager = new HttpManager(new FileSystemResourceFactory(new File("webdav"), new SecurityManager() {
 
-				@Override
-				public Object authenticate(DigestResponse digestRequest) {
-					System.out.println("SecurityManager authenticate(DigestResponse digestRequest)");
-					return null;
-				}
+			out = new FileOutputStream("webdav/nothing.txt");	
+			manager = new HttpManager(new FileSystemResourceFactory(new File("webdav"),
+					new SecurityManager() {
 
-				@Override
-				public Object authenticate(String user, String password) {
-					System.out.println("SecurityManager authenticate(String user, String password)");
-					return new Auth("");
-				}
+						@Override
+						public Object authenticate(DigestResponse digestRequest) {
+							System.out.println("SecurityManager authenticate(DigestResponse digestRequest)");
+							return null;
+						}
 
-				@Override
-				public boolean authorise(Request request, Method method, Auth auth, Resource resource) {
-					System.out
-							.println("SecurityManager authorise(Request request, Method method, Auth auth, Resource resource)");
-					return true;
-				}
+						@Override
+						public Object authenticate(String user, String password) {
+							System.out.println("SecurityManager authenticate(String user, String password)");
+							return new Auth("");
+						}
 
-				@Override
-				public String getRealm() {
-					System.out.println("SecurityManager getRealm");
-					return null;
-				}
-			}), new DefaultWebDavResponseHandler(null), new ProtocolHandlers());
-			 caseOne();
-			 caseTwo();
+						@Override
+						public boolean authorise(Request request, Method method, Auth auth, Resource resource) {
+							System.out
+									.println("SecurityManager authorise(Request request, Method method, Auth auth, Resource resource)");
+							return true;
+						}
+
+						@Override
+						public String getRealm() {
+							System.out.println("SecurityManager getRealm");
+							return null;
+						}
+					}), new DefaultWebDavResponseHandler(null), new ProtocolHandlers());
+			// caseOne();
+			// caseTwo();
 //			caseThree();
+//			caseFour();
+			caseFive();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -102,10 +101,10 @@ public class MiltonStarter {
 
 	// Simpler GET (download) 1 File
 	public void caseOne() throws FileNotFoundException {
-		headers.put(Header.HOST.code, "localhost");
-		headers.put(Header.RANGE.code, "null");
-		headers.put(Header.IF.code, "null");
-		headers.put(Header.CONTENT_TYPE.code, Response.HTTP);
+		headers.put(Header.HOST, "localhost");
+		headers.put(Header.RANGE, "null");
+		headers.put(Header.IF, "null");
+		headers.put(Header.CONTENT_TYPE, Response.HTTP);
 		in = new FileInputStream("webdav/in/download.txt");
 		Request request = new HttpRequest(in, headers, "http://localhost/in/download.txt", "jot",
 				Request.Method.GET);
@@ -116,27 +115,53 @@ public class MiltonStarter {
 
 	// Simpler PUT (upload) 1 File
 	public void caseTwo() throws FileNotFoundException {
-		headers.put(Header.HOST.code, "localhost");
-		headers.put(Header.RANGE.code, "null");
-		headers.put(Header.IF.code, "1");
-		headers.put(Header.CONTENT_TYPE.code, Response.HTTP);
+		headers.put(Header.HOST, "localhost");
+		headers.put(Header.RANGE, "null");
+		headers.put(Header.IF, "1");
+		headers.put(Header.CONTENT_TYPE, Response.HTTP);
 		in = new FileInputStream("webdav/in/upload.txt");
 		Request request = new HttpRequest(in, headers, "http://localhost/out/uploaded.txt", "jot",
 				Request.Method.PUT);
-		
+
 		Response response = new HttpResponse(out);
 		manager.process(request, response);
 	}
 
 	// Collection COPY (upload) several Files
 	public void caseThree() throws FileNotFoundException {
-		headers.put(Header.HOST.code, "localhost");
-		headers.put(Header.RANGE.code, "null");
-		headers.put(Header.IF.code, "1");
-		headers.put(Header.CONTENT_TYPE.code, Response.HTTP);
+		headers.put(Header.HOST, "localhost");
+		headers.put(Header.RANGE, "null");
+		headers.put(Header.IF, "1");
+		headers.put(Header.CONTENT_TYPE, Response.HTTP);
+		headers.put(Header.DESTINATION, "http://localhost/uploadCol/");
 
-		Request request = new HttpRequest(in, headers, "http://localhost/out/", "jot",
-				Request.Method.COPY);
+		Request request = new HttpRequest(in, headers, "http://localhost/in/", "jot", Request.Method.COPY);
+		Response response = new HttpResponse(out);
+		manager.process(request, response);
+	}
+	
+	// Collection Delete several Files
+	public void caseFour() throws FileNotFoundException {
+		headers.put(Header.HOST, "localhost");
+		headers.put(Header.RANGE, "null");
+		headers.put(Header.IF, "1");
+		headers.put(Header.CONTENT_TYPE, Response.HTTP);
+
+		Request request = new HttpRequest(in, headers, "http://localhost/uploadCol/", "jot", Request.Method.DELETE);
+		Response response = new HttpResponse(out);
+		manager.process(request, response);
+	}
+	
+	// Collection GET (download) several File
+	public void caseFive() throws FileNotFoundException {
+		headers.put(Header.HOST, "localhost");
+		headers.put(Header.RANGE, "null");
+		headers.put(Header.IF, "1");
+		headers.put(Header.CONTENT_TYPE, Response.HTTP);
+		
+		out = new FileOutputStream("webdav/out/downloaded.txt");
+
+		Request request = new HttpRequest(in, headers, "http://localhost/in/", "jot", Request.Method.GET);
 		Response response = new HttpResponse(out);
 		manager.process(request, response);
 	}
