@@ -57,7 +57,7 @@ public class ExampleClient {
 	/**
 	 * Run requestResponse service.
 	 */
-	public void runrequestResponseService() {
+	public void runRequestResponseService() {
 
 		ClientScConnection con = new ClientScConnection(HOST, PORT, MessageTransportType.HTTP, NUM_OF_CON);
 		try {
