@@ -19,7 +19,7 @@ package com.stabilit.sc.handler;
 import com.stabilit.sc.service.IService;
 
 /**
- * The Interface ClientTimeoutHandler.
+ * The Interface ClientTimeoutHandler handles timeout on client side.
  * 
  * @author JTraber
  */

@@ -17,7 +17,7 @@
 package com.stabilit.sc.exception;
 
 /**
- * ServiceException, exceptions in service context.
+ * ServiceException, exception in context of services.
  */
 public class ServiceException extends Exception {
 

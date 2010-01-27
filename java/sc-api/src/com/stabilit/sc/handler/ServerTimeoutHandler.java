@@ -19,7 +19,7 @@ package com.stabilit.sc.handler;
 import com.stabilit.sc.ServerScConnection;
 
 /**
- * The Interface ServerTimeoutHandler.
+ * The Interface ServerTimeoutHandler handles timeout on server side.
  * 
  * @author JTraber
  */

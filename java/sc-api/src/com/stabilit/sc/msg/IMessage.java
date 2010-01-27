@@ -18,7 +18,7 @@ package com.stabilit.sc.msg;
 
 
 /**
- * The Interface IMessage.
+ * The Interface IMessage represents a message.
  * 
  * @author JTraber
  */

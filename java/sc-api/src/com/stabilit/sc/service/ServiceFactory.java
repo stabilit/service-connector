@@ -20,7 +20,7 @@ import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
- * The Class ServiceFactory.
+ * The ServiceFactory creates Services for clients.
  * 
  * @author JTraber
  */

@@ -17,7 +17,7 @@
 package com.stabilit.sc.service;
 
 /**
- * SubscriptionMask, defines subscription to several services.
+ * SubscriptionMask defines subscription to several services.
  */
 public class SubscriptionMask {
 

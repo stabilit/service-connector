@@ -17,7 +17,7 @@
 package com.stabilit.sc.exception;
 
 /**
- * ScConnectionException, exceptions from connection sc process.
+ * ScConnectionException, exception in connecting SC process.
  */
 public class ScConnectionException extends Exception {
 	

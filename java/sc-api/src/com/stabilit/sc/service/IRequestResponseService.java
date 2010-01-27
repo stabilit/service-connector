@@ -20,7 +20,7 @@ import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * The Interface IRequestResponseService.
+ * The Interface IRequestResponseService represents RequestResponseService.
  * 
  * @author JTraber
  */

@@ -16,7 +16,7 @@
  */
 package com.stabilit.sc.example;
 
-import com.stabilit.sc.ProtocolType;
+import com.stabilit.sc.MessageTransportType;
 import com.stabilit.sc.ServerScConnection;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ServerResponseHandler;
@@ -24,7 +24,7 @@ import com.stabilit.sc.handler.ServerTimeoutHandler;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * The Class ExampleServer.
+ * ExampleServer.
  * 
  * @author JTraber
  */
@@ -52,7 +52,7 @@ public class ExampleServer {
 	 */
 	public void runPublishServer() {
 
-		ServerScConnection con = new ServerScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
+		ServerScConnection con = new ServerScConnection(HOST, PORT, MessageTransportType.HTTP, NUM_OF_CON);
 		try {
 			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 			con.register("serviceName", new ServerResponseHandler() {

@@ -45,7 +45,7 @@ public class ClientScConnection extends ScConnection {
 	 * @param numOfConnections
 	 *            the number of connections used by Sc
 	 */
-	public ClientScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
+	public ClientScConnection(String scHost, int scPort, MessageTransportType scProtocol, int numOfConnections) {
 		super(scHost, scPort, scProtocol, numOfConnections);
 		serviceFactory = ServiceFactory.getInstance();
 	}

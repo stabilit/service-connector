@@ -19,7 +19,7 @@ package com.stabilit.sc.service;
 import com.stabilit.sc.exception.ServiceException;
 
 /**
- * The Interface ISubscribePublishService.
+ * The Interface ISubscribePublishService represents SubscribePublishService.
  * 
  * @author JTraber
  */

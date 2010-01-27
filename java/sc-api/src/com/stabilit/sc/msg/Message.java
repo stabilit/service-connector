@@ -17,7 +17,7 @@
 package com.stabilit.sc.msg;
 
 /**
- * The Class Message.
+ * Message to receive/send.
  * 
  * @author JTraber
  */

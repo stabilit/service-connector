@@ -20,7 +20,7 @@
 package com.stabilit.sc.service;
 
 /**
- * The Class ServiceCtx, represents the context of a service.
+ * The Class ServiceCtx represents the context of a service.
  * 
  * @author JTraber
  */

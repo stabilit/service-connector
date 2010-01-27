@@ -19,7 +19,7 @@ package com.stabilit.sc.service;
 import com.stabilit.sc.exception.ScConnectionException;
 
 /**
- * The Interface IService.
+ * The Interface IService represents a service.
  * 
  * @author JTraber
  */

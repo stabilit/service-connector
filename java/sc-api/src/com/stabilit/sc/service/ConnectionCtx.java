@@ -17,7 +17,7 @@
 package com.stabilit.sc.service;
 
 /**
- * The Class ConnectionCtx, represents the context of a connection.
+ * The Class ConnectionCtx represents the context of a connection.
  * 
  * @author JTraber
  */

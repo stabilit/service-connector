@@ -21,7 +21,7 @@ import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.service.IService;
 
 /**
- * The Interface ClientResponseHandler.
+ * The Interface ClientResponseHandler handles responses on client side.
  * 
  * @author JTraber
  */

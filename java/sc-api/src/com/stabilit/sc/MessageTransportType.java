@@ -17,11 +17,11 @@
 package com.stabilit.sc;
 
 /**
- * ProtocolType, specifies possible protocols for transportation.
+ * MessageTransportType, specifies possible protocols for transportation.
  * 
  * @author JTraber
  */
-public enum ProtocolType {
+public enum MessageTransportType {
 
 	/** The hypertext transfer protocol. */
 	HTTP, /** The transport protocol . */

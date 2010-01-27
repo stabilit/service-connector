@@ -21,7 +21,7 @@ import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
- * The Class Service.
+ * The Service.
  * 
  * @author JTraber
  */

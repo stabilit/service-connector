@@ -21,7 +21,7 @@ import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * The Class RequestResponseService.
+ * RequestResponseService.
  * 
  * @author JTraber
  */

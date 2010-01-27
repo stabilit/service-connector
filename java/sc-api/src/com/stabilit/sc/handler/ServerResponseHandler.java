@@ -21,7 +21,7 @@ import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.msg.IMessage;
 
 /**
- * The Interface ServerResponseHandler.
+ * The Interface ServerResponseHandler handles reponses on server side.
  * 
  * @author JTraber
  */

@@ -17,7 +17,7 @@
 package com.stabilit.sc.example;
 
 import com.stabilit.sc.ClientScConnection;
-import com.stabilit.sc.ProtocolType;
+import com.stabilit.sc.MessageTransportType;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
@@ -59,7 +59,7 @@ public class ExampleClient {
 	 */
 	public void runrequestResponseService() {
 
-		ClientScConnection con = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
+		ClientScConnection con = new ClientScConnection(HOST, PORT, MessageTransportType.HTTP, NUM_OF_CON);
 		try {
 			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {
@@ -114,7 +114,7 @@ public class ExampleClient {
 	 */
 	public void runSubscribePublishService() {
 
-		ClientScConnection con = new ClientScConnection(HOST, PORT, ProtocolType.HTTP, NUM_OF_CON);
+		ClientScConnection con = new ClientScConnection(HOST, PORT, MessageTransportType.HTTP, NUM_OF_CON);
 		try {
 			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
 		} catch (ScConnectionException e) {

@@ -32,7 +32,7 @@ public abstract class ScConnection {
 	private int scPort;
 
 	/** Used protocol for transportation. */
-	private ProtocolType scProtocol;
+	private MessageTransportType scProtocol;
 
 	/**
 	 * Instantiates a new sc connection.
@@ -46,7 +46,7 @@ public abstract class ScConnection {
 	 * @param numOfConnections
 	 *            the number of connections used by Sc
 	 */
-	public ScConnection(String scHost, int scPort, ProtocolType scProtocol, int numOfConnections) {
+	public ScConnection(String scHost, int scPort, MessageTransportType scProtocol, int numOfConnections) {
 		super();
 		this.scHost = scHost;
 		this.scPort = scPort;
@@ -76,7 +76,7 @@ public abstract class ScConnection {
 	 * 
 	 * @return used protocol
 	 */
-	public ProtocolType getScProtocol() {
+	public MessageTransportType getScProtocol() {
 		return scProtocol;
 	}
 
@@ -86,7 +86,7 @@ public abstract class ScConnection {
 	 * @param scProtocol
 	 *            protocol to use
 	 */
-	public void setScProtocol(ProtocolType scProtocol) {
+	public void setScProtocol(MessageTransportType scProtocol) {
 		this.scProtocol = scProtocol;
 	}
 
