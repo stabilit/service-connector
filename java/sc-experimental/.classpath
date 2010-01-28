@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/netty-3.2.0.ALPHA2.jar"/>
+	<classpathentry kind="lib" path="lib/netty-3.2.0.ALPHA2.jar" sourcepath="lib/netty-3.1.5.GA-sources.jar"/>
 	<classpathentry kind="lib" path="lib/opendmk-1.0-b02-bin-dual-01-Oct-2007_19-17-46.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.aop-3.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.asm-3.0.0.RELEASE.jar"/>
