@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.future.ConnectFuture;
@@ -35,17 +37,12 @@ public class MinaHttpClient implements IClient {
 	private HttpClientHandler handler = null;
 	private ProtocolCodecFilter filter = null;
 
-	private HttpResponseMessage responseMessage;
-	private Object sync;
-
 	public MinaHttpClient() {
 		this.url = null;
 		this.connector = new NioSocketConnector();
 		this.sessionId = null;
 		this.handler = this.new HttpClientHandler();
 		connector.setHandler(handler);
-		this.responseMessage = null;
-		this.sync = new Object();
 	}
 
 	@Override
@@ -84,9 +81,9 @@ public class MinaHttpClient implements IClient {
 
 	@Override
 	public void destroy() throws Exception {
-       connector.dispose();		
+		connector.dispose();
 	}
-	
+
 	@Override
 	public void openSession() throws IOException {
 
@@ -107,12 +104,11 @@ public class MinaHttpClient implements IClient {
 		} catch (ProtocolException e) {
 			e.printStackTrace();
 		}
-		this.resetResponse();
 		WriteFuture future = session.write(requestMessage);
-		future.await();
-		waitForResponse();
+		future.awaitUninterruptibly();
+		HttpClientHandler handler = (HttpClientHandler) session.getHandler();
 
-		byte[] content = this.responseMessage.getContent();
+		byte[] content = handler.getMessageSync().getContent();
 		ByteArrayInputStream bais = new ByteArrayInputStream(content);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
 		if (obj instanceof SCOP) {
@@ -142,12 +138,12 @@ public class MinaHttpClient implements IClient {
 		} catch (ProtocolException e) {
 			e.printStackTrace();
 		}
-		this.resetResponse();
 		WriteFuture future = session.write(requestMessage);
-		future.await();
-		waitForResponse();
+		future.awaitUninterruptibly();
 
-		byte[] content = this.responseMessage.getContent();
+		HttpClientHandler handler = (HttpClientHandler) session.getHandler();
+
+		byte[] content = handler.getMessageSync().getContent();
 		ByteArrayInputStream bais = new ByteArrayInputStream(content);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
 		if (obj instanceof SCOP) {
@@ -163,13 +159,30 @@ public class MinaHttpClient implements IClient {
 
 	public class HttpClientHandler extends IoHandlerAdapter {
 
-		public HttpClientHandler() {
+		private final BlockingQueue<HttpResponseMessage> answer = new LinkedBlockingQueue<HttpResponseMessage>();
+
+		public HttpResponseMessage getMessageSync() {
+			HttpResponseMessage responseMessage;
+			boolean interrupted = false;
+			for (;;) {
+				try {
+					// take() wartet bis Message in Queue kommt!
+					responseMessage = answer.take();
+					break;
+				} catch (InterruptedException e) {
+					interrupted = true;
+				}
+			}
+
+			if (interrupted) {
+				Thread.currentThread().interrupt();
+			}
+			return responseMessage;
 		}
 
 		@Override
 		public void messageReceived(IoSession session, Object message) {
-			HttpResponseMessage responseMessage = (HttpResponseMessage) message;
-			MinaHttpClient.this.submitResponse(responseMessage);
+			answer.offer((HttpResponseMessage) message);
 		}
 
 		@Override
@@ -193,21 +206,5 @@ public class MinaHttpClient implements IClient {
 	@Override
 	public void setEndpoint(URL url) {
 		this.url = url;
-	}
-
-	private synchronized void waitForResponse() throws InterruptedException {
-		if (this.responseMessage != null) {
-			return;
-		}
-		wait();
-	}
-
-	private synchronized void resetResponse() {
-		this.responseMessage = null;
-	}
-
-	private synchronized void submitResponse(HttpResponseMessage responseMessage) {
-		this.responseMessage = responseMessage;
-		notify();
 	}
 }

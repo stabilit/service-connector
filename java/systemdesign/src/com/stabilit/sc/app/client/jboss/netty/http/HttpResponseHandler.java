@@ -15,6 +15,9 @@
  */
 package com.stabilit.sc.app.client.jboss.netty.http;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
@@ -24,17 +27,30 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 @ChannelPipelineCoverage("one")
 public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 
-	private volatile boolean readingChunks;
-	private NettyHttpClient client;
+	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 
-	public HttpResponseHandler(NettyHttpClient client) {
-		this.client = client;
+	public HttpResponse getMessageSync() {
+		HttpResponse responseMessage;
+		boolean interrupted = false;
+		for (;;) {
+			try {
+				// take() wartet bis Message in Queue kommt!
+				responseMessage = answer.take();
+				break;
+			} catch (InterruptedException e) {
+				interrupted = true;
+			}
+		}
+
+		if (interrupted) {
+			Thread.currentThread().interrupt();
+		}
+		return responseMessage;
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
-		HttpResponse response = (HttpResponse) e.getMessage();
-		this.client.submitResponse(response);
+		answer.offer((HttpResponse) e.getMessage());
 	}
 }

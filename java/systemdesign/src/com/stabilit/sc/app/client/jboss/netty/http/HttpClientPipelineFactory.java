@@ -18,11 +18,8 @@ package com.stabilit.sc.app.client.jboss.netty.http;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpContentDecompressor;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-
-import com.stabilit.sc.app.client.IClient;
 
 
 /**
@@ -34,11 +31,6 @@ import com.stabilit.sc.app.client.IClient;
  */
 public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 	
-	private NettyHttpClient client; 
-	public HttpClientPipelineFactory(NettyHttpClient client) {
-		this.client = client;
-	}
-	
     public ChannelPipeline getPipeline() throws Exception {
         // Create a default pipeline implementation.
         ChannelPipeline pipeline = Channels.pipeline();
@@ -48,7 +40,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
         // Uncomment the following line if you don't want to handle HttpChunks.
         //pipeline.addLast("aggregator", new HttpChunkAggregator(1048576));
         pipeline.addLast("encoder", new HttpRequestEncoder());
-        pipeline.addLast("handler", new HttpResponseHandler(this.client));
+        pipeline.addLast("handler", new HttpResponseHandler());
         return pipeline;
     }
 }

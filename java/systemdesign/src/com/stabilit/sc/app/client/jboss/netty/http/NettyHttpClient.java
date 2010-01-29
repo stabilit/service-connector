@@ -31,11 +31,9 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClient;
-import com.stabilit.sc.app.client.mina.http.HttpResponseMessage;
 import com.stabilit.sc.io.SCOP;
 import com.stabilit.sc.job.IJob;
 import com.stabilit.sc.job.IJobResult;
@@ -49,7 +47,6 @@ public class NettyHttpClient implements IClient {
 	private String sessionId;
 	private ClientBootstrap bootstrap;
 	private Channel channel;
-	private HttpResponse responseMessage;
 
 	public NettyHttpClient() {
 		this.url = null;
@@ -61,7 +58,7 @@ public class NettyHttpClient implements IClient {
 				Executors.newCachedThreadPool(), Executors
 						.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory(this));
+		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory());
 	}
 
 	@Override
@@ -120,14 +117,14 @@ public class NettyHttpClient implements IClient {
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
 				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
-		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		request.setContent(channelBuffer);
-		this.resetResponse();
-		ChannelFuture future = channel.write(request);
-		future.awaitUninterruptibly();
-		waitForResponse();
-		ChannelBuffer content = this.responseMessage.getContent();
-		buffer = content.array();
+		// ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
+		// request.setContent(channelBuffer);
+		// this.resetResponse();
+		// ChannelFuture future = channel.write(request);
+		// future.awaitUninterruptibly();
+		// waitForResponse();
+		// ChannelBuffer content = this.responseMessage.getContent();
+		// buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
 		if (obj instanceof SCOP) {
@@ -148,17 +145,18 @@ public class NettyHttpClient implements IClient {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scop);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.POST, this.url.getPath());		
+				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
-		this.resetResponse();
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
-		//future.awaitUninterruptibly();
-		waitForResponse();
-		ChannelBuffer content = this.responseMessage.getContent();
+		
+		HttpResponseHandler handler = channel.getPipeline().get(
+				HttpResponseHandler.class);		
+		ChannelBuffer content = handler.getMessageSync().getContent();
+		
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
@@ -177,21 +175,4 @@ public class NettyHttpClient implements IClient {
 	public void setEndpoint(URL url) {
 		this.url = url;
 	}
-
-	private synchronized void waitForResponse() throws InterruptedException {
-		if (this.responseMessage != null) {
-			return;
-		}
-		wait();
-	}
-	
-	private synchronized void resetResponse() {
-		this.responseMessage = null;
-	}
-
-	public synchronized void submitResponse(HttpResponse responseMessage) {
-		this.responseMessage = responseMessage;
-		notify();
-	}
-
 }
