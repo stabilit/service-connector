@@ -69,9 +69,7 @@ public class ConnectionPoolNetty
 	{
 		ChannelPipeline pipe = createPipeline(handler);
 		Channel tcpChannel = tcpChannelFactory.newChannel(pipe);
-		/*
-		 * Set channel configuration properties
-		 */
+		
 		tcpChannel.getConfig().setOption("reuseAddress", true);
 		tcpChannel.getCloseFuture().addListener(new ChannelFutureListener()
 		{
