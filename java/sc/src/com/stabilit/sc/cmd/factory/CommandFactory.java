@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.impl.AsyncCallCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
+import com.stabilit.sc.cmd.impl.KeepAliveCommand;
 import com.stabilit.sc.cmd.impl.SubscribeCommand;
 import com.stabilit.sc.cmd.impl.UnSubscribeCommand;
 import com.stabilit.sc.io.IRequest;
@@ -26,6 +27,8 @@ public class CommandFactory implements ICommandFactory {
 		commandMap.put(unSubscribeCommand.getKey(), unSubscribeCommand);
 		ICommand asyncCallCommand = new AsyncCallCommand(true);  // echo job creation in separate thread
 		commandMap.put(asyncCallCommand.getKey(), asyncCallCommand);
+		ICommand keepAliveCmd = new KeepAliveCommand();
+		commandMap.put(keepAliveCmd.getKey(), keepAliveCmd);
 	}
 	
 	public static ICommandFactory getInstance() {

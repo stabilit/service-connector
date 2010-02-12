@@ -55,7 +55,6 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
 			e.printStackTrace();
 		}
 		writeResponse(response);
-
 	}
 
     private void writeResponse(NettyHttpResponse response) throws Exception {

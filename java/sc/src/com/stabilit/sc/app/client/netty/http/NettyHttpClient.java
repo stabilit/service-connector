@@ -54,9 +54,8 @@ public class NettyHttpClient implements IClient {
 		this.channel = null;
 
 		// Configure the client.
-		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
-				Executors.newCachedThreadPool(), Executors
-						.newCachedThreadPool()));
+		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
+				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory());
 	}
@@ -71,8 +70,7 @@ public class NettyHttpClient implements IClient {
 		String host = url.getHost();
 		int port = url.getPort();
 		// Start the connection attempt.
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,
-				port));
+		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 
 		// Wait until the connection attempt succeeds or fails.
 		this.channel = future.awaitUninterruptibly().getChannel();
@@ -114,8 +112,8 @@ public class NettyHttpClient implements IClient {
 		scop.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scop);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.POST, this.url.getPath());
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
+				.getPath());
 		byte[] buffer = baos.toByteArray();
 		// ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		// request.setContent(channelBuffer);
@@ -144,19 +142,18 @@ public class NettyHttpClient implements IClient {
 		scop.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scop);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.POST, this.url.getPath());
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
+				.getPath());
 		byte[] buffer = baos.toByteArray();
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
-		
-		HttpResponseHandler handler = channel.getPipeline().get(
-				HttpResponseHandler.class);		
+
+		HttpResponseHandler handler = channel.getPipeline().get(HttpResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
-		
+
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
