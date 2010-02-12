@@ -16,6 +16,8 @@
  */
 package com.stabilit.sc;
 
+import java.io.InputStream;
+
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.handler.ServerResponseHandler;
 import com.stabilit.sc.handler.ServerTimeoutHandler;
@@ -80,5 +82,25 @@ public class ServerScConnection extends ScConnection {
 	/** {@inheritDoc} */
 	@Override
 	public void detach(int timeout) {
+	}
+
+	/**
+	 * Download.
+	 * 
+	 * @param fileName the file name
+	 * @param timeout the timeout
+	 * 
+	 * @return the input stream
+	 */
+	public InputStream downloadFile(String fileName, int timeout) {
+		return null;
+	}
+
+	/**
+	 * Upload.
+	 * 
+	 * @param uploadFile the upload file
+	 */
+	public void uploadFile(InputStream uploadFile) {
 	}
 }
