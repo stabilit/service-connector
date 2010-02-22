@@ -35,19 +35,19 @@ import java.util.TreeMap;
 public class SubPubList implements Runnable {
 
 	List<String> messages = Collections.synchronizedList(new LinkedList<String>());
-	Map<String, Integer> hashMap = Collections.synchronizedMap(new HashMap<String, Integer>());
+	Map<String, Integer> serviceNames = Collections.synchronizedMap(new HashMap<String, Integer>());
 
 	public synchronized String getNextMsg(String serviceName) {
 		int index = 0;
-		if (hashMap.containsKey(serviceName)) {
-			index = (Integer) hashMap.get(serviceName);
+		if (serviceNames.containsKey(serviceName)) {
+			index = (Integer) serviceNames.get(serviceName);
 			index++;
 		}
 
 		if (messages.size() <= index) {
 			return null;
 		}
-		hashMap.put(serviceName, index);
+		serviceNames.put(serviceName, index);
 		String value = messages.get(index);
 		notifyAll();
 		return value;
@@ -61,8 +61,8 @@ public class SubPubList implements Runnable {
 	public synchronized void run() {
 		TreeMap<String, Integer> sortedMap;
 		while (true) {
-			sortedMap = new TreeMap<String, Integer>(new ComparatorMap(hashMap));
-			sortedMap.putAll(hashMap);
+			sortedMap = new TreeMap<String, Integer>(new ComparatorMap(serviceNames));
+			sortedMap.putAll(serviceNames);
 
 			int index = 0;
 			if (sortedMap.size() > 0) {
@@ -75,11 +75,11 @@ public class SubPubList implements Runnable {
 			}
 
 			if (index != 0) {
-				for (Iterator<String> iterator = hashMap.keySet().iterator(); iterator.hasNext();) {
+				for (Iterator<String> iterator = serviceNames.keySet().iterator(); iterator.hasNext();) {
 					String serviceName = iterator.next();
-					int count = hashMap.get(serviceName);
+					int count = serviceNames.get(serviceName);
 					count -= index;
-					hashMap.put(serviceName, count);
+					serviceNames.put(serviceName, count);
 				}
 			}
 
