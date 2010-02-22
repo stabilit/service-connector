@@ -7,7 +7,6 @@ import com.stabilit.sc.job.impl.FileSystemJob;
 
 public class Job implements IJob {
 
-
 	/**
 	 * 
 	 */

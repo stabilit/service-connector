@@ -11,9 +11,10 @@ public class SCOP implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2211653041443557380L;
-	
+
 	private Map<String, String> metaMap;
 	private Object body;
+	private IEncoderDecoder encoderDecoder = null;
 
 	public SCOP() {
 		metaMap = new HashMap<String, String>();
@@ -33,16 +34,24 @@ public class SCOP implements Serializable {
 	}
 
 	public String getSessionId() {
-	    return metaMap.get(ISession.SESSION_ID);	
+		return metaMap.get(ISession.SESSION_ID);
 	}
-	
+
 	public void setSessionId(String sessionId) {
 		if (sessionId == null) {
 			return;
 		}
-	    metaMap.put(ISession.SESSION_ID, sessionId);			
+		metaMap.put(ISession.SESSION_ID, sessionId);
 	}
-	
+
+	public Map<String, String> getMetaMap() {
+		return metaMap;
+	}
+
+	public void setMetaMap(Map<String, String> metaMap) {
+		this.metaMap = metaMap;
+	}
+
 	public void setBody(Object body) {
 		this.body = body;
 	}
@@ -53,15 +62,21 @@ public class SCOP implements Serializable {
 
 	private void writeObject(java.io.ObjectOutputStream stream)
 			throws IOException {
-		stream.writeObject(metaMap);
-		stream.writeObject(body);
+		if (this.encoderDecoder == null) {
+			// get default encoder decoder
+			this.encoderDecoder = EncoderDecoderFactory.newInstance();
+		}
+		this.encoderDecoder.encode(stream, this);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream stream)
 			throws IOException, ClassNotFoundException {
-		this.metaMap = (Map<String, String>) stream.readObject();
-		this.body = stream.readObject();
+		if (this.encoderDecoder == null) {
+			// get default encoder decoder
+			this.encoderDecoder = EncoderDecoderFactory.newInstance();
+		}
+		this.encoderDecoder.decode(stream, this);
 	}
 
 	@Override
@@ -72,6 +87,5 @@ public class SCOP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
+
 }
