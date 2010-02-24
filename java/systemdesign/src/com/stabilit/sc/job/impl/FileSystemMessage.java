@@ -1,19 +1,22 @@
 package com.stabilit.sc.job.impl;
 
-import com.stabilit.sc.job.Job;
+import com.stabilit.sc.msg.Message;
 
-public class FileSystemJob extends Job {
-    /**
+public class FileSystemMessage extends Message {
+
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3998019689531196867L;
+	private static final long serialVersionUID = -7860922024005869265L;
 
 	public enum ACTION {
 		LIST, LOAD, SAVE, DELETE, CHANGEDIR, RENAME
 	};
-	
-	public FileSystemJob() {
-    	super("filesystem");
+
+	public static String ID = "filesystem";
+
+	public FileSystemMessage() {
+    	super(ID);
     }
 	
 	public ACTION getAction() {
