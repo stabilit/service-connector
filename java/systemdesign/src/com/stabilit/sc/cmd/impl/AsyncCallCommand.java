@@ -5,11 +5,9 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.job.IJob;
-import com.stabilit.sc.job.IJobResult;
-import com.stabilit.sc.job.ISubscribe;
-import com.stabilit.sc.job.JobResult;
-import com.stabilit.sc.job.impl.DemoJob;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.job.impl.DemoMessage;
+import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.util.EventQueue;
 import com.stabilit.sc.util.SubscribeQueue;
 
@@ -39,19 +37,21 @@ public class AsyncCallCommand implements ICommand {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
- 		IJob job = request.getJob();
+ 		SCMP scmp= request.getSCMP();
 		try {
 			ISession session = request.getSession(false);
 			if (session == null) {
 				throw new CommandException("no session");
 			}
-			IJob subscribeJob = SubscribeQueue.get(job);
-			int nextIndex = (Integer)subscribeJob.getAttribute(ISubscribe.INDEX); 
-			IJob nextJob = EventQueue.getInstance().get(nextIndex);
-			IJobResult jobResult = new JobResult(nextJob);
+			String subscribeId = scmp.getSubscribeId();
+			IMessage subscribeMessage = SubscribeQueue.get(subscribeId);
+			Integer nextIndex = (Integer)subscribeMessage.getAttribute(SCMP.INDEX); 
+			IMessage nextJob = EventQueue.getInstance().get(nextIndex);
+			SCMP result = new SCMP(nextJob);
+			result.setSubsribeId(subscribeId);
 			//System.out.println("returning job = " + nextJob.toString());
-			response.setJobResult(jobResult);
-			subscribeJob.setAttribute(ISubscribe.INDEX, nextIndex + 1); 
+			response.setSCMP(result);
+			subscribeMessage.setAttribute(SCMP.INDEX, nextIndex + 1); 
 		} catch (CommandException e) {
 			throw e;
 		} catch (Exception e) {
@@ -67,9 +67,9 @@ public class AsyncCallCommand implements ICommand {
             while (true) {
             	try {
 					Thread.sleep(1000);
-	            	IJob demoJob = new DemoJob();
-	            	demoJob.setAttribute("index", index++);
-	            	EventQueue.getInstance().add(demoJob);
+	            	IMessage demoMsg = new DemoMessage();
+	            	demoMsg.setAttribute("index", index++);
+	            	EventQueue.getInstance().add(demoMsg);
 				} catch (InterruptedException e) {
 				}            	
             }

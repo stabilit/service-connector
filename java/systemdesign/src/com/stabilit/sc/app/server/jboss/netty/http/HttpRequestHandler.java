@@ -41,7 +41,6 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
 
-
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event)
 			throws Exception {
@@ -50,6 +49,11 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = commandFactory.newCommand(request);
 		try {
+			if (command == null) {
+				throw new CommandException(
+						"unknown or invalid command for key = "
+								+ request.getKey());
+			}
 			command.run(request, response);
 		} catch (CommandException e) {
 			e.printStackTrace();
@@ -58,32 +62,34 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
 
 	}
 
-    private void writeResponse(NettyHttpResponse response) throws Exception {
-    	MessageEvent event = response.getEvent();
+	private void writeResponse(NettyHttpResponse response) throws Exception {
+		MessageEvent event = response.getEvent();
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 
-        // Decide whether to close the connection or not.
-        boolean close = !httpRequest.isKeepAlive();
+		// Decide whether to close the connection or not.
+		boolean close = !httpRequest.isKeepAlive();
 
-        // Build the response object.
-        HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-        ChannelBuffer buffer = response.getBuffer();
-        
-        httpResponse.setContent(buffer);
+		// Build the response object.
+		HttpResponse httpResponse = new DefaultHttpResponse(
+				HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+		ChannelBuffer buffer = response.getBuffer();
 
-        if (!close) {
-            // There's no need to add 'Content-Length' header
-            // if this is the last response.
-        	httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-        }
-        // Write the response.
-        ChannelFuture future = event.getChannel().write(httpResponse);
+		httpResponse.setContent(buffer);
 
-        // Close the connection after the write operation is done if necessary.
-        if (close) {
-            future.addListener(ChannelFutureListener.CLOSE);
-        }
-    }
+		if (!close) {
+			// There's no need to add 'Content-Length' header
+			// if this is the last response.
+			httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String
+					.valueOf(buffer.readableBytes()));
+		}
+		// Write the response.
+		ChannelFuture future = event.getChannel().write(httpResponse);
+
+		// Close the connection after the write operation is done if necessary.
+		if (close) {
+			future.addListener(ChannelFutureListener.CLOSE);
+		}
+	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)

@@ -1,14 +1,14 @@
 package com.stabilit.sc.context;
 
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
+import com.stabilit.sc.io.SCMP;
 
 public class SCOPSessionContext extends SessionContext {
 
 	public SCOPSessionContext() {
 	}
 
-	public static ISession getSession(SCOP scop, boolean fCreate) {
+	public static ISession getSession(SCMP scop, boolean fCreate) {
 		if (scop == null) {
 			return null;
 		}

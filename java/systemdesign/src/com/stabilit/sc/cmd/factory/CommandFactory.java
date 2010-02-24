@@ -39,6 +39,9 @@ public class CommandFactory implements ICommandFactory {
 	@Override
 	public ICommand newCommand(IRequest request) {
 		String key = request.getKey();
+		if (key == null) {
+			return null;
+		}
 		ICommand command = commandMap.get(key);
 		return command;
 	}

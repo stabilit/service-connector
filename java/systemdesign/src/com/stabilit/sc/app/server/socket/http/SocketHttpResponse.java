@@ -5,18 +5,20 @@ import java.net.Socket;
 
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class SocketHttpResponse implements IResponse {
 
 	private Socket socket;
 	private ISession session;
+	private SCMP scmp;
 
 	public SocketHttpResponse(Socket socket) {
 		this.socket = socket;
 		this.session = null;
+		this.scmp = null;
 	}
 
 	@Override
@@ -25,16 +27,16 @@ public class SocketHttpResponse implements IResponse {
 	}
 
 	@Override
-	public void setJobResult(IJobResult jobResult) throws Exception {
-		if (jobResult == null) {
+	public void setSCMP(SCMP scmp) throws Exception {
+		if (scmp == null) {
 			return;
 		}
 		OutputStream os = socket.getOutputStream();
-		SCOP scop = new SCOP(jobResult);
+		this.scmp = scmp;
 		if (this.session != null) {
-		   scop.setSessionId(this.session.getId());
+		   this.scmp.setSessionId(this.session.getId());
 		}
-		ObjectStreamHttpUtil.writeResponseObject(os, scop);
+		ObjectStreamHttpUtil.writeResponseObject(os, this.scmp);
 
 	}
 

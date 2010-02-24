@@ -1,14 +1,13 @@
 package com.stabilit.sc.app.client.performance;
 
-import java.net.URL;
-
 import com.stabilit.sc.app.client.ClientApplication;
-import com.stabilit.sc.app.client.ClientConnectionFactory;
-import com.stabilit.sc.app.client.IClient;
+import com.stabilit.sc.app.client.IConnection;
+import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.job.IJob;
-import com.stabilit.sc.job.IJobResult;
-import com.stabilit.sc.job.impl.EchoJob;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.job.impl.EchoMessage;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.pool.ConnectionPoolFactory;
 
 /**
  * The Class PerformanceOneClient.
@@ -25,33 +24,30 @@ public class PerformanceApplication extends ClientApplication {
 	public void run() throws Exception {
 		
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		String con = applicationContext.getConnection();
-		URL url = applicationContext.getURL();
-		IClient client = ClientConnectionFactory.newInstance(con);
+		IConnection con = ConnectionPoolFactory.newInstance(applicationContext);
+		if (con == null) {
+			throw new ServerException("no client available");
+		}
 		
 		int numberOfMsg = Integer.valueOf(applicationContext.getArgs()[5]);
 		
-		if (client == null) {
-			System.out.println("no client available");
-		}
-		client.setEndpoint(url);
-
 		int index = 0;
 		startTime = System.currentTimeMillis();
-		client.connect();
+		con.connect();
+		SCMP request = new SCMP();
 		for (int i = 0; i < numberOfMsg; i++) {
-			try {		
-				
-				IJob job = new EchoJob();
-				job.setAttribute("msg", "hello " + ++index);
-				IJobResult result = client.sendAndReceive(job);
+			try {						
+				IMessage msg = new EchoMessage();
+				request.setBody(msg);
+				msg.setAttribute("msg", "hello " + ++index);
+				SCMP result = con.sendAndReceive(request);
 //				System.out.println(result.getJob());
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
 		}	
-		client.disconnect();
+		con.disconnect();
 		
 		endTime = System.currentTimeMillis();
 		long neededTime = endTime - startTime;

@@ -1,15 +1,13 @@
 package com.stabilit.sc.app.client.echo;
 
-import java.net.URL;
-
 import com.stabilit.sc.app.client.ClientApplication;
-import com.stabilit.sc.app.client.ClientConnectionFactory;
-import com.stabilit.sc.app.client.IClient;
+import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.job.IJob;
-import com.stabilit.sc.job.IJobResult;
-import com.stabilit.sc.job.impl.EchoJob;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.job.impl.EchoMessage;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.pool.ConnectionPoolFactory;
 
 public class EchoClientApplicationKeepAlive extends ClientApplication {
 
@@ -19,29 +17,26 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 	@Override
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		String con = applicationContext.getConnection();
-		URL url = applicationContext.getURL();
-		IClient client = ClientConnectionFactory.newInstance(con);
-		if (client == null) {
-			client = ClientConnectionFactory.newInstance();
-		}
-		if (client == null) {
+		IConnection con = ConnectionPoolFactory.newInstance(applicationContext);
+		if (con == null) {
 			throw new ServerException("no client available");
 		}
-		client.setEndpoint(url);
 
 		int index = 0;
-		client.connect();
+		con.connect();
 		long start = System.currentTimeMillis();
+		SCMP request = new SCMP();
 		while (index++ < 10000) {
-			IJob job = new EchoJob();
-			job.setAttribute("msg", "hello " + index);
-			IJobResult result = client.sendAndReceive(job);
-		    System.out.println(result.getJob() + " session = " + client.getSessionId());
+			IMessage msg = new EchoMessage();
+			request.setBody(msg);
+			msg.setAttribute("msg", "hello " + index);
+			SCMP response = con.sendAndReceive(request);
+			IMessage echoed = (IMessage) response.getBody();
+		    System.out.println(echoed + " session = " + con.getSessionId());
 		}
 		long end = System.currentTimeMillis();
 		System.out.println(" 10000 calls in time (ms) = " + (end - start));
-		client.disconnect();
-		client.destroy();
+		con.disconnect();
+		con.destroy();
 	}
 }

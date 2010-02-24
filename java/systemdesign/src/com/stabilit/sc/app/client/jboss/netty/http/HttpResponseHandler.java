@@ -15,6 +15,7 @@
  */
 package com.stabilit.sc.app.client.jboss.netty.http;
 
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -24,11 +25,27 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.cmd.impl.UnSubscribeCommand;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.job.impl.UnSubscribeMessage;
+import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.util.ObjectStreamHttpUtil;
+
 @ChannelPipelineCoverage("one")
 public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 
+	private ICallback callback = null;
+	
+	public void setCallback(ICallback callback) {
+		this.callback = callback;
+	}
+	
+	public ICallback getCallback() {
+		return callback;
+	}
+	
 	public HttpResponse getMessageSync() {
 		HttpResponse responseMessage;
 		boolean interrupted = false;
@@ -51,6 +68,28 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
+		// run callback if any
+		if (this.callback != null) {
+			HttpResponse httpResponse = (HttpResponse) e.getMessage();
+			byte[] buffer = httpResponse.getContent().array();
+			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
+			if (obj instanceof SCMP) {
+				SCMP ret = (SCMP) obj;
+				// check for subscribe id
+				String subscribeId = ret.getSubscribeId();
+				if (subscribeId != null) {
+				   if (subscribeId.equals(this.callback.getSubscribeId())) {
+					  if (UnSubscribeMessage.ID.equals(ret.getMessageId())) {
+						  this.callback = null;
+						  return;
+					  }
+				      this.callback.callback(ret);
+				      return;
+				   }
+				}
+			}
+		}
 		answer.offer((HttpResponse) e.getMessage());
 	}
 }

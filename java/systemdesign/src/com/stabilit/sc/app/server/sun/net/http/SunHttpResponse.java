@@ -7,18 +7,19 @@ import java.io.OutputStream;
 
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.io.SCMP;
 import com.sun.net.httpserver.HttpExchange;
 
 public class SunHttpResponse implements IResponse {
 
 	private HttpExchange httpExchange;
 	private ISession session;
+	private SCMP scmp;
 	
 	public SunHttpResponse(HttpExchange httpExchange) {
 		this.httpExchange = httpExchange;
 		this.session = null;
+		this.scmp = null;
 	}
 
 	@Override
@@ -27,18 +28,18 @@ public class SunHttpResponse implements IResponse {
 	}
 	
 	@Override
-	public void setJobResult(IJobResult jobResult) {
-		if (jobResult == null) {
+	public void setSCMP(SCMP scmp) {
+		if (scmp == null) {
 			return;
 		}
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			SCOP scop = new SCOP(jobResult);
+			this.scmp = scmp;
 			if (this.session != null) {
-			   scop.setSessionId(this.session.getId());
+			   this.scmp.setSessionId(this.session.getId());
 			}
-			oos.writeObject(scop);
+			oos.writeObject(this.scmp);
 			oos.flush();
             byte[] stream = baos.toByteArray();
 			httpExchange.sendResponseHeaders(200, stream.length);

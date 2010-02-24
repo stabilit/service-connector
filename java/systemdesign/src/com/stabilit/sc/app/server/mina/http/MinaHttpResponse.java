@@ -5,15 +5,16 @@ import java.io.OutputStream;
 
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.job.IJobResult;
+import com.stabilit.sc.io.SCMP;
 
 public class MinaHttpResponse implements IResponse {
 
 	private HttpResponseMessage message;
+	private SCMP scmp;
 	private ISession session;
 	
 	public MinaHttpResponse(HttpResponseMessage message) {
+		this.scmp = scmp;
 		this.message = message;
 	}
 
@@ -23,18 +24,18 @@ public class MinaHttpResponse implements IResponse {
 	}
 	
 	@Override
-	public void setJobResult(IJobResult jobResult) {
-		if (jobResult == null) {
+	public void setSCMP(SCMP scmp) {
+		if (scmp == null) {
 			return;
 		}
 		try {
 			OutputStream bodyOS = message.getBodyOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bodyOS);
-			SCOP scop = new SCOP(jobResult);
+			this.scmp = scmp;
 			if (this.session != null) {
-			   scop.setSessionId(this.session.getId());
+			   scmp.setSessionId(this.session.getId());
 			}
-			oos.writeObject(scop);
+			oos.writeObject(this.scmp);
 			oos.flush();
 		} catch (Exception e) {
 			e.printStackTrace();

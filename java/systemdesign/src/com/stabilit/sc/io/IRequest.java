@@ -1,7 +1,6 @@
 package com.stabilit.sc.io;
 
 import com.stabilit.sc.context.IRequestContext;
-import com.stabilit.sc.job.IJob;
 
 public interface IRequest {
 
@@ -11,6 +10,6 @@ public interface IRequest {
 	
 	public ISession getSession(boolean fCreate);
 	
-	public IJob getJob();
-	
+	public SCMP getSCMP();
+		
 }
