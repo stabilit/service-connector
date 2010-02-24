@@ -5,8 +5,8 @@ import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.EchoMessage;
 import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.EchoMessage;
 import com.stabilit.sc.pool.ConnectionPoolFactory;
 
 /**

@@ -6,7 +6,7 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.SubscribeMessage;
+import com.stabilit.sc.msg.impl.SubscribeMessage;
 import com.stabilit.sc.util.SubscribeQueue;
 
 public class SubscribeCommand implements ICommand {

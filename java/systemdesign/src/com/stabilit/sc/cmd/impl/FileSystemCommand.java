@@ -8,10 +8,10 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.FileSystemMessage;
-import com.stabilit.sc.job.impl.FileSystemMessage.ACTION;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.Message;
+import com.stabilit.sc.msg.impl.FileSystemMessage;
+import com.stabilit.sc.msg.impl.FileSystemMessage.ACTION;
 
 public class FileSystemCommand implements ICommand {
 

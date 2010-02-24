@@ -6,9 +6,9 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.UnSubscribeMessage;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.Message;
+import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.SubscribeQueue;
 
 public class UnSubscribeCommand implements ICommand {

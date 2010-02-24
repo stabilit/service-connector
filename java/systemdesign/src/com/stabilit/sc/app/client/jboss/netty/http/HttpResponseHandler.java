@@ -25,10 +25,9 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.sc.cmd.impl.UnSubscribeCommand;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.UnSubscribeMessage;
 import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 @ChannelPipelineCoverage("one")

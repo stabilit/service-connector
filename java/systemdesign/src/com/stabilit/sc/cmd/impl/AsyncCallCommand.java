@@ -6,8 +6,8 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.DemoMessage;
 import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.DemoMessage;
 import com.stabilit.sc.util.EventQueue;
 import com.stabilit.sc.util.SubscribeQueue;
 

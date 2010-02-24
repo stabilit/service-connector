@@ -7,10 +7,9 @@ import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.app.client.IConnectionCallback;
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.job.impl.AsyncCallMessage;
-import com.stabilit.sc.job.impl.SubscribeMessage;
-import com.stabilit.sc.job.impl.UnSubscribeMessage;
 import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.msg.impl.AsyncCallMessage;
+import com.stabilit.sc.msg.impl.SubscribeMessage;
 
 public class PoolConnection implements IConnection, ISubscribe {
 
