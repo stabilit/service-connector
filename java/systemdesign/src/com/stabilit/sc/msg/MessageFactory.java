@@ -8,21 +8,27 @@ import com.stabilit.sc.msg.impl.FileSystemMessage;
 import com.stabilit.sc.msg.impl.FtpMessage;
 
 public class MessageFactory implements IMessageFactory {
-	private Map<String, IMessage> jobMap;
+	private Map<String, IMessage> messageMap;
+	
+	private static IMessageFactory singleMessageFactory = new MessageFactory();
+	
+	public static IMessageFactory getMessageFactory() {
+		return singleMessageFactory;
+	}
 	
 	public MessageFactory() {
-		jobMap = new HashMap<String, IMessage>();
-		IMessage echoJob = new EchoMessage();
-		jobMap.put(echoJob.getKey(), echoJob);
-		IMessage ftpJob = new FtpMessage();
-		jobMap.put(ftpJob.getKey(), ftpJob);
-		IMessage fsJob = new FileSystemMessage();
-		jobMap.put(fsJob.getKey(), fsJob);
+		messageMap = new HashMap<String, IMessage>();
+		IMessage echoMessage = new EchoMessage();
+		messageMap.put(echoMessage.getKey(), echoMessage);
+		IMessage ftpMessage = new FtpMessage();
+		messageMap.put(ftpMessage.getKey(), ftpMessage);
+		IMessage fsMessage = new FileSystemMessage();
+		messageMap.put(fsMessage.getKey(), fsMessage);
 	}
 	
 	@Override
-	public synchronized IMessage newJob(String key) {
-		IMessage job = jobMap.get(key);
+	public synchronized IMessage newMessage(String key) {
+		IMessage job = messageMap.get(key);
 		if (job == null) {
 			return job;
 		}

@@ -8,10 +8,11 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import com.stabilit.sc.context.IRequestContext;
 import com.stabilit.sc.context.RequestContext;
 import com.stabilit.sc.context.SCOPSessionContext;
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyHttpRequest implements IRequest {
 
@@ -61,9 +62,8 @@ public class NettyHttpRequest implements IRequest {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = channelBuffer.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-        Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-        if (obj instanceof SCMP) {
-        	this.scmp = (SCMP)obj;
-        }
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+		this.scmp = new SCMP();
+		encoderDecoder.decode(bais, scmp);
 	}
 }

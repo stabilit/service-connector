@@ -7,6 +7,7 @@ import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.app.client.echo.AsyncDemoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplication;
 import com.stabilit.sc.app.client.echo.EchoClientApplicationKeepAlive;
+import com.stabilit.sc.app.client.echo.EchoStringClientApplication;
 import com.stabilit.sc.app.client.performance.PerformanceApplication;
 
 public class ClientApplicationFactory {
@@ -17,6 +18,9 @@ public class ClientApplicationFactory {
 		IApplication echoClient = new EchoClientApplication();
 		clientMap.put(EchoClientApplication.class.getName(), echoClient);
 		clientMap.put("echo.client", echoClient);
+		IApplication echoStringClient = new EchoStringClientApplication();
+		clientMap.put(EchoStringClientApplication.class.getName(), echoStringClient);
+		clientMap.put("echo.string.client", echoStringClient);
 		IApplication echoClientKeepAlive = new EchoClientApplicationKeepAlive();
 		clientMap.put(EchoClientApplicationKeepAlive.class.getName(), echoClientKeepAlive);
 		clientMap.put("echo.client.keep.alive", echoClientKeepAlive);

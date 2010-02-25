@@ -29,7 +29,6 @@ public class UnSubscribeCommand implements ICommand {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
-		System.out.println("UnSubscribeCommand.run()");
 		SCMP scmp = request.getSCMP();
 		String subscribeId = scmp.getSubscribeId();
 		String messageId = scmp.getMessageId();

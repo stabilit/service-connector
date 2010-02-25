@@ -6,6 +6,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.MessageEvent;
 
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
@@ -30,7 +32,8 @@ public class NettyHttpResponse implements IResponse {
 	
 	public ChannelBuffer getBuffer() throws Exception {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	   ObjectStreamHttpUtil.writeObjectOnly(baos, this.scmp);
+	   IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	   encoderDecoder.encode(baos, this.scmp);
 	   byte[] buf = baos.toByteArray();
 	   return ChannelBuffers.copiedBuffer(buf);
 	}

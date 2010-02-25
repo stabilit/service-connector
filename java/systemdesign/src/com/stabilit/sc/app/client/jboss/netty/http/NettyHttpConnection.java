@@ -36,9 +36,10 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.app.client.IConnectionCallback;
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ICallback;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyHttpConnection implements IConnection, IConnectionCallback {
 
@@ -110,7 +111,8 @@ public class NettyHttpConnection implements IConnection, IConnectionCallback {
 	public void send(SCMP scmp) throws Exception {
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+		encoderDecoder.encode(baos, scmp);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
 				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
@@ -125,7 +127,8 @@ public class NettyHttpConnection implements IConnection, IConnectionCallback {
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+		encoderDecoder.encode(baos, scmp);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
 				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
@@ -141,16 +144,13 @@ public class NettyHttpConnection implements IConnection, IConnectionCallback {
 
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-		if (obj instanceof SCMP) {
-			SCMP ret = (SCMP) obj;
-			String retSessionID = ret.getSessionId();
-			if (retSessionID != null) {
-				this.sessionId = retSessionID;
-			}
-			return ret;
+		SCMP ret = new SCMP();
+		encoderDecoder.decode(bais, ret);
+		String retSessionID = ret.getSessionId();
+		if (retSessionID != null) {
+			this.sessionId = retSessionID;
 		}
-		throw new Exception("not found");
+		return ret;
 	}
 
 	@Override

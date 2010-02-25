@@ -32,6 +32,11 @@ public class Message implements IMessage {
 	public String getKey() {
 		return key;
 	}
+	
+	@Override
+	public Map<String, Object> getAttributeMap() {
+		return attrMap;
+	}
 
 	@Override
 	public String toString() {
