@@ -16,12 +16,12 @@
  */
 package com.stabilit.sc.example;
 
-import com.stabilit.sc.MessageTransportType;
 import com.stabilit.sc.ServerScConnection;
-import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServerResponseHandler;
-import com.stabilit.sc.handler.ServerTimeoutHandler;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.app.server.IServiceServerConnection;
+import com.stabilit.sc.pool.Connection;
+import com.stabilit.sc.serviceserver.ServiceServerException;
+import com.stabilit.sc.serviceserver.handler.IResponseHandler;
+import com.stabilit.sc.serviceserver.handler.ITimeoutHandler;
 
 /**
  * ExampleServer.
@@ -47,47 +47,38 @@ public class ExampleServer {
 	/** The Constant HOST. */
 	private static final String HOST = "localhost";
 
-	/**
-	 * Run publish server.
-	 */
-	public void runPublishServer() {
+	public static void main(String[] args) throws ServiceServerException {
+		ExampleServer service = new ExampleServer();
+		service.runRequestResponseServiceOverHttp();
+	}
 
-		ServerScConnection con = new ServerScConnection(HOST, PORT, MessageTransportType.HTTP, NUM_OF_CON);
-		try {
-			con.attach(TIMEOUT, KEEP_ALIVE_INTERVAL, KEEP_ALIVE_TIMEOUT);
-			con.register("serviceName", new ServerResponseHandler() {
+	public void runRequestResponseServiceOverHttp() throws ServiceServerException {
+		ServerScConnection scConnection = new ServerScConnection("localhost", 8080,
+				"nettyServiceServer.reqRes.http");
+		scConnection.register("ServiceA", MyResponseHandler.class, MyTimeoutHandler.class, 30, 30, 30);
+	}
 
-				@Override
-				public void controlMessageReceived(ServerScConnection connection, IMessage message) {
-				}
+	class MyResponseHandler implements IResponseHandler<IServiceServerConnection> {
 
-				@Override
-				public void exceptionCaught(ServerScConnection connection, ScConnectionException exception) {
-				}
+		@Override
+		public Object getMessageSync() {
+			return null;
+		}
 
-				@Override
-				public void executionMessageReceived(ServerScConnection connection, IMessage message) {
-				}
+		@Override
+		public void messageReceived(IServiceServerConnection con, Object obj) throws Exception {
+			// TODO Auto-generated method stub			
+		}
+	}
 
-			}, new ServerTimeoutHandler() {
+	class MyTimeoutHandler implements ITimeoutHandler {
 
-				@Override
-				public void connectTimedOut(ServerScConnection connection) {
-				}
+		@Override
+		public void readTimedOut(Connection conn) {
+		}
 
-				@Override
-				public void readTimedOut(ServerScConnection connection) {
-				}
-
-				@Override
-				public void writeTimedOut(ServerScConnection connection) {
-				}
-
-			});
-			
-			con.detach(TIMEOUT);
-		} catch (ScConnectionException e) {
-			e.printStackTrace();
+		@Override
+		public void writeTimedOut(Connection conn) {
 		}
 	}
 }

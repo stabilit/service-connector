@@ -32,7 +32,7 @@ public abstract class ScConnection {
 	private int scPort;
 
 	/** Used protocol for transportation. */
-	private MessageTransportType scProtocol;
+	private String connectionType;
 
 	/**
 	 * Instantiates a new sc connection.
@@ -46,11 +46,11 @@ public abstract class ScConnection {
 	 * @param numOfConnections
 	 *            the number of connections used by Sc
 	 */
-	public ScConnection(String scHost, int scPort, MessageTransportType scProtocol, int numOfConnections) {
+	public ScConnection(String scHost, int scPort, String connectionType, int numOfConnections) {
 		super();
 		this.scHost = scHost;
 		this.scPort = scPort;
-		this.scProtocol = scProtocol;
+		this.connectionType = connectionType;
 	}
 
 	/**
@@ -70,41 +70,6 @@ public abstract class ScConnection {
 	public int getScPort() {
 		return scPort;
 	}
-
-	/**
-	 * Gets used protocol.
-	 * 
-	 * @return used protocol
-	 */
-	public MessageTransportType getScProtocol() {
-		return scProtocol;
-	}
-
-	/**
-	 * Sets used protocol.
-	 * 
-	 * @param scProtocol
-	 *            protocol to use
-	 */
-	public void setScProtocol(MessageTransportType scProtocol) {
-		this.scProtocol = scProtocol;
-	}
-
-	/**
-	 * Attach a connector to a Sc.
-	 * 
-	 * @param timeout
-	 *            the timeout
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 * @param keepAliveTimeout
-	 *            the keep alive timeout
-	 * 
-	 * @throws ScConnectionException
-	 *             exception in attach process
-	 */
-	public abstract void attach(int timeout, int keepAliveInterval, int keepAliveTimeout)
-			throws ScConnectionException;
 
 	/**
 	 * Detach connector from Sc.

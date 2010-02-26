@@ -13,67 +13,28 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 package com.stabilit.sc.msg;
 
+
 /**
- * Message to receive/send.
+ * The Interface IMessage represents a message.
  * 
  * @author JTraber
  */
-public class Message implements IMessage {
-
-	/** The routing information. */
-	private String routingInformation;
+public interface IData {
 	
-	/** The message body. */
-	private String messageBody;
-
-	/**
-	 * Instantiates a new message.
-	 * 
-	 * @param routingInformation the routing information
-	 * @param messageBody the message body
-	 */
-	public Message(String routingInformation, String messageBody) {
-		super();
-		this.routingInformation = routingInformation;
-		this.messageBody = messageBody;
-	}
-
 	/**
 	 * Gets the routing information.
 	 * 
 	 * @return the routing information
 	 */
-	public String getRoutingInformation() {
-		return routingInformation;
-	}
-
-	/**
-	 * Sets the routing information.
-	 * 
-	 * @param routingInformation the new routing information
-	 */
-	public void setRoutingInformation(String routingInformation) {
-		this.routingInformation = routingInformation;
-	}
-
+	String getRoutingInformation();
+	
 	/**
 	 * Gets the message body.
 	 * 
 	 * @return the message body
 	 */
-	public String getMessageBody() {
-		return messageBody;
-	}
-
-	/**
-	 * Sets the message body.
-	 * 
-	 * @param messageBody the new message body
-	 */
-	public void setMessageBody(String messageBody) {
-		this.messageBody = messageBody;
-	}
+	String getMessageBody();
 }

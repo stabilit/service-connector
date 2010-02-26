@@ -45,8 +45,8 @@ public class ClientScConnection extends ScConnection {
 	 * @param numOfConnections
 	 *            the number of connections used by Sc
 	 */
-	public ClientScConnection(String scHost, int scPort, MessageTransportType scProtocol, int numOfConnections) {
-		super(scHost, scPort, scProtocol, numOfConnections);
+	public ClientScConnection(String scHost, int scPort, String connectionType, int numOfConnections) {
+		super(scHost, scPort, connectionType, numOfConnections);
 		serviceFactory = ServiceFactory.getInstance();
 	}
 
@@ -82,11 +82,6 @@ public class ClientScConnection extends ScConnection {
 	public ISubscribePublishService newSubscribePublishService(String serviceName,
 			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return serviceFactory.createSubscribePublishService(serviceName, responseHandler, timeoutHandler);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) throws ScConnectionException {
 	}
 
 	/** {@inheritDoc} */

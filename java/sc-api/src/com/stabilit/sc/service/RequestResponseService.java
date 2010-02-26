@@ -18,7 +18,7 @@ package com.stabilit.sc.service;
 
 import com.stabilit.sc.handler.ClientResponseHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.IData;
 
 /**
  * RequestResponseService.
@@ -44,12 +44,12 @@ public class RequestResponseService extends Service implements IRequestResponseS
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(IMessage message, int timeout, boolean compression) {
+	public void send(IData message, int timeout, boolean compression) {
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IMessage sendAndReceive(IMessage message, int timeout, boolean compression) {
+	public IData sendAndReceive(IData message, int timeout, boolean compression) {
 		return null;
 	}
 }

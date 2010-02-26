@@ -17,7 +17,7 @@
 package com.stabilit.sc.handler;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.IData;
 import com.stabilit.sc.service.IService;
 
 /**
@@ -35,7 +35,7 @@ public interface ClientResponseHandler {
 	 * @param response
 	 *            the response
 	 */
-	void messageReceived(IService service, IMessage response);
+	void messageReceived(IService service, IData response);
 
 	/**
 	 * Invoked when a exception occurs in process of receiving a message.

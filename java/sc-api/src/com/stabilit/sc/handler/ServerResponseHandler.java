@@ -18,7 +18,7 @@ package com.stabilit.sc.handler;
 
 import com.stabilit.sc.ServerScConnection;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.IData;
 
 /**
  * The Interface ServerResponseHandler handles reponses on server side.
@@ -35,7 +35,7 @@ public interface ServerResponseHandler {
 	 * @param message
 	 *            the message
 	 */
-	void controlMessageReceived(ServerScConnection connection, IMessage message);
+	void controlMessageReceived(ServerScConnection connection, IData message);
 
 	/**
 	 * Invoked when execution message received.
@@ -45,7 +45,7 @@ public interface ServerResponseHandler {
 	 * @param message
 	 *            the message
 	 */
-	void executionMessageReceived(ServerScConnection connection, IMessage message);
+	void executionMessageReceived(ServerScConnection connection, IData message);
 
 	/**
 	 * Invoked when Exception caught in receiving message process.

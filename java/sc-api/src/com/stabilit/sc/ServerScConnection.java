@@ -18,17 +18,23 @@ package com.stabilit.sc;
 
 import java.io.InputStream;
 
+import com.stabilit.sc.app.server.IServiceServerConnection;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServerResponseHandler;
-import com.stabilit.sc.handler.ServerTimeoutHandler;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.IData;
+import com.stabilit.sc.serviceserver.IServiceServer;
+import com.stabilit.sc.serviceserver.ServerServiceFactory;
+import com.stabilit.sc.serviceserver.ServiceServerException;
+import com.stabilit.sc.serviceserver.handler.IResponseHandler;
+import com.stabilit.sc.serviceserver.handler.ITimeoutHandler;
 
 /**
  * The Class ServerScConnection, represents a connection between a Server and a Sc.
  * 
  * @author JTraber
  */
-public class ServerScConnection extends ScConnection {
+public class ServerScConnection {
+
+	private IServiceServer serviceServer;
 
 	/**
 	 * The Constructor.
@@ -42,22 +48,14 @@ public class ServerScConnection extends ScConnection {
 	 * @param numOfConnections
 	 *            the number of connections used by Sc
 	 */
-	public ServerScConnection(String scHost, int scPort, MessageTransportType scProtocol, int numOfConnections) {
-		super(scHost, scPort, scProtocol, numOfConnections);
+	public ServerScConnection(String scHost, int scPort, String connectionType) {
+		serviceServer = ServerServiceFactory.newInstance(connectionType);
 	}
 
-	/**
-	 * register new publishService, holds the service in the ScConnection which handles communication layer.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param responseHandler
-	 *            the response handler
-	 * @param timeoutHandler
-	 *            the timeout handler
-	 */
-	public void register(String serviceName, ServerResponseHandler responseHandler,
-			ServerTimeoutHandler timeoutHandler) {
+	public void register(String serviceName, Class<? extends IResponseHandler<IServiceServerConnection>> responseHandlerClass,
+			Class<? extends ITimeoutHandler> timeoutHandlerClass, int keepAliveTimeout, int readTimeout,
+			int writeTimeout) throws ServiceServerException {
+		serviceServer.start(serviceName, responseHandlerClass, timeoutHandlerClass, keepAliveTimeout, readTimeout, writeTimeout);
 	}
 
 	/**
@@ -71,24 +69,16 @@ public class ServerScConnection extends ScConnection {
 	 * @throws ScConnectionException
 	 *             connection exception in publish process
 	 */
-	public void publish(IMessage responseMessage, boolean compression) throws ScConnectionException {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void attach(int timeout, int keepAliveInterval, int keepAliveTimeout) throws ScConnectionException {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void detach(int timeout) {
+	public void publish(IData responseMessage, boolean compression) throws ScConnectionException {
 	}
 
 	/**
 	 * Download.
 	 * 
-	 * @param fileName the file name
-	 * @param timeout the timeout
+	 * @param fileName
+	 *            the file name
+	 * @param timeout
+	 *            the timeout
 	 * 
 	 * @return the input stream
 	 */
@@ -99,7 +89,8 @@ public class ServerScConnection extends ScConnection {
 	/**
 	 * Upload.
 	 * 
-	 * @param uploadFile the upload file
+	 * @param uploadFile
+	 *            the upload file
 	 */
 	public void uploadFile(InputStream uploadFile) {
 	}

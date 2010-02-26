@@ -17,7 +17,7 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.IData;
 
 /**
  * The Interface IRequestResponseService represents RequestResponseService.
@@ -39,7 +39,7 @@ public interface IRequestResponseService extends IService {
 	 * @throws ServiceException
 	 *             exception in sending process
 	 */
-	void send(IMessage message, int timeout, boolean compression) throws ServiceException;
+	void send(IData message, int timeout, boolean compression) throws ServiceException;
 
 	/**
 	 * Sends and receives message synchronous.
@@ -56,5 +56,5 @@ public interface IRequestResponseService extends IService {
 	 * @throws ServiceException
 	 *             exception in send and receive process
 	 */
-	IMessage sendAndReceive(IMessage message, int timeout, boolean compression) throws ServiceException;
+	IData sendAndReceive(IData message, int timeout, boolean compression) throws ServiceException;
 }
