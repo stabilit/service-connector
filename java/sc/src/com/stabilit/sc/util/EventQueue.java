@@ -3,7 +3,7 @@ package com.stabilit.sc.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stabilit.sc.message.IMessage;
+import com.stabilit.sc.msg.IMessage;
 
 public class EventQueue {
 	

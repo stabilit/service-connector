@@ -5,47 +5,38 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.stabilit.sc.cmd.CommandException;
-import com.stabilit.sc.message.IMessage;
-import com.stabilit.sc.message.ISubscribe;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
 
 public class SubscribeQueue {
 
 	private static Map<String, IMessage> subscribeMap = new ConcurrentHashMap<String, IMessage>();
-	
-	public static String subscribe(IMessage subscribeJob) {
+
+	public static String subscribe(IMessage subscribeMessage) {
 		UUID uuid = UUID.randomUUID();
 		String sUuid = uuid.toString();
-		subscribeMap.put(sUuid, subscribeJob);
-		if (subscribeJob instanceof ISubscribe) {
-		   ((ISubscribe)subscribeJob).setSubsribeID(sUuid);
-		   subscribeJob.setAttribute(ISubscribe.INDEX, 0);
-		}
+		subscribeMap.put(sUuid, subscribeMessage);
+		subscribeMessage.setAttribute(SCMP.INDEX, 0);
 		return sUuid;
 	}
 
-	public static void unsubscribe(IMessage unsubscribeJob) throws CommandException {
-		if (unsubscribeJob instanceof ISubscribe == false) {
-			throw new CommandException("job is not ISubscribe");
-		}		
-		String subscribeID = ((ISubscribe)unsubscribeJob).getSubscribeID();
-		IMessage subscribeJob = subscribeMap.get(subscribeID);
-		if (subscribeJob == null) {
-			throw new CommandException("subscribe id = " + subscribeID + " is not known");
+	public static void unsubscribe(String subscribeId) throws CommandException {
+		IMessage subscribeMessage = subscribeMap.get(subscribeId);
+		if (subscribeMessage == null) {
+			throw new CommandException("subscribe id = " + subscribeId
+					+ " is not known");
 		}
-		subscribeMap.remove(subscribeID);
+		subscribeMap.remove(subscribeId);
 		return;
 	}
 
-	public static IMessage get(IMessage unsubscribeJob) throws CommandException {
-		if (unsubscribeJob instanceof ISubscribe == false) {
-			throw new CommandException("job is not ISubscribe");
-		}		
-		String subscribeID = ((ISubscribe)unsubscribeJob).getSubscribeID();
-		IMessage subscribeJob = subscribeMap.get(subscribeID);
+	public static IMessage get(String subscribeId) throws CommandException {
+		IMessage subscribeJob = subscribeMap.get(subscribeId);
 		if (subscribeJob == null) {
-			throw new CommandException("subscribe id = " + subscribeID + " is not known");
+			throw new CommandException("subscribe id = " + subscribeId
+					+ " is not known");
 		}
-		return subscribeMap.get(subscribeID);
+		return subscribeMap.get(subscribeId);
 	}
 
 }
