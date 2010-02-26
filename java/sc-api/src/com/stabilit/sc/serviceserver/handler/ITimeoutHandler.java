@@ -19,11 +19,7 @@
  */
 package com.stabilit.sc.serviceserver.handler;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-
-import com.stabilit.sc.pool.Connection;
+import com.stabilit.sc.app.client.IConnection;
 
 /**
  * @author JTraber
@@ -31,7 +27,7 @@ import com.stabilit.sc.pool.Connection;
  */
 public interface ITimeoutHandler {
 
-	public void readTimedOut(Connection conn);
+	public void readTimedOut(IConnection conn);
 
-	public void writeTimedOut(Connection conn);
+	public void writeTimedOut(IConnection conn);
 }

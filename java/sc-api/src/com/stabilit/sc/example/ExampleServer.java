@@ -17,8 +17,8 @@
 package com.stabilit.sc.example;
 
 import com.stabilit.sc.ServerScConnection;
+import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.app.server.IServiceServerConnection;
-import com.stabilit.sc.pool.Connection;
 import com.stabilit.sc.serviceserver.ServiceServerException;
 import com.stabilit.sc.serviceserver.handler.IResponseHandler;
 import com.stabilit.sc.serviceserver.handler.ITimeoutHandler;
@@ -74,11 +74,11 @@ public class ExampleServer {
 	class MyTimeoutHandler implements ITimeoutHandler {
 
 		@Override
-		public void readTimedOut(Connection conn) {
+		public void readTimedOut(IConnection conn) {			
 		}
 
 		@Override
-		public void writeTimedOut(Connection conn) {
+		public void writeTimedOut(IConnection conn) {			
 		}
 	}
 }
