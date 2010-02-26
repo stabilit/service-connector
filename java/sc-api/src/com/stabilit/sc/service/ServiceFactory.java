@@ -16,7 +16,7 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ServiceHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 
 /**
@@ -54,8 +54,8 @@ public final class ServiceFactory {
 	 * @return the requestresponse service
 	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
-			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
-		return new RequestResponseService(serviceName, responseHandler, timeoutHandler);
+			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+		return new RequestResponseService(serviceName, responseHandler);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public final class ServiceFactory {
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
-			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return new SubscribePublishService(serviceName, responseHandler, timeoutHandler);
 	}
 }

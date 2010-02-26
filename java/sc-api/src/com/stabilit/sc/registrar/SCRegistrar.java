@@ -173,7 +173,7 @@ public class SCRegistrar implements IClientConnection {
 	 * @see com.stabilit.sc.app.client.IClientConnection#closeSession()
 	 */
 	@Override
-	public void closeSession() throws IOException {
+	public void deleteSession() throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -200,7 +200,7 @@ public class SCRegistrar implements IClientConnection {
 	 * @see com.stabilit.sc.app.client.IClientConnection#openSession()
 	 */
 	@Override
-	public void openSession() throws IOException {
+	public void createSession() throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -17,6 +17,7 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IData;
 
 /**
@@ -39,7 +40,7 @@ public interface IRequestResponseService extends IService {
 	 * @throws ServiceException
 	 *             exception in sending process
 	 */
-	void send(IData message, int timeout, boolean compression) throws ServiceException;
+	void send(SCMP scmp, int timeout, boolean compression) throws ServiceException;
 
 	/**
 	 * Sends and receives message synchronous.
@@ -56,5 +57,5 @@ public interface IRequestResponseService extends IService {
 	 * @throws ServiceException
 	 *             exception in send and receive process
 	 */
-	IData sendAndReceive(IData message, int timeout, boolean compression) throws ServiceException;
+	SCMP sendAndReceive(SCMP scmp, int timeout, boolean compression) throws ServiceException;
 }

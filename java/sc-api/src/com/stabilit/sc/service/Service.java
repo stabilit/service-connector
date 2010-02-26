@@ -17,8 +17,9 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ClientResponseHandler;
-import com.stabilit.sc.handler.ClientTimeoutHandler;
+import com.stabilit.sc.handler.ServiceHandler;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
  * The Service.
@@ -27,12 +28,11 @@ import com.stabilit.sc.handler.ClientTimeoutHandler;
  */
 public abstract class Service implements IService {
 
+	protected ConnectionPool pool;
+	
 	/** The response handler. */
-	private ClientResponseHandler responseHandler;
-
-	/** The timeout handler. */
-	private ClientTimeoutHandler timeoutHandler;
-
+	private ServiceHandler serviceHandler;
+	
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
 
@@ -44,22 +44,24 @@ public abstract class Service implements IService {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param responseHandler
+	 * @param serviceHandler
 	 *            the response handler
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected Service(String serviceName, ClientResponseHandler responseHandler,
-			ClientTimeoutHandler timeoutHandler) {
+	protected Service(String serviceName, ServiceHandler serviceHandler) {
 		this.serviceCtx = new ServiceCtx(serviceName);
-		this.responseHandler = responseHandler;
-		this.timeoutHandler = timeoutHandler;
+		this.serviceHandler = serviceHandler;
+		ConnectionPool.init(3);
+		this.pool = ConnectionPool.getInstance();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
 		this.connectionCtx = connectionCtx;
+		IPoolConnection conn = pool.borrowConnection(null);
+		conn.releaseConnection();
 	}
 
 	/** {@inheritDoc} */
@@ -72,17 +74,8 @@ public abstract class Service implements IService {
 	 * 
 	 * @return the response handler
 	 */
-	public ClientResponseHandler getResponseHandler() {
-		return responseHandler;
-	}
-
-	/**
-	 * Gets the timeout handler.
-	 * 
-	 * @return the timeout handler
-	 */
-	public ClientTimeoutHandler getTimeoutHandler() {
-		return timeoutHandler;
+	public ServiceHandler getServiceHandler() {
+		return serviceHandler;
 	}
 
 	/**

@@ -25,7 +25,7 @@ import com.stabilit.sc.service.IService;
  * 
  * @author JTraber
  */
-public interface ClientResponseHandler {
+public interface ServiceHandler {
 
 	/**
 	 * Invoked when a message object was received from a remote peer.
@@ -37,6 +37,23 @@ public interface ClientResponseHandler {
 	 */
 	void messageReceived(IService service, IData response);
 
+	/**
+	 * Invoked when time run out in write process.
+	 * 
+	 * @param service
+	 *            the service
+	 */
+	void writeTimedOut(IService service);
+
+	/**
+	 * Invoked when time run out in read process.
+	 * 
+	 * @param service
+	 *            the service
+	 */
+	void readTimedOut(IService service);
+	
+	
 	/**
 	 * Invoked when a exception occurs in process of receiving a message.
 	 * 

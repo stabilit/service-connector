@@ -17,7 +17,7 @@
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ServiceHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ISubscribePublishService;
@@ -63,7 +63,7 @@ public class ClientScConnection extends ScConnection {
 	 * @return the requestResponse service
 	 */
 	public IRequestResponseService newRequestResponseService(String serviceName,
-			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return serviceFactory.createRequestResponseService(serviceName, responseHandler, timeoutHandler);
 	}
 
@@ -80,7 +80,7 @@ public class ClientScConnection extends ScConnection {
 	 * @return the subscribePublish service
 	 */
 	public ISubscribePublishService newSubscribePublishService(String serviceName,
-			ClientResponseHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
+			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
 		return serviceFactory.createSubscribePublishService(serviceName, responseHandler, timeoutHandler);
 	}
 

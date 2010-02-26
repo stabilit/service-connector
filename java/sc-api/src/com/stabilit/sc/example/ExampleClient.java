@@ -19,7 +19,7 @@ package com.stabilit.sc.example;
 import com.stabilit.sc.ClientScConnection;
 import com.stabilit.sc.MessageTransportType;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ClientResponseHandler;
+import com.stabilit.sc.handler.ServiceHandler;
 import com.stabilit.sc.handler.ClientTimeoutHandler;
 import com.stabilit.sc.msg.IData;
 import com.stabilit.sc.msg.Data;

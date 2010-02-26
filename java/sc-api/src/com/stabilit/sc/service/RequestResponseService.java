@@ -16,9 +16,10 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ClientResponseHandler;
-import com.stabilit.sc.handler.ClientTimeoutHandler;
-import com.stabilit.sc.msg.IData;
+import com.stabilit.sc.handler.ServiceHandler;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
  * RequestResponseService.
@@ -32,24 +33,42 @@ public class RequestResponseService extends Service implements IRequestResponseS
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param responseHandler
+	 * @param serviceHandler
 	 *            the response handler
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected RequestResponseService(String serviceName, ClientResponseHandler responseHandler,
-			ClientTimeoutHandler timeoutHandler) {
-		super(serviceName, responseHandler, timeoutHandler);
+	protected RequestResponseService(String serviceName, ServiceHandler serviceHandler) {
+		super(serviceName, serviceHandler);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(IData message, int timeout, boolean compression) {
+	public void send(SCMP scmp, int timeout, boolean compression) {
+	
+		IPoolConnection conn = pool.borrowConnection(null);
+	
+		try {
+			conn.send(scmp);
+			conn.releaseConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IData sendAndReceive(IData message, int timeout, boolean compression) {
-		return null;
+	public SCMP sendAndReceive(SCMP scmp, int timeout, boolean compression) {
+		IPoolConnection conn = pool.borrowConnection(null);
+		SCMP ret = null;
+		try {
+			ret = conn.sendAndReceive(scmp);
+			conn.releaseConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
 	}
 }
