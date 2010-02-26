@@ -17,13 +17,20 @@
 /**
  * 
  */
-package com.stabilit.sc.pool;
+package com.stabilit.sc.msg.impl;
+
+import com.stabilit.sc.msg.Message;
 
 /**
  * @author JTraber
  *
  */
-public enum ConnectionState {
+public class KeepAliveMessage extends Message{
 	
-	FREE, BLOCKED;
+	public KeepAliveMessage() {
+		super("KeepAlive");
+	}
+
+	private static final long serialVersionUID = 1L;
+
 }
