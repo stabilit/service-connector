@@ -1,6 +1,6 @@
 package com.stabilit.sc.cmd.impl;
 
-import com.stabilit.sc.message.Message;
+import com.stabilit.sc.msg.Message;
 
 public class FileSystemJob extends Message {
     /**

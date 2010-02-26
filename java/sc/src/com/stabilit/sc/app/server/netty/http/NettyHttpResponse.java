@@ -8,19 +8,18 @@ import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.message.IMessageResult;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyHttpResponse implements IResponse {
 
 	private MessageEvent event;
-	private SCOP scop;
+	private SCMP scmp;
 	private ISession session;
 	
 	
 	public NettyHttpResponse(MessageEvent event) {
-		this.scop = null;
+		this.scmp = null;
 		this.event = event;
 		this.session = null;
 	}
@@ -31,7 +30,7 @@ public class NettyHttpResponse implements IResponse {
 	
 	public ChannelBuffer getBuffer() throws Exception {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	   ObjectStreamHttpUtil.writeObjectOnly(baos, this.scop);
+	   ObjectStreamHttpUtil.writeObjectOnly(baos, this.scmp);
 	   byte[] buf = baos.toByteArray();
 	   return ChannelBuffers.copiedBuffer(buf);
 	}
@@ -42,14 +41,14 @@ public class NettyHttpResponse implements IResponse {
 	}
 	
 	@Override
-	public void setJobResult(IMessageResult jobResult) {
-		if (jobResult == null) {
+	public void setSCMP(SCMP scmp) {
+		if (scmp == null) {
 			return;
 		}
 		try {
-			this.scop = new SCOP(jobResult);
+			this.scmp = scmp;
 			if (this.session != null) {
-			   this.scop.setSessionId(this.session.getId());
+			   this.scmp.setSessionId(this.session.getId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

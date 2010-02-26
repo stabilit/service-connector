@@ -5,9 +5,10 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.message.IMessage;
-import com.stabilit.sc.message.IMessageResult;
-import com.stabilit.sc.message.MessageResult;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.Message;
+import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.SubscribeQueue;
 
 public class UnSubscribeCommand implements ICommand {
@@ -28,12 +29,22 @@ public class UnSubscribeCommand implements ICommand {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
- 		IMessage job = request.getJob();
-		IMessageResult MessageResult = new MessageResult(job);
+		System.out.println("UnSubscribeCommand.run()");
+		SCMP scmp = request.getSCMP();
+		String subscribeId = scmp.getSubscribeId();
+		String messageId = scmp.getMessageId();
+		if (UnSubscribeMessage.ID.equals(messageId) == false) {
+			throw new CommandException("invalid unsubscribe command");
+		}
+ 		UnSubscribeMessage msg = (UnSubscribeMessage) scmp.getBody();
+		SCMP scmpResult = new SCMP();
+		scmpResult.setSubsribeId(subscribeId);
+		IMessage result = new Message(msg.getKey());
 		try {
 			ISession session = request.getSession(false);
-			SubscribeQueue.unsubscribe(job);			
-			response.setJobResult(MessageResult);
+			SubscribeQueue.unsubscribe(subscribeId);
+			scmpResult.setBody(result);
+			response.setSCMP(scmpResult);
 		} catch (Exception e) {
 			throw new CommandException(e.toString());
 		}

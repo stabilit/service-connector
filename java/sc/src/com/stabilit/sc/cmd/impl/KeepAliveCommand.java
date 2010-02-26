@@ -23,9 +23,8 @@ import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.message.IMessageResult;
-import com.stabilit.sc.message.MessageResult;
-import com.stabilit.sc.message.impl.KeepAliveMessage;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.KeepAliveMessage;
 
 /**
  * @author JTraber
@@ -45,9 +44,9 @@ public class KeepAliveCommand implements ICommand {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		IMessageResult result = new MessageResult(new KeepAliveMessage());
+		IMessage result = new KeepAliveMessage();
 		try {
-			response.setJobResult(result);
+			//response.setSCMP(result);
 		} catch (Exception e) {
 			throw new CommandException(e.toString());
 		}

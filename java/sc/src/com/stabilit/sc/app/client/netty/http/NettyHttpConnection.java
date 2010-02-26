@@ -27,35 +27,35 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.app.client.IClient;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.message.IMessage;
-import com.stabilit.sc.message.IMessageResult;
-import com.stabilit.sc.message.ISubscribe;
-import com.stabilit.sc.message.impl.AsyncCallMessage;
+import com.stabilit.sc.app.client.IClientConnection;
+import com.stabilit.sc.app.client.IConnectionCallback;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.ICallback;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyHttpClient implements IClient {
+public class NettyHttpConnection implements IClientConnection, IConnectionCallback {
 
 	private URL url;
 	private String sessionId;
 	private ClientBootstrap bootstrap;
 	private Channel channel;
 
-	public NettyHttpClient() {
+	public NettyHttpConnection() {
 		this.url = null;
 		this.sessionId = null;
 		this.channel = null;
 
 		// Configure the client.
-		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
-				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
+				Executors.newCachedThreadPool(), Executors
+						.newCachedThreadPool()));
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory());
 	}
@@ -70,7 +70,8 @@ public class NettyHttpClient implements IClient {
 		String host = url.getHost();
 		int port = url.getPort();
 		// Start the connection attempt.
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,
+				port));
 
 		// Wait until the connection attempt succeeds or fails.
 		this.channel = future.awaitUninterruptibly().getChannel();
@@ -106,44 +107,27 @@ public class NettyHttpClient implements IClient {
 	}
 
 	@Override
-	public IMessageResult receive(ISubscribe subscribeJob) throws Exception {
-		IMessage callJob = new AsyncCallMessage(subscribeJob);
-		SCOP scop = new SCOP(callJob);
-		scop.setSessionId(this.sessionId);
+	public void send(SCMP scmp) throws Exception {
+		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scop);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
-				.getPath());
+		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
+				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
-		// ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		// request.setContent(channelBuffer);
-		// this.resetResponse();
-		// ChannelFuture future = channel.write(request);
-		// future.awaitUninterruptibly();
-		// waitForResponse();
-		// ChannelBuffer content = this.responseMessage.getContent();
-		// buffer = content.array();
-		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-		if (obj instanceof SCOP) {
-			SCOP ret = (SCOP) obj;
-			String retSessionID = ret.getSessionId();
-			if (retSessionID != null) {
-				this.sessionId = retSessionID;
-			}
-			return (IMessageResult) ret.getBody();
-		}
-		throw new Exception("not found");
+		request.addHeader("Content-Length", String.valueOf(buffer.length));
+		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
+		request.setContent(channelBuffer);
+		ChannelFuture future = channel.write(request);
+		return;
 	}
 
 	@Override
-	public IMessageResult sendAndReceive(IMessage job) throws Exception {
-		SCOP scop = new SCOP(job);
-		scop.setSessionId(this.sessionId);
+	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scop);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
-				.getPath());
+		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
+				HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
@@ -151,19 +135,20 @@ public class NettyHttpClient implements IClient {
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
 
-		HttpResponseHandler handler = channel.getPipeline().get(HttpResponseHandler.class);
+		HttpResponseHandler handler = channel.getPipeline().get(
+				HttpResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-		if (obj instanceof SCOP) {
-			SCOP ret = (SCOP) obj;
+		if (obj instanceof SCMP) {
+			SCMP ret = (SCMP) obj;
 			String retSessionID = ret.getSessionId();
 			if (retSessionID != null) {
 				this.sessionId = retSessionID;
 			}
-			return (IMessageResult) ret.getBody();
+			return ret;
 		}
 		throw new Exception("not found");
 	}
@@ -171,5 +156,22 @@ public class NettyHttpClient implements IClient {
 	@Override
 	public void setEndpoint(URL url) {
 		this.url = url;
+	}
+
+	@Override
+	public boolean isAvailable() {
+		return false;
+	}
+
+	@Override
+	public void setAvailable(boolean available) {
+
+	}
+
+	@Override
+	public void setCallback(ICallback callback) {
+		ChannelPipeline pipeline = this.channel.getPipeline();
+		HttpResponseHandler handler = pipeline.get(HttpResponseHandler.class);
+		handler.setCallback(callback);
 	}
 }

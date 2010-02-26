@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.app.IApplication;
-import com.stabilit.sc.app.client.impl.EchoClientApplication;
-import com.stabilit.sc.app.client.impl.EchoPoolClientApplication;
+import com.stabilit.sc.app.client.echo.EchoClientApplication;
 
 public class ClientApplicationFactory {
 
@@ -15,10 +14,6 @@ public class ClientApplicationFactory {
 		IApplication echoClient = new EchoClientApplication();
 		clientMap.put(EchoClientApplication.class.getName(), echoClient);
 		clientMap.put("echo.client", echoClient);
-		
-		IApplication echoPoolClient = new EchoPoolClientApplication();
-		clientMap.put(EchoPoolClientApplication.class.getName(), echoPoolClient);
-		clientMap.put("echo.pool.client", echoPoolClient);
 	}
 	
 	public static IApplication newInstance(String key) {

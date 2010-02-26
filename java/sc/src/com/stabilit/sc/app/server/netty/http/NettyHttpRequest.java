@@ -10,19 +10,18 @@ import com.stabilit.sc.context.RequestContext;
 import com.stabilit.sc.context.SCOPSessionContext;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.ISession;
-import com.stabilit.sc.io.SCOP;
-import com.stabilit.sc.message.IMessage;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyHttpRequest implements IRequest {
 
 	private HttpRequest request;
-	private SCOP scop;
+	private SCMP scmp;
 	private IRequestContext requestContext;
 
 	public NettyHttpRequest(HttpRequest request) {
 		this.request = request;
-		this.scop = null;
+		this.scmp = null;
 		this.requestContext = new RequestContext();
 	}
 
@@ -32,29 +31,30 @@ public class NettyHttpRequest implements IRequest {
 	}
 
 	@Override
-	public IMessage getJob() {
-		if (scop == null) {
+	public SCMP getSCMP() {
+		if (scmp == null) {
 			try {
 				load();
 			} catch (Exception e) {
 				return null;
 			}
 		}
-		return (IMessage) scop.getBody();
+		return scmp;
 	}
 
 	@Override
 	public String getKey() {
-		IMessage job = this.getJob();
-		if (job != null) {
-			return job.getKey();
+		SCMP scmp = this.getSCMP();
+		if (scmp == null) {
+			return null;
 		}
-		return null;
+		String messageId = scmp.getMessageId();
+		return messageId;
 	}
 
 	@Override
 	public ISession getSession(boolean fCreate) {
-		return SCOPSessionContext.getSession(scop, fCreate);
+		return SCOPSessionContext.getSession(scmp, fCreate);
 	}
 
 	private void load() throws Exception {
@@ -62,8 +62,8 @@ public class NettyHttpRequest implements IRequest {
 		byte[] buffer = channelBuffer.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
         Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-        if (obj instanceof SCOP) {
-        	this.scop = (SCOP)obj;
+        if (obj instanceof SCMP) {
+        	this.scmp = (SCMP)obj;
         }
 	}
 }
