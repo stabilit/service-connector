@@ -1,7 +1,6 @@
 package com.stabilit.sc.pool;
 
 import java.io.IOException;
-import java.net.URL;
 
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.app.client.IConnectionCallback;
@@ -11,7 +10,7 @@ import com.stabilit.sc.msg.ICallback;
 import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
 
-public class PoolConnection implements IClientConnection, ISubscribe {
+class PoolConnection implements IPoolConnection, ISubscribe {
 
 	private boolean available;
 	private boolean connected;
@@ -23,21 +22,20 @@ public class PoolConnection implements IClientConnection, ISubscribe {
 		this.con = con;
 		this.available = true;
 		this.connected = false;
-
-	}
-
-	@Override
-	public void closeSession() throws IOException {
-		this.con.closeSession();
-	}
-
-	@Override
-	public void connect() throws Exception {
 		if (this.connected == false) {
-			this.con.connect();
+			try {
+				con.connect();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.connected = true;
 		}
-		this.available = false;
+	}
+
+	//TODOD wann muss dies geschehen!
+	public void closeSession() throws IOException {
+		this.con.deleteSession();
 	}
 
 	@Override
@@ -46,8 +44,7 @@ public class PoolConnection implements IClientConnection, ISubscribe {
 	}
 
 	@Override
-	public void disconnect() throws Exception {
-		// connection pool ???
+	public void releaseConnection() {
 		this.available = true;
 	}
 
@@ -60,30 +57,25 @@ public class PoolConnection implements IClientConnection, ISubscribe {
 	public boolean isAvailable() {
 		return this.available;
 	}
+	
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
 
-	@Override
+	//Wann aufrufen eventuell im constructor
 	public void openSession() throws IOException {
-		this.con.openSession();
+		this.con.createSession();
 	}
 
 	@Override
 	public void send(SCMP scmp) throws Exception {
+		this.available = false;		
 		this.con.send(scmp);
 	}
 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		return this.con.sendAndReceive(scmp);
-	}
-
-	@Override
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
-
-	@Override
-	public void setEndpoint(URL url) {
-		this.con.setEndpoint(url);
 	}
 
 	@Override

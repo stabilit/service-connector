@@ -61,7 +61,7 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 	}
 
 	@Override
-	public void closeSession() throws IOException {
+	public void deleteSession() throws IOException {
 
 	}
 
@@ -102,8 +102,9 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 	}
 
 	@Override
-	public void openSession() throws IOException {
-
+	public void createSession() throws IOException {
+		//TODO schicke an SC CREATESESSION
+		//TODO asynchron??????
 	}
 
 	@Override

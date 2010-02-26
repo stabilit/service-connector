@@ -1,13 +1,13 @@
 package com.stabilit.sc.app.client.echo;
 
 import com.stabilit.sc.app.client.ClientApplication;
-import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.EchoMessage;
-import com.stabilit.sc.pool.ConnectionPoolFactory;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 public class EchoClientApplication extends ClientApplication {
 
@@ -17,7 +17,8 @@ public class EchoClientApplication extends ClientApplication {
 	@Override
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		IClientConnection con = ConnectionPoolFactory.borrowConnection(applicationContext);
+		ConnectionPool pool = ConnectionPool.getInstance();		
+		IPoolConnection con = pool.borrowConnection(applicationContext);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}
@@ -25,7 +26,6 @@ public class EchoClientApplication extends ClientApplication {
 		while (true) {
 			try {
 				// Thread.sleep(2000);
-				con.connect();
 				SCMP request = new SCMP();				
 				IMessage message = new EchoMessage();
 				request.setBody(message);
@@ -33,7 +33,7 @@ public class EchoClientApplication extends ClientApplication {
 				SCMP response = con.sendAndReceive(request);
 				IMessage echoed = (IMessage) response.getBody();
 				System.out.println(echoed + " session = " + con.getSessionId());
-				con.disconnect();
+				con.releaseConnection();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

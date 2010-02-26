@@ -15,15 +15,15 @@ public interface IClientConnection extends IConnection {
 
 	public void setEndpoint(URL url);
 
-	public void connect() throws Exception;
-
-	public void openSession() throws IOException;
+	public void createSession() throws IOException;
+	
+	public void connect() throws IOException, Exception;
+	
+	public void disconnect() throws IOException, Exception;
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 
-	public void closeSession() throws IOException;
-
-	public void disconnect() throws Exception;
+	public void deleteSession() throws IOException;
 
 	public void destroy() throws Exception;
 

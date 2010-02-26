@@ -7,7 +7,8 @@ import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.EchoMessage;
-import com.stabilit.sc.pool.ConnectionPoolFactory;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 public class EchoClientApplicationKeepAlive extends ClientApplication {
 
@@ -17,13 +18,13 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 	@Override
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
-		IClientConnection con = ConnectionPoolFactory.borrowConnection(applicationContext);
+		ConnectionPool pool = ConnectionPool.getInstance();		
+		IPoolConnection con = pool.borrowConnection(applicationContext);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}
 
 		int index = 0;
-		con.connect();
 		long start = System.currentTimeMillis();
 		SCMP request = new SCMP();
 		while (index++ < 10000) {
@@ -36,7 +37,6 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 		}
 		long end = System.currentTimeMillis();
 		System.out.println(" 10000 calls in time (ms) = " + (end - start));
-		con.disconnect();
 		con.destroy();
 	}
 }

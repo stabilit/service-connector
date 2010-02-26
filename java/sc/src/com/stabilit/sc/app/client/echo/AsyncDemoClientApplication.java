@@ -5,11 +5,12 @@ import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.pool.ConnectionPoolFactory;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 public class AsyncDemoClientApplication extends ClientApplication {
 
-	private IClientConnection con;
+	private IPoolConnection con;
 
 	public AsyncDemoClientApplication() {
 		this.con = null;
@@ -19,11 +20,13 @@ public class AsyncDemoClientApplication extends ClientApplication {
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this
 				.getContext();
-		con = ConnectionPoolFactory.borrowConnection(applicationContext);
+		
+		ConnectionPool pool = ConnectionPool.getInstance();
+		
+		con = pool.borrowConnection(applicationContext);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}
-		con.connect();
 		int index = 0;
 		while (index++ < 10) {
 			String subscribeId = null;
@@ -42,6 +45,6 @@ public class AsyncDemoClientApplication extends ClientApplication {
 			System.out.println("AsyncDemoClientApplication.run() unsubscribe done");
 			Thread.sleep(5000);
 		}
-		con.disconnect();
+		con.releaseConnection();
 	}
 }

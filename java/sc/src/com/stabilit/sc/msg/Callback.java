@@ -1,16 +1,17 @@
 package com.stabilit.sc.msg;
 
-import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.msg.impl.UnSubscribeMessage;
+import com.stabilit.sc.pool.BlockingPoolConnection;
+import com.stabilit.sc.pool.IPoolConnection;
 
 public abstract class Callback implements ICallback {
-	private IConnection con;
+	private IPoolConnection con;
 	private String subscribeId;
 	private boolean released;
 
-	public Callback(IConnection con) {
+	public Callback(IPoolConnection con) {
 		this.con = con;
 		this.subscribeId = null;
 		this.released = false;
@@ -51,4 +52,11 @@ public abstract class Callback implements ICallback {
 	public void release() {
 	    this.released = true;	
 	}
+
+	@Override
+	public void callback(SCMP scmp) throws Exception {
+		if(con instanceof BlockingPoolConnection) {
+			((BlockingPoolConnection) con).release();
+		}
+	}	
 }

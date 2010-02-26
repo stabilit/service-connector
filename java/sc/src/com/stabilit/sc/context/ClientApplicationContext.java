@@ -36,10 +36,16 @@ public class ClientApplicationContext extends ApplicationContext {
 		String con = ConsoleUtil.getArg(args, "-con");
 		if (con != null) {
 		   this.setAttribute("con", con);
-		}
-		if (con == null) {
+		}else {
 		   throw new Exception("invalid arguments");
 		}
+		
+		String prot = ConsoleUtil.getArg(args, "-prot");
+		if (prot == null) {
+		   throw new Exception("argument prot not set");
+		} else {
+			this.setAttribute("prot", prot);
+		}	
 	}
 
 }
