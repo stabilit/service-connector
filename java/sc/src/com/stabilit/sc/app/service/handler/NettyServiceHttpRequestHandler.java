@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.app.server.netty.http;
+package com.stabilit.sc.app.service.handler;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
@@ -30,6 +30,8 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
+import com.stabilit.sc.app.server.netty.http.NettyHttpRequest;
+import com.stabilit.sc.app.server.netty.http.NettyHttpResponse;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
@@ -37,10 +39,9 @@ import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.io.IRequest;
 
 @ChannelPipelineCoverage("one")
-public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyServiceHttpRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
-
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event)

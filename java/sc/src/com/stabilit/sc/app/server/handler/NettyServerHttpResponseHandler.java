@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.handler;
+package com.stabilit.sc.app.server.handler;
 
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.BlockingQueue;
@@ -30,8 +30,9 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -40,14 +41,14 @@ import com.stabilit.sc.util.ObjectStreamHttpUtil;
  * 
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyServerHttpResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
-	private ISCListener callback;
+	private ISCClientListener callback;
 	private IPoolConnection conn;
 	private boolean sync = false;
 
-	public NettyHttpResponseHandler(ISCListener callback, IPoolConnection conn) {
+	public NettyServerHttpResponseHandler(ISCClientListener callback, IPoolConnection conn) {
 		super();
 		this.callback = callback;
 		this.conn = conn;
@@ -98,7 +99,7 @@ public class NettyHttpResponseHandler extends SimpleChannelUpstreamHandler {
 		// TODO subscribe auch hier handeln ? ?
 	}
 
-	public ISCListener getCallback() {
+	public ISCClientListener getCallback() {
 		return callback;
 	}
 }

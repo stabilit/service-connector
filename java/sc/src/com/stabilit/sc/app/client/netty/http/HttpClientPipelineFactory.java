@@ -22,12 +22,11 @@ import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.util.HashedWheelTimer;
 
-import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.handler.IKeepAliveHandler;
-import com.stabilit.sc.handler.NettyHttpResponseHandler;
-import com.stabilit.sc.handler.NettyIdleHandler;
-import com.stabilit.sc.handler.NettyWriteTimeoutHandler;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
+import com.stabilit.sc.app.server.handler.NettyServerHttpResponseHandler;
+import com.stabilit.sc.app.server.handler.NettyServerIdleHandler;
+import com.stabilit.sc.app.server.handler.NettyServerWriteTimeoutHandler;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -39,17 +38,17 @@ import com.stabilit.sc.pool.IPoolConnection;
  */
 public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 
-	private Class<? extends ISCListener> scListenerClass;
+	private Class<? extends ISCClientListener> scListenerClass;
 	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
-	private NettyHttpResponseHandler responseHandler;
-	private NettyWriteTimeoutHandler writeTimeoutHandler;
-	private NettyIdleHandler nettyIdleHandler;
+	private NettyServerHttpResponseHandler responseHandler;
+	private NettyServerWriteTimeoutHandler writeTimeoutHandler;
+	private NettyServerIdleHandler nettyIdleHandler;
 	private int readTimeout;
 	private int writeTimeout;
 	private int keepAliveTimeout;
 	private IPoolConnection conn;
 
-	public HttpClientPipelineFactory(Class<? extends ISCListener> scListenerClass,
+	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
 			int writeTimeout, IPoolConnection conn) {
 		super();
@@ -62,7 +61,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends ISCListener> scListenerClass,
+	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout,
 			IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
@@ -71,13 +70,13 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends ISCListener> scListenerClass, IPoolConnection conn) {
+	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass, IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
 		this.conn = conn;
 	}
 
 	public ChannelPipeline getPipeline() throws Exception {
-		ISCListener scListener = scListenerClass.newInstance();
+		ISCClientListener scListener = scListenerClass.newInstance();
 		scListener.setConnection(conn);
 
 		// Create a default pipeline implementation.
@@ -85,16 +84,16 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("decoder", new HttpResponseDecoder());
 
 		// TODO readTimeOutHandler muss gleich implementiert werden, timeseconds ??
-		writeTimeoutHandler = new NettyWriteTimeoutHandler(new HashedWheelTimer(), writeTimeout, scListener);
+		writeTimeoutHandler = new NettyServerWriteTimeoutHandler(new HashedWheelTimer(), writeTimeout, scListener);
 		pipeline.addLast("timeout", writeTimeoutHandler);
 
 		if (keepAliveHandlerClass != null) {
-			nettyIdleHandler = new NettyIdleHandler(new HashedWheelTimer(), keepAliveTimeout,
+			nettyIdleHandler = new NettyServerIdleHandler(new HashedWheelTimer(), keepAliveTimeout,
 					keepAliveHandlerClass.newInstance());
 			pipeline.addLast("keepAlive", nettyIdleHandler);
 		}
 		pipeline.addLast("encoder", new HttpRequestEncoder());
-		responseHandler = new NettyHttpResponseHandler(scListener, conn);
+		responseHandler = new NettyServerHttpResponseHandler(scListener, conn);
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

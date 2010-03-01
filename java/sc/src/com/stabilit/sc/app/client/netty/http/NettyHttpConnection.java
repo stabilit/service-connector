@@ -34,11 +34,11 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClientConnection;
+import com.stabilit.sc.app.server.handler.NettyServerHttpResponseHandler;
+import com.stabilit.sc.app.server.handler.SCServerKeepAliveHandler;
 import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.handler.NettyHttpResponseHandler;
-import com.stabilit.sc.handler.SCKeepAliveHandler;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -64,14 +64,14 @@ public class NettyHttpConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(Class<? extends ISCListener> scListenerClass) throws ConnectionException {
+	public void connect(Class<? extends ISCClientListener> scListenerClass) throws ConnectionException {
 
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory(scListenerClass,
-				SCKeepAliveHandler.class, 30, decoratorConn));
+				SCServerKeepAliveHandler.class, 30, decoratorConn));
 
 		String host = url.getHost();
 		int port = url.getPort();
@@ -144,7 +144,7 @@ public class NettyHttpConnection implements IClientConnection {
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
 
-		NettyHttpResponseHandler handler = channel.getPipeline().get(NettyHttpResponseHandler.class);
+		NettyServerHttpResponseHandler handler = channel.getPipeline().get(NettyServerHttpResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 
 		buffer = content.array();

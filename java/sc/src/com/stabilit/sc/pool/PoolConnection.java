@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
 
@@ -15,9 +15,9 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	private boolean connected;
 
 	private IClientConnection con;
-	private ISCListener callback;
+	private ISCClientListener callback;
 
-	public PoolConnection(IClientConnection con, Class<? extends ISCListener> scListener) {
+	public PoolConnection(IClientConnection con, Class<? extends ISCClientListener> scListener) {
 		this.con = con;
 		con.setDecorator(this);
 		this.available = true;

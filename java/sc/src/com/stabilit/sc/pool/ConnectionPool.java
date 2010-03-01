@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 
 public class ConnectionPool {
 
@@ -34,7 +34,7 @@ public class ConnectionPool {
 	}
 
 	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx,
-			Class<? extends ISCListener> scListener) {
+			Class<? extends ISCClientListener> scListener) {
 
 		List<IPoolConnection> connectionList = connectionMap.get(ctx.getConnection());
 		PoolConnection poolCon = null;

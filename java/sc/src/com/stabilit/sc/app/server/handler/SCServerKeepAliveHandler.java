@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.handler;
+package com.stabilit.sc.app.server.handler;
 
 import org.jboss.netty.util.Timer;
 
@@ -26,7 +26,7 @@ import org.jboss.netty.util.Timer;
  * @author JTraber
  * 
  */
-public class SCKeepAliveHandler implements IKeepAliveHandler {
+public class SCServerKeepAliveHandler implements IKeepAliveHandler {
 
 	/* (non-Javadoc)
 	 * @see com.stabilit.sc.serviceserver.IKeepAliveHandler#getAllIdleTimeSeconds()

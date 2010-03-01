@@ -17,34 +17,38 @@
 /**
  * 
  */
-package com.stabilit.sc.handler;
+package com.stabilit.sc.app.service.handler;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
+import org.jboss.netty.handler.timeout.IdleState;
+import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
+
 
 
 /**
  * @author JTraber
  * 
  */
-public class NettyWriteTimeoutHandler extends WriteTimeoutHandler {
+public class NettyServiceIdleHandler extends IdleStateHandler {
 
-	private ISCListener callback;
+	private IKeepAliveHandler callback;
 
 	/**
 	 * @param timer
 	 * @param timeoutSeconds
 	 */
-	public NettyWriteTimeoutHandler(Timer timer, int timeoutSeconds, ISCListener callback) {
-		super(timer, timeoutSeconds);
+	public NettyServiceIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
+		super(timer, 0, 0, timeoutSeconds);
 		this.callback = callback;
 	}
 
 	@Override
-	protected void writeTimedOut(ChannelHandlerContext ctx) throws Exception {
-		super.writeTimedOut(ctx);
-	}
+	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
+			throws Exception {
+		// TODO callback?? oder sowas
+		super.channelIdle(ctx, state, lastActivityTimeMillis);
+	}	
 }

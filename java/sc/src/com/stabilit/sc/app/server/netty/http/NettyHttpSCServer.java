@@ -38,32 +38,25 @@ import com.stabilit.sc.msg.ISCServiceListener;
  *
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyHttpServer extends ServerApplication implements IServerConnection{
+public class NettyHttpSCServer extends ServerApplication implements IServerConnection{
 	
 	private ServerBootstrap bootstrap;
 	private Channel channel;
 	
-	public NettyHttpServer() {
+	public NettyHttpSCServer() {
 		this.bootstrap = null;
 		this.channel = null;
 	}
-	
+
 	@Override
-	public void create(Class<? extends ISCServiceListener> scListenerClass,
-			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
-			int writeTimeout) {
-		// Configure the server.
+	public void create() throws Exception {
+        // Configure the server.
         this.bootstrap = new ServerBootstrap(
                 new NioServerSocketChannelFactory(
                         Executors.newCachedThreadPool(),
                         Executors.newCachedThreadPool()));
         // Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass, writeTimeout, writeTimeout, writeTimeout, null));		
-	}
-	
-	@Override
-	public void create() throws Exception {
-		throw new UnsupportedOperationException();
+        bootstrap.setPipelineFactory(new HttpSCServerPipelineFactory());
 	}
 	
 	public void run() throws Exception {
@@ -78,5 +71,15 @@ public class NettyHttpServer extends ServerApplication implements IServerConnect
 	@Override
 	public void destroy() throws Exception {
 		this.channel.close();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.stabilit.sc.app.server.ServerApplication#create(java.lang.Class, java.lang.Class, int, int, int)
+	 */
+	@Override
+	public void create(Class<? extends ISCServiceListener> scListenerClass,
+			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
+			int writeTimeout) {
+		throw new UnsupportedOperationException();		
 	}
 }

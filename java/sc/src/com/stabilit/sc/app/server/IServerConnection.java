@@ -17,42 +17,12 @@
 /**
  * 
  */
-package com.stabilit.sc.app.client;
-
-import java.net.URL;
-
-import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
-import com.stabilit.sc.pool.IPoolConnection;
+package com.stabilit.sc.app.server;
 
 /**
  * @author JTraber
  *
  */
-public interface IClientConnection {
-	
-	public boolean isAvailable();
-	
-	public void setAvailable(boolean available);
-	
-	public String getSessionId();
-	
-	public void setEndpoint(URL url);
+public interface IServerConnection {
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-
-	public void send(SCMP scmp) throws Exception;
-
-	public void disconnect() throws Exception;
-	
-	public void destroy() throws Exception;
-
-	public void connect(Class<? extends ISCClientListener> scListener) throws ConnectionException;
-
-	public void deleteSession();
-
-	public void createSession();
-	
-	public void setDecorator(IPoolConnection dec);
 }

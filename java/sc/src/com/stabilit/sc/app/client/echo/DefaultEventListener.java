@@ -1,10 +1,10 @@
 package com.stabilit.sc.app.client.echo;
 
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.SCListener;
+import com.stabilit.sc.msg.SCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
-public class DefaultEventListener extends SCListener {
+public class DefaultEventListener extends SCClientListener {
 
 	//TODO ... hmm wie erzwingt man den user den default Konstruktor zu implementieren??
 	
