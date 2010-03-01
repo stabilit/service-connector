@@ -16,7 +16,7 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 
 /**
  * The ServiceFactory creates Services for clients.
@@ -53,7 +53,7 @@ public final class ServiceFactory {
 	 * @return the requestresponse service
 	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
-			Class<? extends ISCListener> scListenerClass) {
+			Class<? extends ISCClientListener> scListenerClass) {
 		return new RequestResponseService(serviceName, scListenerClass);
 	}
 
@@ -67,7 +67,7 @@ public final class ServiceFactory {
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
-			Class<? extends ISCListener> scListenerClass) {
+			Class<? extends ISCClientListener> scListenerClass) {
 		return new SubscribePublishService(serviceName, scListenerClass);
 	}
 }

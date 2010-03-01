@@ -17,7 +17,7 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -37,7 +37,7 @@ public class RequestResponseService extends Service implements IRequestResponseS
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected RequestResponseService(String serviceName, Class<? extends ISCListener> scListenerClass) {
+	protected RequestResponseService(String serviceName, Class<? extends ISCClientListener> scListenerClass) {
 		super(serviceName, scListenerClass);
 	}
 

@@ -16,7 +16,7 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 
 /**
  * SubscribePublishService.
@@ -35,7 +35,7 @@ public class SubscribePublishService extends Service implements ISubscribePublis
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected SubscribePublishService(String serviceName, Class<? extends ISCListener> serviceHandler) {
+	protected SubscribePublishService(String serviceName, Class<? extends ISCClientListener> serviceHandler) {
 		super(serviceName, serviceHandler);
 	}
 

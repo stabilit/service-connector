@@ -17,7 +17,7 @@
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ISubscribePublishService;
 import com.stabilit.sc.service.ServiceFactory;
@@ -62,7 +62,7 @@ public class ClientScConnection extends ScConnection {
 	 * @return the requestResponse service
 	 */
 	public IRequestResponseService newRequestResponseService(String serviceName,
-			Class<? extends ISCListener> scListenerClass) {
+			Class<? extends ISCClientListener> scListenerClass) {
 		return serviceFactory.createRequestResponseService(serviceName, scListenerClass);
 	}
 
@@ -79,7 +79,7 @@ public class ClientScConnection extends ScConnection {
 	 * @return the subscribePublish service
 	 */
 	public ISubscribePublishService newSubscribePublishService(String serviceName,
-			Class<? extends ISCListener> scListenerClass) {
+			Class<? extends ISCClientListener> scListenerClass) {
 		return serviceFactory.createSubscribePublishService(serviceName, scListenerClass);
 	}
 
