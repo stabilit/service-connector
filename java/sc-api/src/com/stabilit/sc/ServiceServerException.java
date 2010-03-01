@@ -17,35 +17,29 @@
 /**
  * 
  */
-package com.stabilit.sc.serviceserver.handler;
-
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateHandler;
-import org.jboss.netty.util.Timer;
-
+package com.stabilit.sc;
 
 /**
  * @author JTraber
  * 
  */
-public class NettyIdleHandler extends IdleStateHandler {
-
-	private IKeepAliveHandler callback;
-
+public class ServiceServerException extends Exception {
 	/**
-	 * @param timer
-	 * @param timeoutSeconds
+	 * @param e
 	 */
-	public NettyIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
-		super(timer, 0, 0, timeoutSeconds);
-		this.callback = callback;
+	public ServiceServerException(Exception e) {
+		super(e);
 	}
 
-	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
-			throws Exception {
-		// TODO callback?? oder sowas
-		super.channelIdle(ctx, state, lastActivityTimeMillis);
-	}	
+	/**
+	 * @param string
+	 */
+	public ServiceServerException(String string) {
+		super(string);
+	}
+
+	public ServiceServerException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	private static final long serialVersionUID = 1L;
 }

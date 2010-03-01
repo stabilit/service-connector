@@ -17,7 +17,7 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServiceHandler;
+import com.stabilit.sc.msg.ISCListener;
 import com.stabilit.sc.pool.ConnectionPool;
 import com.stabilit.sc.pool.IPoolConnection;
 
@@ -31,7 +31,7 @@ public abstract class Service implements IService {
 	protected ConnectionPool pool;
 	
 	/** The response handler. */
-	private ServiceHandler serviceHandler;
+	protected Class<? extends ISCListener> scListenerClass;
 	
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
@@ -49,9 +49,9 @@ public abstract class Service implements IService {
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected Service(String serviceName, ServiceHandler serviceHandler) {
+	protected Service(String serviceName, Class<? extends ISCListener> serviceHandler) {
 		this.serviceCtx = new ServiceCtx(serviceName);
-		this.serviceHandler = serviceHandler;
+		this.scListenerClass = serviceHandler;
 		ConnectionPool.init(3);
 		this.pool = ConnectionPool.getInstance();
 	}
@@ -60,22 +60,13 @@ public abstract class Service implements IService {
 	@Override
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
 		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.borrowConnection(null);
+		IPoolConnection conn = pool.borrowConnection(null, scListenerClass);
 		conn.releaseConnection();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect(int timeout) throws ScConnectionException {
-	}
-
-	/**
-	 * Gets the response handler.
-	 * 
-	 * @return the response handler
-	 */
-	public ServiceHandler getServiceHandler() {
-		return serviceHandler;
 	}
 
 	/**

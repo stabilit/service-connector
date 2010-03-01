@@ -18,14 +18,17 @@ package com.stabilit.sc;
 
 import java.io.InputStream;
 
-import com.stabilit.sc.app.server.IServiceServerConnection;
+import com.stabilit.sc.app.IApplication;
+import com.stabilit.sc.app.client.echo.DefaultEventListener;
+import com.stabilit.sc.app.server.ServerApplicationFactory;
+import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IData;
-import com.stabilit.sc.serviceserver.IServiceServer;
-import com.stabilit.sc.serviceserver.ServerServiceFactory;
-import com.stabilit.sc.serviceserver.ServiceServerException;
-import com.stabilit.sc.serviceserver.handler.IResponseHandler;
-import com.stabilit.sc.serviceserver.handler.ITimeoutHandler;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.EchoMessage;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
  * The Class ServerScConnection, represents a connection between a Server and a Sc.
@@ -34,7 +37,7 @@ import com.stabilit.sc.serviceserver.handler.ITimeoutHandler;
  */
 public class ServerScConnection {
 
-	private IServiceServer serviceServer;
+	private IApplication serviceServer;
 
 	/**
 	 * The Constructor.
@@ -49,13 +52,39 @@ public class ServerScConnection {
 	 *            the number of connections used by Sc
 	 */
 	public ServerScConnection(String scHost, int scPort, String connectionType) {
-		serviceServer = ServerServiceFactory.newInstance(connectionType);
+		serviceServer = ServerApplicationFactory.newInstance("netty.http");
 	}
 
-	public void register(String serviceName, Class<? extends IResponseHandler<IServiceServerConnection>> responseHandlerClass,
-			Class<? extends ITimeoutHandler> timeoutHandlerClass, int keepAliveTimeout, int readTimeout,
-			int writeTimeout) throws ServiceServerException {
-		serviceServer.start(serviceName, responseHandlerClass, timeoutHandlerClass, keepAliveTimeout, readTimeout, writeTimeout);
+	public void register(String serviceName, int readTimeout, int writeTimeout) throws ServiceServerException {
+		try {
+			serviceServer.run();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}	
+		ClientApplicationContext applicationContext = null;
+		//TODO applicationContext connnection type setzten .. ohne keep alive..  
+		ConnectionPool pool = ConnectionPool.getInstance();
+		IPoolConnection con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
+		if (con == null) {
+			throw new ServiceServerException("no client available");
+		}
+		int index = 0;
+		// TODO register handshake!!!
+		while (true) {
+			try {
+				// Thread.sleep(2000);
+				SCMP request = new SCMP();
+				IMessage message = new EchoMessage();
+				request.setBody(message);
+				message.setAttribute("msg", "hello " + ++index);
+				SCMP response = con.sendAndReceive(request);
+				IMessage echoed = (IMessage) response.getBody();
+				System.out.println(echoed + " session = " + con.getSessionId());
+				con.releaseConnection();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

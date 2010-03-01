@@ -17,8 +17,7 @@
 package com.stabilit.sc;
 
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServiceHandler;
-import com.stabilit.sc.handler.ClientTimeoutHandler;
+import com.stabilit.sc.msg.ISCListener;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ISubscribePublishService;
 import com.stabilit.sc.service.ServiceFactory;
@@ -63,8 +62,8 @@ public class ClientScConnection extends ScConnection {
 	 * @return the requestResponse service
 	 */
 	public IRequestResponseService newRequestResponseService(String serviceName,
-			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
-		return serviceFactory.createRequestResponseService(serviceName, responseHandler, timeoutHandler);
+			Class<? extends ISCListener> scListenerClass) {
+		return serviceFactory.createRequestResponseService(serviceName, scListenerClass);
 	}
 
 	/**
@@ -80,8 +79,8 @@ public class ClientScConnection extends ScConnection {
 	 * @return the subscribePublish service
 	 */
 	public ISubscribePublishService newSubscribePublishService(String serviceName,
-			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
-		return serviceFactory.createSubscribePublishService(serviceName, responseHandler, timeoutHandler);
+			Class<? extends ISCListener> scListenerClass) {
+		return serviceFactory.createSubscribePublishService(serviceName, scListenerClass);
 	}
 
 	/** {@inheritDoc} */

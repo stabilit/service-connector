@@ -16,8 +16,7 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.handler.ServiceHandler;
-import com.stabilit.sc.handler.ClientTimeoutHandler;
+import com.stabilit.sc.msg.ISCListener;
 
 /**
  * The ServiceFactory creates Services for clients.
@@ -54,8 +53,8 @@ public final class ServiceFactory {
 	 * @return the requestresponse service
 	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
-			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
-		return new RequestResponseService(serviceName, responseHandler);
+			Class<? extends ISCListener> scListenerClass) {
+		return new RequestResponseService(serviceName, scListenerClass);
 	}
 
 	/**
@@ -68,7 +67,7 @@ public final class ServiceFactory {
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
-			ServiceHandler responseHandler, ClientTimeoutHandler timeoutHandler) {
-		return new SubscribePublishService(serviceName, responseHandler, timeoutHandler);
+			Class<? extends ISCListener> scListenerClass) {
+		return new SubscribePublishService(serviceName, scListenerClass);
 	}
 }

@@ -16,18 +16,6 @@
  */
 package com.stabilit.sc.example;
 
-import com.stabilit.sc.ClientScConnection;
-import com.stabilit.sc.MessageTransportType;
-import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.handler.ServiceHandler;
-import com.stabilit.sc.handler.ClientTimeoutHandler;
-import com.stabilit.sc.msg.IData;
-import com.stabilit.sc.msg.Data;
-import com.stabilit.sc.service.ConnectionCtx;
-import com.stabilit.sc.service.IRequestResponseService;
-import com.stabilit.sc.service.ISubscribePublishService;
-import com.stabilit.sc.service.IService;
-import com.stabilit.sc.service.SubscriptionMask;
 
 /**
  * Example Client.
