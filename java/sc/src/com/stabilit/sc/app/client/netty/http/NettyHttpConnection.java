@@ -17,7 +17,6 @@ package com.stabilit.sc.app.client.netty.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.concurrent.Executors;
@@ -27,7 +26,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -35,53 +34,62 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.client.IConnectionCallback;
+import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.handler.NettyHttpResponseHandler;
+import com.stabilit.sc.handler.SCKeepAliveHandler;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.msg.ISCListener;
+import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyHttpConnection implements IClientConnection, IConnectionCallback {
+public class NettyHttpConnection implements IClientConnection {
 
-	private URL url;
-	private String sessionId;
-	private ClientBootstrap bootstrap;
-	private Channel channel;
-
+	private URL url = null;
+	private String sessionId = null;
+	private ClientBootstrap bootstrap = null;
+	private Channel channel = null;
+	private IPoolConnection decoratorConn = null;
+	
 	public NettyHttpConnection() {
-		this.url = null;
-		this.sessionId = null;
-		this.channel = null;
+	}
+	
+	@Override
+	public void setDecorator(IPoolConnection dec) {
+		this.decoratorConn = dec;
+	}
+
+	@Override
+	public void deleteSession() {
+
+	}
+
+	@Override
+	public void connect(Class<? extends ISCListener> scListenerClass) throws ConnectionException {
 
 		// Configure the client.
-		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
-				Executors.newCachedThreadPool(), Executors
-						.newCachedThreadPool()));
+		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
+				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory());
-	}
+		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory(scListenerClass,
+				SCKeepAliveHandler.class, 30, decoratorConn));
 
-	@Override
-	public void deleteSession() throws IOException {
-
-	}
-
-	@Override
-	public void connect() throws Exception {
 		String host = url.getHost();
 		int port = url.getPort();
 		// Start the connection attempt.
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,
-				port));
+		try {
+			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 
-		// Wait until the connection attempt succeeds or fails.
-		this.channel = future.awaitUninterruptibly().getChannel();
-		if (!future.isSuccess()) {
-			Exception e = (Exception) future.getCause();
-			future.getCause().printStackTrace();
-			this.bootstrap.releaseExternalResources();
-			throw e;
+			// Wait until the connection attempt succeeds or fails.
+			this.channel = future.awaitUninterruptibly().getChannel();
+			if (!future.isSuccess()) {
+				Exception e = (Exception) future.getCause();
+				future.getCause().printStackTrace();
+				this.bootstrap.releaseExternalResources();
+				throw new ConnectionException("Connection could not be established.", e);
+			}
+		} catch (ChannelPipelineException e) {
+			throw new ConnectionException("Connection could not be established.", e);
 		}
-
 	}
 
 	@Override
@@ -102,9 +110,9 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 	}
 
 	@Override
-	public void createSession() throws IOException {
-		//TODO schicke an SC CREATESESSION
-		//TODO asynchron??????
+	public void createSession() {
+		// TODO schicke an SC CREATESESSION
+		// TODO asynchron??????
 	}
 
 	@Override
@@ -112,8 +120,8 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.POST, this.url.getPath());
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
+				.getPath());
 		byte[] buffer = baos.toByteArray();
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
@@ -127,8 +135,8 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.POST, this.url.getPath());
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
+				.getPath());
 		byte[] buffer = baos.toByteArray();
 		request.addHeader("Content-Length", String.valueOf(buffer.length));
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
@@ -136,8 +144,7 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
 
-		HttpResponseHandler handler = channel.getPipeline().get(
-				HttpResponseHandler.class);
+		NettyHttpResponseHandler handler = channel.getPipeline().get(NettyHttpResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 
 		buffer = content.array();
@@ -167,12 +174,5 @@ public class NettyHttpConnection implements IClientConnection, IConnectionCallba
 	@Override
 	public void setAvailable(boolean available) {
 
-	}
-
-	@Override
-	public void setCallback(ICallback callback) {
-		ChannelPipeline pipeline = this.channel.getPipeline();
-		HttpResponseHandler handler = pipeline.get(HttpResponseHandler.class);
-		handler.setCallback(callback);
 	}
 }

@@ -3,10 +3,9 @@ package com.stabilit.sc.pool;
 import java.io.IOException;
 
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.client.IConnectionCallback;
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.msg.ISCListener;
 import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
 
@@ -16,15 +15,16 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	private boolean connected;
 
 	private IClientConnection con;
-	private ICallback callback;
+	private ISCListener callback;
 
-	public PoolConnection(IClientConnection con) {
+	public PoolConnection(IClientConnection con, Class<? extends ISCListener> scListener) {
 		this.con = con;
+		con.setDecorator(this);
 		this.available = true;
 		this.connected = false;
 		if (this.connected == false) {
 			try {
-				con.connect();
+				con.connect(scListener);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -79,7 +79,7 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	}
 
 	@Override
-	public String subscribe(ICallback callback) throws Exception {
+	public String subscribe() throws Exception {
 		SCMP request = new SCMP();
 		SubscribeMessage subscribeMessage = new SubscribeMessage();
 		request.setBody(subscribeMessage);
@@ -87,11 +87,11 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 		String subscribeId = result.getSubscribeId();
 		callback.setSubscribeId(subscribeId);
 		this.callback = callback;
-		if (con instanceof IConnectionCallback) {
-			((IConnectionCallback) con).setCallback(callback);
-		} else {
-			throw new UnsupportedOperationException();
-		}
+//		if (con instanceof IConnectionCallback) {
+//			((IConnectionCallback) con).setCallback(callback);
+//		} else {
+//			throw new UnsupportedOperationException();
+//		}
 		// send initial async call
 		request = new SCMP();
 		request.setSubsribeId(subscribeId);

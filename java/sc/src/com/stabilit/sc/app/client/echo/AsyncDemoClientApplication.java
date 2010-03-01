@@ -1,7 +1,6 @@
 package com.stabilit.sc.app.client.echo;
 
 import com.stabilit.sc.app.client.ClientApplication;
-import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
@@ -23,7 +22,7 @@ public class AsyncDemoClientApplication extends ClientApplication {
 		
 		ConnectionPool pool = ConnectionPool.getInstance();
 		
-		con = pool.borrowConnection(applicationContext);
+		con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}
@@ -33,7 +32,7 @@ public class AsyncDemoClientApplication extends ClientApplication {
 			// subscribe 
 			if (con instanceof ISubscribe) {
 				System.out.println("AsyncDemoClientApplication.run() begin subscribe");
-				subscribeId = ((ISubscribe) con).subscribe(new AsyncDemoCallback(con));
+				subscribeId = ((ISubscribe) con).subscribe();
 				System.out.println("AsyncDemoClientApplication.run() subscribe done,  subscribeid = " + subscribeId);
 			}
 			Thread.sleep(10000);

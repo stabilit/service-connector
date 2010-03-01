@@ -19,9 +19,6 @@
  */
 package com.stabilit.sc.pool;
 
-import java.io.IOException;
-import java.net.URL;
-
 import com.stabilit.sc.io.SCMP;
 
 /**

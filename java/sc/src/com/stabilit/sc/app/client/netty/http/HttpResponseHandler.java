@@ -26,7 +26,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ICallback;
+import com.stabilit.sc.msg.ISCListener;
 import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -35,13 +35,13 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 
-	private ICallback callback = null;
+	private ISCListener callback = null;
 
-	public void setCallback(ICallback callback) {
+	public void setCallback(ISCListener callback) {
 		this.callback = callback;
 	}
 
-	public ICallback getCallback() {
+	public ISCListener getCallback() {
 		return callback;
 	}
 
@@ -82,7 +82,7 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
 							this.callback = null;
 							return;
 						}
-						this.callback.callback(ret);
+			//			this.callback.messageReceived(ret);
 						return;
 					}
 				}

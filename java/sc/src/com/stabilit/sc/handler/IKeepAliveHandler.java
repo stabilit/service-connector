@@ -13,46 +13,33 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.app.client;
+package com.stabilit.sc.handler;
 
-import java.net.URL;
-
-import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCListener;
-import com.stabilit.sc.pool.IPoolConnection;
+import org.jboss.netty.util.Timer;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IClientConnection {
-	
-	public boolean isAvailable();
-	
-	public void setAvailable(boolean available);
-	
-	public String getSessionId();
-	
-	public void setEndpoint(URL url);
+public interface IKeepAliveHandler {
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	Timer getTimer();
 
-	public void send(SCMP scmp) throws Exception;
+	int getReaderIdleTimeSeconds();
 
-	public void disconnect() throws Exception;
+	int getWriterIdleTimeSeconds();
+
+	int getAllIdleTimeSeconds();
 	
-	public void destroy() throws Exception;
-
-	public void connect(Class<? extends ISCListener> scListener) throws ConnectionException;
-
-	public void deleteSession();
-
-	public void createSession();
+	void setAllIdleTimeSeconds(int allIdleTimeSeconds);
 	
-	public void setDecorator(IPoolConnection dec);
+	void setReaderIdleTimeSeconds(int readerIdleTimeSeconds);
+
+	void setWriterIdleTimeSeconds(int writerIdleTimeSeconds);
+	
+	void setTimer(Timer timer);
 }

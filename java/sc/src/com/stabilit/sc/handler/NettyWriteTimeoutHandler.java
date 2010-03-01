@@ -13,46 +13,38 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.app.client;
+package com.stabilit.sc.handler;
 
-import java.net.URL;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
+import org.jboss.netty.util.Timer;
 
-import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ISCListener;
-import com.stabilit.sc.pool.IPoolConnection;
+
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IClientConnection {
-	
-	public boolean isAvailable();
-	
-	public void setAvailable(boolean available);
-	
-	public String getSessionId();
-	
-	public void setEndpoint(URL url);
+public class NettyWriteTimeoutHandler extends WriteTimeoutHandler {
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	private ISCListener callback;
 
-	public void send(SCMP scmp) throws Exception;
+	/**
+	 * @param timer
+	 * @param timeoutSeconds
+	 */
+	public NettyWriteTimeoutHandler(Timer timer, int timeoutSeconds, ISCListener callback) {
+		super(timer, timeoutSeconds);
+		this.callback = callback;
+	}
 
-	public void disconnect() throws Exception;
-	
-	public void destroy() throws Exception;
-
-	public void connect(Class<? extends ISCListener> scListener) throws ConnectionException;
-
-	public void deleteSession();
-
-	public void createSession();
-	
-	public void setDecorator(IPoolConnection dec);
+	@Override
+	protected void writeTimedOut(ChannelHandlerContext ctx) throws Exception {
+		super.writeTimedOut(ctx);
+	}
 }

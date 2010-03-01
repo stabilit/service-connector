@@ -1,10 +1,13 @@
 package com.stabilit.sc.msg;
 
 import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.pool.IPoolConnection;
 
-public interface ICallback {
+public interface ISCListener {
 
-	public void callback(SCMP scmp) throws Exception;
+	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception;
+	
+	public void setConnection(IPoolConnection conn);
 
 	public String getSubscribeId();
 	
@@ -15,5 +18,4 @@ public interface ICallback {
 	public void release();
 	
 	public boolean isReleased();
-
 }

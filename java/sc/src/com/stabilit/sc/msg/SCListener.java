@@ -6,17 +6,20 @@ import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.pool.BlockingPoolConnection;
 import com.stabilit.sc.pool.IPoolConnection;
 
-public abstract class Callback implements ICallback {
-	private IPoolConnection con;
-	private String subscribeId;
-	private boolean released;
+public abstract class SCListener implements ISCListener {
+	private IPoolConnection conn = null;
+	private String subscribeId = null;
+	private boolean released = false;
 
-	public Callback(IPoolConnection con) {
-		this.con = con;
-		this.subscribeId = null;
-		this.released = false;
+	//important for instancing by .newInstance() method.
+	public SCListener() {
 	}
-
+	
+	@Override
+	public void setConnection(IPoolConnection conn) {
+		this.conn = conn;		
+	}
+	
 	@Override
 	public String getSubscribeId() {
 		return this.subscribeId;
@@ -34,13 +37,13 @@ public abstract class Callback implements ICallback {
 			UnSubscribeMessage unsubscribeMessage = new UnSubscribeMessage();
 			request.setBody(unsubscribeMessage);
 			System.out.println("Callback.sendAsyncRequest() send unsubscribe request");
-			con.send(request);
+			conn.send(request);
 			return;
 		}		
 		SCMP request = new SCMP();
 		request.setSubsribeId(this.subscribeId);
 		request.setMessageId(AsyncCallMessage.ID);
-		con.send(request);
+		conn.send(request);
 	}
 
 	@Override
@@ -54,9 +57,9 @@ public abstract class Callback implements ICallback {
 	}
 
 	@Override
-	public void callback(SCMP scmp) throws Exception {
-		if(con instanceof BlockingPoolConnection) {
-			((BlockingPoolConnection) con).release();
-		}
-	}	
+	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
+		if(conn instanceof BlockingPoolConnection) {
+			((BlockingPoolConnection) conn).release();
+		}		
+	}
 }

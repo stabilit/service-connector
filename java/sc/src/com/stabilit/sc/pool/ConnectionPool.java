@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.msg.ISCListener;
 
 public class ConnectionPool {
 
@@ -32,50 +33,53 @@ public class ConnectionPool {
 			instance = new ConnectionPool(numOfConnections);
 	}
 
-	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx) {
+	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx,
+			Class<? extends ISCListener> scListener) {
 
 		List<IPoolConnection> connectionList = connectionMap.get(ctx.getConnection());
 		PoolConnection poolCon = null;
 		IClientConnection con = null;
 		URL url = null;
-		
+
 		if (connectionList == null) {
 			con = ClientConnectionFactory.newInstance(ctx.getConnection());
 			if (con == null) {
 				return null;
 			}
 			url = ctx.getURL();
+			con.setEndpoint(url);
 			connectionList = new ArrayList<IPoolConnection>();
 			connectionMap.put(ctx.getConnection(), connectionList);
-			
+
 			if (ctx.getAttribute("prot").equals("http")) {
-				poolCon = new BlockingPoolConnection(con);
+				poolCon = new BlockingPoolConnection(con, scListener);
 			} else {
-				poolCon = new PoolConnection(con);
+				poolCon = new PoolConnection(con, scListener);
 			}
 			connectionList.add(poolCon);
 			poolCon.setAvailable(false);
-			
+
 		} else {
 			// get first available connection
 			for (IPoolConnection conn : connectionList) {
 				if (conn.isAvailable()) {
-					((PoolConnection)conn).setAvailable(false);
+					((PoolConnection) conn).setAvailable(false);
 					return conn;
 				}
 			}
-			
-			if(connectionList.size() < numOfConnections) {
+
+			if (connectionList.size() < numOfConnections) {
+				url = ctx.getURL();
 				con = ClientConnectionFactory.newInstance(ctx.getConnection());
 				con.setEndpoint(url);
 				if (ctx.getAttribute("prot").equals("http")) {
-					poolCon = new BlockingPoolConnection(con);
+					poolCon = new BlockingPoolConnection(con, scListener);
 				} else {
-					poolCon = new PoolConnection(con);
+					poolCon = new PoolConnection(con, scListener);
 				}
 				connectionList.add(poolCon);
 			}
-		}	
+		}
 		return poolCon;
 	}
 }
