@@ -37,6 +37,7 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 
 	private ISCClientListener callback = null;
 	private IPoolConnection conn;
+	private boolean sync = false;
 
 	/**
 	 * @param scListener
@@ -56,12 +57,14 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 	}
 
 	public ChannelBuffer getMessageSync() {
+		sync = true;
 		ChannelBuffer response;
 		boolean interrupted = false;
 		for (;;) {
 			try {
 				// take() wartet bis Message in Queue kommt!
 				response = answer.take();
+				sync = false;
 				break;
 			} catch (InterruptedException e) {
 				interrupted = true;
@@ -76,10 +79,10 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		
-		// run callback if any
-		if (this.callback != null) {
-			ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
+		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
+		if (sync) {
+			answer.offer(chBuffer);
+		} else {
 			byte[] buffer = chBuffer.array();
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
@@ -89,6 +92,5 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 				return;
 			}
 		}
-		answer.offer((ChannelBuffer) e.getMessage());
 	}
 }

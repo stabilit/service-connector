@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.impl.AsyncCallCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
+import com.stabilit.sc.cmd.impl.GetDataCommand;
 import com.stabilit.sc.cmd.impl.KeepAliveCommand;
 import com.stabilit.sc.cmd.impl.RegisterCommand;
 import com.stabilit.sc.cmd.impl.SubscribeCommand;
@@ -32,6 +33,8 @@ public class CommandFactory implements ICommandFactory {
 		commandMap.put(keepAliveCmd.getKey(), keepAliveCmd);
 		ICommand registerCmd = new RegisterCommand();
 		commandMap.put(registerCmd.getKey(), registerCmd);
+		ICommand getDataCmd = new GetDataCommand();
+		commandMap.put(getDataCmd.getKey(), getDataCmd);
 	}
 	
 	public static ICommandFactory getInstance() {
