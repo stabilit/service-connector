@@ -16,6 +16,13 @@
  */
 package com.stabilit.sc.example;
 
+import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.GetDataMessage;
+import com.stabilit.sc.service.IRequestResponseService;
+import com.stabilit.sc.service.ServiceFactory;
 
 /**
  * Example Client.
@@ -41,5 +48,26 @@ public class ExampleClient {
 
 	/** The Constant HOST. */
 	private static final String HOST = "localhost";
-	
+
+	public static void main(String args[]) {
+		ExampleClient client = new ExampleClient();
+		client.runRequestResponseService();
+	}
+
+	public void runRequestResponseService() {
+		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
+				"ServerService A", ServiceRRListener.class);
+		try {
+			rrService.connect(10, null);
+			SCMP scmp = new SCMP();
+			IMessage getData = new GetDataMessage();
+			scmp.setBody(getData);
+			rrService.send(scmp, 10, false);
+		} catch (ScConnectionException e) {
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

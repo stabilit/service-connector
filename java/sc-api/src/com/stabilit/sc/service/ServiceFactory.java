@@ -16,6 +16,7 @@
  */
 package com.stabilit.sc.service;
 
+import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.msg.ISCClientListener;
 
 /**
@@ -46,28 +47,48 @@ public final class ServiceFactory {
 	/**
 	 * Creates a new RequestResponseService object.
 	 * 
-	 * @param serviceName the service name
-	 * @param responseHandler the response handler
-	 * @param timeoutHandler the timeout handler
+	 * @param serviceName
+	 *            the service name
+	 * @param responseHandler
+	 *            the response handler
+	 * @param timeoutHandler
+	 *            the timeout handler
 	 * 
 	 * @return the requestresponse service
 	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
 			Class<? extends ISCClientListener> scListenerClass) {
-		return new RequestResponseService(serviceName, scListenerClass);
+		ClientApplicationContext appCtx = new ClientApplicationContext();
+		try {
+			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
+					"-url", "http://localhost:80" });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new RequestResponseService(serviceName, scListenerClass, appCtx);
 	}
 
 	/**
 	 * Creates a new SubscribePublishService object.
 	 * 
-	 * @param serviceName the service name
-	 * @param responseHandler the response handler
-	 * @param timeoutHandler the timeout handler
+	 * @param serviceName
+	 *            the service name
+	 * @param responseHandler
+	 *            the response handler
+	 * @param timeoutHandler
+	 *            the timeout handler
 	 * 
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
 			Class<? extends ISCClientListener> scListenerClass) {
-		return new SubscribePublishService(serviceName, scListenerClass);
+		ClientApplicationContext appCtx = new ClientApplicationContext();
+		try {
+			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
+					"-url", "http://localhost:80" });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new SubscribePublishService(serviceName, scListenerClass, appCtx);
 	}
 }

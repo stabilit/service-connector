@@ -17,29 +17,21 @@
 /**
  * 
  */
-package com.stabilit.sc;
+package com.stabilit.sc.example;
+
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.SCClientListener;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
  * @author JTraber
  * 
  */
-public class ServiceServerException extends Exception {
-	/**
-	 * @param e
-	 */
-	public ServiceServerException(Exception e) {
-		super(e);
-	}
 
-	/**
-	 * @param string
-	 */
-	public ServiceServerException(String string) {
-		super(string);
-	}
+public class ServiceRRListener extends SCClientListener {
 
-	public ServiceServerException(String message, Throwable cause) {
-		super(message, cause);
+	@Override
+	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
+		super.messageReceived(conn, scmp);
 	}
-	private static final long serialVersionUID = 1L;
 }

@@ -13,49 +13,56 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
+*/
+/**
+ * 
  */
-package com.stabilit.sc.service;
+package com.stabilit.sc.serviceserver;
 
-import com.stabilit.sc.context.ApplicationContext;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.pool.IPoolConnection;
+import com.stabilit.sc.service.ConnectionCtx;
+import com.stabilit.sc.service.ServiceCtx;
 
 /**
- * SubscribePublishService.
- * 
  * @author JTraber
+ *
  */
-public class SubscribePublishService extends Service implements ISubscribePublishService {
+public class ServiceServer {
+	
+	protected ConnectionPool pool;
+	
+	/** The response handler. */
+	protected Class<? extends ISCClientListener> scListenerClass;
+	
+	/** The connection context. */
+	private ConnectionCtx connectionCtx;
 
-	/**
-	 * Instantiates a new subscribePublish service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param responseHandler
-	 *            the response handler
-	 * @param timeoutHandler
-	 *            the timeout handler
-	 */
-	protected SubscribePublishService(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
-		super(serviceName, serviceHandler, ctx);
+	/** The service context. */
+	private ServiceCtx serviceCtx;
+	
+	protected ClientApplicationContext ctx;
+
+	private String serviceName;
+	
+	protected ServiceServer(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
+		this.serviceCtx = new ServiceCtx(serviceName);
+		this.ctx = ctx;
+		this.scListenerClass = serviceHandler;
+		ConnectionPool.init(1);
+		this.pool = ConnectionPool.getInstance();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
-		// TODO connection pool con holen!! subscribe con geben!
-		// ISubscribe con = ConnectionPool.borrowConnection(null);
-		// con.subscribe(callback); new SubscribeCallback(new responsehandler);
+	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
+		this.connectionCtx = connectionCtx;
+		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		conn.releaseConnection();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void unsubscribe(int timeout) {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
+	public String getServiceName() {
+		return serviceName;
 	}
 }

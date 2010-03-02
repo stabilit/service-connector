@@ -18,16 +18,15 @@ package com.stabilit.sc.example;
 
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.serviceserver.HttpRRServer;
 import com.stabilit.sc.serviceserver.ServiceServerFactory;
+import com.stabilit.sc.serviceserver.TCPRRServer;
 
 /**
  * ExampleServer.
  * 
  * @author JTraber
  */
-public class ExampleServer {
+public class ExampleTCPServer {
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
@@ -47,19 +46,17 @@ public class ExampleServer {
 	private static final String HOST = "localhost";
 
 	public static void main(String[] args) {
-		ExampleServer server = new ExampleServer();
+		ExampleTCPServer server = new ExampleTCPServer();
 		server.runRequestResponseServer();
 	}
 	
 	public void runRequestResponseServer() {
-		HttpRRServer serviceServer = ServiceServerFactory.getInstance()
-				.createHttpRRServer("ServerService A", ServiceServerRRListener.class);
+		TCPRRServer serviceServer = ServiceServerFactory.getInstance()
+				.createTCPRRServer("ServerService A", ServiceServerRRListener.class);
 
 		try {
 			serviceServer.connect(30, null);
 			serviceServer.registerServer(10, 15);
-			SCMP scmp = new SCMP("TestBodyMessageToPublish");
-			serviceServer.publish(scmp, 10, false);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {

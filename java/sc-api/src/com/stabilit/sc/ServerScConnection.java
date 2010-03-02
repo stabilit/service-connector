@@ -18,11 +18,12 @@ package com.stabilit.sc;
 
 import java.io.InputStream;
 
-import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.app.client.echo.DefaultEventListener;
+import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.app.server.ServerApplicationFactory;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IData;
 import com.stabilit.sc.msg.IMessage;
@@ -37,7 +38,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  */
 public class ServerScConnection {
 
-	private IApplication serviceServer;
+	private ServerApplication serviceServer;
 
 	/**
 	 * The Constructor.
@@ -52,11 +53,13 @@ public class ServerScConnection {
 	 *            the number of connections used by Sc
 	 */
 	public ServerScConnection(String scHost, int scPort, String connectionType) {
-		serviceServer = ServerApplicationFactory.newInstance("netty.http");
+		serviceServer = (ServerApplication) ServerApplicationFactory.newInstance("netty.http");
 	}
 
-	public void register(String serviceName, int readTimeout, int writeTimeout) throws ServiceServerException {
+	public void register(String serviceName, int readTimeout, int writeTimeout) throws ServiceException {
+		//Server vorstarten für server to SC paradigma
 		try {
+			//serviceServer.create(, keepAliveHandlerClass, keepAliveTimeout, readTimeout, writeTimeout);
 			serviceServer.run();
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -66,10 +69,10 @@ public class ServerScConnection {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		IPoolConnection con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
 		if (con == null) {
-			throw new ServiceServerException("no client available");
+			throw new ServiceException("no client available");
 		}
 		int index = 0;
-		// TODO register handshake!!!
+		// TODO register handshake!!! client to SC paradigma
 		while (true) {
 			try {
 				// Thread.sleep(2000);

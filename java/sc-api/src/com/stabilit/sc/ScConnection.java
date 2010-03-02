@@ -16,7 +16,6 @@
  */
 package com.stabilit.sc;
 
-import com.stabilit.sc.exception.ScConnectionException;
 
 /**
  * The Class ScConnection, represents a connection between a connector and a Sc.
@@ -70,13 +69,4 @@ public abstract class ScConnection {
 	public int getScPort() {
 		return scPort;
 	}
-
-	/**
-	 * Detach connector from Sc.
-	 * 
-	 * @param timeout the timeout
-	 * 
-	 * @throws ScConnectionException exception in detach process
-	 */
-	public abstract void detach(int timeout) throws ScConnectionException;
 } 

@@ -16,7 +16,6 @@
  */
 package com.stabilit.sc;
 
-import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ISubscribePublishService;
@@ -81,10 +80,5 @@ public class ClientScConnection extends ScConnection {
 	public ISubscribePublishService newSubscribePublishService(String serviceName,
 			Class<? extends ISCClientListener> scListenerClass) {
 		return serviceFactory.createSubscribePublishService(serviceName, scListenerClass);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void detach(int timeout) throws ScConnectionException {
 	}
 }

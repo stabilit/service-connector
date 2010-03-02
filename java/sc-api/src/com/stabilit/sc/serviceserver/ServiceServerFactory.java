@@ -14,60 +14,68 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.service;
+package com.stabilit.sc.serviceserver;
 
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ISCClientListener;
-import com.stabilit.sc.pool.IPoolConnection;
 
 /**
- * RequestResponseService.
+ * The ServiceFactory creates Services for clients.
  * 
  * @author JTraber
  */
-public class RequestResponseService extends Service implements IRequestResponseService {
-	
+public final class ServiceServerFactory {
+
+	/** The singleton instance. */
+	private static ServiceServerFactory factory = new ServiceServerFactory();
+
 	/**
-	 * Instantiates a RequestResponseService.
+	 * Instantiates a new service factory.
+	 */
+	private ServiceServerFactory() {
+	}
+
+	/**
+	 * Gets the single instance of ServiceFactory.
+	 * 
+	 * @return single instance of ServiceFactory
+	 */
+	public static ServiceServerFactory getInstance() {
+		return factory;
+	}
+
+	/**
+	 * Creates a new RequestResponseService object.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param serviceHandler
+	 * @param responseHandler
 	 *            the response handler
 	 * @param timeoutHandler
 	 *            the timeout handler
+	 * 
+	 * @return the requestresponse service
 	 */
-	protected RequestResponseService(String serviceName, Class<? extends ISCClientListener> scListenerClass, ClientApplicationContext ctx) {
-		super(serviceName, scListenerClass, ctx);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void send(SCMP scmp, int timeout, boolean compression) {
-	
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
-	
+	public HttpRRServer createHttpRRServer(String serviceName,
+			Class<? extends ISCClientListener> scListenerClass) {
+		ClientApplicationContext appCtx = new ClientApplicationContext();
 		try {
-			conn.send(scmp);
-			conn.releaseConnection();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMP sendAndReceive(SCMP scmp, int timeout, boolean compression) {
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
-		SCMP ret = null;
-		try {
-			ret = conn.sendAndReceive(scmp);
-			conn.releaseConnection();
+			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
+					"-url", "http://localhost:80" });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ret;
+		return new HttpRRServer(serviceName, scListenerClass, appCtx);
+	}
+	
+	public TCPRRServer createTCPRRServer(String serviceName, Class<? extends ISCClientListener> scListenerClass) {
+		ClientApplicationContext appCtx = new ClientApplicationContext();
+		try {
+			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.tcp", "-prot", "tcp",
+					"-url", "http://localhost:81" });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new TCPRRServer(serviceName, scListenerClass, appCtx);
 	}
 }

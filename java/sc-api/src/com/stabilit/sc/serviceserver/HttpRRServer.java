@@ -13,49 +13,60 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
+*/
+/**
+ * 
  */
-package com.stabilit.sc.service;
+package com.stabilit.sc.serviceserver;
 
-import com.stabilit.sc.context.ApplicationContext;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.impl.RegisterMessage;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
- * SubscribePublishService.
- * 
  * @author JTraber
+ *
  */
-public class SubscribePublishService extends Service implements ISubscribePublishService {
-
+public class HttpRRServer extends ServiceServer{
+	
 	/**
-	 * Instantiates a new subscribePublish service.
-	 * 
 	 * @param serviceName
-	 *            the service name
-	 * @param responseHandler
-	 *            the response handler
-	 * @param timeoutHandler
-	 *            the timeout handler
+	 * @param serviceHandler
+	 * @param ctx
 	 */
-	protected SubscribePublishService(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
+	protected HttpRRServer(String serviceName, Class<? extends ISCClientListener> serviceHandler,
+			ClientApplicationContext ctx) {
 		super(serviceName, serviceHandler, ctx);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
-		// TODO connection pool con holen!! subscribe con geben!
-		// ISubscribe con = ConnectionPool.borrowConnection(null);
-		// con.subscribe(callback); new SubscribeCallback(new responsehandler);
+	public void publish(SCMP scmp, int timeout, boolean compression) {
+	
+		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+	
+		try {
+			conn.send(scmp);
+			conn.releaseConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void unsubscribe(int timeout) {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
+	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {		
+		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		//Register handshake
+		SCMP scmpRequest = new SCMP();
+		IMessage regMsg = new RegisterMessage();
+		scmpRequest.setBody(regMsg);
+		try {
+			SCMP scmpResponse = conn.sendAndReceive(scmpRequest);
+		} catch (Exception e) {
+			throw new ServiceException("Error occured when registering Service to SC.");
+		}
+		conn.releaseConnection();		
 	}
 }
