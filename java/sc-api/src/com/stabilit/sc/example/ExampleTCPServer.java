@@ -18,6 +18,8 @@ package com.stabilit.sc.example;
 
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.impl.GetDataMessage;
 import com.stabilit.sc.serviceserver.ServiceServerFactory;
 import com.stabilit.sc.serviceserver.TCPRRServer;
 
@@ -49,14 +51,19 @@ public class ExampleTCPServer {
 		ExampleTCPServer server = new ExampleTCPServer();
 		server.runRequestResponseServer();
 	}
-	
+
 	public void runRequestResponseServer() {
-		TCPRRServer serviceServer = ServiceServerFactory.getInstance()
-				.createTCPRRServer("ServerService A", ServiceServerRRListener.class);
+		TCPRRServer serviceServer = ServiceServerFactory.getInstance().createTCPRRServer("ServerService A",
+				ServiceServerRRListener.class);
 
 		try {
 			serviceServer.connect(30, null);
 			serviceServer.registerServer(10, 15);
+			SCMP scmp = new SCMP();
+			GetDataMessage getDataMsg = new GetDataMessage();
+			getDataMsg.setServiceName("ServerService A");
+			scmp.setBody(getDataMsg);
+			serviceServer.publish(scmp, 10, false);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
