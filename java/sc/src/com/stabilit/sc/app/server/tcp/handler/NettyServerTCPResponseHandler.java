@@ -17,38 +17,39 @@
 /**
  * 
  */
-package com.stabilit.sc.app.server.handler;
+package com.stabilit.sc.app.server.tcp.handler;
 
-import java.io.ByteArrayInputStream;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.app.server.netty.tcp.NettyTCPRequest;
+import com.stabilit.sc.app.server.netty.tcp.NettyTCPResponse;
+import com.stabilit.sc.cmd.CommandException;
+import com.stabilit.sc.cmd.ICommand;
+import com.stabilit.sc.cmd.factory.CommandFactory;
+import com.stabilit.sc.cmd.factory.ICommandFactory;
+import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 /**
  * @author JTraber
  * 
  */
 @ChannelPipelineCoverage("one")
-public class NettyServerHttpResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler {
 
-	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 	private ISCClientListener callback;
 	private IPoolConnection conn;
-	private boolean sync = false;
 
-	public NettyServerHttpResponseHandler(ISCClientListener callback, IPoolConnection conn) {
+	private ICommandFactory commandFactory = CommandFactory.getInstance();
+
+	public NettyServerTCPResponseHandler(ISCClientListener callback, IPoolConnection conn) {
 		super();
 		this.callback = callback;
 		this.conn = conn;
@@ -59,45 +60,31 @@ public class NettyServerHttpResponseHandler extends SimpleChannelUpstreamHandler
 		super.exceptionCaught(ctx, e);
 	}
 
-	public HttpResponse getMessageSync() {
-		sync = true;
-		HttpResponse responseMessage;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() wartet bis Message in Queue kommt!
-				responseMessage = answer.take();
-				sync = false;
-				break;
-			} catch (InterruptedException e) {
-				interrupted = true;
-			}
-		}
-
-		if (interrupted) {
-			Thread.currentThread().interrupt();
-		}
-		return responseMessage;
-	}
-
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 
-		if (sync) {
-			answer.offer((HttpResponse) e.getMessage());
-		} else {
-			HttpResponse httpResponse = (HttpResponse) e.getMessage();
-			byte[] buffer = httpResponse.getContent().array();
-			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
+		System.out.println("message bekommen!");
 
-			SCMP scmp = (SCMP) obj;
-			callback.messageReceived(conn, scmp);
+		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
+
+		IRequest request = new NettyTCPRequest(chBuffer);
+		NettyTCPResponse response = new NettyTCPResponse(e);
+		ICommand command = commandFactory.newCommand(request);
+		try {
+			command.run(request, response);
+		} catch (CommandException ex) {
+			ex.printStackTrace();
 		}
-		// TODO Keep alives müssen hier ausgesondert werden! bzw. acknowledged! oder eventuell ein handler
-		// davor
-		// TODO subscribe auch hier handeln ? ?
+		writeResponse(response);
 	}
+	
+    private void writeResponse(NettyTCPResponse response) throws Exception {
+    	MessageEvent event = response.getEvent();
+        ChannelBuffer buffer = response.getBuffer();
+        
+        // Write the response.
+        ChannelFuture future = event.getChannel().write(buffer);     
+    }
 
 	public ISCClientListener getCallback() {
 		return callback;

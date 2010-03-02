@@ -17,34 +17,29 @@
 /**
  * 
  */
-package com.stabilit.sc.app.server.handler;
+package com.stabilit.sc.app.server.http.handler;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.Timer;
-
-import com.stabilit.sc.msg.ISCClientListener;
-
 
 /**
  * @author JTraber
  * 
  */
-public class NettyServerWriteTimeoutHandler extends WriteTimeoutHandler {
+public interface IKeepAliveHandler {
 
-	private ISCClientListener callback;
+	Timer getTimer();
 
-	/**
-	 * @param timer
-	 * @param timeoutSeconds
-	 */
-	public NettyServerWriteTimeoutHandler(Timer timer, int timeoutSeconds, ISCClientListener callback) {
-		super(timer, timeoutSeconds);
-		this.callback = callback;
-	}
+	int getReaderIdleTimeSeconds();
 
-	@Override
-	protected void writeTimedOut(ChannelHandlerContext ctx) throws Exception {
-		super.writeTimedOut(ctx);
-	}
+	int getWriterIdleTimeSeconds();
+
+	int getAllIdleTimeSeconds();
+	
+	void setAllIdleTimeSeconds(int allIdleTimeSeconds);
+	
+	void setReaderIdleTimeSeconds(int readerIdleTimeSeconds);
+
+	void setWriterIdleTimeSeconds(int writerIdleTimeSeconds);
+	
+	void setTimer(Timer timer);
 }

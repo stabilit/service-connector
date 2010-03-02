@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.app.client.netty.http;
+package com.stabilit.sc.app.client.netty.tcp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,21 +28,15 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.server.http.handler.NettyServerHttpResponseHandler;
-import com.stabilit.sc.app.server.http.handler.SCServerKeepAliveHandler;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ISCClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyHttpConnection implements IClientConnection {
+public class NettyTCPConnection implements IClientConnection {
 
 	private URL url = null;
 	private String sessionId = null;
@@ -50,7 +44,7 @@ public class NettyHttpConnection implements IClientConnection {
 	private Channel channel = null;
 	private IPoolConnection decoratorConn = null;
 	
-	public NettyHttpConnection() {
+	public NettyTCPConnection() {
 	}
 	
 	@Override
@@ -69,10 +63,10 @@ public class NettyHttpConnection implements IClientConnection {
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
-		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory(scListenerClass,
-				SCServerKeepAliveHandler.class, 30, decoratorConn));
 
+		// Set up the event pipeline factory.
+		this.bootstrap.setPipelineFactory(new TCPClientPipelineFactory(scListenerClass, decoratorConn));
+		
 		String host = url.getHost();
 		int port = url.getPort();
 		// Start the connection attempt.
@@ -118,15 +112,14 @@ public class NettyHttpConnection implements IClientConnection {
 	@Override
 	public void send(SCMP scmp) throws Exception {
 		scmp.setSessionId(this.sessionId);
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
-				.getPath());
-		byte[] buffer = baos.toByteArray();
-		request.addHeader("Content-Length", String.valueOf(buffer.length));
-		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		request.setContent(channelBuffer);
-		ChannelFuture future = channel.write(request);
+		
+		ChannelBuffer buffer = ChannelBuffers.buffer(baos.size());
+		buffer.writeBytes(baos.toByteArray());
+		ChannelFuture future = channel.write(buffer);
+		future.awaitUninterruptibly();
 		return;
 	}
 
@@ -135,19 +128,16 @@ public class NettyHttpConnection implements IClientConnection {
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
-				.getPath());
-		byte[] buffer = baos.toByteArray();
-		request.addHeader("Content-Length", String.valueOf(buffer.length));
-		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		request.setContent(channelBuffer);
-		ChannelFuture future = channel.write(request);
+		
+		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
+		chBuffer.writeBytes(baos.toByteArray());
+		ChannelFuture future = channel.write(chBuffer);
 		future.awaitUninterruptibly();
 
-		NettyServerHttpResponseHandler handler = channel.getPipeline().get(NettyServerHttpResponseHandler.class);
-		ChannelBuffer content = handler.getMessageSync().getContent();
+		NettyClientTCPResponseHandler handler = channel.getPipeline().get(NettyClientTCPResponseHandler.class);
+		ChannelBuffer content = handler.getMessageSync();
 
-		buffer = content.array();
+		byte[] buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
 		if (obj instanceof SCMP) {

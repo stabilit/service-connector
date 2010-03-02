@@ -24,7 +24,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.app.server.IServerConnection;
 import com.stabilit.sc.app.server.ServerApplication;
-import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
+import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.context.ServerApplicationContext;
 import com.stabilit.sc.msg.ISCServiceListener;
 
@@ -58,7 +58,7 @@ public class NettyHttpServer extends ServerApplication implements IServerConnect
                         Executors.newCachedThreadPool(),
                         Executors.newCachedThreadPool()));
         // Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass, writeTimeout, writeTimeout, writeTimeout, null));		
+		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass, writeTimeout, writeTimeout, writeTimeout, this));		
 	}
 	
 	@Override

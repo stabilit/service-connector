@@ -23,8 +23,8 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.util.HashedWheelTimer;
 
 import com.stabilit.sc.app.server.IServerConnection;
-import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
-import com.stabilit.sc.app.server.handler.NettyServerIdleHandler;
+import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
+import com.stabilit.sc.app.server.http.handler.NettyServerIdleHandler;
 import com.stabilit.sc.app.service.handler.NettyServiceHttpRequestHandler;
 import com.stabilit.sc.app.service.handler.NettyServiceWriteTimeoutHandler;
 import com.stabilit.sc.msg.ISCServiceListener;

@@ -1,7 +1,7 @@
 package com.stabilit.sc.app.server;
 
 import com.stabilit.sc.app.Application;
-import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
+import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.context.ServerApplicationContext;
 import com.stabilit.sc.msg.ISCServiceListener;
 

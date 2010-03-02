@@ -22,18 +22,16 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 		con.setDecorator(this);
 		this.available = true;
 		this.connected = false;
-		if (this.connected == false) {
-			try {
-				con.connect(scListener);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.connected = true;
+		try {
+			con.connect(scListener);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		this.connected = true;
 	}
 
-	//TODOD wann muss dies geschehen!
+	// TODOD wann muss dies geschehen!
 	public void closeSession() throws IOException {
 		this.con.deleteSession();
 	}
@@ -57,19 +55,19 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	public boolean isAvailable() {
 		return this.available;
 	}
-	
+
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
 
-	//Wann aufrufen eventuell im constructor
+	// Wann aufrufen eventuell im constructor
 	public void openSession() throws IOException {
 		this.con.createSession();
 	}
 
 	@Override
 	public void send(SCMP scmp) throws Exception {
-		this.available = false;		
+		this.available = false;
 		this.con.send(scmp);
 	}
 
@@ -87,11 +85,11 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 		String subscribeId = result.getSubscribeId();
 		callback.setSubscribeId(subscribeId);
 		this.callback = callback;
-//		if (con instanceof IConnectionCallback) {
-//			((IConnectionCallback) con).setCallback(callback);
-//		} else {
-//			throw new UnsupportedOperationException();
-//		}
+		// if (con instanceof IConnectionCallback) {
+		// ((IConnectionCallback) con).setCallback(callback);
+		// } else {
+		// throw new UnsupportedOperationException();
+		// }
 		// send initial async call
 		request = new SCMP();
 		request.setSubsribeId(subscribeId);

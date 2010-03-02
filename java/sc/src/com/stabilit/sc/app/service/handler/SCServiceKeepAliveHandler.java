@@ -21,7 +21,7 @@ package com.stabilit.sc.app.service.handler;
 
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.sc.app.server.handler.IKeepAliveHandler;
+import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 
 
 /**

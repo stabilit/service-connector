@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.app.server.handler;
+package com.stabilit.sc.app.server.http.handler;
 
 import org.jboss.netty.util.Timer;
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.app.server.netty.http.NettyHttpSCServer;
+import com.stabilit.sc.app.server.netty.tcp.NettyTCPSCServer;
 import com.stabilit.sc.util.ConsoleUtil;
 
 public class ServerApplicationFactory {
@@ -16,6 +17,11 @@ public class ServerApplicationFactory {
 		IApplication nettyHttpServer = new NettyHttpSCServer();
 		serverMap.put(NettyHttpSCServer.class.getName(), nettyHttpServer);
 		serverMap.put("netty.http", nettyHttpServer);
+		
+		// jboss netty tcp server
+		IApplication nettyTCPServer = new NettyTCPSCServer();
+		serverMap.put(NettyTCPSCServer.class.getName(), nettyTCPServer);
+		serverMap.put("netty.tcp", nettyTCPServer);
 	}
 	
 	public static IApplication newInstance() {

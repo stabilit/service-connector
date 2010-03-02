@@ -17,22 +17,18 @@
 /**
  * 
  */
-package com.stabilit.sc.app.service.handler;
+package com.stabilit.sc.app.server.http.handler;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
-
-
-
 /**
  * @author JTraber
  * 
  */
-public class NettyServiceIdleHandler extends IdleStateHandler {
+public class NettyServerIdleHandler extends IdleStateHandler {
 
 	private IKeepAliveHandler callback;
 
@@ -40,7 +36,7 @@ public class NettyServiceIdleHandler extends IdleStateHandler {
 	 * @param timer
 	 * @param timeoutSeconds
 	 */
-	public NettyServiceIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
+	public NettyServerIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
 		super(timer, 0, 0, timeoutSeconds);
 		this.callback = callback;
 	}

@@ -21,7 +21,7 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
-import com.stabilit.sc.app.server.handler.NettyHttpRequestHandler;
+import com.stabilit.sc.app.server.http.handler.NettyHttpRequestHandler;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)

@@ -22,7 +22,7 @@ public class ObjectStreamEncoderDecoder implements IEncoderDecoder {
 		ObjectInputStream ois = (ObjectInputStream) is;
 		SCMP scmp = (SCMP) obj;
 		Map<String, String> metaMap = (Map<String, String>) ois.readObject();
-		scmp.setMetaMap(metaMap);
+		scmp.setHeader(metaMap);
 		try {
 			Object body = ois.readObject();
 			scmp.setBody(body);
@@ -35,7 +35,7 @@ public class ObjectStreamEncoderDecoder implements IEncoderDecoder {
 	public void encode(OutputStream os, Object obj) throws IOException {
 		ObjectOutputStream oos = (ObjectOutputStream) os;
 		SCMP scmp = (SCMP) obj;
-		oos.writeObject(scmp.getMetaMap());
+		oos.writeObject(scmp.getHeader());
 		Object body = scmp.getBody();
 		if (body != null) {
 			oos.writeObject(scmp.getBody());

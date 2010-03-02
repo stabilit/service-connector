@@ -71,12 +71,12 @@ public class SCMP implements Serializable {
 		header.put(MESSAGE_ID, messageId);
 	}
 
-	public Map<String, String> getMetaMap() {
+	public Map<String, String> getHeader() {
 		return header;
 	}
 
-	public void setMetaMap(Map<String, String> metaMap) {
-		this.header = metaMap;
+	public void setHeader(Map<String, String> header) {
+		this.header = header;
 	}
 
 	public void setBody(Object body) {
@@ -112,7 +112,7 @@ public class SCMP implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SCOP [metaMap=");
+		builder.append("SCOP [header=");
 		builder.append(header);
 		builder.append("]");
 		return builder.toString();

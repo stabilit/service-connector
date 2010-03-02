@@ -17,34 +17,28 @@
 /**
  * 
  */
-package com.stabilit.sc.app.server.handler;
+package com.stabilit.sc;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateHandler;
-import org.jboss.netty.util.Timer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author JTraber
  * 
  */
-public class NettyServerIdleHandler extends IdleStateHandler {
+public class SC {
 
-	private IKeepAliveHandler callback;
-
-	/**
-	 * @param timer
-	 * @param timeoutSeconds
-	 */
-	public NettyServerIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
-		super(timer, 0, 0, timeoutSeconds);
-		this.callback = callback;
+	private static SC instance = new SC();
+	private Map<String, String> services = new ConcurrentHashMap<String, String>();
+	
+	private SC() {
 	}
 
-	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
-			throws Exception {
-		// TODO callback?? oder sowas
-		super.channelIdle(ctx, state, lastActivityTimeMillis);
-	}	
+	public static SC getInstance() {
+		return instance;
+	}
+	
+	public void registerService(String serviceName) {
+		services.put(serviceName, serviceName);
+	}
 }
