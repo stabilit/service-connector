@@ -39,7 +39,7 @@ import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.io.IRequest;
 
 @ChannelPipelineCoverage("one")
-public class NettyHttpRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpSCRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
 

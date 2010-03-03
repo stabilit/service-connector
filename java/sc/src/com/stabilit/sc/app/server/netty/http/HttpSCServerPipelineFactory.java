@@ -21,7 +21,7 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
-import com.stabilit.sc.app.server.http.handler.NettyHttpRequestHandler;
+import com.stabilit.sc.app.server.http.handler.NettyHttpSCRequestHandler;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -47,7 +47,7 @@ public class HttpSCServerPipelineFactory implements ChannelPipelineFactory {
         pipeline.addLast("encoder", new HttpResponseEncoder());
         // Remove the following line if you don't want automatic content compression.
 //        pipeline.addLast("deflater", new HttpContentCompressor());
-        pipeline.addLast("handler", new NettyHttpRequestHandler());
+        pipeline.addLast("handler", new NettyHttpSCRequestHandler());
         return pipeline;
     }
 }
