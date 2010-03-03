@@ -28,7 +28,7 @@ import com.stabilit.sc.service.ServiceFactory;
  * 
  * @author JTraber
  */
-public class ExampleHTTPClient {
+public class HttpGui {
 
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
@@ -49,7 +49,7 @@ public class ExampleHTTPClient {
 	private static final String HOST = "localhost";
 
 	public static void main(String args[]) {
-		ExampleHTTPClient client = new ExampleHTTPClient();
+		HttpGui client = new HttpGui();
 		client.runRequestResponseService();
 	}
 

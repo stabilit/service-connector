@@ -14,7 +14,7 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.serviceserver;
+package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.msg.ISCClientListener;
@@ -24,15 +24,15 @@ import com.stabilit.sc.msg.ISCClientListener;
  * 
  * @author JTraber
  */
-public final class ServiceServerFactory {
+public final class ServerFactory {
 
 	/** The singleton instance. */
-	private static ServiceServerFactory factory = new ServiceServerFactory();
+	private static ServerFactory factory = new ServerFactory();
 
 	/**
 	 * Instantiates a new service factory.
 	 */
-	private ServiceServerFactory() {
+	private ServerFactory() {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public final class ServiceServerFactory {
 	 * 
 	 * @return single instance of ServiceFactory
 	 */
-	public static ServiceServerFactory getInstance() {
+	public static ServerFactory getInstance() {
 		return factory;
 	}
 

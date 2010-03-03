@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.serviceserver;
+package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ServiceException;
@@ -30,7 +30,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  * @author JTraber
  *
  */
-public class TCPRRServer extends ServiceServer{
+public class TCPRRServer extends Server{
 	
 	/**
 	 * @param serviceName

@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.serviceserver;
+package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
@@ -31,7 +31,7 @@ import com.stabilit.sc.service.ServiceCtx;
  * @author JTraber
  *
  */
-public class ServiceServer {
+public class Server {
 	
 	protected ConnectionPool pool;
 	
@@ -48,7 +48,7 @@ public class ServiceServer {
 
 	private String serviceName;
 	
-	protected ServiceServer(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
+	protected Server(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
 		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
 		this.scListenerClass = serviceHandler;

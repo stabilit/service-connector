@@ -21,8 +21,8 @@ import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.Message;
 import com.stabilit.sc.msg.impl.GetDataMessage;
-import com.stabilit.sc.serviceserver.HttpRRServer;
-import com.stabilit.sc.serviceserver.ServiceServerFactory;
+import com.stabilit.sc.server.HttpRRServer;
+import com.stabilit.sc.server.ServerFactory;
 
 /**
  * ExampleServer.
@@ -54,7 +54,7 @@ public class ExampleServer {
 	}
 	
 	public void runRequestResponseServer() {
-		HttpRRServer serviceServer = ServiceServerFactory.getInstance()
+		HttpRRServer serviceServer = ServerFactory.getInstance()
 				.createHttpRRServer("ServerService A", ServiceServerRRListener.class);
 
 		try {

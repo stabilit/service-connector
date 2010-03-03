@@ -18,8 +18,8 @@ package com.stabilit.sc.example;
 
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.serviceserver.ServiceServerFactory;
-import com.stabilit.sc.serviceserver.TCPRRServer;
+import com.stabilit.sc.server.ServerFactory;
+import com.stabilit.sc.server.TCPRRServer;
 
 /**
  * ExampleServer.
@@ -51,7 +51,7 @@ public class ExampleTCPServer {
 	}
 
 	public void runRequestResponseServer() {
-		TCPRRServer serviceServer = ServiceServerFactory.getInstance().createTCPRRServer("ServerService A",
+		TCPRRServer serviceServer = ServerFactory.getInstance().createTCPRRServer("ServerService A",
 				ServiceServerRRListener.class);
 
 		try {
