@@ -1,6 +1,6 @@
 package com.stabilit.sc.cmd.impl;
 
-import com.stabilit.sc.app.server.IServerConnection;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;

@@ -45,6 +45,7 @@ public class NettyHttpRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
+		System.out.println("Msg bekommen HTTP Server SC");
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		IRequest request = new NettyHttpRequest(httpRequest);
 		NettyHttpResponse response = new NettyHttpResponse(event);

@@ -27,6 +27,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.SC;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.app.server.netty.tcp.NettyTCPRequest;
 import com.stabilit.sc.app.server.netty.tcp.NettyTCPResponse;
 import com.stabilit.sc.cmd.CommandException;
@@ -34,8 +36,8 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.msg.ISCClientListener;
-import com.stabilit.sc.pool.IPoolConnection;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.impl.RegisterMessage;
 
 /**
  * @author JTraber
@@ -44,14 +46,10 @@ import com.stabilit.sc.pool.IPoolConnection;
 @ChannelPipelineCoverage("one")
 public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler {
 
-	private ISCClientListener callback;
-	private IPoolConnection conn;
-
+	private IHTTPServerConnection conn;
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
-
-	public NettyServerTCPResponseHandler(ISCClientListener callback, IPoolConnection conn) {
-		super();
-		this.callback = callback;
+	
+	public NettyServerTCPResponseHandler(IHTTPServerConnection conn) {
 		this.conn = conn;
 	}
 
@@ -63,7 +61,7 @@ public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 
-		System.out.println("message bekommen!");
+		System.out.println("message bekommen im TCP Server on SC!");
 
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
 
@@ -72,6 +70,11 @@ public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler 
 		ICommand command = commandFactory.newCommand(request);
 		try {
 			command.run(request, response);
+			//TODO wie lösen??? -----------------
+			SCMP scmp = request.getSCMP();
+			RegisterMessage registerMessage = (RegisterMessage) scmp.getBody();
+			SC.getInstance().quickFix(registerMessage.getServiceName(), conn);
+			//-----------------------------
 		} catch (CommandException ex) {
 			ex.printStackTrace();
 		}
@@ -85,8 +88,4 @@ public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler 
         // Write the response.
         ChannelFuture future = event.getChannel().write(buffer);     
     }
-
-	public ISCClientListener getCallback() {
-		return callback;
-	}
 }

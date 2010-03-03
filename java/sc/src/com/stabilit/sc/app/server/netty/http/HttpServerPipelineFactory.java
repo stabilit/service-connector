@@ -22,7 +22,7 @@ import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.util.HashedWheelTimer;
 
-import com.stabilit.sc.app.server.IServerConnection;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerIdleHandler;
 import com.stabilit.sc.app.service.handler.NettyServiceHttpRequestHandler;
@@ -46,11 +46,11 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
 	private int readTimeout;
 	private int writeTimeout;
 	private int keepAliveTimeout;
-	private IServerConnection conn;
+	private IHTTPServerConnection conn;
 
 	public HttpServerPipelineFactory(Class<? extends ISCServiceListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
-			int writeTimeout, IServerConnection conn) {
+			int writeTimeout, IHTTPServerConnection conn) {
 		super();
 		this.scListenerClass = scListenerClass;
 		this.keepAliveHandlerClass = keepAliveHandlerClass;

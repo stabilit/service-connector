@@ -1,23 +1,23 @@
 package com.stabilit.sc.msg;
 
-import com.stabilit.sc.app.server.IServerConnection;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.io.SCMP;
 
 public abstract class SCServiceListener implements ISCServiceListener {
 
-	private IServerConnection conn;
+	private IHTTPServerConnection conn;
 	
 	//important for instancing by .newInstance() method.
 	public SCServiceListener() {
 	}
 
 	@Override
-	public void messageReceived(IServerConnection conn, SCMP scmp) throws Exception {		
+	public void messageReceived(IHTTPServerConnection conn, SCMP scmp) throws Exception {		
 		//TODO callback ?? 
 	}
 
 	@Override
-	public void setConnection(IServerConnection conn) {		
+	public void setConnection(IHTTPServerConnection conn) {		
 		this.conn = conn;
 	}
 }

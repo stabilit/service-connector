@@ -13,41 +13,16 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.stabilit.sc.app.server.IHTTPServerConnection;
+package com.stabilit.sc.app.server;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SC {
+public interface IHTTPServerConnection {
 
-	private static SC instance = new SC();
-	private Map<String, IHTTPServerConnection> services = new ConcurrentHashMap<String, IHTTPServerConnection>();
-
-	private SC() {
-	}
-
-	public static SC getInstance() {
-		return instance;
-	}
-
-	public void registerService(String serviceName) {
-	}
-
-	public void quickFix(String serviceName, IHTTPServerConnection conn) {
-		services.put(serviceName, conn);
-	}
-	
-	public IHTTPServerConnection getService(String serviceName) {
-		return services.get(serviceName);
-	}
 }

@@ -3,7 +3,7 @@ package com.stabilit.sc.cmd.impl;
 import java.io.File;
 import java.io.FileFilter;
 
-import com.stabilit.sc.app.server.IServerConnection;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;

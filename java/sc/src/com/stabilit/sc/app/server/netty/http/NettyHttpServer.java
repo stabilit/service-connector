@@ -22,7 +22,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.app.server.IServerConnection;
+import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.context.ServerApplicationContext;
@@ -38,7 +38,7 @@ import com.stabilit.sc.msg.ISCServiceListener;
  *
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyHttpServer extends ServerApplication implements IServerConnection{
+public class NettyHttpServer extends ServerApplication implements IHTTPServerConnection{
 	
 	private ServerBootstrap bootstrap;
 	private Channel channel;

@@ -13,16 +13,40 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.app.server;
+package com.stabilit.sc;
+
+import com.stabilit.sc.app.server.Server;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IServerConnection {
+public class SCKernelStart {
 
+	public static void main(String[] args) {
+		SCKernelStart.startHTTPSCServer();
+		SCKernelStart.startTCPSCServer();
+	}
+
+	public static void startHTTPSCServer() {
+		Server server = new Server();
+
+		String[] argss = new String[] { "-app", "netty.http", "-port", "80" };
+		server.setArgs(argss);
+		Thread thread = new Thread(server);
+		thread.start();
+	}
+
+	public static void startTCPSCServer() {
+		Server server = new Server();
+
+		String[] argss = new String[] { "-app", "netty.tcp", "-port", "81" };
+		server.setArgs(argss);
+		Thread thread = new Thread(server);
+		thread.start();
+	}
 }

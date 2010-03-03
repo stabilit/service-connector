@@ -23,11 +23,10 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.app.client.echo.DefaultEventListener;
-import com.stabilit.sc.app.server.IServerConnection;
 import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
-import com.stabilit.sc.app.server.netty.http.HttpServerPipelineFactory;
 import com.stabilit.sc.context.ServerApplicationContext;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ISCServiceListener;
 
 /**
@@ -39,7 +38,7 @@ import com.stabilit.sc.msg.ISCServiceListener;
  * 
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyTCPSCServer extends ServerApplication implements IServerConnection {
+public class NettyTCPSCServer extends ServerApplication implements ITCPServerConnection {
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;
@@ -55,7 +54,7 @@ public class NettyTCPSCServer extends ServerApplication implements IServerConnec
 		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new TCPServerPipelineFactory(DefaultEventListener.class, null));
+		bootstrap.setPipelineFactory(new TCPServerPipelineFactory(DefaultEventListener.class, this));
 	}
 
 	public void run() throws Exception {
@@ -72,16 +71,19 @@ public class NettyTCPSCServer extends ServerApplication implements IServerConnec
 		this.channel.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.stabilit.sc.app.server.ServerApplication#create(java.lang.Class, java.lang.Class, int, int,
-	 * int)
-	 */
 	@Override
 	public void create(Class<? extends ISCServiceListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
 			int writeTimeout) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void send(SCMP scmp) throws Exception {		
+	}
+
+	@Override
+	public SCMP sendAndReceive(SCMP scmp) throws Exception {	
+		return null;
 	}
 }
