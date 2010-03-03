@@ -13,38 +13,30 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.app.server.http.handler;
+package com.stabilit.sc.app.server.netty.tcp;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
-import org.jboss.netty.util.Timer;
-
-import com.stabilit.sc.msg.IClientListener;
-
+import com.stabilit.sc.app.server.IHTTPServerConnection;
+import com.stabilit.sc.io.SCMP;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class NettyServerWriteTimeoutHandler extends WriteTimeoutHandler {
-
-	private IClientListener callback;
+public interface ITcpServerConnection extends IHTTPServerConnection {
 
 	/**
-	 * @param timer
-	 * @param timeoutSeconds
+	 * @param msg
+	 * @throws Exception
 	 */
-	public NettyServerWriteTimeoutHandler(Timer timer, int timeoutSeconds, IClientListener callback) {
-		super(timer, timeoutSeconds);
-		this.callback = callback;
-	}
+	void send(SCMP scmp) throws Exception;
 
-	@Override
-	protected void writeTimedOut(ChannelHandlerContext ctx) throws Exception {
-		super.writeTimedOut(ctx);
-	}
+	/**
+	 * @param scmp
+	 * @throws Exception
+	 */
+	SCMP sendAndReceive(SCMP scmp) throws Exception;
 }

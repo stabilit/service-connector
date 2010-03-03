@@ -23,7 +23,7 @@ import java.net.URL;
 
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -48,7 +48,7 @@ public interface IClientConnection {
 	
 	public void destroy() throws Exception;
 
-	public void connect(Class<? extends ISCClientListener> scListener) throws ConnectionException;
+	public void connect(Class<? extends IClientListener> scListener) throws ConnectionException;
 
 	public void deleteSession();
 

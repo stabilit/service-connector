@@ -2,13 +2,14 @@ package com.stabilit.sc.context;
 
 import com.stabilit.sc.util.ConsoleUtil;
 
+
 public class ServerApplicationContext extends ApplicationContext {
 
 	public ServerApplicationContext() {
 	}
 
 	public int getPort() {
-		Integer port = (Integer) this.getAttribute("port");
+		Integer port = Integer.valueOf((String) this.getAttribute("server.port"));
 		if (port == null) {
 			return 8066;
 		}

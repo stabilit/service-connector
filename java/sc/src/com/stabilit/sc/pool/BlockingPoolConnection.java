@@ -3,11 +3,11 @@ package com.stabilit.sc.pool;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 
 public class BlockingPoolConnection extends PoolConnection {
 
-	public BlockingPoolConnection(IClientConnection con, Class<? extends ISCClientListener> scListener) {
+	public BlockingPoolConnection(IClientConnection con, Class<? extends IClientListener> scListener) {
 		super(con, scListener);
 	}
 

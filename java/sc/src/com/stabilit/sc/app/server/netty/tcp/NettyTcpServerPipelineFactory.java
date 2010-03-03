@@ -19,9 +19,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 
-import com.stabilit.sc.app.server.IHTTPServerConnection;
-import com.stabilit.sc.app.server.tcp.handler.NettyServerTCPResponseHandler;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.app.server.tcp.handler.NettyTcpSCServerResponseHandler;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -30,15 +28,12 @@ import com.stabilit.sc.msg.ISCClientListener;
  * 
  * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
  */
-public class TCPServerPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpServerPipelineFactory implements ChannelPipelineFactory {
 
-	private Class<? extends ISCClientListener> scListenerClass;
-	private IHTTPServerConnection conn;
+	private ITcpServerConnection conn;
 
-	public TCPServerPipelineFactory(Class<? extends ISCClientListener> scListenerClass, IHTTPServerConnection conn) {
+	public NettyTcpServerPipelineFactory(ITcpServerConnection conn) {
 		super();
-
-		this.scListenerClass = scListenerClass;
 		this.conn = conn;
 	}
 
@@ -46,7 +41,7 @@ public class TCPServerPipelineFactory implements ChannelPipelineFactory {
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
 		
-		NettyServerTCPResponseHandler responseHandler = new NettyServerTCPResponseHandler(conn);
+		NettyTcpSCServerResponseHandler responseHandler = new NettyTcpSCServerResponseHandler(conn);
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

@@ -22,7 +22,6 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.app.client.echo.DefaultEventListener;
 import com.stabilit.sc.app.server.ServerApplication;
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.context.ServerApplicationContext;
@@ -38,7 +37,7 @@ import com.stabilit.sc.msg.ISCServiceListener;
  * 
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyTCPSCServer extends ServerApplication implements ITCPServerConnection {
+public class NettyTCPSCServer extends ServerApplication implements ITcpServerConnection {
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;
@@ -54,7 +53,7 @@ public class NettyTCPSCServer extends ServerApplication implements ITCPServerCon
 		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new TCPServerPipelineFactory(DefaultEventListener.class, this));
+		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory(this));
 	}
 
 	public void run() throws Exception {

@@ -2,8 +2,8 @@ package com.stabilit.sc.app.client.echo;
 
 import com.stabilit.sc.app.client.ClientApplication;
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.server.ServerException;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.exception.ServerException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.EchoMessage;

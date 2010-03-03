@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc.app.server.tcp.handler;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -28,7 +29,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.sc.SC;
-import com.stabilit.sc.app.server.IHTTPServerConnection;
+import com.stabilit.sc.app.server.netty.tcp.ITcpServerConnection;
 import com.stabilit.sc.app.server.netty.tcp.NettyTCPRequest;
 import com.stabilit.sc.app.server.netty.tcp.NettyTCPResponse;
 import com.stabilit.sc.cmd.CommandException;
@@ -44,30 +45,32 @@ import com.stabilit.sc.msg.impl.RegisterMessage;
  * 
  */
 @ChannelPipelineCoverage("one")
-public class NettyServerTCPResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyTcpSCServerResponseHandler extends SimpleChannelUpstreamHandler {
 
-	private IHTTPServerConnection conn;
+	private ITcpServerConnection conn;
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
+	private Logger log = Logger.getLogger(NettyTcpSCServerResponseHandler.class);
 	
-	public NettyServerTCPResponseHandler(IHTTPServerConnection conn) {
+	public NettyTcpSCServerResponseHandler(ITcpServerConnection conn) {
 		this.conn = conn;
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		log.error("Exception :" + e.getCause().getMessage());		
 		super.exceptionCaught(ctx, e);
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-
-		System.out.println("message bekommen im TCP Server on SC!");
-
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
 
 		IRequest request = new NettyTCPRequest(chBuffer);
 		NettyTCPResponse response = new NettyTCPResponse(e);
 		ICommand command = commandFactory.newCommand(request);
+		
+		log.debug("TcpServerResponseHandler: following command received - " + command.getKey());
+		
 		try {
 			command.run(request, response);
 			//TODO wie lösen??? -----------------

@@ -1,5 +1,7 @@
 package com.stabilit.sc.context;
 
+import static com.stabilit.sc.SCKernelConstants.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.stabilit.sc.util.ConsoleUtil;
@@ -9,12 +11,18 @@ public class ClientApplicationContext extends ApplicationContext {
 	}
 
 	public URL getURL() {
-		URL url = (URL) this.getAttribute("url");
+		URL url;
+		try {
+			url = new URL((String) this.getAttribute(CLIENT_URL));
+		} catch (MalformedURLException e) {
+			// TODO schöner lösen!
+			url = null;
+		}
 		return url;
 	}
-	
+
 	public String getConnection() {
-		return (String)this.getAttribute("con");
+		return (String) this.getAttribute(CLIENT_CON);
 	}
 
 	public void setArgs(String[] args) throws Exception {
@@ -35,17 +43,17 @@ public class ClientApplicationContext extends ApplicationContext {
 		}
 		String con = ConsoleUtil.getArg(args, "-con");
 		if (con != null) {
-		   this.setAttribute("con", con);
-		}else {
-		   throw new Exception("invalid arguments");
+			this.setAttribute("con", con);
+		} else {
+			throw new Exception("invalid arguments");
 		}
-		
+
 		String prot = ConsoleUtil.getArg(args, "-prot");
 		if (prot == null) {
-		   throw new Exception("argument prot not set");
+			throw new Exception("argument prot not set");
 		} else {
 			this.setAttribute("prot", prot);
-		}	
+		}
 	}
 
 }

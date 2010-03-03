@@ -6,16 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
+import static com.stabilit.sc.SCKernelConstants.*;
 import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 
 public class ConnectionPool {
-
 	private static ConnectionPool instance;
 	private static Map<String, List<IPoolConnection>> connectionMap = new ConcurrentHashMap<String, List<IPoolConnection>>();
 	private int numOfConnections = 3;
+	private Logger log = Logger.getLogger(ConnectionPool.class);
 
 	private ConnectionPool(int numOfConnections) {
 		this.numOfConnections = numOfConnections;
@@ -34,7 +37,7 @@ public class ConnectionPool {
 	}
 
 	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx,
-			Class<? extends ISCClientListener> scListener) {
+			Class<? extends IClientListener> scListener) {
 
 		List<IPoolConnection> connectionList = connectionMap.get(ctx.getConnection());
 		PoolConnection poolCon = null;
@@ -42,6 +45,8 @@ public class ConnectionPool {
 		URL url = null;
 
 		if (connectionList == null) {
+			log.debug(ctx.getConnection() + ": borrows first connection from Pool");
+			
 			con = ClientConnectionFactory.newInstance(ctx.getConnection());
 			if (con == null) {
 				return null;
@@ -51,7 +56,7 @@ public class ConnectionPool {
 			connectionList = new ArrayList<IPoolConnection>();
 			connectionMap.put(ctx.getConnection(), connectionList);
 
-			if (ctx.getAttribute("prot").equals("http")) {
+			if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
 				poolCon = new BlockingPoolConnection(con, scListener);
 			} else {
 				poolCon = new PoolConnection(con, scListener);
@@ -60,6 +65,7 @@ public class ConnectionPool {
 			poolCon.setAvailable(false);
 
 		} else {
+			log.debug(ctx.getConnection() + ": borrows connection from Pool, connection in Pool: " + connectionList.size());
 			// get first available connection
 			for (IPoolConnection conn : connectionList) {
 				if (conn.isAvailable()) {
@@ -72,7 +78,7 @@ public class ConnectionPool {
 				url = ctx.getURL();
 				con = ClientConnectionFactory.newInstance(ctx.getConnection());
 				con.setEndpoint(url);
-				if (ctx.getAttribute("prot").equals("http")) {
+				if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
 					poolCon = new BlockingPoolConnection(con, scListener);
 				} else {
 					poolCon = new PoolConnection(con, scListener);

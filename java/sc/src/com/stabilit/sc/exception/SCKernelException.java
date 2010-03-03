@@ -13,40 +13,29 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc;
-
-import com.stabilit.sc.app.server.Server;
+package com.stabilit.sc.exception;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCKernelStart {
+public class SCKernelException extends Exception {
 
-	public static void main(String[] args) {
-		SCKernelStart.startHTTPSCServer();
-		SCKernelStart.startTCPSCServer();
+	private static final long serialVersionUID = 1L;
+
+	public SCKernelException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public static void startHTTPSCServer() {
-		Server server = new Server();
-
-		String[] argss = new String[] { "-app", "netty.http", "-port", "80" };
-		server.setArgs(argss);
-		Thread thread = new Thread(server);
-		thread.start();
+	public SCKernelException(String message) {
+		super(message);
 	}
 
-	public static void startTCPSCServer() {
-		Server server = new Server();
-
-		String[] argss = new String[] { "-app", "netty.tcp", "-port", "81" };
-		server.setArgs(argss);
-		Thread thread = new Thread(server);
-		thread.start();
+	public SCKernelException(Throwable cause) {
+		super(cause);
 	}
 }

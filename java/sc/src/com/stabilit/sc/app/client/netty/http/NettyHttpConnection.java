@@ -38,7 +38,7 @@ import com.stabilit.sc.app.server.http.handler.NettyServerHttpResponseHandler;
 import com.stabilit.sc.app.server.http.handler.SCServerKeepAliveHandler;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -64,7 +64,7 @@ public class NettyHttpConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(Class<? extends ISCClientListener> scListenerClass) throws ConnectionException {
+	public void connect(Class<? extends IClientListener> scListenerClass) throws ConnectionException {
 
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors

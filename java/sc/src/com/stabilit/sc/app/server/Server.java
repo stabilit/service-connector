@@ -1,11 +1,18 @@
 package com.stabilit.sc.app.server;
 
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.context.ServerApplicationContext;
+import com.stabilit.sc.exception.ServerException;
 
 public class Server implements Runnable {
 
 	private String[] args;
+	private Properties props;
+	private Logger log = Logger.getLogger(Server.class);
 
 	public static void main(String[] args) throws ServerException {
 		Server server = new Server();
@@ -17,7 +24,35 @@ public class Server implements Runnable {
 		this.args = args;
 	}
 
-	public static void printUsage() {
+	public void setProps(Properties props) {
+		this.props = props;
+	}
+
+	@Override
+	public void run() {
+		String key = props.getProperty("server.app");
+
+		IApplication application = ServerApplicationFactory.newInstance(key);
+
+		if (application == null) {
+			log.error("no application found for given key = " + key);
+			System.exit(1);
+		}
+		ServerApplicationContext applicationContext = (ServerApplicationContext) application.getContext();
+		applicationContext.setProps(props);
+
+		try {
+			log.info("starting up server for app = " + key + " on port = " + applicationContext.getPort());
+			application.create();
+			log.info("run server for key = " + key + " on port = " + applicationContext.getPort());
+			application.run();
+			application.destroy();
+		} catch (Exception e) {
+			log.error("Error when applications creates/runs or destroys");
+		}
+	}
+
+	public static void printUsageOld() {
 		System.out.println("\nUsage: java -jar Server.jar -app <application> -port <ip port>");
 		Object[] applications = (Object[]) ServerApplicationFactory.getApplications();
 		System.out.print("  Available applications: ");
@@ -38,19 +73,18 @@ public class Server implements Runnable {
 		System.out.println("\n\nExample: java -jar Server.jar -app netty.http -port 80");
 	}
 
-	@Override
-	public void run() {
+	public void runOld() {
 		String key = "default";
 		if (args.length <= 0) {
 			System.err.println("no arguments");
-			printUsage();
+			printUsageOld();
 			System.exit(1);
 		}
 		key = ServerApplicationFactory.getApplicationKey(args);
 		IApplication application = ServerApplicationFactory.newInstance(key);
 		if (application == null) {
 			System.err.println("no application found for given key = " + key);
-			printUsage();
+			printUsageOld();
 			System.exit(1);
 		}
 		ServerApplicationContext applicationContext = (ServerApplicationContext) application.getContext();
@@ -60,7 +94,7 @@ public class Server implements Runnable {
 			applicationContext.setArgs(arguments);
 		} catch (Exception e) {
 			System.err.println(e.toString());
-			printUsage();
+			printUsageOld();
 			System.exit(1);
 		}
 		try {

@@ -1,4 +1,4 @@
-package com.stabilit.sc.app.server;
+package com.stabilit.sc.exception;
 
 public class ServerException extends Exception {
 

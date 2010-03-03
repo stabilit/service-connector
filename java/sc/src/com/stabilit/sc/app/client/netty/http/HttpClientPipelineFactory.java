@@ -26,7 +26,7 @@ import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerHttpResponseHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerIdleHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerWriteTimeoutHandler;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -38,7 +38,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  */
 public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 
-	private Class<? extends ISCClientListener> scListenerClass;
+	private Class<? extends IClientListener> scListenerClass;
 	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
 	private NettyServerHttpResponseHandler responseHandler;
 	private NettyServerWriteTimeoutHandler writeTimeoutHandler;
@@ -48,7 +48,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 	private int keepAliveTimeout;
 	private IPoolConnection conn;
 
-	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass,
+	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
 			int writeTimeout, IPoolConnection conn) {
 		super();
@@ -61,7 +61,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass,
+	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout,
 			IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
@@ -70,13 +70,13 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass, IPoolConnection conn) {
+	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
 		this.conn = conn;
 	}
 
 	public ChannelPipeline getPipeline() throws Exception {
-		ISCClientListener scListener = scListenerClass.newInstance();
+		IClientListener scListener = scListenerClass.newInstance();
 		scListener.setConnection(conn);
 
 		// Create a default pipeline implementation.

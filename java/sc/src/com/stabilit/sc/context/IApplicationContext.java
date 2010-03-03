@@ -1,8 +1,10 @@
 package com.stabilit.sc.context;
 
-public interface IApplicationContext extends IContext {
+import java.util.Properties;
 
-	public String[] getArgs();
+public interface IApplicationContext extends IContext {
 	
 	public void setArgs(String[] args) throws Exception;
+	
+	public void setProps(Properties props);
 }

@@ -32,7 +32,7 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -58,7 +58,7 @@ public class NettyTCPConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(Class<? extends ISCClientListener> scListenerClass) throws ConnectionException {
+	public void connect(Class<? extends IClientListener> scListenerClass) throws ConnectionException {
 
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors

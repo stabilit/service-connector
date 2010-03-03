@@ -6,13 +6,13 @@ import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.pool.BlockingPoolConnection;
 import com.stabilit.sc.pool.IPoolConnection;
 
-public abstract class SCClientListener implements ISCClientListener {
+public abstract class ClientListener implements IClientListener {
 	private IPoolConnection conn = null;
 	private String subscribeId = null;
 	private boolean released = false;
 
 	//important for instancing by .newInstance() method.
-	public SCClientListener() {
+	public ClientListener() {
 	}
 	
 	@Override

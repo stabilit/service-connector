@@ -2,7 +2,7 @@ package com.stabilit.sc.cmd.impl;
 
 import com.stabilit.sc.SC;
 import com.stabilit.sc.app.server.IHTTPServerConnection;
-import com.stabilit.sc.app.server.netty.tcp.ITCPServerConnection;
+import com.stabilit.sc.app.server.netty.tcp.ITcpServerConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -32,7 +32,7 @@ public class GetDataCommand implements ICommand {
 		try {
 			GetDataMessage getDataMsg = (GetDataMessage) scmp.getBody();
 			IHTTPServerConnection conn = SC.getInstance().getService(getDataMsg.getServiceName());
-			ITCPServerConnection tcpConn = (ITCPServerConnection) conn;
+			ITcpServerConnection tcpConn = (ITcpServerConnection) conn;
 			
 			System.out.println("im SC: getDataMessage, sendAndReceive!");
 			SCMP scmpRe = tcpConn.sendAndReceive(scmp);

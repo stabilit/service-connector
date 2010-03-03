@@ -26,7 +26,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
@@ -35,7 +35,7 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 
 	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
 
-	private ISCClientListener callback = null;
+	private IClientListener callback = null;
 	private IPoolConnection conn;
 	private boolean sync = false;
 
@@ -43,16 +43,16 @@ public class NettyClientTCPResponseHandler extends SimpleChannelUpstreamHandler 
 	 * @param scListener
 	 * @param conn
 	 */
-	public NettyClientTCPResponseHandler(ISCClientListener scListener, IPoolConnection conn) {
+	public NettyClientTCPResponseHandler(IClientListener scListener, IPoolConnection conn) {
 		this.callback = scListener;
 		this.conn = conn;
 	}
 
-	public void setCallback(ISCClientListener callback) {
+	public void setCallback(IClientListener callback) {
 		this.callback = callback;
 	}
 
-	public ISCClientListener getCallback() {
+	public IClientListener getCallback() {
 		return callback;
 	}
 

@@ -1,6 +1,6 @@
 package com.stabilit.sc.app.client;
 
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 
 public interface ISubscribe {
 

@@ -19,7 +19,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -31,10 +31,10 @@ import com.stabilit.sc.pool.IPoolConnection;
  */
 public class TCPClientPipelineFactory implements ChannelPipelineFactory {
 
-	private Class<? extends ISCClientListener> scListenerClass;
+	private Class<? extends IClientListener> scListenerClass;
 	private IPoolConnection conn;
 
-	public TCPClientPipelineFactory(Class<? extends ISCClientListener> scListenerClass, IPoolConnection conn) {
+	public TCPClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
 		super();
 
 		this.scListenerClass = scListenerClass;
@@ -42,7 +42,7 @@ public class TCPClientPipelineFactory implements ChannelPipelineFactory {
 	}
 
 	public ChannelPipeline getPipeline() throws Exception {
-		ISCClientListener scListener = scListenerClass.newInstance();
+		IClientListener scListener = scListenerClass.newInstance();
 		scListener.setConnection(conn);
 
 		// Create a default pipeline implementation.

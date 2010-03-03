@@ -17,26 +17,16 @@
 /**
  * 
  */
-package com.stabilit.sc.app.server.netty.tcp;
-
-import com.stabilit.sc.app.server.IHTTPServerConnection;
-import com.stabilit.sc.io.SCMP;
+package com.stabilit.sc;
 
 /**
  * @author JTraber
  *
  */
-public interface ITCPServerConnection extends IHTTPServerConnection {
-
-	/**
-	 * @param msg
-	 * @throws Exception
-	 */
-	void send(SCMP scmp) throws Exception;
-
-	/**
-	 * @param scmp
-	 * @throws Exception
-	 */
-	SCMP sendAndReceive(SCMP scmp) throws Exception;
+public interface SCKernelConstants {
+	
+	final String CLIENT_PROT = "client.prot";
+	final String HTTP = "http";
+	final String CLIENT_CON = "client.con";
+	final String CLIENT_URL = "client.url";
 }
