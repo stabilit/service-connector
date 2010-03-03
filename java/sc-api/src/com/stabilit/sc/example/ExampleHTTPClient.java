@@ -19,7 +19,6 @@ package com.stabilit.sc.example;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.GetDataMessage;
 import com.stabilit.sc.service.IRequestResponseService;
 import com.stabilit.sc.service.ServiceFactory;
@@ -29,7 +28,7 @@ import com.stabilit.sc.service.ServiceFactory;
  * 
  * @author JTraber
  */
-public class ExampleClient {
+public class ExampleHTTPClient {
 
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
@@ -50,17 +49,18 @@ public class ExampleClient {
 	private static final String HOST = "localhost";
 
 	public static void main(String args[]) {
-		ExampleClient client = new ExampleClient();
+		ExampleHTTPClient client = new ExampleHTTPClient();
 		client.runRequestResponseService();
 	}
 
 	public void runRequestResponseService() {
 		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
-				"ServerService A", ServiceRRListener.class);
+				"Service A TCP", ServiceRRListener.class);
 		try {
 			rrService.connect(10, null);
 			SCMP scmp = new SCMP();
-			IMessage getData = new GetDataMessage();
+			GetDataMessage getData = new GetDataMessage();
+			getData.setServiceName("Service A TCP");
 			scmp.setBody(getData);
 			rrService.send(scmp, 10, false);
 		} catch (ScConnectionException e) {
