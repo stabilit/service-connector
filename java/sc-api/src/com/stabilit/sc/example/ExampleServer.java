@@ -55,7 +55,7 @@ public class ExampleServer {
 	
 	public void runRequestResponseServer() {
 		HttpRRServer serviceServer = ServerFactory.getInstance()
-				.createHttpRRServer("ServerService A", ServiceServerRRListener.class);
+				.createHttpRRServer("ServerService A", ServerRRListener.class);
 
 		try {
 			serviceServer.connect(30, null);

@@ -21,7 +21,7 @@ package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.ConnectionPool;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.service.ConnectionCtx;
@@ -36,7 +36,7 @@ public class Server {
 	protected ConnectionPool pool;
 	
 	/** The response handler. */
-	protected Class<? extends ISCClientListener> scListenerClass;
+	protected Class<? extends IClientListener> scListenerClass;
 	
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
@@ -48,7 +48,7 @@ public class Server {
 
 	private String serviceName;
 	
-	protected Server(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
+	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler, ClientApplicationContext ctx) {
 		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
 		this.scListenerClass = serviceHandler;

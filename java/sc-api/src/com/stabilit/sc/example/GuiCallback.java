@@ -14,59 +14,24 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc;
+/**
+ * 
+ */
+package com.stabilit.sc.example;
 
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.ClientListener;
+import com.stabilit.sc.pool.IPoolConnection;
 
 /**
- * The Class ScConnection, represents a connection between a connector and a Sc.
- * 
  * @author JTraber
+ * 
  */
-public abstract class ScConnection {
 
-	/** The sc host. */
-	private String scHost;
+public class GuiCallback extends ClientListener {
 
-	/** The sc port. */
-	private int scPort;
-
-	/** Used protocol for transportation. */
-	private String connectionType;
-
-	/**
-	 * Instantiates a new sc connection.
-	 * 
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
-	 * @param scProtocol
-	 *            used protocol
-	 * @param numOfConnections
-	 *            the number of connections used by Sc
-	 */
-	public ScConnection(String scHost, int scPort, String connectionType, int numOfConnections) {
-		super();
-		this.scHost = scHost;
-		this.scPort = scPort;
-		this.connectionType = connectionType;
+	@Override
+	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
+		super.messageReceived(conn, scmp);
 	}
-
-	/**
-	 * Gets the sc host.
-	 * 
-	 * @return the sc host
-	 */
-	public String getScHost() {
-		return scHost;
-	}
-
-	/**
-	 * Gets the sc port.
-	 * 
-	 * @return the sc port
-	 */
-	public int getScPort() {
-		return scPort;
-	}
-} 
+}

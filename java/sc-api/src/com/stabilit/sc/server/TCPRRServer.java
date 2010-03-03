@@ -22,7 +22,7 @@ package com.stabilit.sc.server;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.msg.impl.RegisterMessage;
 import com.stabilit.sc.pool.IPoolConnection;
 
@@ -37,7 +37,7 @@ public class TCPRRServer extends Server{
 	 * @param serviceHandler
 	 * @param ctx
 	 */
-	protected TCPRRServer(String serviceName, Class<? extends ISCClientListener> serviceHandler,
+	protected TCPRRServer(String serviceName, Class<? extends IClientListener> serviceHandler,
 			ClientApplicationContext ctx) {
 		super(serviceName, serviceHandler, ctx);
 	}

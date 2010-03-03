@@ -16,9 +16,11 @@
  */
 package com.stabilit.sc.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.ConnectionPool;
 import com.stabilit.sc.pool.IPoolConnection;
 
@@ -30,41 +32,45 @@ import com.stabilit.sc.pool.IPoolConnection;
 public abstract class Service implements IService {
 
 	protected ConnectionPool pool;
-	
+
 	/** The response handler. */
-	protected Class<? extends ISCClientListener> scListenerClass;
-	
+	protected Class<? extends IClientListener> clientListenerClass;
+
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
 
 	/** The service context. */
 	private ServiceCtx serviceCtx;
-	
+
 	protected ClientApplicationContext ctx;
+
+	protected Logger log = Logger.getLogger(Service.class);
 
 	/**
 	 * Instantiates a new service.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param serviceHandler
+	 * @param clientListenerClass
 	 *            the response handler
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected Service(String serviceName, Class<? extends ISCClientListener> serviceHandler, ClientApplicationContext ctx) {
+	protected Service(String serviceName, Class<? extends IClientListener> clientListenerClass,
+			ClientApplicationContext ctx) {
 		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
-		this.scListenerClass = serviceHandler;
-		ConnectionPool.init(3);
+		this.clientListenerClass = clientListenerClass;
+		ConnectionPool.init(Integer.valueOf((String) ctx.getAttribute("client.numOfCon")));
 		this.pool = ConnectionPool.getInstance();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
+		log.debug("Service connects to SC.");
 		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
 		conn.releaseConnection();
 	}
 

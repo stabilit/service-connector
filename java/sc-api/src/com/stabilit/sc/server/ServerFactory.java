@@ -17,7 +17,7 @@
 package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 
 /**
  * The ServiceFactory creates Services for clients.
@@ -57,7 +57,7 @@ public final class ServerFactory {
 	 * @return the requestresponse service
 	 */
 	public HttpRRServer createHttpRRServer(String serviceName,
-			Class<? extends ISCClientListener> scListenerClass) {
+			Class<? extends IClientListener> scListenerClass) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
 		try {
 			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
@@ -68,7 +68,7 @@ public final class ServerFactory {
 		return new HttpRRServer(serviceName, scListenerClass, appCtx);
 	}
 	
-	public TCPRRServer createTCPRRServer(String serviceName, Class<? extends ISCClientListener> scListenerClass) {
+	public TCPRRServer createTCPRRServer(String serviceName, Class<? extends IClientListener> scListenerClass) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
 		try {
 			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.tcp", "-prot", "tcp",

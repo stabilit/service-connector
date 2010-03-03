@@ -18,7 +18,7 @@ package com.stabilit.sc.service;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -38,15 +38,15 @@ public class RequestResponseService extends Service implements IRequestResponseS
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected RequestResponseService(String serviceName, Class<? extends ISCClientListener> scListenerClass, ClientApplicationContext ctx) {
-		super(serviceName, scListenerClass, ctx);
+	protected RequestResponseService(String serviceName, Class<? extends IClientListener> clientListenerClass, ClientApplicationContext ctx) {
+		super(serviceName, clientListenerClass, ctx);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMP scmp, int timeout, boolean compression) {
-	
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		log.debug("RequestResponseService sends to SC.");
+		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
 	
 		try {
 			conn.send(scmp);
@@ -60,7 +60,8 @@ public class RequestResponseService extends Service implements IRequestResponseS
 	/** {@inheritDoc} */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp, int timeout, boolean compression) {
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		log.debug("RequestResponseService sendAndReceive to/from SC.");
+		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
 		SCMP ret = null;
 		try {
 			ret = conn.sendAndReceive(scmp);

@@ -16,8 +16,10 @@
  */
 package com.stabilit.sc.service;
 
+import java.util.Properties;
+
 import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.msg.ISCClientListener;
+import com.stabilit.sc.msg.IClientListener;
 
 /**
  * The ServiceFactory creates Services for clients.
@@ -57,14 +59,9 @@ public final class ServiceFactory {
 	 * @return the requestresponse service
 	 */
 	public IRequestResponseService createRequestResponseService(String serviceName,
-			Class<? extends ISCClientListener> scListenerClass) {
+			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		try {
-			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
-					"-url", "http://localhost:80" });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		appCtx.setProps(props);
 		return new RequestResponseService(serviceName, scListenerClass, appCtx);
 	}
 
@@ -81,7 +78,7 @@ public final class ServiceFactory {
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
-			Class<? extends ISCClientListener> scListenerClass) {
+			Class<? extends IClientListener> scListenerClass) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
 		try {
 			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",

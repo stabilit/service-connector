@@ -52,7 +52,7 @@ public class ExampleTCPServer {
 
 	public void runRequestResponseServer() {
 		TCPRRServer serviceServer = ServerFactory.getInstance().createTCPRRServer("ServerService A",
-				ServiceServerRRListener.class);
+				ServerRRListener.class);
 
 		try {
 			serviceServer.connect(30, null);
