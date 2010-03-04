@@ -29,12 +29,12 @@ import com.stabilit.sc.pool.IPoolConnection;
  * 
  * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
  */
-public class TcpClientPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 
 	private Class<? extends IClientListener> scListenerClass;
 	private IPoolConnection conn;
 
-	public TcpClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
+	public NettyTcpClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
 		super();
 
 		this.scListenerClass = scListenerClass;
@@ -48,7 +48,7 @@ public class TcpClientPipelineFactory implements ChannelPipelineFactory {
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
 		
-		NettyClientTcpResponseHandler responseHandler = new NettyClientTcpResponseHandler(scListener, conn);
+		NettyTcpClientResponseHandler responseHandler = new NettyTcpClientResponseHandler(scListener, conn);
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

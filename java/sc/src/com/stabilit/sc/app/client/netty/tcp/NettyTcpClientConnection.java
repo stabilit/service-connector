@@ -36,7 +36,7 @@ import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyTcpConnection implements IClientConnection {
+public class NettyTcpClientConnection implements IClientConnection {
 
 	private URL url = null;
 	private String sessionId = null;
@@ -44,7 +44,7 @@ public class NettyTcpConnection implements IClientConnection {
 	private Channel channel = null;
 	private IPoolConnection decoratorConn = null;
 	
-	public NettyTcpConnection() {
+	public NettyTcpClientConnection() {
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class NettyTcpConnection implements IClientConnection {
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 
 		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new TcpClientPipelineFactory(scListenerClass, decoratorConn));
+		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory(scListenerClass, decoratorConn));
 		
 		String host = url.getHost();
 		int port = url.getPort();
@@ -134,7 +134,7 @@ public class NettyTcpConnection implements IClientConnection {
 		ChannelFuture future = channel.write(chBuffer);
 		future.awaitUninterruptibly();
 
-		NettyClientTcpResponseHandler handler = channel.getPipeline().get(NettyClientTcpResponseHandler.class);
+		NettyTcpClientResponseHandler handler = channel.getPipeline().get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
 
 		byte[] buffer = content.array();

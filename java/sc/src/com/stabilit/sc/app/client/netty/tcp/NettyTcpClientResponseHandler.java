@@ -31,7 +31,7 @@ import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 @ChannelPipelineCoverage("one")
-public class NettyClientTcpResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
 
@@ -43,7 +43,7 @@ public class NettyClientTcpResponseHandler extends SimpleChannelUpstreamHandler 
 	 * @param scListener
 	 * @param conn
 	 */
-	public NettyClientTcpResponseHandler(IClientListener scListener, IPoolConnection conn) {
+	public NettyTcpClientResponseHandler(IClientListener scListener, IPoolConnection conn) {
 		this.callback = scListener;
 		this.conn = conn;
 	}
