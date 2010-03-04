@@ -22,61 +22,64 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.app.server.IHTTPServerConnection;
-import com.stabilit.sc.app.server.ServerApplication;
+import com.stabilit.sc.app.server.HttpServerConnection;
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
 import com.stabilit.sc.context.ServerApplicationContext;
+import com.stabilit.sc.exception.HttpServerConnectionException;
 import com.stabilit.sc.msg.ISCServiceListener;
 
 /**
- * An HTTP server that sends back the content of the received HTTP request
- * in a pretty plaintext form.
- *
+ * An HTTP server that sends back the content of the received HTTP request in a pretty plaintext form.
+ * 
  * @author The Netty Project (netty-dev@lists.jboss.org)
  * @author Andy Taylor (andy.taylor@jboss.org)
  * @author Trustin Lee (trustin@gmail.com)
- *
+ * 
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyHttpServer extends ServerApplication implements IHTTPServerConnection{
-	
+public class NettyHttpServer extends HttpServerConnection {
+
 	private ServerBootstrap bootstrap;
 	private Channel channel;
-	
+
 	public NettyHttpServer() {
 		this.bootstrap = null;
 		this.channel = null;
 	}
-	
+
 	@Override
 	public void create(Class<? extends ISCServiceListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
 			int writeTimeout) {
 		// Configure the server.
-        this.bootstrap = new ServerBootstrap(
-                new NioServerSocketChannelFactory(
-                        Executors.newCachedThreadPool(),
-                        Executors.newCachedThreadPool()));
-        // Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass, writeTimeout, writeTimeout, writeTimeout, this));		
+		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
+				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+		// Set up the event pipeline factory.
+		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass,
+				writeTimeout, writeTimeout, writeTimeout, this));
 	}
-	
-	@Override
-	public void create() throws Exception {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void run() throws Exception {
-		ServerApplicationContext appContext = (ServerApplicationContext) this.getContext();
-		int port = appContext.getPort();
-        this.channel = this.bootstrap.bind(new InetSocketAddress(port));
-		synchronized (this) {
-			wait();
-		}
-    }
 
 	@Override
-	public void destroy() throws Exception {
+	public void create() throws HttpServerConnectionException {
+		throw new HttpServerConnectionException(
+				"create() is an unsupported operation for this type of http server");
+	}
+
+	public void run() throws HttpServerConnectionException {
+		ServerApplicationContext appContext = (ServerApplicationContext) this.getContext();
+		int port = appContext.getPort();
+		this.channel = this.bootstrap.bind(new InetSocketAddress(port));
+		synchronized (this) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				throw new HttpServerConnectionException("Exception occured in wait mode of http server", e);
+			}
+		}
+	}
+
+	@Override
+	public void destroy() throws HttpServerConnectionException {
 		this.channel.close();
 	}
 }
