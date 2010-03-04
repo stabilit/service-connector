@@ -13,28 +13,40 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.example.client;
+package com.stabilit.sc.test;
 
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.ClientListener;
-import com.stabilit.sc.pool.IPoolConnection;
+import org.junit.Test;
+
+import com.stabilit.sc.SCKernel;
+import com.stabilit.sc.example.client.ExampleTcpRRClient;
+import com.stabilit.sc.example.server.ExampleTcpRRServer;
 
 /**
  * @author JTraber
- * 
  */
-
-public class ClientCallback extends ClientListener {
-
-	@Override
-	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
-		super.messageReceived(conn, scmp);
-		if(scmp.getMessageId().equals("getData")) {
-			System.out.println("yes getData got to the Client!!!!");
+public class TcpClientServerRRTest {	
+	
+	@Test
+	public void runTcpClientServerRRTest() {
+		SCKernel scKernel = new SCKernel();
+		Thread scKernelTh = new Thread(scKernel);
+		scKernelTh.start();
+		
+		ExampleTcpRRServer tcpRRServer = new ExampleTcpRRServer();
+		Thread tcpRRServerTh = new Thread(tcpRRServer);
+		tcpRRServerTh.start();
+		
+		ExampleTcpRRClient tcpRRClient = new ExampleTcpRRClient();
+		Thread tcpRRClientTh = new Thread(tcpRRClient);
+		tcpRRClientTh.start();
+		try {
+			Thread.currentThread().join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }

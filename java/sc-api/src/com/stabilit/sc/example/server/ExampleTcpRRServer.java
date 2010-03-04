@@ -16,12 +16,13 @@
  */
 package com.stabilit.sc.example.server;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import com.stabilit.sc.example.client.ExampleTcpRRClient;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.impl.GetDataMessage;
-import com.stabilit.sc.server.HttpRRServer;
+import com.stabilit.sc.server.ITcpRRServer;
 import com.stabilit.sc.server.ServerFactory;
 
 /**
@@ -29,7 +30,7 @@ import com.stabilit.sc.server.ServerFactory;
  * 
  * @author JTraber
  */
-public class ExampleServer {
+public class ExampleTcpRRServer implements Runnable {
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
@@ -49,25 +50,34 @@ public class ExampleServer {
 	private static final String HOST = "localhost";
 
 	public static void main(String[] args) {
-		ExampleServer server = new ExampleServer();
+		ExampleTcpRRServer server = new ExampleTcpRRServer();
 		server.runRequestResponseServer();
 	}
-	
+
 	public void runRequestResponseServer() {
-		HttpRRServer serviceServer = ServerFactory.getInstance()
-				.createHttpRRServer("ServerService A", ServerRRListener.class);
+
+		Properties props = new Properties();
+		try {
+			props.load(ExampleTcpRRClient.class.getResourceAsStream("exampleTcpRRGui.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		ITcpRRServer tcpRRServer = ServerFactory.getInstance().createTCPRRServer("Service A",
+				ServerRRListener.class, props);
 
 		try {
-			serviceServer.connect(30, null);
-			serviceServer.registerServer(10, 15);
-			SCMP scmp = new SCMP();
-			Message msg = new GetDataMessage();
-			scmp.setBody(msg);
-			serviceServer.publish(scmp, 10, false);
+			tcpRRServer.connect(30, null);
+			tcpRRServer.registerServer(10, 15);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void run() {
+		runRequestResponseServer();
 	}
 }

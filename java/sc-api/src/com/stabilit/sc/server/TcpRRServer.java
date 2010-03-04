@@ -21,48 +21,60 @@ package com.stabilit.sc.server;
 
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
+import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
-import com.stabilit.sc.pool.ConnectionPool;
+import com.stabilit.sc.msg.impl.RegisterMessage;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.service.ConnectionCtx;
-import com.stabilit.sc.service.ServiceCtx;
 
 /**
  * @author JTraber
  *
  */
-public abstract class Server {
+class TcpRRServer extends Server implements ITcpRRServer {
 	
-	protected ConnectionPool pool;
-	
-	/** The response handler. */
-	protected Class<? extends IClientListener> scListenerClass;
-	
-	/** The connection context. */
-	private ConnectionCtx connectionCtx;
-
-	/** The service context. */
-	protected ServiceCtx serviceCtx;
-	
-	protected ClientApplicationContext ctx;
-
-	private String serviceName;
-	
-	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler, ClientApplicationContext ctx) {
-		this.serviceCtx = new ServiceCtx(serviceName);
-		this.ctx = ctx;
-		this.scListenerClass = serviceHandler;
-		ConnectionPool.init(1);
-		this.pool = ConnectionPool.getInstance();
+	/**
+	 * @param serviceName
+	 * @param serviceHandler
+	 * @param ctx
+	 */
+	protected TcpRRServer(String serviceName, Class<? extends IClientListener> serviceHandler,
+			ClientApplicationContext ctx) {
+		super(serviceName, serviceHandler, ctx);
 	}
 
+	@Override
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
-		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
-		conn.releaseConnection();
+		super.connect(timeout, connectionCtx);
 	}
-
-	public String getServiceName() {
-		return serviceName;
+	
+	@Override
+	public void publish(SCMP scmp, int timeout, boolean compression) {
+	
+		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+	
+		try {
+			conn.send(scmp);
+			conn.releaseConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {		
+		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		//Register handshake
+		SCMP scmpRequest = new SCMP();
+		RegisterMessage regMsg = new RegisterMessage();
+		regMsg.setServiceName(serviceCtx.getServiceName());
+		scmpRequest.setBody(regMsg);
+		try {
+			SCMP scmpResponse = conn.sendAndReceive(scmpRequest);
+		} catch (Exception e) {
+			throw new ServiceException("Error occured when registering Service to SC.");
+		}
+		conn.releaseConnection();		
 	}
 }

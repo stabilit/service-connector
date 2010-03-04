@@ -61,6 +61,7 @@ public final class ServiceFactory {
 	public IRequestResponseService createRequestResponseService(String serviceName,
 			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
+		appCtx.setIdentifier("createRequestResponseService");
 		appCtx.setProps(props);
 		return new RequestResponseService(serviceName, scListenerClass, appCtx);
 	}

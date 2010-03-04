@@ -31,7 +31,7 @@ import com.stabilit.sc.service.ServiceFactory;
  * 
  * @author JTraber
  */
-public class ExampleTcpRRClient {
+public class ExampleTcpRRClient implements Runnable {
 
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
@@ -48,6 +48,11 @@ public class ExampleTcpRRClient {
 		client.runTcpRequestResponseService();
 	}
 
+	@Override
+	public void run() {
+		runTcpRequestResponseService();
+	}
+	
 	public void runTcpRequestResponseService() {
 
 		Properties props = new Properties();
@@ -58,12 +63,12 @@ public class ExampleTcpRRClient {
 		}
 
 		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
-				"Service A TCP", ClientCallback.class, props);
+				"Service A", ClientCallback.class, props);
 		try {
 			rrService.connect(10, null);
 			SCMP scmp = new SCMP();
 			GetDataMessage getData = new GetDataMessage();
-			getData.setServiceName("Service A TCP");
+			getData.setServiceName("Service A");
 			scmp.setBody(getData);
 			rrService.send(scmp, 10, false);
 		} catch (ScConnectionException e) {

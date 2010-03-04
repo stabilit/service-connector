@@ -16,6 +16,8 @@
  */
 package com.stabilit.sc.server;
 
+import java.util.Properties;
+
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.msg.IClientListener;
 
@@ -57,25 +59,22 @@ public final class ServerFactory {
 	 * @return the requestresponse service
 	 */
 	public HttpRRServer createHttpRRServer(String serviceName,
-			Class<? extends IClientListener> scListenerClass) {
+			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		try {
-			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
-					"-url", "http://localhost:80" });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		appCtx.setProps(props);
+//		try {
+//			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
+//					"-url", "http://localhost:80" });
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return new HttpRRServer(serviceName, scListenerClass, appCtx);
 	}
 	
-	public TCPRRServer createTCPRRServer(String serviceName, Class<? extends IClientListener> scListenerClass) {
+	public TcpRRServer createTCPRRServer(String serviceName, Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		try {
-			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.tcp", "-prot", "tcp",
-					"-url", "http://localhost:81" });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new TCPRRServer(serviceName, scListenerClass, appCtx);
+		appCtx.setIdentifier("TcpRRServer");
+		appCtx.setProps(props);
+		return new TcpRRServer(serviceName, scListenerClass, appCtx);
 	}
 }
