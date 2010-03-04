@@ -23,8 +23,8 @@ import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.util.HashedWheelTimer;
 
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
-import com.stabilit.sc.app.server.http.handler.NettyServerIdleHandler;
-import com.stabilit.sc.app.server.http.handler.NettyServerWriteTimeoutHandler;
+import com.stabilit.sc.app.server.http.handler.NettyIdleHandler;
+import com.stabilit.sc.app.server.http.handler.NettyWriteTimeoutHandler;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
@@ -40,8 +40,8 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 	private Class<? extends IClientListener> scListenerClass;
 	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
 	private NettyHttpClientResponseHandler responseHandler;
-	private NettyServerWriteTimeoutHandler writeTimeoutHandler;
-	private NettyServerIdleHandler nettyIdleHandler;
+	private NettyWriteTimeoutHandler writeTimeoutHandler;
+	private NettyIdleHandler nettyIdleHandler;
 	private int readTimeout;
 	private int writeTimeout;
 	private int keepAliveTimeout;
@@ -83,11 +83,11 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("decoder", new HttpResponseDecoder());
 
 		// TODO readTimeOutHandler muss gleich implementiert werden, timeseconds ??
-		writeTimeoutHandler = new NettyServerWriteTimeoutHandler(new HashedWheelTimer(), writeTimeout, scListener);
+		writeTimeoutHandler = new NettyWriteTimeoutHandler(new HashedWheelTimer(), writeTimeout, scListener);
 		pipeline.addLast("timeout", writeTimeoutHandler);
 
 		if (keepAliveHandlerClass != null) {
-			nettyIdleHandler = new NettyServerIdleHandler(new HashedWheelTimer(), keepAliveTimeout,
+			nettyIdleHandler = new NettyIdleHandler(new HashedWheelTimer(), keepAliveTimeout,
 					keepAliveHandlerClass.newInstance());
 			pipeline.addLast("keepAlive", nettyIdleHandler);
 		}

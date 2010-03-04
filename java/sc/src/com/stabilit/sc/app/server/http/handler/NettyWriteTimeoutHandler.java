@@ -20,31 +20,31 @@
 package com.stabilit.sc.app.server.http.handler;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.Timer;
+
+import com.stabilit.sc.msg.IClientListener;
+
 
 /**
  * @author JTraber
  * 
  */
-public class NettyServerIdleHandler extends IdleStateHandler {
+public class NettyWriteTimeoutHandler extends WriteTimeoutHandler {
 
-	private IKeepAliveHandler callback;
+	private IClientListener callback;
 
 	/**
 	 * @param timer
 	 * @param timeoutSeconds
 	 */
-	public NettyServerIdleHandler(Timer timer, int timeoutSeconds, IKeepAliveHandler callback) {
-		super(timer, 0, 0, timeoutSeconds);
+	public NettyWriteTimeoutHandler(Timer timer, int timeoutSeconds, IClientListener callback) {
+		super(timer, timeoutSeconds);
 		this.callback = callback;
 	}
 
 	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
-			throws Exception {
-		// TODO callback?? oder sowas
-		super.channelIdle(ctx, state, lastActivityTimeMillis);
-	}	
+	protected void writeTimedOut(ChannelHandlerContext ctx) throws Exception {
+		super.writeTimedOut(ctx);
+	}
 }

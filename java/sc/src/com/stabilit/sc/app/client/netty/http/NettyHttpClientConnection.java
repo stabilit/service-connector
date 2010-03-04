@@ -34,7 +34,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.server.http.handler.SCServerKeepAliveHandler;
+import com.stabilit.sc.app.server.http.handler.KeepAliveHandler;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
@@ -70,7 +70,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory(scListenerClass,
-				SCServerKeepAliveHandler.class, 30, decoratorConn));
+				KeepAliveHandler.class, 30, decoratorConn));
 
 		String host = url.getHost();
 		int port = url.getPort();
