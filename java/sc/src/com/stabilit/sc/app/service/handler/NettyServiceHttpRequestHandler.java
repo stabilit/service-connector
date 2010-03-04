@@ -30,8 +30,9 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.app.server.netty.http.NettyHttpRequest;
-import com.stabilit.sc.app.server.netty.http.NettyHttpResponse;
+import com.stabilit.sc.app.server.IHttpServerConnection;
+import com.stabilit.sc.app.server.NettyHttpRequest;
+import com.stabilit.sc.app.server.NettyHttpResponse;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
@@ -42,7 +43,12 @@ import com.stabilit.sc.io.IRequest;
 public class NettyServiceHttpRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
-
+	private IHttpServerConnection conn;
+	
+	public NettyServiceHttpRequestHandler(IHttpServerConnection conn) {
+		super();
+		this.conn = conn;
+	}
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event)
 			throws Exception {
@@ -51,7 +57,7 @@ public class NettyServiceHttpRequestHandler extends SimpleChannelUpstreamHandler
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = commandFactory.newCommand(request);
 		try {
-			command.run(request, response);
+			command.run(request, response, conn);
 		} catch (CommandException e) {
 			e.printStackTrace();
 		}
