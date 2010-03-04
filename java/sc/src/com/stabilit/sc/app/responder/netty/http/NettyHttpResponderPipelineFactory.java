@@ -22,7 +22,6 @@ import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
 import com.stabilit.sc.app.server.IHttpServerConnection;
-import com.stabilit.sc.app.server.http.handler.NettyHttpResponderRequestHandler;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -31,11 +30,11 @@ import com.stabilit.sc.app.server.http.handler.NettyHttpResponderRequestHandler;
  * 
  * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
  */
-public class HttpResponderPipelineFactory implements ChannelPipelineFactory {
+public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	private IHttpServerConnection conn;
 
-	public HttpResponderPipelineFactory(IHttpServerConnection conn) {
+	public NettyHttpResponderPipelineFactory(IHttpServerConnection conn) {
 		super();
 		this.conn = conn;
 	}

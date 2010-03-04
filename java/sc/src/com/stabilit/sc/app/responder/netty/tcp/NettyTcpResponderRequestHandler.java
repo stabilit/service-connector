@@ -42,13 +42,13 @@ import com.stabilit.sc.io.IRequest;
  * 
  */
 @ChannelPipelineCoverage("one")
-public class NettyTcpResponderResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ITcpServerConnection conn;
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
-	private Logger log = Logger.getLogger(NettyTcpResponderResponseHandler.class);
+	private Logger log = Logger.getLogger(NettyTcpResponderRequestHandler.class);
 	
-	public NettyTcpResponderResponseHandler(ITcpServerConnection conn) {
+	public NettyTcpResponderRequestHandler(ITcpServerConnection conn) {
 		this.conn = conn;
 	}
 

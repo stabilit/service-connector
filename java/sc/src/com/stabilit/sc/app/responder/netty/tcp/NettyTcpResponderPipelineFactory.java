@@ -41,7 +41,7 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
 		
-		NettyTcpResponderResponseHandler responseHandler = new NettyTcpResponderResponseHandler(conn);
+		NettyTcpResponderRequestHandler responseHandler = new NettyTcpResponderRequestHandler(conn);
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

@@ -52,7 +52,7 @@ public class NettyHttpResponder extends HttpServerConnection {
 		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpResponderPipelineFactory(this));
+		bootstrap.setPipelineFactory(new NettyHttpResponderPipelineFactory(this));
 	}
 
 	public void run() throws Exception {
