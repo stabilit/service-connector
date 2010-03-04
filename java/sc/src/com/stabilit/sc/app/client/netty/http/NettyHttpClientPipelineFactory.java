@@ -23,7 +23,6 @@ import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.util.HashedWheelTimer;
 
 import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
-import com.stabilit.sc.app.server.http.handler.NettyServerHttpResponseHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerIdleHandler;
 import com.stabilit.sc.app.server.http.handler.NettyServerWriteTimeoutHandler;
 import com.stabilit.sc.msg.IClientListener;
@@ -40,7 +39,7 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 
 	private Class<? extends IClientListener> scListenerClass;
 	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
-	private NettyServerHttpResponseHandler responseHandler;
+	private NettyHttpClientResponseHandler responseHandler;
 	private NettyServerWriteTimeoutHandler writeTimeoutHandler;
 	private NettyServerIdleHandler nettyIdleHandler;
 	private int readTimeout;
@@ -93,7 +92,7 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 			pipeline.addLast("keepAlive", nettyIdleHandler);
 		}
 		pipeline.addLast("encoder", new HttpRequestEncoder());
-		responseHandler = new NettyServerHttpResponseHandler(scListener, conn);
+		responseHandler = new NettyHttpClientResponseHandler(scListener, conn);
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

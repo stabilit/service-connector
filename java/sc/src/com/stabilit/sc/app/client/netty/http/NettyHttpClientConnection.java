@@ -34,7 +34,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.app.client.IClientConnection;
-import com.stabilit.sc.app.server.http.handler.NettyServerHttpResponseHandler;
 import com.stabilit.sc.app.server.http.handler.SCServerKeepAliveHandler;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
@@ -144,7 +143,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		ChannelFuture future = channel.write(request);
 		future.awaitUninterruptibly();
 
-		NettyServerHttpResponseHandler handler = channel.getPipeline().get(NettyServerHttpResponseHandler.class);
+		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 
 		buffer = content.array();
