@@ -14,19 +14,22 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.example;
+package com.stabilit.sc.example.server;
 
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.Message;
+import com.stabilit.sc.msg.impl.GetDataMessage;
+import com.stabilit.sc.server.HttpRRServer;
 import com.stabilit.sc.server.ServerFactory;
-import com.stabilit.sc.server.TCPRRServer;
 
 /**
  * ExampleServer.
  * 
  * @author JTraber
  */
-public class ExampleTcpServer {
+public class ExampleServer {
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
@@ -46,17 +49,21 @@ public class ExampleTcpServer {
 	private static final String HOST = "localhost";
 
 	public static void main(String[] args) {
-		ExampleTcpServer server = new ExampleTcpServer();
+		ExampleServer server = new ExampleServer();
 		server.runRequestResponseServer();
 	}
-
+	
 	public void runRequestResponseServer() {
-		TCPRRServer serviceServer = ServerFactory.getInstance().createTCPRRServer("ServerService A",
-				ServerRRListener.class);
+		HttpRRServer serviceServer = ServerFactory.getInstance()
+				.createHttpRRServer("ServerService A", ServerRRListener.class);
 
 		try {
 			serviceServer.connect(30, null);
 			serviceServer.registerServer(10, 15);
+			SCMP scmp = new SCMP();
+			Message msg = new GetDataMessage();
+			scmp.setBody(msg);
+			serviceServer.publish(scmp, 10, false);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {

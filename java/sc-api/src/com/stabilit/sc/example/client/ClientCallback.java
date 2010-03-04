@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.example;
+package com.stabilit.sc.example.client;
 
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ClientListener;
@@ -28,7 +28,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  * 
  */
 
-public class GuiCallback extends ClientListener {
+public class ClientCallback extends ClientListener {
 
 	@Override
 	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {

@@ -14,12 +14,11 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.example;
+package com.stabilit.sc.example.client;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import com.stabilit.sc.SCKernel;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
@@ -32,7 +31,7 @@ import com.stabilit.sc.service.ServiceFactory;
  * 
  * @author JTraber
  */
-public class ExampleTcpRRGui {
+public class ExampleTcpRRClient {
 
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
@@ -45,7 +44,7 @@ public class ExampleTcpRRGui {
 
 
 	public static void main(String args[]) {
-		ExampleTcpRRGui client = new ExampleTcpRRGui();
+		ExampleTcpRRClient client = new ExampleTcpRRClient();
 		client.runTcpRequestResponseService();
 	}
 
@@ -53,13 +52,13 @@ public class ExampleTcpRRGui {
 
 		Properties props = new Properties();
 		try {
-			props.load(ExampleTcpRRGui.class.getResourceAsStream("exampleTcpRRGui.properties"));
+			props.load(ExampleTcpRRClient.class.getResourceAsStream("exampleTcpRRGui.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
-				"Service A TCP", GuiCallback.class, props);
+				"Service A TCP", ClientCallback.class, props);
 		try {
 			rrService.connect(10, null);
 			SCMP scmp = new SCMP();

@@ -1,4 +1,4 @@
-package com.stabilit.sc.example;
+package com.stabilit.sc.example.server;
 
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ClientListener;
