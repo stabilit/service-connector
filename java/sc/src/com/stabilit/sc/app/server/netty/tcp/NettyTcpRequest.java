@@ -12,13 +12,13 @@ import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyTCPRequest implements IRequest {
+public class NettyTcpRequest implements IRequest {
 
 	private ChannelBuffer request;
 	private SCMP scmp;
 	private IRequestContext requestContext;
 
-	public NettyTCPRequest(ChannelBuffer request) {
+	public NettyTcpRequest(ChannelBuffer request) {
 		this.request = request;
 		this.scmp = null;
 		this.requestContext = new RequestContext();

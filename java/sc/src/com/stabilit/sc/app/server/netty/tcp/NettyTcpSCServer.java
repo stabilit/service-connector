@@ -37,12 +37,12 @@ import com.stabilit.sc.msg.ISCServiceListener;
  * 
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyTCPSCServer extends ServerApplication implements ITcpServerConnection {
+public class NettyTcpSCServer extends ServerApplication implements ITcpServerConnection {
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;
 
-	public NettyTCPSCServer() {
+	public NettyTcpSCServer() {
 		this.bootstrap = null;
 		this.channel = null;
 	}

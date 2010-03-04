@@ -30,8 +30,8 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.sc.SC;
 import com.stabilit.sc.app.server.netty.tcp.ITcpServerConnection;
-import com.stabilit.sc.app.server.netty.tcp.NettyTCPRequest;
-import com.stabilit.sc.app.server.netty.tcp.NettyTCPResponse;
+import com.stabilit.sc.app.server.netty.tcp.NettyTcpRequest;
+import com.stabilit.sc.app.server.netty.tcp.NettyTcpResponse;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
@@ -65,8 +65,8 @@ public class NettyTcpSCServerResponseHandler extends SimpleChannelUpstreamHandle
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
 
-		IRequest request = new NettyTCPRequest(chBuffer);
-		NettyTCPResponse response = new NettyTCPResponse(e);
+		IRequest request = new NettyTcpRequest(chBuffer);
+		NettyTcpResponse response = new NettyTcpResponse(e);
 		ICommand command = commandFactory.newCommand(request);
 		
 		log.debug("TcpServerResponseHandler: following command received - " + command.getKey());
@@ -84,7 +84,7 @@ public class NettyTcpSCServerResponseHandler extends SimpleChannelUpstreamHandle
 		writeResponse(response);
 	}
 	
-    private void writeResponse(NettyTCPResponse response) throws Exception {
+    private void writeResponse(NettyTcpResponse response) throws Exception {
     	MessageEvent event = response.getEvent();
         ChannelBuffer buffer = response.getBuffer();
         

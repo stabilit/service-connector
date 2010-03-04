@@ -11,14 +11,14 @@ import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyTCPResponse implements IResponse {
+public class NettyTcpResponse implements IResponse {
 
 	private MessageEvent event;
 	private SCMP scmp;
 	private ISession session;
 	
 	
-	public NettyTCPResponse(MessageEvent event) {
+	public NettyTcpResponse(MessageEvent event) {
 		this.scmp = null;
 		this.event = event;
 		this.session = null;
