@@ -11,7 +11,7 @@ import com.stabilit.sc.msg.Message;
 import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.SubscribeQueue;
 
-public class UnSubscribeCommand implements ICommand {
+public class UnSubscribeCommand extends Command {
 
 	public UnSubscribeCommand() {
 	}

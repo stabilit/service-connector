@@ -9,7 +9,7 @@ import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
 import com.stabilit.sc.util.SubscribeQueue;
 
-public class SubscribeCommand implements ICommand {
+public class SubscribeCommand extends Command {
 
 	public SubscribeCommand() {
 	}

@@ -1,6 +1,5 @@
 package com.stabilit.sc.cmd.impl;
 
-import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -8,7 +7,7 @@ import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 
-public class EchoCommand implements ICommand {
+public class EchoCommand extends Command {
 
 	@Override
 	public String getKey() {
@@ -33,5 +32,4 @@ public class EchoCommand implements ICommand {
 			throw new CommandException(e.toString());
 		}
 	}
-
 }

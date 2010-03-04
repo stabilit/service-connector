@@ -3,7 +3,6 @@ package com.stabilit.sc.cmd.impl;
 import java.io.File;
 import java.io.FileFilter;
 
-import com.stabilit.sc.app.server.IHTTPServerConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -14,7 +13,7 @@ import com.stabilit.sc.msg.Message;
 import com.stabilit.sc.msg.impl.FileSystemMessage;
 import com.stabilit.sc.msg.impl.FileSystemMessage.ACTION;
 
-public class FileSystemCommand implements ICommand {
+public class FileSystemCommand extends Command {
 
 	@Override
 	public String getKey() {
@@ -27,9 +26,8 @@ public class FileSystemCommand implements ICommand {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
-		SCMP scmp = request.getSCMP();	
+	public void run(IRequest request, IResponse response) throws CommandException {
+		SCMP scmp = request.getSCMP();
 		String messageId = scmp.getMessageId();
 		if (FileSystemMessage.ID.equals(messageId) == false) {
 			throw new CommandException("no filesystem message [id=" + messageId + "]");
@@ -62,5 +60,4 @@ public class FileSystemCommand implements ICommand {
 		File[] files = dir.listFiles(fileFilter);
 		return files;
 	}
-
 }

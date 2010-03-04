@@ -13,38 +13,25 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc;
+package com.stabilit.sc.cmd.impl;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.stabilit.sc.app.client.IConnection;
+import com.stabilit.sc.cmd.CommandException;
+import com.stabilit.sc.cmd.ICommand;
+import com.stabilit.sc.io.IRequest;
+import com.stabilit.sc.io.IResponse;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SC {
+public abstract class ExtendedCommand implements ICommand {
 
-	private static SC instance = new SC();
-	private Map<String, IConnection> services = new ConcurrentHashMap<String, IConnection>();
-
-	private SC() {
-	}
-
-	public static SC getInstance() {
-		return instance;
-	}
-
-	public void registerService(String serviceName, IConnection conn) {
-		services.put(serviceName, conn);
-	}
-
-	public IConnection getService(String serviceName) {
-		return services.get(serviceName);
+	@Override
+	public void run(IRequest request, IResponse response) throws CommandException {
+		throw new CommandException("Unsupported Operation for this type of Command, " + getKey() + ".");	
 	}
 }

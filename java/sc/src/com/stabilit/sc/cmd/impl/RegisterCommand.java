@@ -1,6 +1,7 @@
 package com.stabilit.sc.cmd.impl;
 
 import com.stabilit.sc.SC;
+import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -9,7 +10,7 @@ import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.RegisterMessage;
 
-public class RegisterCommand implements ICommand {
+public class RegisterCommand extends ExtendedCommand {
 
 	public RegisterCommand() {
 	}
@@ -26,13 +27,18 @@ public class RegisterCommand implements ICommand {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
+		throw new CommandException("Unsupported operation for " + RegisterCommand.class + " Command.");	
+	}
+
+	@Override
+	public void run(IRequest request, IResponse response, IConnection conn) throws CommandException {
 		SCMP scmp = request.getSCMP();
 
 		ISession session = request.getSession(true);
 		RegisterMessage registerMessage = (RegisterMessage) scmp.getBody();
 		
 		// TODO Sc getservice Register list .. and register new ServiceServer!
-		SC.getInstance().registerService(registerMessage.getServiceName());		
+		SC.getInstance().registerService(registerMessage.getServiceName(), conn);		
 		
 		try {
 			//TODO registerMessage response generieren und zurücksenden!

@@ -30,7 +30,7 @@ import com.stabilit.sc.msg.impl.KeepAliveMessage;
  * @author JTraber
  * 
  */
-public class KeepAliveCommand implements ICommand {
+public class KeepAliveCommand extends Command {
 
 	@Override
 	public String getKey() {
