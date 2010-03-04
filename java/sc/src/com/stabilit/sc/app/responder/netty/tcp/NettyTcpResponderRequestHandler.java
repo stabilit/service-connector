@@ -19,6 +19,9 @@
  */
 package com.stabilit.sc.app.responder.netty.tcp;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
@@ -27,6 +30,7 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.sc.app.server.ITcpServerConnection;
 import com.stabilit.sc.app.server.NettyTcpRequest;
@@ -44,43 +48,71 @@ import com.stabilit.sc.io.IRequest;
 @ChannelPipelineCoverage("one")
 public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
+	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
 	private ITcpServerConnection conn;
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
 	private Logger log = Logger.getLogger(NettyTcpResponderRequestHandler.class);
-	
+	private boolean sync = false;
+
 	public NettyTcpResponderRequestHandler(ITcpServerConnection conn) {
 		this.conn = conn;
 	}
 
+	public ChannelBuffer getMessageSync() {
+		sync = true;
+		ChannelBuffer responseMessage;
+		boolean interrupted = false;
+		for (;;) {
+			try {
+				// take() waits until first message gets in queue!
+				responseMessage = answer.take();
+				sync = false;
+				break;
+			} catch (InterruptedException e) {
+				interrupted = true;
+			}
+		}
+
+		if (interrupted) {
+			Thread.currentThread().interrupt();
+		}
+		return responseMessage;
+	}
+
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		log.error("Exception :" + e.getCause().getMessage());		
+		log.error("Exception :" + e.getCause().getMessage());
 		super.exceptionCaught(ctx, e);
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
 
-		IRequest request = new NettyTcpRequest(chBuffer);
-		NettyTcpResponse response = new NettyTcpResponse(e);
-		ICommand command = commandFactory.newCommand(request);
-		
-		log.debug("TcpServerResponseHandler: following command received - " + command.getKey());
-		
-		try {
-			command.run(request, response, conn);
-		} catch (CommandException ex) {
-			ex.printStackTrace();
+		if (sync) {
+			answer.offer((ChannelBuffer) e.getMessage());
+		} else {
+			ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
+
+			IRequest request = new NettyTcpRequest(chBuffer);
+			NettyTcpResponse response = new NettyTcpResponse(e);
+			ICommand command = commandFactory.newCommand(request);
+
+			log.debug("NettyTcpResponderRequestHandler: following command received - " + command.getKey());
+
+			try {
+				command.run(request, response, conn);
+			} catch (CommandException ex) {
+				ex.printStackTrace();
+			}
+			writeResponse(response);
 		}
-		writeResponse(response);
 	}
-	
-    private void writeResponse(NettyTcpResponse response) throws Exception {
-    	MessageEvent event = response.getEvent();
-        ChannelBuffer buffer = response.getBuffer();
-        
-        // Write the response.
-        ChannelFuture future = event.getChannel().write(buffer);     
-    }
+
+	private void writeResponse(NettyTcpResponse response) throws Exception {
+		MessageEvent event = response.getEvent();
+		ChannelBuffer buffer = response.getBuffer();
+
+		// Write the response.
+		ChannelFuture future = event.getChannel().write(buffer);
+	}
 }

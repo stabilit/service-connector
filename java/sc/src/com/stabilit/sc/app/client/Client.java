@@ -5,7 +5,7 @@ import com.stabilit.sc.app.server.ServerApplicationFactory;
 import com.stabilit.sc.context.ClientApplicationContext;
 
 public class Client implements Runnable {
-
+	
 	private String[] args;
 	
 	public static void main(String[] args) {

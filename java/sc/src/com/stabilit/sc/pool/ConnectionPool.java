@@ -39,7 +39,7 @@ public class ConnectionPool {
 	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx,
 			Class<? extends IClientListener> scListener) {
 
-		List<IPoolConnection> connectionList = connectionMap.get(ctx.getConnection());
+		List<IPoolConnection> connectionList = connectionMap.get(ctx.getIdentifier());
 		PoolConnection poolCon = null;
 		IClientConnection con = null;
 		URL url = null;
@@ -54,7 +54,7 @@ public class ConnectionPool {
 			url = ctx.getURL();
 			con.setEndpoint(url);
 			connectionList = new ArrayList<IPoolConnection>();
-			connectionMap.put(ctx.getConnection(), connectionList);
+			connectionMap.put(ctx.getIdentifier(), connectionList);
 
 			if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
 				poolCon = new BlockingPoolConnection(con, scListener);

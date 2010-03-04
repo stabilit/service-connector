@@ -28,7 +28,7 @@ import com.stabilit.sc.app.server.http.handler.IKeepAliveHandler;
  * @author JTraber
  * 
  */
-public class NettyServerKeepAliveHandler implements IKeepAliveHandler {
+public class NettyHttpServerKeepAliveHandler implements IKeepAliveHandler {
 
 	/* (non-Javadoc)
 	 * @see com.stabilit.sc.serviceserver.IKeepAliveHandler#getAllIdleTimeSeconds()

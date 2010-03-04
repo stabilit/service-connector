@@ -31,7 +31,9 @@ public class GetDataCommand extends Command {
 		try {
 			GetDataMessage getDataMsg = (GetDataMessage) scmp.getBody();
 			IConnection conn = (IConnection) SC.getInstance().getService(getDataMsg.getServiceName());
-			
+
+			if (conn == null)
+				throw new CommandException("No Service registered with name: " + getDataMsg.getServiceName());
 			SCMP scmpRe = conn.sendAndReceive(scmp);
 
 			ISession session = request.getSession(true);

@@ -15,6 +15,7 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	private boolean connected;
 
 	private IClientConnection con;
+	//TODO This callback is not right implemented, attention!
 	private IClientListener callback;
 
 	public PoolConnection(IClientConnection con, Class<? extends IClientListener> scListener) {

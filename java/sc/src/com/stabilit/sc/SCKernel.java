@@ -31,7 +31,7 @@ import com.stabilit.sc.exception.SCKernelException;
  * @author JTraber
  * 
  */
-public class SCKernel implements SCKernelConstants{
+public class SCKernel implements SCKernelConstants, Runnable{
 
 	private static final String HTTP_CONFIG_FILE = "sc-http.properties";
 	private static final String TCP_CONFIG_FILE = "sc-tcp.properties";
@@ -75,5 +75,16 @@ public class SCKernel implements SCKernelConstants{
 		server.setProps(props);
 		Thread thread = new Thread(server);
 		thread.start();
+	}
+
+	//TODO wieder entfernen, runnable zu testzwecken!
+	@Override
+	public void run() {
+		try {
+			SCKernel.startHTTPSCServer();
+			SCKernel.startTCPSCServer();
+		} catch (SCKernelException e) {
+			e.printStackTrace();
+		}
 	}
 }
