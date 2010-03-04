@@ -42,7 +42,7 @@ import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
-public class NettyHttpConnection implements IClientConnection {
+public class NettyHttpClientConnection implements IClientConnection {
 
 	private URL url = null;
 	private String sessionId = null;
@@ -50,7 +50,7 @@ public class NettyHttpConnection implements IClientConnection {
 	private Channel channel = null;
 	private IPoolConnection decoratorConn = null;
 	
-	public NettyHttpConnection() {
+	public NettyHttpClientConnection() {
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class NettyHttpConnection implements IClientConnection {
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new HttpClientPipelineFactory(scListenerClass,
+		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory(scListenerClass,
 				SCServerKeepAliveHandler.class, 30, decoratorConn));
 
 		String host = url.getHost();

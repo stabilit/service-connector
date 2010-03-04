@@ -31,7 +31,7 @@ import com.stabilit.sc.msg.impl.UnSubscribeMessage;
 import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 @ChannelPipelineCoverage("one")
-public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 

@@ -36,7 +36,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  * 
  * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
  */
-public class HttpClientPipelineFactory implements ChannelPipelineFactory {
+public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 
 	private Class<? extends IClientListener> scListenerClass;
 	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
@@ -48,7 +48,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 	private int keepAliveTimeout;
 	private IPoolConnection conn;
 
-	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
+	public NettyHttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout, int readTimeout,
 			int writeTimeout, IPoolConnection conn) {
 		super();
@@ -61,7 +61,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
+	public NettyHttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass,
 			Class<? extends IKeepAliveHandler> keepAliveHandlerClass, int keepAliveTimeout,
 			IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
@@ -70,7 +70,7 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
 		this.conn = conn;
 	}
 
-	public HttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
+	public NettyHttpClientPipelineFactory(Class<? extends IClientListener> scListenerClass, IPoolConnection conn) {
 		this.scListenerClass = scListenerClass;
 		this.conn = conn;
 	}

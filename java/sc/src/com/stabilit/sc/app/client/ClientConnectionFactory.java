@@ -3,7 +3,7 @@ package com.stabilit.sc.app.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.app.client.netty.http.NettyHttpConnection;
+import com.stabilit.sc.app.client.netty.http.NettyHttpClientConnection;
 import com.stabilit.sc.app.client.netty.tcp.NettyTcpClientConnection;
 
 public class ClientConnectionFactory {
@@ -12,8 +12,8 @@ public class ClientConnectionFactory {
 
 	static {
 		// jboss netty http client
-		IClientConnection nettyHttpClient = new NettyHttpConnection(); 
-		clientMap.put(NettyHttpConnection.class.getName(), nettyHttpClient);
+		IClientConnection nettyHttpClient = new NettyHttpClientConnection(); 
+		clientMap.put(NettyHttpClientConnection.class.getName(), nettyHttpClient);
 		clientMap.put("netty.http", nettyHttpClient);
 		
 		// jboss netty tcp client
