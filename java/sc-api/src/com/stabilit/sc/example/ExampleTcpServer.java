@@ -26,7 +26,7 @@ import com.stabilit.sc.server.TCPRRServer;
  * 
  * @author JTraber
  */
-public class ExampleTCPServer {
+public class ExampleTcpServer {
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
@@ -46,7 +46,7 @@ public class ExampleTCPServer {
 	private static final String HOST = "localhost";
 
 	public static void main(String[] args) {
-		ExampleTCPServer server = new ExampleTCPServer();
+		ExampleTcpServer server = new ExampleTcpServer();
 		server.runRequestResponseServer();
 	}
 
