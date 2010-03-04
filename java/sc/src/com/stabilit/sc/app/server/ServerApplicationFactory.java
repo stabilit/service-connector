@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.sc.app.IApplication;
-import com.stabilit.sc.app.server.netty.http.NettyHttpSCServer;
-import com.stabilit.sc.app.server.netty.tcp.NettyTcpSCServer;
+import com.stabilit.sc.app.responder.netty.http.NettyHttpResponder;
+import com.stabilit.sc.app.responder.netty.tcp.NettyTcpResponder;
 import com.stabilit.sc.util.ConsoleUtil;
 
 public class ServerApplicationFactory {
@@ -14,13 +14,13 @@ public class ServerApplicationFactory {
 
 	static {
 		// jboss netty http server
-		IApplication nettyHttpServer = new NettyHttpSCServer();
-		serverMap.put(NettyHttpSCServer.class.getName(), nettyHttpServer);
+		IApplication nettyHttpServer = new NettyHttpResponder();
+		serverMap.put(NettyHttpResponder.class.getName(), nettyHttpServer);
 		serverMap.put("netty.http", nettyHttpServer);
 		
 		// jboss netty tcp server
-		IApplication nettyTCPServer = new NettyTcpSCServer();
-		serverMap.put(NettyTcpSCServer.class.getName(), nettyTCPServer);
+		IApplication nettyTCPServer = new NettyTcpResponder();
+		serverMap.put(NettyTcpResponder.class.getName(), nettyTCPServer);
 		serverMap.put("netty.tcp", nettyTCPServer);
 	}
 	
