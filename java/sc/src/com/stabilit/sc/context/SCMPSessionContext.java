@@ -3,16 +3,16 @@ package com.stabilit.sc.context;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 
-public class SCOPSessionContext extends SessionContext {
+public class SCMPSessionContext extends SessionContext {
 
-	public SCOPSessionContext() {
+	public SCMPSessionContext() {
 	}
 
-	public static ISession getSession(SCMP scop, boolean fCreate) {
-		if (scop == null) {
+	public static ISession getSession(SCMP scmp, boolean fCreate) {
+		if (scmp == null) {
 			return null;
 		}
-		String sessionId = scop.getSessionId();
+		String sessionId = scmp.getSessionId();
 		ISession session = null;
 		if (sessionId != null) {
 			session = SessionContext.getSession(sessionId);
