@@ -15,6 +15,7 @@
  */
 package com.stabilit.sc.app.server.http.handler;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -30,8 +31,9 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.app.server.netty.http.NettyHttpRequest;
-import com.stabilit.sc.app.server.netty.http.NettyHttpResponse;
+import com.stabilit.sc.app.server.IHttpServerConnection;
+import com.stabilit.sc.app.server.NettyHttpRequest;
+import com.stabilit.sc.app.server.NettyHttpResponse;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
@@ -39,20 +41,28 @@ import com.stabilit.sc.cmd.factory.ICommandFactory;
 import com.stabilit.sc.io.IRequest;
 
 @ChannelPipelineCoverage("one")
-public class NettyHttpSCRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private ICommandFactory commandFactory = CommandFactory.getInstance();
+	private IHttpServerConnection conn;
+	private Logger log = Logger.getLogger(NettyHttpResponderRequestHandler.class);
+
+	public NettyHttpResponderRequestHandler(IHttpServerConnection conn) {
+		super();
+		this.conn = conn;
+	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
+
 		System.out.println("Msg bekommen HTTP Server SC");
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		IRequest request = new NettyHttpRequest(httpRequest);
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = commandFactory.newCommand(request);
-
+		log.debug("Command " + command.getKey() + " received on http responder.");
 		try {
-			command.run(request, response);
+			command.run(request, response, conn);
 		} catch (CommandException e) {
 			e.printStackTrace();
 		}
