@@ -64,7 +64,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 		boolean interrupted = false;
 		for (;;) {
 			try {
-				// take() wartet bis Message in Queue kommt!
+				// take() waits until first message gets in queue!
 				responseMessage = answer.take();
 				sync = false;
 				break;

@@ -55,7 +55,7 @@ public class NettyHttpServer extends HttpServerConnection {
 		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass,
+		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory(scListenerClass, keepAliveHandlerClass,
 				writeTimeout, writeTimeout, writeTimeout, this));
 	}
 
