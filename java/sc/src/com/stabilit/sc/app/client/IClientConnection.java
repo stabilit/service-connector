@@ -22,7 +22,6 @@ package com.stabilit.sc.app.client;
 import java.net.URL;
 
 import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
 
@@ -30,7 +29,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  * @author JTraber
  *
  */
-public interface IClientConnection {
+public interface IClientConnection extends IConnection {
 	
 	public boolean isAvailable();
 	
@@ -40,19 +39,15 @@ public interface IClientConnection {
 	
 	public void setEndpoint(URL url);
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-
-	public void send(SCMP scmp) throws Exception;
-
-	public void disconnect() throws Exception;
-	
-	public void destroy() throws Exception;
-
-	public void connect(Class<? extends IClientListener> scListener) throws ConnectionException;
-
 	public void deleteSession();
 
 	public void createSession();
 	
 	public void setDecorator(IPoolConnection dec);
+	
+	public void disconnect() throws Exception;
+
+	public void destroy() throws Exception;
+
+	public void connect(Class<? extends IClientListener> scListener) throws ConnectionException;
 }
