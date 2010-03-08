@@ -30,10 +30,11 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 /**
  * @author JTraber
@@ -46,6 +47,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	private IClientListener callback;
 	private IPoolConnection conn;
 	private boolean sync = false;
+	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	public NettyHttpClientResponseHandler(IClientListener callback, IPoolConnection conn) {
 		super();
@@ -82,15 +84,15 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 
+		//TODO conn setAvailable oder sowas? weider freigeben! eventuell über HTTPConnectionHandler
 		if (sync) {
 			answer.offer((HttpResponse) e.getMessage());
 		} else {
 			HttpResponse httpResponse = (HttpResponse) e.getMessage();
 			byte[] buffer = httpResponse.getContent().array();
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-
-			SCMP scmp = (SCMP) obj;
+			SCMP scmp = new SCMP();
+			encoderDecoder.decode(bais, scmp);
 			callback.messageReceived(conn, scmp);
 		}
 		// TODO Keep alives müssen hier ausgesondert werden! bzw. acknowledged! oder eventuell ein handler

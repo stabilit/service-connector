@@ -45,6 +45,12 @@ public class Message implements IMessage {
 		}
 		return sb.toString();
 	}
+	
+	
+	@Override
+	public Map<String, Object> getAttributeMap() {
+		return attrMap;
+	}
 
 	@Override
 	public Object getAttribute(String name) {

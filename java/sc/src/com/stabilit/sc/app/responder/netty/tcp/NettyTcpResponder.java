@@ -15,17 +15,14 @@
  */
 package com.stabilit.sc.app.responder.netty.tcp;
 
-import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.app.client.netty.http.NettyHttpClientResponseHandler;
 import com.stabilit.sc.app.server.ITcpServerConnection;
 import com.stabilit.sc.app.server.NettyTcpResponse;
 import com.stabilit.sc.app.server.ServerApplication;
@@ -35,7 +32,6 @@ import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.msg.ISCServiceListener;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 /**
  * An HTTP server that sends back the content of the received HTTP request in a pretty plaintext form.

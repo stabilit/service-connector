@@ -3,7 +3,7 @@ package com.stabilit.sc.io;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.io.impl.ObjectStreamEncoderDecoder;
+import com.stabilit.sc.io.impl.DefaultEncoderDecoder;
 
 public class EncoderDecoderFactory {
 
@@ -11,8 +11,8 @@ public class EncoderDecoderFactory {
 
 	static {
 		// object stream encoder decoder
-		IEncoderDecoder encoderDecoder = new ObjectStreamEncoderDecoder();
-		encoderDecoderMap.put(ObjectStreamEncoderDecoder.class.getName(), encoderDecoder);
+		IEncoderDecoder encoderDecoder = new DefaultEncoderDecoder();
+		encoderDecoderMap.put(DefaultEncoderDecoder.class.getName(), encoderDecoder);
 		encoderDecoderMap.put("default", encoderDecoder);
 	}
 	

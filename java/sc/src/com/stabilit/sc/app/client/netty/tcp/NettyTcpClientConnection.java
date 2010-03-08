@@ -31,10 +31,11 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyTcpClientConnection implements IClientConnection {
 
@@ -43,10 +44,11 @@ public class NettyTcpClientConnection implements IClientConnection {
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
 	private IPoolConnection decoratorConn = null;
-	
+	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+
 	public NettyTcpClientConnection() {
 	}
-	
+
 	@Override
 	public void setDecorator(IPoolConnection dec) {
 		this.decoratorConn = dec;
@@ -66,7 +68,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory(scListenerClass, decoratorConn));
-		
+
 		String host = url.getHost();
 		int port = url.getPort();
 		// Start the connection attempt.
@@ -114,8 +116,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 		scmp.setSessionId(this.sessionId);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		
+		encoderDecoder.encode(baos, scmp);
 		ChannelBuffer buffer = ChannelBuffers.buffer(baos.size());
 		buffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(buffer);
@@ -127,28 +128,29 @@ public class NettyTcpClientConnection implements IClientConnection {
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeObjectOnly(baos, scmp);
-		
+		encoderDecoder.encode(baos, scmp);
+
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
+
 		chBuffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(chBuffer);
+	
 		future.awaitUninterruptibly();
 
-		NettyTcpClientResponseHandler handler = channel.getPipeline().get(NettyTcpClientResponseHandler.class);
+		NettyTcpClientResponseHandler handler = channel.getPipeline()
+				.get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
 
 		byte[] buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-		if (obj instanceof SCMP) {
-			SCMP ret = (SCMP) obj;
-			String retSessionID = ret.getSessionId();
-			if (retSessionID != null) {
-				this.sessionId = retSessionID;
-			}
-			return ret;
+		SCMP ret = new SCMP();
+		encoderDecoder.decode(bais, ret);
+
+		String retSessionID = ret.getSessionId();
+		if (retSessionID != null) {
+			this.sessionId = retSessionID;
 		}
-		throw new Exception("not found");
+		return ret;
 	}
 
 	@Override

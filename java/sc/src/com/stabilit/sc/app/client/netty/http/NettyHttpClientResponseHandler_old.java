@@ -25,10 +25,11 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.msg.impl.UnSubscribeMessage;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 @ChannelPipelineCoverage("one")
 public class NettyHttpClientResponseHandler_old extends SimpleChannelUpstreamHandler {
@@ -36,6 +37,7 @@ public class NettyHttpClientResponseHandler_old extends SimpleChannelUpstreamHan
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 
 	private IClientListener callback = null;
+	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	public void setCallback(IClientListener callback) {
 		this.callback = callback;
@@ -71,22 +73,22 @@ public class NettyHttpClientResponseHandler_old extends SimpleChannelUpstreamHan
 			HttpResponse httpResponse = (HttpResponse) e.getMessage();
 			byte[] buffer = httpResponse.getContent().array();
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-			if (obj instanceof SCMP) {
-				SCMP ret = (SCMP) obj;
-				// check for subscribe id
-				String subscribeId = ret.getSubscribeId();
-				if (subscribeId != null) {
-					if (subscribeId.equals(this.callback.getSubscribeId())) {
-						if (UnSubscribeMessage.ID.equals(ret.getMessageId())) {
-							this.callback = null;
-							return;
-						}
-			//			this.callback.messageReceived(ret);
+			SCMP ret = new SCMP();
+			encoderDecoder.decode(bais, ret);
+			
+			// check for subscribe id
+			String subscribeId = ret.getSubscribeId();
+			if (subscribeId != null) {
+				if (subscribeId.equals(this.callback.getSubscribeId())) {
+					if (UnSubscribeMessage.ID.equals(ret.getMessageId())) {
+						this.callback = null;
 						return;
 					}
+					// this.callback.messageReceived(ret);
+					return;
 				}
 			}
+
 		}
 		answer.offer((HttpResponse) e.getMessage());
 	}

@@ -7,16 +7,18 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import com.stabilit.sc.context.IRequestContext;
 import com.stabilit.sc.context.RequestContext;
 import com.stabilit.sc.context.SCMPSessionContext;
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 public class NettyTcpRequest implements IRequest {
 
 	private ChannelBuffer request;
 	private SCMP scmp;
 	private IRequestContext requestContext;
+	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	public NettyTcpRequest(ChannelBuffer request) {
 		this.request = request;
@@ -54,10 +56,9 @@ public class NettyTcpRequest implements IRequest {
 	private void load() throws Exception {
 		byte[] buffer = request.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-        Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-        if (obj instanceof SCMP) {
-        	this.scmp = (SCMP)obj;
-        }
+		SCMP scmp = new SCMP();
+		encoderDecoder.decode(bais, scmp);
+		this.scmp = scmp;
 	}
 
 	@Override

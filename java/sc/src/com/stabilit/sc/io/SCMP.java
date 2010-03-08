@@ -117,5 +117,4 @@ public class SCMP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
-
 }

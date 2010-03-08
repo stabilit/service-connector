@@ -12,7 +12,6 @@ import com.stabilit.sc.msg.impl.SubscribeMessage;
 class PoolConnection implements IPoolConnection, ISubscribe {
 
 	private boolean available;
-	private boolean connected;
 
 	private IClientConnection con;
 	//TODO This callback is not right implemented, attention!
@@ -22,14 +21,12 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 		this.con = con;
 		con.setDecorator(this);
 		this.available = true;
-		this.connected = false;
 		try {
 			con.connect(scListener);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.connected = true;
 	}
 
 	// TODOD wann muss dies geschehen!

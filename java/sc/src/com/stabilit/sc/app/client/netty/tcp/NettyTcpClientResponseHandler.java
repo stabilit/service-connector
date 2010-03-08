@@ -25,10 +25,11 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.io.EncoderDecoderFactory;
+import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.util.ObjectStreamHttpUtil;
 
 @ChannelPipelineCoverage("one")
 public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
@@ -38,6 +39,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 	private IClientListener callback = null;
 	private IPoolConnection conn;
 	private boolean sync = false;
+	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	/**
 	 * @param scListener
@@ -85,12 +87,9 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		} else {
 			byte[] buffer = chBuffer.array();
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			Object obj = ObjectStreamHttpUtil.readObjectOnly(bais);
-			if (obj instanceof SCMP) {
-				SCMP ret = (SCMP) obj;
-				this.callback.messageReceived(conn, ret);
-				return;
-			}
+			SCMP ret = new SCMP();
+			encoderDecoder.decode(bais, ret);
+			this.callback.messageReceived(conn, ret);
 		}
 	}
 }
