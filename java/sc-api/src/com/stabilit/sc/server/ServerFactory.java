@@ -46,19 +46,7 @@ public final class ServerFactory {
 		return factory;
 	}
 
-	/**
-	 * Creates a new RequestResponseService object.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param responseHandler
-	 *            the response handler
-	 * @param timeoutHandler
-	 *            the timeout handler
-	 * 
-	 * @return the requestresponse service
-	 */
-	public HttpRRServer createHttpRRServer(String serviceName,
+	public IServer createHttpServer(String serviceName,
 			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
 		appCtx.setProps(props);
@@ -68,13 +56,13 @@ public final class ServerFactory {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		return new HttpRRServer(serviceName, scListenerClass, appCtx);
+		return new HttpServer(serviceName, scListenerClass, appCtx);
 	}
 	
-	public TcpRRServer createTCPRRServer(String serviceName, Class<? extends IClientListener> scListenerClass, Properties props) {
+	public IServer createTcpServer(String serviceName, Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
 		appCtx.setIdentifier("TcpRRServer");
 		appCtx.setProps(props);
-		return new TcpRRServer(serviceName, scListenerClass, appCtx);
+		return new TcpServer(serviceName, scListenerClass, appCtx);
 	}
 }

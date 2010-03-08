@@ -24,6 +24,7 @@ import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
+import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.RegisterMessage;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.service.ConnectionCtx;
@@ -32,24 +33,18 @@ import com.stabilit.sc.service.ConnectionCtx;
  * @author JTraber
  *
  */
-class TcpRRServer extends Server implements ITcpRRServer {
+class HttpServer extends Server{
 	
 	/**
 	 * @param serviceName
 	 * @param serviceHandler
 	 * @param ctx
 	 */
-	protected TcpRRServer(String serviceName, Class<? extends IClientListener> serviceHandler,
+	protected HttpServer(String serviceName, Class<? extends IClientListener> serviceHandler,
 			ClientApplicationContext ctx) {
 		super(serviceName, serviceHandler, ctx);
 	}
 
-	@Override
-	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
-		super.connect(timeout, connectionCtx);
-	}
-	
-	@Override
 	public void publish(SCMP scmp, int timeout, boolean compression) {
 	
 		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
@@ -58,17 +53,16 @@ class TcpRRServer extends Server implements ITcpRRServer {
 			conn.send(scmp);
 			conn.releaseConnection();
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
+
 	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {		
 		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
 		//Register handshake
 		SCMP scmpRequest = new SCMP();
-		RegisterMessage regMsg = new RegisterMessage();
-		regMsg.setServiceName(serviceCtx.getServiceName());
+		IMessage regMsg = new RegisterMessage();
 		scmpRequest.setBody(regMsg);
 		try {
 			SCMP scmpResponse = conn.sendAndReceive(scmpRequest);
@@ -76,5 +70,15 @@ class TcpRRServer extends Server implements ITcpRRServer {
 			throw new ServiceException("Error occured when registering Service to SC.");
 		}
 		conn.releaseConnection();		
+	}
+
+	@Override
+	public void disconnect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
+		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public void unregisterServer(int readTimeout, int writeTimeout) throws ServiceException {
+		// TODO do unregister server		
 	}
 }

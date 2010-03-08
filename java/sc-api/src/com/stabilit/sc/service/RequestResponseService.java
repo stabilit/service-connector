@@ -26,7 +26,7 @@ import com.stabilit.sc.pool.IPoolConnection;
  * 
  * @author JTraber
  */
-public class RequestResponseService extends Service implements IRequestResponseService {
+class RequestResponseService extends Service implements IRequestResponseService {
 	
 	/**
 	 * Instantiates a RequestResponseService.
@@ -52,7 +52,6 @@ public class RequestResponseService extends Service implements IRequestResponseS
 			conn.send(scmp);
 			conn.releaseConnection();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

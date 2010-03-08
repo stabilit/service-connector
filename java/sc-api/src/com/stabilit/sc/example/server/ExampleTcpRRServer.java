@@ -22,7 +22,7 @@ import java.util.Properties;
 import com.stabilit.sc.example.client.ExampleTcpRRClient;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
-import com.stabilit.sc.server.ITcpRRServer;
+import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.server.ServerFactory;
 
 /**
@@ -63,7 +63,7 @@ public class ExampleTcpRRServer implements Runnable {
 			e.printStackTrace();
 		}
 
-		ITcpRRServer tcpRRServer = ServerFactory.getInstance().createTCPRRServer("Service A",
+		IServer tcpRRServer = ServerFactory.getInstance().createTcpServer("Service A",
 				ServerRRListener.class, props);
 
 		try {

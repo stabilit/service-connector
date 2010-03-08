@@ -16,7 +16,6 @@
  */
 package com.stabilit.sc.service;
 
-import com.stabilit.sc.context.ApplicationContext;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.msg.IClientListener;
 
@@ -25,7 +24,7 @@ import com.stabilit.sc.msg.IClientListener;
  * 
  * @author JTraber
  */
-public class SubscribePublishService extends Service implements ISubscribePublishService {
+class SubscribePublishService extends Service implements ISubscribePublishService {
 
 	/**
 	 * Instantiates a new subscribePublish service.

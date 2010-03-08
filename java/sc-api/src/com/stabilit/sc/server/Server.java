@@ -13,7 +13,7 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
@@ -29,26 +29,27 @@ import com.stabilit.sc.service.ServiceCtx;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public abstract class Server {
-	
+public abstract class Server implements IServer {
+
 	protected ConnectionPool pool;
-	
+
 	/** The response handler. */
 	protected Class<? extends IClientListener> scListenerClass;
-	
+
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
 
 	/** The service context. */
 	protected ServiceCtx serviceCtx;
-	
+
 	protected ClientApplicationContext ctx;
 
 	private String serviceName;
-	
-	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler, ClientApplicationContext ctx) {
+
+	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler,
+			ClientApplicationContext ctx) {
 		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
 		this.scListenerClass = serviceHandler;

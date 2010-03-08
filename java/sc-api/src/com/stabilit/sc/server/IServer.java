@@ -28,7 +28,7 @@ import com.stabilit.sc.service.ConnectionCtx;
  * @author JTraber
  * 
  */
-public interface ITcpRRServer {
+public interface IServer {
 
 	/**
 	 * @param readTimeout
@@ -36,6 +36,8 @@ public interface ITcpRRServer {
 	 * @throws ServiceException
 	 */
 	void registerServer(int readTimeout, int writeTimeout) throws ServiceException;
+	
+	void unregisterServer(int readTimeout, int writeTimeout) throws ServiceException;
 
 	/**
 	 * @param scmp
@@ -45,5 +47,7 @@ public interface ITcpRRServer {
 	void publish(SCMP scmp, int timeout, boolean compression);
 
 	void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException;
+	
+	void disconnect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException;
 
 }

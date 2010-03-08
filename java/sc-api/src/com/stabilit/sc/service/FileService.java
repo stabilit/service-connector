@@ -28,7 +28,7 @@ import com.stabilit.sc.exception.ScConnectionException;
  * @author JTraber
  *
  */
-public class FileService implements IFileService {
+class FileService implements IFileService {
 
 	/** {@inheritDoc} */
 	@Override
