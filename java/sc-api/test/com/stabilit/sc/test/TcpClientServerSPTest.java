@@ -17,45 +17,37 @@
 /**
  * 
  */
-package com.stabilit.sc.service;
+package com.stabilit.sc.test;
+
+import org.junit.Test;
+
+import com.stabilit.sc.SCKernel;
+import com.stabilit.sc.example.client.ExampleTcpSPClient;
+import com.stabilit.sc.example.server.ExampleTcpSPServer;
 
 /**
- * The Class ServiceCtx represents the context of a service.
- * 
  * @author JTraber
  */
-public class ServiceCtx {
+public class TcpClientServerSPTest {
 
-	/** The service name. */
-	private String serviceName;
+	@Test
+	public void runTcpClientServerSPTest() {
+		SCKernel scKernel = new SCKernel();
+		Thread scKernelTh = new Thread(scKernel);
+		scKernelTh.start();
 
-	/**
-	 * Instantiates a new service context.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 */
-	public ServiceCtx(String serviceName) {
-		super();
-		this.serviceName = serviceName;
-	}
+		ExampleTcpSPServer tcpSPServer = new ExampleTcpSPServer();
+		Thread tcpSPServerTh = new Thread(tcpSPServer);
+		tcpSPServerTh.start();
 
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the service name
-	 */
-	public String getServiceName() {
-		return serviceName;
-	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+		 ExampleTcpSPClient tcpSPClient = new ExampleTcpSPClient();
+		 Thread tcpSPClientTh = new Thread(tcpSPClient);
+		 tcpSPClientTh.start();
+		 
+		try {
+			Thread.currentThread().join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

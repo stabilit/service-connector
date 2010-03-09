@@ -30,11 +30,14 @@ import com.stabilit.sc.pool.IPoolConnection;
 
 public class ClientCallback extends ClientListener {
 
+	int count = 0;
+	
 	@Override
 	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
 		super.messageReceived(conn, scmp);
-		if(scmp.getMessageId().equals("getData")) {
-			System.out.println("yes getData got to the Client!!!!");
+		if(count < 15) {
+			System.out.println("Message: " + scmp.getBody());
+			count++;
 		}
 	}
 }

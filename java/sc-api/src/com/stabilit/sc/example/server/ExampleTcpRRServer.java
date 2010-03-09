@@ -58,7 +58,7 @@ public class ExampleTcpRRServer implements Runnable {
 
 		Properties props = new Properties();
 		try {
-			props.load(ExampleTcpRRClient.class.getResourceAsStream("exampleTcpRRGui.properties"));
+			props.load(ExampleTcpRRServer.class.getResourceAsStream("exampleTcpRRServer.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

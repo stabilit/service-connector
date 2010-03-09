@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.server;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
@@ -33,6 +35,8 @@ import com.stabilit.sc.service.ConnectionCtx;
  * 
  */
 class TcpServer extends Server {
+
+	Logger log = Logger.getLogger(TcpServer.class);
 
 	/**
 	 * @param serviceName
@@ -68,10 +72,15 @@ class TcpServer extends Server {
 		// Register handshake
 		SCMP scmpRequest = new SCMP();
 		RegisterMessage regMsg = new RegisterMessage();
-		regMsg.setServiceName(serviceCtx.getServiceName());
+		scmpRequest.getHeader().put("serviceName", serviceName);
 		scmpRequest.setBody(regMsg);
 		try {
 			SCMP scmpResponse = conn.sendAndReceive(scmpRequest);
+			if (scmpResponse.getMessageId().equals("register")) {
+				log.info("TCPServer Register Handshake is sucessfully done!");
+			} else {
+				throw new Exception("Registering Server failed, unexpected Response received.");
+			}
 		} catch (Exception e) {
 			throw new ServiceException("Error occured when registering Service to SC.");
 		}
@@ -81,11 +90,10 @@ class TcpServer extends Server {
 	@Override
 	public void disconnect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void unregisterServer(int readTimeout, int writeTimeout) throws ServiceException {
-		// TODO do unregister server		
+		// TODO do unregister server
 	}
 }

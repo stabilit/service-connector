@@ -14,7 +14,7 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.example.client;
+package com.stabilit.sc.example.server;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -22,17 +22,16 @@ import java.util.Properties;
 import com.stabilit.sc.exception.ScConnectionException;
 import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.impl.GetDataMessage;
-import com.stabilit.sc.service.IRequestResponseService;
-import com.stabilit.sc.service.ServiceFactory;
+import com.stabilit.sc.msg.impl.PublishMessage;
+import com.stabilit.sc.server.IServer;
+import com.stabilit.sc.server.ServerFactory;
 
 /**
- * Example Client.
+ * ExampleServer.
  * 
  * @author JTraber
  */
-public class ExampleTcpRRClient implements Runnable {
-
+public class ExampleTcpSPServer implements Runnable {
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
 
@@ -42,39 +41,49 @@ public class ExampleTcpRRClient implements Runnable {
 	/** The Constant TIMEOUT. */
 	private static final int TIMEOUT = 10;
 
-	public static void main(String args[]) {
-		ExampleTcpRRClient client = new ExampleTcpRRClient();
-		client.runTcpRequestResponseService();
+	/** The Constant NUM_OF_CON. */
+	private static final int NUM_OF_CON = 3;
+
+	/** The Constant PORT. */
+	private static final int PORT = 80;
+
+	/** The Constant HOST. */
+	private static final String HOST = "localhost";
+
+	public static void main(String[] args) {
+		ExampleTcpSPServer server = new ExampleTcpSPServer();
+		server.runRequestResponseServer();
 	}
 
-	@Override
-	public void run() {
-		runTcpRequestResponseService();
-	}
-
-	public void runTcpRequestResponseService() {
+	public void runRequestResponseServer() {
 
 		Properties props = new Properties();
 		try {
-			props.load(ExampleTcpRRClient.class.getResourceAsStream("exampleTcpRRGui.properties"));
+			props.load(ExampleTcpSPServer.class.getResourceAsStream("exampleTcpSPServer.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
-				"Service A", ClientCallback.class, props);
+		IServer tcpRRServer = ServerFactory.getInstance().createTcpServer("Service B",
+				ServerSPListener.class, props);
+
 		try {
-			rrService.connect(10, null);
+			tcpRRServer.connect(30, null);
+			tcpRRServer.registerServer(10, 15);
 			SCMP scmp = new SCMP();
-			GetDataMessage getData = new GetDataMessage();
-			scmp.getHeader().put("serviceName", "Service A");
-			scmp.setBody(getData);
-			rrService.send(scmp, 10, false);
+			PublishMessage publishMsg = new PublishMessage();
+			publishMsg.setAttribute("msg", "publish msg");
+			scmp.setBody(publishMsg);
+			tcpRRServer.publish(scmp, 10, false);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
+	}
 
+	@Override
+	public void run() {
+		runRequestResponseServer();
 	}
 }

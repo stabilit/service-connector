@@ -79,14 +79,10 @@ public final class ServiceFactory {
 	 * @return the subscribepublish service
 	 */
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
-			Class<? extends IClientListener> scListenerClass) {
+			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		try {
-			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
-					"-url", "http://localhost:80" });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		appCtx.setIdentifier("createSubscribePublishService");
+		appCtx.setProps(props);
 		return new SubscribePublishService(serviceName, scListenerClass, appCtx);
 	}
 }

@@ -39,9 +39,6 @@ public abstract class Service implements IService {
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
 
-	/** The service context. */
-	private ServiceCtx serviceCtx;
-
 	protected ClientApplicationContext ctx;
 
 	protected Logger log = Logger.getLogger(Service.class);
@@ -58,7 +55,6 @@ public abstract class Service implements IService {
 	 */
 	protected Service(String serviceName, Class<? extends IClientListener> clientListenerClass,
 			ClientApplicationContext ctx) {
-		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
 		this.clientListenerClass = clientListenerClass;
 		ConnectionPool.init(Integer.valueOf((String) ctx.getAttribute("client.numOfCon")));
@@ -96,14 +92,5 @@ public abstract class Service implements IService {
 	 */
 	public void setConnectionInformation(ConnectionCtx connectionCtx) {
 		this.connectionCtx = connectionCtx;
-	}
-
-	/**
-	 * Gets the service ctx.
-	 * 
-	 * @return the service ctx
-	 */
-	public ServiceCtx getServiceCtx() {
-		return serviceCtx;
 	}
 }

@@ -24,14 +24,16 @@ import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.GetDataMessage;
 import com.stabilit.sc.service.IRequestResponseService;
+import com.stabilit.sc.service.ISubscribePublishService;
 import com.stabilit.sc.service.ServiceFactory;
+import com.stabilit.sc.service.SubscriptionMask;
 
 /**
  * Example Client.
  * 
  * @author JTraber
  */
-public class ExampleTcpRRClient implements Runnable {
+public class ExampleTcpSPClient implements Runnable {
 
 	/** The Constant KEEP_ALIVE_TIMEOUT. */
 	private static final int KEEP_ALIVE_TIMEOUT = 12;
@@ -43,7 +45,7 @@ public class ExampleTcpRRClient implements Runnable {
 	private static final int TIMEOUT = 10;
 
 	public static void main(String args[]) {
-		ExampleTcpRRClient client = new ExampleTcpRRClient();
+		ExampleTcpSPClient client = new ExampleTcpSPClient();
 		client.runTcpRequestResponseService();
 	}
 
@@ -56,20 +58,16 @@ public class ExampleTcpRRClient implements Runnable {
 
 		Properties props = new Properties();
 		try {
-			props.load(ExampleTcpRRClient.class.getResourceAsStream("exampleTcpRRGui.properties"));
+			props.load(ExampleTcpSPClient.class.getResourceAsStream("exampleTcpSPGui.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		IRequestResponseService rrService = ServiceFactory.getInstance().createRequestResponseService(
-				"Service A", ClientCallback.class, props);
+		ISubscribePublishService rrService = ServiceFactory.getInstance().createSubscribePublishService(
+				"Service B", ClientCallback.class, props);
 		try {
 			rrService.connect(10, null);
-			SCMP scmp = new SCMP();
-			GetDataMessage getData = new GetDataMessage();
-			scmp.getHeader().put("serviceName", "Service A");
-			scmp.setBody(getData);
-			rrService.send(scmp, 10, false);
+			rrService.subscribe(new SubscriptionMask(), 10);
 		} catch (ScConnectionException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {

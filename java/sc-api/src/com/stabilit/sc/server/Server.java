@@ -25,7 +25,6 @@ import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.pool.ConnectionPool;
 import com.stabilit.sc.pool.IPoolConnection;
 import com.stabilit.sc.service.ConnectionCtx;
-import com.stabilit.sc.service.ServiceCtx;
 
 /**
  * @author JTraber
@@ -41,17 +40,14 @@ public abstract class Server implements IServer {
 	/** The connection context. */
 	private ConnectionCtx connectionCtx;
 
-	/** The service context. */
-	protected ServiceCtx serviceCtx;
-
 	protected ClientApplicationContext ctx;
 
-	private String serviceName;
+	protected String serviceName;
 
 	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler,
 			ClientApplicationContext ctx) {
-		this.serviceCtx = new ServiceCtx(serviceName);
 		this.ctx = ctx;
+		this.serviceName = serviceName;
 		this.scListenerClass = serviceHandler;
 		ConnectionPool.init(1);
 		this.pool = ConnectionPool.getInstance();

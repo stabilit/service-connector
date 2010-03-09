@@ -16,6 +16,7 @@
  */
 package com.stabilit.sc.service;
 
+import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.msg.IClientListener;
 
@@ -36,16 +37,20 @@ class SubscribePublishService extends Service implements ISubscribePublishServic
 	 * @param timeoutHandler
 	 *            the timeout handler
 	 */
-	protected SubscribePublishService(String serviceName, Class<? extends IClientListener> serviceHandler, ClientApplicationContext ctx) {
+	protected SubscribePublishService(String serviceName, Class<? extends IClientListener> serviceHandler,
+			ClientApplicationContext ctx) {
 		super(serviceName, serviceHandler, ctx);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
-		// TODO connection pool con holen!! subscribe con geben!
-		// ISubscribe con = ConnectionPool.borrowConnection(null);
-		// con.subscribe(callback); new SubscribeCallback(new responsehandler);
+		ISubscribe conn = (ISubscribe) pool.borrowConnection(ctx, this.clientListenerClass);
+		try {
+			conn.subscribe();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** {@inheritDoc} */
