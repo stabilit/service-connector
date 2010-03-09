@@ -1,43 +1,35 @@
 package com.stabilit.sc.cmd.impl;
 
 import com.stabilit.sc.SC;
-import com.stabilit.sc.app.client.IConnection;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.impl.GetDataMessage;
-import com.stabilit.sc.service.ServiceCtx;
+import com.stabilit.sc.msg.impl.PublishMessage;
 
-public class GetDataCommand extends Command {
+public class PublishCommand extends Command {
 
 	@Override
 	public String getKey() {
-		return "getData";
+		return "publish";
 	}
 
 	@Override
 	public ICommand newCommand() {
-		return new GetDataCommand();
+		return new PublishCommand();
 	}
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
 		SCMP scmp = request.getSCMP();
 
-		// TODO
-		// System.out.println("EchoCommand.run(): job = " + job.toString());
 		try {
-			GetDataMessage getDataMsg = (GetDataMessage) scmp.getBody();
-			ServiceCtx serviceCtx = SC.getInstance().getService(scmp.getHeader("serviceName"));
-			IConnection conn = serviceCtx.getConn();
+			PublishMessage publishMsg = (PublishMessage) scmp.getBody();
 			
-			if (conn == null)
-				throw new CommandException("No Service registered with name: " + getDataMsg.getServiceName());
-			SCMP scmpRe = conn.sendAndReceive(scmp);
-
+			SC.getInstance().getSubPubQueue().putNewMsg((String)publishMsg.getAttribute("msg"));		
+			
 			ISession session = request.getSession(true);
 			response.setSession(session);
 			response.setSCMP(scmp);

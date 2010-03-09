@@ -8,6 +8,7 @@ import com.stabilit.sc.cmd.impl.AsyncCallCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
 import com.stabilit.sc.cmd.impl.GetDataCommand;
 import com.stabilit.sc.cmd.impl.KeepAliveCommand;
+import com.stabilit.sc.cmd.impl.PublishCommand;
 import com.stabilit.sc.cmd.impl.RegisterCommand;
 import com.stabilit.sc.cmd.impl.SubscribeCommand;
 import com.stabilit.sc.cmd.impl.UnSubscribeCommand;
@@ -27,7 +28,7 @@ public class CommandFactory implements ICommandFactory {
 		commandMap.put(subscribeCommand.getKey(), subscribeCommand);
 		ICommand unSubscribeCommand = new UnSubscribeCommand();
 		commandMap.put(unSubscribeCommand.getKey(), unSubscribeCommand);
-		ICommand asyncCallCommand = new AsyncCallCommand(true);  // echo job creation in separate thread
+		ICommand asyncCallCommand = new AsyncCallCommand();  // echo job creation in separate thread
 		commandMap.put(asyncCallCommand.getKey(), asyncCallCommand);
 		ICommand keepAliveCmd = new KeepAliveCommand();
 		commandMap.put(keepAliveCmd.getKey(), keepAliveCmd);
@@ -35,6 +36,8 @@ public class CommandFactory implements ICommandFactory {
 		commandMap.put(registerCmd.getKey(), registerCmd);
 		ICommand getDataCmd = new GetDataCommand();
 		commandMap.put(getDataCmd.getKey(), getDataCmd);
+		ICommand publishCommand = new PublishCommand();
+		commandMap.put(publishCommand.getKey(), publishCommand);
 	}
 	
 	public static ICommandFactory getInstance() {

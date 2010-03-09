@@ -1,5 +1,6 @@
 package com.stabilit.sc.cmd.impl;
 
+import com.stabilit.sc.SC;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -9,7 +10,7 @@ import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.Message;
 import com.stabilit.sc.msg.impl.UnSubscribeMessage;
-import com.stabilit.sc.util.SubscribeQueue;
+import com.stabilit.sc.util.SubscribePublishQueue;
 
 public class UnSubscribeCommand extends Command {
 
@@ -42,7 +43,7 @@ public class UnSubscribeCommand extends Command {
 		IMessage result = new Message(msg.getKey());
 		try {
 			ISession session = request.getSession(false);
-			SubscribeQueue.unsubscribe(subscribeId);
+			SC.getInstance().getSubPubQueue().unsubscribe(subscribeId);
 			scmpResult.setBody(result);
 			response.setSCMP(scmpResult);
 		} catch (Exception e) {

@@ -38,7 +38,7 @@ public class RegisterCommand extends ExtendedCommand {
 		RegisterMessage registerMessage = (RegisterMessage) scmp.getBody();
 		
 		// TODO Sc getservice Register list .. and register new ServiceServer!
-		SC.getInstance().registerService(registerMessage.getServiceName(), conn);		
+		SC.getInstance().registerService(scmp.getHeader().get("serviceName"), conn);		
 		
 		try {
 			//TODO registerMessage response generieren und zurücksenden!

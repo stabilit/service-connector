@@ -1,5 +1,6 @@
 package com.stabilit.sc.cmd.impl;
 
+import com.stabilit.sc.SC;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.io.IRequest;
@@ -7,7 +8,6 @@ import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
-import com.stabilit.sc.util.SubscribeQueue;
 
 public class SubscribeCommand extends Command {
 
@@ -31,12 +31,11 @@ public class SubscribeCommand extends Command {
  		if (SubscribeMessage.ID.equals(scmp.getMessageId()) == false) {
  			throw new CommandException("not supported message id");
  		}
- 		SubscribeMessage subscribeMessage = (SubscribeMessage)scmp.getBody();
- 		SubscribeMessage result = new SubscribeMessage();
 		try {
 			ISession session = request.getSession(true);
 			response.setSession(session);
-			String subscribeId = SubscribeQueue.subscribe(subscribeMessage);
+			String subscribeId = SC.getInstance().getSubPubQueue().subscribe();
+			
 			// set initial event queue read position
 			scmp.setSubsribeId(subscribeId);
 			response.setSCMP(scmp);

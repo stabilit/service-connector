@@ -81,18 +81,20 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 		request.setBody(subscribeMessage);
 		SCMP result = con.sendAndReceive(request);
 		String subscribeId = result.getSubscribeId();
-		callback.setSubscribeId(subscribeId);
-		this.callback = callback;
+		//callback.setSubscribeId(subscribeId);
+		//this.callback = callback;
 		// if (con instanceof IConnectionCallback) {
 		// ((IConnectionCallback) con).setCallback(callback);
 		// } else {
 		// throw new UnsupportedOperationException();
 		// }
 		// send initial async call
-		request = new SCMP();
-		request.setSubsribeId(subscribeId);
-		request.setMessageId(AsyncCallMessage.ID);
-		con.send(request);
+		SCMP req = new SCMP();
+		req.setSubsribeId(subscribeId);
+		req.setMessageId(AsyncCallMessage.ID);
+		AsyncCallMessage async = new AsyncCallMessage();
+		req.setBody(async);
+		con.send(req);
 		return subscribeId;
 	}
 

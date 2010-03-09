@@ -30,7 +30,6 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.sc.app.server.ITcpServerConnection;
 import com.stabilit.sc.app.server.NettyTcpRequest;

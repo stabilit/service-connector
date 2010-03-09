@@ -25,10 +25,12 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.app.server.NettyTcpResponse;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
+import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.pool.IPoolConnection;
 
 @ChannelPipelineCoverage("one")
@@ -89,6 +91,18 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			SCMP ret = new SCMP();
 			encoderDecoder.decode(bais, ret);
+			
+			if(ret.getMessageId().equals("asyncCall")) {
+				NettyTcpResponse response = new NettyTcpResponse(e);
+				
+				SCMP req = new SCMP();
+				req.setMessageId(AsyncCallMessage.ID);
+				AsyncCallMessage async = new AsyncCallMessage();
+				req.setBody(async);
+				req.setSubsribeId(ret.getSubscribeId());
+				response.setSCMP(req);
+				ctx.getChannel().write(response.getBuffer());
+			}			
 			this.callback.messageReceived(conn, ret);
 		}
 	}

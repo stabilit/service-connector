@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="lib/sigar.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/netty-3.2.0.ALPHA2.jar" sourcepath="lib/netty-3.1.5.GA-sources.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.1.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

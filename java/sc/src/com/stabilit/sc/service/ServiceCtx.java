@@ -17,53 +17,67 @@
 /**
  * 
  */
-package com.stabilit.sc;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+package com.stabilit.sc.service;
 
 import com.stabilit.sc.app.client.IConnection;
-import com.stabilit.sc.service.ServiceCtx;
-import com.stabilit.sc.util.SubscribePublishQueue;
 
 /**
- * @author JTraber
+ * The Class ServiceCtx represents the context of a service.
  * 
+ * @author JTraber
  */
-public class SC {
+public class ServiceCtx {
 
-	private static SC instance = new SC();
-	private Map<String, ServiceCtx> services;
-	private SubscribePublishQueue subPubQueue;
+	/** The service name. */
+	private String serviceName;
+	private IConnection conn = null;
 
-	private SC() {
-		services = new ConcurrentHashMap<String, ServiceCtx>();
-		subPubQueue = new SubscribePublishQueue();
-		// starts subscribe publish list
-		// TODO thread irgendwo wieder beenden. oder so
-		Thread subPubListThread = new Thread(subPubQueue);
-		subPubListThread.start();
+	private int subPubIndex = 0;
+
+	/**
+	 * Instantiates a new service context.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
+	public ServiceCtx(String serviceName, IConnection conn) {
+		super();
+		this.serviceName = serviceName;
+		this.conn = conn;
 	}
 
-	public static SC getInstance() {
-		return instance;
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return serviceName;
 	}
 
-	public void registerService(String serviceName, IConnection conn) {
-		// TODO achtung doppelte register??
-		ServiceCtx serviceCtx = new ServiceCtx(serviceName, conn);
-		services.put(serviceName, serviceCtx);
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
-	public ServiceCtx getService(String serviceName) {
-		return services.get(serviceName);
+	public IConnection getConn() {
+		return conn;
 	}
 
-	public Map<String, ServiceCtx> getServiceList() {
-		return services;
+	public void setConn(IConnection conn) {
+		this.conn = conn;
 	}
 
-	public SubscribePublishQueue getSubPubQueue() {
-		return subPubQueue;
+	public int getSubPubIndex() {
+		return subPubIndex;
+	}
+
+	public void setSubPubIndex(int subPubIndex) {
+		this.subPubIndex = subPubIndex;
 	}
 }

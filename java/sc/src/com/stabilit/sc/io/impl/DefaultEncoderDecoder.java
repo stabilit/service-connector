@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
-import com.stabilit.sc.msg.MessageFactory;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
