@@ -61,7 +61,6 @@ public final class ServerFactory {
 	
 	public IServer createTcpServer(String serviceName, Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		appCtx.setIdentifier("TcpRRServer");
 		appCtx.setProps(props);
 		return new TcpServer(serviceName, scListenerClass, appCtx);
 	}

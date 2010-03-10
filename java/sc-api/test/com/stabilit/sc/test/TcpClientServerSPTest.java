@@ -35,15 +35,16 @@ public class TcpClientServerSPTest {
 		SCKernel scKernel = new SCKernel();
 		Thread scKernelTh = new Thread(scKernel);
 		scKernelTh.start();
+			
+		ExampleTcpSPClient tcpSPClient = new ExampleTcpSPClient();
+		Thread tcpSPClientTh = new Thread(tcpSPClient);
+		tcpSPClientTh.start();
 
 		ExampleTcpSPServer tcpSPServer = new ExampleTcpSPServer();
 		Thread tcpSPServerTh = new Thread(tcpSPServer);
 		tcpSPServerTh.start();
-
-		 ExampleTcpSPClient tcpSPClient = new ExampleTcpSPClient();
-		 Thread tcpSPClientTh = new Thread(tcpSPClient);
-		 tcpSPClientTh.start();
-		 
+		
+		
 		try {
 			Thread.currentThread().join();
 		} catch (InterruptedException e) {

@@ -55,7 +55,7 @@ public abstract class Server implements IServer {
 
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
 		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
 		conn.releaseConnection();
 	}
 

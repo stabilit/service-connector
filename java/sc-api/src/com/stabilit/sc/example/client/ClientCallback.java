@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.example.client;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.ClientListener;
 import com.stabilit.sc.pool.IPoolConnection;
@@ -31,12 +33,14 @@ import com.stabilit.sc.pool.IPoolConnection;
 public class ClientCallback extends ClientListener {
 
 	int count = 0;
-	
+	Logger log = Logger.getLogger(ClientCallback.class);
+
 	@Override
 	public void messageReceived(IPoolConnection conn, SCMP scmp) throws Exception {
 		super.messageReceived(conn, scmp);
-		if(count < 15) {
-			System.out.println("Message: " + scmp.getBody());
+
+		if (scmp.getMessageId().equals("asyncCall")) {
+			log.debug("Messages asyncCall confirmed " + scmp.getMessageId() + " on TcpSPServerListener " + count);
 			count++;
 		}
 	}

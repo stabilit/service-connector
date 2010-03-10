@@ -66,7 +66,7 @@ public abstract class Service implements IService {
 	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
 		log.debug("Service connects to SC.");
 		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, clientListenerClass);
 		conn.releaseConnection();
 	}
 

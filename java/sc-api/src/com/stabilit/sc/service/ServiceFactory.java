@@ -61,7 +61,6 @@ public final class ServiceFactory {
 	public IRequestResponseService createRequestResponseService(String serviceName,
 			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		appCtx.setIdentifier("createRequestResponseService");
 		appCtx.setProps(props);
 		return new RequestResponseService(serviceName, scListenerClass, appCtx);
 	}
@@ -81,7 +80,6 @@ public final class ServiceFactory {
 	public ISubscribePublishService createSubscribePublishService(String serviceName,
 			Class<? extends IClientListener> scListenerClass, Properties props) {
 		ClientApplicationContext appCtx = new ClientApplicationContext();
-		appCtx.setIdentifier("createSubscribePublishService");
 		appCtx.setProps(props);
 		return new SubscribePublishService(serviceName, scListenerClass, appCtx);
 	}

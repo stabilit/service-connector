@@ -47,7 +47,7 @@ class HttpServer extends Server{
 
 	public void publish(SCMP scmp, int timeout, boolean compression) {
 	
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
 	
 		try {
 			conn.send(scmp);
@@ -59,7 +59,7 @@ class HttpServer extends Server{
 	}
 
 	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {		
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
 		//Register handshake
 		SCMP scmpRequest = new SCMP();
 		IMessage regMsg = new RegisterMessage();

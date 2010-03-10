@@ -46,7 +46,7 @@ class RequestResponseService extends Service implements IRequestResponseService 
 	@Override
 	public void send(SCMP scmp, int timeout, boolean compression) {
 		log.debug("RequestResponseService sends to SC.");
-		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, clientListenerClass);
 	
 		try {
 			conn.send(scmp);
@@ -60,7 +60,7 @@ class RequestResponseService extends Service implements IRequestResponseService 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp, int timeout, boolean compression) {
 		log.debug("RequestResponseService sendAndReceive to/from SC.");
-		IPoolConnection conn = pool.borrowConnection(ctx, clientListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, clientListenerClass);
 		SCMP ret = null;
 		try {
 			ret = conn.sendAndReceive(scmp);

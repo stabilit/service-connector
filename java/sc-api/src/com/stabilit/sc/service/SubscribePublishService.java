@@ -18,6 +18,7 @@ package com.stabilit.sc.service;
 
 import com.stabilit.sc.app.client.ISubscribe;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.exception.ServiceException;
 import com.stabilit.sc.msg.IClientListener;
 
 /**
@@ -26,6 +27,11 @@ import com.stabilit.sc.msg.IClientListener;
  * @author JTraber
  */
 class SubscribePublishService extends Service implements ISubscribePublishService {
+
+	// connection which handles subscription process, only used for making unsubscribe
+	// never use it in other cases! Other operations should be done over new connections from ConnnectionPools
+	private ISubscribe conn;
+	private String subscribeId;
 
 	/**
 	 * Instantiates a new subscribePublish service.
@@ -45,21 +51,33 @@ class SubscribePublishService extends Service implements ISubscribePublishServic
 	/** {@inheritDoc} */
 	@Override
 	public void subscribe(SubscriptionMask subscriptionMask, int timeout) {
-		ISubscribe conn = (ISubscribe) pool.borrowConnection(ctx, this.clientListenerClass);
+		conn = (ISubscribe) pool.lendConnection(ctx, this.clientListenerClass);
 		try {
-			conn.subscribe();
+			subscribeId = conn.subscribe();
+			conn.releaseConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws ServiceException */
 	@Override
-	public void unsubscribe(int timeout) {
+	public void unsubscribe(int timeout) throws ServiceException {
+		if (conn == null)
+			throw new ServiceException("Unsubscribe Service impossible first subscribe is necessary.");
+		
+		conn.stopSubscriptionActionOnConnection();
+		ISubscribe conn = (ISubscribe) pool.lendConnection(ctx, this.clientListenerClass);
+		conn.unsubscribe(subscribeId);
+		conn.releaseConnection();
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws ServiceException */
 	@Override
-	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) {
+	public void changeSubscription(SubscriptionMask newSubscriptionMask, int timeout) throws ServiceException {
+		if (conn == null)
+			throw new ServiceException("Change Subscription impossible first subscribe is necessary.");
 	}
 }

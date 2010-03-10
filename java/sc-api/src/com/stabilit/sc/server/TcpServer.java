@@ -56,7 +56,7 @@ class TcpServer extends Server {
 	@Override
 	public void publish(SCMP scmp, int timeout, boolean compression) {
 
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
 
 		try {
 			conn.send(scmp);
@@ -68,7 +68,7 @@ class TcpServer extends Server {
 
 	@Override
 	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {
-		IPoolConnection conn = pool.borrowConnection(ctx, scListenerClass);
+		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
 		// Register handshake
 		SCMP scmpRequest = new SCMP();
 		RegisterMessage regMsg = new RegisterMessage();
