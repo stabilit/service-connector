@@ -9,22 +9,20 @@ import com.stabilit.sc.msg.IClientListener;
 import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.msg.impl.SubscribeMessage;
 
-class PoolConnection implements IPoolConnection, ISubscribe {
+abstract class PoolConnection implements IPoolConnection, ISubscribe {
 
-	private boolean available;
+	private boolean lendable;
+	private boolean subscript;
 
 	private IClientConnection con;
-	//TODO This callback is not right implemented, attention!
-	private IClientListener callback;
 
 	public PoolConnection(IClientConnection con, Class<? extends IClientListener> scListener) {
 		this.con = con;
 		con.setDecorator(this);
-		this.available = true;
+		this.lendable = true;
 		try {
 			con.connect(scListener);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -40,22 +38,23 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	}
 
 	@Override
-	public void releaseConnection() {
-		this.available = true;
-	}
-
-	@Override
 	public String getSessionId() {
 		return this.con.getSessionId();
 	}
 
 	@Override
-	public boolean isAvailable() {
-		return this.available;
+	public boolean isLendable() {
+		return this.lendable;
 	}
 
-	public void setAvailable(boolean available) {
-		this.available = available;
+	@Override
+	public void lend() {
+		this.lendable = false;
+	}
+
+	@Override
+	public void releaseConnection() {
+		this.lendable = true;
 	}
 
 	// Wann aufrufen eventuell im constructor
@@ -65,7 +64,6 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 
 	@Override
 	public void send(SCMP scmp) throws Exception {
-		this.available = false;
 		this.con.send(scmp);
 	}
 
@@ -76,18 +74,13 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 
 	@Override
 	public String subscribe() throws Exception {
+		this.subscript = true;
 		SCMP request = new SCMP();
 		SubscribeMessage subscribeMessage = new SubscribeMessage();
 		request.setBody(subscribeMessage);
 		SCMP result = con.sendAndReceive(request);
 		String subscribeId = result.getSubscribeId();
-		//callback.setSubscribeId(subscribeId);
-		//this.callback = callback;
-		// if (con instanceof IConnectionCallback) {
-		// ((IConnectionCallback) con).setCallback(callback);
-		// } else {
-		// throw new UnsupportedOperationException();
-		// }
+
 		// send initial async call
 		SCMP req = new SCMP();
 		req.setSubsribeId(subscribeId);
@@ -99,10 +92,21 @@ class PoolConnection implements IPoolConnection, ISubscribe {
 	}
 
 	@Override
-	public void unsubscribe(String subscribeId) throws Exception {
-		if (this.callback != null) {
-			this.callback.release();
-		}
+	public void unsubscribe(String subscribeId) {
+		// TODO unsubscribe client!
 		return;
 	}
+
+	@Override
+	public boolean continueSubscriptionOnConnection() {
+		return subscript;
+	}
+
+	@Override
+	public void stopSubscriptionActionOnConnection() {
+		this.subscript = false;
+	}
+
+	@Override
+	public abstract boolean isWritable();
 }

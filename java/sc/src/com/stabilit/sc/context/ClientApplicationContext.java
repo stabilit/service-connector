@@ -7,7 +7,6 @@ import java.net.URL;
 import com.stabilit.sc.util.ConsoleUtil;
 
 public class ClientApplicationContext extends ApplicationContext {
-	private String identifier;
 
 	public ClientApplicationContext() {
 	}
@@ -21,14 +20,6 @@ public class ClientApplicationContext extends ApplicationContext {
 			url = null;
 		}
 		return url;
-	}
-
-	public void setIdentifier(String ident) {
-		this.identifier = ident;
-	}
-
-	public String getIdentifier() {
-		return identifier;
 	}
 
 	public String getConnection() {

@@ -18,7 +18,7 @@ public class EchoClientApplication extends ClientApplication {
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
 		ConnectionPool pool = ConnectionPool.getInstance();		
-		IPoolConnection con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
+		IPoolConnection con = pool.lendConnection(applicationContext, DefaultEventListener.class);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}

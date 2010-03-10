@@ -1,7 +1,6 @@
 package com.stabilit.sc.app.client.echo;
 
 import com.stabilit.sc.app.client.ClientApplication;
-import com.stabilit.sc.app.client.IClientConnection;
 import com.stabilit.sc.context.ClientApplicationContext;
 import com.stabilit.sc.exception.ServerException;
 import com.stabilit.sc.io.SCMP;
@@ -19,7 +18,7 @@ public class EchoClientApplicationKeepAlive extends ClientApplication {
 	public void run() throws Exception {
 		ClientApplicationContext applicationContext = (ClientApplicationContext) this.getContext();
 		ConnectionPool pool = ConnectionPool.getInstance();		
-		IPoolConnection con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
+		IPoolConnection con = pool.lendConnection(applicationContext, DefaultEventListener.class);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}

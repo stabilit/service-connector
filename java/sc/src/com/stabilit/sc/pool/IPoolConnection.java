@@ -27,10 +27,6 @@ import com.stabilit.sc.io.SCMP;
  */
 public interface IPoolConnection {
 
-	void releaseConnection();
-
-	boolean isAvailable();
-
 	void send(SCMP scmp) throws Exception;
 
 	SCMP sendAndReceive(SCMP scmp) throws Exception;
@@ -38,4 +34,14 @@ public interface IPoolConnection {
 	void destroy() throws Exception;
 
 	String getSessionId();
+	
+	void releaseConnection();
+
+	boolean isLendable();
+
+	void lend();
+
+	boolean isWritable();
+
+	void setWritable(boolean writable);
 }

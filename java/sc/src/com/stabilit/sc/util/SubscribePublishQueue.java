@@ -32,6 +32,9 @@ public class SubscribePublishQueue implements Runnable {
 		int index = 0;
 		if (subscribeMap.containsKey(uuid)) {
 			index = subscribeMap.get(uuid);
+		} else {
+			//client made unsubscribe
+			
 		}
 
 		if (messages.size() <= index) {

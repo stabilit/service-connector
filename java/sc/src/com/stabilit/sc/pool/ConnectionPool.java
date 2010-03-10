@@ -36,17 +36,18 @@ public class ConnectionPool {
 			instance = new ConnectionPool(numOfConnections);
 	}
 
-	public synchronized IPoolConnection borrowConnection(ClientApplicationContext ctx,
+	public synchronized IPoolConnection lendConnection(ClientApplicationContext ctx,
 			Class<? extends IClientListener> scListener) {
 
-		List<IPoolConnection> connectionList = connectionMap.get(ctx.getIdentifier());
+		// TODO scListener für connectionMap holen sinnvoll?
+		List<IPoolConnection> connectionList = connectionMap.get(scListener.getName());
 		PoolConnection poolCon = null;
 		IClientConnection con = null;
 		URL url = null;
 
 		if (connectionList == null) {
 			log.debug(ctx.getConnection() + ": borrows first connection from Pool");
-			
+
 			con = ClientConnectionFactory.newInstance(ctx.getConnection());
 			if (con == null) {
 				return null;
@@ -54,22 +55,25 @@ public class ConnectionPool {
 			url = ctx.getURL();
 			con.setEndpoint(url);
 			connectionList = new ArrayList<IPoolConnection>();
-			connectionMap.put(ctx.getIdentifier(), connectionList);
+			connectionMap.put(scListener.getName(), connectionList);
 
-			if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
-				poolCon = new BlockingPoolConnection(con, scListener);
-			} else {
-				poolCon = new PoolConnection(con, scListener);
-			}
+			// if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
+			// poolCon = new BlockingPoolConnection(con, scListener);
+			// } else {
+			// poolCon = new PoolConnection(con, scListener);
+			// }
+
+			poolCon = new BlockingPoolConnection(con, scListener);
 			connectionList.add(poolCon);
-			poolCon.setAvailable(false);
+			poolCon.lend();
 
 		} else {
-			log.debug(ctx.getConnection() + ": borrows connection from Pool, connection in Pool: " + connectionList.size());
+			log.debug(ctx.getConnection() + ": borrows connection from Pool, connection in Pool: "
+					+ connectionList.size());
 			// get first available connection
 			for (IPoolConnection conn : connectionList) {
-				if (conn.isAvailable()) {
-					((PoolConnection) conn).setAvailable(false);
+				if (conn.isLendable() && conn.isWritable()) {
+					((PoolConnection) conn).lend();
 					return conn;
 				}
 			}
@@ -78,11 +82,13 @@ public class ConnectionPool {
 				url = ctx.getURL();
 				con = ClientConnectionFactory.newInstance(ctx.getConnection());
 				con.setEndpoint(url);
-				if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
-					poolCon = new BlockingPoolConnection(con, scListener);
-				} else {
-					poolCon = new PoolConnection(con, scListener);
-				}
+				// if (ctx.getAttribute(CLIENT_PROT).equals(HTTP)) {
+				// poolCon = new BlockingPoolConnection(con, scListener);
+				// } else {
+				// poolCon = new PoolConnection(con, scListener);
+				// }
+
+				poolCon = new BlockingPoolConnection(con, scListener);
 				connectionList.add(poolCon);
 			}
 		}

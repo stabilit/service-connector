@@ -7,21 +7,27 @@ import com.stabilit.sc.msg.IClientListener;
 
 public class BlockingPoolConnection extends PoolConnection {
 
+	private boolean writable;
+
 	public BlockingPoolConnection(IClientConnection con, Class<? extends IClientListener> scListener) {
 		super(con, scListener);
+		writable = true;
 	}
-
-	private boolean blocked;
 
 	@Override
 	public void send(SCMP scmp) throws Exception {
-		if (blocked)
+		if (writable)
 			new ConnectionException("Connection blocked, not possible to complete send.");
-		blocked = true;
+		writable = true;
 		super.send(scmp);
 	}
 
-	public void release() {
-		blocked = false;
+	public boolean isWritable() {
+		return this.writable;
+	}
+
+	@Override
+	public void setWritable(boolean writable) {
+		this.writable = writable;
 	}
 }

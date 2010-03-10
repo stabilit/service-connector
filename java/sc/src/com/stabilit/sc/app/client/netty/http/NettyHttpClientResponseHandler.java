@@ -30,10 +30,12 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.app.server.NettyTcpResponse;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IClientListener;
+import com.stabilit.sc.msg.impl.AsyncCallMessage;
 import com.stabilit.sc.pool.IPoolConnection;
 
 /**
@@ -60,7 +62,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 		super.exceptionCaught(ctx, e);
 	}
 
-	public HttpResponse getMessageSync() {
+	HttpResponse getMessageSync() {
 		sync = true;
 		HttpResponse responseMessage;
 		boolean interrupted = false;
@@ -84,7 +86,6 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 
-		//TODO conn setAvailable oder sowas? weider freigeben! eventuell über HTTPConnectionHandler
 		if (sync) {
 			answer.offer((HttpResponse) e.getMessage());
 		} else {
@@ -94,10 +95,23 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 			SCMP scmp = new SCMP();
 			encoderDecoder.decode(bais, scmp);
 			callback.messageReceived(conn, scmp);
-		}
+		} 
+//TODO like tcp
+//		if(ret.getMessageId().equals("asyncCall")) {
+//			NettyTcpResponse response = new NettyTcpResponse(e);
+//			
+//			SCMP req = new SCMP();
+//			req.setMessageId(AsyncCallMessage.ID);
+//			AsyncCallMessage async = new AsyncCallMessage();
+//			req.setBody(async);
+//			req.setSubsribeId(ret.getSubscribeId());
+//			response.setSCMP(req);
+//			ctx.getChannel().write(response.getBuffer());
+//		} else {
+//			conn.setWritable(true);
+//		}
 		// TODO Keep alives müssen hier ausgesondert werden! bzw. acknowledged! oder eventuell ein handler
 		// davor
-		// TODO subscribe auch hier handeln ? ? siehe NettyHttpClientResponseHandler_old
 	}
 
 	public IClientListener getCallback() {

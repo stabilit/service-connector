@@ -76,7 +76,6 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 
 	public ChannelPipeline getPipeline() throws Exception {
 		IClientListener scListener = scListenerClass.newInstance();
-		scListener.setConnection(conn);
 
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();

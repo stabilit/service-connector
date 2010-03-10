@@ -22,7 +22,7 @@ public class AsyncDemoClientApplication extends ClientApplication {
 		
 		ConnectionPool pool = ConnectionPool.getInstance();
 		
-		con = pool.borrowConnection(applicationContext, DefaultEventListener.class);
+		con = pool.lendConnection(applicationContext, DefaultEventListener.class);
 		if (con == null) {
 			throw new ServerException("no client available");
 		}

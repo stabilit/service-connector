@@ -34,10 +34,18 @@ public class AsyncCallCommand extends Command {
 			}
 			String subscribeId = scmp.getSubscribeId();
 			String msg = SC.getInstance().getSubPubQueue().getNextMsg(subscribeId);
-			
-			SCMP result = new SCMP(msg);
+
+			SCMP result;
+			if (msg == null) {
+				result = new SCMP();
+			} else {
+				result = new SCMP(msg);
+			}
+
 			result.setMessageId(AsyncCallMessage.ID);
+			AsyncCallMessage asyncM = new AsyncCallMessage();
 			result.setSubsribeId(subscribeId);
+			result.setBody(asyncM);
 			response.setSCMP(result);
 		} catch (CommandException e) {
 			throw e;

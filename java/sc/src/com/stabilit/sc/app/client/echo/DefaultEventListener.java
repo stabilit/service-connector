@@ -14,6 +14,5 @@ public class DefaultEventListener extends ClientListener {
 		System.out.println("DemoEventListener.messageReceived()");
 		Object obj = scmp.getBody();
 		System.out.println(obj);
-		this.sendAsyncRequest();
 	}
 }

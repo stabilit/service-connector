@@ -57,7 +57,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		this.conn = conn;
 	}
 
-	public ChannelBuffer getMessageSync() {
+	ChannelBuffer getMessageSync() {
 		sync = true;
 		ChannelBuffer responseMessage;
 		boolean interrupted = false;
