@@ -16,4 +16,8 @@ public class ConsoleUtil {
 		}
 		return null;
 	}
+
+	public static String getApplicationKey(String[] args) {
+		return ConsoleUtil.getArg(args, "-app");
+	}
 }

@@ -37,7 +37,4 @@ public class ServerApplicationFactory {
 		return serverMap.keySet().toArray();
 	}
 	
-	public static String getApplicationKey(String[]args) {
-		return ConsoleUtil.getArg(args, "-app");
-	}
 }

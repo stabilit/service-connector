@@ -27,7 +27,7 @@ abstract class PoolConnection implements IPoolConnection, ISubscribe {
 		}
 	}
 
-	// TODOD wann muss dies geschehen!
+	// TODO wann muss dies geschehen!
 	public void closeSession() throws IOException {
 		this.con.deleteSession();
 	}

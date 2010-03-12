@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.sc.app.IApplication;
 import com.stabilit.sc.context.ServerApplicationContext;
 import com.stabilit.sc.exception.ServerException;
+import com.stabilit.sc.util.ConsoleUtil;
 
 public class Server implements Runnable {
 
@@ -80,7 +81,7 @@ public class Server implements Runnable {
 			printUsageOld();
 			System.exit(1);
 		}
-		key = ServerApplicationFactory.getApplicationKey(args);
+		key = ConsoleUtil.getApplicationKey(args);
 		IApplication application = ServerApplicationFactory.newInstance(key);
 		if (application == null) {
 			System.err.println("no application found for given key = " + key);

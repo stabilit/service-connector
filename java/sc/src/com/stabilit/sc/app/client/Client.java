@@ -1,8 +1,8 @@
 package com.stabilit.sc.app.client;
 
 import com.stabilit.sc.app.IApplication;
-import com.stabilit.sc.app.server.ServerApplicationFactory;
 import com.stabilit.sc.context.ClientApplicationContext;
+import com.stabilit.sc.util.ConsoleUtil;
 
 public class Client implements Runnable {
 	
@@ -47,7 +47,7 @@ public class Client implements Runnable {
 			printUsage();
 			System.exit(1);
 		}
-		String key = ServerApplicationFactory.getApplicationKey(args);
+		String key = ConsoleUtil.getApplicationKey(args);
 		IApplication application = ClientApplicationFactory.newInstance(key);
 		if (application == null) {
 			System.err.println("no application found for given key = " + key);
