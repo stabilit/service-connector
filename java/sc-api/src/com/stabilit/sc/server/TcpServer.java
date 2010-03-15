@@ -19,8 +19,6 @@
  */
 package com.stabilit.sc.server;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.server.ITcpServerConnection;
 import com.stabilit.sc.client.IClientConnection;
@@ -48,8 +46,6 @@ class TcpServer extends Server {
 		con = (ITcpServerConnection) connectionCtx.create();
 	}
 
-	Logger log = Logger.getLogger(TcpServer.class);
-
 	@Override
 	public void publish(SCMP scmp, int timeout, boolean compression) {
 	}
@@ -60,12 +56,13 @@ class TcpServer extends Server {
 		tcpServer.start();
 		IClientConnection clientCon = ClientConnectionFactory.newInstance("nettyRegister.tcp");
 		try {
-			clientCon.connect(connectionCtx.getSCHost(), connectionCtx.getSCPort());
+			clientCon.connect(connectionCtx.getTarHost(), connectionCtx.getTarPort());
 
 			SCMP scmp = new SCMP();
 			scmp.setMessageId("register");
 			IMessage msg = new RegisterMessage();
-			msg.setAttribute("test", "tester");
+			msg.setAttribute("host", connectionCtx.getSrcHost());
+			msg.setAttribute("port", connectionCtx.getSrcPort());
 			scmp.setHeader("serviceName", "service A");
 			scmp.setBody(msg);
 

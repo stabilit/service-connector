@@ -50,7 +50,7 @@ public final class ServerFactory {
 	}
 	
 	public IServer createTcpServer(String serviceName) {
-		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 81, "localhost", 9000, "netty.tcp");
+		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 9000, "localhost", 7777, "nettyAPI.tcp");
 		return new TcpServer(serviceName, serverCtx);
 	}
 }
