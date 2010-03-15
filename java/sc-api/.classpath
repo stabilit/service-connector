@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-main"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-client-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

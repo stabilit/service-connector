@@ -13,44 +13,34 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
+*/
+/**
+ * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.net.server.netty.tcp;
 
-import com.stabilit.sc.context.ServerConnectionContext;
+import com.stabilit.sc.app.server.ITcpServerConnection;
 
 /**
- * The ServiceFactory creates Services for clients.
- * 
  * @author JTraber
+ *
  */
-public final class ServerFactory {
+public class NettyTcpServerConnectionThread implements Runnable{
 
-	/** The singleton instance. */
-	private static ServerFactory factory = new ServerFactory();
-
-	/**
-	 * Instantiates a new service factory.
-	 */
-	private ServerFactory() {
-	}
-
-	/**
-	 * Gets the single instance of ServiceFactory.
-	 * 
-	 * @return single instance of ServiceFactory
-	 */
-	public static ServerFactory getInstance() {
-		return factory;
-	}
-
-	public IServer createHttpServer(String serviceName) {
-		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 8001, "localhost", 9000, "netty.http");
-
-		return new HttpServer(serviceName, serverCtx);
-	}
+	private ITcpServerConnection tcpServer;
 	
-	public IServer createTcpServer(String serviceName) {
-		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 81, "localhost", 9000, "netty.tcp");
-		return new TcpServer(serviceName, serverCtx);
+	public NettyTcpServerConnectionThread(ITcpServerConnection con) {
+		super();
+		this.tcpServer = con;
 	}
+
+	@Override
+	public void run() {
+		try {
+			tcpServer.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

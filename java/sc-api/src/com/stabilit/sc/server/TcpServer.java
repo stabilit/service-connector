@@ -21,9 +21,15 @@ package com.stabilit.sc.server;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.app.server.ITcpServerConnection;
+import com.stabilit.sc.client.IClientConnection;
 import com.stabilit.sc.context.ServerConnectionContext;
+import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
+import com.stabilit.sc.msg.impl.RegisterMessage;
+import com.stabilit.sc.net.server.netty.tcp.NettyTcpServerConnectionThread;
 
 /**
  * @author JTraber
@@ -32,7 +38,7 @@ import com.stabilit.sc.io.SCMP;
 class TcpServer extends Server {
 
 	private ITcpServerConnection con;
-	
+
 	/**
 	 * @param serviceName
 	 * @param connectionCtx
@@ -44,16 +50,37 @@ class TcpServer extends Server {
 
 	Logger log = Logger.getLogger(TcpServer.class);
 
-
 	@Override
 	public void publish(SCMP scmp, int timeout, boolean compression) {
 	}
 
 	@Override
-	public void connect() {		
-		con.connect();
+	public void connect() {
+		Thread tcpServer = new Thread(new NettyTcpServerConnectionThread(con));
+		tcpServer.start();
+		IClientConnection clientCon = ClientConnectionFactory.newInstance("nettyRegister.tcp");
+		try {
+			clientCon.connect(connectionCtx.getSCHost(), connectionCtx.getSCPort());
+
+			SCMP scmp = new SCMP();
+			scmp.setMessageId("register");
+			IMessage msg = new RegisterMessage();
+			msg.setAttribute("test", "tester");
+			scmp.setHeader("serviceName", "service A");
+			scmp.setBody(msg);
+
+			SCMP scmpRes = clientCon.sendAndReceive(scmp);
+			
+			if (scmpRes.getMessageId().equals("register"))
+				System.out.println("server registered!");
+
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
 	public void run() throws Exception {
 		con.run();
