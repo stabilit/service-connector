@@ -21,14 +21,9 @@ package com.stabilit.sc.server;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.exception.ServiceException;
+import com.stabilit.sc.app.server.ITcpServerConnection;
+import com.stabilit.sc.context.ServerConnectionContext;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.IClientListener;
-import com.stabilit.sc.msg.impl.RegisterMessage;
-import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.service.ConnectionCtx;
 
 /**
  * @author JTraber
@@ -36,64 +31,31 @@ import com.stabilit.sc.service.ConnectionCtx;
  */
 class TcpServer extends Server {
 
-	Logger log = Logger.getLogger(TcpServer.class);
-
+	private ITcpServerConnection con;
+	
 	/**
 	 * @param serviceName
-	 * @param serviceHandler
-	 * @param ctx
+	 * @param connectionCtx
 	 */
-	protected TcpServer(String serviceName, Class<? extends IClientListener> serviceHandler,
-			ClientApplicationContext ctx) {
-		super(serviceName, serviceHandler, ctx);
+	protected TcpServer(String serviceName, ServerConnectionContext connectionCtx) {
+		super(serviceName, connectionCtx);
+		con = (ITcpServerConnection) connectionCtx.create();
 	}
 
-	@Override
-	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
-		super.connect(timeout, connectionCtx);
-	}
+	Logger log = Logger.getLogger(TcpServer.class);
+
 
 	@Override
 	public void publish(SCMP scmp, int timeout, boolean compression) {
-
-		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
-
-		try {
-			conn.send(scmp);
-			conn.releaseConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
-	public void registerServer(int readTimeout, int writeTimeout) throws ServiceException {
-		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
-		// Register handshake
-		SCMP scmpRequest = new SCMP();
-		RegisterMessage regMsg = new RegisterMessage();
-		scmpRequest.getHeader().put("serviceName", serviceName);
-		scmpRequest.setBody(regMsg);
-		try {
-			SCMP scmpResponse = conn.sendAndReceive(scmpRequest);
-			if (scmpResponse.getMessageId().equals("register")) {
-				log.info("TCPServer Register Handshake is sucessfully done!");
-			} else {
-				throw new Exception("Registering Server failed, unexpected Response received.");
-			}
-		} catch (Exception e) {
-			throw new ServiceException("Error occured when registering Service to SC.");
-		}
-		conn.releaseConnection();
+	public void connect() {		
+		con.connect();
 	}
-
+	
 	@Override
-	public void disconnect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void unregisterServer(int readTimeout, int writeTimeout) throws ServiceException {
-		// TODO do unregister server
+	public void run() throws Exception {
+		con.run();
 	}
 }

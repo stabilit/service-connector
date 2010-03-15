@@ -19,12 +19,7 @@
  */
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.exception.ScConnectionException;
-import com.stabilit.sc.msg.IClientListener;
-import com.stabilit.sc.pool.ConnectionPool;
-import com.stabilit.sc.pool.IPoolConnection;
-import com.stabilit.sc.service.ConnectionCtx;
+import com.stabilit.sc.context.ServerConnectionContext;
 
 /**
  * @author JTraber
@@ -32,31 +27,14 @@ import com.stabilit.sc.service.ConnectionCtx;
  */
 public abstract class Server implements IServer {
 
-	protected ConnectionPool pool;
-
-	/** The response handler. */
-	protected Class<? extends IClientListener> scListenerClass;
-
 	/** The connection context. */
-	private ConnectionCtx connectionCtx;
-
-	protected ClientApplicationContext ctx;
+	protected ServerConnectionContext connectionCtx;
 
 	protected String serviceName;
 
-	protected Server(String serviceName, Class<? extends IClientListener> serviceHandler,
-			ClientApplicationContext ctx) {
-		this.ctx = ctx;
-		this.serviceName = serviceName;
-		this.scListenerClass = serviceHandler;
-		ConnectionPool.init(1);
-		this.pool = ConnectionPool.getInstance();
-	}
-
-	public void connect(int timeout, ConnectionCtx connectionCtx) throws ScConnectionException {
+	protected Server(String serviceName, ServerConnectionContext connectionCtx) {
 		this.connectionCtx = connectionCtx;
-		IPoolConnection conn = pool.lendConnection(ctx, scListenerClass);
-		conn.releaseConnection();
+		this.serviceName = serviceName;
 	}
 
 	public String getServiceName() {

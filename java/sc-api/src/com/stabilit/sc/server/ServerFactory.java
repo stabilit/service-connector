@@ -16,10 +16,7 @@
  */
 package com.stabilit.sc.server;
 
-import java.util.Properties;
-
-import com.stabilit.sc.context.ClientApplicationContext;
-import com.stabilit.sc.msg.IClientListener;
+import com.stabilit.sc.context.ServerConnectionContext;
 
 /**
  * The ServiceFactory creates Services for clients.
@@ -46,22 +43,14 @@ public final class ServerFactory {
 		return factory;
 	}
 
-	public IServer createHttpServer(String serviceName,
-			Class<? extends IClientListener> scListenerClass, Properties props) {
-		ClientApplicationContext appCtx = new ClientApplicationContext();
-		appCtx.setProps(props);
-//		try {
-//			appCtx.setArgs(new String[] { "-app", "echo.client", "-con", "netty.http", "-prot", "http",
-//					"-url", "http://localhost:80" });
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		return new HttpServer(serviceName, scListenerClass, appCtx);
+	public IServer createHttpServer(String serviceName) {
+		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 8001, "netty.http");
+
+		return new HttpServer(serviceName, serverCtx);
 	}
 	
-	public IServer createTcpServer(String serviceName, Class<? extends IClientListener> scListenerClass, Properties props) {
-		ClientApplicationContext appCtx = new ClientApplicationContext();
-		appCtx.setProps(props);
-		return new TcpServer(serviceName, scListenerClass, appCtx);
+	public IServer createTcpServer(String serviceName) {
+		ServerConnectionContext serverCtx = new ServerConnectionContext("localhost", 8000, "netty.tcp");
+		return new TcpServer(serviceName, serverCtx);
 	}
 }
