@@ -26,6 +26,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
@@ -147,5 +148,14 @@ public class NettyHttpClientConnection implements IClientConnection {
 
 	@Override
 	public void setAvailable(boolean available) {
+	}
+
+	@Override
+	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {		
+	}
+
+	@Override
+	public void setChannel(Channel channel) {
+		// TODO Auto-generated method stub		
 	}
 }

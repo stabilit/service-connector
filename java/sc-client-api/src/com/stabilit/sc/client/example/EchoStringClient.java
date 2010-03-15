@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import com.stabilit.sc.client.IClientConnection;
 import com.stabilit.sc.ctx.ClientConnectionContext;
 import com.stabilit.sc.ctx.IClientConnectionContext;
+import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 
 /**
@@ -32,10 +33,10 @@ import com.stabilit.sc.io.SCMP;
  */
 public class EchoStringClient {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ConnectionException {
 		IClientConnectionContext conCtx = null;
 		try {
-			conCtx = new ClientConnectionContext("localhost", 81, "netty.tcp");
+			conCtx = new ClientConnectionContext("localhost", 7777, "netty.tcp");
 			conCtx.setPoolSize(4); // optional
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
@@ -43,23 +44,32 @@ public class EchoStringClient {
 
 		IClientConnection con = null;
 		int index = 0;
-		while (true) {
+		int numberofMsgToSend = 1000;
+		// Thread.sleep(2000);
+		con = conCtx.connect();
+		long startTime = System.currentTimeMillis();
+		while (index < numberofMsgToSend) {
 			try {
-				// Thread.sleep(2000);
-				con = conCtx.connect();
+				
 				// TODO con.createSession();
 				SCMP request = new SCMP();
 				request.setMessageId("roundTrip");
-				String msg = "hello " + ++index;
+				request.setHeader("serviceName", "service A");
+				String msg = "hello world " + ++index;
+				
 				request.setBody(msg);
 				SCMP response = con.sendAndReceive(request);
 				String roundTrip = (String) response.getBody();
-				System.out.println(roundTrip + " session = " + con.getSessionId());
-				// TODO con.deleteSession();
-				con.disconnect();
+			//	System.out.println(roundTrip + " session = " + con.getSessionId());
+				
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}	
 		}
+		long neededTime = System.currentTimeMillis() - startTime;
+		float numberOfMsg = numberofMsgToSend / (neededTime/1000f);
+		System.out.println(numberOfMsg + " msg's per second!");
+		// TODO con.deleteSession();
+		con.disconnect();
 	}
 }

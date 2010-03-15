@@ -10,31 +10,26 @@ import com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection;
 
 public class ClientConnectionFactory {
 
-	private static Map<String, IClientConnection> clientMap = new HashMap<String, IClientConnection>();
+	private static Map<String, Class<? extends IClientConnection>> clientMap = new HashMap<String, Class<? extends IClientConnection>>();
 
 	static {
-		// jboss netty http client
-		IClientConnection nettyHttpClient = new NettyHttpClientConnection(); 
-		clientMap.put(NettyHttpClientConnection.class.getName(), nettyHttpClient);
-		clientMap.put("netty.http", nettyHttpClient);
-		
-		// jboss netty tcp client
-		IClientConnection nettyTCPConnection = new NettyTcpClientConnection(); 
-		clientMap.put(NettyTcpClientConnection.class.getName(), nettyTCPConnection);
-		clientMap.put("netty.tcp", nettyTCPConnection);
-		
-		// jboss netty http client
-		IClientConnection nettyRegister = new NettyRegisterTcpClientConnection(); 
-		clientMap.put(NettyRegisterTcpClientConnection.class.getName(), nettyRegister);
-		clientMap.put("nettyRegister.tcp", nettyRegister);
-	}
-	
-	public static IClientConnection newInstance() {
-		return newInstance("default");
+		clientMap.put("netty.http", NettyHttpClientConnection.class);
+
+		clientMap.put("netty.tcp", NettyTcpClientConnection.class);
+
+		clientMap.put("nettyRegister.tcp", NettyRegisterTcpClientConnection.class);
 	}
 
 	public static IClientConnection newInstance(String key) {
-		IClientConnection client = clientMap.get(key);
+		IClientConnection client = null;
+		//TODO correct exception handling
+		try {
+			client = clientMap.get(key).newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		return client;
 	}
 

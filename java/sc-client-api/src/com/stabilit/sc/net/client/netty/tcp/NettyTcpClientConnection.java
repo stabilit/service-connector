@@ -25,6 +25,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
@@ -76,6 +77,31 @@ public class NettyTcpClientConnection implements IClientConnection {
 	}
 
 	@Override
+	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {
+		// Configure the client.
+		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
+				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+
+		// Set up the event pipeline factory.
+		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory());
+
+		// Start the connection attempt.
+		try {
+			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+
+			future.addListener(listener);
+
+		} catch (ChannelPipelineException e) {
+			throw new ConnectionException("Connection could not be established.", e);
+		}
+	}
+
+	@Override
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
+
+	@Override
 	public void disconnect() {
 		// Wait for the server to close the connection.
 		this.channel.disconnect().awaitUninterruptibly();
@@ -109,8 +135,6 @@ public class NettyTcpClientConnection implements IClientConnection {
 		chBuffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(chBuffer);
 
-		future.awaitUninterruptibly();
-
 		NettyTcpClientResponseHandler handler = channel.getPipeline()
 				.get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
@@ -126,7 +150,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public boolean isAvailable() {
 		return false;

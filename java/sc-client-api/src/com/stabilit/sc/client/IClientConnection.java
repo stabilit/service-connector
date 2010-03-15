@@ -19,6 +19,9 @@
  */
 package com.stabilit.sc.client;
 
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFutureListener;
+
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 
@@ -45,4 +48,8 @@ public interface IClientConnection extends IConnection {
 	public void connect(String host, int port) throws ConnectionException;
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+
+	void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException;
+
+	void setChannel(Channel channel);
 }
