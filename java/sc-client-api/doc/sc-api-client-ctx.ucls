@@ -1,0 +1,207 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.app.IApplication" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/app/IApplication.java" binary="false">    
+    <position x="813" y="72" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.app.Application" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/app/Application.java" binary="false">    
+    <position x="572" y="77" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.context.ClientApplicationContext" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/context/ClientApplicationContext.java" 
+    binary="false">    
+    <position x="182" y="497" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.IApplicationContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/IApplicationContext.java" binary="false">    
+    <position x="177" y="78" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.ApplicationContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/ApplicationContext.java" binary="false">    
+    <position x="179" y="275" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.IContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/IContext.java" binary="false">    
+    <position x="505" y="258" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.RequestContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/RequestContext.java" binary="false">    
+    <position x="743" y="581" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.ISessionContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/ISessionContext.java" binary="false">    
+    <position x="509" y="381" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.SessionContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/SessionContext.java" binary="false">    
+    <position x="509" y="547" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.SCMPSessionContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/SCMPSessionContext.java" binary="false">    
+    <position x="507" y="741" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.io.IRequest" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false">    
+    <position x="725" y="167" width="170" height="115"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpRequest" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpRequest.java" 
+    binary="false">    
+    <position x="1007" y="437" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.ctx.IRequestContext" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/ctx/IRequestContext.java" binary="false">    
+    <position x="740" y="437" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.app.Application" 
+      file="/sc-common/src/com/stabilit/sc/app/Application.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.app.IApplication" 
+      file="/sc-common/src/com/stabilit/sc/app/IApplication.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpRequest" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpRequest.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IRequest" 
+      file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false"/>  
+  </realization>  
+  <generalization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.IRequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IRequestContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IContext.java" binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpRequest" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpRequest.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.RequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/RequestContext.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.IApplicationContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IApplicationContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IContext.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.context.ClientApplicationContext" 
+      file="/sc-client-api/src/com/stabilit/sc/context/ClientApplicationContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.ApplicationContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/ApplicationContext.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.ISessionContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/ISessionContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IContext.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="sc-common" name="com.stabilit.sc.app.Application" 
+      file="/sc-common/src/com/stabilit/sc/app/Application.java" binary="false" navigable="false">      
+      <attribute name="applicationContext"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IApplicationContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IApplicationContext.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.SCMPSessionContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/SCMPSessionContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.SessionContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/SessionContext.java" binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.IRequest" 
+      file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IRequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IRequestContext.java" binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.RequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/RequestContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IRequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IRequestContext.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.SessionContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/SessionContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.ISessionContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/ISessionContext.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.ctx.ApplicationContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/ApplicationContext.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IApplicationContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IApplicationContext.java" binary="false"/>  
+  </realization>  
+  <association>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpRequest" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpRequest.java" binary="false" 
+      navigable="false">      
+      <attribute name="requestContext"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="sc-common" name="com.stabilit.sc.ctx.IRequestContext" 
+      file="/sc-common/src/com/stabilit/sc/ctx/IRequestContext.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

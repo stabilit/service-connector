@@ -1,0 +1,41 @@
+package com.stabilit.sc.app.client;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.stabilit.sc.client.IClientConnection;
+import com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection;
+import com.stabilit.sc.net.client.netty.tcp.NettyRegisterTcpClientConnection;
+import com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection;
+
+public class ClientConnectionFactory {
+
+	private static Map<String, IClientConnection> clientMap = new HashMap<String, IClientConnection>();
+
+	static {
+		// jboss netty http client
+		IClientConnection nettyHttpClient = new NettyHttpClientConnection(); 
+		clientMap.put(NettyHttpClientConnection.class.getName(), nettyHttpClient);
+		clientMap.put("netty.http", nettyHttpClient);
+		
+		// jboss netty tcp client
+		IClientConnection nettyTCPConnection = new NettyTcpClientConnection(); 
+		clientMap.put(NettyTcpClientConnection.class.getName(), nettyTCPConnection);
+		clientMap.put("netty.tcp", nettyTCPConnection);
+		
+		// jboss netty http client
+		IClientConnection nettyRegister = new NettyRegisterTcpClientConnection(); 
+		clientMap.put(NettyRegisterTcpClientConnection.class.getName(), nettyRegister);
+		clientMap.put("nettyRegister.tcp", nettyRegister);
+	}
+	
+	public static IClientConnection newInstance() {
+		return newInstance("default");
+	}
+
+	public static IClientConnection newInstance(String key) {
+		IClientConnection client = clientMap.get(key);
+		return client;
+	}
+
+}

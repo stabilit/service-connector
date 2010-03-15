@@ -1,0 +1,117 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" 
+    binary="false">    
+    <position x="157" y="319" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.client.IConnection" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false">    
+    <position x="519" y="71" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.client.IClientConnection" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false">    
+    <position x="514" y="318" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.io.SCMP" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/io/SCMP.java" binary="false">    
+    <position x="874" y="270" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+    project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false">    
+    <position x="703" y="747" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" 
+    binary="false">    
+    <position x="305" y="742" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.client.IConnection" 
+      file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.client.IConnection" 
+      file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false" navigable="false">      
+      <attribute name="clientMap"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
