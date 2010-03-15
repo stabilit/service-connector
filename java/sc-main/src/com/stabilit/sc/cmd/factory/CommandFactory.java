@@ -10,6 +10,7 @@ import com.stabilit.sc.cmd.impl.GetDataCommand;
 import com.stabilit.sc.cmd.impl.KeepAliveCommand;
 import com.stabilit.sc.cmd.impl.PublishCommand;
 import com.stabilit.sc.cmd.impl.RegisterCommand;
+import com.stabilit.sc.cmd.impl.RoundTripCommand;
 import com.stabilit.sc.cmd.impl.SubscribeCommand;
 import com.stabilit.sc.cmd.impl.UnSubscribeCommand;
 import com.stabilit.sc.io.IRequest;
@@ -38,6 +39,8 @@ public class CommandFactory implements ICommandFactory {
 		commandMap.put(getDataCmd.getKey(), getDataCmd);
 		ICommand publishCommand = new PublishCommand();
 		commandMap.put(publishCommand.getKey(), publishCommand);
+		ICommand roundTripCmd = new RoundTripCommand();
+		commandMap.put(roundTripCmd.getKey(), roundTripCmd);
 	}
 	
 	public static ICommandFactory getInstance() {

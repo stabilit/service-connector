@@ -8,6 +8,7 @@ import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.impl.RoundTripMessage;
 import com.stabilit.sc.service.ServiceCtx;
 
@@ -24,21 +25,20 @@ public class RoundTripCommand extends Command {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws CommandException {
 		SCMP scmp = request.getSCMP();
 		try {
-			RoundTripMessage roundTrip = (RoundTripMessage) scmp.getBody();
 			ServiceCtx serviceCtx = SCKernel.getInstance().getService(scmp.getHeader("serviceName"));
 			IClientConnection conn = serviceCtx.getConn();
-			
+
 			if (conn == null)
-				throw new CommandException("No Service registered with name: " + scmp.getHeader("serviceName"));
+				throw new CommandException("No Service registered with name: "
+						+ scmp.getHeader("serviceName"));
 			SCMP scmpRe = conn.sendAndReceive(scmp);
 
 			ISession session = request.getSession(true);
 			response.setSession(session);
-			response.setSCMP(scmp);
+			response.setSCMP(scmpRe);
 		} catch (Exception e) {
 			throw new CommandException(e.toString());
 		}

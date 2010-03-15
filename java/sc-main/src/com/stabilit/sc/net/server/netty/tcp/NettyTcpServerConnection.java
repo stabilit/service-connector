@@ -25,6 +25,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
+
 import com.stabilit.sc.app.server.ITcpServerConnection;
 import com.stabilit.sc.app.server.NettyTcpResponse;
 import com.stabilit.sc.context.ServerConnectionContext;
@@ -65,7 +66,7 @@ public class NettyTcpServerConnection implements ITcpServerConnection {
 
 	public void run() throws Exception {
 		
-		int port = serverCtx.getServerPort();
+		int port = serverCtx.getSrcPort();
 		this.channel = this.bootstrap.bind(new InetSocketAddress(port));
 		
 		synchronized (this) {

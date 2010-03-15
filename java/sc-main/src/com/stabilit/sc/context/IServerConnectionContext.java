@@ -33,10 +33,10 @@ public interface IServerConnectionContext extends IContext {
 	/**
 	 * @return
 	 */
-	int getSCPort();
+	int getSrcPort();
 
 	/**
 	 * @return
 	 */
-	String getSCHost();
+	String getSrcHost();
 }

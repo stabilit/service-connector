@@ -57,7 +57,7 @@ public class NettyHttpServerConnection extends HttpServerConnection {
 	}
 
 	public void run() throws HttpServerConnectionException {
-		int port = serverCtx.getSCPort();
+		int port = serverCtx.getSrcPort();
 		this.channel = this.bootstrap.bind(new InetSocketAddress(port));
 		synchronized (this) {
 			try {

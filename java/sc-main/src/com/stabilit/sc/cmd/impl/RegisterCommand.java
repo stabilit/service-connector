@@ -1,5 +1,7 @@
 package com.stabilit.sc.cmd.impl;
 
+import org.jboss.netty.channel.ChannelFuture;
+
 import com.stabilit.sc.SCKernel;
 import com.stabilit.sc.app.client.ClientConnectionFactory;
 import com.stabilit.sc.client.IClientConnection;
@@ -12,7 +14,7 @@ import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.impl.RegisterMessage;
-import com.stabilit.sc.server.IServerConnection;
+import com.stabilit.sc.net.client.netty.tcp.TCPClientConnectListener;
 
 public class RegisterCommand extends ExtendedCommand {
 
@@ -40,15 +42,23 @@ public class RegisterCommand extends ExtendedCommand {
 
 		ISession session = request.getSession(true);
 		RegisterMessage registerMessage = (RegisterMessage) scmp.getBody();
-		System.out.println(registerMessage.getAttribute("test"));
+
 		IClientConnection clientConn = ClientConnectionFactory.newInstance("netty.tcp");
 		try {
-			clientConn.connect("localhost", 9000);
+			// Listener is necessary because awaitUniterruptly in client is not allowed inside I/O thread. Be
+			// carefull when using this listener. High potential of dead lock!
+			TCPClientConnectListener listener = new TCPClientConnectListener();
+			// TODO Check if ok
+			clientConn.connect((String) registerMessage.getAttribute("host"), Integer
+					.valueOf((String) registerMessage.getAttribute("port")), listener);
+
+			// TODO Achtung netty abhängigkeit .. sollte noch ausgelagert werden!
+			ChannelFuture future = listener.getOperationCompleteEventSync();
+			clientConn.setChannel(future.getChannel());
 		} catch (ConnectionException e1) {
 			e1.printStackTrace();
 		}
-		//TODO client connection facroty erstellen für connect to tcpserver aufgrund register!
-		// TODO Sc getservice Register list .. and register new ServiceServer!
+
 		SCKernel.getInstance().registerService(scmp.getHeader().get("serviceName"), clientConn);
 
 		try {

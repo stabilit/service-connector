@@ -19,7 +19,7 @@ public class Server implements Runnable {
 	@Override
 	public void run() {
 
-		ServerConnectionContext serverCtx = new ServerConnectionContext(props.getProperty("host"),
+		ServerConnectionContext serverCtx = new ServerConnectionContext(props.getProperty("server.host"),
 				new Integer(props.getProperty("server.port")), props.getProperty("server.connectionType"));
 		IServerConnection con = serverCtx.create();
 

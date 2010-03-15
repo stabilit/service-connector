@@ -81,7 +81,6 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		log.error("Exception :" + e.getCause().getMessage());
-		super.exceptionCaught(ctx, e);
 	}
 
 	@Override

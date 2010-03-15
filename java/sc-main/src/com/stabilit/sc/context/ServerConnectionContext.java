@@ -33,29 +33,29 @@ public class ServerConnectionContext implements IServerConnectionContext {
 
 	protected String[] args;
 	private String connectionType;
-	private String SChost;
-	private int SCport;
-	private String serverHost;
-	private int serverPort;
+	private String srcHost;
+	private int srcPort;
+	private String tarHost;
+	private int tarPort;
 	private int poolSize;
 
 	private Map<String, Object> attrMap;
 
-	public ServerConnectionContext(String SChost, int SCport, String serverHost, int serverPort,
+	public ServerConnectionContext(String srcHost, int srcPort, String tarHost, int tarPort,
 			String connectionType) {
 		this.attrMap = new ConcurrentHashMap<String, Object>();
-		this.SCport = SCport;
-		this.SChost = SChost;
+		this.srcPort = srcPort;
+		this.srcHost = srcHost;
 		this.connectionType = connectionType;
 		this.poolSize = 3;
-		this.serverHost = serverHost;
-		this.serverPort = serverPort;
+		this.tarHost = tarHost;
+		this.tarPort = tarPort;
 	}
 
-	public ServerConnectionContext(String SChost, int SCport, String connectionType) {
+	public ServerConnectionContext(String srcHost, int srcPort, String connectionType) {
 		this.attrMap = new ConcurrentHashMap<String, Object>();
-		this.SCport = SCport;
-		this.SChost = SChost;
+		this.srcHost = srcHost;
+		this.srcPort = srcPort;
 		this.connectionType = connectionType;
 		this.poolSize = 3;
 	}
@@ -77,21 +77,21 @@ public class ServerConnectionContext implements IServerConnectionContext {
 	}
 
 	@Override
-	public String getSCHost() {
-		return SChost;
+	public String getSrcHost() {
+		return srcHost;
 	}
 
 	@Override
-	public int getSCPort() {
-		return SCport;
+	public int getSrcPort() {
+		return srcPort;
 	}
 
-	public String getServerHost() {
-		return serverHost;
+	public String getTarHost() {
+		return tarHost;
 	}
 
-	public int getServerPort() {
-		return serverPort;
+	public int getTarPort() {
+		return tarPort;
 	}
 
 	public String getConnectionType() {
