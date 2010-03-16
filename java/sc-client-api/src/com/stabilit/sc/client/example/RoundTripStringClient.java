@@ -31,7 +31,7 @@ import com.stabilit.sc.io.SCMP;
  * @author JTraber
  * 
  */
-public class EchoStringClient {
+public class RoundTripStringClient {
 
 	public static void main(String[] args) throws ConnectionException {
 		IClientConnectionContext conCtx = null;
@@ -53,8 +53,8 @@ public class EchoStringClient {
 				
 				// TODO con.createSession();
 				SCMP request = new SCMP();
-				request.setMessageId("echo");
-				//request.setHeader("serviceName", "service A");
+				request.setMessageId("roundTrip");
+				request.setHeader("serviceName", "service A");
 				String msg = "hello world " + ++index;
 				
 				request.setBody(msg);
