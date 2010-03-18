@@ -27,7 +27,7 @@ import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.MsgType;
 import com.stabilit.sc.msg.impl.EchoMessage;
-import com.stabilit.sc.sim.client.config.Config;
+import com.stabilit.sc.sim.config.ConfigForClients;
 
 /**
  * @author JTraber
@@ -36,7 +36,7 @@ import com.stabilit.sc.sim.client.config.Config;
 public class ClientMain {
 	
 	public static void main(String[] args) throws Exception {
-		Config config = new Config();
+		ConfigForClients config = new ConfigForClients();
 		config.load("sc-client-api.properties");
 		
 		List<ClientConfig> clientConfigList = config.getClientConfigList();
