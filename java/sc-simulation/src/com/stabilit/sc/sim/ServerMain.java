@@ -1,4 +1,4 @@
-package com.stabilit.sc.sim.server;
+package com.stabilit.sc.sim;
 
 import java.io.IOException;
 import java.util.List;
