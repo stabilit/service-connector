@@ -29,7 +29,9 @@ import com.stabilit.sc.context.ServerConnectionContext;
 public interface IServerConnection extends IConnection {
 	public void destroy() throws Exception;
 
-	void create(ServerConnectionContext serverCtx);
-	
-	public void run() throws Exception;
+	void create();
+
+	public void runAsync() throws Exception;
+
+	public void runSync() throws Exception;
 }

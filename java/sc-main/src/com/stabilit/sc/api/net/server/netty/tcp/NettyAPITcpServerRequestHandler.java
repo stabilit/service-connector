@@ -98,7 +98,7 @@ public class NettyAPITcpServerRequestHandler extends SimpleChannelUpstreamHandle
 			NettyTcpResponse response = new NettyTcpResponse(e);
 			ICommand command = commandFactory.newCommand(request);
 
-			log.debug("NettyTcpResponderRequestHandler: following command received - " + command.getKey());
+			log.debug("NettyAPITcpServerRequestHandler: following command received - " + command.getKey());
 
 			SCMP scmp = request.getSCMP();
 			ISession session = request.getSession(true);

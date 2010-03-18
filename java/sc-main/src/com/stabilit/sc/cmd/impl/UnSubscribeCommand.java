@@ -9,7 +9,7 @@ import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.msg.IMessage;
 import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.impl.UnSubscribeMessage;
+import com.stabilit.sc.msg.impl.unSubscribeMessage;
 import com.stabilit.sc.util.SubscribePublishQueue;
 
 public class UnSubscribeCommand extends Command {
@@ -34,10 +34,10 @@ public class UnSubscribeCommand extends Command {
 		SCMP scmp = request.getSCMP();
 		String subscribeId = scmp.getSubscribeId();
 		String messageId = scmp.getMessageId();
-		if (UnSubscribeMessage.ID.equals(messageId) == false) {
+		if (unSubscribeMessage.ID.equals(messageId) == false) {
 			throw new CommandException("invalid unsubscribe command");
 		}
- 		UnSubscribeMessage msg = (UnSubscribeMessage) scmp.getBody();
+ 		unSubscribeMessage msg = (unSubscribeMessage) scmp.getBody();
 		SCMP scmpResult = new SCMP();
 		scmpResult.setSubsribeId(subscribeId);
 		IMessage result = new Message(msg.getKey());

@@ -32,7 +32,7 @@ import com.stabilit.sc.io.IResponse;
 public abstract class Command implements ICommand {
 
 	@Override
-	public void run(IRequest request, IResponse response, IConnection conn) throws CommandException {
+	public void run(IRequest request, IResponse response) throws CommandException {
 		run(request, response);
 	}
 }
