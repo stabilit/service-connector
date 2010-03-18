@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 public interface IMessage extends Serializable {
-	public String getKey();
-	
+	public MsgType getKey();
+
 	public IMessage newInstance();
 
 	public Object getAttribute(String name);

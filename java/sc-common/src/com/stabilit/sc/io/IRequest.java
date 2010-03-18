@@ -1,10 +1,11 @@
 package com.stabilit.sc.io;
 
 import com.stabilit.sc.ctx.IRequestContext;
+import com.stabilit.sc.msg.MsgType;
 
 public interface IRequest {
 
-	public String getKey();
+	public MsgType getKey();
 
 	public IRequestContext getContext();
 	

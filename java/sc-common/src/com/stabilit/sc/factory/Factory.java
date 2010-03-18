@@ -17,21 +17,46 @@
 /**
  * 
  */
-package com.stabilit.sc.msg.impl;
+package com.stabilit.sc.factory;
 
-import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.MsgType;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author JTraber
  * 
  */
-public class KeepAliveMessage extends Message {
+public class Factory {
 
-	private static final long serialVersionUID = -1962428309463037514L;
-	public static MsgType ID = MsgType.KEEP_ALIVE;
+	protected Map<String, IFactoryable> factoryMap = new ConcurrentHashMap<String, IFactoryable>();
 
-	public KeepAliveMessage() {
-		super(ID);
+	public IFactoryable getInstance() {
+		return getInstance("default");
 	}
+
+	public void add(String key, IFactoryable factoryInstance) {
+		factoryMap.put(key, factoryInstance);
+	}
+
+	public void remove(String key) {
+		factoryMap.remove(key);
+	}
+
+	public IFactoryable getInstance(String key) {
+		IFactoryable factoryInstance = factoryMap.get(key);
+		return factoryInstance;
+	}
+
+	public IFactoryable newInstance() {
+		return newInstance("default");
+	}
+
+	public IFactoryable newInstance(String key) {
+		IFactoryable factoryInstance = this.getInstance();
+		if (factoryInstance == null) {
+			return null;
+		}
+		return factoryInstance.newInstance();
+	}
+
 }

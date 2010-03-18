@@ -13,25 +13,17 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.msg.impl;
-
-import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.MsgType;
+package com.stabilit.sc.factory;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class KeepAliveMessage extends Message {
+public interface IFactoryable {
 
-	private static final long serialVersionUID = -1962428309463037514L;
-	public static MsgType ID = MsgType.KEEP_ALIVE;
-
-	public KeepAliveMessage() {
-		super(ID);
-	}
+	public IFactoryable newInstance();
 }

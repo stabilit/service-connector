@@ -17,21 +17,45 @@
 /**
  * 
  */
-package com.stabilit.sc.msg.impl;
-
-import com.stabilit.sc.msg.Message;
-import com.stabilit.sc.msg.MsgType;
+package com.stabilit.sc.msg;
 
 /**
  * @author JTraber
  * 
  */
-public class KeepAliveMessage extends Message {
+public enum MsgType {
 
-	private static final long serialVersionUID = -1962428309463037514L;
-	public static MsgType ID = MsgType.KEEP_ALIVE;
+	CONNECT("CONNECT"),
+	DISCONNECT("DISCONNECT"),
+	KEEP_ALIVE("KEEP_ALIVE"),
+	CREATE_SESSION("CREATE_SESSION"),
+	DELETE_SESSION("DELETE_SESSION"),
+	ABORT_SESSION("ABORT_SESSION"),
+	DATA("DATA"),
+	SUBSCRIBE("SUBSCRIBE"), 
+	UNSUBSCRIBE("UNSUBSCRIBE"),
+	CHANGE_SUB("CHANGE_SUB"),
+	RECEIVE_PUBLICATION("RECEIVE_PUBLICATION"),
+	PUBLISH("PUBLISH"),
+	REGISTER_SERVICE("REGISTER_SERVICE"), 
+	UNDEFINED("UNDEFINED"),
+	ECHO("ECHO");
 
-	public KeepAliveMessage() {
-		super(ID);
+	private String name;
+
+	private MsgType(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String toString() {
+		return name;
+	}
+
+	public static MsgType getMsgType(String messageId) {
+		return MsgType.valueOf(messageId);
 	}
 }

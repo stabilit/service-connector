@@ -5,20 +5,17 @@ import java.util.Map;
 
 public class Message implements IMessage {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1763291531850424661L;
 
-	private String key;
+	private MsgType key;
 	
 	private Map<String, Object> attrMap;
 
 	public Message() {
-		this("");
+		this(MsgType.UNDEFINED);
 	}
 	
-	public Message(String key) {
+	public Message(MsgType key) {
 		this.key = key;
 		this.attrMap = new HashMap<String, Object>();
 	}
@@ -29,7 +26,7 @@ public class Message implements IMessage {
 	}
 	
 	@Override
-	public String getKey() {
+	public MsgType getKey() {
 		return key;
 	}
 

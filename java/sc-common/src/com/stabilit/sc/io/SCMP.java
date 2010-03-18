@@ -82,7 +82,7 @@ public class SCMP implements Serializable {
 	public void setBody(Object body) {
 		this.body = body;
 		if (this.body instanceof IMessage) {
-			this.setMessageId(((IMessage)this.body).getKey());
+			this.setMessageId(((IMessage)this.body).getKey().getName());
 		}
 	}
 
