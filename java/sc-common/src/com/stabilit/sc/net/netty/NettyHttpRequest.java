@@ -62,7 +62,8 @@ public class NettyHttpRequest implements IRequest {
 
 	private void load() throws Exception {
 		ChannelBuffer channelBuffer = request.getContent();
-		byte[] buffer = channelBuffer.array();
+		byte[] buffer = new byte[channelBuffer.readableBytes()];
+		channelBuffer.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = new SCMP();
 		encoderDecoder.decode(bais, scmp);

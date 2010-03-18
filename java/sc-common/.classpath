@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/sc-lib/lib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="/sc-lib/lib/netty-3.2.0.ALPHA2.jar" sourcepath="/sc-lib/lib/netty-3.1.5.GA-sources.jar"/>
+	<classpathentry kind="lib" path="/sc-lib/lib/netty-3.1.5.GA.jar" sourcepath="/sc-lib/lib/netty-3.1.5.GA-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
