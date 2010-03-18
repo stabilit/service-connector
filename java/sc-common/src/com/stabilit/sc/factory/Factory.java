@@ -52,7 +52,7 @@ public class Factory {
 	}
 
 	public IFactoryable newInstance(String key) {
-		IFactoryable factoryInstance = this.getInstance();
+		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
 			return null;
 		}
