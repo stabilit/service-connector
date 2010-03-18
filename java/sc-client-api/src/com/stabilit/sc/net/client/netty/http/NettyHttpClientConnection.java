@@ -113,6 +113,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		encoderDecoder.encode(baos, scmp);
+		url = new URL("http", host, port,"/");
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
 				.getPath());
 		byte[] buffer = baos.toByteArray();
@@ -128,19 +129,10 @@ public class NettyHttpClientConnection implements IClientConnection {
 
 		buffer = content.array();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		
+
 		SCMP ret = new SCMP();
 		encoderDecoder.decode(bais, ret);
-		// TODO ?? needed or not
-		// if (obj instanceof SCMP) {
-		//			
-		// String retSessionID = ret.getSessionId();
-		// if (retSessionID != null) {
-		// this.sessionId = retSessionID;
-		// }
-		// return ret;
-		// }
-		throw new Exception("not found");
+		return ret;
 	}
 
 	@Override
@@ -151,12 +143,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 	@Override
 	public void setAvailable(boolean available) {
 	}
-	
+
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	@Override
 	public void setHost(String host) {
 		this.host = host;

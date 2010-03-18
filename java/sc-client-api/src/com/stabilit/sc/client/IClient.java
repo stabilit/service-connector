@@ -19,8 +19,6 @@
  */
 package com.stabilit.sc.client;
 
-import org.jboss.netty.channel.ChannelFutureListener;
-
 import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
@@ -40,11 +38,9 @@ public interface IClient extends IFactoryable {
 
 	public void destroy() throws Exception;
 
-	public void connect(String host, int port) throws ConnectionException;
+	public void connect() throws ConnectionException;
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-
-	void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException;
 
 	/**
 	 * @param clientConfig

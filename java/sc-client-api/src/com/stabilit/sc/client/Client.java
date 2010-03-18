@@ -19,8 +19,6 @@
  */
 package com.stabilit.sc.client;
 
-import org.jboss.netty.channel.ChannelFutureListener;
-
 import com.stabilit.sc.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.exception.ConnectionException;
@@ -46,34 +44,37 @@ public class Client implements IClient {
 		this.clientConfig = clientConfig;
 		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
 		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getCon());
+		clientConnection.setHost(clientConfig.getHost());
+		clientConnection.setPort(clientConfig.getPort());
 	}
 
 	@Override
-	public void connect(String host, int port) throws ConnectionException {
-	}
-
-	@Override
-	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {
+	public void connect() throws ConnectionException {
+		clientConnection.connect();
 	}
 
 	@Override
 	public void createSession() {
+		clientConnection.createSession();
 	}
 
 	@Override
 	public void deleteSession() {
+		clientConnection.deleteSession();
 	}
 
 	@Override
 	public void destroy() throws Exception {
+		clientConnection.destroy();
 	}
 
 	@Override
 	public void disconnect() {
+		clientConnection.disconnect();
 	}
 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		return null;
+		return clientConnection.sendAndReceive(scmp);
 	}
 }
