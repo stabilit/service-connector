@@ -115,7 +115,8 @@ public class NettyTcpClientConnection implements IClientConnection {
 				.get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
 
-		byte[] buffer = content.array();
+		byte[] buffer = new byte[content.readableBytes()];
+		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP ret = new SCMP();
 		encoderDecoder.decode(bais, ret);

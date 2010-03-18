@@ -126,8 +126,9 @@ public class NettyHttpClientConnection implements IClientConnection {
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(
 				NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
-
-		buffer = content.array();
+		
+		buffer = new byte[content.readableBytes()];
+		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		SCMP ret = new SCMP();
