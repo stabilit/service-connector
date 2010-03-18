@@ -8,6 +8,7 @@ import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.sc.conf.Config;
 import com.stabilit.sc.conf.ServerConfig;
 import com.stabilit.sc.server.IServer;
+import com.stabilit.sc.server.ServerFactory;
 
 public class ServiceConnector {
 
