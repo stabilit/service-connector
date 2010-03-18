@@ -58,41 +58,6 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
-
 		answer.offer(chBuffer);
-
-		// if (sync) {
-		// answer.offer(chBuffer);
-		// } else {
-		// byte[] buffer = chBuffer.array();
-		// ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		// SCMP ret = new SCMP();
-		// encoderDecoder.decode(bais, ret);
-		//
-		// if (ret.getMessageId().equals("asyncCall")) {
-		// try {
-		// // checks if unsubscribe has been made.
-		// if (((ISubscribe) conn).continueSubscriptionOnConnection()) {
-		// NettyTcpResponse response = new NettyTcpResponse(e);
-		//
-		// SCMP req = new SCMP();
-		// req.setMessageId(AsyncCallMessage.ID);
-		// AsyncCallMessage async = new AsyncCallMessage();
-		// req.setBody(async);
-		// req.setSubsribeId(ret.getSubscribeId());
-		// response.setSCMP(req);
-		// ctx.getChannel().write(response.getBuffer());
-		// this.callback.messageReceived(conn, ret);
-		// }
-		// } catch (ClassCastException cce) {
-		// throw new SCMPException(
-		// "Wrong message type (asyncCall) received, connection is not type of ISubscribe.");
-		// }
-		//
-		// } else {
-		// conn.setWritable(true);
-		// this.callback.messageReceived(conn, ret);
-		// }}
-
 	}
 }
