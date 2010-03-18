@@ -16,7 +16,7 @@ public class RequestContext implements IRequestContext {
 	 * @param remoteAddress
 	 */
 	public RequestContext(SocketAddress remoteAddress) {
-		super();
+		this();
 		this.setSocketAddress(remoteAddress);
 	}
 
@@ -36,7 +36,7 @@ public class RequestContext implements IRequestContext {
 	}
 	
 	public void setSocketAddress(SocketAddress socketAddress) {
-		this.setAttribute(SocketAddress.class.getName(), socketAddress);
+		this.setAttribute(SocketAddress.class.getName(), socketAddress.toString());
 	}
 
 }
