@@ -26,7 +26,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
@@ -36,6 +35,7 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.client.IClientConnection;
 import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
@@ -47,6 +47,8 @@ public class NettyHttpClientConnection implements IClientConnection {
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
 	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	private int port;
+	private String host;
 
 	public NettyHttpClientConnection() {
 	}
@@ -57,7 +59,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(String host, int port) throws ConnectionException {
+	public void connect() throws ConnectionException {
 
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
@@ -149,13 +151,19 @@ public class NettyHttpClientConnection implements IClientConnection {
 	@Override
 	public void setAvailable(boolean available) {
 	}
-
+	
 	@Override
-	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {		
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
+	@Override
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	@Override
-	public void setChannel(Channel channel) {
-		// TODO Auto-generated method stub		
+	public IFactoryable newInstance() {
+		return new NettyHttpClientConnection();
 	}
 }

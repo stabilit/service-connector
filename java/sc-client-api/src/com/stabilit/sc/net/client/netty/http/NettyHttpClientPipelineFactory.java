@@ -20,12 +20,6 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-import org.jboss.netty.util.HashedWheelTimer;
-
-import com.stabilit.sc.client.IConnectionListener;
-import com.stabilit.sc.net.handler.IKeepAliveHandler;
-import com.stabilit.sc.net.handler.NettyIdleHandler;
-import com.stabilit.sc.net.handler.NettyWriteTimeoutHandler;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -36,44 +30,12 @@ import com.stabilit.sc.net.handler.NettyWriteTimeoutHandler;
  */
 public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 
-	private Class<? extends IConnectionListener> scListenerClass;
-	private Class<? extends IKeepAliveHandler> keepAliveHandlerClass;
-	private NettyHttpClientResponseHandler responseHandler;
-	private NettyWriteTimeoutHandler writeTimeoutHandler;
-	private NettyIdleHandler nettyIdleHandler;
-	private int readTimeout;
-	private int writeTimeout;
-	private int keepAliveTimeout;
-
-	public NettyHttpClientPipelineFactory() {
-		super();
-
-		this.scListenerClass = scListenerClass;
-		this.keepAliveHandlerClass = keepAliveHandlerClass;
-		this.keepAliveTimeout = keepAliveTimeout;
-		this.readTimeout = readTimeout;
-		this.writeTimeout = writeTimeout;
-	}
-
 	public ChannelPipeline getPipeline() throws Exception {
-		IConnectionListener scListener = scListenerClass.newInstance();
-
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
 		pipeline.addLast("decoder", new HttpResponseDecoder());
-
-		// TODO readTimeOutHandler muss gleich implementiert werden, timeseconds ??
-		writeTimeoutHandler = new NettyWriteTimeoutHandler(new HashedWheelTimer(), writeTimeout, scListener);
-		pipeline.addLast("timeout", writeTimeoutHandler);
-
-		if (keepAliveHandlerClass != null) {
-			nettyIdleHandler = new NettyIdleHandler(new HashedWheelTimer(), keepAliveTimeout,
-					keepAliveHandlerClass.newInstance());
-			pipeline.addLast("keepAlive", nettyIdleHandler);
-		}
 		pipeline.addLast("encoder", new HttpRequestEncoder());
-		responseHandler = new NettyHttpClientResponseHandler();
-		pipeline.addLast("handler", responseHandler);
+		pipeline.addLast("handler", new NettyHttpClientResponseHandler());
 		return pipeline;
 	}
 }

@@ -19,11 +19,8 @@
  */
 package com.stabilit.sc.client.example;
 
-import java.net.MalformedURLException;
-
 import com.stabilit.sc.client.IClientConnection;
-import com.stabilit.sc.ctx.ClientConnectionContext;
-import com.stabilit.sc.ctx.IClientConnectionContext;
+import com.stabilit.sc.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 
@@ -34,42 +31,39 @@ import com.stabilit.sc.io.SCMP;
 public class EchoStringClient {
 
 	public static void main(String[] args) throws ConnectionException {
-		IClientConnectionContext conCtx = null;
-		try {
-			conCtx = new ClientConnectionContext("localhost", 7777, "netty.tcp");
-			conCtx.setPoolSize(4); // optional
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
-
-		IClientConnection con = null;
+		IClientConnection clientConnection = null;
+		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
+		clientConnection = clientConnectionFactory.newInstance("netty.tcp");
+		clientConnection.setHost("localhost");
+		clientConnection.setPort(7777);
+		
 		int index = 0;
 		int numberofMsgToSend = 10000;
 		// Thread.sleep(2000);
-		con = conCtx.connect();
+		clientConnection.connect();
 		long startTime = System.currentTimeMillis();
 		while (index < numberofMsgToSend) {
 			try {
-				
+
 				// TODO con.createSession();
 				SCMP request = new SCMP();
 				request.setMessageId("echo");
-				//request.setHeader("serviceName", "service A");
+				// request.setHeader("serviceName", "service A");
 				String msg = "hello world " + ++index;
-				
+
 				request.setBody(msg);
-				SCMP response = con.sendAndReceive(request);
+				SCMP response = clientConnection.sendAndReceive(request);
 				String roundTrip = (String) response.getBody();
-			//	System.out.println(roundTrip + " session = " + con.getSessionId());
-				
+				// System.out.println(roundTrip + " session = " + con.getSessionId());
+
 			} catch (Exception e) {
 				e.printStackTrace();
-			}	
+			}
 		}
 		long neededTime = System.currentTimeMillis() - startTime;
-		float numberOfMsg = numberofMsgToSend / (neededTime/1000f);
+		float numberOfMsg = numberofMsgToSend / (neededTime / 1000f);
 		System.out.println(numberOfMsg + " msg's per second!");
 		// TODO con.deleteSession();
-		con.disconnect();
+		clientConnection.disconnect();
 	}
 }

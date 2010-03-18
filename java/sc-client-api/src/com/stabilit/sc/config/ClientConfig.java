@@ -13,36 +13,43 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.ctx;
-
-import com.stabilit.sc.client.IClientConnection;
-import com.stabilit.sc.exception.ConnectionException;
-
+package com.stabilit.sc.config;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IClientConnectionContext extends IContext {
+public class ClientConfig {
 
-	IClientConnection connect() throws ConnectionException;
+	private int port;
+	private String host;
+	private String con;
 
-	/**
-	 * @param i
-	 */
-	void setPoolSize(int i);
+	public int getPort() {
+		return port;
+	}
 
-	/**
-	 * @return
-	 */
-	int getPort();
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-	/**
-	 * @return
-	 */
-	String getHost();
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getCon() {
+		return con;
+	}
+
+	public void setCon(String con) {
+		this.con = con;
+	}
 }

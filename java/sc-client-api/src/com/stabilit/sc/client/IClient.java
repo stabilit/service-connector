@@ -13,47 +13,41 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.net.client.netty.tcp;
+package com.stabilit.sc.client;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
+
+import com.stabilit.sc.config.ClientConfig;
+import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.io.SCMP;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public class TCPClientConnectListener implements ChannelFutureListener {
-	
-	private final BlockingQueue<ChannelFuture> answer = new LinkedBlockingQueue<ChannelFuture>();
-	
-	@Override
-	public void operationComplete(ChannelFuture future) throws Exception {
-		answer.offer(future);
-	}
-	
-	public ChannelFuture getOperationCompleteEventSync() {
-		ChannelFuture responseFuture;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() waits until first message gets in queue!
-				responseFuture = answer.take();
-				break;
-			} catch (InterruptedException e) {
-				interrupted = true;
-			}
-		}
+public interface IClient extends IFactoryable {
 
-		if (interrupted) {
-			Thread.currentThread().interrupt();
-		}
-		return responseFuture;
-	}
+	public void deleteSession();
+
+	public void createSession();
+
+	public void disconnect();
+
+	public void destroy() throws Exception;
+
+	public void connect(String host, int port) throws ConnectionException;
+
+	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+
+	void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException;
+
+	/**
+	 * @param clientConfig
+	 */
+	void setClientConfig(ClientConfig clientConfig);
 }

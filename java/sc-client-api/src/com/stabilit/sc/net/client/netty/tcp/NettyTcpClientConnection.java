@@ -25,12 +25,12 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.stabilit.sc.client.IClientConnection;
 import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.SCMP;
@@ -41,7 +41,10 @@ public class NettyTcpClientConnection implements IClientConnection {
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
 	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	private int port;
+	private String host;
 
+	
 	public NettyTcpClientConnection() {
 	}
 
@@ -51,7 +54,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(String host, int port) throws ConnectionException {
+	public void connect() throws ConnectionException {
 		// Configure the client.
 		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
 				.newCachedThreadPool(), Executors.newCachedThreadPool()));
@@ -77,31 +80,6 @@ public class NettyTcpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {
-		// Configure the client.
-		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
-				.newCachedThreadPool(), Executors.newCachedThreadPool()));
-
-		// Set up the event pipeline factory.
-		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory());
-
-		// Start the connection attempt.
-		try {
-			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-
-			future.addListener(listener);
-
-		} catch (ChannelPipelineException e) {
-			throw new ConnectionException("Connection could not be established.", e);
-		}
-	}
-
-	@Override
-	public void setChannel(Channel channel) {
-		this.channel = channel;
-	}
-
-	@Override
 	public void disconnect() {
 		// Wait for the server to close the connection.
 		this.channel.disconnect().awaitUninterruptibly();
@@ -120,8 +98,6 @@ public class NettyTcpClientConnection implements IClientConnection {
 
 	@Override
 	public void createSession() {
-		// TODO schicke an SC CREATESESSION
-		// TODO asynchron??????
 	}
 
 	@Override
@@ -159,5 +135,20 @@ public class NettyTcpClientConnection implements IClientConnection {
 	@Override
 	public void setAvailable(boolean available) {
 
+	}
+
+	@Override
+	public IFactoryable newInstance() {
+		return new NettyTcpClientConnection();
+	}
+
+	@Override
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
+	@Override
+	public void setHost(String host) {
+		this.host = host;
 	}
 }

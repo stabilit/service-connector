@@ -24,18 +24,10 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.client.IConnectionListener;
-import com.stabilit.sc.io.EncoderDecoderFactory;
-import com.stabilit.sc.io.IEncoderDecoder;
-
 @ChannelPipelineCoverage("one")
 public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
-
-	private IConnectionListener callback = null;
-	private boolean sync = false;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	/**
 	 * @param scListener
@@ -44,23 +36,13 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 	public NettyTcpClientResponseHandler() {
 	}
 
-	public void setCallback(IConnectionListener callback) {
-		this.callback = callback;
-	}
-
-	public IConnectionListener getCallback() {
-		return callback;
-	}
-
 	public ChannelBuffer getMessageSync() {
-		sync = true;
 		ChannelBuffer response;
 		boolean interrupted = false;
 		for (;;) {
 			try {
 				// take() wartet bis Message in Queue kommt!
 				response = answer.take();
-				sync = false;
 				break;
 			} catch (InterruptedException e) {
 				interrupted = true;

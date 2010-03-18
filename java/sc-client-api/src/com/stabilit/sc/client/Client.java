@@ -17,71 +17,63 @@
 /**
  * 
  */
-package com.stabilit.sc.ctx;
+package com.stabilit.sc.client;
 
-import java.net.MalformedURLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.jboss.netty.channel.ChannelFutureListener;
 
-import com.stabilit.sc.app.client.ClientConnectionFactory;
-import com.stabilit.sc.client.IClientConnection;
+import com.stabilit.sc.client.factory.ClientConnectionFactory;
+import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.exception.ConnectionException;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.io.SCMP;
 
 /**
  * @author JTraber
  * 
  */
-public class ClientConnectionContext implements IClientConnectionContext {
+public class Client implements IClient {
 
-	protected String[] args;
-	private String connectionType;
-	private String host;
-	private int port;
-	private int poolSize;
+	private ClientConfig clientConfig;
+	private IClientConnection clientConnection;
 
-	private Map<String, Object> attrMap;
-
-	public ClientConnectionContext(String host, int port, String connectionType) throws MalformedURLException {
-		this.attrMap = new ConcurrentHashMap<String, Object>();
-		this.port = port;
-		this.host = host;
-		this.connectionType = connectionType;
-		this.poolSize = 3;
+	@Override
+	public IFactoryable newInstance() {
+		return new Client();
 	}
 
 	@Override
-	public Object getAttribute(String name) {
-		return this.attrMap.get(name);
+	public void setClientConfig(ClientConfig clientConfig) {
+		this.clientConfig = clientConfig;
+		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
+		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getCon());
 	}
 
 	@Override
-	public void setAttribute(String name, Object value) {
-		this.attrMap.put(name, value);
+	public void connect(String host, int port) throws ConnectionException {
 	}
 
 	@Override
-	public IClientConnection connect() throws ConnectionException {
-		IClientConnection con = ClientConnectionFactory.newInstance(connectionType);
-		con.connect(host, port);
-		return con;
+	public void connect(String host, int port, ChannelFutureListener listener) throws ConnectionException {
 	}
 
 	@Override
-	public String getHost() {
-		return host;
+	public void createSession() {
 	}
 
 	@Override
-	public void setPoolSize(int poolSize) {
-		this.poolSize = poolSize;
+	public void deleteSession() {
 	}
 
 	@Override
-	public int getPort() {
-		return port;
+	public void destroy() throws Exception {
 	}
 
-	public String getConnectionType() {
-		return connectionType;
+	@Override
+	public void disconnect() {
+	}
+
+	@Override
+	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+		return null;
 	}
 }
