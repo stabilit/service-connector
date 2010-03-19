@@ -25,7 +25,7 @@ public class DisconnectCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.DISCONNECT;
+		return SCMPMsgType.REQ_DISCONNECT;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class DisconnectCommand extends CommandAdapter {
 		}
 		connectionRegistry.remove(socketAddress);
 		SCMPReply scmpReply = new SCMPReply();
-		scmpReply.setMessageType(SCMPMsgType.DISCONNECT.getResponseName());
+		scmpReply.setMessageType(SCMPMsgType.REQ_DISCONNECT.getResponseName());
 		response.setSCMP(scmpReply);
 	}
 

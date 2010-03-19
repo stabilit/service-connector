@@ -31,7 +31,7 @@ public class ConnectCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CONNECT;
+		return SCMPMsgType.REQ_CONNECT;
 	}
 
 	@Override
@@ -48,13 +48,13 @@ public class ConnectCommand extends CommandAdapter {
 		
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 		
-		if(mapBean == null) {
+		if(mapBean != null) {
 			throw new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);		
 		}
 		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
 
 		SCMPReply scmpReply = new SCMPReply();
-		scmpReply.setMessageType(SCMPMsgType.CONNECT.getResponseName());
+		scmpReply.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 		scmpReply.setLocalDateTime();
 		response.setSCMP(scmpReply);
 	}
@@ -80,7 +80,7 @@ public class ConnectCommand extends CommandAdapter {
 				request.setAttribute("keepAliveInterval", keepAliveInterval);
 			} catch (Exception e) {
 				SCMPValidatorException validatorException =  new SCMPValidatorException();
-				validatorException.setMessageType(SCMPMsgType.CONNECT.getResponseName());
+				validatorException.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 				throw validatorException;
 			}
 		}
