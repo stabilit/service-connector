@@ -1,32 +1,23 @@
 package com.stabilit.sc.cmd.impl;
 
-import org.jboss.netty.channel.ChannelFuture;
-
-import com.stabilit.sc.client.IConnection;
+import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
-import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.MsgType;
+import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.msg.impl.RegisterMessage;
 
-public class RegisterServiceCommand implements ICommand {
+public class RegisterServiceCommand extends CommandAdapter  {
 
 	public RegisterServiceCommand() {
 	}
 
 	@Override
-	public MsgType getKey() {
-		return MsgType.REGISTER_SERVICE;
-	}
-	
-	@Override
-	public String getKeyName() {
-		return this.getKey().getName();
+	public SCMPMsgType getKey() {
+		return SCMPMsgType.REGISTER_SERVICE;
 	}
 
 	@Override

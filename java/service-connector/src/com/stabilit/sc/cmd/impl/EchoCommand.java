@@ -8,28 +8,19 @@ import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.msg.impl.GetDataMessage;
 
-public class DataCommand extends CommandAdapter {
+public class EchoCommand extends CommandAdapter  {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.DATA;
+		return SCMPMsgType.ECHO;
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response)
+			throws CommandException {
 		SCMP scmp = request.getSCMP();
-
 		try {
-			GetDataMessage getDataMsg = (GetDataMessage) scmp.getBody();
-			// ServiceCtx serviceCtx = SCKernel.getInstance().getService(scmp.getHeader("serviceName"));
-			// IClientConnection conn = serviceCtx.getConn();
-
-			// if (conn == null)
-			// throw new CommandException("No Service registered with name: " + getDataMsg.getServiceName());
-			// SCMP scmpRe = conn.sendAndReceive(scmp);
-
 			ISession session = request.getSession(true);
 			response.setSession(session);
 			response.setSCMP(scmp);

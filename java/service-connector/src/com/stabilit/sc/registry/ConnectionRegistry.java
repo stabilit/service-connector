@@ -19,7 +19,7 @@
  */
 package com.stabilit.sc.registry;
 
-import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber
@@ -36,8 +36,7 @@ public class ConnectionRegistry extends Registry {
 		return instance;
 	}
 
-	public void add(Object key, SCMP scmp) {
-		MapBean<String> mapBean = new MapBean<String>(scmp.getHeader());
+	public void add(Object key, MapBean<Object> mapBean) {
 		this.put(key, mapBean);
 	}
 }

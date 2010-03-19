@@ -22,6 +22,8 @@ package com.stabilit.sc.registry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.stabilit.sc.util.MapBean;
+
 /**
  * @author JTraber
  * 
