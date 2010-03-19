@@ -27,12 +27,9 @@ import org.junit.Test;
 import com.stabilit.sc.client.ClientFactory;
 import com.stabilit.sc.client.IClient;
 import com.stabilit.sc.config.ClientConfig;
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.io.IMessage;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.msg.impl.ConnectMessage;
-import com.stabilit.sc.msg.impl.EchoMessage;
 import com.stabilit.sc.util.DateTime;
 
 public class ConnectHttpTestCase {
