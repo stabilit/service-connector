@@ -36,7 +36,7 @@ public class RequestContext implements IRequestContext {
 	}
 	
 	public void setSocketAddress(SocketAddress socketAddress) {
-		this.setAttribute(SocketAddress.class.getName(), socketAddress.toString());
+		this.setAttribute(SocketAddress.class.getName(), socketAddress);
 	}
 
 }

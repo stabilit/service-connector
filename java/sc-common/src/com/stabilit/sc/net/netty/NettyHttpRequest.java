@@ -1,6 +1,7 @@
 package com.stabilit.sc.net.netty;
 
 import java.io.ByteArrayInputStream;
+import java.net.SocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -19,16 +20,18 @@ import com.stabilit.sc.util.MapBean;
 public class NettyHttpRequest implements IRequest {
 
 	private HttpRequest request;
+	private SocketAddress socketAddress;
 	private SCMP scmp;
 	private IRequestContext requestContext;
 	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 	private MapBean<Object> mapBean;
 
-	public NettyHttpRequest(HttpRequest request) {
+	public NettyHttpRequest(HttpRequest request, SocketAddress socketAddress) {
 		this.mapBean = new MapBean<Object>();
 		this.request = request;
 		this.scmp = null;
-		this.requestContext = new RequestContext();
+		this.socketAddress = socketAddress;
+		this.requestContext = new RequestContext(this.socketAddress);
 	}
 
 	@Override
