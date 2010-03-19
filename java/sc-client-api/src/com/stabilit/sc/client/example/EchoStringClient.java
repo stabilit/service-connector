@@ -48,7 +48,7 @@ public class EchoStringClient {
 
 				// TODO con.createSession();
 				SCMP request = new SCMP();
-				request.setMessageType(SCMPMsgType.ECHO.getRequestName());
+				request.setMessageType(SCMPMsgType.REQ_ECHO.getRequestName());
 				// request.setHeader("serviceName", "service A");
 				String msg = "hello world " + ++index;
 

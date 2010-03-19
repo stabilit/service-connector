@@ -6,7 +6,7 @@ import com.stabilit.sc.io.SCMPMsgType;
 
 public class ConnectMessage extends Message {
 
-	public static SCMPMsgType ID = SCMPMsgType.CONNECT;
+	public static SCMPMsgType ID = SCMPMsgType.REQ_CONNECT;
 
 	public ConnectMessage() {
 		super(ID);
