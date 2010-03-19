@@ -6,9 +6,6 @@ import com.stabilit.sc.factory.IFactoryable;
 
 public class ServerFactory extends Factory {
 
-	/**
-	 * 
-	 */
 	public ServerFactory() {
 	    Server server = new Server();
 	    this.factoryMap.put("default", server);
