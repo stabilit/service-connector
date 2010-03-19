@@ -102,10 +102,10 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-		String messageId = scmp.getMessageId(); // messageId is never null
-		if (messageId.startsWith("REQ_")) {
+		String messageType = scmp.getMessageType(); // messageType is never null
+		if (messageType.startsWith("REQ_")) {
 			sb.append("REQ / SCMP/");
-		} else if (messageId.startsWith("RES_")) {
+		} else if (messageType.startsWith("RES_")) {
 			if (scmp.isFault()) {
 			    sb.append("RES / SCMP/");
 			} else {

@@ -13,7 +13,7 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
@@ -21,27 +21,9 @@ package com.stabilit.sc.io;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public enum ErrorCode {
+public interface IFaultResponse {
 
-	CLIENT_ERROR("400", "Client error occured."),
-	REQUEST_UNKNOWN("401", "Request unknown"),
-	SERVER_ERROR("500", "Server error occured.");
-	
-	private String errorCode;
-	private String errorText;
-	
-	private ErrorCode(String errorCode, String errorText) {
-		this.errorCode = errorCode;
-		this.errorText = errorText;
-	}
-
-	public String getErrorCode() {
-		return errorCode;
-	}
-
-	public String getErrorText() {
-		return errorText;
-	}
+	public void setFaultResponse(IResponse response);
 }

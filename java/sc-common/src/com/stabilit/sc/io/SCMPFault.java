@@ -13,21 +13,45 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.config;
+package com.stabilit.sc.io;
+
+import java.util.Map;
+
+import com.stabilit.sc.util.DateTime;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IConstants {
+public class SCMPFault extends SCMP {
+
+	public SCMPFault(Map<String, String> map) {
+		this.header = map;
+	}
+
+	public SCMPFault(SCMPErrorCode errorCode) {
+		setError(errorCode);
+	}
 	
-	final String CLIENT_PROT = "prot";
-	final String HTTP = "http";
-	final String CLIENT_CON = "con";
-	final String CLIENT_URL = "url";
-	final String VERSION = "1.0";
+	public void setLocalDateTime() {
+		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTime.getCurrentTimeZoneMillis());
+	}
+	
+	public boolean isFault() {
+		return true;
+	}
+
+	public void setError(String errorCode, String errorText) {
+		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode);
+		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorText);
+	}
+
+	public void setError(SCMPErrorCode errorCode) {
+		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
+		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
+	}
 }

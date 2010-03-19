@@ -54,8 +54,8 @@ public class NettyHttpRequest implements IRequest {
 		if (scmp == null) {
 			return null;
 		}
-		String messageId = scmp.getMessageId();
-		return SCMPMsgType.getMsgType(messageId);
+		String messageType = scmp.getMessageType();
+		return SCMPMsgType.getMsgType(messageType);
 	}
 
 	@Override

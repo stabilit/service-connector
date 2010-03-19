@@ -13,21 +13,40 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.config;
+package com.stabilit.sc.io;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IConstants {
+public enum SCMPErrorCode {
+
+	CLIENT_ERROR("400", "Client error occured."),
+	REQUEST_UNKNOWN("401", "Request unknown"),
+	VALIDATION_ERROR("402", "Validation error occured."),	
+	NOT_FOUND("404", "Not found error occured."),
+	NOT_CONNECTED("405", "Not connected."),
+	ALREADY_CONNECTED("406","Already connected."),
+	PROTOCOL_MISMATCH("405", "Service Connector protocol mismatches."),
+	SERVER_ERROR("500", "Server error occured.");
 	
-	final String CLIENT_PROT = "prot";
-	final String HTTP = "http";
-	final String CLIENT_CON = "con";
-	final String CLIENT_URL = "url";
-	final String VERSION = "1.0";
+	private String errorCode;
+	private String errorText;
+	
+	private SCMPErrorCode(String errorCode, String errorText) {
+		this.errorCode = errorCode;
+		this.errorText = errorText;
+	}
+
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	public String getErrorText() {
+		return errorText;
+	}
 }

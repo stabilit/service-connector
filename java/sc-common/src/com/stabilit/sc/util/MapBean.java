@@ -38,6 +38,10 @@ public class MapBean<T> {
 		attrMap = map;
 	}
 
+	public Map<String, T> getAttributeMap() {
+	    return this.attrMap;	
+	}
+
 	public T getAttribute(String name) {
 		return this.attrMap.get(name);
 	}

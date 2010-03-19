@@ -8,17 +8,11 @@ import java.util.Map;
 
 public class SCMP implements Serializable {
 
-	private static final long serialVersionUID = 2547798618820848999L;
-
-	public static final String SUBSCRIBE_ID = "com.stabilit.sc.SUBSCRIBE_ID";
-
-	public static final String MESSAGE_ID = "com.stabilit.sc.MESSAGE_ID";
-
-	public static final String INDEX = "com.stabilit.sc.INDEX";
+	private static final long serialVersionUID = -3464445251398033295L;
 
 	public static final String VERSION = "1.0";
 
-	private Map<String, String> header;
+	protected Map<String, String> header;
 	private Object body;
 	private IEncoderDecoder encoderDecoder = null;
 
@@ -30,14 +24,17 @@ public class SCMP implements Serializable {
 		header = new HashMap<String, String>();
 		this.setBody(body);
 	}
-
-	public boolean isFault() {
-		return header.containsKey(SCMPHeaderType.SC_ERROR_CODE);
+	
+	public void setMessageType(String messageType) {
+		setHeader(SCMPHeaderType.MSG_TYPE.getName(), messageType);
+	}
+	
+	public String getMessageType() {
+		return getHeader(SCMPHeaderType.MSG_TYPE.getName());
 	}
 
-	public void setError(String errorCode, String errorText) {
-		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode);
-		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorText);
+	public boolean isFault() {
+		return false;
 	}
 
 	public void setHeader(String name, String value) {
@@ -57,28 +54,6 @@ public class SCMP implements Serializable {
 			return;
 		}
 		header.put(ISession.SESSION_ID, sessionId);
-	}
-
-	public String getSubscribeId() {
-		return header.get(SUBSCRIBE_ID);
-	}
-
-	public void setSubsribeId(String subscribeId) {
-		if (subscribeId == null) {
-			return;
-		}
-		header.put(SUBSCRIBE_ID, subscribeId);
-	}
-
-	public String getMessageId() {
-		return header.get(MESSAGE_ID);
-	}
-
-	public void setMessageId(String messageId) {
-		if (messageId == null) {
-			messageId = "";
-		}
-		header.put(MESSAGE_ID, messageId);
 	}
 
 	public Map<String, String> getHeader() {
@@ -117,7 +92,7 @@ public class SCMP implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SCOP [header=");
+		builder.append("SCMP [header=");
 		builder.append(header);
 		builder.append("]");
 		return builder.toString();

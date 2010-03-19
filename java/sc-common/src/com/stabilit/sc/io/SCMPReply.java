@@ -13,21 +13,22 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.config;
+package com.stabilit.sc.io;
+
+import com.stabilit.sc.util.DateTime;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IConstants {
+public class SCMPReply extends SCMP {
 	
-	final String CLIENT_PROT = "prot";
-	final String HTTP = "http";
-	final String CLIENT_CON = "con";
-	final String CLIENT_URL = "url";
-	final String VERSION = "1.0";
+	public void setLocalDateTime() {
+		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTime.getCurrentTimeZoneMillis());
+	}
+
 }
