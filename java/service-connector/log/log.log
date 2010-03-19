@@ -1,1 +1,0 @@
-2010-03-19 17:12:49,046 [New I/O server worker #2-1] ERROR com.stabilit.sc.net.server.netty.tcp.NettyTcpServerRequestHandler - Exception :An existing connection was forcibly closed by the remote host
