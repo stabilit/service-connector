@@ -15,6 +15,8 @@
  */
 package com.stabilit.sc.net.server.netty.http;
 
+import java.net.SocketAddress;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -49,7 +51,8 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		IRequest request = new NettyHttpRequest(httpRequest);
+		SocketAddress socketAddress = ctx.getChannel().getRemoteAddress();
+		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
 		if (command == null) {
