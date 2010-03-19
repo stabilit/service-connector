@@ -39,7 +39,7 @@ public class ConnectHttpTestCase {
 
 	public ConnectHttpTestCase() throws IOException {
 		config = new ClientConfig();
-		config.load("sc-client-api.properties");
+		config.load("sc-unit.properties");
 
 	}
 
@@ -60,7 +60,7 @@ public class ConnectHttpTestCase {
 		try {
 			client.connect();
 			SCMP scmp = new SCMP();
-			scmp.setMessageType(SCMPMsgType.CONNECT.getRequestName());
+			scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
 			ConnectMessage connect = new ConnectMessage();
 			
 			connect.setVersion("1.0");
