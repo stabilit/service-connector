@@ -20,7 +20,7 @@
 package com.stabilit.sc.client;
 
 import com.stabilit.sc.client.factory.ClientConnectionFactory;
-import com.stabilit.sc.config.ClientConfig;
+import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.SCMP;
@@ -31,7 +31,7 @@ import com.stabilit.sc.io.SCMP;
  */
 public class Client implements IClient {
 
-	private ClientConfig clientConfig;
+	private ClientConfigItem clientConfig;
 	private IClientConnection clientConnection;
 
 	@Override
@@ -40,7 +40,7 @@ public class Client implements IClient {
 	}
 
 	@Override
-	public void setClientConfig(ClientConfig clientConfig) {
+	public void setClientConfig(ClientConfigItem clientConfig) {
 		this.clientConfig = clientConfig;
 		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
 		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getCon());

@@ -23,6 +23,7 @@ import com.stabilit.sc.client.IClientConnection;
 import com.stabilit.sc.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPMsgType;
 
 /**
  * @author JTraber
@@ -47,7 +48,7 @@ public class EchoStringClient {
 
 				// TODO con.createSession();
 				SCMP request = new SCMP();
-				request.setMessageId("echo");
+				request.setMessageType(SCMPMsgType.ECHO.getRequestName());
 				// request.setHeader("serviceName", "service A");
 				String msg = "hello world " + ++index;
 

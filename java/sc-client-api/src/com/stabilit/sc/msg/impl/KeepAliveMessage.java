@@ -17,33 +17,21 @@
 /**
  * 
  */
-package com.stabilit.sc.client;
+package com.stabilit.sc.msg.impl;
 
-import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.exception.ConnectionException;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.Message;
+import com.stabilit.sc.io.SCMPMsgType;
 
 /**
  * @author JTraber
  * 
  */
-public interface IClient extends IFactoryable {
+public class KeepAliveMessage extends Message {
 
-	public void deleteSession();
+	private static final long serialVersionUID = -1962428309463037514L;
+	public static SCMPMsgType ID = SCMPMsgType.KEEP_ALIVE;
 
-	public void createSession();
-
-	public void disconnect();
-
-	public void destroy() throws Exception;
-
-	public void connect() throws ConnectionException;
-
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-
-	/**
-	 * @param clientConfig
-	 */
-	void setClientConfig(ClientConfigItem clientConfig);
+	public KeepAliveMessage() {
+		super(ID);
+	}
 }

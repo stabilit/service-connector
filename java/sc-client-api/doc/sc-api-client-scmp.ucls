@@ -72,24 +72,24 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </enumeration>  
-  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.msg.IMessage" project="sc-common" 
-    file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false">    
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.io.IMessage" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false">    
     <position x="256" y="822" width="207" height="131"/>    
     <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </interface>  
-  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.msg.IMessageFactory" project="sc-common" 
-    file="/sc-common/src/com/stabilit/sc/msg/IMessageFactory.java" binary="false">    
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.io.IMessageFactory" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/io/IMessageFactory.java" binary="false">    
     <position x="42" y="363" width="153" height="67"/>    
     <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </interface>  
-  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.msg.Message" project="sc-common" 
-    file="/sc-common/src/com/stabilit/sc/msg/Message.java" binary="false">    
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.io.Message" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/io/Message.java" binary="false">    
     <position x="256" y="363" width="207" height="227"/>    
     <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -104,97 +104,6 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <dependency>    
-    <bendpoint x="950" y="363"/>    
-    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessage" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false"/>  
-  </dependency>  
-  <realization>    
-    <bendpoint x="971" y="363"/>    
-    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.IEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/IEncoderDecoder.java" binary="false"/>  
-  </realization>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.IRequest" 
-      file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>  
-  </dependency>  
-  <association>    
-    <bendpoint x="225" y="363"/>    
-    <source project="sc-common" name="com.stabilit.sc.msg.MessageFactory" 
-      file="/sc-common/src/com/stabilit/sc/msg/MessageFactory.java" binary="false" navigable="false">      
-      <attribute name="msgMap"/>      
-      <multiplicity minimum="0" maximum="2147483647"/>    
-    </source>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessage" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization>    
-    <source project="sc-common" name="com.stabilit.sc.io.Session" file="/sc-common/src/com/stabilit/sc/io/Session.java" 
-      binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
-      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
-  </realization>  
-  <realization>    
-    <source project="sc-common" name="com.stabilit.sc.msg.Message" 
-      file="/sc-common/src/com/stabilit/sc/msg/Message.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessage" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false"/>  
-  </realization>  
-  <realization>    
-    <source project="sc-common" name="com.stabilit.sc.msg.MessageFactory" 
-      file="/sc-common/src/com/stabilit/sc/msg/MessageFactory.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessageFactory" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessageFactory.java" binary="false"/>  
-  </realization>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.EncoderDecoderFactory" 
-      file="/sc-common/src/com/stabilit/sc/io/EncoderDecoderFactory.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>  
-  </dependency>  
-  <nesting>    
-    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder.TYPE" 
-      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>  
-  </nesting>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.IResponse" 
-      file="/sc-common/src/com/stabilit/sc/io/IResponse.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
-      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.msg.IMessageFactory" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessageFactory.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessage" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.IResponse" 
-      file="/sc-common/src/com/stabilit/sc/io/IResponse.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.msg.IMessage" 
-      file="/sc-common/src/com/stabilit/sc/msg/IMessage.java" binary="false"/>  
-  </dependency>  
   <association>    
     <source project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
       binary="false" navigable="false">      
@@ -205,11 +114,53 @@
       file="/sc-common/src/com/stabilit/sc/io/IEncoderDecoder.java" binary="false" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <nesting>    
+    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder.TYPE" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>  
+  </nesting>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.IResponse" 
+      file="/sc-common/src/com/stabilit/sc/io/IResponse.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.IResponse" 
+      file="/sc-common/src/com/stabilit/sc/io/IResponse.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
+      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.io.Message" file="/sc-common/src/com/stabilit/sc/io/Message.java" 
+      binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessage" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.io.Session" file="/sc-common/src/com/stabilit/sc/io/Session.java" 
+      binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
+      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-common" name="com.stabilit.sc.msg.MessageFactory" 
+      file="/sc-common/src/com/stabilit/sc/msg/MessageFactory.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessageFactory" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessageFactory.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.IMessageFactory" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessageFactory.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessage" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false"/>  
+  </dependency>  
   <dependency>    
     <source project="sc-common" name="com.stabilit.sc.io.IRequest" 
       file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
-      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
   </dependency>  
   <association>    
     <bendpoint x="1188" y="176"/>    
@@ -223,6 +174,55 @@
       file="/sc-common/src/com/stabilit/sc/io/IEncoderDecoder.java" binary="false" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association>    
+    <bendpoint x="225" y="363"/>    
+    <source project="sc-common" name="com.stabilit.sc.msg.MessageFactory" 
+      file="/sc-common/src/com/stabilit/sc/msg/MessageFactory.java" binary="false" navigable="false">      
+      <attribute name="msgMap"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessage" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.EncoderDecoderFactory" 
+      file="/sc-common/src/com/stabilit/sc/io/EncoderDecoderFactory.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.IRequest" 
+      file="/sc-common/src/com/stabilit/sc/io/IRequest.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.ISession" 
+      file="/sc-common/src/com/stabilit/sc/io/ISession.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessage" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <realization>    
+    <bendpoint x="971" y="363"/>    
+    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/IEncoderDecoder.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <bendpoint x="950" y="363"/>    
+    <source project="sc-common" name="com.stabilit.sc.io.impl.DefaultEncoderDecoder" 
+      file="/sc-common/src/com/stabilit/sc/io/impl/DefaultEncoderDecoder.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.IMessage" 
+      file="/sc-common/src/com/stabilit/sc/io/IMessage.java" binary="false"/>  
+  </dependency>  
   <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true"/>    
     <operations public="true" package="true" protected="true" private="true"/>  

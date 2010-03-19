@@ -19,37 +19,91 @@
  */
 package com.stabilit.sc.config;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * @author JTraber
  * 
  */
 public class ClientConfig {
 
-	private int port;
-	private String host;
-	private String con;
+	private Properties props;
+	private List<ClientConfigItem> clientConfigItemList;
 
-	public int getPort() {
-		return port;
+	public ClientConfig() {
+		super();
+		clientConfigItemList = null;
+		props = null;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
+	public void load(String fileName) throws IOException {
+		InputStream is = ClientConfig.class.getResourceAsStream(".." + File.separatorChar + fileName);
+		props = new Properties();
+		props.load(is);
+
+		String serverNames = props.getProperty("serverNames");
+
+		String[] servers = serverNames.split(",|;");
+		clientConfigItemList = new ArrayList<ClientConfigItem>();
+
+		for (String serverName : servers) {
+			ClientConfigItem clientConfigItem = new ClientConfigItem();
+
+			clientConfigItemList.add(clientConfigItem);
+			
+			int port = Integer.parseInt((String) props.get(serverName + ".port"));
+
+			clientConfigItem.setPort(port);
+			clientConfigItem.setHost((String) props.get(serverName + ".host"));
+			clientConfigItem.setCon((String) props.get(serverName + ".con"));
+		}
 	}
 
-	public String getHost() {
-		return host;
+	public List<ClientConfigItem> getClientConfigList() {
+		return clientConfigItemList;
 	}
-
-	public void setHost(String host) {
-		this.host = host;
+	
+	public ClientConfigItem getClientConfig() {
+		return clientConfigItemList.get(0);
 	}
+	
+	public class ClientConfigItem {
 
-	public String getCon() {
-		return con;
-	}
+		private int port;
+		private String host;
+		private String con;
 
-	public void setCon(String con) {
-		this.con = con;
+		public int getPort() {
+			return port;
+		}
+
+		public void setPort(int port) {
+			this.port = port;
+		}
+
+		public String getHost() {
+			return host;
+		}
+
+		public void setHost(String host) {
+			this.host = host;
+		}
+
+		public String getCon() {
+			return con;
+		}
+
+		public void setCon(String con) {
+			this.con = con;
+		}
 	}
 }
