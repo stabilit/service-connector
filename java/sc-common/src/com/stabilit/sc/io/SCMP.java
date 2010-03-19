@@ -5,17 +5,18 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.msg.IMessage;
 
 public class SCMP implements Serializable {
 
 	private static final long serialVersionUID = 2547798618820848999L;
 
 	public static final String SUBSCRIBE_ID = "com.stabilit.sc.SUBSCRIBE_ID";
-	
+
 	public static final String MESSAGE_ID = "com.stabilit.sc.MESSAGE_ID";
 
-	public static final String INDEX = "com.stabilit.sc.INDEX"; 
+	public static final String INDEX = "com.stabilit.sc.INDEX";
+
+	public static final String VERSION = "1.0";
 
 	private Map<String, String> header;
 	private Object body;
@@ -28,6 +29,15 @@ public class SCMP implements Serializable {
 	public SCMP(Object body) {
 		header = new HashMap<String, String>();
 		this.setBody(body);
+	}
+
+	public boolean isFault() {
+		return header.containsKey(SCMPHeaderType.SC_ERROR_CODE);
+	}
+
+	public void setError(String errorCode, String errorText) {
+		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode);
+		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorText);
 	}
 
 	public void setHeader(String name, String value) {
@@ -50,9 +60,9 @@ public class SCMP implements Serializable {
 	}
 
 	public String getSubscribeId() {
-		return header.get(SUBSCRIBE_ID);		
+		return header.get(SUBSCRIBE_ID);
 	}
-	
+
 	public void setSubsribeId(String subscribeId) {
 		if (subscribeId == null) {
 			return;
@@ -61,12 +71,12 @@ public class SCMP implements Serializable {
 	}
 
 	public String getMessageId() {
-		return header.get(MESSAGE_ID);		
+		return header.get(MESSAGE_ID);
 	}
-	
+
 	public void setMessageId(String messageId) {
 		if (messageId == null) {
-			return;
+			messageId = "";
 		}
 		header.put(MESSAGE_ID, messageId);
 	}
@@ -81,17 +91,13 @@ public class SCMP implements Serializable {
 
 	public void setBody(Object body) {
 		this.body = body;
-		if (this.body instanceof IMessage) {
-			this.setMessageId(((IMessage)this.body).getKey().getName());
-		}
 	}
 
 	public Object getBody() {
 		return body;
 	}
 
-	private void writeObject(java.io.ObjectOutputStream stream)
-			throws IOException {
+	private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
 		if (this.encoderDecoder == null) {
 			// get default encoder decoder
 			this.encoderDecoder = EncoderDecoderFactory.newInstance();
@@ -100,8 +106,7 @@ public class SCMP implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream stream)
-			throws IOException, ClassNotFoundException {
+	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		if (this.encoderDecoder == null) {
 			// get default encoder decoder
 			this.encoderDecoder = EncoderDecoderFactory.newInstance();
@@ -117,4 +122,5 @@ public class SCMP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
 }

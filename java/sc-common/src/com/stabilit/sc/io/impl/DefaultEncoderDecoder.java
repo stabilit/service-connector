@@ -13,13 +13,13 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.stabilit.sc.io.IEncoderDecoder;
+import com.stabilit.sc.io.IMessage;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.IMessage;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
-    private static final String SCMP_BODY_TYPE = "scmp-body-type";
-    private static final String SCMP_BODY_LENGTH = "scmp-body-length";
+	private static final String SCMP_BODY_TYPE = "scmp-body-type";
+	private static final String SCMP_BODY_LENGTH = "scmp-body-length";
 	private static final String CHARSET = "UTF-8";
 
 	public DefaultEncoderDecoder() {
@@ -27,8 +27,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void decode(InputStream is, Object obj) throws IOException,
-			ClassNotFoundException {
+	public void decode(InputStream is, Object obj) throws IOException, ClassNotFoundException {
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
 		Map<String, String> metaMap = new HashMap<String, String>();
@@ -39,7 +38,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			}
 			String[] t = line.split("=");
 			if (t.length == 2) {
-				metaMap.put(t[0],t[1]);
+				metaMap.put(t[0], t[1]);
 			}
 		}
 		String scmpBodyType = metaMap.get(SCMP_BODY_TYPE);
@@ -53,8 +52,8 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				char[] caBuffer = new char[caLength];
 				br.read(caBuffer);
 				String bodyString = new String(caBuffer, 0, caLength);
-			    scmp.setBody(bodyString);
-			    return;				
+				scmp.setBody(bodyString);
+				return;
 			}
 			if (scmpBodyTypEnum == TYPE.MESSAGE) {
 				String classLine = br.readLine();
@@ -81,14 +80,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					}
 				}
 				scmp.setBody(message);
-			    return;
+				return;
 			}
 			if (scmpBodyTypEnum == TYPE.ARRAY) {
 				int baLength = Integer.parseInt(scmpBodyLength);
 				byte[] baBuffer = new byte[baLength];
 				is.read(baBuffer);
-			    scmp.setBody(baBuffer);
-			    return;
+				scmp.setBody(baBuffer);
+				return;
 			}
 		} catch (Exception e) {
 		}
@@ -103,7 +102,18 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-		sb.append("SCMP\n");
+		String messageId = scmp.getMessageId(); // messageId is never null
+		if (messageId.startsWith("REQ_")) {
+			sb.append("REQ / SCMP/");
+		} else if (messageId.startsWith("RES_")) {
+			if (scmp.isFault()) {
+			    sb.append("RES / SCMP/");
+			} else {
+			    sb.append("EXC / SCMP/");			
+			}
+		}
+		sb.append(SCMP.VERSION);
+		sb.append("\n");
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
 		for (Entry<String, String> entry : entrySet) {
 			String key = entry.getKey();
@@ -116,7 +126,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Object body = scmp.getBody();
 		if (body != null) {
 			if (String.class == body.getClass()) {
-				String t = (String)body;			
+				String t = (String) body;
 				sb.append(SCMP_BODY_TYPE);
 				sb.append("=");
 				sb.append(TYPE.STRING.getType());
@@ -137,7 +147,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				sb.append("\n\n");
 				bw.write(sb.toString());
 				bw.flush();
-				IMessage message = (IMessage)body;				
+				IMessage message = (IMessage) body;
 				Map<String, Object> attrMap = message.getAttributeMap();
 				Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
 				StringBuilder mb = new StringBuilder();
@@ -154,7 +164,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					mb.append("\n");
 				}
 				bw.write(mb.toString());
-				bw.flush();				
+				bw.flush();
 				return;
 			}
 			if (body instanceof byte[]) {
@@ -162,7 +172,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				sb.append("=");
 				sb.append(TYPE.ARRAY.getType());
 				sb.append("\n");
-				byte[]ba = (byte[])body;
+				byte[] ba = (byte[]) body;
 				sb.append(SCMP_BODY_LENGTH);
 				sb.append("=");
 				sb.append(String.valueOf(ba.length));

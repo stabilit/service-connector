@@ -13,7 +13,8 @@ import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.msg.MsgType;
+import com.stabilit.sc.io.SCMPMsgType;
+import com.stabilit.sc.util.MapBean;
 
 public class NettyTcpRequest implements IRequest {
 
@@ -21,8 +22,10 @@ public class NettyTcpRequest implements IRequest {
 	private SCMP scmp;
 	private IRequestContext requestContext;
 	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	private MapBean<Object> mapBean;
 
 	public NettyTcpRequest(MessageEvent e) {
+		this.mapBean = new MapBean<Object>();
 		this.request = (ChannelBuffer) e.getMessage();
 		this.scmp = null;
 		this.requestContext = new RequestContext(e.getRemoteAddress());
@@ -41,13 +44,13 @@ public class NettyTcpRequest implements IRequest {
 	}
 
 	@Override
-	public MsgType getKey() {
+	public SCMPMsgType getKey() {
 		SCMP scmp = this.getSCMP();
 		if (scmp == null) {
 			return null;
 		}
 		String messageId = scmp.getMessageId();
-		return MsgType.getMsgType(messageId);
+		return SCMPMsgType.getMsgType(messageId);
 	}
 
 	@Override
@@ -67,5 +70,20 @@ public class NettyTcpRequest implements IRequest {
 	@Override
 	public IRequestContext getContext() {
 		return requestContext;
+	}
+
+	@Override
+	public Object getAttribute(String key) {
+		return mapBean.getAttribute(key);
+	}
+
+	@Override
+	public void setAttribute(String key, Object value) {
+		mapBean.setAttribute(key, value);
+	}
+
+	@Override
+	public MapBean<Object> getAttributeMapBean() {
+		return mapBean;
 	}
 }
