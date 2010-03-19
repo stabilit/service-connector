@@ -19,7 +19,7 @@
  */
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.conf.ServerConfig;
+import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.server.factory.ServerConnectionFactory;
 
@@ -29,7 +29,7 @@ import com.stabilit.sc.server.factory.ServerConnectionFactory;
  */
 public class Server implements IServer {
 
-	private ServerConfig serverConfig;
+	private ServerConfigItem serverConfig;
 	private IServerConnection serverConnection;
 	
 
@@ -39,7 +39,7 @@ public class Server implements IServer {
 	}
 
 	@Override
-	public void setServerConfig(ServerConfig serverConfig) {
+	public void setServerConfig(ServerConfigItem serverConfig) {
 		this.serverConfig = serverConfig;
 		ServerConnectionFactory serverConnectionFactory = new ServerConnectionFactory();
 		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getCon());

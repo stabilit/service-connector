@@ -4,7 +4,7 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.msg.MsgType;
+import com.stabilit.sc.io.SCMPMsgType;
 
 public class CommandFactory extends Factory {
 
@@ -22,8 +22,8 @@ public class CommandFactory extends Factory {
 	}
 		
 	public ICommand newCommand(IRequest request) {
-		MsgType key = request.getKey();
-		IFactoryable factoryInstance = this.newInstance(key.getName()); 
+		SCMPMsgType key = request.getKey();
+		IFactoryable factoryInstance = this.newInstance(key.getRequestName()); 
 		return (ICommand)factoryInstance;
 	}
 

@@ -1,6 +1,6 @@
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.conf.ServerConfig;
+import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 
@@ -11,7 +11,7 @@ public class ServerFactory extends Factory {
 	    this.factoryMap.put("default", server);
 	}
 	
-	public IServer newInstance(ServerConfig serverConfig) {
+	public IServer newInstance(ServerConfigItem serverConfig) {
 		IFactoryable factoryInstance = this.newInstance();
 		IServer server = (IServer)factoryInstance;
 		server.setServerConfig(serverConfig);

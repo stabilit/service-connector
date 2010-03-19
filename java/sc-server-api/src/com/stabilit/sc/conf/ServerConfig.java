@@ -13,59 +13,109 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
 package com.stabilit.sc.conf;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * @author JTraber
- *
+ * 
  */
 public class ServerConfig {
 
-	private String serverName;
-	private int port;
-	private String host;
-	private String con;
-	
+	private Properties props;
+	private List<ServerConfigItem> serverConfigList;
+
+	public ServerConfig() {
+		super();
+		serverConfigList = null;
+		props = null;
+	}
+
 	/**
-	 * @param serverName
+	 * @param args
+	 * @throws IOException
 	 */
-	public ServerConfig(String serverName) {
-		this.serverName = serverName;
+	public void load(String fileName) throws IOException {
+		InputStream is = ServerConfig.class.getResourceAsStream(".." + File.separatorChar + fileName);
+		props = new Properties();
+		props.load(is);
+
+		String serverNames = props.getProperty("serverNames");
+
+		String[] servers = serverNames.split(",|;");
+		serverConfigList = new ArrayList<ServerConfigItem>();
+
+		for (String serverName : servers) {
+			ServerConfigItem serverConfig = new ServerConfigItem(serverName);
+
+			serverConfigList.add(serverConfig);
+			
+			int port = Integer.parseInt((String) props.get(serverName + ".port"));
+
+			serverConfig.setPort(port);
+			serverConfig.setHost((String) props.get(serverName + ".host"));
+			serverConfig.setCon((String) props.get(serverName + ".con"));
+		}
 	}
 
-	public String getServerName() {
-		return serverName;
+	public List<ServerConfigItem> getServerConfigList() {
+		return serverConfigList;
 	}
+	
+	public class ServerConfigItem {
 
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
+		private String serverName;
+		private int port;
+		private String host;
+		private String con;
+		
+		/**
+		 * @param serverName
+		 */
+		public ServerConfigItem(String serverName) {
+			this.serverName = serverName;
+		}
 
-	public int getPort() {
-		return port;
-	}
+		public String getServerName() {
+			return serverName;
+		}
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+		public void setServerName(String serverName) {
+			this.serverName = serverName;
+		}
 
-	public String getHost() {
-		return host;
-	}
+		public int getPort() {
+			return port;
+		}
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+		public void setPort(int port) {
+			this.port = port;
+		}
 
-	public String getCon() {
-		return con;
-	}
+		public String getHost() {
+			return host;
+		}
 
-	public void setCon(String con) {
-		this.con = con;
+		public void setHost(String host) {
+			this.host = host;
+		}
+
+		public String getCon() {
+			return con;
+		}
+
+		public void setCon(String con) {
+			this.con = con;
+		}
 	}
 }

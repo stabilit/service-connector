@@ -32,8 +32,14 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
+import com.stabilit.sc.cmd.ICommandValidator;
+import com.stabilit.sc.cmd.ValidatorException;
 import com.stabilit.sc.cmd.factory.CommandFactory;
+import com.stabilit.sc.io.IFaultResponse;
 import com.stabilit.sc.io.IRequest;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPErrorCode;
+import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.net.netty.NettyHttpRequest;
 import com.stabilit.sc.net.netty.NettyHttpResponse;
 
@@ -46,7 +52,28 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		IRequest request = new NettyHttpRequest(httpRequest);
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+		if (command == null) {
+			SCMP scmpReq = request.getSCMP();
+			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+			scmpFault.setMessageType(scmpReq.getMessageType());
+			scmpFault.setLocalDateTime();
+			response.setSCMP(scmpFault);
+			writeResponse(response);
+			return;
+		}
 		try {
+			ICommandValidator commandValidator = command.getCommandValidator();
+			if (commandValidator != null) {
+				try {
+					commandValidator.validate(request, response);
+				} catch (ValidatorException e) {
+					if (e instanceof IFaultResponse) {
+						((IFaultResponse)e).setFaultResponse(response);
+					}
+					writeResponse(response);
+					return;
+				}
+			}
 			command.run(request, response);
 		} catch (CommandException e) {
 			e.printStackTrace();

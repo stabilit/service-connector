@@ -17,19 +17,16 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.cmd;
 
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.io.IRequest;
+import com.stabilit.sc.io.IResponse;
 
 /**
  * @author JTraber
  *
  */
-public interface IServer extends IFactoryable {
-	
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create();
-	public void runAsync();
-	public void runSync() throws InterruptedException;
+public interface ICommandValidator {
+
+	public void validate(IRequest request, IResponse response) throws ValidatorException;
 }

@@ -17,19 +17,35 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.cmd;
 
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
 
 /**
  * @author JTraber
  *
  */
-public interface IServer extends IFactoryable {
+public abstract class CommandAdapter implements ICommand {
+
 	
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create();
-	public void runAsync();
-	public void runSync() throws InterruptedException;
+
+	protected ICommandValidator commandValidator;
+	
+	public CommandAdapter() {
+		commandValidator = NullCommandValidator.newInstance();  // www.refactoring.com Introduce NULL Object
+	}
+
+	@Override
+	public ICommandValidator getCommandValidator() {
+		return commandValidator;
+	}
+		
+	@Override
+	public String getRequestKeyName() {
+		return this.getKey().getRequestName();
+	}
+	
+	@Override
+	public String getResponseKeyName() {
+		return this.getKey().getResponseName();
+	}
 }

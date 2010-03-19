@@ -17,19 +17,30 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.cmd;
 
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.io.IRequest;
+import com.stabilit.sc.io.IResponse;
 
 /**
  * @author JTraber
  *
  */
-public interface IServer extends IFactoryable {
+public class NullCommandValidator implements ICommandValidator {
+
+	private static ICommandValidator nullCommandValidator = new NullCommandValidator();
+		
+	public static ICommandValidator newInstance() {
+		return nullCommandValidator;
+	}
+
+	private NullCommandValidator() {
+	}
 	
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create();
-	public void runAsync();
-	public void runSync() throws InterruptedException;
+	@Override
+	public void validate(IRequest request, IResponse resonse) throws ValidatorException {
+        throw new ValidatorException("no validator implemented");
+	}
+
+
 }

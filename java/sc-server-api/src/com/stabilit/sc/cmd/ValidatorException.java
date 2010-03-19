@@ -13,23 +13,45 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.server;
-
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
+package com.stabilit.sc.cmd;
 
 /**
  * @author JTraber
  *
  */
-public interface IServer extends IFactoryable {
-	
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create();
-	public void runAsync();
-	public void runSync() throws InterruptedException;
+public class ValidatorException extends Exception {
+
+	/**
+	 * 
+	 */
+	public ValidatorException() {
+		super();
+	}
+
+	/**
+	 * @param message
+	 */
+	public ValidatorException(String message) {
+		super(message);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public ValidatorException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ValidatorException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

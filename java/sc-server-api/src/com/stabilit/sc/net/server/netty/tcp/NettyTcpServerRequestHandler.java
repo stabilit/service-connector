@@ -33,8 +33,14 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
+import com.stabilit.sc.cmd.ICommandValidator;
+import com.stabilit.sc.cmd.ValidatorException;
 import com.stabilit.sc.cmd.factory.CommandFactory;
+import com.stabilit.sc.io.IFaultResponse;
 import com.stabilit.sc.io.IRequest;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPErrorCode;
+import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.net.netty.NettyTcpRequest;
 import com.stabilit.sc.net.netty.NettyTcpResponse;
 
@@ -76,22 +82,40 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 
 		if (sync) {
-			answer.offer((ChannelBuffer) e.getMessage());
+			answer.offer((ChannelBuffer) event.getMessage());
 		} else {
-			
-			IRequest request = new NettyTcpRequest(e);
-			NettyTcpResponse response = new NettyTcpResponse(e);
+
+			IRequest request = new NettyTcpRequest(event);
+			NettyTcpResponse response = new NettyTcpResponse(event);
 			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
-
-			log.debug("NettyTcpResponderRequestHandler: following command received - " + command.getKey());
-
+			if (command == null) {
+				SCMP scmpReq = request.getSCMP();
+				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+				scmpFault.setMessageType(scmpReq.getMessageType());
+				scmpFault.setLocalDateTime();
+				response.setSCMP(scmpFault);
+				writeResponse(response);
+				return;
+			}
 			try {
+				ICommandValidator commandValidator = command.getCommandValidator();
+				if (commandValidator != null) {
+					try {
+						commandValidator.validate(request, response);
+					} catch (ValidatorException ex) {
+						if (ex instanceof IFaultResponse) {
+							((IFaultResponse) ex).setFaultResponse(response);
+						}
+						writeResponse(response);
+						return;
+					}
+				}
 				command.run(request, response);
-			} catch (CommandException ex) {
-				ex.printStackTrace();
+			} catch (CommandException exc) {
+				exc.printStackTrace();
 			}
 			writeResponse(response);
 		}
