@@ -19,7 +19,7 @@
  */
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.client.IConnection;
+import com.stabilit.sc.IConnection;
 
 /**
  * @author JTraber
