@@ -6,6 +6,7 @@ import com.stabilit.sc.cmd.impl.ConnectCommand;
 import com.stabilit.sc.cmd.impl.DataCommand;
 import com.stabilit.sc.cmd.impl.DisconnectCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
+import com.stabilit.sc.cmd.impl.MaintenanceCommand;
 import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
 
 public class ServiceConnectorCommandFactory extends CommandFactory {
@@ -13,6 +14,8 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	public ServiceConnectorCommandFactory() {
 		ICommand echoCommand = new EchoCommand();
 		add(echoCommand.getRequestKeyName(), echoCommand);
+		ICommand maintenanceCommand = new MaintenanceCommand();
+		add(maintenanceCommand.getRequestKeyName(), maintenanceCommand);
 		ICommand connectCommand = new ConnectCommand();
 		add(connectCommand.getRequestKeyName(), connectCommand);
 		ICommand disconnectCommand = new DisconnectCommand();
