@@ -12,20 +12,12 @@ public class ConnectMessage extends Message {
 		super(ID);
 	}
 
-	public String getProtocol() {
-		return (String) attrMap.get(SCMPHeaderType.PROTOCOL.getName());
-	}
-
-	public void setProtocol(String protocol) {
-		attrMap.put(SCMPHeaderType.PROTOCOL.getName(), protocol);
-	}
-
 	public String getVersion() {
-		return (String) attrMap.get(SCMPHeaderType.VERSION.getName());
+		return (String) attrMap.get(SCMPHeaderType.SCMP_VERSION.getName());
 	}
 
 	public void setVersion(String version) {
-		attrMap.put(SCMPHeaderType.VERSION.getName(), version);
+		attrMap.put(SCMPHeaderType.SCMP_VERSION.getName(), version);
 	}
 
 	public boolean isCompression() {
