@@ -32,6 +32,7 @@ import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.msg.impl.ConnectMessage;
+import com.stabilit.sc.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.util.DateTimeUtility;
 
 public class ConnectHttpTestCase {
@@ -67,7 +68,7 @@ public class ConnectHttpTestCase {
 			scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
 			ConnectMessage connect = new ConnectMessage();
 
-			connect.setVersion("1.0");
+			connect.setVersion("1.0-00");
 			connect.setCompression(false);
 			connect.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			connect.setKeepAliveTimeout(30);
@@ -82,6 +83,14 @@ public class ConnectHttpTestCase {
 			for (Entry<String, String> entry : result.getHeader().entrySet()) {
 				System.out.println(entry.getKey() + " " + entry.getValue());
 			}
+			
+			MaintenanceMessage msgMain = new MaintenanceMessage();
+			scmp.setMessageType(SCMPMsgType.REQ_MAINTENANCE.getRequestName());
+			scmp.setBody(msgMain);
+			SCMP maintenance = client.sendAndReceive(scmp);
+			MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+			String map =  (String) mainMsg.getAttribute("map");
+			System.out.println(map);
 			/*************** scmp connect ******************/			
 			/*************** scmp disconnect *********/
 			//TODO
