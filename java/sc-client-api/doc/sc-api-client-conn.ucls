@@ -9,8 +9,8 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.client.IConnection" project="sc-common" 
-    file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false">    
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.IConnection" project="sc-common" 
+    file="/sc-common/src/com/stabilit/sc/IConnection.java" binary="false">    
     <position x="519" y="71" width="-1" height="-1"/>    
     <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -52,17 +52,53 @@
     </display>  
   </class>  
   <dependency>    
-    <source project="sc-common" name="com.stabilit.sc.client.IConnection" 
-      file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false"/>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
+      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
     <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
       binary="false"/>  
   </dependency>  
   <generalization>    
     <source project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
       file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.client.IConnection" 
-      file="/sc-common/src/com/stabilit/sc/client/IConnection.java" binary="false"/>  
+    <target project="sc-common" name="com.stabilit.sc.IConnection" 
+      file="/sc-common/src/com/stabilit/sc/IConnection.java" binary="false"/>  
   </generalization>  
+  <dependency>    
+    <source project="sc-common" name="com.stabilit.sc.IConnection" 
+      file="/sc-common/src/com/stabilit/sc/IConnection.java" binary="false"/>    
+    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
+      binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
+  </realization>  
   <association>    
     <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
       file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false" navigable="false">      
@@ -73,42 +109,6 @@
       file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization>    
-    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
-  </realization>  
-  <dependency>    
-    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>  
-  </dependency>  
-  <realization>    
-    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.client.IClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/client/IClientConnection.java" binary="false"/>  
-  </realization>  
-  <dependency>    
-    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
-      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.http.NettyHttpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-client-api" name="com.stabilit.sc.app.client.ClientConnectionFactory" 
-      file="/sc-client-api/src/com/stabilit/sc/app/client/ClientConnectionFactory.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>  
-  </dependency>  
-  <dependency>    
-    <source project="sc-client-api" name="com.stabilit.sc.net.client.netty.tcp.NettyTcpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
-    <target project="sc-common" name="com.stabilit.sc.io.SCMP" file="/sc-common/src/com/stabilit/sc/io/SCMP.java" 
-      binary="false"/>  
-  </dependency>  
   <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true"/>    
     <operations public="true" package="true" protected="true" private="true"/>  

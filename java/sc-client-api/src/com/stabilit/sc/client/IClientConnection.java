@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc.client;
 
+import com.stabilit.sc.IConnection;
 import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 

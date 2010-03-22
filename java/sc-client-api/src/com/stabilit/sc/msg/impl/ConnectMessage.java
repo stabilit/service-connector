@@ -41,7 +41,7 @@ public class ConnectMessage extends Message {
 	}
 
 	public void setLocalDateTime(String localDateTime) {
-		attrMap.put(SCMPHeaderType.COMPRESSION.getName(), localDateTime);
+		attrMap.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), localDateTime);
 	}
 
 	public int getKeepAliveTimeout() {
