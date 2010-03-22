@@ -57,9 +57,6 @@ public class ConnectCommand extends CommandAdapter {
 		scmpReply.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 		scmpReply.setLocalDateTime();
 		response.setSCMP(scmpReply);
-		//		
-		// IMessage msg = new ConnectMessage();
-		// scmpReply.setBody(msg);
 	}
 
 	@Override
