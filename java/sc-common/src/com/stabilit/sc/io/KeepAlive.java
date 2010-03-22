@@ -23,54 +23,30 @@ package com.stabilit.sc.io;
  * @author JTraber
  * 
  */
-public enum SCMPMsgType {
+public class KeepAlive {
 
-	REQ_CONNECT("CONNECT"),
-	RES_CONNECT("CONNECT"),
-	REQ_DISCONNECT("DISCONNECT"),
-	RES_DISCONNECT("DISCONNECT"),
-	KEEP_ALIVE("KEEP_ALIVE"),
-	CREATE_SESSION("CREATE_SESSION"),
-	DELETE_SESSION("DELETE_SESSION"),
-	ABORT_SESSION("ABORT_SESSION"),
-	DATA("DATA"),
-	SUBSCRIBE("SUBSCRIBE"), 
-	UNSUBSCRIBE("UNSUBSCRIBE"),
-	CHANGE_SUB("CHANGE_SUB"),
-	RECEIVE_PUBLICATION("RECEIVE_PUBLICATION"),
-	PUBLISH("PUBLISH"),
-	REGISTER_SERVICE("REGISTER_SERVICE"), 
-	UNDEFINED("UNDEFINED"),
-	REQ_ECHO("ECHO"),
-	RES_ECHO("ECHO"),
-	REQ_MAINTENANCE("MAINTENANCE"),
-	RES_MAINTENANCE("MAINTENANCE");
+	int keepAliveTimeout = 0;
+	int keepAliveInterval = 0;
 
-	private static final String RES_PREFIX = "RES_";
-	private static final String REQ_PREFIX = "REQ_";
-	private String name;
-	private String requestName;
-	private String responseName;
-
-	private SCMPMsgType(String name) {
-		this.name = name;
-		this.requestName = REQ_PREFIX + name;
-		this.responseName = RES_PREFIX + name;		
-	}
-	
-	public String getRequestName() {
-		return requestName;
-	}
-	
-	public String getResponseName() {
-		return responseName;
+	public KeepAlive(int keepAliveTimeout, int keepAliveInterval) {
+		super();
+		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
-	public String toString() {
-		return name;
+	public int getKeepAliveInterval() {
+		return keepAliveInterval;
 	}
 
-	public static SCMPMsgType getMsgType(String messageId) {
-		return SCMPMsgType.valueOf(messageId);
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
+
+	public int getKeepAliveTimeout() {
+		return keepAliveTimeout;
+	}
+
+	public void setKeepAliveTimeout(int keepAliveTimeout) {
+		this.keepAliveTimeout = keepAliveTimeout;
 	}
 }
