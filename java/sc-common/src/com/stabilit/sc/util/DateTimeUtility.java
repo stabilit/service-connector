@@ -3,7 +3,7 @@ package com.stabilit.sc.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class DateTime {
+public class DateTimeUtility {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
 

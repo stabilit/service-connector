@@ -21,7 +21,7 @@ package com.stabilit.sc.io;
 
 import java.util.Map;
 
-import com.stabilit.sc.util.DateTime;
+import com.stabilit.sc.util.DateTimeUtility;
 
 /**
  * @author JTraber
@@ -38,7 +38,7 @@ public class SCMPFault extends SCMP {
 	}
 	
 	public void setLocalDateTime() {
-		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTime.getCurrentTimeZoneMillis());
+		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 	
 	public boolean isFault() {

@@ -19,7 +19,7 @@
  */
 package com.stabilit.sc.io;
 
-import com.stabilit.sc.util.DateTime;
+import com.stabilit.sc.util.DateTimeUtility;
 
 /**
  * @author JTraber
@@ -28,7 +28,7 @@ import com.stabilit.sc.util.DateTime;
 public class SCMPReply extends SCMP {
 	
 	public void setLocalDateTime() {
-		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTime.getCurrentTimeZoneMillis());
+		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
 }

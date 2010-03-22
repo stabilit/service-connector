@@ -1,4 +1,4 @@
-package com.stabilit.sc.client;
+package com.stabilit.sc;
 
 import com.stabilit.sc.factory.IFactoryable;
 

@@ -107,9 +107,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			sb.append("REQ / SCMP/");
 		} else if (messageType.startsWith("RES_")) {
 			if (scmp.isFault()) {
-			    sb.append("RES / SCMP/");
+				sb.append("EXC / SCMP/");			
 			} else {
-			    sb.append("EXC / SCMP/");			
+				sb.append("RES / SCMP/");			    
 			}
 		}
 		sb.append(SCMP.VERSION);
@@ -185,6 +185,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			} else {
 				throw new IOException("unsupported body type");
 			}
+		} else { //TODO verify with DANI, added because null bodies is allowed!
+			bw.write(sb.toString());
+			bw.flush();
 		}
 		return;
 	}
