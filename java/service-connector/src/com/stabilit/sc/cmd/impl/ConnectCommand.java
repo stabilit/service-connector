@@ -10,17 +10,17 @@ import com.stabilit.sc.cmd.SCMPCommandException;
 import com.stabilit.sc.cmd.SCMPValidatorException;
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.io.IMessage;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
+import com.stabilit.sc.msg.impl.ConnectMessage;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.util.Converter;
-import com.stabilit.sc.util.DateTime;
 import com.stabilit.sc.util.MapBean;
 
 public class ConnectCommand extends CommandAdapter {
@@ -45,11 +45,11 @@ public class ConnectCommand extends CommandAdapter {
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		// TODO is socketAddress the right thing to save a a unique key?
-		
+
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
-		
-		if(mapBean != null) {
-			throw new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);		
+
+		if (mapBean != null) {
+			throw new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
 		}
 		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
 
@@ -57,6 +57,9 @@ public class ConnectCommand extends CommandAdapter {
 		scmpReply.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 		scmpReply.setLocalDateTime();
 		response.setSCMP(scmpReply);
+		//		
+		// IMessage msg = new ConnectMessage();
+		// scmpReply.setBody(msg);
 	}
 
 	@Override
@@ -69,17 +72,22 @@ public class ConnectCommand extends CommandAdapter {
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
 			SCMP scmp = request.getSCMP();
-			// transform localDateTime into localDateTimeObject
-			// Date localDateTimeObject = ???
 
 			Map<String, String> scmpHeader = scmp.getHeader();
 			try {
-				Integer keepAliveTimeout = Converter.getUnsignedInteger(scmpHeader, "keepAliveTimeout", 0);
-				request.setAttribute("keepAliveTimeout", keepAliveTimeout);
-				Integer keepAliveInterval = Converter.getUnsignedInteger(scmpHeader, "keepAliveInterval", 0);
-				request.setAttribute("keepAliveInterval", keepAliveInterval);
+
+				ConnectMessage msg = (ConnectMessage) scmp.getBody();
+				System.out.println("LocalDateTime Format is " + Converter.getLocalDateTime(msg.getAttribute(SCMPHeaderType.LOCAL_DATE_TIME
+						.getName())));
+
+				Integer keepAliveTimeout = Converter.getUnsignedInteger(scmpHeader,
+						SCMPHeaderType.KEEP_ALIVE_TIMEOUT, 0);
+				request.setAttribute(SCMPHeaderType.KEEP_ALIVE_TIMEOUT.getName(), keepAliveTimeout);
+				Integer keepAliveInterval = Converter.getUnsignedInteger(scmpHeader,
+						SCMPHeaderType.KEEP_ALIVE_INTERVAL, 0);
+				request.setAttribute(SCMPHeaderType.KEEP_ALIVE_INTERVAL.getName(), keepAliveInterval);
 			} catch (Exception e) {
-				SCMPValidatorException validatorException =  new SCMPValidatorException();
+				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 				throw validatorException;
 			}
