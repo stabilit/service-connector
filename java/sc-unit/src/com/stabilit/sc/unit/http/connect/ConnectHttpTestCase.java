@@ -17,6 +17,8 @@
 package com.stabilit.sc.unit.http.connect;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.Assert;
 
@@ -30,7 +32,7 @@ import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.msg.impl.ConnectMessage;
-import com.stabilit.sc.util.DateTime;
+import com.stabilit.sc.util.DateTimeUtility;
 
 public class ConnectHttpTestCase {
 
@@ -58,22 +60,34 @@ public class ConnectHttpTestCase {
 	public void singleConnect() {
 
 		try {
-			client.connect();
+			client.connect(); //physical connect
+
+			/*************** scmp connect ******************/
 			SCMP scmp = new SCMP();
 			scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
 			ConnectMessage connect = new ConnectMessage();
-			
+
 			connect.setVersion("1.0");
 			connect.setCompression(false);
-			connect.setLocalDateTime(DateTime.getCurrentTimeZoneMillis());
+			connect.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			connect.setKeepAliveTimeout(30);
-			connect.setKeepAliveInterval(360);			
-			
+			connect.setKeepAliveInterval(360);
+
 			scmp.setBody(connect);
 			SCMP result = client.sendAndReceive(scmp);
 
-			System.out.println(result.getBody());
-			client.disconnect();
+			System.out.println("Body: " + result.getBody());
+
+			System.out.println("Header:");
+			for (Entry<String, String> entry : result.getHeader().entrySet()) {
+				System.out.println(entry.getKey() + " " + entry.getValue());
+			}
+			/*************** scmp connect ******************/			
+			/*************** scmp disconnect *********/
+			//TODO
+			/*************** scmp disconnect *********/
+			
+			client.disconnect(); //physical disconnect
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
