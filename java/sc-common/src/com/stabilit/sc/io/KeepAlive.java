@@ -49,4 +49,9 @@ public class KeepAlive {
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
 		this.keepAliveTimeout = keepAliveTimeout;
 	}
+
+	@Override
+	public String toString() {
+		return keepAliveTimeout + "," + keepAliveInterval;
+	}
 }

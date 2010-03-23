@@ -49,4 +49,13 @@ public class MapBean<T> {
 	public void setAttribute(String name, T value) {
 		this.attrMap.put(name, value);
 	}
+
+	@Override
+	public String toString() {
+		String string = "";
+		for (String key : attrMap.keySet()) {
+			string += key + "=" + attrMap.get(key) + ";";
+		}
+		return string;
+	}	
 }

@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 public class DateTimeUtility {
 	
-	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	public static String getCurrentTimeZoneMillis() {
 		long timeInMillis = System.currentTimeMillis();

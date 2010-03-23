@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IMessage;
@@ -18,9 +20,15 @@ import com.stabilit.sc.io.SCMP;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
+	/**
+	 * 
+	 */
+	private static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
+	private static final String ESCAPED_EQUAL_SIGN = "\\=";
+	private static final String EQUAL_SIGN = "=";
 	private static final String SCMP_BODY_TYPE = "scmp-body-type";
 	private static final String SCMP_BODY_LENGTH = "scmp-body-length";
-	private static final String CHARSET = "UTF-8";
+	private static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
 
 	public DefaultEncoderDecoder() {
 	}
@@ -36,9 +44,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			if (line == null || line.length() <= 0) {
 				break;
 			}
-			String[] t = line.split("=");
-			if (t.length == 2) {
-				metaMap.put(t[0], t[1]);
+			Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
+			Matcher match = decodReg.matcher(line);
+
+			if (match.matches() && match.groupCount() == 2) {
+				/********* escaping *************/
+				String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+				String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+				metaMap.put(key, value);
 			}
 		}
 		String scmpBodyType = metaMap.get(SCMP_BODY_TYPE);
@@ -60,7 +73,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				if (classLine == null) {
 					return;
 				}
-				String[] t = classLine.split("=");
+				String[] t = classLine.split(EQUAL_SIGN);
 				if (IMessage.class.getName().equals(t[0]) == false) {
 					return;
 				}
@@ -74,9 +87,13 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					if (line == null || line.length() <= 0) {
 						break;
 					}
-					t = line.split("=");
-					if (t.length == 2) {
-						message.setAttribute(t[0], t[1]);
+					Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
+					Matcher match = decodReg.matcher(line);
+					if (match.matches() && match.groupCount() == 2) {
+						/********* escaping *************/
+						String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+						String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+						message.setAttribute(key, value);
 					}
 				}
 				scmp.setBody(message);
@@ -107,19 +124,24 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			sb.append("REQ / SCMP/");
 		} else if (messageType.startsWith("RES_")) {
 			if (scmp.isFault()) {
-				sb.append("EXC / SCMP/");			
+				sb.append("EXC / SCMP/");
 			} else {
-				sb.append("RES / SCMP/");			    
+				sb.append("RES / SCMP/");
 			}
 		}
 		sb.append(SCMP.VERSION);
 		sb.append("\n");
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
+
 		for (Entry<String, String> entry : entrySet) {
 			String key = entry.getKey();
 			String value = entry.getValue();
+			/********* escaping *************/
+			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+			value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+
 			sb.append(key);
-			sb.append("=");
+			sb.append(EQUAL_SIGN);
 			sb.append(value);
 			sb.append("\n");
 		}
@@ -128,11 +150,11 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			if (String.class == body.getClass()) {
 				String t = (String) body;
 				sb.append(SCMP_BODY_TYPE);
-				sb.append("=");
+				sb.append(EQUAL_SIGN);
 				sb.append(TYPE.STRING.getType());
 				sb.append("\n");
 				sb.append(SCMP_BODY_LENGTH);
-				sb.append("=");
+				sb.append(EQUAL_SIGN);
 				sb.append(String.valueOf(t.length()));
 				sb.append("\n\n");
 				bw.write(sb.toString());
@@ -142,7 +164,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			}
 			if (body instanceof IMessage) {
 				sb.append(SCMP_BODY_TYPE);
-				sb.append("=");
+				sb.append(EQUAL_SIGN);
 				sb.append(TYPE.MESSAGE.getType());
 				sb.append("\n\n");
 				bw.write(sb.toString());
@@ -152,15 +174,19 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
 				StringBuilder mb = new StringBuilder();
 				mb.append(IMessage.class.getName());
-				mb.append("=");
+				mb.append(EQUAL_SIGN);
 				mb.append(message.getClass().getName());
 				mb.append("\n");
 				for (Entry<String, Object> entry : attrEntrySet) {
 					String key = entry.getKey();
-					Object value = entry.getValue();
+					String value = entry.getValue().toString();
+					/********* escaping *************/
+					key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+					value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+
 					mb.append(key);
-					mb.append("=");
-					mb.append(value.toString());
+					mb.append(EQUAL_SIGN);
+					mb.append(value);
 					mb.append("\n");
 				}
 				bw.write(mb.toString());
@@ -169,12 +195,12 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			}
 			if (body instanceof byte[]) {
 				sb.append(SCMP_BODY_TYPE);
-				sb.append("=");
+				sb.append(EQUAL_SIGN);
 				sb.append(TYPE.ARRAY.getType());
 				sb.append("\n");
 				byte[] ba = (byte[]) body;
 				sb.append(SCMP_BODY_LENGTH);
-				sb.append("=");
+				sb.append(EQUAL_SIGN);
 				sb.append(String.valueOf(ba.length));
 				sb.append("\n\n");
 				bw.write(sb.toString());
@@ -185,7 +211,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			} else {
 				throw new IOException("unsupported body type");
 			}
-		} else { //TODO verify with DANI, added because null bodies is allowed!
+		} else { // TODO verify with DANI, added because null bodies is allowed!
 			bw.write(sb.toString());
 			bw.flush();
 		}

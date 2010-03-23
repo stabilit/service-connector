@@ -20,6 +20,7 @@
 package com.stabilit.sc.util;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -81,7 +82,6 @@ public class ValidatorUtility {
 		// .compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}\\+[0-9]{4}");
 		// Matcher m = pat.matcher(localDateTimeString);
 		// m.matches();
-
 		Date localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
 		return localDateTime;
 	}
