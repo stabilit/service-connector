@@ -81,7 +81,7 @@ public class NettyTcpServerConnection implements IServerConnection, Runnable {
 	}
 
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		this.channel.close();
 	}
 

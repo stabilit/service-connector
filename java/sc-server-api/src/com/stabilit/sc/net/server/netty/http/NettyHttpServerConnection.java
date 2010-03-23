@@ -22,7 +22,6 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.exception.HttpServerConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.server.IServerConnection;
 
@@ -81,7 +80,7 @@ public class NettyHttpServerConnection implements IServerConnection, Runnable {
 	}
 
 	@Override
-	public void destroy() throws HttpServerConnectionException {
+	public void destroy() {
 		this.channel.close();
 	}
 

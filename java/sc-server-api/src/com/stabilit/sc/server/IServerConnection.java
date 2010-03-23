@@ -26,7 +26,7 @@ import com.stabilit.sc.IConnection;
  * 
  */
 public interface IServerConnection extends IConnection {
-	public void destroy() throws Exception;
+	public void destroy();
 
 	public void create();
 
