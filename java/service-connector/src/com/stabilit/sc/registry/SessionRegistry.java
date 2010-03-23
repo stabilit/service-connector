@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.registry;
 
+import com.stabilit.sc.util.MapBean;
+
 /**
  * @author JTraber
  *
@@ -33,4 +35,8 @@ public class SessionRegistry extends Registry {
 	public static SessionRegistry getCurrentInstance() {
 		return instance;
 	}	
+	
+	public void add(Object key, MapBean<Object> mapBean) {
+		this.put(key, mapBean);
+	}
 }
