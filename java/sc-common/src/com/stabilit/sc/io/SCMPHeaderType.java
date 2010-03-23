@@ -32,7 +32,24 @@ public enum SCMPHeaderType {
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
 	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
 	SC_ERROR_CODE("scErrorCode"),
-	SC_ERROR_TEXT("scErrorText");
+	SC_ERROR_TEXT("scErrorText"),
+	APP_ERROR_CODE("appErrorCode"),
+	APP_ERROR_TEXT("appErrorText"),
+	BODY_LENGTH("bodyLength"),
+	CACHE_SIGNATURE("cacheSignature"),
+	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
+	IP_ADDRESS_LIST("ipAddressList"),
+	PORT_NR("portNr"),
+	MASK("mask"),
+	MAX_SESSIONS("maxSessions"),
+	MESSAGE_INFO("messageInfo"),
+	MULTI_THREADED("multiThreaded"),
+	NO_DATA("noData"),
+	REJECT_SESSION("rejectSession"),
+	SEQUENCE_NR("sequenceNr"),
+	SERVICE_NAME("serviceName"),
+	SESSION_ID("sessionId"),
+	SESSION_INFO("sessionInfo");
 	
 	private String name;
 	

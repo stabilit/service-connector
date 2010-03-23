@@ -32,11 +32,7 @@ public class NettyHttpResponse implements IResponse {
 	public ChannelBuffer getBuffer() throws Exception {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	   encoderDecoder.encode(baos, this.scmp);
-	   System.out.println(baos.size());
-	   
 	   byte[] buf = baos.toByteArray();
-	   
-	   System.out.println(buf.length);
 	   return ChannelBuffers.copiedBuffer(buf);
 	}
 	
