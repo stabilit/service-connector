@@ -32,10 +32,8 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.ICommandValidator;
-import com.stabilit.sc.cmd.ValidatorException;
 import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.io.IFaultResponse;
 import com.stabilit.sc.io.IRequest;
@@ -64,22 +62,15 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			writeResponse(response);
 			return;
 		}
+		
+		ICommandValidator commandValidator = command.getCommandValidator();
 		try {
-			ICommandValidator commandValidator = command.getCommandValidator();
-			if (commandValidator != null) {
-				try {
-					commandValidator.validate(request, response);
-				} catch (ValidatorException e) {
-					if (e instanceof IFaultResponse) {
-						((IFaultResponse)e).setFaultResponse(response);
-					}
-					writeResponse(response);
-					return;
-				}
-			}
+			commandValidator.validate(request, response);
 			command.run(request, response);
-		} catch (CommandException e) {
-			e.printStackTrace();
+		} catch (Throwable ex) {
+			if (ex instanceof IFaultResponse) {
+				((IFaultResponse) ex).setFaultResponse(response);
+			}
 		}
 		writeResponse(response);
 	}

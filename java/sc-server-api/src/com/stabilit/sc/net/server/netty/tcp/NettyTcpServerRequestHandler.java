@@ -31,10 +31,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.ICommandValidator;
-import com.stabilit.sc.cmd.ValidatorException;
 import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.io.IFaultResponse;
 import com.stabilit.sc.io.IRequest;
@@ -100,22 +98,15 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				writeResponse(response);
 				return;
 			}
+
+			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
-				ICommandValidator commandValidator = command.getCommandValidator();
-				if (commandValidator != null) {
-					try {
-						commandValidator.validate(request, response);
-					} catch (ValidatorException ex) {
-						if (ex instanceof IFaultResponse) {
-							((IFaultResponse) ex).setFaultResponse(response);
-						}
-						writeResponse(response);
-						return;
-					}
-				}
+				commandValidator.validate(request, response);
 				command.run(request, response);
-			} catch (CommandException exc) {
-				exc.printStackTrace();
+			} catch (Throwable ex) {
+				if (ex instanceof IFaultResponse) {
+					((IFaultResponse) ex).setFaultResponse(response);
+				}
 			}
 			writeResponse(response);
 		}
