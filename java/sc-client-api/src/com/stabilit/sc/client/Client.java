@@ -21,7 +21,6 @@ package com.stabilit.sc.client;
 
 import com.stabilit.sc.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.SCMP;
 
@@ -64,7 +63,7 @@ public class Client implements IClient {
 	}
 
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		clientConnection.destroy();
 	}
 

@@ -28,8 +28,8 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
+import com.stabilit.sc.client.ConnectionException;
 import com.stabilit.sc.client.IClientConnection;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
@@ -86,7 +86,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}

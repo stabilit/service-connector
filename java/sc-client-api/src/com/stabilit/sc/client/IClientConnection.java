@@ -20,7 +20,6 @@
 package com.stabilit.sc.client;
 
 import com.stabilit.sc.IConnection;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.io.SCMP;
 
 /**
@@ -41,7 +40,7 @@ public interface IClientConnection extends IConnection {
 	
 	public void disconnect();
 
-	public void destroy() throws Exception;
+	public void destroy();
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 

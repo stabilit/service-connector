@@ -20,7 +20,6 @@
 package com.stabilit.sc.client;
 
 import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.SCMP;
 
@@ -36,7 +35,7 @@ public interface IClient extends IFactoryable {
 
 	public void disconnect();
 
-	public void destroy() throws Exception;
+	public void destroy();
 
 	public void connect() throws ConnectionException;
 

@@ -33,8 +33,8 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
+import com.stabilit.sc.client.ConnectionException;
 import com.stabilit.sc.client.IClientConnection;
-import com.stabilit.sc.exception.ConnectionException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
@@ -91,7 +91,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}
