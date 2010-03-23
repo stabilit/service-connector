@@ -7,7 +7,7 @@ public class UnSubscribeMessage extends Message {
 
 	private static final long serialVersionUID = 2012750566022077421L;
 	
-	public static SCMPMsgType ID = SCMPMsgType.UNSUBSCRIBE;
+	public static SCMPMsgType ID = SCMPMsgType.REQ_UNSUBSCRIBE;
 
 	public UnSubscribeMessage() {
     	super(ID);

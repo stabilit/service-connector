@@ -7,7 +7,7 @@ public class PublishMessage extends Message {
 	
 	private static final long serialVersionUID = -5461603317301105352L;
 	
-	public static SCMPMsgType ID = SCMPMsgType.PUBLISH;
+	public static SCMPMsgType ID = SCMPMsgType.REQ_PUBLISH;
 
 	public PublishMessage() {
     	super(ID);

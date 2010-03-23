@@ -29,7 +29,7 @@ import com.stabilit.sc.io.SCMPMsgType;
 public class KeepAliveMessage extends Message {
 
 	private static final long serialVersionUID = -1962428309463037514L;
-	public static SCMPMsgType ID = SCMPMsgType.KEEP_ALIVE;
+	public static SCMPMsgType ID = SCMPMsgType.REQ_KEEP_ALIVE;
 
 	public KeepAliveMessage() {
 		super(ID);
