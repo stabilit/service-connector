@@ -14,7 +14,7 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.unit.http.connect;
+package com.stabilit.sc.unit;
 
 import java.util.Date;
 
@@ -35,7 +35,7 @@ import com.stabilit.sc.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.util.DateTimeUtility;
 import com.stabilit.sc.util.ValidatorUtility;
 
-public class ConnectDisconnectHttpTestCase {
+public class ConnectDisconnectTestCase {
 
 	static ClientConfig config = null;
 	static IClient client = null;
@@ -75,7 +75,7 @@ public class ConnectDisconnectHttpTestCase {
 		scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
 		ConnectMessage connect = new ConnectMessage();
 		scmp.setBody(connect);
-		/*********************************** incompatible scmp version ****************************/
+		/*********************************** incompatible scmp version ***************************/
 		connect.setVersion("2.0-00");
 		connect.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
@@ -146,8 +146,6 @@ public class ConnectDisconnectHttpTestCase {
 
 		scmp.setBody(connect);
 		SCMP result = client.sendAndReceive(scmp);
-
-		/*********************************** Verify error response double connect **********************/
 		verifyError(result, SCMPErrorCode.ALREADY_CONNECTED, SCMPMsgType.RES_CONNECT);
 	}
 
@@ -168,7 +166,7 @@ public class ConnectDisconnectHttpTestCase {
 		scmp.setBody(msgMain);
 		SCMP maintenance = client.sendAndReceive(scmp);
 
-		/*********************************** Verify registry entries in SC ********************************/
+		/*********************************** Verify registry entries in SC ***********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
 		String scEntry = (String) mainMsg.getAttribute("connectionRegistry");
 		Assert.assertEquals("", scEntry);
