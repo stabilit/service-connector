@@ -2,6 +2,7 @@ package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Date;
+import java.util.Map;
 
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
@@ -42,18 +43,14 @@ public class MaintenanceCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		// TODO is socketAddress the right thing to save a a unique key?
-
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(SCMPMsgType.RES_MAINTENANCE.getResponseName());
 		scmpReply.setLocalDateTime();
 		MaintenanceMessage mainMsg = new MaintenanceMessage();
-		mainMsg.setAttribute("map", "yes map");
+		
+		mainMsg.setAttribute("connectionRegistry", connectionRegistry);
 		scmpReply.setBody(mainMsg);
 		response.setSCMP(scmpReply);
 	}

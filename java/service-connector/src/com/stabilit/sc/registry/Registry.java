@@ -47,4 +47,16 @@ public abstract class Registry implements IRegistry {
 	public void remove(Object key) {
 		this.registryMap.remove(key);
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer dump = new StringBuffer();
+		for (Object key : registryMap.keySet()) {
+			dump.append(key);
+			dump.append(":");
+			dump.append(registryMap.get(key).toString());
+			dump.append("\n");
+		}
+		return dump.toString();
+	}	
 }

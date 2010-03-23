@@ -49,7 +49,9 @@ public class ConnectCommand extends CommandAdapter {
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean != null) {
-			throw new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
+			scmpCommandException.setMessageType(SCMPMsgType.RES_CONNECT.getResponseName());
+			throw scmpCommandException;
 		}
 		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
 
@@ -69,7 +71,7 @@ public class ConnectCommand extends CommandAdapter {
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
 			SCMP scmp = request.getSCMP();
-			
+
 			try {
 				// TODO msg in body??
 				ConnectMessage msg = (ConnectMessage) scmp.getBody();
@@ -85,9 +87,9 @@ public class ConnectCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
 
 				// localDateTime
-			//	Date localDateTime = ValidatorUtility.validateLocalDateTime((String) msg
-			//			.getAttribute(SCMPHeaderType.LOCAL_DATE_TIME.getName()));
-			//s	request.setAttribute(SCMPHeaderType.LOCAL_DATE_TIME.getName(), localDateTime);
+				Date localDateTime = ValidatorUtility.validateLocalDateTime((String) msg
+						.getAttribute(SCMPHeaderType.LOCAL_DATE_TIME.getName()));
+				request.setAttribute(SCMPHeaderType.LOCAL_DATE_TIME.getName(), localDateTime);
 
 				// KeepAliveTimeout && KeepAliveInterval
 				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive((String) msg
