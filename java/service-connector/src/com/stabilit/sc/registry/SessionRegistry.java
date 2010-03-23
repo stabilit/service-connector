@@ -25,7 +25,7 @@ import com.stabilit.sc.util.MapBean;
  * @author JTraber
  *
  */
-public class SessionRegistry extends Registry {
+public final class SessionRegistry extends Registry {
 	
 	private static SessionRegistry instance = new SessionRegistry();
 	

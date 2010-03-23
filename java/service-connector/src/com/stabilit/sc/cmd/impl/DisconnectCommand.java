@@ -39,11 +39,11 @@ public class DisconnectCommand extends CommandAdapter {
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		// TODO is socketAddress the right thing to save as a unique key?
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);		
-		if(mapBean == null) {
+		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		if (mapBean == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
 			scmpCommandException.setMessageType(SCMPMsgType.RES_DISCONNECT.getResponseName());
-			throw scmpCommandException;		
+			throw scmpCommandException;
 		}
 		connectionRegistry.remove(socketAddress);
 		SCMPReply scmpReply = new SCMPReply();

@@ -25,7 +25,7 @@ import com.stabilit.sc.util.MapBean;
  * @author JTraber
  * 
  */
-public class ConnectionRegistry extends Registry {
+public final class ConnectionRegistry extends Registry {
 
 	private static ConnectionRegistry instance = new ConnectionRegistry();
 

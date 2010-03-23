@@ -25,7 +25,7 @@ import com.stabilit.sc.util.MapBean;
  * @author JTraber
  *
  */
-public class ServiceRegistry extends Registry {
+public final class ServiceRegistry extends Registry {
 	
 	private static ServiceRegistry instance = new ServiceRegistry();
 	

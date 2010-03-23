@@ -49,7 +49,8 @@ public class ConnectCommand extends CommandAdapter {
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean != null) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(
+					SCMPErrorCode.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(SCMPMsgType.RES_CONNECT.getResponseName());
 			throw scmpCommandException;
 		}
