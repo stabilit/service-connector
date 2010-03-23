@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/sc-lib/lib/junit.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-client-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/service-connector"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
