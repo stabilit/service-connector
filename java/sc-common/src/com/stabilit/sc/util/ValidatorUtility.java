@@ -20,7 +20,6 @@
 package com.stabilit.sc.util;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,6 +27,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.sc.io.IpAddressList;
 import com.stabilit.sc.io.KeepAlive;
 import com.stabilit.sc.io.SCMPHeaderType;
 
@@ -37,19 +37,22 @@ import com.stabilit.sc.io.SCMPHeaderType;
  */
 public class ValidatorUtility {
 
+	private static final String SCMP_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
+	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/??)+";
+
 	public static void validateSCMPVersion(String currenSCMPVersion, String incomingSCMPVersion)
 			throws ValidationExcpetion {
-		Pattern pattern = Pattern.compile("(\\d\\.\\d)-(\\d*)");
+		Pattern pattern = Pattern.compile(SCMP_VERSION_REGEX);
 
 		Matcher matchCurr = pattern.matcher(currenSCMPVersion);
 		matchCurr.find();
-		
+
 		float currReleaseAndVersionNr = Float.parseFloat(matchCurr.group(1));
 		int currRevisionNr = Integer.parseInt(matchCurr.group(2));
 
 		Matcher matchIn = pattern.matcher(incomingSCMPVersion);
 		matchIn.find();
-		
+
 		float incReleaseAndVersionNr = Float.parseFloat(matchIn.group(1));
 		int incRevisionNr = Integer.parseInt(matchIn.group(2));
 
@@ -102,19 +105,36 @@ public class ValidatorUtility {
 			throws ValidationException {
 		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
 		int keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
-		
+
 		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
 			throw new ValidationException("keepAliveTimeout or keepAliveInterval is to high.");
-		}		
-		
+		}
+
 		if (keepAliveTimeoutInt > 3600) {
 			throw new ValidationException("keepAliveTimeout is to high.");
 		}
-		
+
 		if ((keepAliveTimeoutInt == 0 && keepAliveIntervalInt != 0)
 				|| (keepAliveIntervalInt == 0 && keepAliveTimeoutInt != 0)) {
-			throw new ValidationException("keepAliveTimeout and keepAliveInterval must either be both zero or both non zero!");
+			throw new ValidationException(
+					"keepAliveTimeout and keepAliveInterval must either be both zero or both non zero!");
 		}
 		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
+	}
+
+	public static IpAddressList validateIpAddressList(String ipAddressListString) throws ValidationException {
+		IpAddressList ipAddressList = new IpAddressList();
+		
+
+		Pattern pat = Pattern.compile(IP_LIST_REGEX);
+		Matcher m = pat.matcher(ipAddressListString);
+		if (!m.matches()) {
+			throw new ValidationException("iplist has wrong format.");
+		}
+		m.reset();
+		while (m.find()) {
+			ipAddressList.addIp(m.group(1));
+		}
+		return ipAddressList;
 	}
 }
