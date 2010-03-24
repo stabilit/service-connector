@@ -24,9 +24,7 @@ package com.stabilit.sc.cmd;
  * @author JTraber
  *
  */
-public abstract class CommandAdapter implements ICommand {
-
-	
+public abstract class CommandAdapter implements ICommand {	
 
 	protected ICommandValidator commandValidator;
 	
