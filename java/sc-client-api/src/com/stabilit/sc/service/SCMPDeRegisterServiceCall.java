@@ -29,19 +29,19 @@ import com.stabilit.sc.io.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPRegisterServiceCall extends SCMPCallAdapter {
+public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	
-	public SCMPRegisterServiceCall() {
+	public SCMPDeRegisterServiceCall() {
 		this(null);
 	}
 
-	public SCMPRegisterServiceCall(IClient client) {
+	public SCMPDeRegisterServiceCall(IClient client) {
 		this.client = client;
 	}
 
 	@Override
 	public SCMP invoke() throws Exception {
-		this.call.setMessageType(SCMPMsgType.REQ_REGISTER_SERVICE.getRequestName());
+		this.call.setMessageType(SCMPMsgType.REQ_DEREGISTER_SERVICE.getRequestName());
 		this.result = client.sendAndReceive(this.call);
 		
 		if(this.result.isFault()){
@@ -52,22 +52,10 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 
 	@Override
 	public ISCMPCall newInstance(IClient client) {
-		return new SCMPRegisterServiceCall(client);
+		return new SCMPDeRegisterServiceCall(client);
 	}
 	
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
-	}
-	
-	public void setMaxSessions(int maxSessions) {
-		call.setHeader(SCMPHeaderType.MAX_SESSIONS.getName(), maxSessions);
-	}
-	
-	public void setMultithreaded(boolean multiThreaded) {
-		call.setHeader(SCMPHeaderType.MULTI_THREADED.getName(), multiThreaded);
-	}
-	
-	public void setPortNumber(int portNumber) {
-		call.setHeader(SCMPHeaderType.PORT_NR.getName(), portNumber);
 	}	
 }
