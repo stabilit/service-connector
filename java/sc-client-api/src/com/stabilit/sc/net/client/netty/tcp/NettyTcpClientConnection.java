@@ -118,8 +118,8 @@ public class NettyTcpClientConnection implements IClientConnection {
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP ret = new SCMP();
-		encoderDecoder.decode(bais, ret);
+		
+		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 
 		String retSessionID = ret.getSessionId();
 		if (retSessionID != null) {

@@ -131,8 +131,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
-		SCMP ret = new SCMP();
-		encoderDecoder.decode(bais, ret);
+		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}
 

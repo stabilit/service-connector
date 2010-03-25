@@ -50,7 +50,7 @@ public class ClientConfig {
 		props = new Properties();
 		props.load(is);
 
-		String serverNames = props.getProperty("serverNames");
+		String serverNames = props.getProperty("connectionNames");
 
 		String[] servers = serverNames.split(",|;");
 		clientConfigItemList = new ArrayList<ClientConfigItem>();
