@@ -17,45 +17,34 @@
 /**
  * 
  */
-package com.stabilit.sc.io;
+package com.stabilit.sc.ctx;
 
 import java.util.Map;
-
-import com.stabilit.sc.util.DateTimeUtility;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCMPFault extends SCMP {
+public class ContextAdapter implements IContext {
 
-	public SCMPFault() {
-		super();
-	}
-	
-	public SCMPFault(Map<String, String> map) {
-		this.header = map;
-	}
+	protected Map<String, Object> attrMap;
 
-	public SCMPFault(SCMPErrorCode errorCode) {
-		setError(errorCode);
-	}
-	
-	public void setLocalDateTime() {
-		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
-	}
-	
-	public boolean isFault() {
-		return true;
+	/**
+	 * 
+	 */
+	public ContextAdapter() {
+		attrMap = new ConcurrentHashMap<String, Object>();
 	}
 
-	public void setError(String errorCode, String errorText) {
-		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode);
-		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorText);
+	@Override
+	public Object getAttribute(String name) {
+		return this.attrMap.get(name);
 	}
 
-	public void setError(SCMPErrorCode errorCode) {
-		header.put(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		header.put(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
+	@Override
+	public void setAttribute(String name, Object value) {
+		this.attrMap.put(name, value);
 	}
+
 }

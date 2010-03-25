@@ -62,8 +62,7 @@ public class NettyTcpRequest implements IRequest {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = new SCMP();
-		encoderDecoder.decode(bais, scmp);
+		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		this.scmp = scmp;
 	}
 

@@ -8,6 +8,6 @@ public interface IEncoderDecoder {
 
 	public void encode(OutputStream os, Object obj) throws IOException;
 	
-	public void decode(InputStream is, Object obj) throws IOException, ClassNotFoundException;
+	public Object decode(InputStream is) throws IOException, ClassNotFoundException;
 
 }

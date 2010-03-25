@@ -41,6 +41,18 @@ public class SCMP implements Serializable {
 		header.put(name, value);
 	}
 
+	public void setHeader(String name, boolean value) {
+		if (value) {
+		    header.put(name, "1");
+		} else {
+		    header.put(name, "0");			
+		}
+	}
+	
+	public void setHeader(String name, int value) {
+		header.put(name, String.valueOf(value));
+	}
+
 	public String getHeader(String name) {
 		return header.get(name);
 	}
@@ -72,23 +84,6 @@ public class SCMP implements Serializable {
 		return body;
 	}
 
-	private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-		if (this.encoderDecoder == null) {
-			// get default encoder decoder
-			this.encoderDecoder = EncoderDecoderFactory.newInstance();
-		}
-		this.encoderDecoder.encode(stream, this);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-		if (this.encoderDecoder == null) {
-			// get default encoder decoder
-			this.encoderDecoder = EncoderDecoderFactory.newInstance();
-		}
-		this.encoderDecoder.decode(stream, this);
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -97,5 +92,4 @@ public class SCMP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
-
 }
