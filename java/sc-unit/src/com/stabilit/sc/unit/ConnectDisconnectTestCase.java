@@ -16,8 +16,6 @@
  */
 package com.stabilit.sc.unit;
 
-import java.util.Date;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -30,9 +28,10 @@ import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.msg.impl.ConnectMessage;
 import com.stabilit.sc.msg.impl.MaintenanceMessage;
-import com.stabilit.sc.util.DateTimeUtility;
+import com.stabilit.sc.service.SCMPCallFactory;
+import com.stabilit.sc.service.SCMPConnectCall;
+import com.stabilit.sc.service.SCMPMaintenanceCall;
 import com.stabilit.sc.util.ValidatorUtility;
 
 public class ConnectDisconnectTestCase {
@@ -59,50 +58,33 @@ public class ConnectDisconnectTestCase {
 		client.disconnect(); // physical disconnect
 		client = null;
 	}
-	
+
 	@Test
 	public void runTests() throws Exception {
-		//guarantees test sequence
+		// guarantees test sequence
 		failConnect();
 		connect();
 		secondConnect();
 		disconnect();
 		secondDisconnect();
 	}
-	
+
 	public void failConnect() throws Exception {
-		SCMP scmp = new SCMP();
-		scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
-		ConnectMessage connect = new ConnectMessage();
-		scmp.setBody(connect);
-		/*********************************** incompatible scmp version ***************************/
-		connect.setVersion("2.0-00");
-		connect.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
-
-		SCMP result = client.sendAndReceive(scmp);
-		verifyError(result, SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.RES_CONNECT);
-		/*********************************** wrong dateTime format ******************************/
-		connect.setVersion("1.0-00");
-		connect.setLocalDateTime("12.12.2000");
-
-		result = client.sendAndReceive(scmp);
+		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+		connectCall.setVersion("2.0-00");
+		SCMP result = connectCall.invoke();
 		verifyError(result, SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.RES_CONNECT);
 	}
 
 	public void connect() throws Exception {
-		SCMP scmp = new SCMP();
-		scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
-		ConnectMessage connect = new ConnectMessage();
+		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
-		connect.setVersion("1.0-00");
-		connect.setCompression(false);
-		String localDateTimeString = DateTimeUtility.getCurrentTimeZoneMillis();
-		connect.setLocalDateTime(localDateTimeString);
-		connect.setKeepAliveTimeout(30);
-		connect.setKeepAliveInterval(360);
+		connectCall.setVersion("1.0-00");
+		connectCall.setCompression(false);
+		connectCall.setKeepAliveTimeout(30);
+		connectCall.setKeepAliveInterval(360);
 
-		scmp.setBody(connect);
-		SCMP result = client.sendAndReceive(scmp);
+		SCMP result = connectCall.invoke();
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
@@ -112,15 +94,13 @@ public class ConnectDisconnectTestCase {
 				.getHeader(SCMPHeaderType.LOCAL_DATE_TIME.getName())));
 
 		/*************** scmp maintenance ********/
-		MaintenanceMessage msgMain = new MaintenanceMessage();
-		scmp.setMessageType(SCMPMsgType.REQ_MAINTENANCE.getRequestName());
-		scmp.setBody(msgMain);
-		SCMP maintenance = client.sendAndReceive(scmp);
+		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+		SCMP maintenance = maintenanceCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
-		String expectedScEntry = ":compression=false;localDateTime=" + localDateTime
+		String expectedScEntry = ":compression=false;localDateTime="
+				+ connectCall.getCall().getHeader(SCMPHeaderType.LOCAL_DATE_TIME.getName())
 				+ ";keepAliveTimeout=30,360;scmpVersion=1.0-00;";
 		String scEntry = (String) mainMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
@@ -130,26 +110,18 @@ public class ConnectDisconnectTestCase {
 		Assert.assertEquals(expectedScEntry, scEntry);
 	}
 
-	
 	public void secondConnect() throws Exception {
-		/*************** scmp connect second time ****/
-		SCMP scmp = new SCMP();
-		scmp.setMessageType(SCMPMsgType.REQ_CONNECT.getRequestName());
-		ConnectMessage connect = new ConnectMessage();
+		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+		
+		connectCall.setVersion("1.0-00");
+		connectCall.setCompression(false);
+		connectCall.setKeepAliveTimeout(30);
+		connectCall.setKeepAliveInterval(360);
 
-		connect.setVersion("1.0-00");
-		connect.setCompression(false);
-		String localDateTimeString = DateTimeUtility.getCurrentTimeZoneMillis();
-		connect.setLocalDateTime(localDateTimeString);
-		connect.setKeepAliveTimeout(30);
-		connect.setKeepAliveInterval(360);
-
-		scmp.setBody(connect);
-		SCMP result = client.sendAndReceive(scmp);
+		SCMP result = connectCall.invoke();
 		verifyError(result, SCMPErrorCode.ALREADY_CONNECTED, SCMPMsgType.RES_CONNECT);
 	}
 
-	
 	public void disconnect() throws Exception {
 		SCMP scmp = new SCMP();
 		scmp.setMessageType(SCMPMsgType.REQ_DISCONNECT.getRequestName());
@@ -172,7 +144,6 @@ public class ConnectDisconnectTestCase {
 		Assert.assertEquals("", scEntry);
 	}
 
-	
 	public void secondDisconnect() throws Exception {
 		SCMP scmp = new SCMP();
 		scmp.setMessageType(SCMPMsgType.REQ_DISCONNECT.getRequestName());
