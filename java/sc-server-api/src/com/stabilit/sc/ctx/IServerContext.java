@@ -17,21 +17,15 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.ctx;
 
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.ctx.IServerContext;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.server.IServer;
 
 /**
  * @author JTraber
  *
  */
-public interface IServer extends IFactoryable {
+public interface IServerContext extends IContext {
 
-	public IServerContext getServerContext();
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create() throws Exception;
-	public void runAsync() throws Exception;
-	public void runSync() throws Exception;
+	public IServer getServer();
 }

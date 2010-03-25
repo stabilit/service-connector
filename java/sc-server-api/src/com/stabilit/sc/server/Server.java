@@ -20,27 +20,25 @@
 package com.stabilit.sc.server;
 
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.ctx.IServerContext;
+import com.stabilit.sc.ctx.ServerContext;
 import com.stabilit.sc.server.factory.ServerConnectionFactory;
 
 /**
  * @author JTraber
  * 
  */
-public class Server implements IServer {
+public abstract class Server implements IServer {
 
 	private ServerConfigItem serverConfig;
 	private IServerConnection serverConnection;
+	protected IServerContext serverContext;
 	
-
-	@Override
-	public IFactoryable newInstance() {
-		return new Server();
-	}
 
 	@Override
 	public void setServerConfig(ServerConfigItem serverConfig) {
 		this.serverConfig = serverConfig;
+		this.serverContext = new ServerContext(this);
 		ServerConnectionFactory serverConnectionFactory = new ServerConnectionFactory();
 		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getCon());
 		this.serverConnection.setHost(this.serverConfig.getHost());
@@ -48,17 +46,22 @@ public class Server implements IServer {
 	}
 
 	@Override
-	public void create() {		
+	public void create() throws Exception {		
 		serverConnection.create();
 	}
 
 	@Override
-	public void runAsync() {
+	public void runAsync() throws Exception {
 		serverConnection.runAsync();
 	}
 
 	@Override
-	public void runSync() throws InterruptedException {
+	public void runSync() throws Exception {
 		serverConnection.runSync();
 	}
+
+	@Override
+	public IServerContext getServerContext() {
+		return serverContext;
+	}	
 }
