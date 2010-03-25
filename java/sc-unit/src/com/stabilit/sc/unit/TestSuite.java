@@ -29,8 +29,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { 
-	ConnectDisconnectTestCase.class, 
+@SuiteClasses( {
+	RegisterServiceCallTestCase.class
+	//ConnectDisconnectTestCase.class, 
 	//SessionTestCase.class 
 })
 public class TestSuite {
