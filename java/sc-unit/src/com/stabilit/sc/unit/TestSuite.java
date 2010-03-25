@@ -31,7 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses( { 
 	ConnectDisconnectTestCase.class, 
-	SessionTestCase.class 
+	//SessionTestCase.class 
 })
 public class TestSuite {
 
