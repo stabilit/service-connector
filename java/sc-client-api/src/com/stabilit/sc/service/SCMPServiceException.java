@@ -32,4 +32,8 @@ public class SCMPServiceException extends Exception {
 	public SCMPServiceException(SCMPFault fault) {
 		this.fault = fault;
 	}
+
+	public SCMPFault getFault() {
+		return fault;
+	}
 }
