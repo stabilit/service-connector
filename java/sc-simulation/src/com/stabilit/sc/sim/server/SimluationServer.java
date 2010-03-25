@@ -23,11 +23,8 @@ import com.stabilit.sc.client.ClientFactory;
 import com.stabilit.sc.client.IClient;
 import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.server.Server;
 import com.stabilit.sc.service.ISCMPCall;
-import com.stabilit.sc.service.SCMPRegisterServiceCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 
 /**
