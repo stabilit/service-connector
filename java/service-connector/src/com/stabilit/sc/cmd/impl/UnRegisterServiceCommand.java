@@ -1,31 +1,30 @@
 package com.stabilit.sc.cmd.impl;
 
-import java.net.SocketAddress;
-
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommandValidator;
 import com.stabilit.sc.cmd.SCMPCommandException;
 import com.stabilit.sc.cmd.SCMPValidatorException;
-import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
+import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPErrorCode;
+import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
-import com.stabilit.sc.registry.ConnectionRegistry;
+import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.util.MapBean;
 
-public class DisconnectCommand extends CommandAdapter {
+public class UnRegisterServiceCommand extends CommandAdapter {
 
-	public DisconnectCommand() {
-		this.commandValidator = new DisconnectCommandValidator();
+	public UnRegisterServiceCommand() {
+		this.commandValidator = new UnRegisterServiceCommandValidator();
 	}
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_DISCONNECT;
+		return SCMPMsgType.REQ_DEREGISTER_SERVICE;
 	}
 
 	@Override
@@ -35,20 +34,21 @@ public class DisconnectCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		// TODO is socketAddress the right thing to save as a unique key?
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		SCMP scmp = request.getSCMP();
+		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
+		MapBean<?> mapBean = serviceRegistry.get(serviceName);
+		
 		if (mapBean == null) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		connectionRegistry.remove(socketAddress);
+		serviceRegistry.remove(serviceName);
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
-		response.setSCMP(scmpReply);
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		response.setSCMP(scmpReply);	
 	}
 
 	@Override
@@ -56,10 +56,21 @@ public class DisconnectCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class DisconnectCommandValidator implements ICommandValidator {
+	public class UnRegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+			SCMP scmp = request.getSCMP();
+
+			try {
+
+				
+			} catch (Throwable e) {
+				SCMPValidatorException validatorException = new SCMPValidatorException();
+				validatorException.setMessageType(getKey().getResponseName());
+				throw validatorException;
+			}
 		}
 	}
+
 }

@@ -13,30 +13,40 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
 package com.stabilit.sc.registry;
 
-import com.stabilit.sc.io.Session;
+import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public final class SessionRegistry extends Registry {
-	
-	private static SessionRegistry instance = new SessionRegistry();
-	
-	private SessionRegistry() {
+public class ServiceRegistryItem extends MapBean<String> {
+
+	private SCMP scmp;
+	private IClient client;
+
+	public ServiceRegistryItem(SCMP scmp) {
+		this.scmp = scmp;
+		this.attrMap = scmp.getHeader();
 	}
-	
-	public static SessionRegistry getCurrentInstance() {
-		return instance;
-	}	
-	
-	public void add(Object key, Session session) {
-		this.put(key, session);
+
+	public void allocate() throws Exception {
+         // TODO allocate session call
+		
+	}
+
+	public void deallocate() throws Exception {
+        // TODO deallocate session
+	}
+
+	public boolean isAllocated() {
+       return false;
 	}
 }

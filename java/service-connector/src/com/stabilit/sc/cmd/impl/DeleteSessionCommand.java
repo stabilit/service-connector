@@ -1,3 +1,22 @@
+/*
+ *-----------------------------------------------------------------------------*
+ *                            Copyright © 2010 by                              *
+ *                    STABILIT Informatik AG, Switzerland                      *
+ *                            ALL RIGHTS RESERVED                              *
+ *                                                                             *
+ * Valid license from STABILIT is required for possession, use or copying.     *
+ * This software or any other copies thereof may not be provided or otherwise  *
+ * made available to any other person. No title to and ownership of the        *
+ * software is hereby transferred. The information in this software is subject *
+ * to change without notice and should not be construed as a commitment by     *
+ * STABILIT Informatik AG.                                                     *
+ *                                                                             *
+ * All referenced products are trademarks of their respective owners.          *
+ *-----------------------------------------------------------------------------*
+*/
+/**
+ * 
+ */
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
@@ -15,16 +34,17 @@ import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
-import com.stabilit.sc.io.Session;
 import com.stabilit.sc.msg.impl.CreateSessionMessage;
-import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.util.ValidatorUtility;
 
-public class CreateSessionCommand extends CommandAdapter {
+/**
+ * @author JTraber
+ *
+ */
+public class DeleteSessionCommand extends CommandAdapter {
 
-	public CreateSessionCommand() {
+	public DeleteSessionCommand() {
 		this.commandValidator = new CreateSessionCommandValidator();
 	}
 
@@ -42,26 +62,12 @@ public class CreateSessionCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws CommandException {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
-		try {
-			// get free service
-			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
-			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName);
-			if (serviceRegistryItem == null) {
-				// throw
-			}
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-			// create session
-			Session session = new Session();
-			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
-			sessionRegistry.put(session.getId(), session);
-			SCMPReply scmpReply = new SCMPReply();
-			scmpReply.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getResponseName());
-			scmpReply.setSessionId(session.getId());
-			response.setSCMP(scmpReply);
-		} catch (Exception e) {
-		}
+		
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+
+		SCMPReply scmpReply = new SCMPReply();
+		scmpReply.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getResponseName());
+		response.setSCMP(scmpReply);
 	}
 
 	@Override
@@ -80,11 +86,10 @@ public class CreateSessionCommand extends CommandAdapter {
 				CreateSessionMessage msg = (CreateSessionMessage) scmp.getBody();
 
 				// ipAddressList
-				String ipAddressListString = (String) msg.getAttribute(SCMPHeaderType.IP_ADDRESS_LIST
-						.getName());
+				String ipAddressListString = (String) msg.getAttribute(SCMPHeaderType.IP_ADDRESS_LIST.getName());
 				IpAddressList ipAddressList = ValidatorUtility.validateIpAddressList(ipAddressListString);
 				request.setAttribute(SCMPHeaderType.IP_ADDRESS_LIST.getName(), ipAddressList);
-
+			
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getResponseName());
@@ -92,5 +97,4 @@ public class CreateSessionCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

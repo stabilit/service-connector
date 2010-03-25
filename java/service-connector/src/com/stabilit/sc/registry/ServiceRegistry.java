@@ -13,30 +13,45 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
 package com.stabilit.sc.registry;
 
-import com.stabilit.sc.util.MapBean;
-
 /**
  * @author JTraber
- *
+ * 
  */
 public final class ServiceRegistry extends Registry {
-	
+
 	private static ServiceRegistry instance = new ServiceRegistry();
-	
+
 	private ServiceRegistry() {
 	}
-	
+
 	public static ServiceRegistry getCurrentInstance() {
 		return instance;
 	}
-	
-	public void add(Object key, MapBean<Object> mapBean) {
-		this.put(key, mapBean);
+
+	public void add(Object key, ServiceRegistryItem item) {
+		this.put(key, item);
 	}
+
+	public synchronized ServiceRegistryItem allocate(Object key) throws Exception {
+		ServiceRegistryItem item = (ServiceRegistryItem) this.get(key); // is this a list, TODO
+		if (item.isAllocated()) {
+			return null;
+		}
+		item.allocate();
+		return item;
+	}
+
+	public synchronized void deallocate(ServiceRegistryItem item) throws Exception {
+		if (item.isAllocated()) {
+			item.deallocate();
+		}
+		return;
+	}
+
 }

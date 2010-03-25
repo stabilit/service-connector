@@ -1,8 +1,6 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
-import java.util.Date;
-import java.util.Map;
 
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
@@ -13,25 +11,24 @@ import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.io.KeepAlive;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
-import com.stabilit.sc.registry.ConnectionRegistry;
+import com.stabilit.sc.registry.ServiceRegistry;
+import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.util.MapBean;
-import com.stabilit.sc.util.ValidatorUtility;
 
-public class ConnectCommand extends CommandAdapter {
+public class RegisterServiceCommand extends CommandAdapter {
 
-	public ConnectCommand() {
-		this.commandValidator = new ConnectCommandValidator();
+	public RegisterServiceCommand() {
+		this.commandValidator = new RegisterServiceCommandValidator();
 	}
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_CONNECT;
+		return SCMPMsgType.REQ_REGISTER_SERVICE;
 	}
 
 	@Override
@@ -43,19 +40,22 @@ public class ConnectCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws CommandException {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		// TODO is socketAddress the right thing to save a a unique key?
-
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		request.setAttribute(SocketAddress.class.getName(), socketAddress);
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		
+		SCMP scmp = request.getSCMP();
+		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
+		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean != null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.ALREADY_CONNECTED);
+					SCMPErrorCode.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
-
+		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp);
+		serviceRegistry.add(serviceName, serviceRegistryItem);
+		
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setLocalDateTime();
@@ -67,7 +67,7 @@ public class ConnectCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class ConnectCommandValidator implements ICommandValidator {
+	public class RegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
@@ -75,27 +75,7 @@ public class ConnectCommand extends CommandAdapter {
 
 			try {
 
-				Map<String, String> scmpHeader = scmp.getHeader();
-				// scmpVersion
-				String scmpVersion = (String) scmpHeader.get(SCMPHeaderType.SCMP_VERSION.getName());
-				ValidatorUtility.validateSCMPVersion(SCMP.VERSION, scmpVersion);
-				request.setAttribute(SCMPHeaderType.SCMP_VERSION.getName(), scmpVersion);
-
-				// compression
-				String compression = (String) scmpHeader.get(SCMPHeaderType.COMPRESSION.getName());
-				compression = ValidatorUtility.validateBoolean(compression);
-				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
-
-				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime((String) scmpHeader
-						.get(SCMPHeaderType.LOCAL_DATE_TIME.getName()));
-				request.setAttribute(SCMPHeaderType.LOCAL_DATE_TIME.getName(), localDateTime);
-
-				// KeepAliveTimeout && KeepAliveInterval
-				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive((String) scmpHeader
-						.get(SCMPHeaderType.KEEP_ALIVE_TIMEOUT.getName()), (String) scmpHeader
-						.get(SCMPHeaderType.KEEP_ALIVE_INTERVAL.getName()));
-				request.setAttribute(SCMPHeaderType.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
+				
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
