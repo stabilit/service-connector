@@ -4,8 +4,9 @@ import java.util.UUID;
 
 import com.stabilit.sc.ctx.ISessionContext;
 import com.stabilit.sc.ctx.SessionContext;
+import com.stabilit.sc.util.MapBean;
 
-public class Session implements ISession {
+public class Session extends MapBean<Object> implements ISession {
 
 	private String id;
 	private ISessionContext sessionContext;

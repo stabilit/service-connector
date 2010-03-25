@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class MapBean<T> {
 	
-	private Map<String, T> attrMap;
+	protected Map<String, T> attrMap;
 	
 	public MapBean() {
 		attrMap = new HashMap<String, T>();

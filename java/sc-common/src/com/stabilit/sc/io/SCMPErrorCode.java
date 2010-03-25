@@ -31,7 +31,9 @@ public enum SCMPErrorCode {
 	NOT_FOUND("404", "Not found error occured."),
 	NOT_CONNECTED("405", "Not connected."),
 	ALREADY_CONNECTED("406","Already connected."),
-	PROTOCOL_MISMATCH("405", "Service Connector protocol mismatches."),
+	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
+	ALREADY_REGISTERED("408","Already registered."),
+	NOT_REGISTERED("409","Not registered."),
 	SERVER_ERROR("500", "Server error occured.");
 	
 	private String errorCode;
