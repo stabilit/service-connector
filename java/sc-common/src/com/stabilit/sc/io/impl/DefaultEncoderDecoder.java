@@ -77,7 +77,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				br.read(caBuffer);
 				String bodyString = new String(caBuffer, 0, caLength);
 				scmp.setBody(bodyString);
-				return null;
+				return scmp;
 			}
 			if (scmpBodyTypEnum == TYPE.MESSAGE) {
 				String classLine = br.readLine();
@@ -95,18 +95,18 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				IMessage message = (IMessage) messageClass.newInstance();
 				message.decode(br);
 				scmp.setBody(message);
-				return null;
+				return scmp;
 			}
 			if (scmpBodyTypEnum == TYPE.ARRAY) {
 				int baLength = Integer.parseInt(scmpBodyLength);
 				byte[] baBuffer = new byte[baLength];
 				is.read(baBuffer);
 				scmp.setBody(baBuffer);
-				return null;
+				return scmp;
 			}
 		} catch (Exception e) {
 		}
-		return null;
+		return scmp;
 	}
 
 	@Override

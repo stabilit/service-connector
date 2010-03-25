@@ -65,15 +65,15 @@ public class ValidatorUtility {
 		}
 	}
 
-	public static String validateCompression(String compression) throws ValidationException {
-		if (compression == null) {
-			return "true";
+	public static String validateBoolean(String booleanValue) throws ValidationException {
+		if (booleanValue == null) {
+			return "1";
 		}
 
-		if (!compression.equals("true") && !compression.equals("false")) {
-			throw new ValidationException("CompressinValue not valid");
+		if (!booleanValue.equals("1") && !booleanValue.equals("0")) {
+			throw new ValidationException("BooleanValue not valid");
 		}
-		return compression;
+		return booleanValue;
 	}
 
 	public static Date validateLocalDateTime(String localDateTimeString) throws ParseException {
