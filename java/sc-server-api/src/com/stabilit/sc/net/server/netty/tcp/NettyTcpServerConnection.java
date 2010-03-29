@@ -23,7 +23,9 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.server.IServerConnection;
+import com.stabilit.sc.registry.ServerRegistry;
+import com.stabilit.sc.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.sc.server.ServerConnectionAdapter;
 
 /**
  * An HTTP server that sends back the content of the received HTTP request in a pretty plaintext form.
@@ -34,7 +36,7 @@ import com.stabilit.sc.server.IServerConnection;
  * 
  * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
  */
-public class NettyTcpServerConnection implements IServerConnection, Runnable {
+public class NettyTcpServerConnection extends ServerConnectionAdapter implements Runnable {
 
 	private ServerBootstrap bootstrap;
 	private Channel channel;
@@ -64,7 +66,8 @@ public class NettyTcpServerConnection implements IServerConnection, Runnable {
 	@Override
 	public void runSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.port));
-
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		serverRegistry.add(this.channel.getId(), new ServerRegistryItem(this.server));
 		synchronized (this) {
 			wait();
 		}
@@ -107,4 +110,5 @@ public class NettyTcpServerConnection implements IServerConnection, Runnable {
 	public void setPort(int port) {
 		this.port = port;
 	}
+	
 }

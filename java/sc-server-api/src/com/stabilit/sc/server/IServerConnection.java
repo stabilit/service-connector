@@ -33,4 +33,9 @@ public interface IServerConnection extends IConnection {
 	public void runAsync();
 
 	public void runSync() throws InterruptedException;
+	
+	public IServer getServer();
+	
+	public void setServer (IServer server);
+		
 }

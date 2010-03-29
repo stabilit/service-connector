@@ -1,5 +1,6 @@
 package com.stabilit.sc.ctx;
 
+import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.server.IServer;
 
 
@@ -13,5 +14,10 @@ public class ServerContext extends ContextAdapter implements IServerContext {
 
 	public IServer getServer() {
 		return server;
+	}
+
+	public static IServerContext getCurrentInstance() {
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		return (IServerContext) serverRegistry.getCurrentContext();
 	}
 }

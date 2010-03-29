@@ -9,22 +9,26 @@ import com.stabilit.sc.io.SCMPMsgType;
 public class CommandFactory extends Factory {
 
 	protected static CommandFactory commandFactory = null;
-	
+
 	public CommandFactory() {
 	}
-	
+
 	public static CommandFactory getCurrentCommandFactory() {
 		return commandFactory;
 	}
-	
+
 	public static void setCurrentCommandFactory(CommandFactory commandFactory) {
 		CommandFactory.commandFactory = commandFactory;
 	}
-		
+
+	public void init(CommandFactory commandFactory) {
+
+	}
+
 	public ICommand newCommand(IRequest request) {
 		SCMPMsgType key = request.getKey();
-		IFactoryable factoryInstance = this.newInstance(key.getRequestName()); 
-		return (ICommand)factoryInstance;
+		IFactoryable factoryInstance = this.newInstance(key.getRequestName());
+		return (ICommand) factoryInstance;
 	}
 
 }

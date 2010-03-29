@@ -24,6 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
@@ -41,6 +42,7 @@ import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.net.netty.NettyTcpRequest;
 import com.stabilit.sc.net.netty.NettyTcpResponse;
+import com.stabilit.sc.registry.ServerRegistry;
 
 /**
  * @author JTraber
@@ -81,11 +83,13 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-
+		//TODO lazy code!
 		if (sync) {
 			answer.offer((ChannelBuffer) event.getMessage());
 		} else {
-
+			Channel channel = ctx.getChannel();
+			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+			serverRegistry.setThreadLocal(channel.getParent().getId());
 			IRequest request = new NettyTcpRequest(event);
 			NettyTcpResponse response = new NettyTcpResponse(event);
 			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);

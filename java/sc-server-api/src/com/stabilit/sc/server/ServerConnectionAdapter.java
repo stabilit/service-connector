@@ -13,27 +13,29 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.conf.ServerConfig;
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.ctx.IServerContext;
-import com.stabilit.sc.factory.IFactoryable;
-
 /**
  * @author JTraber
- *
+ * 
  */
-public interface IServer extends IFactoryable {
+public abstract class ServerConnectionAdapter implements IServerConnection {
+	protected IServer server;
 
-	public IServerContext getServerContext();
-    public void setServerConfig(ServerConfigItem serverConfig);
-	public void create() throws Exception;
-	public void runAsync() throws Exception;
-	public void runSync() throws Exception;
-	public ServerConfigItem getServerConfig();
+	public ServerConnectionAdapter() {
+		this.server = null;
+	}
+
+	@Override
+	public IServer getServer() {
+		return server;
+	}
+	
+	public void setServer(IServer server) {
+		this.server = server;
+	}
 }

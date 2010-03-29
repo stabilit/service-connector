@@ -18,6 +18,7 @@ package com.stabilit.sc.net.server.netty.http;
 import java.net.SocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -42,6 +43,7 @@ import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.net.netty.NettyHttpRequest;
 import com.stabilit.sc.net.netty.NettyHttpResponse;
+import com.stabilit.sc.registry.ServerRegistry;
 
 @ChannelPipelineCoverage("one")
 public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler {
@@ -49,12 +51,15 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		SocketAddress socketAddress = ctx.getChannel().getRemoteAddress();
+		Channel channel = ctx.getChannel();
+		SocketAddress socketAddress = channel.getRemoteAddress();
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		serverRegistry.setThreadLocal(channel.getParent());
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+		SCMP scmpReq = request.getSCMP();
 		if (command == null) {
-			SCMP scmpReq = request.getSCMP();
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 			scmpFault.setMessageType(scmpReq.getMessageType());
 			scmpFault.setLocalDateTime();
@@ -62,7 +67,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			writeResponse(response);
 			return;
 		}
-		
+
 		ICommandValidator commandValidator = command.getCommandValidator();
 		try {
 			commandValidator.validate(request, response);
@@ -70,6 +75,11 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		} catch (Throwable ex) {
 			if (ex instanceof IFaultResponse) {
 				((IFaultResponse) ex).setFaultResponse(response);
+			} else {
+				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+				scmpFault.setMessageType(scmpReq.getMessageType());
+				scmpFault.setLocalDateTime();
+				response.setSCMP(scmpFault);
 			}
 		}
 		writeResponse(response);
