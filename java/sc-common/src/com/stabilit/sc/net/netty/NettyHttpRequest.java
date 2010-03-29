@@ -8,13 +8,13 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.ctx.RequestContext;
-import com.stabilit.sc.ctx.SCMPSessionContext;
 import com.stabilit.sc.io.EncoderDecoderFactory;
 import com.stabilit.sc.io.IEncoderDecoder;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.ISession;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPMsgType;
+import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.util.MapBean;
 
 public class NettyHttpRequest implements IRequest {
@@ -62,8 +62,8 @@ public class NettyHttpRequest implements IRequest {
 	}
 
 	@Override
-	public ISession getSession(boolean fCreate) {
-		return SCMPSessionContext.getSession(scmp, fCreate);
+	public ISession getSession() {
+		return (ISession) SessionRegistry.getCurrentInstance().get(scmp.getSessionId());
 	}
 
 	private void load() throws Exception {

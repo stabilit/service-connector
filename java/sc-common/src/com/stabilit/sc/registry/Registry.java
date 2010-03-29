@@ -13,54 +13,53 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.util;
+package com.stabilit.sc.registry;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public class MapBean<T> {
+public abstract class Registry implements IRegistry {
+
+	private Map<Object, MapBean<?>> registryMap;
+
+	public Registry() {
+		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();
+	}
+
+	public void put(Object key, MapBean<?> value) {
+		registryMap.put(key, value);
+	}
+
+	public MapBean<?> get(Object key) {
+		return registryMap.get(key);
+	}
 	
-	protected Map<String, T> attrMap;
-	
-	public MapBean() {
-		attrMap = new HashMap<String, T>();
-	}
-
-	public MapBean(Map<String, T> map) {
-		attrMap = map;
-	}
-
-	public Map<String, T> getAttributeMap() {
-	    return this.attrMap;	
+	public void remove(Object key) {
+		this.registryMap.remove(key);
 	}
 	
-	protected void setAttributeMap(Map<String, T> attrMap) {
-	    this.attrMap = attrMap;	
-	}
-
-
-	public T getAttribute(String name) {
-		return this.attrMap.get(name);
-	}
-
-	public void setAttribute(String name, T value) {
-		this.attrMap.put(name, value);
+	public boolean containsKey(Object key) {
+		return registryMap.containsKey(key);
 	}
 
 	@Override
 	public String toString() {
-		String string = "";
-		for (String key : attrMap.keySet()) {
-			string += key + "=" + attrMap.get(key) + ";";
+		StringBuffer dump = new StringBuffer();
+		for (Object key : registryMap.keySet()) {
+			dump.append(key);
+			dump.append(":");
+			dump.append(registryMap.get(key).toString());
 		}
-		return string;
+		return dump.toString();
 	}	
 }

@@ -9,7 +9,7 @@ public interface IRequest {
 
 	public IRequestContext getContext();
 	
-	public ISession getSession(boolean fCreate);
+	public ISession getSession();
 	
 	public SCMP getSCMP();
 	

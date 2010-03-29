@@ -17,50 +17,26 @@
 /**
  * 
  */
-package com.stabilit.sc.util;
+package com.stabilit.sc.registry;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.stabilit.sc.io.Session;
 
 /**
  * @author JTraber
  *
  */
-public class MapBean<T> {
+public final class SessionRegistry extends Registry {
 	
-	protected Map<String, T> attrMap;
+	private static SessionRegistry instance = new SessionRegistry();
 	
-	public MapBean() {
-		attrMap = new HashMap<String, T>();
-	}
-
-	public MapBean(Map<String, T> map) {
-		attrMap = map;
-	}
-
-	public Map<String, T> getAttributeMap() {
-	    return this.attrMap;	
+	private SessionRegistry() {
 	}
 	
-	protected void setAttributeMap(Map<String, T> attrMap) {
-	    this.attrMap = attrMap;	
-	}
-
-
-	public T getAttribute(String name) {
-		return this.attrMap.get(name);
-	}
-
-	public void setAttribute(String name, T value) {
-		this.attrMap.put(name, value);
-	}
-
-	@Override
-	public String toString() {
-		String string = "";
-		for (String key : attrMap.keySet()) {
-			string += key + "=" + attrMap.get(key) + ";";
-		}
-		return string;
+	public static SessionRegistry getCurrentInstance() {
+		return instance;
 	}	
+	
+	public void add(Object key, Session session) {
+		this.put(key, session);
+	}
 }

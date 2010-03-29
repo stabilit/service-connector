@@ -17,50 +17,12 @@
 /**
  * 
  */
-package com.stabilit.sc.util;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.stabilit.sc.registry;
 
 /**
  * @author JTraber
  *
  */
-public class MapBean<T> {
-	
-	protected Map<String, T> attrMap;
-	
-	public MapBean() {
-		attrMap = new HashMap<String, T>();
-	}
+public interface IRegistry {
 
-	public MapBean(Map<String, T> map) {
-		attrMap = map;
-	}
-
-	public Map<String, T> getAttributeMap() {
-	    return this.attrMap;	
-	}
-	
-	protected void setAttributeMap(Map<String, T> attrMap) {
-	    this.attrMap = attrMap;	
-	}
-
-
-	public T getAttribute(String name) {
-		return this.attrMap.get(name);
-	}
-
-	public void setAttribute(String name, T value) {
-		this.attrMap.put(name, value);
-	}
-
-	@Override
-	public String toString() {
-		String string = "";
-		for (String key : attrMap.keySet()) {
-			string += key + "=" + attrMap.get(key) + ";";
-		}
-		return string;
-	}	
 }
