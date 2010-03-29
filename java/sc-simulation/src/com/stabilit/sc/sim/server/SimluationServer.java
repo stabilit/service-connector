@@ -21,11 +21,12 @@ package com.stabilit.sc.sim.server;
 
 import com.stabilit.sc.client.ClientFactory;
 import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.server.Server;
-import com.stabilit.sc.service.ISCMPCall;
 import com.stabilit.sc.service.SCMPCallFactory;
+import com.stabilit.sc.service.SCMPRegisterServiceCall;
 
 /**
  * @author JTraber
@@ -44,10 +45,14 @@ public class SimluationServer extends Server {
 	public void create() throws Exception {
 		super.create();
 		ClientConfig clientConfig = (ClientConfig) this.getServerContext().getAttribute(ClientConfig.class.getName());
+		ServerConfigItem serverConfigItem = (ServerConfigItem) this.getServerContext().getServer().getServerConfig();
 		client = clientFactory.newInstance(clientConfig.getClientConfig());
 		client.connect(); // physical connect
 		// scmp registerService		
-		ISCMPCall registerService = SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
+		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
+		registerService.setServiceName("simulation");
+		registerService.setMaxSessions(1);
+		registerService.setPortNumber(serverConfigItem.getPort());
 		registerService.invoke();
 	}
 

@@ -22,8 +22,10 @@ public class Simulation {
 		ClientConfig clientConfig = new ClientConfig();
 		clientConfig.load("sc-sim.properties");
 
-		CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
-		
+		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
+		if (commandFactory == null) {
+			CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
+		}
 		List<ServerConfigItem> serverConfigList = srvConfig.getServerConfigList();
 		ServerFactory serverFactory = new SimluationServerFactory();
 		for (ServerConfigItem serverConfigItem : serverConfigList) {
@@ -37,5 +39,15 @@ public class Simulation {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * @throws IOException
+	 * 
+	 */
+	public static Process startup() throws IOException {
+		// TODO Auto-generated method stub
+		Process process = Runtime.getRuntime().exec("java ch.stabilit.sc.sim.Simluation");
+		return process;
 	}
 }
