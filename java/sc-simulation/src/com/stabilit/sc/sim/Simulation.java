@@ -23,7 +23,7 @@ public class Simulation {
 		clientConfig.load("sc-sim.properties");
 
 		CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
-
+		
 		List<ServerConfigItem> serverConfigList = srvConfig.getServerConfigList();
 		ServerFactory serverFactory = new SimluationServerFactory();
 		for (ServerConfigItem serverConfigItem : serverConfigList) {
