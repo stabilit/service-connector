@@ -32,8 +32,7 @@ public abstract class Server implements IServer {
 
 	private ServerConfigItem serverConfig;
 	private IServerConnection serverConnection;
-	protected IServerContext serverContext;
-	
+	protected IServerContext serverContext;	
 
 	@Override
 	public void setServerConfig(ServerConfigItem serverConfig) {
