@@ -30,9 +30,6 @@ public class ContextAdapter implements IContext {
 
 	protected Map<String, Object> attrMap;
 
-	/**
-	 * 
-	 */
 	public ContextAdapter() {
 		attrMap = new ConcurrentHashMap<String, Object>();
 	}
