@@ -27,7 +27,11 @@ import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.msg.impl.CreateSessionMessage;
+import com.stabilit.sc.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.service.SCMPCallFactory;
+import com.stabilit.sc.service.SCMPCreateSessionCall;
+import com.stabilit.sc.service.SCMPMaintenanceCall;
+import com.stabilit.sc.service.SCMPServiceException;
 
 public class SessionTestCase {
 
@@ -56,74 +60,57 @@ public class SessionTestCase {
 	@Test
 	public void runTests() throws Exception {
 		// guarantees test sequence
+		RegisterServiceCallTestCase.registerServiceCall();
 		failCreateSession();
+		createSession();
 	}
 
 	public void failCreateSession() throws Exception {
-		SCMP scmp = new SCMP();
-		scmp.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getRequestName());
-		CreateSessionMessage sessionMsg = new CreateSessionMessage();
-		scmp.setBody(sessionMsg);
+		SCMPCreateSessionCall createSessionCall = (SCMPCreateSessionCall) SCMPCallFactory.CREATE_SESSION_CALL
+				.newInstance(client);
 
-		sessionMsg.setServiceName("P01_RTXS_RPRWS1");
-		sessionMsg.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		/*********************************** wrong format of ip list *****************************/
-		sessionMsg.setIpAddressList("10.0.4.32/243.43.1/192.243.43.1");
+		/*********************** serviceName not set *******************/
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 
-		SCMP result = client.sendAndReceive(scmp);
-		verifyError(result, SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.RES_CREATE_SESSION);
+		try {
+			createSessionCall.invoke();
+			Assert.fail("Should throw Exception!");
+		} catch (SCMPServiceException ex) {
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR,
+					SCMPMsgType.REQ_CREATE_SESSION);
+		}
 	}
 
 	public void createSession() throws Exception {
-		SCMP scmp = new SCMP();
-		scmp.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getRequestName());
-		CreateSessionMessage sessionMsg = new CreateSessionMessage();
+		SCMPCreateSessionCall createSessionCall = (SCMPCreateSessionCall) SCMPCallFactory.CREATE_SESSION_CALL
+				.newInstance(client);
 
-		sessionMsg.setServiceName("P01_RTXS_RPRWS1");
-		sessionMsg.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		sessionMsg.setIpAddressList("127.0.0.1");
+		createSessionCall.setServiceName("P01_RTXS_RPRWS1");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 
-		scmp.setBody(sessionMsg);
-		SCMP result = client.sendAndReceive(scmp);
-
-		/*************************** Verify create session response msg **********************************/
+		SCMP result = createSessionCall.invoke();
+		/*************************** verify create session **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()),
+		Assert.assertEquals(result.getMessageType(),
 				SCMPMsgType.RES_CREATE_SESSION.getResponseName());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SESSION_ID.getName()));
-		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME.getName())); //?? why?
+		Assert.assertNotNull(result.getSessionId());
+		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME
+				.getName()));
 
-//		/*************** scmp maintenance ********/
-//		MaintenanceMessage msgMain = new MaintenanceMessage();
-//		scmp.setMessageType(SCMPMsgType.REQ_MAINTENANCE.getRequestName());
-//		scmp.setBody(msgMain);
-//		SCMP maintenance = client.sendAndReceive(scmp);
-//
-//		/*********************************** Verify registry entries in SC ********************************/
-//		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-//		String expectedScEntry = ":compression=false;keepAliveTimeout=30,360;scmpVersion=1.0-00;";
-//		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
-//		Assert.assertEquals(expectedScEntry, scEntry);
-	}
+		/*************** scmp maintenance ********/
+		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+				.newInstance(client);
+		SCMP maintenance = maintenanceCall.invoke();
 
-	public void secondCreateSession() throws Exception {
-		
+		/*********************************** Verify registry entries in SC ********************************/
+		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;;";		
+		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
+		scEntry = scEntry.substring(scEntry.indexOf(":"));
+		Assert.assertEquals(expectedScEntry, scEntry);
 	}
 
 	public void deleteSession() throws Exception {
 
-	}
-
-	public void secondDeleteSession() throws Exception {
-	}
-
-	/**
-	 * @param result
-	 */
-	private void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT.getName()), error.getErrorText());
 	}
 }

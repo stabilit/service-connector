@@ -19,9 +19,16 @@
  */
 package com.stabilit.sc.unit;
 
+import junit.framework.Assert;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPErrorCode;
+import com.stabilit.sc.io.SCMPHeaderType;
+import com.stabilit.sc.io.SCMPMsgType;
 
 /**
  * @author JTraber
@@ -30,10 +37,21 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses( {
-	RegisterServiceCallTestCase.class
-	//ConnectDisconnectTestCase.class, 
-	//SessionTestCase.class 
+	RegisterServiceCallTestCase.class,
+	ConnectDisconnectTestCase.class, 
+	SessionTestCase.class 
 })
-public class TestSuite {
+public class SCTest {
 
+	public static void verifyError(SCMP result, SCMPErrorCode error,
+			SCMPMsgType msgType) {
+		Assert.assertNull(result.getBody());
+		Assert.assertEquals(
+				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
+						.getResponseName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
+				.getName()), error.getErrorCode());
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
+				.getName()), error.getErrorText());
+	}
 }
