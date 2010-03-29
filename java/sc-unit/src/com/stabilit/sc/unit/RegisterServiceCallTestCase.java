@@ -18,9 +18,9 @@ package com.stabilit.sc.unit;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.client.ClientFactory;
 import com.stabilit.sc.client.IClient;
 import com.stabilit.sc.config.ClientConfig;
@@ -39,12 +39,12 @@ public class RegisterServiceCallTestCase {
 	static ClientConfig config = null;
 	static IClient client = null;
 
-	static {
+	@Before
+	public void setup() {
+		SetupTestCases.setup();
 		try {
-			ServiceConnector.main(null);
 			config = new ClientConfig();
 			config.load("sc-unit.properties");
-
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect
@@ -62,7 +62,7 @@ public class RegisterServiceCallTestCase {
 	@Test
 	public void runTests() throws Exception {
 		// guarantees test sequence
-		failRegisterServiceCall();
+		//failRegisterServiceCall();
 		RegisterServiceCallTestCase.registerServiceCall();
 		secondRegisterServiceCall();
 		RegisterServiceCallTestCase.deRegisterServiceCall();

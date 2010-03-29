@@ -18,6 +18,7 @@ package com.stabilit.sc.unit;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.sc.client.ClientFactory;
@@ -40,11 +41,13 @@ public class ConnectDisconnectTestCase {
 	static ClientConfig config = null;
 	static IClient client = null;
 
-	static {
+
+	@Before
+	public void setup() {
+		SetupTestCases.setup();
 		try {
 			config = new ClientConfig();
 			config.load("sc-unit.properties");
-
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect
@@ -52,7 +55,7 @@ public class ConnectDisconnectTestCase {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	protected void finalize() throws Throwable {
 		client.disconnect(); // physical disconnect

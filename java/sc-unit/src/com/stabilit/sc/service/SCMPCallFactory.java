@@ -17,42 +17,22 @@
 /**
  * 
  */
-package com.stabilit.sc.unit;
-
-import junit.framework.Assert;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
+package com.stabilit.sc.service;
 
 /**
  * @author JTraber
  * 
  */
+public class SCMPCallFactory {
 
-@RunWith(Suite.class)
-@SuiteClasses( {
-	RegisterServiceCallTestCase.class,
-	ConnectDisconnectTestCase.class, 
-	//SessionTestCase.class 
-})
-
-public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
-	}
+	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
+	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
+	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
+	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
+	public static final ISCMPCall CREATE_SESSION_CALL = new SCMPCreateSessionCall();
+	public static final ISCMPCall DELETE_SESSION_CALL = new SCMPDeleteSessionCall();
+	public static final ISCMPCall MAINTENANCE_CALL = new SCMPMaintenanceCall();
+	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
+	public static final ISCMPCall ALLOCATE_SESSION_CALL = new SCMPAllocateSessionCall();
+	public static final ISCMPCall DEALLOCATE_SESSION_CALL = new SCMPDeAllocateSessionCall();
 }

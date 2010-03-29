@@ -17,42 +17,20 @@
 /**
  * 
  */
-package com.stabilit.sc.unit;
+package com.stabilit.sc;
 
-import junit.framework.Assert;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
+import com.stabilit.sc.cmd.factory.CommandFactory;
+import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.sc.cmd.factory.impl.SimulationServerCommandFactory;
 
 /**
  * @author JTraber
  * 
  */
-
-@RunWith(Suite.class)
-@SuiteClasses( {
-	RegisterServiceCallTestCase.class,
-	ConnectDisconnectTestCase.class, 
-	//SessionTestCase.class 
-})
-
-public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+public class UnitCommandFactory extends CommandFactory {
+		
+	public UnitCommandFactory() {
+		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);		
+		SimulationServerCommandFactory simulationServerCommandFactory = new SimulationServerCommandFactory(this);		
 	}
 }
