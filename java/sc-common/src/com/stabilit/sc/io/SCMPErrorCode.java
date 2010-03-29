@@ -34,7 +34,11 @@ public enum SCMPErrorCode {
 	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
 	ALREADY_REGISTERED("408","Already registered."),
 	NOT_REGISTERED("409","Not registered."),
-	SERVER_ERROR("500", "Server error occured.");
+	ALREADY_ALLOCATED("410","Already allocated."),
+	NOT_ALLOCATED("411","Not allocated."),
+	NO_SESSION("412","No session found."),
+	SERVER_ERROR("500", "Server error occured."),
+	UNKNOWN_SERVICE("501", "Unknown service requested.");
 	
 	private String errorCode;
 	private String errorText;

@@ -21,9 +21,6 @@ import com.stabilit.sc.io.SCMPFault;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
-	/**
-	 * 
-	 */
 	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
 	public static final String ESCAPED_EQUAL_SIGN = "\\=";
 	public static final String EQUAL_SIGN = "=";

@@ -63,9 +63,6 @@ public class Message implements IMessage {
 		bw.write(mb.toString());		
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.stabilit.sc.io.IMessage#decode(java.io.Reader)
-	 */
 	@Override
 	public void decode(BufferedReader br) throws IOException {
 		while (true) {

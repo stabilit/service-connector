@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.sc.io.IpAddressList;
 import com.stabilit.sc.io.KeepAlive;
 import com.stabilit.sc.io.SCMPHeaderType;
 
@@ -40,8 +39,8 @@ public class ValidatorUtility {
 	private static final String SCMP_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/??)+";
 
-	public static void validateSCMPVersion(String currenSCMPVersion, String incomingSCMPVersion)
-			throws ValidationExcpetion {
+	public static void validateSCMPVersion(String currenSCMPVersion,
+			String incomingSCMPVersion) throws ValidationExcpetion {
 		Pattern pattern = Pattern.compile(SCMP_VERSION_REGEX);
 
 		Matcher matchCurr = pattern.matcher(currenSCMPVersion);
@@ -57,7 +56,8 @@ public class ValidatorUtility {
 		int incRevisionNr = Integer.parseInt(matchIn.group(2));
 
 		if (incReleaseAndVersionNr <= currReleaseAndVersionNr) {
-			if (incReleaseAndVersionNr == currReleaseAndVersionNr && incRevisionNr > currRevisionNr) {
+			if (incReleaseAndVersionNr == currReleaseAndVersionNr
+					&& incRevisionNr > currRevisionNr) {
 				throw new ValidationExcpetion("SCMPVersion not compatible.");
 			}
 		} else {
@@ -65,9 +65,10 @@ public class ValidatorUtility {
 		}
 	}
 
-	public static String validateBoolean(String booleanValue) throws ValidationException {
+	public static String validateBoolean(String booleanValue,
+			Boolean defaultValue) throws ValidationException {
 		if (booleanValue == null) {
-			return "1";
+			return defaultValue.toString();
 		}
 
 		if (!booleanValue.equals("1") && !booleanValue.equals("0")) {
@@ -76,7 +77,8 @@ public class ValidatorUtility {
 		return booleanValue;
 	}
 
-	public static Date validateLocalDateTime(String localDateTimeString) throws ParseException {
+	public static Date validateLocalDateTime(String localDateTimeString)
+			throws ParseException {
 		if (localDateTimeString == null) {
 			return null;
 		}
@@ -89,8 +91,8 @@ public class ValidatorUtility {
 		return localDateTime;
 	}
 
-	public static Integer convertUnsignedInteger(Map<String, String> map, SCMPHeaderType key,
-			Integer defaultValue) {
+	public static Integer convertUnsignedInteger(Map<String, String> map,
+			SCMPHeaderType key, Integer defaultValue) {
 
 		String obj = map.get(key.getName());
 
@@ -101,13 +103,14 @@ public class ValidatorUtility {
 		return value;
 	}
 
-	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
-			throws ValidationException {
+	public static KeepAlive validateKeepAlive(String keepAliveTimeout,
+			String keepAliveInterval) throws ValidationException {
 		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
 		int keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
 
 		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
-			throw new ValidationException("keepAliveTimeout or keepAliveInterval is to high.");
+			throw new ValidationException(
+					"keepAliveTimeout or keepAliveInterval is to high.");
 		}
 
 		if (keepAliveTimeoutInt > 3600) {
@@ -122,19 +125,58 @@ public class ValidatorUtility {
 		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
 	}
 
-	public static IpAddressList validateIpAddressList(String ipAddressListString) throws ValidationException {
-		IpAddressList ipAddressList = new IpAddressList();
+	public static void validateIpAddressList(String ipAddressListString)
+			throws ValidationException {
 		
-
 		Pattern pat = Pattern.compile(IP_LIST_REGEX);
 		Matcher m = pat.matcher(ipAddressListString);
 		if (!m.matches()) {
 			throw new ValidationException("iplist has wrong format.");
 		}
-		m.reset();
-		while (m.find()) {
-			ipAddressList.addIp(m.group(1));
+	}
+
+	public static String validateInt(int lowerLimit, String intStringValue)
+			throws ValidationException {
+		if (intStringValue == null) {
+			throw new ValidationException("intValue must be set.");
 		}
-		return ipAddressList;
+		int intValue = 0;
+		try {
+			intValue = Integer.parseInt(intStringValue);
+		} catch (NumberFormatException ex) {
+			throw new ValidationException("intValue must be numeric.");
+		}
+
+		if (intValue <= lowerLimit)
+			throw new ValidationException("intValue to low.");
+
+		return intStringValue;
+	}
+
+	public static String validateInt(int lowerLimit, String intStringValue,
+			int upperLimit) throws ValidationException {
+		if (intStringValue == null) {
+			throw new ValidationException("intValue must be set.");
+		}
+		int intValue = 0;
+		try {
+			intValue = Integer.parseInt(intStringValue);
+		} catch (NumberFormatException ex) {
+			throw new ValidationException("intValue must be numeric.");
+		}
+
+		if (intValue <= lowerLimit || intValue >= upperLimit)
+			throw new ValidationException("intValue not within limits.");
+
+		return intStringValue;
+	}
+	
+	public static void validateString(int minSize, String stringValue,
+			int maxSize) throws ValidationException {
+		int length = stringValue.getBytes().length;
+		
+		if(length < minSize || length > maxSize) {
+			throw new ValidationException("stringValue length is not within limits.");
+		}
 	}
 }
