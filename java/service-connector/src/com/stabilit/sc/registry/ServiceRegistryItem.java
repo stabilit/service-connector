@@ -43,6 +43,11 @@ public class ServiceRegistryItem extends MapBean<String> {
 		//TODO clientConfig problem
 		ClientConfigItem config = new ClientConfig().new ClientConfigItem();
 	}
+	
+	public ServiceRegistryItem(Map<String, String> attrMap) {
+		this();
+		setAttributeMap(attrMap);
+	}
 
 	public void allocate(Map<String, String> attrMap) throws Exception {
 		SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL

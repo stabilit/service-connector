@@ -59,7 +59,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem();
+		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp.getHeader());
 		serviceRegistry.add(serviceName, serviceRegistryItem);
 
 		SCMPReply scmpReply = new SCMPReply();

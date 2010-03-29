@@ -117,6 +117,9 @@ public class DeleteSessionCommand extends CommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
 				}
+				if (SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
+					throw new ValidationException("sessoion does not exists!");
+				}
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
