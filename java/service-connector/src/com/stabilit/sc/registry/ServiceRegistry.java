@@ -19,7 +19,7 @@
  */
 package com.stabilit.sc.registry;
 
-import java.util.Map;
+import com.stabilit.sc.io.SCMP;
 
 /**
  * @author JTraber
@@ -40,18 +40,18 @@ public final class ServiceRegistry extends Registry {
 		this.put(key, item);
 	}
 
-	public synchronized ServiceRegistryItem allocate(Object key, Map<String, String> attrMap) throws Exception {
+	public synchronized ServiceRegistryItem allocate(Object key, SCMP scmp) throws Exception {
 		ServiceRegistryItem item = (ServiceRegistryItem) this.get(key); // is this a list, TODO
 		if (item.isAllocated()) {
 			return null;
 		}
-		item.allocate(attrMap);
+		item.allocate(scmp);
 		return item;
 	}
 
-	public synchronized void deallocate(ServiceRegistryItem item, Map<String, String> attrMap) throws Exception {
+	public synchronized void deallocate(ServiceRegistryItem item, SCMP scmp) throws Exception {
 		if (item.isAllocated()) {
-			item.deallocate(attrMap);
+			item.deallocate(scmp);
 		}
 		return;
 	}

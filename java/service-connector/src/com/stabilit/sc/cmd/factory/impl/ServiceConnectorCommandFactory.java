@@ -14,21 +14,27 @@ import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
 public class ServiceConnectorCommandFactory extends CommandFactory {
 
 	public ServiceConnectorCommandFactory() {
+		init(this);
+	}
+	public ServiceConnectorCommandFactory(CommandFactory commandFactory) {
+		init(commandFactory);
+	}
+	public void init(CommandFactory commandFactory) {
 		ICommand echoCommand = new EchoCommand();
-		add(echoCommand.getRequestKeyName(), echoCommand);
+		commandFactory.add(echoCommand.getRequestKeyName(), echoCommand);
 		ICommand maintenanceCommand = new MaintenanceCommand();
-		add(maintenanceCommand.getRequestKeyName(), maintenanceCommand);
+		commandFactory.add(maintenanceCommand.getRequestKeyName(), maintenanceCommand);
 		ICommand connectCommand = new ConnectCommand();
-		add(connectCommand.getRequestKeyName(), connectCommand);
+		commandFactory.add(connectCommand.getRequestKeyName(), connectCommand);
 		ICommand disconnectCommand = new DisconnectCommand();
-		add(disconnectCommand.getRequestKeyName(), disconnectCommand);
+		commandFactory.add(disconnectCommand.getRequestKeyName(), disconnectCommand);
 		ICommand createSessionCommand = new CreateSessionCommand();
-		add(createSessionCommand.getRequestKeyName(), createSessionCommand);
+		commandFactory.add(createSessionCommand.getRequestKeyName(), createSessionCommand);
 		ICommand deleteSessionCommand = new DeleteSessionCommand();
-		add(deleteSessionCommand.getRequestKeyName(), deleteSessionCommand);
+		commandFactory.add(deleteSessionCommand.getRequestKeyName(), deleteSessionCommand);
 		ICommand registerServiceCommand = new RegisterServiceCommand();
-		add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
+		commandFactory.add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
-		add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
+		commandFactory.add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
 	}
 }

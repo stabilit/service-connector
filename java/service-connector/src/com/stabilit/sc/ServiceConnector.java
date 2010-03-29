@@ -20,7 +20,10 @@ public final class ServiceConnector {
 		ServerConfig config = new ServerConfig();
 		config.load("sc.properties");
 
-		CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
+		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
+		if (commandFactory == null) {
+		    CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
+		}
 
 		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
 		SCServerFactory serverFactory = new SCServerFactory();
@@ -34,4 +37,5 @@ public final class ServiceConnector {
 			}
 		}
 	}
+
 }

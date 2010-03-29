@@ -80,9 +80,9 @@ public class ClnDataCommand extends CommandAdapter {
 				compression = ValidatorUtility.validateBoolean(compression, true);
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
 
-				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderType.SESSION_INFO.getName());
-				ValidatorUtility.validateString(0, sessionInfo, 256);
+				// messageInfo
+				String messageInfo = (String) scmpHeader.get(SCMPHeaderType.MESSAGE_INFO.getName());
+				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

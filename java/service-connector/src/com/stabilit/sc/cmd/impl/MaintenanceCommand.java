@@ -11,6 +11,7 @@ import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
 import com.stabilit.sc.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.registry.ConnectionRegistry;
+import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.SessionRegistry;
 

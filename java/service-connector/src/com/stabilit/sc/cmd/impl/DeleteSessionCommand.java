@@ -80,7 +80,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 				.getAttribute(ServiceRegistryItem.class.getName());
 
 		try {
-			serviceRegistryItem.deallocate(scmp.getHeader());
+			serviceRegistryItem.deallocate(scmp);
 		} catch (Exception e) {
 			// TODO what to do!
 		}

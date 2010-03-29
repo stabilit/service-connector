@@ -19,12 +19,17 @@
  */
 package com.stabilit.sc.registry;
 
-import java.util.Map;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 import com.stabilit.sc.client.ClientFactory;
+import com.stabilit.sc.client.ConnectionException;
 import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.config.ClientConfig;
-import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
+import com.stabilit.sc.ctx.IServerContext;
+import com.stabilit.sc.ctx.ServerContext;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPHeaderType;
+import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
@@ -37,26 +42,31 @@ import com.stabilit.sc.util.MapBean;
 public class ServiceRegistryItem extends MapBean<String> {
 
 	private IClient client;
+	private SCMP registerScmp;
+	private SocketAddress socketAddress;
 
-	public ServiceRegistryItem() {
+	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress) {
+		this.registerScmp = scmp;
+		this.attrMap = scmp.getHeader();
+		this.socketAddress = socketAddress;
+
+		IServerContext currentServerContext = ServerContext.getCurrentInstance();
+		IServer server = currentServerContext.getServer();
+
 		ClientFactory clientFactory = new ClientFactory();
-		//TODO clientConfig problem
-		ClientConfigItem config = new ClientConfig().new ClientConfigItem();
-	}
-	
-	public ServiceRegistryItem(Map<String, String> attrMap) {
-		this();
-		setAttributeMap(attrMap);
+		int serverPort = Integer.parseInt(registerScmp.getHeader(SCMPHeaderType.PORT_NR.getName()));
+		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
+		String serverCon = server.getServerConfig().getCon();
+		client = clientFactory.newInstance(serverHost, serverPort, serverCon);
 	}
 
-	public void allocate(Map<String, String> attrMap) throws Exception {
-		SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
-				.newInstance(client);
-		allocateSessionCall.setHeader(attrMap);
-		allocateSessionCall.invoke();
+	public void allocate(SCMP scmp) throws Exception {
+		Thread thread = new Thread(new AllocateSession()) {			
+		};
+		thread.start();
 	}
 
-	public void deallocate(Map<String, String> attrMap) throws Exception {
+	public void deallocate(SCMP scmp) throws Exception {
 		SCMPDeAllocateSessionCall deAllocateSessionCall = (SCMPDeAllocateSessionCall) SCMPCallFactory.DEALLOCATE_SESSION_CALL
 				.newInstance(client);
 		deAllocateSessionCall.setHeader(attrMap);
@@ -65,5 +75,25 @@ public class ServiceRegistryItem extends MapBean<String> {
 
 	public boolean isAllocated() {
 		return false;
+	}
+
+	public class AllocateSession implements Runnable {
+		@Override
+		public void run() {
+			// TODO client.disconnect and error log
+			try {
+				client.connect();
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
+			try {
+				SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
+						.newInstance(client);
+				allocateSessionCall.setHeader(attrMap);
+				allocateSessionCall.invoke();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

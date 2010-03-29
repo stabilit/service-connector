@@ -49,17 +49,15 @@ public class RegisterServiceCommand extends CommandAdapter {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
-				.getName());
+		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
-
 		if (mapBean != null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp.getHeader());
+		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp, socketAddress);
 		serviceRegistry.add(serviceName, serviceRegistryItem);
 
 		SCMPReply scmpReply = new SCMPReply();

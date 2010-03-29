@@ -18,11 +18,14 @@ import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
 import com.stabilit.sc.io.Session;
+import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
+
+
 
 public class CreateSessionCommand extends CommandAdapter {
 
@@ -49,8 +52,7 @@ public class CreateSessionCommand extends CommandAdapter {
 			SCMP scmp = request.getSCMP();
 			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
 					.getName());
-			ServiceRegistry serviceRegistry = ServiceRegistry
-					.getCurrentInstance();
+			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
@@ -67,8 +69,7 @@ public class CreateSessionCommand extends CommandAdapter {
 			Session session = new Session();
 			scmp.setSessionId(session.getId());
 			// try to allocate session
-			ServiceRegistryItem serviceRegistryItem = serviceRegistry
-					.allocate(serviceName, scmp.getHeader());
+			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
 			
 			// finally save session
 			session.setAttribute(ServiceRegistryItem.class.getName(),
