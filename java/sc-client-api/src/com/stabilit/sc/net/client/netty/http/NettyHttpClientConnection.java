@@ -70,7 +70,6 @@ public class NettyHttpClientConnection implements IClientConnection {
 		// Start the connection attempt.
 		try {
 			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-
 			// Wait until the connection attempt succeeds or fails.
 			this.channel = future.awaitUninterruptibly().getChannel();
 			if (!future.isSuccess()) {

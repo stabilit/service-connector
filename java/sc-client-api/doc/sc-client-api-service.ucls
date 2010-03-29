@@ -1,0 +1,108 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.ISCMPCall" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/service/ISCMPCall.java" binary="false">    
+    <position x="113" y="69" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPCallAdapter" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false">    
+    <position x="89" y="233" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPMaintenanceCall" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/service/SCMPMaintenanceCall.java" binary="false">    
+    <position x="276" y="263" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPConnectCall" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/service/SCMPConnectCall.java" binary="false">    
+    <position x="102" y="439" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPCreateSessionCall" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/service/SCMPCreateSessionCall.java" binary="false">    
+    <position x="490" y="148" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPDeleteSessionCall" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/service/SCMPDeleteSessionCall.java" binary="false">    
+    <position x="298" y="88" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPCallFactory" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallFactory.java" binary="false">    
+    <position x="492" y="316" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.service.SCMPDisconnectCall" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/service/SCMPDisconnectCall.java" binary="false">    
+    <position x="286" y="397" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPMaintenanceCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPMaintenanceCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPDeleteSessionCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPDeleteSessionCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPCreateSessionCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCreateSessionCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPDisconnectCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPDisconnectCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPConnectCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPConnectCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/service/SCMPCallAdapter.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.service.ISCMPCall" 
+      file="/sc-client-api/src/com/stabilit/sc/service/ISCMPCall.java" binary="false"/>  
+  </realization>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

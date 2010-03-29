@@ -19,17 +19,37 @@
  */
 package com.stabilit.sc.service;
 
+import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPFault;
+import com.stabilit.sc.io.SCMPMsgType;
+
 /**
  * @author JTraber
  * 
  */
-public class SCMPCallFactory {
+public class SCMPDisconnectCall extends SCMPCallAdapter {
 
-	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
-	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
-	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
-	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
-	public static final ISCMPCall CREATE_SESSION_CALL = new SCMPCreateSessionCall();
-	public static final ISCMPCall DELETE_SESSION_CALL = new SCMPDeleteSessionCall();
-	public static final ISCMPCall MAINTENANCE_CALL = new SCMPMaintenanceCall();
+	public SCMPDisconnectCall() {
+		this(null);
+	}
+
+	public SCMPDisconnectCall(IClient client) {
+		this.client = client;
+	}
+
+	@Override
+	public SCMP invoke() throws Exception {
+		this.call.setMessageType(SCMPMsgType.REQ_DISCONNECT.getRequestName());
+		this.result = client.sendAndReceive(this.call);
+		if (this.result.isFault()) {
+			throw new SCMPServiceException((SCMPFault) result);
+		}
+		return this.result;
+	}
+
+	@Override
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPDisconnectCall(client);
+	}
 }
