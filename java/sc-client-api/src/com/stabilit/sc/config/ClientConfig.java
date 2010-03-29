@@ -82,6 +82,16 @@ public class ClientConfig {
 		private String host;
 		private String con;
 
+		public ClientConfigItem() {
+		}
+		
+		public ClientConfigItem(String host, int port, String con) {
+			super();
+			this.port = port;
+			this.host = host;
+			this.con = con;
+		}
+
 		public int getPort() {
 			return port;
 		}

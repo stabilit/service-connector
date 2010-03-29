@@ -28,11 +28,7 @@ import com.stabilit.sc.io.SCMP;
  * 
  */
 public interface IClient extends IFactoryable {
-
-	public void deleteSession();
-
-	public void createSession();
-
+	
 	public void disconnect();
 
 	public void destroy();

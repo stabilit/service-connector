@@ -53,16 +53,6 @@ public class Client implements IClient {
 	}
 
 	@Override
-	public void createSession() {
-		clientConnection.createSession();
-	}
-
-	@Override
-	public void deleteSession() {
-		clientConnection.deleteSession();
-	}
-
-	@Override
 	public void destroy() {
 		clientConnection.destroy();
 	}
