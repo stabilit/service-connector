@@ -55,7 +55,6 @@ public abstract class Registry implements IRegistry {
 			dump.append(key);
 			dump.append(":");
 			dump.append(registryMap.get(key).toString());
-			dump.append("\n");
 		}
 		return dump.toString();
 	}	

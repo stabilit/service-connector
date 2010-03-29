@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.registry;
 
+import java.util.Map;
+
 /**
  * @author JTraber
  * 
@@ -38,18 +40,18 @@ public final class ServiceRegistry extends Registry {
 		this.put(key, item);
 	}
 
-	public synchronized ServiceRegistryItem allocate(Object key) throws Exception {
+	public synchronized ServiceRegistryItem allocate(Object key, Map<String, String> attrMap) throws Exception {
 		ServiceRegistryItem item = (ServiceRegistryItem) this.get(key); // is this a list, TODO
 		if (item.isAllocated()) {
 			return null;
 		}
-		item.allocate();
+		item.allocate(attrMap);
 		return item;
 	}
 
-	public synchronized void deallocate(ServiceRegistryItem item) throws Exception {
+	public synchronized void deallocate(ServiceRegistryItem item, Map<String, String> attrMap) throws Exception {
 		if (item.isAllocated()) {
-			item.deallocate();
+			item.deallocate(attrMap);
 		}
 		return;
 	}

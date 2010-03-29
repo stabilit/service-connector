@@ -19,15 +19,13 @@
  */
 package com.stabilit.sc.service;
 
+import java.util.Map;
+
 import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.io.IpAddressList;
 import com.stabilit.sc.io.SCMP;
 import com.stabilit.sc.io.SCMPFault;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.service.ISCMPCall;
-import com.stabilit.sc.service.SCMPCallAdapter;
-import com.stabilit.sc.service.SCMPServiceException;
 
 /**
  * @author JTraber
@@ -67,11 +65,7 @@ public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
 		call.setHeader(SCMPHeaderType.SESSION_ID.getName(), sessionId);
 	}
 
-	public void setIpAddressList(IpAddressList ipAddressList) {
-		call.setHeader(SCMPHeaderType.IP_ADDRESS_LIST.getName(), ipAddressList.toString());
-	}
-	
-	public void setSessionInfo(String sessionInfo) {
-		call.setHeader(SCMPHeaderType.SESSION_INFO.getName(), sessionInfo);
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);		
 	}
 }

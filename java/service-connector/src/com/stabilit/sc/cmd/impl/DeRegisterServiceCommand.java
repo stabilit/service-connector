@@ -1,5 +1,9 @@
 package com.stabilit.sc.cmd.impl;
 
+import java.util.Map;
+
+import javax.xml.bind.ValidationException;
+
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommandValidator;
@@ -16,9 +20,9 @@ import com.stabilit.sc.io.SCMPReply;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.util.MapBean;
 
-public class UnRegisterServiceCommand extends CommandAdapter {
+public class DeRegisterServiceCommand extends CommandAdapter {
 
-	public UnRegisterServiceCommand() {
+	public DeRegisterServiceCommand() {
 		this.commandValidator = new UnRegisterServiceCommandValidator();
 	}
 
@@ -33,14 +37,17 @@ public class UnRegisterServiceCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response)
+			throws CommandException {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
+		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
+				.getName());
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
-		
+
 		if (mapBean == null) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(
+					SCMPErrorCode.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -48,7 +55,7 @@ public class UnRegisterServiceCommand extends CommandAdapter {
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
-		response.setSCMP(scmpReply);	
+		response.setSCMP(scmpReply);
 	}
 
 	@Override
@@ -59,12 +66,17 @@ public class UnRegisterServiceCommand extends CommandAdapter {
 	public class UnRegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
-			SCMP scmp = request.getSCMP();
+		public void validate(IRequest request, IResponse response)
+				throws SCMPValidatorException {
+			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {
-
-				
+				// serviceName
+				String serviceName = (String) scmpHeader
+						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				if (serviceName == null || serviceName.equals("")) {
+					throw new ValidationException("ServiceName must be set!");
+				}
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

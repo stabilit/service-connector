@@ -19,8 +19,15 @@
  */
 package com.stabilit.sc.registry;
 
+import java.util.Map;
+
+import com.stabilit.sc.client.ClientFactory;
 import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.config.ClientConfig;
+import com.stabilit.sc.config.ClientConfig.ClientConfigItem;
+import com.stabilit.sc.service.SCMPAllocateSessionCall;
+import com.stabilit.sc.service.SCMPCallFactory;
+import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -29,24 +36,29 @@ import com.stabilit.sc.util.MapBean;
  */
 public class ServiceRegistryItem extends MapBean<String> {
 
-	private SCMP scmp;
 	private IClient client;
 
-	public ServiceRegistryItem(SCMP scmp) {
-		this.scmp = scmp;
-		this.attrMap = scmp.getHeader();
+	public ServiceRegistryItem() {
+		ClientFactory clientFactory = new ClientFactory();
+		//TODO clientConfig problem
+		ClientConfigItem config = new ClientConfig().new ClientConfigItem();
 	}
 
-	public void allocate() throws Exception {
-         // TODO allocate session call
-		
+	public void allocate(Map<String, String> attrMap) throws Exception {
+		SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
+				.newInstance(client);
+		allocateSessionCall.setHeader(attrMap);
+		allocateSessionCall.invoke();
 	}
 
-	public void deallocate() throws Exception {
-        // TODO deallocate session
+	public void deallocate(Map<String, String> attrMap) throws Exception {
+		SCMPDeAllocateSessionCall deAllocateSessionCall = (SCMPDeAllocateSessionCall) SCMPCallFactory.DEALLOCATE_SESSION_CALL
+				.newInstance(client);
+		deAllocateSessionCall.setHeader(attrMap);
+		deAllocateSessionCall.invoke();
 	}
 
 	public boolean isAllocated() {
-       return false;
+		return false;
 	}
 }

@@ -4,6 +4,7 @@ import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.impl.ConnectCommand;
 import com.stabilit.sc.cmd.impl.CreateSessionCommand;
+import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
 import com.stabilit.sc.cmd.impl.DeleteSessionCommand;
 import com.stabilit.sc.cmd.impl.DisconnectCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
@@ -27,5 +28,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		add(deleteSessionCommand.getRequestKeyName(), deleteSessionCommand);
 		ICommand registerServiceCommand = new RegisterServiceCommand();
 		add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
+		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
+		add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
 	}
 }

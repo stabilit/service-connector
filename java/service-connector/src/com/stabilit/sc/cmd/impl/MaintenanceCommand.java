@@ -12,6 +12,7 @@ import com.stabilit.sc.io.SCMPReply;
 import com.stabilit.sc.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
+import com.stabilit.sc.registry.SessionRegistry;
 
 public class MaintenanceCommand extends CommandAdapter {
 
@@ -33,6 +34,7 @@ public class MaintenanceCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws CommandException {
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -41,6 +43,7 @@ public class MaintenanceCommand extends CommandAdapter {
 		
 		mainMsg.setAttribute("connectionRegistry", connectionRegistry);
 		mainMsg.setAttribute("serviceRegistry", serviceRegistry);
+		mainMsg.setAttribute("sessionRegistry", sessionRegistry);
 		scmpReply.setBody(mainMsg);
 		response.setSCMP(scmpReply);
 	}

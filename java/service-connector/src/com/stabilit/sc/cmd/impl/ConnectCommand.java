@@ -83,7 +83,7 @@ public class ConnectCommand extends CommandAdapter {
 
 				// compression
 				String compression = (String) scmpHeader.get(SCMPHeaderType.COMPRESSION.getName());
-				compression = ValidatorUtility.validateBoolean(compression);
+				compression = ValidatorUtility.validateBoolean(compression, true);
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
 
 				// localDateTime

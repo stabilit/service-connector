@@ -1,25 +1,27 @@
 package com.stabilit.sc.cmd.impl;
 
-import java.net.SocketAddress;
+import java.util.Map;
+
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommandValidator;
+import com.stabilit.sc.cmd.SCMPCommandException;
 import com.stabilit.sc.cmd.SCMPValidatorException;
-import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.io.IRequest;
 import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.io.IpAddressList;
 import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.io.SCMPErrorCode;
 import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.io.SCMPMsgType;
 import com.stabilit.sc.io.SCMPReply;
 import com.stabilit.sc.io.Session;
-import com.stabilit.sc.msg.impl.CreateSessionMessage;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
+import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
 public class CreateSessionCommand extends CommandAdapter {
@@ -39,28 +41,52 @@ public class CreateSessionCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
+	public void run(IRequest request, IResponse response)
+			throws CommandException {
+
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
-			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName);
-			if (serviceRegistryItem == null) {
-				// throw
+			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
+					.getName());
+			ServiceRegistry serviceRegistry = ServiceRegistry
+					.getCurrentInstance();
+
+			MapBean<?> mapBean = serviceRegistry.get(serviceName);
+
+			if (mapBean == null) {
+				SCMPCommandException scmpCommandException = new SCMPCommandException(
+						SCMPErrorCode.UNKNOWN_SERVICE);
+				scmpCommandException.setMessageType(getKey().getResponseName());
+				throw scmpCommandException;
 			}
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+			SessionRegistry sessionRegistry = SessionRegistry
+					.getCurrentInstance();
+			
 			// create session
 			Session session = new Session();
-			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
+			scmp.setSessionId(session.getId());
+			// try to allocate session
+			ServiceRegistryItem serviceRegistryItem = serviceRegistry
+					.allocate(serviceName, scmp.getHeader());
+			
+			// finally save session
+			session.setAttribute(ServiceRegistryItem.class.getName(),
+					serviceRegistryItem);
 			sessionRegistry.put(session.getId(), session);
+			
+			// reply
 			SCMPReply scmpReply = new SCMPReply();
-			scmpReply.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getResponseName());
+			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(session.getId());
+			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(),
+					serviceName);
 			response.setSCMP(scmpReply);
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(
+					SCMPErrorCode.SERVER_ERROR);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
 		}
 	}
 
@@ -72,22 +98,30 @@ public class CreateSessionCommand extends CommandAdapter {
 	public class CreateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
-			SCMP scmp = request.getSCMP();
+		public void validate(IRequest request, IResponse response)
+				throws SCMPValidatorException {
+			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {
-				// TODO msg in body??
-				CreateSessionMessage msg = (CreateSessionMessage) scmp.getBody();
+				// serviceName
+				String serviceName = (String) scmpHeader
+						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				if (serviceName == null || serviceName.equals("")) {
+					throw new ValidationException("serviceName must be set!");
+				}
 
 				// ipAddressList
-				String ipAddressListString = (String) msg.getAttribute(SCMPHeaderType.IP_ADDRESS_LIST
-						.getName());
-				IpAddressList ipAddressList = ValidatorUtility.validateIpAddressList(ipAddressListString);
-				request.setAttribute(SCMPHeaderType.IP_ADDRESS_LIST.getName(), ipAddressList);
+				String ipAddressList = (String) scmpHeader
+						.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
+				ValidatorUtility.validateIpAddressList(ipAddressList);
 
+				// sessionInfo
+				String sessionInfo = (String) scmpHeader
+						.get(SCMPHeaderType.SESSION_INFO.getName());
+				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(SCMPMsgType.REQ_CREATE_SESSION.getResponseName());
+				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;
 			}
 		}
