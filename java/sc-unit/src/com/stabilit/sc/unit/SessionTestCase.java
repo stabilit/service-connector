@@ -62,7 +62,7 @@ public class SessionTestCase {
 		// guarantees test sequence
 		RegisterServiceCallTestCase.registerServiceCall();
 		failCreateSession();
-		createSession();
+		//createSession();
 	}
 
 	public void failCreateSession() throws Exception {
