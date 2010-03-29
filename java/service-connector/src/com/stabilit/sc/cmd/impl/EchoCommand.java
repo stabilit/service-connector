@@ -30,8 +30,14 @@ public class EchoCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
 		
-		EchoMessage echo = new EchoMessage();
+		EchoMessage echoReq = (EchoMessage) request.getSCMP().getBody();
 		
+		String text = (String) echoReq.getAttribute("text");
+		text.toUpperCase();
+		
+		EchoMessage echo = new EchoMessage();
+		echo.setAttribute("text", text);
+				
 		SCMP scmpReply = new SCMP();
 		scmpReply.setBody(echo);
 		response.setSCMP(scmpReply);
