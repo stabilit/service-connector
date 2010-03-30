@@ -24,6 +24,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -34,16 +35,16 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
 
 	public SCMPDeAllocateSessionCall() {
-		this(null);
+		this(null, null);
 	}
 
-	public SCMPDeAllocateSessionCall(IClient client) {
-		this.client = client;
+	public SCMPDeAllocateSessionCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPDeAllocateSessionCall(client);
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPDeAllocateSessionCall(client, scmpSession);
 	}
 	
 	public void setServiceName(String serviceName) {

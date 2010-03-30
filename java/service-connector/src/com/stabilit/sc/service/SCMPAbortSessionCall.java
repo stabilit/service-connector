@@ -24,6 +24,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -34,16 +35,16 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public class SCMPAbortSessionCall extends SCMPCallAdapter {
 
 	public SCMPAbortSessionCall() {
-		this(null);
+		this(null, null);
 	}
 
-	public SCMPAbortSessionCall(IClient client) {
-		this.client = client;
+	public SCMPAbortSessionCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPAbortSessionCall(client);
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPAbortSessionCall(client, scmpSession);
 	}
 	
 	public void setSessionId(String sessionId) {

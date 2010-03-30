@@ -25,6 +25,7 @@ import java.net.SocketAddress;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.util.MapBean;
@@ -69,7 +70,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 		}
 		try {
 			SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
-					.newInstance(client);
+					.newInstance(client, scmp);
 			allocateSessionCall.setHeader(scmp.getHeader());
 			allocateSessionCall.invoke();
 		} catch (Exception e) {
@@ -79,9 +80,10 @@ public class ServiceRegistryItem extends MapBean<String> {
 
 	public void deallocate(SCMP scmp) throws Exception {
 		SCMPDeAllocateSessionCall deAllocateSessionCall = (SCMPDeAllocateSessionCall) SCMPCallFactory.DEALLOCATE_SESSION_CALL
-				.newInstance(client);
+				.newInstance(client, scmp);
 		deAllocateSessionCall.setHeader(scmp.getHeader());
 		deAllocateSessionCall.invoke();
+		client.disconnect();
 	}
 
 	public boolean isAllocated() {
@@ -91,7 +93,15 @@ public class ServiceRegistryItem extends MapBean<String> {
 	public class AllocateSession implements Runnable {
 		@Override
 		public void run() {
-			
+
 		}
+	}
+
+	public SCMP echo(SCMP scmp) throws Exception {
+		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmp);
+		echoCall.setHeader(scmp.getHeader());
+		echoCall.setBody(scmp.getBody());
+		echoCall.setTransitive(false);
+		return echoCall.invoke();
 	}
 }

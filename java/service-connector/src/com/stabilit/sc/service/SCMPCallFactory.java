@@ -20,6 +20,7 @@
 package com.stabilit.sc.service;
 
 import com.stabilit.sc.cln.service.ISCMPCall;
+import com.stabilit.sc.cln.service.SCMPEchoCall;
 
 /**
  * @author JTraber
@@ -29,4 +30,5 @@ public class SCMPCallFactory {
 
 	public static final ISCMPCall ALLOCATE_SESSION_CALL = new SCMPAllocateSessionCall();
 	public static final ISCMPCall DEALLOCATE_SESSION_CALL = new SCMPDeAllocateSessionCall();
+	public static final ISCMPCall ECHO_CALL = new SCMPEchoCall();
 }
