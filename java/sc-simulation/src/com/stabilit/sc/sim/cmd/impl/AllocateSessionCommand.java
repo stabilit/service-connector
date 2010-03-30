@@ -1,4 +1,4 @@
-package com.stabilit.sc.cmd.impl;
+package com.stabilit.sc.sim.cmd.impl;
 
 import java.util.Map;
 

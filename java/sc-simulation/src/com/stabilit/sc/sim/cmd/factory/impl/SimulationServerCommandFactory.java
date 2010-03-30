@@ -1,7 +1,7 @@
-package com.stabilit.sc.cmd.factory.impl;
+package com.stabilit.sc.sim.cmd.factory.impl;
 
-import com.stabilit.sc.cmd.impl.AllocateSessionCommand;
-import com.stabilit.sc.cmd.impl.DeAllocateSessionCommand;
+import com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand;
+import com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 

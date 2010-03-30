@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.cmd.factory.impl.SimulationServerCommandFactory;
+import com.stabilit.sc.sim.cmd.factory.impl.SimulationServerCommandFactory;
 import com.stabilit.sc.sim.server.SimluationServerFactory;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.srv.conf.ServerConfig;
