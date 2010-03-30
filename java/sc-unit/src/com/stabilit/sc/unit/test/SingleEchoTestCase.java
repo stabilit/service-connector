@@ -23,23 +23,39 @@ import org.junit.Test;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class SingleEchoTestCase extends SuperTestCase {
 
+	protected Integer index = null;
+
 	@Test
 	public void invokeTest() throws Exception {
-		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL
-				.newInstance(client, scmpSession);
+		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
 
+		if (index == null) {
+			echoCall.setBody("hello world");
+		} else {
+			echoCall.setBody("hello world, index = " + index++);
+		}
+		echoCall.setTransitive(false);
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getMessageType(),
-				SCMPMsgType.RES_ECHO.getResponseName());
+		Assert.assertNotNull(result.getBody());
+		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME
-				.getName()));
+
+		SCMPEchoCall echoCallTransitive = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client,
+				scmpSession);
+		if (index == null) {
+			echoCallTransitive.setBody("hello TRANSITIVE world");
+		} else {
+			echoCallTransitive.setBody("hello TRANSITIVE world, index = " + index++);
+		}
+		echoCallTransitive.setTransitive(true);
+		echoCallTransitive.setServiceName("simulation");
+		result = echoCallTransitive.invoke();
+		System.out.println("result echo = " + result.getBody());
 	}
+
 }
