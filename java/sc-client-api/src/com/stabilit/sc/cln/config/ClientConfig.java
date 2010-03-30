@@ -46,7 +46,7 @@ public class ClientConfig {
 	 * @throws IOException
 	 */
 	public void load(String fileName) throws IOException {
-		InputStream is = ClientConfig.class.getResourceAsStream(".." + File.separatorChar + fileName);
+		InputStream	is = ClassLoader.getSystemResourceAsStream(fileName);
 		props = new Properties();
 		props.load(is);
 
