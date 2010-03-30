@@ -37,8 +37,7 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 
 public class NettyTcpClientConnection implements IClientConnection {
-
-	private String sessionId = null;
+	
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
 	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
@@ -92,13 +91,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 	}
 
 	@Override
-	public String getSessionId() {
-		return this.sessionId;
-	}
-
-	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		scmp.setSessionId(this.sessionId);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder.encode(baos, scmp);
 
@@ -118,11 +111,6 @@ public class NettyTcpClientConnection implements IClientConnection {
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
-
-		String retSessionID = ret.getSessionId();
-		if (retSessionID != null) {
-			this.sessionId = retSessionID;
-		}
 		return ret;
 	}
 

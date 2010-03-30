@@ -33,8 +33,6 @@ public interface IClientConnection extends IConnection {
 	 */
 	void connect() throws ConnectionException;
 	
-	public String getSessionId();
-	
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 	
 	public void disconnect();
