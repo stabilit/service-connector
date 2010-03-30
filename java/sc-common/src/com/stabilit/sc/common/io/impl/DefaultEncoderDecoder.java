@@ -107,7 +107,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 	}
 
 	@Override
-	public void encode(OutputStream os, Object obj) throws IOException {
+	public void encode(OutputStream os, Object obj) throws Exception {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
@@ -115,6 +115,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		// create meta part
 		StringBuilder sb = new StringBuilder();
 		String messageType = scmp.getMessageType(); // messageType is never null
+		if(messageType == null) {
+			throw new EncodingDecodingException("No messageType found (null)");
+		}
 		if (messageType.startsWith("REQ_")) {
 			sb.append("REQ / SCMP/");
 		} else if (messageType.startsWith("RES_")) {

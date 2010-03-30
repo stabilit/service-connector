@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class SCMP implements Serializable {
 
 	private static final long serialVersionUID = -3464445251398033295L;
@@ -23,11 +22,11 @@ public class SCMP implements Serializable {
 		header = new HashMap<String, String>();
 		this.setBody(body);
 	}
-	
+
 	public void setMessageType(String messageType) {
 		setHeader(SCMPHeaderType.MSG_TYPE.getName(), messageType);
 	}
-	
+
 	public String getMessageType() {
 		return getHeader(SCMPHeaderType.MSG_TYPE.getName());
 	}
@@ -42,18 +41,43 @@ public class SCMP implements Serializable {
 
 	public void setHeader(String name, boolean value) {
 		if (value) {
-		    header.put(name, "1");
+			header.put(name, "1");
 		} else {
-		    header.put(name, "0");			
+			header.put(name, "0");
 		}
 	}
-	
+
 	public void setHeader(String name, int value) {
 		header.put(name, String.valueOf(value));
 	}
 
 	public String getHeader(String name) {
 		return header.get(name);
+	}
+
+	public Boolean getHeaderBoolean(String name) {
+		String value = header.get(name);
+
+		if ("0".equals(value)) {
+			return false;
+		}
+		if ("1".equals(value)) {
+			return true;
+		}
+		return null;
+	}
+
+	public Integer getHeaderInt(String name) {
+		String value = header.get(name);
+		if (value == null)
+			return null;
+		Integer intValue = null;
+		try {
+			intValue = Integer.parseInt(value);
+		} catch (Throwable th) {
+			return null;
+		}
+		return intValue;
 	}
 
 	public String getSessionId() {

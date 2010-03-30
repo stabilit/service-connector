@@ -49,7 +49,8 @@ public enum SCMPHeaderType {
 	SEQUENCE_NR("sequenceNr"),
 	SERVICE_NAME("serviceName"),
 	SESSION_ID("sessionId"),
-	SESSION_INFO("sessionInfo");
+	SESSION_INFO("sessionInfo"),
+	TRANSITIVE("transitive");
 	
 	private String name;
 	
