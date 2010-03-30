@@ -19,7 +19,6 @@
  */
 package com.stabilit.sc.srv.conf;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

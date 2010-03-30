@@ -15,6 +15,6 @@ public interface ICommand extends IFactoryable {
 
 	public ICommandValidator getCommandValidator();
 	
-	public void run(IRequest request, IResponse response) throws CommandException;
+	public void run(IRequest request, IResponse response) throws Exception;
 
 }
