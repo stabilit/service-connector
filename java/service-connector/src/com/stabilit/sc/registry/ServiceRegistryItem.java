@@ -28,12 +28,12 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.ctx.IServerContext;
-import com.stabilit.sc.ctx.ServerContext;
-import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
+import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.srv.ctx.ServerContext;
+import com.stabilit.sc.srv.server.IServer;
 
 /**
  * @author JTraber

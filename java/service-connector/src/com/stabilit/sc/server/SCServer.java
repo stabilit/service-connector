@@ -20,6 +20,7 @@
 package com.stabilit.sc.server;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.srv.server.Server;
 
 /**
  * @author JTraber

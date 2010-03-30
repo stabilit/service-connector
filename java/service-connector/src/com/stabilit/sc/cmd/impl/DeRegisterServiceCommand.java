@@ -4,11 +4,6 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.sc.cmd.CommandAdapter;
-import com.stabilit.sc.cmd.CommandException;
-import com.stabilit.sc.cmd.ICommandValidator;
-import com.stabilit.sc.cmd.SCMPCommandException;
-import com.stabilit.sc.cmd.SCMPValidatorException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -19,6 +14,11 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.registry.ServiceRegistry;
+import com.stabilit.sc.srv.cmd.CommandAdapter;
+import com.stabilit.sc.srv.cmd.CommandException;
+import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.SCMPCommandException;
+import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class DeRegisterServiceCommand extends CommandAdapter {
 

@@ -1,7 +1,5 @@
 package com.stabilit.sc.cmd.factory.impl;
 
-import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.impl.ConnectCommand;
 import com.stabilit.sc.cmd.impl.CreateSessionCommand;
 import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
@@ -10,6 +8,8 @@ import com.stabilit.sc.cmd.impl.DisconnectCommand;
 import com.stabilit.sc.cmd.impl.EchoCommand;
 import com.stabilit.sc.cmd.impl.MaintenanceCommand;
 import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 public class ServiceConnectorCommandFactory extends CommandFactory {
 
