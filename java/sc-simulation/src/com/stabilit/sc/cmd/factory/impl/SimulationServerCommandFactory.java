@@ -1,9 +1,9 @@
 package com.stabilit.sc.cmd.factory.impl;
 
-import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.impl.AllocateSessionCommand;
 import com.stabilit.sc.cmd.impl.DeAllocateSessionCommand;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 public class SimulationServerCommandFactory extends CommandFactory {
 
