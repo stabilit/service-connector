@@ -45,6 +45,7 @@ public class AllocateSessionCommand extends CommandAdapter {
 		MapBean<Object> mapBean = (MapBean<Object>) sessionRegistry.get("key");
 		SCMPReply scmpReply = new SCMPReply();
 
+		// quick and dirty key available prevents multiple calls
 		if (mapBean == null) {
 			MapBean<Object> newMapBean = new MapBean<Object>();
 			newMapBean.setAttribute("available", false);
