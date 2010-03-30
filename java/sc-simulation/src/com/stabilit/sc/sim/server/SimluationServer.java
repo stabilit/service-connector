@@ -19,14 +19,14 @@
  */
 package com.stabilit.sc.sim.server;
 
-import com.stabilit.sc.client.ClientFactory;
-import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.cln.client.ClientFactory;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.config.ClientConfig;
-import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.server.Server;
-import com.stabilit.sc.service.SCMPCallFactory;
-import com.stabilit.sc.service.SCMPRegisterServiceCall;
 
 /**
  * @author JTraber

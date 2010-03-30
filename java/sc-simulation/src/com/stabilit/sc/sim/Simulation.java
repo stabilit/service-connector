@@ -3,11 +3,11 @@ package com.stabilit.sc.sim;
 import java.io.IOException;
 import java.util.List;
 
+import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.factory.impl.SimulationServerCommandFactory;
 import com.stabilit.sc.conf.ServerConfig;
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.config.ClientConfig;
 import com.stabilit.sc.ctx.IServerContext;
 import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.server.ServerFactory;

@@ -19,8 +19,8 @@
  */
 package com.stabilit.sc.sim.server;
 
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.server.Server;
 import com.stabilit.sc.server.ServerFactory;
