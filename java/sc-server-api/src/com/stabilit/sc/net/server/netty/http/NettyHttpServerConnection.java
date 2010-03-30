@@ -22,7 +22,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.server.ServerConnectionAdapter;

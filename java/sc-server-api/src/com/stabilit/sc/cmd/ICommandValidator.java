@@ -19,8 +19,8 @@
  */
 package com.stabilit.sc.cmd;
 
-import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.io.IResponse;
+import com.stabilit.sc.common.io.IRequest;
+import com.stabilit.sc.common.io.IResponse;
 
 /**
  * @author JTraber

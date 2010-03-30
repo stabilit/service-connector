@@ -1,5 +1,6 @@
 package com.stabilit.sc.ctx;
 
+import com.stabilit.sc.common.ctx.ContextAdapter;
 import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.server.IServer;
 

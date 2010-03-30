@@ -19,12 +19,12 @@
  */
 package com.stabilit.sc.cmd;
 
-import com.stabilit.sc.io.IFaultResponse;
-import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPFault;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.sc.common.io.IFaultResponse;
+import com.stabilit.sc.common.io.IResponse;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.util.MapBean;
 
 /**
  * @author JTraber

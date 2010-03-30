@@ -1,7 +1,7 @@
 package com.stabilit.sc.server.factory;
 
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.common.factory.Factory;
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.net.server.netty.http.NettyHttpServerConnection;
 import com.stabilit.sc.net.server.netty.tcp.NettyTcpServerConnection;
 import com.stabilit.sc.server.IServerConnection;

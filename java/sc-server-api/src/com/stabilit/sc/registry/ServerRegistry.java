@@ -1,8 +1,9 @@
 package com.stabilit.sc.registry;
 
+import com.stabilit.sc.common.registry.Registry;
+import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.ctx.IServerContext;
 import com.stabilit.sc.server.IServer;
-import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber

@@ -19,6 +19,7 @@
  */
 package com.stabilit.sc.ctx;
 
+import com.stabilit.sc.common.ctx.IContext;
 import com.stabilit.sc.server.IServer;
 
 /**

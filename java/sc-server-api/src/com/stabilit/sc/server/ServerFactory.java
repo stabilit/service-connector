@@ -1,8 +1,8 @@
 package com.stabilit.sc.server;
 
+import com.stabilit.sc.common.factory.Factory;
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
 
 public class ServerFactory extends Factory {
 

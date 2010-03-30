@@ -36,13 +36,13 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.cmd.ICommandValidator;
 import com.stabilit.sc.cmd.factory.CommandFactory;
-import com.stabilit.sc.io.IFaultResponse;
-import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPFault;
-import com.stabilit.sc.net.netty.NettyHttpRequest;
-import com.stabilit.sc.net.netty.NettyHttpResponse;
+import com.stabilit.sc.common.io.IFaultResponse;
+import com.stabilit.sc.common.io.IRequest;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.net.netty.NettyHttpRequest;
+import com.stabilit.sc.common.net.netty.NettyHttpResponse;
 import com.stabilit.sc.registry.ServerRegistry;
 
 @ChannelPipelineCoverage("one")

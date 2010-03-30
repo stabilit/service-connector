@@ -19,7 +19,6 @@
  */
 package com.stabilit.sc.server;
 
-import com.stabilit.sc.conf.ServerConfig;
 import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.sc.ctx.IServerContext;
 import com.stabilit.sc.ctx.ServerContext;
