@@ -14,7 +14,7 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.unit;
+package com.stabilit.sc.unit.test;
 
 import junit.framework.Assert;
 

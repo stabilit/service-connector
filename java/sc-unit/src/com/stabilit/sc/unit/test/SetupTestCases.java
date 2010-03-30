@@ -17,42 +17,37 @@
 /**
  * 
  */
-package com.stabilit.sc.unit;
+package com.stabilit.sc.unit.test;
 
-import junit.framework.Assert;
+import sun.management.counter.Units;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.stabilit.sc.ServiceConnector;
+import com.stabilit.sc.sim.Simulation;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
-import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
  * @author JTraber
  * 
  */
+public class SetupTestCases {
 
-@RunWith(Suite.class)
-@SuiteClasses( {
-	RegisterServiceCallTestCase.class,
-	ConnectDisconnectTestCase.class, 
-	//SessionTestCase.class 
-})
+	private static SetupTestCases setupTestCases = null;
 
-public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+	public static void setup() {
+		if (setupTestCases == null) {
+			setupTestCases = new SetupTestCases();
+			try {
+				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				ServiceConnector.main(null);
+				Simulation.main(null);			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private SetupTestCases() {
+
 	}
 }

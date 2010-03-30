@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.unit;
+package com.stabilit.sc.unit.test;
 
 import org.junit.After;
 import org.junit.Before;

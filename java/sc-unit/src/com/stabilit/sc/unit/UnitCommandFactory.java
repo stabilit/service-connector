@@ -17,20 +17,21 @@
 /**
  * 
  */
-package com.stabilit.sc;
+package com.stabilit.sc.unit;
 
-import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.sc.cmd.factory.impl.SimulationServerCommandFactory;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
  * @author JTraber
  * 
  */
 public class UnitCommandFactory extends CommandFactory {
-		
 	public UnitCommandFactory() {
-		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);		
-		SimulationServerCommandFactory simulationServerCommandFactory = new SimulationServerCommandFactory(this);		
+		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(
+				this);
+		SimulationServerCommandFactory simulationServerCommandFactory = new SimulationServerCommandFactory(
+				this);
 	}
 }
