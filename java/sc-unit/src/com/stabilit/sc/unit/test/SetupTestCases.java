@@ -19,11 +19,10 @@
  */
 package com.stabilit.sc.unit.test;
 
-import sun.management.counter.Units;
-
 import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.sc.unit.UnitCommandFactory;
 
 
 /**
