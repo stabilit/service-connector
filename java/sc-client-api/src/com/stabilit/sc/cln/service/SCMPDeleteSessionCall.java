@@ -35,12 +35,12 @@ public class SCMPDeleteSessionCall extends SCMPCallAdapter {
 		this(null, null);
 	}
 
-	public SCMPDeleteSessionCall(IClient client, SCMPSession scmpSession) {
+	public SCMPDeleteSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPSession scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		return new SCMPDeleteSessionCall(client, scmpSession);
 	}
 
@@ -51,7 +51,8 @@ public class SCMPDeleteSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMP invoke() throws Exception {
 		super.invoke(); // throws exception in case of error
-		scmpSession.removeSessionRegistry();
+		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession)
+		((SCMPSession)this.scmpSession).removeSessionRegistry();
 		return this.result;
 	}
 

@@ -20,6 +20,7 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -30,26 +31,26 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public class SCMPClnDataCall extends SCMPCallAdapter {
 
 	public SCMPClnDataCall() {
-		this(null);
+		this(null,null);
 	}
 
-	public SCMPClnDataCall(IClient client) {
-		this.client = client;
+	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPClnDataCall(client);
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPClnDataCall(client, scmpSession);
 	}
-	
+
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
 	}
-		
+
 	public void setMessagInfo(String messageInfo) {
 		call.setHeader(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
 	}
-	
+
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.REQ_CLN_DATA;

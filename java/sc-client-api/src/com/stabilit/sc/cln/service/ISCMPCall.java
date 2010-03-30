@@ -20,7 +20,6 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -32,7 +31,7 @@ public interface ISCMPCall {
 
 	public ISCMPCall newInstance(IClient client);
 	
-	public ISCMPCall newInstance(IClient client, SCMPSession scmpSession);
+	public ISCMPCall newInstance(IClient client, SCMP scmp);
 	
 	public SCMP invoke() throws Exception;
 	

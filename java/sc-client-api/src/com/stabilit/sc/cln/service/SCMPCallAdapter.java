@@ -20,12 +20,10 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.common.io.IMessage;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderType;
-import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
  * @author JTraber
@@ -34,7 +32,7 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	protected IClient client;
-	protected SCMPSession scmpSession;
+	protected SCMP scmpSession;
 	protected SCMP call;
 	protected SCMP result;
 
@@ -42,17 +40,18 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * 
 	 */
 	public SCMPCallAdapter() {
-		super();
-		this.call = new SCMP();
+		this(null, null);
 	}
 
-	public SCMPCallAdapter(IClient client, SCMPSession scmpSession) {
+	public SCMPCallAdapter(IClient client, SCMP scmpSession) {
 		this.client = client;
+		
 		this.scmpSession = scmpSession;
-		this.call.setMessageType(SCMPMsgType.REQ_DELETE_SESSION.getRequestName());
-		this.call.setSessionId(scmpSession.getSessionId());
-		this.call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmpSession
-				.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+		this.call = new SCMP();
+		if (this.scmpSession != null) {
+		   this.call.setSessionId(scmpSession.getSessionId());
+		   this.call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmpSession.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+		}
 	}
 
 	@Override
@@ -61,12 +60,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPSession scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public SCMP invoke() throws Exception {
+		this.call.setMessageType(getMessageType().getRequestName());
 		this.result = client.sendAndReceive(this.call);
 
 		if (this.result.isFault()) {
@@ -85,25 +85,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		return result;
 	}
 
-	public void setBody(byte[] buffer) {
-		if (buffer == null) {
-			throw new IllegalArgumentException();
-		}
-		call.setBody(buffer);
-	}
-
-	public void setBody(String s) {
-		if (s == null) {
-			throw new IllegalArgumentException();
-		}
-		call.setBody(s);
-	}
-
-	public void setBody(IMessage message) {
-		if (message == null) {
-			throw new IllegalArgumentException();
-		}
-		call.setBody(message);
+	public void setBody(Object obj) {
+		call.setBody(obj);
 	}
 
 	// sequencenr

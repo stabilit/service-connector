@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.cln.service;
 
+import java.util.Map;
+
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
@@ -32,11 +34,11 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public class SCMPEchoCall extends SCMPCallAdapter {
 
 	public SCMPEchoCall() {
-		this(null);
+		this(null, null);
 	}
 
-	public SCMPEchoCall(IClient client) {
-		this.client = client;
+	public SCMPEchoCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
 	}
 
 	@Override
@@ -50,8 +52,8 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPEchoCall(client);
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPEchoCall(client, scmpSession);
 	}
 
 	public void setServiceName(String serviceName) {
@@ -61,5 +63,13 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.REQ_ECHO;
+	}
+	
+	public void setTransitive(boolean value) {
+		call.setHeader(SCMPHeaderType.TRANSITIVE.getName(), value);
+	}
+	
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);		
 	}
 }
