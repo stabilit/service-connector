@@ -20,7 +20,7 @@
 package com.stabilit.sc.unit;
 
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.sc.cmd.factory.impl.SimulationServerCommandFactory;
+import com.stabilit.sc.sim.cmd.factory.impl.SimulationServerCommandFactory;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
