@@ -21,23 +21,27 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.client.ClientFactory;
-import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.config.ClientConfig;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.msg.impl.MaintenanceMessage;
-import com.stabilit.sc.service.SCMPCallFactory;
-import com.stabilit.sc.service.SCMPCreateSessionCall;
-import com.stabilit.sc.service.SCMPMaintenanceCall;
-import com.stabilit.sc.service.SCMPServiceException;
+import com.stabilit.sc.cln.client.ClientFactory;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.cln.io.SCMPSession;
+import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPCreateSessionCall;
+import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
+import com.stabilit.sc.cln.service.SCMPServiceException;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+
 
 public class SessionTestCase {
 
-	static ClientConfig config = null;
-	static IClient client = null;
+	private ClientConfig config = null;
+	private IClient client = null;
+	private SCMPSession scmpSession = null;
 
 	@Before
 	public void setup() {
@@ -62,8 +66,9 @@ public class SessionTestCase {
 	@Test
 	public void runTests() throws Exception {
 		// guarantees test sequence
-		//failCreateSession();
+		// failCreateSession();
 		createSession();
+		deleteSession();
 	}
 
 	public void failCreateSession() throws Exception {
@@ -77,8 +82,7 @@ public class SessionTestCase {
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR,
-					SCMPMsgType.REQ_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REQ_CREATE_SESSION);
 		}
 	}
 
@@ -89,14 +93,12 @@ public class SessionTestCase {
 		createSessionCall.setServiceName("simulation");
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 
-		SCMP result = createSessionCall.invoke();
+		scmpSession = createSessionCall.invoke();
 		/*************************** verify create session **********************************/
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getMessageType(),
-				SCMPMsgType.RES_CREATE_SESSION.getResponseName());
-		Assert.assertNotNull(result.getSessionId());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME
-				.getName()));
+		Assert.assertNull(scmpSession.getBody());
+		Assert.assertEquals(SCMPMsgType.RES_CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
+		Assert.assertNotNull(scmpSession.getSessionId());
+		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
 
 		/*************** scmp maintenance ********/
 		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
@@ -105,13 +107,29 @@ public class SessionTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;;";		
+		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;";
 		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
-		//Assert.assertEquals(expectedScEntry, scEntry);
+		// Assert.assertEquals(expectedScEntry, scEntry);
 	}
 
 	public void deleteSession() throws Exception {
+		SCMPDeleteSessionCall deleteSessionCall = (SCMPDeleteSessionCall) SCMPCallFactory.DELETE_SESSION_CALL.newInstance(client, scmpSession);
+		SCMP result = deleteSessionCall.invoke();
+		
+		/*************************** verify create session **********************************/
+		Assert.assertNull(result.getBody());
+		Assert.assertEquals(SCMPMsgType.RES_DELETE_SESSION.getResponseName(), result.getMessageType());
+		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));	
+		
+		/*************** scmp maintenance ********/
+		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+				.newInstance(client);
+		SCMP maintenance = maintenanceCall.invoke();
 
+		/*********************************** Verify registry entries in SC ********************************/
+		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
+		Assert.assertEquals("", scEntry);
 	}
 }

@@ -14,25 +14,32 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
-package com.stabilit.sc.service;
+package com.stabilit.sc.unit;
 
-/**
- * @author JTraber
- * 
- */
-public class SCMPCallFactory {
+import junit.framework.Assert;
 
-	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
-	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
-	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
-	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
-	public static final ISCMPCall CREATE_SESSION_CALL = new SCMPCreateSessionCall();
-	public static final ISCMPCall DELETE_SESSION_CALL = new SCMPDeleteSessionCall();
-	public static final ISCMPCall MAINTENANCE_CALL = new SCMPMaintenanceCall();
-	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
-	public static final ISCMPCall ALLOCATE_SESSION_CALL = new SCMPAllocateSessionCall();
-	public static final ISCMPCall DEALLOCATE_SESSION_CALL = new SCMPDeAllocateSessionCall();
+import org.junit.Test;
+
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPEchoCall;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+
+public class SingleEchoTestCase extends SuperTestCase {
+
+	@Test
+	public void invokeTest() throws Exception {
+		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL
+				.newInstance(client, scmpSession);
+
+		SCMP result = echoCall.invoke();
+		/*************************** verify echo session **********************************/
+		Assert.assertNull(result.getBody());
+		Assert.assertEquals(result.getMessageType(),
+				SCMPMsgType.RES_ECHO.getResponseName());
+		Assert.assertNotNull(result.getSessionId());
+		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME
+				.getName()));
+	}
 }

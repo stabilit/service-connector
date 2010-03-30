@@ -21,20 +21,21 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.client.ClientFactory;
-import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.config.ClientConfig;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.msg.impl.MaintenanceMessage;
-import com.stabilit.sc.service.SCMPCallFactory;
-import com.stabilit.sc.service.SCMPConnectCall;
-import com.stabilit.sc.service.SCMPDisconnectCall;
-import com.stabilit.sc.service.SCMPMaintenanceCall;
-import com.stabilit.sc.service.SCMPServiceException;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.sc.cln.client.ClientFactory;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPConnectCall;
+import com.stabilit.sc.cln.service.SCMPDisconnectCall;
+import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
+import com.stabilit.sc.cln.service.SCMPServiceException;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.util.ValidatorUtility;
+
 
 public class ConnectDisconnectTestCase {
 
