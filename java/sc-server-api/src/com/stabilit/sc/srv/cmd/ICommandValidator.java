@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.cmd;
+package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;

@@ -1,8 +1,8 @@
-package com.stabilit.sc.ctx;
+package com.stabilit.sc.srv.ctx;
 
 import com.stabilit.sc.common.ctx.ContextAdapter;
-import com.stabilit.sc.registry.ServerRegistry;
-import com.stabilit.sc.server.IServer;
+import com.stabilit.sc.srv.registry.ServerRegistry;
+import com.stabilit.sc.srv.server.IServer;
 
 
 public class ServerContext extends ContextAdapter implements IServerContext {

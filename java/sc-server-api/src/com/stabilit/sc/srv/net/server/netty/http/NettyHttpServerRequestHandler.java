@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.net.server.netty.http;
+package com.stabilit.sc.srv.net.server.netty.http;
 
 import java.net.SocketAddress;
 
@@ -33,9 +33,6 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.cmd.ICommandValidator;
-import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
@@ -43,7 +40,10 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.net.netty.NettyHttpRequest;
 import com.stabilit.sc.common.net.netty.NettyHttpResponse;
-import com.stabilit.sc.registry.ServerRegistry;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.sc.srv.registry.ServerRegistry;
 
 @ChannelPipelineCoverage("one")
 public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler {

@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.cmd;
+package com.stabilit.sc.srv.cmd;
 
 
 /**

@@ -1,10 +1,10 @@
-package com.stabilit.sc.cmd.factory;
+package com.stabilit.sc.srv.cmd.factory;
 
-import com.stabilit.sc.cmd.ICommand;
 import com.stabilit.sc.common.factory.Factory;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.srv.cmd.ICommand;
 
 public class CommandFactory extends Factory {
 

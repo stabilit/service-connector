@@ -1,10 +1,10 @@
-package com.stabilit.sc.server.factory;
+package com.stabilit.sc.srv.server.factory;
 
 import com.stabilit.sc.common.factory.Factory;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.net.server.netty.http.NettyHttpServerConnection;
-import com.stabilit.sc.net.server.netty.tcp.NettyTcpServerConnection;
-import com.stabilit.sc.server.IServerConnection;
+import com.stabilit.sc.srv.net.server.netty.http.NettyHttpServerConnection;
+import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpServerConnection;
+import com.stabilit.sc.srv.server.IServerConnection;
 
 public class ServerConnectionFactory extends Factory {
 

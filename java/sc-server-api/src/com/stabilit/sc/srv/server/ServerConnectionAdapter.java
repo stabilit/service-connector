@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.srv.server;
 
 /**
  * @author JTraber

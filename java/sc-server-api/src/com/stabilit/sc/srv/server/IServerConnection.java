@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.srv.server;
 
 import com.stabilit.sc.common.IConnection;
 

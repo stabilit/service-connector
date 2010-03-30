@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.conf;
+package com.stabilit.sc.srv.conf;
 
 import java.io.File;
 import java.io.IOException;

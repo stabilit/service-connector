@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.net.server.netty.tcp;
+package com.stabilit.sc.srv.net.server.netty.tcp;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;

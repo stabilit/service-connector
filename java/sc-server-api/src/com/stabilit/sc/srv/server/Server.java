@@ -17,12 +17,12 @@
 /**
  * 
  */
-package com.stabilit.sc.server;
+package com.stabilit.sc.srv.server;
 
-import com.stabilit.sc.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.ctx.IServerContext;
-import com.stabilit.sc.ctx.ServerContext;
-import com.stabilit.sc.server.factory.ServerConnectionFactory;
+import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
+import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.srv.ctx.ServerContext;
+import com.stabilit.sc.srv.server.factory.ServerConnectionFactory;
 
 /**
  * @author JTraber

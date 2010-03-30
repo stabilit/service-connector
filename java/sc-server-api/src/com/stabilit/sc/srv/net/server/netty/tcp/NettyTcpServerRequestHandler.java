@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.net.server.netty.tcp;
+package com.stabilit.sc.srv.net.server.netty.tcp;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,9 +32,6 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.cmd.ICommand;
-import com.stabilit.sc.cmd.ICommandValidator;
-import com.stabilit.sc.cmd.factory.CommandFactory;
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
@@ -42,7 +39,10 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
-import com.stabilit.sc.registry.ServerRegistry;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.sc.srv.registry.ServerRegistry;
 
 /**
  * @author JTraber

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.net.server.netty.tcp;
+package com.stabilit.sc.srv.net.server.netty.tcp;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
@@ -23,9 +23,9 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.registry.ServerRegistry;
-import com.stabilit.sc.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.sc.server.ServerConnectionAdapter;
+import com.stabilit.sc.srv.registry.ServerRegistry;
+import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.sc.srv.server.ServerConnectionAdapter;
 
 /**
  * An HTTP server that sends back the content of the received HTTP request in a pretty plaintext form.

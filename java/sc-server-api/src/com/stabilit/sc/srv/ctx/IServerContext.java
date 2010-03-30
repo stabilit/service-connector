@@ -17,10 +17,10 @@
 /**
  * 
  */
-package com.stabilit.sc.ctx;
+package com.stabilit.sc.srv.ctx;
 
 import com.stabilit.sc.common.ctx.IContext;
-import com.stabilit.sc.server.IServer;
+import com.stabilit.sc.srv.server.IServer;
 
 /**
  * @author JTraber
