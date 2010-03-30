@@ -18,17 +18,20 @@ package com.stabilit.sc.unit.test;
 
 import org.junit.Test;
 
-public class MultipleEchoTestCase extends SingleEchoTestCase {
+public class MultipleSessionEchoTestCase extends SingleEchoTestCase {
 
 	@Test
 	public void invokeTest() throws Exception {	
-		
+		deleteSession();		
 		long startTime = System.currentTimeMillis();
-		int anzMsg = 100000;
+		int anzMsg = 10000;
 		for (int i = 0; i < anzMsg; i++) {
 			this.index = i;
+			createSession();
 			super.invokeTest();
+			deleteSession();
 		}
 		System.out.println(anzMsg/((System.currentTimeMillis() - startTime)/1000D) + " msg pro sec");
+		createSession();
 	}
 }
