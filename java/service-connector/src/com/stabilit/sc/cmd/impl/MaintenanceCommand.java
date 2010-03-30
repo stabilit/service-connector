@@ -1,19 +1,18 @@
 package com.stabilit.sc.cmd.impl;
 
+import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.cmd.CommandAdapter;
 import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommandValidator;
 import com.stabilit.sc.cmd.SCMPValidatorException;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.io.SCMPReply;
-import com.stabilit.sc.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.IRequest;
+import com.stabilit.sc.common.io.IResponse;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.registry.ConnectionRegistry;
-import com.stabilit.sc.registry.ServerRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.SessionRegistry;
 
 public class MaintenanceCommand extends CommandAdapter {
 

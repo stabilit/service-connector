@@ -9,21 +9,20 @@ import com.stabilit.sc.cmd.CommandException;
 import com.stabilit.sc.cmd.ICommandValidator;
 import com.stabilit.sc.cmd.SCMPCommandException;
 import com.stabilit.sc.cmd.SCMPValidatorException;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.io.IRequest;
-import com.stabilit.sc.io.IResponse;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPErrorCode;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
-import com.stabilit.sc.io.SCMPReply;
-import com.stabilit.sc.io.Session;
-import com.stabilit.sc.registry.ServerRegistry;
+import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.IRequest;
+import com.stabilit.sc.common.io.IResponse;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.io.Session;
+import com.stabilit.sc.common.registry.SessionRegistry;
+import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
-import com.stabilit.sc.registry.SessionRegistry;
-import com.stabilit.sc.util.MapBean;
-import com.stabilit.sc.util.ValidatorUtility;
 
 
 

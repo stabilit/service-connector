@@ -19,7 +19,8 @@
  */
 package com.stabilit.sc.registry;
 
-import com.stabilit.sc.io.SCMP;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.registry.Registry;
 
 /**
  * @author JTraber

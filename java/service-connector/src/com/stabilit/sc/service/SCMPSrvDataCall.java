@@ -21,11 +21,11 @@ package com.stabilit.sc.service;
 
 import java.util.Map;
 
-import com.stabilit.sc.client.IClient;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPFault;
-import com.stabilit.sc.io.SCMPHeaderType;
-import com.stabilit.sc.io.SCMPMsgType;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.service.ISCMPCall;
+import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
  * @author JTraber
@@ -42,36 +42,12 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	}
 
 	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setMessageType(SCMPMsgType.REQ_SRV_DATA.getRequestName());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPServiceException((SCMPFault) result);
-		}
-		return this.result;
-	}
-
-	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPSrvDataCall(client);
 	}
 	
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
-	}
-	
-	// TODO
-	// session id
-	
-	// bodyLength
-	private void setBodyLength(int length) {
-		call.setHeader(SCMPHeaderType.BODY_LENGTH.getName(), length);
-	}
-	// sequencenr
-	
-	
-	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderType.COMPRESSION.getName(), compression);
 	}
 	
 	public void setMessagInfo(String messageInfo) {
@@ -82,8 +58,8 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 		this.call.setHeader(header);
 	}
 	
-	public void setBody(byte[] body) {
-		setBodyLength(body.length);
-		call.setBody(body);
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.REQ_SRV_DATA;
 	}
 }

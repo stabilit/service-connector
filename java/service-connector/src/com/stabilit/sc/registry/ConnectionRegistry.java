@@ -19,7 +19,8 @@
  */
 package com.stabilit.sc.registry;
 
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.sc.common.registry.Registry;
+import com.stabilit.sc.common.util.MapBean;
 
 /**
  * @author JTraber

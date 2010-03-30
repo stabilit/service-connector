@@ -22,18 +22,18 @@ package com.stabilit.sc.registry;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import com.stabilit.sc.client.ClientFactory;
-import com.stabilit.sc.client.ConnectionException;
-import com.stabilit.sc.client.IClient;
+import com.stabilit.sc.cln.client.ClientFactory;
+import com.stabilit.sc.cln.client.ConnectionException;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.ctx.IServerContext;
 import com.stabilit.sc.ctx.ServerContext;
-import com.stabilit.sc.io.SCMP;
-import com.stabilit.sc.io.SCMPHeaderType;
 import com.stabilit.sc.server.IServer;
 import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
-import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber
@@ -61,15 +61,26 @@ public class ServiceRegistryItem extends MapBean<String> {
 	}
 
 	public void allocate(SCMP scmp) throws Exception {
-		Thread thread = new Thread(new AllocateSession()) {			
-		};
-		thread.start();
+		// TODO client.disconnect and error log
+		try {
+			client.connect();
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
+		try {
+			SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
+					.newInstance(client);
+			allocateSessionCall.setHeader(scmp.getHeader());
+			allocateSessionCall.invoke();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void deallocate(SCMP scmp) throws Exception {
 		SCMPDeAllocateSessionCall deAllocateSessionCall = (SCMPDeAllocateSessionCall) SCMPCallFactory.DEALLOCATE_SESSION_CALL
 				.newInstance(client);
-		deAllocateSessionCall.setHeader(attrMap);
+		deAllocateSessionCall.setHeader(scmp.getHeader());
 		deAllocateSessionCall.invoke();
 	}
 
@@ -80,20 +91,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 	public class AllocateSession implements Runnable {
 		@Override
 		public void run() {
-			// TODO client.disconnect and error log
-			try {
-				client.connect();
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
-			try {
-				SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
-						.newInstance(client);
-				allocateSessionCall.setHeader(attrMap);
-				allocateSessionCall.invoke();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
 		}
 	}
 }
