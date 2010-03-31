@@ -11,9 +11,9 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
-import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
+import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -40,16 +40,16 @@ public class AllocateSessionCommand extends CommandAdapter {
 			throws CommandException {
 
 		SCMP scmp = request.getSCMP();
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
-		MapBean<Object> mapBean = (MapBean<Object>) sessionRegistry.get("key");
+		String sessionId = scmp.getSessionId();
+		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 		SCMPReply scmpReply = new SCMPReply();
 
-		// quick and dirty key available prevents multiple calls
 		if (mapBean == null) {
 			MapBean<Object> newMapBean = new MapBean<Object>();
 			newMapBean.setAttribute("available", false);
-			sessionRegistry.put("key", newMapBean);
+			simSessReg.put(sessionId, newMapBean);
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
 			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp

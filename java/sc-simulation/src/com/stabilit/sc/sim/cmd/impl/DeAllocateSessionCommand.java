@@ -10,8 +10,8 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
-import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -34,14 +34,15 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 		return super.getCommandValidator();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
 		SCMP scmp = request.getSCMP();
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
-		MapBean<Object> mapBean = (MapBean<Object>) sessionRegistry.get(scmp
-				.getSessionId());
+		String sessionId = scmp.getSessionId();
+		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
@@ -49,7 +50,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		sessionRegistry.remove("key");
+		simSessReg.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp
