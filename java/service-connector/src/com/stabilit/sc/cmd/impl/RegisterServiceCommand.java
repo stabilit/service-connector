@@ -41,8 +41,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws CommandException {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
@@ -74,34 +73,29 @@ public class RegisterServiceCommand extends CommandAdapter {
 	public class RegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
-			Map<String, String> scmpHeader = request.getSCMP().getHeader();
+		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+			SCMP scmp = request.getSCMP();
+			Map<String, String> scmpHeader = scmp.getHeader();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
 
 				// maxSessions
-				String maxSessions = (String) scmpHeader
-						.get(SCMPHeaderType.MAX_SESSIONS.getName());
-				maxSessions = ValidatorUtility.validateInt(0,maxSessions);
-				request.setAttribute(SCMPHeaderType.MAX_SESSIONS.getName(),
-						maxSessions);
-				// multiThreaded
-				String multiThreaded = (String) scmpHeader
-						.get(SCMPHeaderType.MULTI_THREADED.getName());
-				multiThreaded = ValidatorUtility.validateBoolean(multiThreaded,
-						false);
-				request.setAttribute(SCMPHeaderType.MULTI_THREADED.getName(),
-						multiThreaded);
+				String maxSessions = (String) scmpHeader.get(SCMPHeaderType.MAX_SESSIONS.getName());
+				maxSessions = ValidatorUtility.validateInt(0, maxSessions);
+				request.setAttribute(SCMPHeaderType.MAX_SESSIONS.getName(), maxSessions);
+				// compression
+				Boolean multiThreaded = scmp.getHeaderBoolean(SCMPHeaderType.MULTI_THREADED.getName());
+				if (multiThreaded == null) {
+					multiThreaded = false;
+				}
+				request.setAttribute(SCMPHeaderType.MULTI_THREADED.getName(), multiThreaded);
 				// portNr
-				String portNr = (String) scmpHeader.get(SCMPHeaderType.PORT_NR
-						.getName());
+				String portNr = (String) scmpHeader.get(SCMPHeaderType.PORT_NR.getName());
 				portNr = ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderType.PORT_NR.getName(), portNr);
 
@@ -112,5 +106,4 @@ public class RegisterServiceCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

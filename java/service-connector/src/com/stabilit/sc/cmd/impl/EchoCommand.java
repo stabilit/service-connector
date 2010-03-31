@@ -3,10 +3,13 @@ package com.stabilit.sc.cmd.impl;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
+import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.Session;
+import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
@@ -49,18 +52,24 @@ public class EchoCommand extends CommandAdapter {
 
 		// get free service
 		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) serviceRegistry.get(serviceName);
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
+		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session.getAttribute(ServiceRegistryItem.class.getName());
+//		TODO replaced! that's wrong isn't it?
+//		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+//
+//		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) serviceRegistry.get(serviceName);
 
 		if (serviceRegistryItem == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.UNKNOWN_SERVICE);
+					SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
 		System.out.println("EchoCommand TRANSITIVE body = " + scmp.getBody().toString());
 		SCMP result = serviceRegistryItem.echo(scmp);
+		result.setMessageType(getKey().getResponseName());
 		response.setSCMP(result);
 	}
 

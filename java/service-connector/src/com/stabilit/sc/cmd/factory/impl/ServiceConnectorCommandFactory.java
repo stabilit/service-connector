@@ -1,5 +1,6 @@
 package com.stabilit.sc.cmd.factory.impl;
 
+import com.stabilit.sc.cmd.impl.ClnDataCommand;
 import com.stabilit.sc.cmd.impl.ConnectCommand;
 import com.stabilit.sc.cmd.impl.CreateSessionCommand;
 import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
@@ -36,5 +37,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
 		commandFactory.add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
+		ICommand clnDataCommand = new ClnDataCommand();
+		commandFactory.add(clnDataCommand.getRequestKeyName(), clnDataCommand);
 	}
 }

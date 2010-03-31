@@ -7,6 +7,7 @@ import javax.xml.bind.ValidationException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
+import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;

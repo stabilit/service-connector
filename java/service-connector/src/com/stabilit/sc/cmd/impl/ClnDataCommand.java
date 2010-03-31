@@ -10,11 +10,11 @@ import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.ValidatorUtility;
+import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -35,9 +35,15 @@ public class ClnDataCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
-		
-		SCMPReply scmpReply = new SCMPReply();
+	public void run(IRequest request, IResponse response) throws Exception {
+		SCMP scmp = request.getSCMP();
+
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
+		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
+				.getAttribute(ServiceRegistryItem.class.getName());
+
+		SCMP scmpReply = serviceRegistryItem.srvData(scmp);
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
 	}
@@ -61,7 +67,7 @@ public class ClnDataCommand extends CommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessionId must be set!");
 				}
-				if (SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
+				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
 					throw new ValidationException("sessoion does not exists!");
 				}
 
@@ -76,8 +82,10 @@ public class ClnDataCommand extends CommandAdapter {
 				// sequenceNr
 
 				// compression
-				String compression = (String) scmpHeader.get(SCMPHeaderType.COMPRESSION.getName());
-				compression = ValidatorUtility.validateBoolean(compression, true);
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
+				if(compression == null) {
+					compression = true;
+				}
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
 
 				// messageInfo
@@ -90,5 +98,4 @@ public class ClnDataCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

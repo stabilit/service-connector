@@ -32,6 +32,7 @@ import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
+import com.stabilit.sc.service.SCMPSrvDataCall;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.ctx.ServerContext;
 import com.stabilit.sc.srv.server.IServer;
@@ -44,12 +45,10 @@ public class ServiceRegistryItem extends MapBean<String> {
 
 	private IClient client;
 	private SCMP registerScmp;
-	private SocketAddress socketAddress;
 
 	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress) {
 		this.registerScmp = scmp;
 		this.attrMap = scmp.getHeader();
-		this.socketAddress = socketAddress;
 
 		IServerContext currentServerContext = ServerContext.getCurrentInstance();
 		IServer server = currentServerContext.getServer();
@@ -90,18 +89,18 @@ public class ServiceRegistryItem extends MapBean<String> {
 		return false;
 	}
 
-	public class AllocateSession implements Runnable {
-		@Override
-		public void run() {
-
-		}
-	}
-
 	public SCMP echo(SCMP scmp) throws Exception {
 		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setBody(scmp.getBody());
 		echoCall.setTransitive(false);
 		return echoCall.invoke();
+	}
+
+	public SCMP srvData(SCMP scmp) throws Exception {
+		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client, scmp);
+		srvDataCall.setHeader(scmp.getHeader());
+		srvDataCall.setBody(scmp.getBody());
+		return srvDataCall.invoke();
 	}
 }
