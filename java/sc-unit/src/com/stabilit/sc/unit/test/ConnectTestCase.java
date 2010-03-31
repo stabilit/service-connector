@@ -72,7 +72,7 @@ public class ConnectTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-		String expectedScEntry = ":compression=0;localDateTime="
+		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
 						SCMPHeaderType.LOCAL_DATE_TIME.getName()))
 				+ ";keepAliveTimeout=30,360;scmpVersion=1.0-00;";

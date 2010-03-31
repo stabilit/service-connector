@@ -21,12 +21,11 @@ package com.stabilit.sc.unit.test;
 
 import junit.framework.Assert;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.Test;
 
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -34,29 +33,32 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  * @author JTraber
  * 
  */
+public class ClnDataTestCase extends SuperSessionTestCase {
 
-@RunWith(Suite.class)
-@SuiteClasses( {
-	ConnectTestCase.class, 
-	DisconnectTestCase.class,
-	CreateSessionTestCase.class,
-	DeleteSessionTestCase.class,
-	RegisterServiceTestCase.class,
-	DeRegisterServiceTestCase.class,
-	ClnDataTestCase.class
-})
+	@Test
+	public void clnDataTest() throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
+		clnDataCall.setMessagInfo("message info");
+		SCMP scmpReply = clnDataCall.invoke();
+		String result = (String) scmpReply.getBody();
 
-public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+		/*********************************** Verify connect response msg **********************************/
+		Assert.assertNotNull(scmpReply.getBody());
+		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.RES_CLN_DATA
+				.getResponseName());
+		Assert.assertEquals("Message number 0", result);
+	}
+
+	@Test
+	public void multipleClnDataTest() throws Exception {
+
+		for (int i = 0; i < 100; i++) {
+			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+					scmpSession);
+			clnDataCall.setMessagInfo("message info");
+			SCMP scmpReply = clnDataCall.invoke();
+			System.out.println(scmpReply.getBody());
+		}
 	}
 }
