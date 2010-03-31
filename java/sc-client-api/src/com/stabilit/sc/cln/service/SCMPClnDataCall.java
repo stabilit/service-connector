@@ -50,6 +50,8 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	public void setMessagInfo(String messageInfo) {
 		call.setHeader(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
 	}
+	
+	//TODO sequenceNr
 
 	@Override
 	public SCMPMsgType getMessageType() {

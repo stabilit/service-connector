@@ -20,7 +20,6 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.common.io.IMessage;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderType;
@@ -36,9 +35,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	protected SCMP call;
 	protected SCMP result;
 
-	/**
-	 * 
-	 */
 	public SCMPCallAdapter() {
 		this(null, null);
 	}
@@ -89,10 +85,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		call.setBody(obj);
 	}
 
-	// sequencenr
-
 	public void setCompression(boolean compression) {
 		call.setHeader(SCMPHeaderType.COMPRESSION.getName(), compression);
 	}
-
 }
