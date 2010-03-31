@@ -25,7 +25,7 @@ import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
-public class SingleEchoTestCase extends SuperTestCase {
+public class SingleEchoTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 

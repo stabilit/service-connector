@@ -19,43 +19,50 @@
  */
 package com.stabilit.sc.unit.test;
 
-import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.cln.io.SCMPSession;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPCreateSessionCall;
+import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
 
 /**
  * @author JTraber
  * 
  */
+public abstract class SuperSessionTestCase extends SuperTestCase {
 
-@RunWith(Suite.class)
-@SuiteClasses( {
-	ConnectTestCase.class, 
-	DisconnectTestCase.class,
-	CreateSessionTestCase.class,
-	DeleteSessionTestCase.class,
-	RegisterServiceTestCase.class,
-	DeRegisterServiceTestCase.class
-})
+	protected SCMPSession scmpSession = null;
 
-public class SCTest {
+	public SuperSessionTestCase() {
+		super();
+	}
+
+	@Before
+	public void setup() throws Exception {
+		super.setup();
+		createSession();
+	}
 	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+	@After
+	public void tearDown() throws Exception {
+		deleteSession();
+		super.tearDown();
+	}
+	
+	public void createSession() throws Exception {
+		SCMPCreateSessionCall createSessionCall = (SCMPCreateSessionCall) SCMPCallFactory.CREATE_SESSION_CALL
+				.newInstance(client);
+
+		createSessionCall.setServiceName("simulation");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		scmpSession = createSessionCall.invoke();
+	}
+
+	public void deleteSession() throws Exception {
+		SCMPDeleteSessionCall deleteSessionCall = (SCMPDeleteSessionCall) SCMPCallFactory.DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
+		deleteSessionCall.invoke();
 	}
 }

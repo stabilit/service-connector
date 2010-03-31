@@ -14,48 +14,42 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-/**
- * 
- */
 package com.stabilit.sc.unit.test;
 
 import junit.framework.Assert;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.Test;
 
+import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
-/**
- * @author JTraber
- * 
- */
+public class DeleteSessionTestCase extends SuperSessionTestCase {
 
-@RunWith(Suite.class)
-@SuiteClasses( {
-	ConnectTestCase.class, 
-	DisconnectTestCase.class,
-	CreateSessionTestCase.class,
-	DeleteSessionTestCase.class,
-	RegisterServiceTestCase.class,
-	DeRegisterServiceTestCase.class
-})
+	@Test
+	public void deleteSession() throws Exception {
+		SCMPDeleteSessionCall deleteSessionCall = (SCMPDeleteSessionCall) SCMPCallFactory.DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
+		SCMP result = deleteSessionCall.invoke();
 
-public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
+		/*************************** verify create session **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+		Assert.assertEquals(SCMPMsgType.RES_DELETE_SESSION.getResponseName(), result.getMessageType());
+		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+
+		/*************** scmp maintenance ********/
+		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+				.newInstance(client);
+		SCMP maintenance = maintenanceCall.invoke();
+
+		/*********************************** Verify registry entries in SC ********************************/
+		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
+		Assert.assertEquals("", scEntry);
+		super.createSession();
 	}
 }

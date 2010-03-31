@@ -22,45 +22,50 @@ package com.stabilit.sc.unit.test;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.client.ClientFactory;
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.cln.io.SCMPSession;
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
+import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
 
 /**
  * @author JTraber
  * 
  */
-public class SuperTestCase {
+public abstract class SuperRegisterTestCase extends SuperTestCase {
 
-	protected ClientConfig config = null;
-	protected IClient client = null;
+	protected SCMPSession scmpSession = null;
 
-	public SuperTestCase() {
+	public SuperRegisterTestCase() {
 		super();
 	}
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setup();
-		try {
-			config = new ClientConfig();
-			config.load("sc-unit.properties");
-			ClientFactory clientFactory = new ClientFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		super.setup();
+		registerService();
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
-		client.disconnect();
+		deRegisterService();
+		super.tearDown();
 	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		client.disconnect(); // physical disconnect
-		client = null;
+
+	public void registerService() throws Exception {
+		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+				.newInstance(client);
+
+		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
+		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMultithreaded(true);
+		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.invoke();
+	}
+
+	public void deRegisterService() throws Exception {
+		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+				.newInstance(client);
+		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+		deRegisterServiceCall.invoke();
 	}
 }

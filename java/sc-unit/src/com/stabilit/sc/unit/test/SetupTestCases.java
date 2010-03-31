@@ -33,6 +33,9 @@ public class SetupTestCases {
 
 	private static SetupTestCases setupTestCases = null;
 
+	private SetupTestCases() {
+	}
+	
 	public static void setup() {
 		if (setupTestCases == null) {
 			setupTestCases = new SetupTestCases();
@@ -44,9 +47,5 @@ public class SetupTestCases {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private SetupTestCases() {
-
 	}
 }
