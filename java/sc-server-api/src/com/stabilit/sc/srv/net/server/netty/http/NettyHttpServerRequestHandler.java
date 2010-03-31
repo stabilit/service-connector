@@ -54,7 +54,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		Channel channel = ctx.getChannel();
 		SocketAddress socketAddress = channel.getRemoteAddress();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		serverRegistry.setThreadLocal(channel.getParent());
+		serverRegistry.setThreadLocal(channel.getParent().getId());
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);

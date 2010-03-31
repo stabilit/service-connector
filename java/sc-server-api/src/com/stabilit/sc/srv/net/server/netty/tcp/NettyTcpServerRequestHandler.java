@@ -19,9 +19,6 @@
  */
 package com.stabilit.sc.srv.net.server.netty.tcp;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -51,30 +48,7 @@ import com.stabilit.sc.srv.registry.ServerRegistry;
 @ChannelPipelineCoverage("one")
 public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
-	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
 	private Logger log = Logger.getLogger(NettyTcpServerRequestHandler.class);
-	private boolean sync = false;
-
-	ChannelBuffer getMessageSync() {
-		sync = true;
-		ChannelBuffer responseMessage;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() waits until first message gets in queue!
-				responseMessage = answer.take();
-				sync = false;
-				break;
-			} catch (InterruptedException e) {
-				interrupted = true;
-			}
-		}
-
-		if (interrupted) {
-			Thread.currentThread().interrupt();
-		}
-		return responseMessage;
-	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
@@ -83,37 +57,33 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		//TODO lazy code!
-		if (sync) {
-			answer.offer((ChannelBuffer) event.getMessage());
-		} else {
-			Channel channel = ctx.getChannel();
-			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-			serverRegistry.setThreadLocal(channel.getParent().getId());
-			IRequest request = new NettyTcpRequest(event);
-			NettyTcpResponse response = new NettyTcpResponse(event);
-			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
-			if (command == null) {
-				SCMP scmpReq = request.getSCMP();
-				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
-				scmpFault.setMessageType(scmpReq.getMessageType());
-				scmpFault.setLocalDateTime();
-				response.setSCMP(scmpFault);
-				writeResponse(response);
-				return;
-			}
 
-			ICommandValidator commandValidator = command.getCommandValidator();
-			try {
-				commandValidator.validate(request, response);
-				command.run(request, response);
-			} catch (Throwable ex) {
-				if (ex instanceof IFaultResponse) {
-					((IFaultResponse) ex).setFaultResponse(response);
-				}
-			}
+		Channel channel = ctx.getChannel();
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		serverRegistry.setThreadLocal(channel.getParent().getId());
+		IRequest request = new NettyTcpRequest(event);
+		NettyTcpResponse response = new NettyTcpResponse(event);
+		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+		if (command == null) {
+			SCMP scmpReq = request.getSCMP();
+			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+			scmpFault.setMessageType(scmpReq.getMessageType());
+			scmpFault.setLocalDateTime();
+			response.setSCMP(scmpFault);
 			writeResponse(response);
+			return;
 		}
+
+		ICommandValidator commandValidator = command.getCommandValidator();
+		try {
+			commandValidator.validate(request, response);
+			command.run(request, response);
+		} catch (Throwable ex) {
+			if (ex instanceof IFaultResponse) {
+				((IFaultResponse) ex).setFaultResponse(response);
+			}
+		}
+		writeResponse(response);
 	}
 
 	private void writeResponse(NettyTcpResponse response) throws Exception {
