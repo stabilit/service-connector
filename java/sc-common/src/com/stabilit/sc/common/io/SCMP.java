@@ -12,7 +12,6 @@ public class SCMP implements Serializable {
 
 	protected Map<String, String> header;
 	private Object body;
-	private IEncoderDecoder encoderDecoder = null;
 
 	public SCMP() {
 		header = new HashMap<String, String>();

@@ -11,10 +11,8 @@ import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NettyHttpRequest implements IRequest {
@@ -32,6 +30,11 @@ public class NettyHttpRequest implements IRequest {
 		this.scmp = null;
 		this.socketAddress = socketAddress;
 		this.requestContext = new RequestContext(this.socketAddress);
+	}
+	
+	@Override
+	public String getSessionId() {
+		return scmp.getSessionId();
 	}
 
 	@Override
@@ -59,11 +62,6 @@ public class NettyHttpRequest implements IRequest {
 		}
 		String messageType = scmp.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
-	}
-
-	@Override
-	public ISession getSession() {
-		return (ISession) SessionRegistry.getCurrentInstance().get(scmp.getSessionId());
 	}
 
 	private void load() throws Exception {

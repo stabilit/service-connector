@@ -65,18 +65,6 @@ public class ValidatorUtility {
 		}
 	}
 
-	public static String validateBoolean(String booleanValue,
-			Boolean defaultValue) throws ValidationException {
-		if (booleanValue == null) {
-			return defaultValue.toString();
-		}
-
-		if (!booleanValue.equals("1") && !booleanValue.equals("0")) {
-			throw new ValidationException("BooleanValue not valid");
-		}
-		return booleanValue;
-	}
-
 	public static Date validateLocalDateTime(String localDateTimeString)
 			throws ParseException {
 		if (localDateTimeString == null) {

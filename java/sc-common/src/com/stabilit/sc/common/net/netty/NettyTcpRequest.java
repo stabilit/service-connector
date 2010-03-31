@@ -10,10 +10,8 @@ import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NettyTcpRequest implements IRequest {
@@ -41,6 +39,11 @@ public class NettyTcpRequest implements IRequest {
 			}
 		}
 		return scmp;
+	}	
+
+	@Override
+	public String getSessionId() {
+		return scmp.getSessionId();
 	}
 
 	@Override
@@ -52,12 +55,7 @@ public class NettyTcpRequest implements IRequest {
 		String messageType = scmp.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
 	}
-
-	@Override
-	public ISession getSession() {
-		return (ISession) SessionRegistry.getCurrentInstance().get(scmp.getSessionId());
-	}
-
+	
 	private void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);

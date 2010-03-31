@@ -8,10 +8,10 @@ public interface IRequest {
 	public SCMPMsgType getKey();
 
 	public IRequestContext getContext();
-	
-	public ISession getSession();
-	
+		
 	public SCMP getSCMP();
+	
+	public String getSessionId();
 	
 	public void setAttribute(String key, Object value);
 	
