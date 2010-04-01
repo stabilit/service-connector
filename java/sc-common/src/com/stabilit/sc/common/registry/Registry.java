@@ -22,13 +22,15 @@ package com.stabilit.sc.common.registry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.stabilit.sc.common.registry.jmx.IRegistryMXBean;
+import com.stabilit.sc.common.registry.jmx.MapBeanWrapperJMX;
 import com.stabilit.sc.common.util.MapBean;
 
 /**
  * @author JTraber
  * 
  */
-public class Registry implements IRegistry {
+public class Registry implements IRegistry, IRegistryMXBean {
 
 	private Map<Object, MapBean<?>> registryMap;
 
@@ -61,5 +63,16 @@ public class Registry implements IRegistry {
 			dump.append(registryMap.get(key).toString());
 		}
 		return dump.toString();
-	}	
+	}
+	
+	@Override
+	public MapBeanWrapperJMX[] getEntries() {
+		MapBeanWrapperJMX[] mapBeanStringJMX = new MapBeanWrapperJMX[registryMap.size()];
+		int i = 0;
+		for (Object key : registryMap.keySet()) {
+			mapBeanStringJMX[i] = new MapBeanWrapperJMX(key.toString(),(MapBean<?>) registryMap.get(key) );
+			i++;
+		}
+		return mapBeanStringJMX;
+	}
 }
