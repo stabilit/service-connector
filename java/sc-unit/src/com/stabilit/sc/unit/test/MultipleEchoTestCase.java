@@ -24,7 +24,7 @@ public class MultipleEchoTestCase extends SingleEchoTestCase {
 	public void invokeTest() throws Exception {	
 		
 		long startTime = System.currentTimeMillis();
-		int anzMsg = 1000;
+		int anzMsg = 100000;
 		for (int i = 0; i < anzMsg; i++) {
 			this.index = i;
 			super.invokeTest();
