@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -24,6 +26,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class SrvDataCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(SrvDataCommand.class);
+	
 	public SrvDataCommand() {
 		this.commandValidator = new SrvDataCommandValidator();
 	}
@@ -41,7 +45,7 @@ public class SrvDataCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-
+		log.debug("Run command " + this.getKey());
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = request.getSessionId();
@@ -49,6 +53,7 @@ public class SrvDataCommand extends CommandAdapter {
 		SCMPReply scmpReply = new SCMPReply();
 
 		if (mapBean == null) {
+			log.debug("command error: session not found");
 			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request
 					.getAttribute(SCMPHeaderType.SERVICE_NAME.getName()).toString());
 			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_CODE.getName(), SCMPErrorCode.SERVER_ERROR
@@ -87,7 +92,6 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setBody(msg.get(messageQueueId));
 		mapBean.setAttribute("messageQueueId", messageQueueId);
 		response.setSCMP(scmpReply);
-
 	}
 
 	@Override
@@ -136,6 +140,7 @@ public class SrvDataCommand extends CommandAdapter {
 				ValidatorUtility.validateString(0, messageInfo, 256);
 				request.setAttribute(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

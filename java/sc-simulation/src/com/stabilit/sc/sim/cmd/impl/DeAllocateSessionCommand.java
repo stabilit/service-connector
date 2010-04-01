@@ -2,6 +2,8 @@ package com.stabilit.sc.sim.cmd.impl;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -20,6 +22,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class DeAllocateSessionCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(DeAllocateSessionCommand.class);
+	
 	public DeAllocateSessionCommand() {
 		this.commandValidator = new DeAllocateSessionCommandValidator();
 	}
@@ -38,6 +42,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
+		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
@@ -45,6 +50,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
+			log.debug("command error: session is no allocated");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -84,6 +90,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

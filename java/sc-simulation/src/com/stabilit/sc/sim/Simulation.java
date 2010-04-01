@@ -46,7 +46,6 @@ public class Simulation {
 	 * 
 	 */
 	public static Process startup() throws IOException {
-		// TODO Auto-generated method stub
 		Process process = Runtime.getRuntime().exec("java ch.stabilit.sc.sim.Simluation");
 		return process;
 	}
