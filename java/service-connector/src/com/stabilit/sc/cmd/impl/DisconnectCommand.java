@@ -2,6 +2,8 @@ package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
@@ -19,6 +21,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class DisconnectCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(DisconnectCommand.class);
+	
 	public DisconnectCommand() {
 		this.commandValidator = new DisconnectCommandValidator();
 	}
@@ -35,12 +39,14 @@ public class DisconnectCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
+		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		// TODO is socketAddress the right thing to save as a unique key?
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 		if (mapBean == null) {
+			log.debug("command error: client not connected");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;

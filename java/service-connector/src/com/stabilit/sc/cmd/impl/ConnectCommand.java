@@ -4,6 +4,8 @@ import java.net.SocketAddress;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
@@ -24,7 +26,9 @@ import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class ConnectCommand extends CommandAdapter {
-
+	
+	private static Logger log = Logger.getLogger(ConnectCommand.class);
+	
 	public ConnectCommand() {
 		this.commandValidator = new ConnectCommandValidator();
 	}
@@ -41,6 +45,7 @@ public class ConnectCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
+		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
@@ -49,6 +54,7 @@ public class ConnectCommand extends CommandAdapter {
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean != null) {
+			log.debug("command error: already connected");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -98,6 +104,7 @@ public class ConnectCommand extends CommandAdapter {
 						.get(SCMPHeaderType.KEEP_ALIVE_INTERVAL.getName()));
 				request.setAttribute(SCMPHeaderType.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

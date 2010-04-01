@@ -22,6 +22,8 @@ package com.stabilit.sc.registry;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
@@ -45,7 +47,8 @@ public class ServiceRegistryItem extends MapBean<String> {
 
 	private IClient client;
 	private SCMP registerScmp;
-
+	private static Logger log = Logger.getLogger(ServiceRegistryItem.class);
+	
 	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress) {
 		this.registerScmp = scmp;
 		this.attrMap = scmp.getHeader();

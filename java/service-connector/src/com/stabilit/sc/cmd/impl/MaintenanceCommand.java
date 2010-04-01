@@ -1,5 +1,7 @@
 package com.stabilit.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
@@ -16,6 +18,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class MaintenanceCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(MaintenanceCommand.class);
+	
 	public MaintenanceCommand() {
 		this.commandValidator = new MaintenanceCommandValidator();
 	}
@@ -32,6 +36,7 @@ public class MaintenanceCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
+		log.debug("Run command " + this.getKey());
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
@@ -26,6 +28,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class RegisterServiceCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(RegisterServiceCommand.class);
+	
 	public RegisterServiceCommand() {
 		this.commandValidator = new RegisterServiceCommandValidator();
 	}
@@ -42,6 +46,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
+		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
@@ -50,12 +55,15 @@ public class RegisterServiceCommand extends CommandAdapter {
 		SCMP scmp = request.getSCMP();
 		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
+		
 		if (mapBean != null) {
+			log.debug("command error: service already registered");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
+		
 		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp, socketAddress);
 		serviceRegistry.add(serviceName, serviceRegistryItem);
 
@@ -100,6 +108,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderType.PORT_NR.getName(), portNr);
 
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

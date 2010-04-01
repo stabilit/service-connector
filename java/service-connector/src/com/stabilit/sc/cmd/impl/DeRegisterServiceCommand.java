@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -22,6 +24,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class DeRegisterServiceCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(DeRegisterServiceCommand.class);
+	
 	public DeRegisterServiceCommand() {
 		this.commandValidator = new UnRegisterServiceCommandValidator();
 	}
@@ -39,6 +43,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
+		log.debug("Run command " + this.getKey());
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
 		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
@@ -46,6 +51,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
+			log.debug("command error: service not registered");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -78,6 +84,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 					throw new ValidationException("ServiceName must be set!");
 				}
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

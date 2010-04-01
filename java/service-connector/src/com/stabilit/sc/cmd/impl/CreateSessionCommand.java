@@ -4,10 +4,11 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
@@ -25,9 +26,9 @@ import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-
-
 public class CreateSessionCommand extends CommandAdapter {
+
+	private static Logger log = Logger.getLogger(CreateSessionCommand.class);
 
 	public CreateSessionCommand() {
 		this.commandValidator = new CreateSessionCommandValidator();
@@ -44,48 +45,44 @@ public class CreateSessionCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
-
+	public void run(IRequest request, IResponse response) throws CommandException {
+		log.debug("Run command " + this.getKey());
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
-					.getName());
+			String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 			if (mapBean == null) {
+				log.debug("command error: unknown service requested");
 				SCMPCommandException scmpCommandException = new SCMPCommandException(
 						SCMPErrorCode.UNKNOWN_SERVICE);
 				scmpCommandException.setMessageType(getKey().getResponseName());
 				throw scmpCommandException;
 			}
-			SessionRegistry sessionRegistry = SessionRegistry
-					.getCurrentInstance();
-			
+			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+
 			// create session
 			Session session = new Session();
 			scmp.setSessionId(session.getId());
 			// try to allocate session
 			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
-			
+
 			// finally save session
-			session.setAttribute(ServiceRegistryItem.class.getName(),
-					serviceRegistryItem);
+			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
 			sessionRegistry.put(session.getId(), session);
-			
+
 			// reply
 			SCMPReply scmpReply = new SCMPReply();
 			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(session.getId());
-			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(),
-					serviceName);
+			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.SERVER_ERROR);
+			log.debug("command error: fatal error when command runs");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -99,28 +96,25 @@ public class CreateSessionCommand extends CommandAdapter {
 	public class CreateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
 			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
 
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader
-						.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader
-						.get(SCMPHeaderType.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderType.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

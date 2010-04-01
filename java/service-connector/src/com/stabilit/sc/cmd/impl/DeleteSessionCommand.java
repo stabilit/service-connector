@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -46,6 +48,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
  */
 public class DeleteSessionCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(DeleteSessionCommand.class);
+	
 	public DeleteSessionCommand() {
 		this.commandValidator = new DeleteSessionCommandValidator();
 	}
@@ -63,6 +67,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response)
 			throws CommandException {
+		log.debug("Run command " + this.getKey());
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
 
@@ -70,6 +75,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 		MapBean<?> mapBean = sessionRegistry.get(sessionId);
 
 		if (mapBean == null) {
+			log.debug("command error: no session found for id :" + sessionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -82,8 +88,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 		try {
 			serviceRegistryItem.deallocate(scmp);
 		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO what to do!
+			log.debug("command error: deallocating failed for scmp: " + scmp );
 		}
 		
 		sessionRegistry.remove(sessionId);
@@ -124,6 +129,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessoion does not exists!");
 				}
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

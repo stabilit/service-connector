@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.registry;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.registry.Registry;
 
@@ -29,8 +31,9 @@ import com.stabilit.sc.common.registry.Registry;
 public final class ServiceRegistry extends Registry {
 
 	private static ServiceRegistry instance = new ServiceRegistry();
-
+	
 	private ServiceRegistry() {
+		log = Logger.getLogger(ServiceRegistry.class);
 	}
 
 	public static ServiceRegistry getCurrentInstance() {

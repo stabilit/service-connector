@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -20,6 +22,8 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class ClnDataCommand extends CommandAdapter {
 
+	private static Logger log = Logger.getLogger(ClnDataCommand.class);
+	
 	public ClnDataCommand() {
 		this.commandValidator = new ClnDataCommandValidator();
 	}
@@ -36,8 +40,9 @@ public class ClnDataCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
+		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
-
+		
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
@@ -92,6 +97,7 @@ public class ClnDataCommand extends CommandAdapter {
 				String messageInfo = (String) scmpHeader.get(SCMPHeaderType.MESSAGE_INFO.getName());
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
+				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;
