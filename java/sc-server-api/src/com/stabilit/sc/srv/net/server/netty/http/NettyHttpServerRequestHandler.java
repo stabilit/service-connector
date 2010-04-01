@@ -38,6 +38,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.net.netty.NettyHttpRequest;
 import com.stabilit.sc.common.net.netty.NettyHttpResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -50,37 +51,45 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		Channel channel = ctx.getChannel();
-		SocketAddress socketAddress = channel.getRemoteAddress();
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		serverRegistry.setThreadLocal(channel.getParent().getId());
-		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		NettyHttpResponse response = new NettyHttpResponse(event);
-		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
-		SCMP scmpReq = request.getSCMP();
-		if (command == null) {
-			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
-			scmpFault.setMessageType(scmpReq.getMessageType());
-			scmpFault.setLocalDateTime();
-			response.setSCMP(scmpFault);
-			writeResponse(response);
-			return;
-		}
-
-		ICommandValidator commandValidator = command.getCommandValidator();
 		try {
-			commandValidator.validate(request, response);
-			command.run(request, response);
-		} catch (Throwable ex) {
-			if (ex instanceof IFaultResponse) {
-				((IFaultResponse) ex).setFaultResponse(response);
-			} else {
-				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+			HttpRequest httpRequest = (HttpRequest) event.getMessage();
+			Channel channel = ctx.getChannel();
+			SocketAddress socketAddress = channel.getRemoteAddress();
+			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+			serverRegistry.setThreadLocal(channel.getParent().getId());
+			IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
+			response = new NettyHttpResponse(event);
+			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+			SCMP scmpReq = request.getSCMP();
+			if (command == null) {
+				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
+				writeResponse(response);
+				return;
 			}
+
+			ICommandValidator commandValidator = command.getCommandValidator();
+			try {
+				commandValidator.validate(request, response);
+				command.run(request, response);
+			} catch (Throwable ex) {
+				if (ex instanceof IFaultResponse) {
+					((IFaultResponse) ex).setFaultResponse(response);
+				} else {
+					SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+					scmpFault.setMessageType(scmpReq.getMessageType());
+					scmpFault.setLocalDateTime();
+					response.setSCMP(scmpFault);
+				}
+			}
+		} catch (Throwable th) {
+			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+			scmpFault.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
+			scmpFault.setLocalDateTime();
+			response.setSCMP(scmpFault);
 		}
 		writeResponse(response);
 	}
@@ -91,7 +100,8 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 		// Decide whether to close the connection or not.
 		boolean close = !httpRequest.isKeepAlive();
-
+		//TODO ?? keepAlive close?
+		
 		// Build the response object.
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		ChannelBuffer buffer = response.getBuffer();
