@@ -13,51 +13,50 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
 package com.example.jmx.mxbean;
 
+import java.beans.ConstructorProperties;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class Registry implements IRegistry {
+public class MapBeanSample implements MapBeanSampleMXBean{
 
-	protected Map<Object, MapBean> registryMap;
-
-	public Registry() {
-		registryMap = new ConcurrentHashMap<Object, MapBean>();
+	MapBean<String> mapBean;
+	
+	@ConstructorProperties({"MapBean"})
+	public MapBeanSample(MapBean que) {
+		this.mapBean = que;
 	}
-
-	public void put(Object key, MapBean value) {
-		registryMap.put(key, value);
-	}
-
-	public MapBean get(Object key) {
-		return registryMap.get(key);
-	}
-
-	public void remove(Object key) {
-		this.registryMap.remove(key);
-	}
-
-	public boolean containsKey(Object key) {
-		return registryMap.containsKey(key);
-	}
-
-	@Override
-	public String toString() {
-		StringBuffer dump = new StringBuffer();
-		for (Object key : registryMap.keySet()) {
-			dump.append(key);
-			dump.append(":");
-			dump.append(registryMap.get(key).toString());
+	
+	public String[] getAttributes() {
+		Map<String, String> attributeMap = mapBean.getAttributeMap();
+		String[] attributes = new String[attributeMap.size()];
+		
+		int index = 0;
+		for (String value : attributeMap.values()) {
+			attributes[index] = value;
+			index++;
 		}
-		return dump.toString();
+		return attributes;
+	}
+	
+	@Override
+	public RegistryEntry[] getTest() {
+		Map<String, String> attributeMap = mapBean.getAttributeMap();
+		RegistryEntry[] tests = new RegistryEntry[attributeMap.size()];
+		
+		int index = 0;
+		for (String value : attributeMap.values()) {
+			tests[index] = new RegistryEntry(value, null);
+			index++;
+		}		
+		return tests;	
 	}
 }

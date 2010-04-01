@@ -13,51 +13,17 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
 package com.example.jmx.mxbean;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @author JTraber
- * 
+ *
  */
-public class Registry implements IRegistry {
+public interface MapBeanSampleMXBean {
 
-	protected Map<Object, MapBean> registryMap;
-
-	public Registry() {
-		registryMap = new ConcurrentHashMap<Object, MapBean>();
-	}
-
-	public void put(Object key, MapBean value) {
-		registryMap.put(key, value);
-	}
-
-	public MapBean get(Object key) {
-		return registryMap.get(key);
-	}
-
-	public void remove(Object key) {
-		this.registryMap.remove(key);
-	}
-
-	public boolean containsKey(Object key) {
-		return registryMap.containsKey(key);
-	}
-
-	@Override
-	public String toString() {
-		StringBuffer dump = new StringBuffer();
-		for (Object key : registryMap.keySet()) {
-			dump.append(key);
-			dump.append(":");
-			dump.append(registryMap.get(key).toString());
-		}
-		return dump.toString();
-	}
+	RegistryEntry[] getTest();
 }

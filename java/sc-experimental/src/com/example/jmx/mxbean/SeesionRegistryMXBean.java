@@ -19,15 +19,14 @@
  */
 package com.example.jmx.mxbean;
 
-import java.util.Set;
-import java.util.Map.Entry;
 
 
 /**
  * @author JTraber
+ * @param <T>
  *
  */
 public interface SeesionRegistryMXBean {
 	
-	Queuesse[] getBeans();
+	MapBeanSample[] getBeans();
 }

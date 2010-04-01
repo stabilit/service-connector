@@ -19,45 +19,37 @@
  */
 package com.example.jmx.mxbean;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.beans.ConstructorProperties;
 
 /**
  * @author JTraber
  * 
  */
-public class Registry implements IRegistry {
+public class RegistryEntry {
 
-	protected Map<Object, MapBean> registryMap;
+	private String value;
+	private String key;
 
-	public Registry() {
-		registryMap = new ConcurrentHashMap<Object, MapBean>();
+	@ConstructorProperties( { "value", "key" })
+	public RegistryEntry(String value, String key) {
+		super();
+		this.value = value;
+		this.key = key;
 	}
 
-	public void put(Object key, MapBean value) {
-		registryMap.put(key, value);
+	public String getValue() {
+		return value;
 	}
 
-	public MapBean get(Object key) {
-		return registryMap.get(key);
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public void remove(Object key) {
-		this.registryMap.remove(key);
+	public String getKey() {
+		return key;
 	}
 
-	public boolean containsKey(Object key) {
-		return registryMap.containsKey(key);
-	}
-
-	@Override
-	public String toString() {
-		StringBuffer dump = new StringBuffer();
-		for (Object key : registryMap.keySet()) {
-			dump.append(key);
-			dump.append(":");
-			dump.append(registryMap.get(key).toString());
-		}
-		return dump.toString();
+	public void setKey(String key) {
+		this.key = key;
 	}
 }

@@ -7,8 +7,6 @@
 package com.example.jmx.mxbean;
 
 import java.lang.management.ManagementFactory;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -25,11 +23,11 @@ public class MainMap {
 		// Construct the ObjectName for the QueueSampler MXBean we will register
 		ObjectName mxbeanName = new ObjectName("com.example:type=registry");
 		
-		Queuesse mapBean = new Queuesse();
+		MapBean<String> mapBean = new MapBean<String>();
 		mapBean.setAttribute("1","Request-1");
 		mapBean.setAttribute("2","Request-2");
 		
-		Queuesse mapBean1 = new Queuesse();
+		MapBean<String> mapBean1 = new MapBean<String>();
 		mapBean1.setAttribute("1","Request-1");
 		mapBean1.setAttribute("2","Request-2");
 		
