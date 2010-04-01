@@ -1,0 +1,325 @@
+2010-04-01 17:16:23,265 [Thread-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 5799060=com.stabilit.sc.srv.server.IServer=com.stabilit.sc.server.SCServer@19d0a1;
+2010-04-01 17:16:23,265 [Thread-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 22743805=com.stabilit.sc.srv.server.IServer=com.stabilit.sc.server.SCServer@1c247a0;
+2010-04-01 17:16:23,296 [New I/O server worker #2-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,296 [New I/O server worker #2-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: simulation=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;
+2010-04-01 17:16:23,296 [Thread-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 20531348=com.stabilit.sc.srv.server.IServer=com.stabilit.sc.sim.server.SimluationServer@1506dc4;
+2010-04-01 17:16:23,312 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - validation error: SCMPVersion not compatible.
+2010-04-01 17:16:23,343 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,343 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11656=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,343 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,343 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,343 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11656=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11663=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - command error: already connected
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,359 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11663=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11670=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11670=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - command error: client not connected
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11670=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11670=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11677=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,375 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11677=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,375 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,390 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,390 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11677=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,390 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,390 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11677=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,390 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,390 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11682=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,390 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - validation error: serviceName must be set!
+2010-04-01 17:16:23,390 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,390 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11682=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,406 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ConnectCommand - Run command CONNECT
+2010-04-01 17:16:23,406 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: /127.0.0.1:11687=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,406 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,421 [New I/O server worker #3-1] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,437 [New I/O server worker #3-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: e296ffc7-9d4a-4bfc-906d-4da448032828=available=false;
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: e296ffc7-9d4a-4bfc-906d-4da448032828=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,437 [main] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: sessionIdMapBean=
+2010-04-01 17:16:23,437 [main] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: serviceNameMapBean=
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.DeleteSessionCommand - Run command DELETE_SESSION
+2010-04-01 17:16:23,437 [New I/O server worker #3-1] DEBUG com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand - Run command DEALLOCATE_SESSION
+2010-04-01 17:16:23,437 [New I/O server worker #3-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: e296ffc7-9d4a-4bfc-906d-4da448032828=available=false;
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: e296ffc7-9d4a-4bfc-906d-4da448032828=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.DisconnectCommand - Run command DISCONNECT
+2010-04-01 17:16:23,437 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: /127.0.0.1:11687=compression=false;localDateTime=Thu Apr 01 17:16:23 CEST 2010;keepAliveTimeout=30,360;scmpVersion=1.0-00;
+2010-04-01 17:16:23,437 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-2] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 8e65ca94-4a5f-47a9-b6fe-26238ab1c758=available=false;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 8e65ca94-4a5f-47a9-b6fe-26238ab1c758=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DeleteSessionCommand - Run command DELETE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand - Run command DEALLOCATE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 8e65ca94-4a5f-47a9-b6fe-26238ab1c758=available=false;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 8e65ca94-4a5f-47a9-b6fe-26238ab1c758=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-3] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,453 [New I/O server worker #3-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 4e6c259a-0c6f-46cd-8c5b-c39894b752d7=available=false;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 4e6c259a-0c6f-46cd-8c5b-c39894b752d7=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,453 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DeleteSessionCommand - Run command DELETE_SESSION
+2010-04-01 17:16:23,468 [New I/O server worker #3-3] DEBUG com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand - Run command DEALLOCATE_SESSION
+2010-04-01 17:16:23,468 [New I/O server worker #3-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 4e6c259a-0c6f-46cd-8c5b-c39894b752d7=available=false;
+2010-04-01 17:16:23,468 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 4e6c259a-0c6f-46cd-8c5b-c39894b752d7=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,468 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,468 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,468 [New I/O server worker #3-4] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,468 [New I/O server worker #3-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: cf4d4ec6-8dfc-4682-a36a-6a6e30595fae=available=false;
+2010-04-01 17:16:23,468 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: cf4d4ec6-8dfc-4682-a36a-6a6e30595fae=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,484 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - validation error: ServiceName must be set!
+2010-04-01 17:16:23,484 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - validation error: intValue to low.
+2010-04-01 17:16:23,484 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - validation error: intValue not within limits.
+2010-04-01 17:16:23,578 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,578 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,593 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,609 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,609 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - command error: service already registered
+2010-04-01 17:16:23,609 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,609 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,609 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,609 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,609 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,609 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.MaintenanceCommand - Run command MAINTENANCE
+2010-04-01 17:16:23,625 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-4] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-4] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - command error: service not registered
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.RegisterServiceCommand - Run command REGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.cmd.impl.DeRegisterServiceCommand - Run command DEREGISTER_SERVICE
+2010-04-01 17:16:23,625 [New I/O server worker #1-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: P01_RTXS_RPRWS1=portNr=9100;maxSessions=10;msgType=REQ_REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;
+2010-04-01 17:16:23,640 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,640 [New I/O server worker #3-1] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,640 [New I/O server worker #3-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 1869c484-2269-4cc8-a156-ba07546a416a=available=false;
+2010-04-01 17:16:23,640 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: 1869c484-2269-4cc8-a156-ba07546a416a=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,640 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,640 [New I/O server worker #3-1] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,640 [New I/O server worker #1-2] DEBUG com.stabilit.sc.cmd.impl.DeleteSessionCommand - Run command DELETE_SESSION
+2010-04-01 17:16:23,640 [New I/O server worker #3-1] DEBUG com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand - Run command DEALLOCATE_SESSION
+2010-04-01 17:16:23,640 [New I/O server worker #3-1] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 1869c484-2269-4cc8-a156-ba07546a416a=messageQueueId=0;messageQueue=[Message number 0, Message number 1, Message number 2, Message number 3, Message number 4, Message number 5, Message number 6, Message number 7, Message number 8, Message number 9, Message number 10, Message number 11, Message number 12, Message number 13, Message number 14, Message number 15, Message number 16, Message number 17, Message number 18, Message number 19, Message number 20, Message number 21, Message number 22, Message number 23, Message number 24, Message number 25, Message number 26, Message number 27, Message number 28, Message number 29, Message number 30, Message number 31, Message number 32, Message number 33, Message number 34, Message number 35, Message number 36, Message number 37, Message number 38, Message number 39, Message number 40, Message number 41, Message number 42, Message number 43, Message number 44, Message number 45, Message number 46, Message number 47, Message number 48, Message number 49, Message number 50, Message number 51, Message number 52, Message number 53, Message number 54, Message number 55, Message number 56, Message number 57, Message number 58, Message number 59, Message number 60, Message number 61, Message number 62, Message number 63, Message number 64, Message number 65, Message number 66, Message number 67, Message number 68, Message number 69, Message number 70, Message number 71, Message number 72, Message number 73, Message number 74, Message number 75, Message number 76, Message number 77, Message number 78, Message number 79, Message number 80, Message number 81, Message number 82, Message number 83, Message number 84, Message number 85, Message number 86, Message number 87, Message number 88, Message number 89, Message number 90, Message number 91, Message number 92, Message number 93, Message number 94, Message number 95, Message number 96, Message number 97, Message number 98, Message number 99];available=false;
+2010-04-01 17:16:23,640 [New I/O server worker #1-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: 1869c484-2269-4cc8-a156-ba07546a416a=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.CreateSessionCommand - Run command CREATE_SESSION
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG connections.com.stabilit.sc.sim.cmd.impl.AllocateSessionCommand - Run command ALLOCATE_SESSION
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: a8c536ee-dde6-4b0b-b711-e8c371fee645=available=false;
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry added: a8c536ee-dde6-4b0b-b711-e8c371fee645=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,656 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,671 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,687 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,703 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,718 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,734 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,750 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,765 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,781 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,796 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,812 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.ClnDataCommand - Run command CLN_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.SrvDataCommand - Run command SRV_DATA
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.cmd.impl.DeleteSessionCommand - Run command DELETE_SESSION
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.sim.cmd.impl.DeAllocateSessionCommand - Run command DEALLOCATE_SESSION
+2010-04-01 17:16:23,828 [New I/O server worker #3-2] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: a8c536ee-dde6-4b0b-b711-e8c371fee645=messageQueueId=99;messageQueue=[Message number 0, Message number 1, Message number 2, Message number 3, Message number 4, Message number 5, Message number 6, Message number 7, Message number 8, Message number 9, Message number 10, Message number 11, Message number 12, Message number 13, Message number 14, Message number 15, Message number 16, Message number 17, Message number 18, Message number 19, Message number 20, Message number 21, Message number 22, Message number 23, Message number 24, Message number 25, Message number 26, Message number 27, Message number 28, Message number 29, Message number 30, Message number 31, Message number 32, Message number 33, Message number 34, Message number 35, Message number 36, Message number 37, Message number 38, Message number 39, Message number 40, Message number 41, Message number 42, Message number 43, Message number 44, Message number 45, Message number 46, Message number 47, Message number 48, Message number 49, Message number 50, Message number 51, Message number 52, Message number 53, Message number 54, Message number 55, Message number 56, Message number 57, Message number 58, Message number 59, Message number 60, Message number 61, Message number 62, Message number 63, Message number 64, Message number 65, Message number 66, Message number 67, Message number 68, Message number 69, Message number 70, Message number 71, Message number 72, Message number 73, Message number 74, Message number 75, Message number 76, Message number 77, Message number 78, Message number 79, Message number 80, Message number 81, Message number 82, Message number 83, Message number 84, Message number 85, Message number 86, Message number 87, Message number 88, Message number 89, Message number 90, Message number 91, Message number 92, Message number 93, Message number 94, Message number 95, Message number 96, Message number 97, Message number 98, Message number 99];available=false;
+2010-04-01 17:16:23,828 [New I/O server worker #1-3] DEBUG com.stabilit.sc.registry.ServiceRegistry - Entry removed: a8c536ee-dde6-4b0b-b711-e8c371fee645=com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;

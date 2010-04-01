@@ -58,7 +58,7 @@ public class ClnDataTestCase extends SuperSessionTestCase {
 					scmpSession);
 			clnDataCall.setMessagInfo("message info");
 			SCMP scmpReply = clnDataCall.invoke();
-			System.out.println(scmpReply.getBody());
+			Assert.assertEquals("Message number " + i, scmpReply.getBody());
 		}
 	}
 }

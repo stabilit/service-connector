@@ -72,7 +72,6 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
 				.newInstance(client);
 		SCMP maintenance = maintenanceCall.invoke();
-		Thread.currentThread().sleep(100000);
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
 		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;";
