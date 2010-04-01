@@ -17,6 +17,7 @@ package com.stabilit.sc.srv.net.server.netty.http;
 
 import java.net.SocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -49,11 +50,14 @@ import com.stabilit.sc.srv.registry.ServerRegistry;
 @ChannelPipelineCoverage("one")
 public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
+	private static Logger log = Logger.getLogger(NettyHttpServerRequestHandler.class);
+	
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(event);
+		HttpRequest httpRequest = (HttpRequest) event.getMessage();
+		
 		try {
-			HttpRequest httpRequest = (HttpRequest) event.getMessage();
 			Channel channel = ctx.getChannel();
 			SocketAddress socketAddress = channel.getRemoteAddress();
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
@@ -63,6 +67,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
 			SCMP scmpReq = request.getSCMP();
 			if (command == null) {
+				log.debug("Request unkown, " + request);
 				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
@@ -100,8 +105,8 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 		// Decide whether to close the connection or not.
 		boolean close = !httpRequest.isKeepAlive();
-		//TODO ?? keepAlive close?
-		
+		// TODO ?? keepAlive close?
+
 		// Build the response object.
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		ChannelBuffer buffer = response.getBuffer();
