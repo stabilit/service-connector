@@ -1,9 +1,15 @@
 package com.stabilit.sc;
 
-import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.List;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.sc.common.registry.SessionRegistry;
+import com.stabilit.sc.registry.ConnectionRegistry;
+import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.server.SCServerFactory;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.srv.conf.ServerConfig;
@@ -15,7 +21,7 @@ public final class ServiceConnector {
 	private ServiceConnector() {
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
 		ServerConfig config = new ServerConfig();
 		config.load("sc.properties");
@@ -24,7 +30,17 @@ public final class ServiceConnector {
 		if (commandFactory == null) {
 		    CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
-
+		
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
+		ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
+		ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
+		
+		// Register the Queue Sampler MXBean
+		mbs.registerMBean(ConnectionRegistry.getCurrentInstance(), mxbeanNameConnReg);
+		mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
+		mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
+		
 		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
 		SCServerFactory serverFactory = new SCServerFactory();
 		for (ServerConfigItem serverConfig : serverConfigList) {
