@@ -13,33 +13,19 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
-package com.stabilit.sc.common.registry;
-
-import org.apache.log4j.Logger;
-
-import com.stabilit.sc.common.io.Session;
+package com.stabilit.sc.common.util;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public final class SessionRegistry extends Registry {
-	
-	private static SessionRegistry instance = new SessionRegistry();
-	
-	private SessionRegistry() {
-		log = Logger.getLogger(SessionRegistry.class);
-	}
-	
-	public static SessionRegistry getCurrentInstance() {
-		return instance;
-	}	
-	
-	public void add(Object key, Session session) {
-		this.put(key, session);
+public class ValidationException extends Exception {
+
+	public ValidationException(String message) {
+		super(message);
 	}
 }

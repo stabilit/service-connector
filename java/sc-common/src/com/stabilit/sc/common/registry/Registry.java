@@ -22,6 +22,8 @@ package com.stabilit.sc.common.registry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.registry.jmx.IRegistryMXBean;
 import com.stabilit.sc.common.registry.jmx.MapBeanWrapperJMX;
 import com.stabilit.sc.common.util.MapBean;
@@ -33,13 +35,15 @@ import com.stabilit.sc.common.util.MapBean;
 public class Registry implements IRegistry, IRegistryMXBean {
 
 	private Map<Object, MapBean<?>> registryMap;
-
+	protected static Logger log;
+	
 	public Registry() {
 		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();
 	}
 
 	public void put(Object key, MapBean<?> value) {
 		registryMap.put(key, value);
+		log.debug("Entry added: " + key + "=" + value);
 	}
 
 	public MapBean<?> get(Object key) {
@@ -47,6 +51,7 @@ public class Registry implements IRegistry, IRegistryMXBean {
 	}
 	
 	public void remove(Object key) {
+		log.debug("Entry removed: " + key + "=" + registryMap.get(key));
 		this.registryMap.remove(key);
 	}
 	

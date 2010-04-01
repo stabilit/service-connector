@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.sc.common.io.KeepAlive;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 
