@@ -59,7 +59,11 @@ public class EchoCommand extends CommandAdapter {
 			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(scmp.getSessionId());
 			scmpReply.setBody(obj);
-			System.out.println("EchoCommand not transitive body = " + obj.toString().substring(0, 100));
+			if (obj.toString().length() > 100) {
+				System.out.println("EchoCommand not transitive body = " + obj.toString().substring(0, 100));
+			} else {
+				System.out.println("EchoCommand not transitive body = " + obj.toString());
+			}
 			response.setSCMP(scmpReply);
 			return;
 		}
@@ -83,7 +87,13 @@ public class EchoCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		System.out.println("EchoCommand TRANSITIVE body = " + scmp.getBody().toString().substring(0, 100));
+		if (scmp.getBody().toString().length() > 100) {
+			System.out
+					.println("EchoCommand TRANSITIVE body = " + scmp.getBody().toString().substring(0, 100));
+		} else {
+			System.out
+					.println("EchoCommand TRANSITIVE body = " + scmp.getBody().toString());
+		}
 		SCMP result = serviceRegistryItem.echo(scmp);
 		result.setMessageType(getKey().getResponseName());
 		response.setSCMP(result);
