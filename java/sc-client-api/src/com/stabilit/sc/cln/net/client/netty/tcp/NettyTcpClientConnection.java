@@ -28,19 +28,18 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
+import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
-import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.cln.net.client.netty.http.NettyOperationListener;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 
-public class NettyTcpClientConnection implements IClientConnection {
+public class NettyTcpClientConnection extends ClientConnectionAdapter {
 	
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 	private int port;
 	private String host;
 	private NettyOperationListener operationListener;

@@ -33,19 +33,16 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
+import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
-import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 
-public class NettyHttpClientConnection implements IClientConnection {
+public class NettyHttpClientConnection extends ClientConnectionAdapter {
 
 	private URL url = null;
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 	private int port;
 	private String host;
 	private NettyOperationListener operationListener;

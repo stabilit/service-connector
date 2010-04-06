@@ -18,6 +18,9 @@ package com.stabilit.sc.cln.net.client.netty.tcp;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
+
+import com.stabilit.sc.common.io.SCMP;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)

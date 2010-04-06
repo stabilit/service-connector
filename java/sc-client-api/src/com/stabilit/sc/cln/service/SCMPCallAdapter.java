@@ -23,6 +23,7 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPPart;
 
 /**
  * @author JTraber
@@ -41,12 +42,23 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	public SCMPCallAdapter(IClient client, SCMP scmpSession) {
 		this.client = client;
-		
+
 		this.scmpSession = scmpSession;
-		this.call = new SCMP();
+
 		if (this.scmpSession != null) {
-		   this.call.setSessionId(scmpSession.getSessionId());
-		   this.call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmpSession.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+			if (this.scmpSession.isPart()) {
+				this.call = new SCMPPart();
+				this.call.setHeader(this.scmpSession.getHeader());
+			} else {
+				this.call = new SCMP();
+			}
+			this.call.setSessionId(scmpSession.getSessionId());
+			this.call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmpSession
+					.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+		}
+
+		if (this.call == null) {
+			this.call = new SCMP();
 		}
 	}
 

@@ -19,26 +19,21 @@
  */
 package com.stabilit.sc.cln.client;
 
-import com.stabilit.sc.common.IConnection;
 import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.SCMP;
 
 /**
  * @author JTraber
  *
  */
-public interface IClientConnection extends IConnection {
-		
-	/**
-	 * @throws ConnectionException
-	 */
-	void connect() throws ConnectionException;
-	
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-	
-	public void disconnect();
+public abstract class ClientConnectionAdapter implements IClientConnection {
 
-	public void destroy();	
+	protected IEncoderDecoder encoderDecoder;
 	
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
+	public ClientConnectionAdapter() {
+		encoderDecoder = null;
+	}
+	@Override
+	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
+		this.encoderDecoder = encoderDecoder;
+	}
 }

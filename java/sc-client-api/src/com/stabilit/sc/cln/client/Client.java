@@ -22,7 +22,10 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.EncoderDecoderFactory;
+import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 
 /**
  * @author JTraber
@@ -64,6 +67,17 @@ public class Client implements IClient {
 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+		// we assume that is is not a large message
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
+		clientConnection.setEncoderDecoder(encoderDecoder);
+		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
+			while (scmp.isPart() == false) {
+		       SCMP ret = clientConnection.sendAndReceive(scmp);
+		       if (ret.isPart() == false) {
+		    	   return ret;
+		       }
+			}
+		}
 		return clientConnection.sendAndReceive(scmp);
 	}
 }

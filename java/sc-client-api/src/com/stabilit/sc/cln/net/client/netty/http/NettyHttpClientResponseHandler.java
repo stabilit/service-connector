@@ -41,7 +41,6 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 	private boolean sync = false;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {

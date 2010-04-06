@@ -4,6 +4,8 @@ package com.stabilit.sc.cln.io;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.registry.Registry;
 import com.stabilit.sc.common.util.MapBean;
 
@@ -20,6 +22,7 @@ public class SCMPSessionRegistry extends Registry {
 	}
 	
 	private SCMPSessionRegistry() {
+		log = Logger.getLogger(SCMPSessionRegistry.class);
 		MapBean<?> sessionIdMapBean = new MapBean<List<String>>();
 		this.put("sessionIdMapBean", sessionIdMapBean);
 		MapBean<?> serviceNameMapBean = new MapBean<List<String>>();
