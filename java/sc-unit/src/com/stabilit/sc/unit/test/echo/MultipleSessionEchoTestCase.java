@@ -14,9 +14,10 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.echo;
 
 import org.junit.Test;
+
 
 public class MultipleSessionEchoTestCase extends SingleEchoTestCase {
 
