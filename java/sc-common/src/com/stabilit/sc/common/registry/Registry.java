@@ -32,10 +32,10 @@ import com.stabilit.sc.common.util.MapBean;
  * @author JTraber
  * 
  */
-public class Registry implements IRegistry, IRegistryMXBean {
+public abstract class Registry implements IRegistry, IRegistryMXBean {
 
 	private Map<Object, MapBean<?>> registryMap;
-	protected static Logger log;
+	protected Logger log;
 	
 	public Registry() {
 		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();

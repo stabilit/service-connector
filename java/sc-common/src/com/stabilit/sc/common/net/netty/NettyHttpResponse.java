@@ -17,7 +17,7 @@ public class NettyHttpResponse implements IResponse {
 	private MessageEvent event;
 	private SCMP scmp;
 	private ISession session;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();	
+	private IEncoderDecoder encoderDecoder;	
 	
 	public NettyHttpResponse(MessageEvent event) {
 		this.scmp = null;
@@ -31,6 +31,7 @@ public class NettyHttpResponse implements IResponse {
 	
 	public ChannelBuffer getBuffer() throws Exception {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	   encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
 	   encoderDecoder.encode(baos, this.scmp);
 	   byte[] buf = baos.toByteArray();
 	   return ChannelBuffers.copiedBuffer(buf);

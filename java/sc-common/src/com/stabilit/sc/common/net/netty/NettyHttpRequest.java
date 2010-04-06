@@ -21,7 +21,7 @@ public class NettyHttpRequest implements IRequest {
 	private SocketAddress socketAddress;
 	private SCMP scmp;
 	private IRequestContext requestContext;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	private IEncoderDecoder encoderDecoder;
 	private MapBean<Object> mapBean;
 
 	public NettyHttpRequest(HttpRequest request, SocketAddress socketAddress) {
@@ -68,6 +68,7 @@ public class NettyHttpRequest implements IRequest {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
+		this.encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		this.scmp = scmp;

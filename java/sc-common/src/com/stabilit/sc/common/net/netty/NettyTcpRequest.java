@@ -19,7 +19,7 @@ public class NettyTcpRequest implements IRequest {
 	private ChannelBuffer request;
 	private SCMP scmp;
 	private IRequestContext requestContext;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();
+	private IEncoderDecoder encoderDecoder;
 	private MapBean<Object> mapBean;
 
 	public NettyTcpRequest(MessageEvent e) {
@@ -59,6 +59,7 @@ public class NettyTcpRequest implements IRequest {
 	private void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
+		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		this.scmp = scmp;

@@ -10,6 +10,8 @@ public class SCMP implements Serializable {
 
 	public static final String VERSION = "1.0-00";
 
+	public static final int LARGE_MESSAGE_LIMIT = 60 << 10;
+
 	protected Map<String, String> header;
 	private Object body;
 
@@ -31,6 +33,10 @@ public class SCMP implements Serializable {
 	}
 
 	public boolean isFault() {
+		return false;
+	}
+
+	public boolean isPart() {
 		return false;
 	}
 
@@ -106,6 +112,19 @@ public class SCMP implements Serializable {
 		return body;
 	}
 
+	public int getBodyLength() {
+		if (body == null) {
+			return 0;
+		}
+		if (String.class == body.getClass()) {
+			return ((String)body).length();
+		}		
+		if (byte[].class == body.getClass()) {
+			return ((byte[])body).length;
+		}
+		return 0;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -114,4 +133,13 @@ public class SCMP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	public boolean isLargeMessage() {
+		if (this.body == null) {
+			return false;
+		}
+		int bodyLength = this.getBodyLength();
+		return bodyLength > LARGE_MESSAGE_LIMIT;
+	}
+
 }

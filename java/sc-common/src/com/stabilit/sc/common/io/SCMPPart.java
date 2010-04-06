@@ -19,54 +19,26 @@
  */
 package com.stabilit.sc.common.io;
 
+import java.util.Map;
+
+import com.stabilit.sc.common.util.DateTimeUtility;
+
 /**
  * @author JTraber
  * 
  */
-public enum SCMPHeaderType {
+public class SCMPPart extends SCMP {
 
-	MSG_TYPE("msgType"),
-	SCMP_VERSION("scmpVersion"),
-	COMPRESSION("compression"),
-	LOCAL_DATE_TIME("localDateTime"),
-	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
-	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
-	SC_ERROR_CODE("scErrorCode"),
-	SC_ERROR_TEXT("scErrorText"),
-	APP_ERROR_CODE("appErrorCode"),
-	APP_ERROR_TEXT("appErrorText"),
-	BODY_LENGTH("bodyLength"),
-	CACHE_SIGNATURE("cacheSignature"),
-	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
-	IP_ADDRESS_LIST("ipAddressList"),
-	PORT_NR("portNr"),
-	MASK("mask"),
-	MAX_SESSIONS("maxSessions"),
-	MESSAGE_INFO("messageInfo"),
-	MULTI_THREADED("multiThreaded"),
-	NO_DATA("noData"),
-	REJECT_SESSION("rejectSession"),
-	SEQUENCE_NR("sequenceNr"),
-	SERVICE_NAME("serviceName"),
-	SESSION_ID("sessionId"),
-	SESSION_INFO("sessionInfo"),
-	TRANSITIVE("transitive"),
-	SCMP_OFFSET("scmpOffset"),
-	SCMP_MESSAGE_ID("scmpMessageID"),
-	SCMP_CALL_LENGTH("scmpCallLength"),
-	SCMP_BODY_TYPE("bodyType");
-	
-	private String name;
-	
-	private SCMPHeaderType(String name) {
-		this.name = name;	
+	public SCMPPart() {
+		super();
 	}
 
-	public String getName() {
-		return name;
+	public SCMPPart(Map<String, String> map) {
+		this.header = map;
 	}
-	
-	public static SCMPHeaderType getMsgHeaderType(String messageId) {
-		return SCMPHeaderType.valueOf(messageId);
+
+	public boolean isPart() {
+		return true;
 	}
+
 }
