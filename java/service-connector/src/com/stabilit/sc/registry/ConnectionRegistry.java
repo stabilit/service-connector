@@ -33,7 +33,7 @@ public final class ConnectionRegistry extends Registry {
 	private static ConnectionRegistry instance = new ConnectionRegistry();
 
 	private ConnectionRegistry() {
-		log = Logger.getLogger(ConnectionRegistry.class);
+		log = Logger.getLogger("connections." + ConnectionRegistry.class.getName());
 	}
 
 	public static ConnectionRegistry getCurrentInstance() {
