@@ -18,8 +18,11 @@ package com.stabilit.sc.srv.net.server.netty.http;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+
+import com.stabilit.sc.common.io.SCMP;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -35,6 +38,7 @@ public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 		ChannelPipeline pipeline = Channels.pipeline();
 		pipeline.addLast("decoder", new HttpRequestDecoder());
 
+		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMP.LARGE_MESSAGE_LIMIT+4<<10));
 		pipeline.addLast("encoder", new HttpResponseEncoder());
 		pipeline.addLast("handler", new NettyHttpServerRequestHandler());
 		return pipeline;
