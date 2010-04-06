@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.sim.registry;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.registry.Registry;
 
@@ -31,6 +33,7 @@ public final class SimulationSessionRegistry extends Registry {
 	private static SimulationSessionRegistry instance = new SimulationSessionRegistry();
 	
 	private SimulationSessionRegistry() {
+		log = Logger.getLogger(SimulationSessionRegistry.class);
 	}
 	
 	public static SimulationSessionRegistry getCurrentInstance() {
