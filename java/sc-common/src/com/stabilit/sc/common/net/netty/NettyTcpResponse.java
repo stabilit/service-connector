@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
@@ -17,7 +18,7 @@ public class NettyTcpResponse implements IResponse {
 	private MessageEvent event;
 	private SCMP scmp;
 	private ISession session;
-	private IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance();	
+	private IEncoderDecoder encoderDecoder;
 	
 	public NettyTcpResponse(MessageEvent event) {
 		this.scmp = null;
@@ -31,7 +32,10 @@ public class NettyTcpResponse implements IResponse {
 	
 	public ChannelBuffer getBuffer() throws Exception {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	   this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
 	   encoderDecoder.encode(baos, scmp);
+	   // TODO verify
+	   baos.write(Delimiters.nulDelimiter()[0].toByteBuffer().array());
 	   byte[] buf = baos.toByteArray();
 	   return ChannelBuffers.copiedBuffer(buf);
 	}

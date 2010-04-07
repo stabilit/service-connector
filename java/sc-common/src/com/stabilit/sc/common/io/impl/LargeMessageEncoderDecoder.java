@@ -20,6 +20,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPPart;
+import com.stabilit.sc.common.io.impl.DefaultEncoderDecoder.TYPE;
 
 public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
@@ -28,6 +29,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 	public static final String EQUAL_SIGN = "=";
 	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
 
+	// identifies messageContext when message is large and chunked
 	public static Integer lastMessageID = 0;
 
 	public LargeMessageEncoderDecoder() {
@@ -48,6 +50,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		if (line.startsWith("EXC ")) {
 			scmp = new SCMPFault();
 		} else {
+			// message chunking
 			if (line.charAt(0) == 'P') {
 				scmp = new SCMPPart();
 			} else {
@@ -138,6 +141,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		if (messageType == null) {
 			throw new EncodingDecodingException("No messageType found (null)");
 		}
+		// message chunking
 		String headLineKey = null;
 		if (messageType.startsWith("REQ_")) {
 			if (scmp.isPart()) {
@@ -178,6 +182,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				sb.append(EQUAL_SIGN);
 				sb.append(TYPE.STRING.getType());
 				sb.append("\n");
+				// message chunking
 				int bodyLength = scmp.getBodyLength();
 				int messagePartLength = bodyLength;
 				if (scmp.isPart() == false) {
@@ -221,6 +226,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				byte[] ba = (byte[]) body;
 				sb.append(SCMPHeaderType.BODY_LENGTH.getName());
 				sb.append(EQUAL_SIGN);
+				// message chunking
 				int bodyLength = scmp.getBodyLength();
 				int messagePartLength = bodyLength;
 				if (scmp.isPart() == false) {
@@ -255,39 +261,10 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			} else {
 				throw new IOException("unsupported large message body type");
 			}
-		} else { // TODO verify with DANI, added because null bodies are allowed!
+		} else {
 			bw.write(sb.toString());
 			bw.flush();
 		}
 		return;
-	}
-
-	private static enum TYPE {
-		UNDEFINED("undefined"), MESSAGE("msg"), ARRAY("array"), STRING("string");
-		private String type = "undefined";
-
-		private TYPE(String type) {
-			this.type = type;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public static TYPE getEnumType(String type) {
-			if (UNDEFINED.getType().equals(type)) {
-				return UNDEFINED;
-			}
-			if (STRING.getType().equals(type)) {
-				return STRING;
-			}
-			if (MESSAGE.getType().equals(type)) {
-				return MESSAGE;
-			}
-			if (ARRAY.getType().equals(type)) {
-				return ARRAY;
-			}
-			return UNDEFINED;
-		}
 	}
 }

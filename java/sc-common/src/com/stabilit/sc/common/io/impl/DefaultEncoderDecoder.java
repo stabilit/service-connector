@@ -189,14 +189,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			} else {
 				throw new IOException("unsupported body type");
 			}
-		} else { // TODO verify with DANI, added because null bodies are allowed!
+		} else {
 			bw.write(sb.toString());
 			bw.flush();
 		}
 		return;
 	}
 
-	private static enum TYPE {
+	public static enum TYPE {
 		UNDEFINED("undefined"), MESSAGE("msg"), ARRAY("array"), STRING("string");
 		private String type = "undefined";
 
