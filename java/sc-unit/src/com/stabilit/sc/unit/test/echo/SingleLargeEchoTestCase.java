@@ -30,6 +30,7 @@ public class SingleLargeEchoTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
+	@Test
 	public void invokeTest() throws Exception {
 		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
 
@@ -47,7 +48,6 @@ public class SingleLargeEchoTestCase extends SuperSessionTestCase {
 		Assert.assertNotNull(result.getSessionId());
 	}
 
-	@Test
 	public void invokeTestTransitive() throws Exception {
 		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
 
