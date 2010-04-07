@@ -10,7 +10,6 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
-import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
@@ -69,17 +68,10 @@ public class EchoCommand extends CommandAdapter {
 		}
 		log.info("echo runs transitive");
 
-		// get free service
-		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
-
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
-		// TODO replaced! that's wrong isn't it?
-		// ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		//
-		// ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) serviceRegistry.get(serviceName);
 
 		if (serviceRegistryItem == null) {
 			log.debug("command error: serviceRegistryItem not found");
