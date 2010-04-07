@@ -28,6 +28,7 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
