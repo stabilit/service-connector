@@ -29,9 +29,6 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-
 /**
  * @author JTraber
  * 
@@ -40,7 +37,6 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
-	private boolean sync = false;
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
@@ -48,14 +44,12 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	}
 
 	HttpResponse getMessageSync() {
-		sync = true;
 		HttpResponse responseMessage;
 		boolean interrupted = false;
 		for (;;) {
 			try {
 				// take() waits until first message gets in queue!
 				responseMessage = answer.take();
-				sync = false;
 				break;
 			} catch (InterruptedException e) {
 				interrupted = true;
@@ -71,31 +65,5 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		answer.offer((HttpResponse) e.getMessage());
-//		if (sync) {
-//			answer.offer((HttpResponse) e.getMessage());
-//		} else {
-//			HttpResponse httpResponse = (HttpResponse) e.getMessage();
-//			byte[] buffer = httpResponse.getContent().array();
-//			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-//			SCMP scmp = new SCMP();
-//			encoderDecoder.decode(bais, scmp);
-//			callback.messageReceived(conn, scmp);
-//		} 
-//TODO like tcp
-//		if(ret.getMessageId().equals("asyncCall")) {
-//			NettyTcpResponse response = new NettyTcpResponse(e);
-//			
-//			SCMP req = new SCMP();
-//			req.setMessageId(AsyncCallMessage.ID);
-//			AsyncCallMessage async = new AsyncCallMessage();
-//			req.setBody(async);
-//			req.setSubsribeId(ret.getSubscribeId());
-//			response.setSCMP(req);
-//			ctx.getChannel().write(response.getBuffer());
-//		} else {
-//			conn.setWritable(true);
-//		}
-		// TODO Keep alives müssen hier ausgesondert werden! bzw. acknowledged! oder eventuell ein handler
-		// davor
 	}
 }

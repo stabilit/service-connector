@@ -67,15 +67,15 @@ public class Client implements IClient {
 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		// we assume that is is not a large message
+		// following code handles large messages. (chunking)
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
-			while (scmp.isPart() == false) {
-		       SCMP ret = clientConnection.sendAndReceive(scmp);
-		       if (ret.isPart() == false) {
-		    	   return ret;
-		       }
+			while (scmp.isPart() == false ) {
+				SCMP ret = clientConnection.sendAndReceive(scmp);
+				if (ret.isPart() == false) {
+					return ret;
+				}
 			}
 		}
 		return clientConnection.sendAndReceive(scmp);

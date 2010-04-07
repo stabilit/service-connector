@@ -18,7 +18,8 @@ package com.stabilit.sc.cln.net.client.netty.tcp;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
+import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
+import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.common.io.SCMP;
 
@@ -35,8 +36,10 @@ public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 
 		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
-		
+
 		NettyTcpClientResponseHandler responseHandler = new NettyTcpClientResponseHandler();
+		pipeline.addLast("framer", new DelimiterBasedFrameDecoder(SCMP.LARGE_MESSAGE_LIMIT + 4 << 10,
+				Delimiters.nulDelimiter()[0]));
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}

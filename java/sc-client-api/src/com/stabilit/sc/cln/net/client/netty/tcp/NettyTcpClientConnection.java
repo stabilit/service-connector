@@ -27,23 +27,22 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.net.client.netty.http.NettyOperationListener;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 
 public class NettyTcpClientConnection extends ClientConnectionAdapter {
-	
+
 	private ClientBootstrap bootstrap = null;
 	private Channel channel = null;
 	private int port;
 	private String host;
 	private NettyOperationListener operationListener;
-	
+
 	public NettyTcpClientConnection() {
 	}
 
@@ -59,7 +58,7 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		// Start the connection attempt.
 		try {
 			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-			
+
 			operationListener = new NettyOperationListener();
 			future.addListener(operationListener);
 			// Wait until the connection attempt succeeds or fails.
@@ -94,21 +93,22 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder.encode(baos, scmp);
 
-		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
+		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size()+4);
 
 		chBuffer.writeBytes(baos.toByteArray());
+		//TODO entfernen
+		chBuffer.writeBytes(Delimiters.nulDelimiter()[0]);
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
-		
+
 		NettyTcpClientResponseHandler handler = channel.getPipeline()
 				.get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
-
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		
+
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}
@@ -122,7 +122,7 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	@Override
 	public void setHost(String host) {
 		this.host = host;
