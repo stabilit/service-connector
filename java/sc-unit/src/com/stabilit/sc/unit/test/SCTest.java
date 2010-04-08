@@ -29,6 +29,11 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
+import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoTestCase;
+import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoTestCase;
+import com.stabilit.sc.unit.test.echo.MultipleEchoTestCase;
+import com.stabilit.sc.unit.test.echo.SingleEchoTestCase;
 
 /**
  * @author JTraber
@@ -36,9 +41,18 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { ConnectTestCase.class, DisconnectTestCase.class, CreateSessionTestCase.class,
-		DeleteSessionTestCase.class, RegisterServiceTestCase.class, DeRegisterServiceTestCase.class,
-		ClnDataTestCase.class })
+@SuiteClasses( { 
+	ConnectTestCase.class, 
+	DisconnectTestCase.class, 
+	CreateSessionTestCase.class,
+	DeleteSessionTestCase.class, 
+	RegisterServiceTestCase.class, 
+	DeRegisterServiceTestCase.class,
+	ClnDataTestCase.class,
+	SingleEchoTestCase.class,
+	MultipleEchoTestCase.class,
+	ClientSingleLargeEchoTestCase.class,
+	ClientPartLargeEchoTestCase.class})
 public class SCTest {
 
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {

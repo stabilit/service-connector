@@ -14,36 +14,41 @@
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
  */
-package com.stabilit.sc.unit.test.echo;
+/**
+ * 
+ */
+package com.stabilit.sc.unit.test.clnData;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class MultipleEchoTestCase extends SingleEchoTestCase {
+import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPClnDataCall;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.SuperSessionTestCase;
+
+/**
+ * @author JTraber
+ * 
+ */
+public class ClnDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
-	public void invokeTest() throws Exception {	
-		
-		long startTime = System.currentTimeMillis();
-		int anzMsg = 1000;
-		for (int i = 0; i < anzMsg; i++) {
-			this.index = i;
-			super.invokeTest();
-		}
-		System.out.println(anzMsg/((System.currentTimeMillis() - startTime)/1000D) + " msg pro sec");
-	}
-	
-	@Test
-	public void invokeTestMultipleSession() throws Exception {	
-		deleteSession();		
-		long startTime = System.currentTimeMillis();
-		int anzMsg = 1000;
-		for (int i = 0; i < anzMsg; i++) {
-			this.index = i;
-			createSession();
-			super.invokeTest();
-			deleteSession();
-		}
-		System.out.println(anzMsg/((System.currentTimeMillis() - startTime)/1000D) + " msg pro sec");
-		createSession();
+	public void clnDataLargeTest() throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
+		clnDataCall.setMessagInfo("message info");
+		clnDataCall.setBody("large");
+		SCMP scmpReply = clnDataCall.invoke();
+		String result = (String) scmpReply.getBody();
+
+		/*********************************** Verify connect response msg **********************************/
+		Assert.assertNotNull(scmpReply.getBody());
+		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.RES_CLN_DATA
+				.getResponseName());
+		Assert.assertEquals("Message number 0", result);
 	}
 }

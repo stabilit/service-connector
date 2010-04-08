@@ -46,7 +46,7 @@ public class ClientPartLargeEchoTestCase extends SuperSessionTestCase {
 
 			Map<String, String> header = result.getHeader();
 			Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
-			Assert.assertEquals("0", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+			Assert.assertEquals("3", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 			Assert.assertNotNull(header.get(SCMPHeaderType.SESSION_ID.getName()));
 
 			if (i < 10) {
@@ -80,7 +80,7 @@ public class ClientPartLargeEchoTestCase extends SuperSessionTestCase {
 
 			Map<String, String> header = result.getHeader();
 			Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
-			Assert.assertEquals("1", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+			Assert.assertEquals("2", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 			Assert.assertNotNull(header.get(SCMPHeaderType.SESSION_ID.getName()));
 
 			if (i < 10) {

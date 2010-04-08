@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.clnData;
 
 import junit.framework.Assert;
 
@@ -28,6 +28,7 @@ import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
 /**
  * @author JTraber
