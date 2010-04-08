@@ -96,7 +96,8 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size()+4);
 
 		chBuffer.writeBytes(baos.toByteArray());
-		//TODO entfernen
+		
+		//TODO delimiter necessary for delimiterBaseFrameDecoding
 		chBuffer.writeBytes(Delimiters.nulDelimiter()[0]);
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
