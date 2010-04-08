@@ -31,9 +31,9 @@ import com.stabilit.sc.common.registry.Registry;
 public final class ServiceRegistry extends Registry {
 
 	private static ServiceRegistry instance = new ServiceRegistry();
-	
+
 	private ServiceRegistry() {
-		log = Logger.getLogger(ServiceRegistry.class);
+		log = Logger.getLogger("serviceRegistry." + ServiceRegistry.class.getName());
 	}
 
 	public static ServiceRegistry getCurrentInstance() {

@@ -72,7 +72,7 @@ public class CreateSessionCommand extends CommandAdapter {
 
 			// finally save session
 			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
-			sessionRegistry.put(session.getId(), session);
+			sessionRegistry.add(session.getId(), session);
 
 			// reply
 			SCMPReply scmpReply = new SCMPReply();
