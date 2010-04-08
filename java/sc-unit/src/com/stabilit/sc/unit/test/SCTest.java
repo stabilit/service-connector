@@ -36,27 +36,32 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( {
-	ConnectTestCase.class, 
-	DisconnectTestCase.class,
-	CreateSessionTestCase.class,
-	DeleteSessionTestCase.class,
-	RegisterServiceTestCase.class,
-	DeRegisterServiceTestCase.class,
-	ClnDataTestCase.class
-})
-
+@SuiteClasses( { ConnectTestCase.class, DisconnectTestCase.class, CreateSessionTestCase.class,
+		DeleteSessionTestCase.class, RegisterServiceTestCase.class, DeRegisterServiceTestCase.class,
+		ClnDataTestCase.class })
 public class SCTest {
-	
-	public static void verifyError(SCMP result, SCMPErrorCode error,
-			SCMPMsgType msgType) {
+
+	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(
-				result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType
-						.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE
-				.getName()), error.getErrorCode());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT
-				.getName()), error.getErrorText());
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType.getResponseName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE.getName()), error.getErrorCode());
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT.getName()), error.getErrorText());
+	}
+
+	public static String getExpectedOffset(int runIndex, int characterNumber) {
+		if (runIndex > 10) {
+			if (runIndex % 10 == 0) {
+				return (characterNumber * 10 + (((runIndex / 10) - 1) * (characterNumber + 1)) * 10) + "";
+			} else {
+				if (runIndex / 10 > 0) {
+					return (runIndex % 10 * (characterNumber + 1) + (characterNumber * 10) + (((runIndex / 10) - 1) * (characterNumber + 1)) * 10)
+							+ "";
+				} else {
+					return (runIndex % 10 * (characterNumber + 1) + (characterNumber * 10)) + "";
+				}
+			}
+		} else {
+			return (runIndex * characterNumber) + "";
+		}
 	}
 }

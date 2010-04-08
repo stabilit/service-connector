@@ -16,19 +16,26 @@
  */
 package com.stabilit.sc.unit.test.echo;
 
+import java.util.Map;
+
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
-public class NoSizeLargeEchoTestCase extends SuperSessionTestCase {
+public class ClientPartLargeEchoTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
 	@Test
-	public void invokeTest() throws Exception {
+	public void invokeTestNotTransitive() throws Exception {
 		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
 		echoCall.setPartMessage(true);
 		for (int i = 0; i < 100; i++) {
@@ -36,6 +43,23 @@ public class NoSizeLargeEchoTestCase extends SuperSessionTestCase {
 			echoCall.setBody(s);
 			echoCall.setTransitive(false);
 			SCMP result = echoCall.invoke();
+
+			Map<String, String> header = result.getHeader();
+			Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
+			Assert.assertEquals("0", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+			Assert.assertNotNull(header.get(SCMPHeaderType.SESSION_ID.getName()));
+
+			if (i < 10) {
+				Assert.assertEquals("12", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+				Assert.assertEquals("12", header.get(SCMPHeaderType.SCMP_CALL_LENGTH.getName()));
+			} else {
+				Assert.assertEquals("13", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+				Assert.assertEquals("13", header.get(SCMPHeaderType.SCMP_CALL_LENGTH.getName()));
+			}
+			Assert.assertEquals(SCTest.getExpectedOffset(i, 12), header.get(SCMPHeaderType.SCMP_OFFSET
+					.getName()));
+			Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+			Assert.assertEquals(i + "", header.get(SCMPHeaderType.SEQUENCE_NR.getName()));
 		}
 		String s = "This is the end";
 		echoCall.setBody(s);
@@ -53,12 +77,27 @@ public class NoSizeLargeEchoTestCase extends SuperSessionTestCase {
 			String s = "Hello part " + i;
 			echoCall.setBody(s);
 			SCMP result = echoCall.invoke();
+
+			Map<String, String> header = result.getHeader();
+			Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
+			Assert.assertEquals("1", header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+			Assert.assertNotNull(header.get(SCMPHeaderType.SESSION_ID.getName()));
+
+			if (i < 10) {
+				Assert.assertEquals("12", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+				Assert.assertEquals("12", header.get(SCMPHeaderType.SCMP_CALL_LENGTH.getName()));
+			} else {
+				Assert.assertEquals("13", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+				Assert.assertEquals("13", header.get(SCMPHeaderType.SCMP_CALL_LENGTH.getName()));
+			}
+			Assert.assertEquals(SCTest.getExpectedOffset(i, 12), header.get(SCMPHeaderType.SCMP_OFFSET
+					.getName()));
+			Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+			Assert.assertEquals(i + "", header.get(SCMPHeaderType.SEQUENCE_NR.getName()));
 		}
 		String s = "This is the end";
 		echoCall.setBody(s);
 		echoCall.setPartMessage(false);
 		SCMP result = echoCall.invoke();
 	}
-
-
 }

@@ -31,4 +31,19 @@ public class MultipleEchoTestCase extends SingleEchoTestCase {
 		}
 		System.out.println(anzMsg/((System.currentTimeMillis() - startTime)/1000D) + " msg pro sec");
 	}
+	
+	@Test
+	public void invokeTestMultipleSession() throws Exception {	
+		deleteSession();		
+		long startTime = System.currentTimeMillis();
+		int anzMsg = 10000;
+		for (int i = 0; i < anzMsg; i++) {
+			this.index = i;
+			createSession();
+			super.invokeTest();
+			deleteSession();
+		}
+		System.out.println(anzMsg/((System.currentTimeMillis() - startTime)/1000D) + " msg pro sec");
+		createSession();
+	}
 }

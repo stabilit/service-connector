@@ -16,6 +16,8 @@
  */
 package com.stabilit.sc.unit.test.echo;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -23,10 +25,11 @@ import org.junit.Test;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
-public class SingleLargeEchoTestCase extends SuperSessionTestCase {
+public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
@@ -40,14 +43,23 @@ public class SingleLargeEchoTestCase extends SuperSessionTestCase {
 		}
 		echoCall.setBody(sb.toString());
 		echoCall.setTransitive(false);
-		
+
 		SCMP result = echoCall.invoke();
+
 		/*************************** verify echo session **********************************/
-		Assert.assertNotNull(result.getBody());
+		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
+		int bodyLength = sb.length() - start;
+		String lastPartBody = sb.substring(start);
+		Map<String, String> header = result.getHeader();
+		Assert.assertEquals(lastPartBody, result.getBody());
+		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
+		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
+	@Test
 	public void invokeTestTransitive() throws Exception {
 		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
 
@@ -57,10 +69,18 @@ public class SingleLargeEchoTestCase extends SuperSessionTestCase {
 		}
 		echoCall.setBody(sb.toString());
 		echoCall.setTransitive(true);
-		
+
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
-		Assert.assertNotNull(result.getBody());
+		/*************************** verify echo session **********************************/
+		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
+		int bodyLength = sb.length() - start;
+		String lastPartBody = sb.substring(start);
+		Map<String, String> header = result.getHeader();
+		Assert.assertEquals(lastPartBody, result.getBody());
+		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
+		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
+		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
