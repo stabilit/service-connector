@@ -23,7 +23,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class DeAllocateSessionCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(DeAllocateSessionCommand.class);
-	
+
 	public DeAllocateSessionCommand() {
 		this.commandValidator = new DeAllocateSessionCommandValidator();
 	}
@@ -40,8 +40,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
@@ -51,16 +50,15 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 
 		if (mapBean == null) {
 			log.debug("command error: session is no allocated");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.NOT_ALLOCATED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
 		simSessReg.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp
-				.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME
+				.getName()));
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
 	}
@@ -73,14 +71,12 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 	public class DeAllocateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmp
-						.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -97,5 +93,4 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

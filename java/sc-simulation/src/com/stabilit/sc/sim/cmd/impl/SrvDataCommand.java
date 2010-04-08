@@ -27,7 +27,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class SrvDataCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(SrvDataCommand.class);
-	
+
 	public SrvDataCommand() {
 		this.commandValidator = new SrvDataCommandValidator();
 	}
@@ -54,8 +54,8 @@ public class SrvDataCommand extends CommandAdapter {
 
 		if (mapBean == null) {
 			log.debug("command error: session not found");
-			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request
-					.getAttribute(SCMPHeaderType.SERVICE_NAME.getName()).toString());
+			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request.getAttribute(
+					SCMPHeaderType.SERVICE_NAME.getName()).toString());
 			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_CODE.getName(), SCMPErrorCode.SERVER_ERROR
 					.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_TEXT.getName(), SCMPErrorCode.SERVER_ERROR
@@ -67,11 +67,11 @@ public class SrvDataCommand extends CommandAdapter {
 
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request.getAttribute(SCMPHeaderType.SERVICE_NAME
-				.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request.getAttribute(
+				SCMPHeaderType.SERVICE_NAME.getName()).toString());
 		scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
-		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(SCMPHeaderType.COMPRESSION
-				.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
+				SCMPHeaderType.COMPRESSION.getName()).toString());
 
 		List<String> msg = (List<String>) mapBean.getAttribute("messageQueue");
 
@@ -102,7 +102,7 @@ public class SrvDataCommand extends CommandAdapter {
 	public class SrvDataCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {
@@ -130,7 +130,7 @@ public class SrvDataCommand extends CommandAdapter {
 
 				// compression
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
-				if(compression == null) {
+				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);

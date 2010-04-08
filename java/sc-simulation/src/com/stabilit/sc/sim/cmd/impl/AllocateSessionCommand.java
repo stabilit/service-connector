@@ -17,14 +17,13 @@ import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class AllocateSessionCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(AllocateSessionCommand.class);
-	
+
 	public AllocateSessionCommand() {
 		this.commandValidator = new AllocateSessionCommandValidator();
 	}
@@ -40,8 +39,7 @@ public class AllocateSessionCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
@@ -62,11 +60,9 @@ public class AllocateSessionCommand extends CommandAdapter {
 			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp
 					.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
 			scmpReply.setHeader(SCMPHeaderType.REJECT_SESSION.getName(), true);
-			scmpReply.setHeader(SCMPHeaderType.APP_ERROR_CODE.getName(),
-					4334591);
-			scmpReply
-					.setHeader(SCMPHeaderType.APP_ERROR_TEXT.getName(),
-							"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
+			scmpReply.setHeader(SCMPHeaderType.APP_ERROR_CODE.getName(), 4334591);
+			scmpReply.setHeader(SCMPHeaderType.APP_ERROR_TEXT.getName(),
+					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
@@ -80,14 +76,12 @@ public class AllocateSessionCommand extends CommandAdapter {
 	public class AllocateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 			Map<String, String> scmpHeader = scmp.getHeader();
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -97,13 +91,11 @@ public class AllocateSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader
-						.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader
-						.get(SCMPHeaderType.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderType.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
