@@ -5,11 +5,11 @@ import com.stabilit.sc.common.util.MapBean;
 
 public interface IRequest {
 
-	public SCMPMsgType getKey();
+	public SCMPMsgType getKey() throws Exception;
 
 	public IRequestContext getContext();
 		
-	public SCMP getSCMP();
+	public SCMP getSCMP() throws Exception;
 	
 	public String getSessionId();
 	

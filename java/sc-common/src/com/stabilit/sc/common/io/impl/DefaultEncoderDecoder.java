@@ -22,46 +22,57 @@ import com.stabilit.sc.common.io.SCMPHeaderType;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
-	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
-	public static final String ESCAPED_EQUAL_SIGN = "\\=";
-	public static final String EQUAL_SIGN = "=";
-	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
-
 	public DefaultEncoderDecoder() {
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object decode(InputStream is) throws IOException, ClassNotFoundException {
+	public Object decode(InputStream is) throws EncodingDecodingException {
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
 		Map<String, String> metaMap = new HashMap<String, String>();
 		// read heading line
-		String line = br.readLine(); // TODO
-		if (line == null || line.length() <= 0) {
-			return null;
-		}
+		String line;
 		SCMP scmp = null;
-		if (line.startsWith("EXC ")) {
-			scmp = new SCMPFault();
-		} else {
-			scmp = new SCMP();
-		}
-		while (true) {
-			line = br.readLine(); // TODO
-			if (line == null || line.length() <= 0) {
-				break;
-			}
-			Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
-			Matcher match = decodReg.matcher(line);
+		try {
+			// TODO performance
+			line = br.readLine();
 
-			if (match.matches() && match.groupCount() == 2) {
-				/********* escaping *************/
-				String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
-				String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
-				metaMap.put(key, value);
+			if (line == null || line.length() <= 0) {
+				return null;
 			}
+
+			Pattern decodHeadReg = Pattern.compile(HEADER_REGEX);
+			Matcher matchHeadline = decodHeadReg.matcher(line);
+
+			if (matchHeadline.matches() == false) {
+				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
+			}
+
+			if (line.startsWith("EXC ")) {
+				scmp = new SCMPFault();
+			} else {
+				scmp = new SCMP();
+			}
+			while (true) {
+				line = br.readLine(); // TODO
+				if (line == null || line.length() <= 0) {
+					break;
+				}
+				Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
+				Matcher match = decodReg.matcher(line);
+
+				if (match.matches() && match.groupCount() == 2) {
+					/********* escaping *************/
+					String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+					String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+					metaMap.put(key, value);
+				}
+			}
+		} catch (IOException e1) {
+			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
+
 		String scmpBodyType = metaMap.get(SCMPHeaderType.SCMP_BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderType.BODY_LENGTH.getName());
 		TYPE scmpBodyTypEnum = TYPE.getEnumType(scmpBodyType);
@@ -106,7 +117,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 	}
 
 	@Override
-	public void encode(OutputStream os, Object obj) throws Exception {
+	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
@@ -114,7 +125,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		// create meta part
 		StringBuilder sb = new StringBuilder();
 		String messageType = scmp.getMessageType(); // messageType is never null
-		if(messageType == null) {
+		if (messageType == null) {
 			throw new EncodingDecodingException("No messageType found (null)");
 		}
 		if (messageType.startsWith("REQ_")) {
@@ -143,85 +154,60 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			sb.append("\n");
 		}
 		Object body = scmp.getBody();
-		if (body != null) {
-			if (String.class == body.getClass()) {
-				String t = (String) body;
-				sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append(TYPE.STRING.getType());
-				sb.append("\n");
-				sb.append(SCMPHeaderType.BODY_LENGTH.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append(String.valueOf(t.length()));
-				sb.append("\n\n");
-				bw.write(sb.toString());
-				bw.write(t);
-				bw.flush();
-				return;
-			}
-			if (body instanceof IMessage) {
-				sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append(TYPE.MESSAGE.getType());
-				sb.append("\n\n");
-				bw.write(sb.toString());
-				bw.flush();
-				IMessage message = (IMessage) body;
-				message.encode(bw);
-				bw.flush();
-				return;
-			}
-			if (body instanceof byte[]) {
-				sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append(TYPE.ARRAY.getType());
-				sb.append("\n");
-				byte[] ba = (byte[]) body;
-				sb.append(SCMPHeaderType.BODY_LENGTH.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append(String.valueOf(ba.length));
-				sb.append("\n\n");
-				bw.write(sb.toString());
-				bw.flush();
-				os.write((byte[])ba);
-				os.flush();
-				return;
+		try {
+			if (body != null) {
+				if (String.class == body.getClass()) {
+					String t = (String) body;
+					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(EQUAL_SIGN);
+					sb.append(TYPE.STRING.getType());
+					sb.append("\n");
+					sb.append(SCMPHeaderType.BODY_LENGTH.getName());
+					sb.append(EQUAL_SIGN);
+					sb.append(String.valueOf(t.length()));
+					sb.append("\n\n");
+					bw.write(sb.toString());
+					bw.write(t);
+					bw.flush();
+					return;
+				}
+				if (body instanceof IMessage) {
+					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(EQUAL_SIGN);
+					sb.append(TYPE.MESSAGE.getType());
+					sb.append("\n\n");
+					bw.write(sb.toString());
+					bw.flush();
+					IMessage message = (IMessage) body;
+					message.encode(bw);
+					bw.flush();
+					return;
+				}
+				if (body instanceof byte[]) {
+					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(EQUAL_SIGN);
+					sb.append(TYPE.ARRAY.getType());
+					sb.append("\n");
+					byte[] ba = (byte[]) body;
+					sb.append(SCMPHeaderType.BODY_LENGTH.getName());
+					sb.append(EQUAL_SIGN);
+					sb.append(String.valueOf(ba.length));
+					sb.append("\n\n");
+					bw.write(sb.toString());
+					bw.flush();
+					os.write((byte[]) ba);
+					os.flush();
+					return;
+				} else {
+					throw new EncodingDecodingException("unsupported body type");
+				}
 			} else {
-				throw new IOException("unsupported body type");
+				bw.write(sb.toString());
+				bw.flush();
 			}
-		} else {
-			bw.write(sb.toString());
-			bw.flush();
+		} catch (IOException e1) {
+			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 		return;
-	}
-
-	public static enum TYPE {
-		UNDEFINED("undefined"), MESSAGE("msg"), ARRAY("array"), STRING("string");
-		private String type = "undefined";
-
-		private TYPE(String type) {
-			this.type = type;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public static TYPE getEnumType(String type) {
-			if (UNDEFINED.getType().equals(type)) {
-				return UNDEFINED;
-			}
-			if (STRING.getType().equals(type)) {
-				return STRING;
-			}
-			if (MESSAGE.getType().equals(type)) {
-				return MESSAGE;
-			}
-			if (ARRAY.getType().equals(type)) {
-				return ARRAY;
-			}
-			return UNDEFINED;
-		}
 	}
 }

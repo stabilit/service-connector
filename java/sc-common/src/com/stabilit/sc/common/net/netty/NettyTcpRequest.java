@@ -30,16 +30,12 @@ public class NettyTcpRequest implements IRequest {
 	}
 
 	@Override
-	public SCMP getSCMP() {
+	public SCMP getSCMP() throws Exception {
 		if (scmp == null) {
-			try {
-				load();
-			} catch (Exception e) {
-				return null;
-			}
+			load();
 		}
 		return scmp;
-	}	
+	}
 
 	@Override
 	public String getSessionId() {
@@ -47,15 +43,12 @@ public class NettyTcpRequest implements IRequest {
 	}
 
 	@Override
-	public SCMPMsgType getKey() {
+	public SCMPMsgType getKey() throws Exception {
 		SCMP scmp = this.getSCMP();
-		if (scmp == null) {
-			return null;
-		}
 		String messageType = scmp.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
 	}
-	
+
 	private void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
