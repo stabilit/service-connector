@@ -31,7 +31,7 @@ import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
  * @author JTraber
  * 
  */
-public abstract class SuperSessionTestCase extends SuperTestCase {
+public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 
 	protected SCMPSession scmpSession = null;
 
@@ -44,13 +44,13 @@ public abstract class SuperSessionTestCase extends SuperTestCase {
 		super.setup();
 		createSession();
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		deleteSession();
 		super.tearDown();
 	}
-	
+
 	public void createSession() throws Exception {
 		SCMPCreateSessionCall createSessionCall = (SCMPCreateSessionCall) SCMPCallFactory.CREATE_SESSION_CALL
 				.newInstance(client);
