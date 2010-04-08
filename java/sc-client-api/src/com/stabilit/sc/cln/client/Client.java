@@ -71,7 +71,7 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
-			while (scmp.isPart() == false ) {
+			while (scmp.isPart() == false) {
 				SCMP ret = clientConnection.sendAndReceive(scmp);
 				if (ret.isPart() == false) {
 					return ret;

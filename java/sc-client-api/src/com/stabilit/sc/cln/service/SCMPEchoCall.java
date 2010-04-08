@@ -94,5 +94,4 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 		this.call = scmp;
 		return;
 	}
-
 }

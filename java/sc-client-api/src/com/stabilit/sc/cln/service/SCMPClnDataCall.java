@@ -23,6 +23,7 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPPart;
 
 /**
  * @author JTraber
@@ -36,6 +37,20 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 
 	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
+	}
+	
+	@Override
+	public SCMP invoke() throws Exception {
+		super.invoke();
+		
+		while(this.result.isPart()) {
+			String messageInfo = this.call.getHeader(SCMPHeaderType.MESSAGE_INFO.getName());
+			this.call = new SCMPPart();
+			this.call.setHeader(this.result.getHeader());
+			this.call.setHeader(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
+			super.invoke();
+		}
+		return this.result;
 	}
 
 	@Override

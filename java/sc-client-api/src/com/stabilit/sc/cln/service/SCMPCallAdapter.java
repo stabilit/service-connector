@@ -78,7 +78,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	public SCMP invoke() throws Exception {
 		this.call.setMessageType(getMessageType().getRequestName());
 		this.result = client.sendAndReceive(this.call);
-
+		
 		if (this.result.isFault()) {
 			throw new SCMPServiceException((SCMPFault) result);
 		}

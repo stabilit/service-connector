@@ -33,6 +33,7 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.net.client.netty.http.NettyOperationListener;
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
 
 public class NettyTcpClientConnection extends ClientConnectionAdapter {
@@ -110,6 +111,8 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		content.readBytes(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
+		//TODO encoder ?? large
+		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}
