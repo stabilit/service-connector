@@ -1,5 +1,9 @@
 package com.stabilit.sc.common.io;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,6 +124,9 @@ public class SCMP implements Serializable {
 		}		
 		if (byte[].class == body.getClass()) {
 			return ((byte[])body).length;
+		}
+		if(File.class == body.getClass()) {
+			return (int) ((File)body).length();
 		}
 		return 0;
 	}

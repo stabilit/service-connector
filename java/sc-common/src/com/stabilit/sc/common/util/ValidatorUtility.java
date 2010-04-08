@@ -159,6 +159,10 @@ public class ValidatorUtility {
 	
 	public static void validateString(int minSize, String stringValue,
 			int maxSize) throws ValidationException {
+		if(stringValue == null) {
+			throw new ValidationException("stringValue must be set.");
+		}
+		
 		int length = stringValue.getBytes().length;
 		
 		if(length < minSize || length > maxSize) {

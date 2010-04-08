@@ -13,7 +13,7 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
@@ -25,20 +25,20 @@ import com.stabilit.sc.common.io.Session;
 
 /**
  * @author JTraber
- *
+ * 
  */
 public final class SessionRegistry extends Registry {
-	
+
 	private static SessionRegistry instance = new SessionRegistry();
-	
+
 	private SessionRegistry() {
-		log = Logger.getLogger(SessionRegistry.class);
+		log = Logger.getLogger("sessionRegistry." + SessionRegistry.class.getName());
 	}
-	
+
 	public static SessionRegistry getCurrentInstance() {
 		return instance;
-	}	
-	
+	}
+
 	public void add(Object key, Session session) {
 		this.put(key, session);
 	}

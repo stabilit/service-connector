@@ -41,7 +41,7 @@ public abstract class Registry implements IRegistry, IRegistryMXBean {
 		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();
 	}
 
-	public void put(Object key, MapBean<?> value) {
+	protected void put(Object key, MapBean<?> value) {
 		registryMap.put(key, value);
 		log.debug("Entry added: " + key + "=" + value);
 	}
