@@ -96,7 +96,7 @@ public class CreateSessionCommand extends CommandAdapter {
 	public class CreateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {

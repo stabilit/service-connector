@@ -49,7 +49,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class DeleteSessionCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(DeleteSessionCommand.class);
-	
+
 	public DeleteSessionCommand() {
 		this.commandValidator = new DeleteSessionCommandValidator();
 	}
@@ -65,8 +65,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
@@ -76,8 +75,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 
 		if (mapBean == null) {
 			log.debug("command error: no session found for id :" + sessionId);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.NO_SESSION);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -88,15 +86,15 @@ public class DeleteSessionCommand extends CommandAdapter {
 		try {
 			serviceRegistryItem.deallocate(scmp);
 		} catch (Exception e) {
-			log.debug("command error: deallocating failed for scmp: " + scmp );
+			log.debug("command error: deallocating failed for scmp: " + scmp);
 		}
-		
+
 		sessionRegistry.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp
-				.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME
+				.getName()));
 		response.setSCMP(scmpReply);
 	}
 
@@ -108,15 +106,13 @@ public class DeleteSessionCommand extends CommandAdapter {
 	public class DeleteSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 			Map<String, String> scmpHeader = scmp.getHeader();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}

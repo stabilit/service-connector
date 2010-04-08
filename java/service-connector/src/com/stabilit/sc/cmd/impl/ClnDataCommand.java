@@ -23,7 +23,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class ClnDataCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(ClnDataCommand.class);
-	
+
 	public ClnDataCommand() {
 		this.commandValidator = new ClnDataCommandValidator();
 	}
@@ -42,7 +42,7 @@ public class ClnDataCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
-		
+
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
@@ -61,7 +61,7 @@ public class ClnDataCommand extends CommandAdapter {
 	public class ClnDataCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {
@@ -88,7 +88,7 @@ public class ClnDataCommand extends CommandAdapter {
 
 				// compression
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
-				if(compression == null) {
+				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);

@@ -48,9 +48,11 @@ public class EchoCommand extends CommandAdapter {
 			if (scmp.isPart()) {
 				String messageId = scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());
 				String sequenceNr = scmp.getHeader(SCMPHeaderType.SEQUENCE_NR.getName());
+				String offset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
 				scmpReply = new SCMPPart();
 				scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), messageId);
 				scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), sequenceNr);
+				scmpReply.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), offset);
 			} else {
 				scmpReply = new SCMP();
 			}

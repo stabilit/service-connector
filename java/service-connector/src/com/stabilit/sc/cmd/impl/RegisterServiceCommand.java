@@ -29,7 +29,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class RegisterServiceCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(RegisterServiceCommand.class);
-	
+
 	public RegisterServiceCommand() {
 		this.commandValidator = new RegisterServiceCommandValidator();
 	}
@@ -45,7 +45,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
@@ -55,7 +55,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 		SCMP scmp = request.getSCMP();
 		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
-		
+
 		if (mapBean != null) {
 			log.debug("command error: service already registered");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
@@ -63,7 +63,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		
+
 		ServiceRegistryItem serviceRegistryItem = new ServiceRegistryItem(scmp, socketAddress);
 		serviceRegistry.add(serviceName, serviceRegistryItem);
 
@@ -81,7 +81,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 	public class RegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 			Map<String, String> scmpHeader = scmp.getHeader();
 

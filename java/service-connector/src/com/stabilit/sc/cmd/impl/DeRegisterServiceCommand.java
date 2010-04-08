@@ -25,7 +25,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 public class DeRegisterServiceCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(DeRegisterServiceCommand.class);
-	
+
 	public DeRegisterServiceCommand() {
 		this.commandValidator = new UnRegisterServiceCommandValidator();
 	}
@@ -41,19 +41,16 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response)
-			throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME
-				.getName());
+		String serviceName = scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
 			log.debug("command error: service not registered");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.NOT_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -72,14 +69,12 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 	public class UnRegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response)
-				throws SCMPValidatorException {
+		public void validate(IRequest request, IResponse response) throws Exception {
 			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
