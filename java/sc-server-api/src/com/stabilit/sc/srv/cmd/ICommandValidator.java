@@ -28,5 +28,5 @@ import com.stabilit.sc.common.io.IResponse;
  */
 public interface ICommandValidator {
 
-	public void validate(IRequest request, IResponse response) throws ValidatorException;
+	public void validate(IRequest request, IResponse response) throws Exception;
 }

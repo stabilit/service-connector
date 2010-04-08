@@ -28,13 +28,15 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.frame.Delimiters;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.net.netty.NettyHttpResponse;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -58,31 +60,40 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-
-		Channel channel = ctx.getChannel();
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		serverRegistry.setThreadLocal(channel.getParent().getId());
-		IRequest request = new NettyTcpRequest(event);
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
-		if (command == null) {
-			SCMP scmpReq = request.getSCMP();
-			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
-			scmpFault.setMessageType(scmpReq.getMessageType());
+		IRequest request = new NettyTcpRequest(event);
+		try {
+			Channel channel = ctx.getChannel();
+			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+			serverRegistry.setThreadLocal(channel.getParent().getId());
+
+			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+			if (command == null) {
+				SCMP scmpReq = request.getSCMP();
+				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+				scmpFault.setMessageType(scmpReq.getMessageType());
+				scmpFault.setLocalDateTime();
+				response.setSCMP(scmpFault);
+				writeResponse(response);
+				return;
+			}
+
+			ICommandValidator commandValidator = command.getCommandValidator();
+			try {
+				commandValidator.validate(request, response);
+				command.run(request, response);
+			} catch (Throwable ex) {
+				if (ex instanceof IFaultResponse) {
+					((IFaultResponse) ex).setFaultResponse(response);
+				}
+			}
+
+		//TODO error handling immer antworten?
+		} catch (Throwable th) {
+			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+			scmpFault.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
-			writeResponse(response);
-			return;
-		}
-
-		ICommandValidator commandValidator = command.getCommandValidator();
-		try {
-			commandValidator.validate(request, response);
-			command.run(request, response);
-		} catch (Throwable ex) {
-			if (ex instanceof IFaultResponse) {
-				((IFaultResponse) ex).setFaultResponse(response);
-			}
 		}
 		writeResponse(response);
 	}
