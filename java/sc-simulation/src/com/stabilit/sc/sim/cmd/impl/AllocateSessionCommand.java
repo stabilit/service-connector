@@ -13,6 +13,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
@@ -49,9 +50,9 @@ public class AllocateSessionCommand extends CommandAdapter {
 		SCMPReply scmpReply = new SCMPReply();
 
 		if (mapBean == null) {
-			MapBean<Object> newMapBean = new MapBean<Object>();
-			newMapBean.setAttribute("available", false);
-			simSessReg.put(sessionId, newMapBean);
+			Session session = new Session();
+			session.setAttribute("available", false);
+			simSessReg.add(sessionId, (Session) session);
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
 			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp

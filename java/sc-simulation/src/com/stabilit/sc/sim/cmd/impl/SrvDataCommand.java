@@ -1,5 +1,9 @@
 package com.stabilit.sc.sim.cmd.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +24,6 @@ import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -44,7 +47,7 @@ public class SrvDataCommand extends CommandAdapter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
@@ -72,6 +75,15 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
 		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
 				SCMPHeaderType.COMPRESSION.getName()).toString());
+
+		SCMP scmp = request.getSCMP();
+		if (scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName()) != null || "large".equals(scmp.getBody())) {
+			File file = new File(
+					"C:/stabilit/projects/EUREX/SC/dev/eclipse_workspace/sc-simulation/files/large.txt");
+			scmpReply.setBody(file);
+			response.setSCMP(scmpReply);
+			return;
+		}
 
 		List<String> msg = (List<String>) mapBean.getAttribute("messageQueue");
 
