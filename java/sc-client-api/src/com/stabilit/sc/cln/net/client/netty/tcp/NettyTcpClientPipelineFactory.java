@@ -22,6 +22,7 @@ import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -38,8 +39,7 @@ public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 		ChannelPipeline pipeline = Channels.pipeline();
 
 		NettyTcpClientResponseHandler responseHandler = new NettyTcpClientResponseHandler();
-		pipeline.addLast("framer", new DelimiterBasedFrameDecoder(SCMP.LARGE_MESSAGE_LIMIT + 4 << 10,
-				Delimiters.nulDelimiter()[0]));
+		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		pipeline.addLast("handler", responseHandler);
 		return pipeline;
 	}
