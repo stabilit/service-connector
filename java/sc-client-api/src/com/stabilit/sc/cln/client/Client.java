@@ -25,6 +25,8 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPComposite;
+import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 
 /**
@@ -77,6 +79,28 @@ public class Client implements IClient {
 					return ret;
 				}
 			}
+		}
+		if (scmp.isPart() == false) {
+			// we are a client, not an sc
+			SCMP ret = clientConnection.sendAndReceive(scmp);
+			if (ret == null) {
+				return ret;
+			}
+			if (ret.isPart() == false) {
+				return ret;
+			}
+			SCMPComposite scmpComposite = new SCMPComposite(scmp, (SCMPPart)ret);
+			while (true) {
+				ret = clientConnection.sendAndReceive(scmpComposite);
+				if (ret == null) {
+					return ret;
+				}
+				scmpComposite.add(ret);
+				if (ret.isPart() == false) {
+					break;
+				}
+			}
+			return scmpComposite;
 		}
 		return clientConnection.sendAndReceive(scmp);
 	}
