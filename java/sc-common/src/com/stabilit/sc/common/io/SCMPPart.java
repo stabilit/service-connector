@@ -40,5 +40,13 @@ public class SCMPPart extends SCMP {
 	public boolean isPart() {
 		return true;
 	}
+	
+	public void setMessageId(String messageId) {
+		this.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), messageId);
+	}
+	
+	public String getMessageId() {
+		return this.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());		
+	}
 
 }

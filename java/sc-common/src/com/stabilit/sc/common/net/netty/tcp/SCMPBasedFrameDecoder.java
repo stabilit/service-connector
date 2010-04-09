@@ -48,6 +48,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer)
 			throws Exception {
+		
 		switch (this.decodeState) {
 		case READY:
 			// read scmp headline

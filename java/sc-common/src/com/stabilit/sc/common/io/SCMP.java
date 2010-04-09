@@ -42,6 +42,10 @@ public class SCMP implements Serializable {
 	public boolean isPart() {
 		return false;
 	}
+	
+	public boolean isComposite() {
+		return false;
+	}
 
 	public void setHeader(String name, String value) {
 		header.put(name, value);

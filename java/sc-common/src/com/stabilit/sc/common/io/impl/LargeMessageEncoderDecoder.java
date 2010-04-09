@@ -2,8 +2,6 @@ package com.stabilit.sc.common.io.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +17,7 @@ import java.util.regex.Pattern;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IMessage;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderKey;
 import com.stabilit.sc.common.io.SCMPHeaderType;
@@ -26,7 +25,7 @@ import com.stabilit.sc.common.io.SCMPPart;
 
 public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
-	public static final String HEADER_REGEX = "(RES|REQ|PRQ|PRS|EXC) / .*";
+	public static final String HEADER_REGEX = "(RES|REQ|PRQ|PRS|EXC) .*";
 
 	// identifies messageContext when message is large and chunked
 	public static Integer lastMessageID = 0;
@@ -133,23 +132,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
-		// try to get message offset
-		String scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
-		String scmpSequenceNr = scmp.getHeader(SCMPHeaderType.SEQUENCE_NR.getName());
-		if (scmpOffset == null) {
-			scmpOffset = "0";
-			scmpSequenceNr = "0";
-			scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
-			scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), "0");
-			synchronized (LargeMessageEncoderDecoder.class) {
-				scmp.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), lastMessageID++);
-			}
-		}
-		int scmpOffsetInt = Integer.parseInt(scmpOffset);
-		int scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
-		Map<String, String> metaMap = scmp.getHeader();
-		// create meta part
-		StringBuilder sb = new StringBuilder();
 		String messageType = scmp.getMessageType(); // messageType is never null
 		if (messageType == null) {
 			throw new EncodingDecodingException("No messageType found (null)");
@@ -157,7 +139,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		// message chunking
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
 		if (messageType.startsWith("REQ_")) {
-			if (scmp.isPart()) {
+			if (scmp.isPart() || scmp.isComposite()) {
 				headerKey = SCMPHeaderKey.PRQ;
 			} else {
 				headerKey = SCMPHeaderKey.REQ;
@@ -170,6 +152,30 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				headerKey = SCMPHeaderKey.PRS;
 			}
 		}
+		int scmpOffsetInt = 0;
+		int scmpSequenceNrInt = 0;
+		if (scmp.isComposite() == false) {
+			// try to get message offset
+			String scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
+			String scmpSequenceNr = scmp.getHeader(SCMPHeaderType.SEQUENCE_NR.getName());
+			if (scmpOffset == null) {
+				scmpOffset = "0";
+				scmpSequenceNr = "0";
+				scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
+				scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), "0");
+				synchronized (LargeMessageEncoderDecoder.class) {
+					scmp.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), lastMessageID++);
+				}
+			}
+			scmpOffsetInt = Integer.parseInt(scmpOffset);
+			scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
+		} else {
+			scmpOffsetInt =  ((SCMPComposite)scmp).getOffset();
+			scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), String.valueOf(scmpOffsetInt));
+		}
+		Map<String, String> metaMap = scmp.getHeader();
+		// create meta part
+		StringBuilder sb = new StringBuilder();
 
 		// TODO ?? needs to be removed will be set 10 lines down
 		metaMap.remove(SCMPHeaderType.SCMP_BODY_TYPE.getName());
@@ -224,7 +230,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					int messageLength = sb.length() + messagePartLength;
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
-					if (scmp.isPart()) {
+					if (scmp.isPart() == false) {
 						bw.write(t, scmpOffsetInt, messagePartLength);
 					} else {
 						bw.write(t, 0, messagePartLength);
@@ -236,55 +242,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					bw.flush();
 					return;
 				}
-				// if (File.class == body.getClass()) {
-				// sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
-				// sb.append(EQUAL_SIGN);
-				// sb.append(TYPE.STRING.getType());
-				// sb.append("\n");
-				// // message chunking
-				// int bodyLength = scmp.getBodyLength();
-				// int messagePartLength = bodyLength;
-				// if (scmp.isPart() == false) {
-				// if (messagePartLength > SCMP.LARGE_MESSAGE_LIMIT) {
-				// messagePartLength = (bodyLength - scmpOffsetInt) > SCMP.LARGE_MESSAGE_LIMIT ?
-				// SCMP.LARGE_MESSAGE_LIMIT
-				// : bodyLength - scmpOffsetInt;
-				// if ("REQ".equals(headLineKey)) {
-				// if (bodyLength > messagePartLength + scmpOffsetInt) {
-				// headLineKey = "PRQ";
-				// }
-				// }
-				// }
-				// }
-				// sb.append(SCMPHeaderType.BODY_LENGTH.getName());
-				// sb.append(EQUAL_SIGN);
-				// sb.append(String.valueOf(messagePartLength));
-				// sb.append("\n");
-				// sb.append(SCMPHeaderType.SCMP_CALL_LENGTH.getName());
-				// sb.append(EQUAL_SIGN);
-				// sb.append(String.valueOf(bodyLength));
-				// sb.append("\n\n");
-				// int messageLength = sb.length() + ba.length;
-				// writeHeadLine(bw, headerKey, messageLength);
-				// bw.write(sb.toString());
-				//
-				// BufferedReader br = new BufferedReader(new FileReader((File) body));
-				// char[] cbuf = new char[SCMP.LARGE_MESSAGE_LIMIT];
-				//
-				// if (scmp.isPart()) {
-				// br.read(cbuf, scmpOffsetInt, messagePartLength);
-				// bw.write(cbuf, scmpOffsetInt, messagePartLength);
-				// } else {
-				// br.read(cbuf, 0, messagePartLength);
-				// bw.write(cbuf, 0, messagePartLength);
-				// }
-				// scmpOffsetInt += messagePartLength;
-				// scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffsetInt);
-				// scmpSequenceNrInt++;
-				// scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmpSequenceNrInt);
-				// bw.flush();
-				// return;
-				// }
+
 				if (byte[].class == body.getClass()) {
 					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
 					sb.append(EQUAL_SIGN);
@@ -315,13 +273,13 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
 					bw.flush();
-					if (scmp.isPart()) {
+					if (scmp.isPart() == false) {
 						os.write((byte[]) ba, scmpOffsetInt, messagePartLength);
 					} else {
 						os.write((byte[]) ba, 0, messagePartLength);
 					}
-					scmpOffset += messagePartLength;
-					scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
+					scmpOffsetInt += messagePartLength;
+					scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffsetInt);
 					scmpSequenceNrInt++;
 					scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmpSequenceNrInt);
 					os.flush();
