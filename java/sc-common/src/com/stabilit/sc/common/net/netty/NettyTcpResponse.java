@@ -34,8 +34,6 @@ public class NettyTcpResponse implements IResponse {
 	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	   this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
 	   encoderDecoder.encode(baos, scmp);
-	   // TODO verify
-	   baos.write(Delimiters.nulDelimiter()[0].toByteBuffer().array());
 	   byte[] buf = baos.toByteArray();
 	   return ChannelBuffers.copiedBuffer(buf);
 	}

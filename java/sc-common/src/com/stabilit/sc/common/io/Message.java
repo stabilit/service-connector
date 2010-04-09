@@ -19,6 +19,8 @@ public class Message implements IMessage {
 	private SCMPMsgType key;
 	
 	protected Map<String, Object> attrMap;
+	
+	protected StringBuilder encodedBuilder;
 
 	public Message() {
 		this(SCMPMsgType.UNDEFINED);
@@ -27,6 +29,7 @@ public class Message implements IMessage {
 	public Message(SCMPMsgType key) {
 		this.key = key;
 		this.attrMap = new HashMap<String, Object>();
+		this.encodedBuilder = null;
 	}
 
 	@Override
@@ -41,13 +44,20 @@ public class Message implements IMessage {
 
 	@Override
 	public void encode(BufferedWriter bw) throws IOException {
+		if (this.encodedBuilder == null) {
+		   this.encodedBuilder = new StringBuilder();
+		   encode(this.encodedBuilder);
+		}
+		bw.write(this.encodedBuilder.toString());		
+	}
+	
+	private void encode(StringBuilder eb) {		
 		Map<String, Object> attrMap = this.getAttributeMap();
 		Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
-		StringBuilder mb = new StringBuilder();
-		mb.append(IMessage.class.getName());
-		mb.append(DefaultEncoderDecoder.EQUAL_SIGN);
-		mb.append(this.getClass().getName());
-		mb.append("\n");
+		eb.append(IMessage.class.getName());
+		eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
+		eb.append(this.getClass().getName());
+		eb.append("\n");
 		for (Entry<String, Object> entry : attrEntrySet) {
 			String key = entry.getKey();
 			String value = entry.getValue().toString();
@@ -55,14 +65,13 @@ public class Message implements IMessage {
 			key = key.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
 			value = value.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
 
-			mb.append(key);
-			mb.append(DefaultEncoderDecoder.EQUAL_SIGN);
-			mb.append(value);
-			mb.append("\n");
+			eb.append(key);
+			eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
+			eb.append(value);
+			eb.append("\n");
 		}
-		bw.write(mb.toString());		
 	}
-	
+
 	@Override
 	public void decode(BufferedReader br) throws IOException {
 		while (true) {
@@ -107,5 +116,14 @@ public class Message implements IMessage {
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);
+	}
+
+	@Override
+	public int getLength() {
+		if (this.encodedBuilder == null) {
+			this.encodedBuilder = new StringBuilder();
+			encode(this.encodedBuilder);
+		}
+		return this.encodedBuilder.length();
 	}
 }

@@ -7,7 +7,7 @@ import com.stabilit.sc.common.io.impl.EncodingDecodingException;
 
 public interface IEncoderDecoder {
 
-	public static final String HEADER_REGEX = "(RES|REQ|EXC) / .*";
+	public static final String HEADER_REGEX = "(RES|REQ|EXC) .*";
 	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
 	public static final String ESCAPED_EQUAL_SIGN = "\\=";
 	public static final String EQUAL_SIGN = "=";

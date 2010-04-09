@@ -19,4 +19,6 @@ public interface IMessage {
 	public void encode(BufferedWriter bw) throws IOException;
 	
 	public void decode(BufferedReader br) throws IOException;
+
+	public int getLength();
 }
