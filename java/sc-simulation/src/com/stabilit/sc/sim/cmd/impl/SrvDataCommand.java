@@ -1,9 +1,5 @@
 package com.stabilit.sc.sim.cmd.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +15,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
@@ -53,7 +50,7 @@ public class SrvDataCommand extends CommandAdapter {
 
 		String sessionId = request.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
-		SCMPReply scmpReply = new SCMPReply();
+		SCMP scmpReply = new SCMPReply();
 
 		if (mapBean == null) {
 			log.debug("command error: session not found");
@@ -68,20 +65,45 @@ public class SrvDataCommand extends CommandAdapter {
 			return;
 		}
 
+		SCMP scmp = request.getSCMP();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request.getAttribute(
-				SCMPHeaderType.SERVICE_NAME.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName()).toString());
 		scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
-		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
-				SCMPHeaderType.COMPRESSION.getName()).toString());
+//		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
+//				SCMPHeaderType.COMPRESSION.getName()).toString());
 
-		SCMP scmp = request.getSCMP();
-		if (scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName()) != null || "large".equals(scmp.getBody())) {
-			File file = new File(
-					"C:/stabilit/projects/EUREX/SC/dev/eclipse_workspace/sc-simulation/files/large.txt");
-			scmpReply.setBody(file);
-			response.setSCMP(scmpReply);
+		int scmpOffsetInt = 0;
+		String scmpOffset = null;
+		if (scmp.isPart()) {
+		    scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
+		    scmpOffsetInt = Integer.parseInt(scmpOffset);
+		}
+		
+		if ("large".equals(scmp.getBody()) || scmp.isPart()) {
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			for (i = scmpOffsetInt; i < 1000000; i++) {				
+				if (sb.length() > 60000) {
+					break;
+				}
+				sb.append(i);
+			}
+			if (i >= 1000000) {
+				scmpReply.setBody(sb.toString());
+				response.setSCMP(scmpReply);			
+			} else {
+				scmpReply = new SCMPPart();				
+				scmpReply.setMessageType(getKey().getResponseName());
+				scmpReply.setSessionId(sessionId);
+				scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName()).toString());
+				scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
+				if (scmp.isPart()) {
+				    scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName()).toString());
+				}
+				scmpReply.setBody(sb.toString());
+				response.setSCMP(scmpReply);			
+			}
 			return;
 		}
 
@@ -117,6 +139,9 @@ public class SrvDataCommand extends CommandAdapter {
 		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 
+			if (scmp.isPart()) {
+				return;
+			}
 			try {
 				Map<String, String> scmpHeader = scmp.getHeader();
 
