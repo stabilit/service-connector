@@ -34,12 +34,12 @@ import com.stabilit.sc.common.io.SCMPHeaderType;
  */
 public class ValidatorUtility {
 
-	private static final String SCMP_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
+	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/??)+";
 
-	public static void validateSCMPVersion(String currenSCMPVersion,
+	public static void validateSCVersion(String currenSCMPVersion,
 			String incomingSCMPVersion) throws ValidationExcpetion {
-		Pattern pattern = Pattern.compile(SCMP_VERSION_REGEX);
+		Pattern pattern = Pattern.compile(SC_VERSION_REGEX);
 
 		Matcher matchCurr = pattern.matcher(currenSCMPVersion);
 		matchCurr.find();
@@ -56,10 +56,10 @@ public class ValidatorUtility {
 		if (incReleaseAndVersionNr <= currReleaseAndVersionNr) {
 			if (incReleaseAndVersionNr == currReleaseAndVersionNr
 					&& incRevisionNr > currRevisionNr) {
-				throw new ValidationExcpetion("SCMPVersion not compatible.");
+				throw new ValidationExcpetion("SCVersion not compatible.");
 			}
 		} else {
-			throw new ValidationExcpetion("SCMPVersion not compatible.");
+			throw new ValidationExcpetion("SCVersion not compatible.");
 		}
 	}
 

@@ -31,4 +31,8 @@ public class SCMPReply extends SCMP {
 		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
+	@Override
+	public boolean isReply() {
+		return true;
+	}	
 }

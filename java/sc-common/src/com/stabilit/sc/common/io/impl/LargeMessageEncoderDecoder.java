@@ -132,26 +132,41 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
-		String messageType = scmp.getMessageType(); // messageType is never null
-		if (messageType == null) {
-			throw new EncodingDecodingException("No messageType found (null)");
-		}
+//		String messageType = scmp.getMessageType(); // messageType is never null
+//		if (messageType == null) {
+//			throw new EncodingDecodingException("No messageType found (null)");
+//		}
 		// message chunking
-		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
-		if (messageType.startsWith("REQ_")) {
-			if (scmp.isPart() || scmp.isComposite()) {
-				headerKey = SCMPHeaderKey.PRQ;
-			} else {
-				headerKey = SCMPHeaderKey.REQ;
 
-			}
-		} else if (messageType.startsWith("RES_")) {
+		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
+		if (scmp.isReply()) {
 			if (scmp.isFault()) {
 				headerKey = SCMPHeaderKey.EXC;
 			} else {
 				headerKey = SCMPHeaderKey.PRS;
 			}
+		} else {
+			if (scmp.isPart() || scmp.isComposite()) {
+				headerKey = SCMPHeaderKey.PRQ;
+			} else {
+				headerKey = SCMPHeaderKey.REQ;
+			}
 		}
+		// SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
+		// if (messageType.startsWith("REQ_")) {
+		// if (scmp.isPart() || scmp.isComposite()) {
+		// headerKey = SCMPHeaderKey.PRQ;
+		// } else {
+		// headerKey = SCMPHeaderKey.REQ;
+		//
+		// }
+		// } else if (messageType.startsWith("RES_")) {
+		// if (scmp.isFault()) {
+		// headerKey = SCMPHeaderKey.EXC;
+		// } else {
+		// headerKey = SCMPHeaderKey.PRS;
+		// }
+		// }
 		int scmpOffsetInt = 0;
 		int scmpSequenceNrInt = 0;
 		if (scmp.isComposite() == false) {
@@ -170,7 +185,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			scmpOffsetInt = Integer.parseInt(scmpOffset);
 			scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
 		} else {
-			scmpOffsetInt =  ((SCMPComposite)scmp).getOffset();
+			scmpOffsetInt = ((SCMPComposite) scmp).getOffset();
 			scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), String.valueOf(scmpOffsetInt));
 		}
 		Map<String, String> metaMap = scmp.getHeader();

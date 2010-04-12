@@ -37,6 +37,10 @@ public class SCMP implements Serializable {
 	public boolean isFault() {
 		return false;
 	}
+	
+	public boolean isReply() {
+		return false;
+	}
 
 	public boolean isPart() {
 		return false;

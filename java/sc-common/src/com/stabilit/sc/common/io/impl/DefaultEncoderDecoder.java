@@ -125,20 +125,30 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-		String messageType = scmp.getMessageType(); // messageType is never null
-		if (messageType == null) {
-			throw new EncodingDecodingException("No messageType found (null)");
-		}
+		
+//		String messageType = scmp.getMessageType(); // messageType is never null
+//		if (messageType == null) {
+//			throw new EncodingDecodingException("No messageType found (null)");
+//		}
+		
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
-		if (messageType.startsWith("REQ_")) {
-			headerKey = SCMPHeaderKey.REQ;
-		} else if (messageType.startsWith("RES_")) {
-			if (scmp.isFault()) {
+		if(scmp.isReply()) {
+			headerKey = SCMPHeaderKey.RES;
+			if(scmp.isFault()) {
 				headerKey = SCMPHeaderKey.EXC;
-			} else {
-				headerKey = SCMPHeaderKey.RES;
 			}
+		} else {
+			headerKey = SCMPHeaderKey.REQ;
 		}
+//		if (messageType.startsWith("REQ_")) {
+//			headerKey = SCMPHeaderKey.REQ;
+//		} else if (messageType.startsWith("RES_")) {
+//			if (scmp.isFault()) {
+//				headerKey = SCMPHeaderKey.EXC;
+//			} else {
+//				headerKey = SCMPHeaderKey.RES;
+//			}
+//		}
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
 
 		for (Entry<String, String> entry : entrySet) {
@@ -219,7 +229,8 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		return;
 	}
 
-	private void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageLength) throws IOException {
+	private void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageLength)
+			throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(" /s=");
 		bw.write(String.valueOf(messageLength));

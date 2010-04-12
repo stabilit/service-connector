@@ -63,7 +63,6 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 			int readableBytes = buffer.readableBytes();
 			byte[] readableBuffer = new byte[readableBytes];
 			buffer.getBytes(0, readableBuffer);
-			System.out.println(new String(readableBuffer));
 			if (readableBytes >= this.scmpLength + this.scmpHeadlineLength) {
 				this.decodeState = DecodeState.READY;
 				return buffer.readBytes(this.scmpLength + this.scmpHeadlineLength);
@@ -93,7 +92,6 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 
 				int startIndex = 0;
 				int endIndex = 0;
-				System.out.println(new String(headLine));
 				label:
 				for (startIndex = 0; startIndex < headLine.length; startIndex++) {
 
@@ -106,7 +104,6 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 								if (headLine[endIndex] == '&' || headLine[endIndex] == ' ')
 									break label;
 							}
-
 						}
 					}
 				}

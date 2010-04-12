@@ -29,6 +29,8 @@ import com.stabilit.sc.common.util.DateTimeUtility;
  */
 public class SCMPFault extends SCMP {
 
+	private static final long serialVersionUID = -4041668035605907106L;
+
 	public SCMPFault() {
 		super();
 	}
@@ -45,7 +47,13 @@ public class SCMPFault extends SCMP {
 		header.put(SCMPHeaderType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 	
+	@Override
 	public boolean isFault() {
+		return true;
+	}
+
+	@Override
+	public boolean isReply() {
 		return true;
 	}
 
