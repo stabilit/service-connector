@@ -58,6 +58,6 @@ public class SCMPDeleteSessionCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_DELETE_SESSION;
+		return SCMPMsgType.DELETE_SESSION;
 	}
 }

@@ -65,6 +65,6 @@ public class SCMPCreateSessionCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_CREATE_SESSION;
+		return SCMPMsgType.CREATE_SESSION;
 	}
 }

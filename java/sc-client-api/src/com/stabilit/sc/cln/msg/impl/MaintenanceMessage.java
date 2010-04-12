@@ -5,7 +5,7 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class MaintenanceMessage extends Message {
 
-	public static SCMPMsgType ID = SCMPMsgType.REQ_MAINTENANCE;
+	public static SCMPMsgType ID = SCMPMsgType.MAINTENANCE;
 
 	public MaintenanceMessage() {
 		super(ID);

@@ -55,6 +55,6 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_CLN_DATA;
+		return SCMPMsgType.CLN_DATA;
 	}
 }

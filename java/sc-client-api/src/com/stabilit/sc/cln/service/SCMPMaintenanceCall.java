@@ -43,6 +43,6 @@ public class SCMPMaintenanceCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_MAINTENANCE;
+		return SCMPMsgType.MAINTENANCE;
 	}
 }

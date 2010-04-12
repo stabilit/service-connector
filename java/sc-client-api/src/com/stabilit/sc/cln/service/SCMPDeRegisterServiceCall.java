@@ -48,6 +48,6 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_DEREGISTER_SERVICE;
+		return SCMPMsgType.DEREGISTER_SERVICE;
 	}
 }

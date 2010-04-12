@@ -43,6 +43,6 @@ public class SCMPDisconnectCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_DISCONNECT;
+		return SCMPMsgType.DISCONNECT;
 	}
 }

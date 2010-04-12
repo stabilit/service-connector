@@ -50,12 +50,6 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <realization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.net.client.netty.tcp.NettyTcpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.cln.client.IClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/client/IClientConnection.java" binary="false"/>  
-  </realization>  
   <association>    
     <source project="sc-client-api" name="com.stabilit.sc.cln.client.Client" 
       file="/sc-client-api/src/com/stabilit/sc/cln/client/Client.java" binary="false" navigable="false">      
@@ -71,12 +65,6 @@
       file="/sc-client-api/src/com/stabilit/sc/cln/client/Client.java" binary="false"/>    
     <target project="sc-client-api" name="com.stabilit.sc.cln.client.IClient" 
       file="/sc-client-api/src/com/stabilit/sc/cln/client/IClient.java" binary="false"/>  
-  </realization>  
-  <realization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.net.client.netty.http.NettyHttpClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/net/client/netty/http/NettyHttpClientConnection.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.cln.client.IClientConnection" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/client/IClientConnection.java" binary="false"/>  
   </realization>  
   <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true"/>    

@@ -63,7 +63,7 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 	
 	public void setTransitive(boolean value) {

@@ -73,6 +73,6 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_CONNECT;
+		return SCMPMsgType.CONNECT;
 	}
 }
