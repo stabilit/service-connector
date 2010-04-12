@@ -89,7 +89,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		//TODO error handling immer antworten?
 		} catch (Throwable th) {
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.REQ_CONNECT.getResponseName());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
