@@ -28,7 +28,6 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
@@ -36,7 +35,6 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.net.netty.NettyHttpResponse;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
