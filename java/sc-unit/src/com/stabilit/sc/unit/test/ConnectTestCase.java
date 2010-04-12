@@ -75,7 +75,7 @@ public class ConnectTestCase extends SuperTestCase {
 		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
 						SCMPHeaderType.LOCAL_DATE_TIME.getName()))
-				+ ";keepAliveTimeout=30,360;scmpVersion=1.0-00;";
+				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
 		String scEntry = (String) mainMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
