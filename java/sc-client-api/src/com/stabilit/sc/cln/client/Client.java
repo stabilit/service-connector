@@ -21,6 +21,7 @@ package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
+import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
@@ -53,7 +54,7 @@ public class Client implements IClient {
 	}
 
 	@Override
-	public void connect() throws ConnectionException {
+	public void connect() throws Exception {
 		clientConnection.connect();
 	}
 
@@ -84,7 +85,7 @@ public class Client implements IClient {
 			// we are a client, not an sc
 			SCMP ret = clientConnection.sendAndReceive(scmp);
 			if (ret == null) {
-				return ret;
+				throw new SCMPServiceException("result scmp is null");
 			}
 			if (ret.isPart() == false) {
 				return ret;

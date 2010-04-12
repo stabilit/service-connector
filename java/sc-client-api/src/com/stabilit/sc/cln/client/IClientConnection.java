@@ -32,7 +32,7 @@ public interface IClientConnection extends IConnection {
 	/**
 	 * @throws ConnectionException
 	 */
-	void connect() throws ConnectionException;
+	void connect() throws Exception;
 	
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 	

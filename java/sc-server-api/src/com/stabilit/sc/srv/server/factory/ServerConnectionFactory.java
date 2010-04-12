@@ -4,6 +4,7 @@ import com.stabilit.sc.common.factory.Factory;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.srv.net.server.netty.http.NettyHttpServerConnection;
 import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpServerConnection;
+import com.stabilit.sc.srv.net.server.nio.tcp.NioServer;
 import com.stabilit.sc.srv.server.IServerConnection;
 
 public class ServerConnectionFactory extends Factory {
@@ -16,6 +17,10 @@ public class ServerConnectionFactory extends Factory {
 		// jboss netty tcp server
 		IServerConnection nettyTCPServer = new NettyTcpServerConnection();
 		add("netty.tcp", nettyTCPServer);
+		
+		// nioServer
+		IServerConnection nioServer = new NioServer();
+		add("nio.tcp", nioServer);
 	}
 
 	public IServerConnection newInstance() {

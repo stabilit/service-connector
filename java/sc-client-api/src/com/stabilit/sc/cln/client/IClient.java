@@ -33,7 +33,7 @@ public interface IClient extends IFactoryable {
 
 	public void destroy();
 
-	public void connect() throws ConnectionException;
+	public void connect() throws Exception;
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 

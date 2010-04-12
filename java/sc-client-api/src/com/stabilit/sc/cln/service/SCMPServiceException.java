@@ -33,6 +33,13 @@ public class SCMPServiceException extends Exception {
 		this.fault = fault;
 	}
 
+	/**
+	 * @param string
+	 */
+	public SCMPServiceException(String string) {
+		super(string);
+	}
+
 	public SCMPFault getFault() {
 		return fault;
 	}
