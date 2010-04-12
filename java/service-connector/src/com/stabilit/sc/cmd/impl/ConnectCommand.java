@@ -83,9 +83,9 @@ public class ConnectCommand extends CommandAdapter {
 
 				Map<String, String> scmpHeader = scmp.getHeader();
 				// scmpVersion
-				String scmpVersion = (String) scmpHeader.get(SCMPHeaderType.SCMP_VERSION.getName());
-				ValidatorUtility.validateSCMPVersion(SCMP.VERSION, scmpVersion);
-				request.setAttribute(SCMPHeaderType.SCMP_VERSION.getName(), scmpVersion);
+				String scVersion = (String) scmpHeader.get(SCMPHeaderType.SC_VERSION.getName());
+				ValidatorUtility.validateSCMPVersion(SCMP.SC_VERSION, scVersion);
+				request.setAttribute(SCMPHeaderType.SC_VERSION.getName(), scVersion);
 
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
 				if(compression == null) {
