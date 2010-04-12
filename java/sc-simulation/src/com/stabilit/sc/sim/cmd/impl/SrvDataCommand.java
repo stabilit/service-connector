@@ -34,7 +34,7 @@ public class SrvDataCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_SRV_DATA;
+		return SCMPMsgType.SRV_DATA;
 	}
 
 	@Override

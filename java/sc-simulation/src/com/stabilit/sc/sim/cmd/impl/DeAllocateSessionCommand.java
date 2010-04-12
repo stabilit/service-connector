@@ -30,7 +30,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_DEALLOCATE_SESSION;
+		return SCMPMsgType.DEALLOCATE_SESSION;
 	}
 
 	@Override

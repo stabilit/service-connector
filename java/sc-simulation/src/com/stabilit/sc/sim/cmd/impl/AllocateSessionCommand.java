@@ -31,7 +31,7 @@ public class AllocateSessionCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_ALLOCATE_SESSION;
+		return SCMPMsgType.ALLOCATE_SESSION;
 	}
 
 	@Override
