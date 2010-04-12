@@ -52,7 +52,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	}
 
 	public void setVersion(String version) {
-		call.setHeader(SCMPHeaderType.SCMP_VERSION.getName(), version);
+		call.setHeader(SCMPHeaderType.SC_VERSION.getName(), version);
 	}
 
 	public void setCompression(boolean compression) {
