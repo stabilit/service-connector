@@ -302,10 +302,10 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 	private void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageLength)
 			throws IOException {
 		bw.write(headerKey.toString());
-		bw.write(" /scl=");
+		bw.write(" /s=");
 		bw.write(String.valueOf(messageLength));
 		bw.write("& SCMP/");
-		bw.append(SCMP.VERSION);
+		bw.append(SCMP.SCMP_VERSION);
 		bw.append("\n");
 	}
 }

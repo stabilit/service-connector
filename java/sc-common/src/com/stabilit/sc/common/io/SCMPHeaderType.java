@@ -26,7 +26,7 @@ package com.stabilit.sc.common.io;
 public enum SCMPHeaderType {
 
 	MSG_TYPE("msgType"),
-	SCMP_VERSION("scmpVersion"),
+	SC_VERSION("scVersion"),
 	COMPRESSION("compression"),
 	LOCAL_DATE_TIME("localDateTime"),
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),

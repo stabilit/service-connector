@@ -99,10 +99,9 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 
 					if (headLine[startIndex] == '/' || headLine[startIndex] == '&') {
 
-						if (headLine[startIndex + 1] == 's' && headLine[startIndex + 2] == 'c'
-								&& headLine[startIndex + 3] == 'l' && headLine[startIndex + 4] == '=') {
+						if (headLine[startIndex + 1] == 's' && headLine[startIndex + 2] == '=') {
 
-							startIndex += 5;
+							startIndex += 3;
 							for (endIndex = startIndex; endIndex < headLine.length; endIndex++) {
 								if (headLine[endIndex] == '&' || headLine[endIndex] == ' ')
 									break label;
