@@ -61,6 +61,6 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_SRV_DATA;
+		return SCMPMsgType.SRV_DATA;
 	}
 }

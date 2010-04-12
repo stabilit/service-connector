@@ -36,7 +36,7 @@ public class CreateSessionCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_CREATE_SESSION;
+		return SCMPMsgType.CREATE_SESSION;
 	}
 
 	@Override

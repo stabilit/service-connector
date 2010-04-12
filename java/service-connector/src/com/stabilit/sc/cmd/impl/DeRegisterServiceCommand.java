@@ -32,7 +32,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_DEREGISTER_SERVICE;
+		return SCMPMsgType.DEREGISTER_SERVICE;
 	}
 
 	@Override

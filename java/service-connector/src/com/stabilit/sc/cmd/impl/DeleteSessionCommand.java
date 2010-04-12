@@ -56,7 +56,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_DELETE_SESSION;
+		return SCMPMsgType.DELETE_SESSION;
 	}
 
 	@Override

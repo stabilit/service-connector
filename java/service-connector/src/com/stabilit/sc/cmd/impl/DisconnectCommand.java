@@ -29,7 +29,7 @@ public class DisconnectCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_DISCONNECT;
+		return SCMPMsgType.DISCONNECT;
 	}
 
 	@Override

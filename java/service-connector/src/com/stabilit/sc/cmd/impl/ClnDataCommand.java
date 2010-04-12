@@ -30,7 +30,7 @@ public class ClnDataCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_CLN_DATA;
+		return SCMPMsgType.CLN_DATA;
 	}
 
 	@Override

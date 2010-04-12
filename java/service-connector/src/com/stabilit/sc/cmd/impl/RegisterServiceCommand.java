@@ -36,7 +36,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_REGISTER_SERVICE;
+		return SCMPMsgType.REGISTER_SERVICE;
 	}
 
 	@Override

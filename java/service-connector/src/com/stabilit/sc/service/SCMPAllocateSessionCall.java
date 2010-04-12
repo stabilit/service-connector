@@ -57,6 +57,6 @@ public class SCMPAllocateSessionCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_ALLOCATE_SESSION;
+		return SCMPMsgType.ALLOCATE_SESSION;
 	}
 }

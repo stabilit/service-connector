@@ -57,6 +57,6 @@ public class SCMPAbortSessionCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_ABORT_SESSION;
+		return SCMPMsgType.ABORT_SESSION;
 	}
 }

@@ -61,6 +61,6 @@ public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REQ_DEALLOCATE_SESSION;
+		return SCMPMsgType.DEALLOCATE_SESSION;
 	}
 }

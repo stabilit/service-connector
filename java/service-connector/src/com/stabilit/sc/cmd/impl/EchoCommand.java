@@ -28,7 +28,7 @@ public class EchoCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 
 	@Override

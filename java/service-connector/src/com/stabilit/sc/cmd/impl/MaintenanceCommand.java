@@ -26,7 +26,7 @@ public class MaintenanceCommand extends CommandAdapter {
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REQ_MAINTENANCE;
+		return SCMPMsgType.MAINTENANCE;
 	}
 
 	@Override
