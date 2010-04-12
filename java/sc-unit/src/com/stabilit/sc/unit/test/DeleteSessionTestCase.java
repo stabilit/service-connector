@@ -38,7 +38,7 @@ public class DeleteSessionTestCase extends SuperSessionTestCase {
 
 		/*************************** verify create session **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(SCMPMsgType.RES_DELETE_SESSION.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.DELETE_SESSION.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
 
 		/*************** scmp maintenance ********/

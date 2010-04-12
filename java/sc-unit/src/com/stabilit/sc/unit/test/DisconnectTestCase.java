@@ -46,7 +46,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 			connectCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_CONNECTED, SCMPMsgType.RES_CONNECT);
+			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_CONNECTED, SCMPMsgType.CONNECT);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 
 		/*********************************** Verify disconnect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.RES_DISCONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.DISCONNECT
 				.getResponseName());
 
 		/*************** scmp maintenance ********/
@@ -86,7 +86,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		try {
 			disconnectCall.invoke();
 		} catch (SCMPServiceException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.RES_DISCONNECT);
+			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
 		}
 		super.simpleConnect();
 	}

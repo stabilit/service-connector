@@ -47,7 +47,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
 		String scEntry = (String) mainMsg.getAttribute("serviceRegistry");
-		String expectedEnty = "simulation:portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;";
+		String expectedEnty = "simulation:portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
 		Assert.assertEquals(expectedEnty, scEntry);
 		super.registerService();
 	}
@@ -65,7 +65,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException e) {
 			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_REGISTERED,
-					SCMPMsgType.REQ_DEREGISTER_SERVICE);
+					SCMPMsgType.DEREGISTER_SERVICE);
 		}
 		super.registerService();
 	}

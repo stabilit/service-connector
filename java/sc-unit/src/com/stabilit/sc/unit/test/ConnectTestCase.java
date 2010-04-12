@@ -43,7 +43,7 @@ public class ConnectTestCase extends SuperTestCase {
 			connectCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.RES_CONNECT);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CONNECT);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class ConnectTestCase extends SuperTestCase {
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.RES_CONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.CONNECT
 				.getResponseName());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderType.LOCAL_DATE_TIME.getName())));

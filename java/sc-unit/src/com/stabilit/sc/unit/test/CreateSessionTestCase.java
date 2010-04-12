@@ -49,7 +49,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REQ_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CREATE_SESSION);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		scmpSession = createSessionCall.invoke();
 		/*************************** verify create session **********************************/
 		Assert.assertNull(scmpSession.getBody());
-		Assert.assertEquals(SCMPMsgType.RES_CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
 		Assert.assertNotNull(scmpSession.getSessionId());
 		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
 
@@ -74,7 +74,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		SCMP maintenance = maintenanceCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REQ_REGISTER_SERVICE;serviceName=simulation;;";
+		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
 		String scEntry = (String) mainMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);

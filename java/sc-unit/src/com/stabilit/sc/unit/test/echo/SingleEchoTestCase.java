@@ -60,7 +60,7 @@ public class SingleEchoTestCase extends SuperSessionTestCase {
 		/*************************** verify echo session **********************************/		
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNotNull(result.getSessionId());		
-		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 
 		SCMPEchoCall echoCallTransitive = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client,
 				scmpSession);
@@ -83,6 +83,6 @@ public class SingleEchoTestCase extends SuperSessionTestCase {
 		echoCallTransitive.setServiceName("simulation");
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNotNull(result.getSessionId());
-		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 	}
 }

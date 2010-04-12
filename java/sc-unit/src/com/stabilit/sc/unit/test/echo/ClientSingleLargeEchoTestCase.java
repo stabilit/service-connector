@@ -45,7 +45,6 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 		echoCall.setTransitive(false);
 
 		SCMP result = echoCall.invoke();
-
 		/*************************** verify echo session **********************************/
 		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
 		int bodyLength = sb.length() - start;
@@ -55,7 +54,7 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
@@ -72,7 +71,6 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
-		/*************************** verify echo session **********************************/
 		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
 		int bodyLength = sb.length() - start;
 		String lastPartBody = sb.substring(start);
@@ -81,8 +79,7 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
-
 }

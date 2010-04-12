@@ -58,7 +58,7 @@ public class ClientPartLargeEchoTestCase extends SuperSessionTestCase {
 			}
 			Assert.assertEquals(SCTest.getExpectedOffset(i, 12), header.get(SCMPHeaderType.SCMP_OFFSET
 					.getName()));
-			Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+			Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 			Assert.assertEquals(i + "", header.get(SCMPHeaderType.SEQUENCE_NR.getName()));
 		}
 		String s = "This is the end";
@@ -92,7 +92,7 @@ public class ClientPartLargeEchoTestCase extends SuperSessionTestCase {
 			}
 			Assert.assertEquals(SCTest.getExpectedOffset(i, 12), header.get(SCMPHeaderType.SCMP_OFFSET
 					.getName()));
-			Assert.assertEquals(SCMPMsgType.RES_ECHO.getResponseName(), result.getMessageType());
+			Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
 			Assert.assertEquals(i + "", header.get(SCMPHeaderType.SEQUENCE_NR.getName()));
 		}
 		String s = "This is the end";
