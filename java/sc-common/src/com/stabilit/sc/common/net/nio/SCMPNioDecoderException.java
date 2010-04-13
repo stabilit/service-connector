@@ -13,30 +13,29 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.cln.client;
-
-import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.SCMP;
+package com.stabilit.sc.common.net.nio;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public interface IClient extends IFactoryable {
-	
-	public void disconnect() throws Exception;
+public class SCMPNioDecoderException extends Exception {
 
-	public void destroy() throws Exception;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6537338790870840933L;
 
-	public void connect() throws Exception;
+	public SCMPNioDecoderException() {
+		super();
+	}
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	public SCMPNioDecoderException(String msg) {
+		super(msg);
+	}
 
-	public void setClientConfig(ClientConfigItem clientConfig);
-	
 }

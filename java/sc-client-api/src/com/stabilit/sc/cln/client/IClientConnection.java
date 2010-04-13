@@ -36,9 +36,9 @@ public interface IClientConnection extends IConnection {
 	
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 	
-	public void disconnect();
+	public void disconnect() throws Exception;
 
-	public void destroy();	
+	public void destroy() throws Exception;	
 	
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
 }

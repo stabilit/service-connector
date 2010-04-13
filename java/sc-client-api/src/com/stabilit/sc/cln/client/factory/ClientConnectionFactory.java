@@ -3,7 +3,7 @@ package com.stabilit.sc.cln.client.factory;
 import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.cln.net.client.netty.http.NettyHttpClientConnection;
 import com.stabilit.sc.cln.net.client.netty.tcp.NettyTcpClientConnection;
-import com.stabilit.sc.cln.net.client.nio.tcp.NioClient;
+import com.stabilit.sc.cln.net.client.nio.tcp.NioTcpClientConnection;
 import com.stabilit.sc.common.factory.Factory;
 import com.stabilit.sc.common.factory.IFactoryable;
 
@@ -17,9 +17,8 @@ public class ClientConnectionFactory extends Factory {
 		// jboss netty tcp server
 		IClientConnection nettyTCPCient = new NettyTcpClientConnection();
 		add("netty.tcp", nettyTCPCient);
-
-		IClientConnection nioClient = new NioClient();
-		add("nio.tcp", nioClient);
+		IClientConnection nioTCPCient = new NioTcpClientConnection();
+		add("nio.tcp", nioTCPCient); 
 	}
 
 	public IClientConnection newInstance() {

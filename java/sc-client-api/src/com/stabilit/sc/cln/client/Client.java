@@ -61,12 +61,12 @@ public class Client implements IClient {
 	}
 
 	@Override
-	public void destroy() {
+	public void destroy() throws Exception {
 		clientConnection.destroy();
 	}
 
 	@Override
-	public void disconnect() {
+	public void disconnect() throws Exception {
 		clientConnection.disconnect();
 	}
 

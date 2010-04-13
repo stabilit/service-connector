@@ -34,4 +34,5 @@ public class SCMPCallFactory {
 	public static final ISCMPCall MAINTENANCE_CALL = new SCMPMaintenanceCall();
 	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
 	public static final ISCMPCall ECHO_CALL = new SCMPEchoCall();
+	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
 }
