@@ -13,41 +13,25 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
-package com.stabilit.sc.unit.test.clnData;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnDataCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.unit.test.SuperSessionTestCase;
+package com.stabilit.sc.cln.service;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class ClnDataLargeTestCase extends SuperSessionTestCase {
+public class SequenceNumber {
 
-	@Test
-	public void clnDataLargeTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setBody("large");
-		SCMP scmpReply = clnDataCall.invoke();
-		String result = (String) scmpReply.getBody();
-
-		/*********************************** Verify connect response msg **********************************/
-		Assert.assertNotNull(scmpReply.getBody());
-		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.CLN_DATA
-				.getResponseName());
+	private static int sequenceNumber = 1;
+	
+	public synchronized static int getNext() {
+		return ++sequenceNumber;
+	}
+	
+	public static String getNextAsString() {
+		return String.valueOf(getNext());
 	}
 }

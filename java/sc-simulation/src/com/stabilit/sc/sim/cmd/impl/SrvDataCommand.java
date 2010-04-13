@@ -8,6 +8,7 @@ import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.cln.service.MessageID;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -51,6 +52,7 @@ public class SrvDataCommand extends CommandAdapter {
 		String sessionId = request.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 		SCMP scmpReply = new SCMPReply();
+		SCMP scmp = request.getSCMP();
 
 		if (mapBean == null) {
 			log.debug("command error: session not found");
@@ -60,30 +62,35 @@ public class SrvDataCommand extends CommandAdapter {
 					.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_TEXT.getName(), SCMPErrorCode.SERVER_ERROR
 					.getErrorText());
+			scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp
+					.getHeader(SCMPHeaderType.SEQUENCE_NR.getName()));
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 			return;
 		}
 
-		SCMP scmp = request.getSCMP();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(
+				SCMPHeaderType.SERVICE_NAME.getName()).toString());
 		scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
-//		scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
-//				SCMPHeaderType.COMPRESSION.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp.getHeader(SCMPHeaderType.SEQUENCE_NR
+				.getName()));
+		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
+		// SCMPHeaderType.COMPRESSION.getName()).toString());
 
 		int scmpOffsetInt = 0;
 		String scmpOffset = null;
 		if (scmp.isPart()) {
-		    scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
-		    scmpOffsetInt = Integer.parseInt(scmpOffset);
+			scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
+			scmpOffsetInt = Integer.parseInt(scmpOffset);
 		}
-		
+
 		if ("large".equals(scmp.getBody()) || scmp.isPart()) {
+			String messageID = MessageID.getNextAsString();
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
-			for (i = scmpOffsetInt; i < 1000000; i++) {				
+			for (i = scmpOffsetInt; i < 1000000; i++) {
 				if (sb.length() > 60000) {
 					break;
 				}
@@ -91,18 +98,23 @@ public class SrvDataCommand extends CommandAdapter {
 			}
 			if (i >= 1000000) {
 				scmpReply.setBody(sb.toString());
-				response.setSCMP(scmpReply);			
+				response.setSCMP(scmpReply);
 			} else {
-				scmpReply = new SCMPPart();				
+				scmpReply = new SCMPPart();
 				scmpReply.setMessageType(getKey().getResponseName());
+				((SCMPPart)scmpReply).setMessageId(messageID);
 				scmpReply.setSessionId(sessionId);
-				scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME.getName()).toString());
+				scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp
+						.getHeader(SCMPHeaderType.SEQUENCE_NR.getName()));
+				scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(
+						SCMPHeaderType.SERVICE_NAME.getName()).toString());
 				scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
 				if (scmp.isPart()) {
-				    scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName()).toString());
+					scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), scmp.getHeader(
+							SCMPHeaderType.SCMP_MESSAGE_ID.getName()).toString());
 				}
 				scmpReply.setBody(sb.toString());
-				response.setSCMP(scmpReply);			
+				response.setSCMP(scmpReply);
 			}
 			return;
 		}

@@ -27,7 +27,6 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.frame.Delimiters;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;

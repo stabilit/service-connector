@@ -17,37 +17,32 @@
 /**
  * 
  */
-package com.stabilit.sc.unit.test.clnData;
+package com.stabilit.sc.srv.client;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnDataCall;
+import com.stabilit.sc.cln.client.Client;
+import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.EncoderDecoderFactory;
+import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
 /**
  * @author JTraber
  * 
  */
-public class ClnDataLargeTestCase extends SuperSessionTestCase {
+public class SCClient extends Client {
 
-	@Test
-	public void clnDataLargeTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setBody("large");
-		SCMP scmpReply = clnDataCall.invoke();
-		String result = (String) scmpReply.getBody();
+	public SCClient() {
+	}
+	
+	@Override
+	public IFactoryable newInstance() {
+		return new SCClient();
+	}
 
-		/*********************************** Verify connect response msg **********************************/
-		Assert.assertNotNull(scmpReply.getBody());
-		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.CLN_DATA
-				.getResponseName());
+	@Override
+	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
+		clientConnection.setEncoderDecoder(encoderDecoder);
+		return clientConnection.sendAndReceive(scmp);
 	}
 }

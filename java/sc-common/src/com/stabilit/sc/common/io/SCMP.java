@@ -15,7 +15,7 @@ public class SCMP implements Serializable {
 	public static final int LARGE_MESSAGE_LIMIT = 60<<10;
 
 	protected Map<String, String> header;
-	private Object body;
+	protected Object body;
 
 	public SCMP() {
 		header = new HashMap<String, String>();
@@ -48,6 +48,20 @@ public class SCMP implements Serializable {
 	
 	public boolean isComposite() {
 		return false;
+	}
+
+	public boolean isByteArray() {
+		if (this.body == null) {
+			return false;
+		}
+		return byte[].class == this.body.getClass();
+	}
+
+	public boolean isString() {
+		if (this.body == null) {
+			return false;
+		}
+		return String.class == this.body.getClass();
 	}
 
 	public void setHeader(String name, String value) {

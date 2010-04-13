@@ -49,4 +49,5 @@ public class SCMPPart extends SCMP {
 		return this.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());		
 	}
 
+
 }

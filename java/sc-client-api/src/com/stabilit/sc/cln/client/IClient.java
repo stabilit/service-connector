@@ -37,8 +37,6 @@ public interface IClient extends IFactoryable {
 
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 
-	/**
-	 * @param clientConfig
-	 */
-	void setClientConfig(ClientConfigItem clientConfig);
+	public void setClientConfig(ClientConfigItem clientConfig);
+	
 }

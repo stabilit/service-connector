@@ -27,9 +27,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
 	public static final String HEADER_REGEX = "(RES|REQ|PRQ|PRS|EXC) .*";
 
-	// identifies messageContext when message is large and chunked
-	public static Integer lastMessageID = 0;
-
 	public LargeMessageEncoderDecoder() {
 	}
 
@@ -178,9 +175,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				scmpSequenceNr = "0";
 				scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
 				scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), "0");
-				synchronized (LargeMessageEncoderDecoder.class) {
-					scmp.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), lastMessageID++);
-				}
 			}
 			scmpOffsetInt = Integer.parseInt(scmpOffset);
 			scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);

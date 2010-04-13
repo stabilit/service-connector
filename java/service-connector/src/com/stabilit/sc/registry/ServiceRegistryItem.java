@@ -24,7 +24,6 @@ import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.SCMPEchoCall;
@@ -35,6 +34,7 @@ import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
 import com.stabilit.sc.service.SCMPSrvDataCall;
+import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.ctx.ServerContext;
 import com.stabilit.sc.srv.server.IServer;
@@ -56,7 +56,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 		IServerContext currentServerContext = ServerContext.getCurrentInstance();
 		IServer server = currentServerContext.getServer();
 
-		ClientFactory clientFactory = new ClientFactory();
+		SCClientFactory clientFactory = new SCClientFactory();
 		int serverPort = Integer.parseInt(registerScmp.getHeader(SCMPHeaderType.PORT_NR.getName()));
 		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
 		String serverCon = server.getServerConfig().getCon();

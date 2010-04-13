@@ -21,12 +21,14 @@ package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
+import com.stabilit.sc.cln.service.MessageID;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
+import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 
@@ -37,7 +39,7 @@ import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 public class Client implements IClient {
 
 	private ClientConfigItem clientConfig;
-	private IClientConnection clientConnection;
+	protected IClientConnection clientConnection;
 
 	@Override
 	public IFactoryable newInstance() {
@@ -74,6 +76,9 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
+			if (scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName()) == null) {
+				scmp.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
+			}
 			while (scmp.isPart() == false) {
 				SCMP ret = clientConnection.sendAndReceive(scmp);
 				if (ret.isPart() == false) {
@@ -92,8 +97,11 @@ public class Client implements IClient {
 			}
 			SCMPComposite scmpComposite = new SCMPComposite(scmp, (SCMPPart)ret);
 			while (true) {
-				ret = clientConnection.sendAndReceive(scmpComposite);
+				ret = clientConnection.sendAndReceive(scmpComposite.getPartRequest());
 				if (ret == null) {
+					return ret;
+				}
+				if(ret.isFault()) {
 					return ret;
 				}
 				scmpComposite.add(ret);
@@ -105,4 +113,5 @@ public class Client implements IClient {
 		}
 		return clientConnection.sendAndReceive(scmp);
 	}
+		
 }
