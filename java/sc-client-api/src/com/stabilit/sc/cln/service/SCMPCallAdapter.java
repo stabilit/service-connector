@@ -19,8 +19,6 @@
  */
 package com.stabilit.sc.cln.service;
 
-import java.util.Map;
-
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;

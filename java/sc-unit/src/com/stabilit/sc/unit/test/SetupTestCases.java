@@ -36,13 +36,25 @@ public class SetupTestCases {
 	private SetupTestCases() {
 	}
 	
-	public static void setup() {
+	public static void setupAll() {
 		if (setupTestCases == null) {
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				ServiceConnector.main(null);
 				Simulation.main(null);			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void setupSC() {
+		if (setupTestCases == null) {
+			setupTestCases = new SetupTestCases();
+			try {
+				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				ServiceConnector.main(null);			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

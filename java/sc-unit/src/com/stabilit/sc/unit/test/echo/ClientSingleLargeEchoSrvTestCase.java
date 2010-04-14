@@ -23,27 +23,26 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPEchoCall;
+import com.stabilit.sc.cln.service.SCMPEchoSrvCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
-public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
+public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
 	@Test
 	public void invokeTest() throws Exception {
-		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
+		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client, scmpSession);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 100000; i++) {
 			sb.append(i);
 		}
 		echoCall.setBody(sb.toString());
-		echoCall.setTransitive(false);
-
+		echoCall.setMaxNodes(2);
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
@@ -54,21 +53,20 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
 	@Test
 	public void invokeTestTransitive() throws Exception {
-		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmpSession);
+		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client, scmpSession);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 100000; i++) {
 			sb.append(i);
 		}
 		echoCall.setBody(sb.toString());
-		echoCall.setTransitive(true);
-
+		echoCall.setMaxNodes(2);
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		int start = (sb.length() / SCMP.LARGE_MESSAGE_LIMIT) * SCMP.LARGE_MESSAGE_LIMIT;
@@ -79,7 +77,7 @@ public class ClientSingleLargeEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 }

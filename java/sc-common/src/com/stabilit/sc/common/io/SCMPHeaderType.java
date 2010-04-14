@@ -54,7 +54,8 @@ public enum SCMPHeaderType {
 	SCMP_OFFSET("scmpOffset"),
 	SCMP_MESSAGE_ID("scmpMessageID"),
 	SCMP_CALL_LENGTH("scmpCallLength"),
-	SCMP_BODY_TYPE("bodyType");
+	SCMP_BODY_TYPE("bodyType"),
+	MAX_NODES("maxNodes");
 	
 	private String name;
 	

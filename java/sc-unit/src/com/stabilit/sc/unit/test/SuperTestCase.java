@@ -41,7 +41,7 @@ public class SuperTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setup();
+		SetupTestCases.setupAll();
 		try {
 			config = new ClientConfig();
 			config.load("sc-unit.properties");
@@ -56,11 +56,13 @@ public class SuperTestCase {
 	@After
 	public void tearDown() throws Exception {
 		client.disconnect();
+		client.destroy();
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
 		client.disconnect(); // physical disconnect
+		client.destroy();
 		client = null;
 	}
 }

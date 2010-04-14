@@ -88,4 +88,9 @@ public class NettyHttpRequest implements IRequest {
 	public MapBean<Object> getAttributeMapBean() {
 		return mapBean;
 	}
+	
+	@Override
+	public SocketAddress getSocketAddress() {
+		return socketAddress;
+	}
 }

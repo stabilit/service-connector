@@ -32,13 +32,13 @@ import com.stabilit.sc.common.io.SCMPPart;
  * @author JTraber
  * 
  */
-public class SCMPEchoCall extends SCMPCallAdapter {
+public class SCMPEchoSrvCall extends SCMPCallAdapter {
 
-	public SCMPEchoCall() {
+	public SCMPEchoSrvCall() {
 		this(null, null);
 	}
 
-	public SCMPEchoCall(IClient client, SCMP scmpSession) {
+	public SCMPEchoSrvCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -54,7 +54,7 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPEchoCall(client, scmpSession);
+		return new SCMPEchoSrvCall(client, scmpSession);
 	}
 
 	public void setServiceName(String serviceName) {
@@ -63,15 +63,15 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.ECHO;
-	}
-	
-	public void setTransitive(boolean value) {
-		call.setHeader(SCMPHeaderType.TRANSITIVE.getName(), value);
+		return SCMPMsgType.ECHO_SRV;
 	}
 	
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);		
+	}
+	
+	public void setMaxNodes(int maxNodes) {
+		this.call.setHeader(SCMPHeaderType.MAX_NODES.getName(), String.valueOf(maxNodes));
 	}
 	
 	public void setPartMessage(boolean partMessage) {

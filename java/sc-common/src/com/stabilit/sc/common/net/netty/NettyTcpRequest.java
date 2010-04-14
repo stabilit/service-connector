@@ -1,6 +1,7 @@
 package com.stabilit.sc.common.net.netty;
 
 import java.io.ByteArrayInputStream;
+import java.net.SocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
@@ -21,8 +22,10 @@ public class NettyTcpRequest implements IRequest {
 	private IRequestContext requestContext;
 	private IEncoderDecoder encoderDecoder;
 	private MapBean<Object> mapBean;
+	private SocketAddress socketAddress;
 
-	public NettyTcpRequest(MessageEvent e) {
+	public NettyTcpRequest(MessageEvent e, SocketAddress socketAddress) {
+		this.socketAddress = socketAddress;
 		this.mapBean = new MapBean<Object>();
 		this.request = (ChannelBuffer) e.getMessage();
 		this.scmp = null;
@@ -76,5 +79,10 @@ public class NettyTcpRequest implements IRequest {
 	@Override
 	public MapBean<Object> getAttributeMapBean() {
 		return mapBean;
+	}
+
+	@Override
+	public SocketAddress getSocketAddress() {
+		return socketAddress;
 	}
 }

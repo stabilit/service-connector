@@ -2,6 +2,7 @@ package com.stabilit.sc.common.net.nio;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -23,10 +24,12 @@ public class NioTcpRequest implements IRequest {
 	private IEncoderDecoder encoderDecoder;
 	private MapBean<Object> mapBean;
 	private int headLineSize = 0;
+	private SocketAddress socketAddress;
 
 	public NioTcpRequest(SocketChannel socketChannel) {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
+		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
 		this.scmp = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
@@ -159,5 +162,10 @@ public class NioTcpRequest implements IRequest {
 			}
 		}
 		return scmpLength;
+	}
+
+	@Override
+	public SocketAddress getSocketAddress() {
+		return socketAddress;
 	}
 }

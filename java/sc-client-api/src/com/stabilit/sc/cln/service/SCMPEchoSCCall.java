@@ -63,11 +63,7 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.ECHO;
-	}
-
-	public void setTransitive(boolean value) {
-		call.setHeader(SCMPHeaderType.TRANSITIVE.getName(), value);
+		return SCMPMsgType.ECHO_SC;
 	}
 
 	public void setHeader(Map<String, String> header) {

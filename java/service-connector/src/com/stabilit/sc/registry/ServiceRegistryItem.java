@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.SCMPEchoCall;
+import com.stabilit.sc.cln.service.SCMPEchoSrvCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.util.MapBean;
@@ -92,11 +92,10 @@ public class ServiceRegistryItem extends MapBean<String> {
 		return false;
 	}
 
-	public SCMP echo(SCMP scmp) throws Exception {
-		SCMPEchoCall echoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(client, scmp);
+	public SCMP echoSrv(SCMP scmp) throws Exception {
+		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setBody(scmp.getBody());
-		echoCall.setTransitive(false);
 		return echoCall.invoke();
 	}
 

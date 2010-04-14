@@ -112,6 +112,5 @@ public class Client implements IClient {
 			return scmpComposite;
 		}
 		return clientConnection.sendAndReceive(scmp);
-	}
-		
+	}		
 }

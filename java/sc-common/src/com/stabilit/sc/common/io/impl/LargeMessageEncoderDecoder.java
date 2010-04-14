@@ -177,7 +177,8 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				scmp.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), "0");
 			}
 			scmpOffsetInt = Integer.parseInt(scmpOffset);
-			scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
+			//TODO wrong here!!
+			//scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
 		} else {
 			scmpOffsetInt = ((SCMPComposite) scmp).getOffset();
 			scmp.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), String.valueOf(scmpOffsetInt));

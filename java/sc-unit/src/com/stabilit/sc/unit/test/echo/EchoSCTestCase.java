@@ -23,27 +23,23 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPEchoCall;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderType;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
-import com.stabilit.sc.unit.UnitCommandFactory;
+import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
-public class SingleEchoSCTestCase extends SuperTestCase {
+public class EchoSCTestCase extends SuperTestCase {
 
 	@Before
 	@Override
 	public void setup() throws Exception {
+		SetupTestCases.setupSC();
 		try {
-			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-			ServiceConnector.main(null);
 			config = new ClientConfig();
 			config.load("sc-unit.properties");
 			ClientFactory clientFactory = new ClientFactory();
@@ -55,26 +51,44 @@ public class SingleEchoSCTestCase extends SuperTestCase {
 	}
 
 	@Test
-	public void invokeTest() throws Exception {
+	public void invokeSingleEchoSCTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
-		echoCall.setTransitive(false);
 
 		SCMP result = null;
 		Map<String, String> header = null;
 
-		long startTime = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
-			echoCall.setBody("hello world " + i);
-			result = echoCall.invoke();
-		//	System.out.println("result = " + result.getBody());
-		}
-		System.out.println((System.currentTimeMillis() - startTime) / 1000 + " sec.");
+		echoCall.setBody("hello world!");
+		result = echoCall.invoke();
+		System.out.println("result = " + result.getBody());
 		header = result.getHeader();
-		//Assert.assertEquals("hello world 9", result.getBody());
+		Assert.assertEquals("hello world!", result.getBody());
 		Assert.assertNotNull(header.get(SCMPHeaderType.BODY_LENGTH.getName()));
 
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
-		Assert.assertEquals(SCMPMsgType.ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 	}
+
+	@Test
+	public void invokeMultipleEchoSCTest() throws Exception {
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+
+		SCMP result = null;
+		Map<String, String> header = null;
+
+		int i = 0;
+		for (i = 0; i < 10000; i++) {
+			echoCall.setBody("hello world " + i);
+			result = echoCall.invoke();
+			System.out.println("result = " + result.getBody());
+		}
+		header = result.getHeader();
+		Assert.assertEquals("hello world " + (i-1), result.getBody());
+		Assert.assertNotNull(header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+
+		/*************************** verify echo session **********************************/
+		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
+	}
+
 }

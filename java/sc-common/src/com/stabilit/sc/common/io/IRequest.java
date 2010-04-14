@@ -1,5 +1,7 @@
 package com.stabilit.sc.common.io;
 
+import java.net.SocketAddress;
+
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.util.MapBean;
 
@@ -18,5 +20,7 @@ public interface IRequest {
 	public Object getAttribute(String key);
 
 	public MapBean<Object> getAttributeMapBean();
+
+	public SocketAddress getSocketAddress();
 		
 }

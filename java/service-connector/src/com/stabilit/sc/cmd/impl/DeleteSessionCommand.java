@@ -122,7 +122,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
-					throw new ValidationException("sessoion does not exists!");
+					throw new ValidationException("session does not exists!");
 				}
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

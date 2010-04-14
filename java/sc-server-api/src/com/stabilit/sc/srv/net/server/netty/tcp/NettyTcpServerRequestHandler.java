@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.srv.net.server.netty.tcp;
 
+import java.net.SocketAddress;
+
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -59,12 +61,13 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		IRequest request = new NettyTcpRequest(event);
+		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
+		IRequest request = new NettyTcpRequest(event, socketAddress);
 		try {
 			Channel channel = ctx.getChannel();
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
-
+					
 			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
 			if (command == null) {
 				SCMP scmpReq = request.getSCMP();
