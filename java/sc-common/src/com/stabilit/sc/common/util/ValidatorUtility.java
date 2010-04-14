@@ -37,25 +37,25 @@ public class ValidatorUtility {
 	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/??)+";
 
-	public static void validateSCVersion(String currenSCMPVersion,
-			String incomingSCMPVersion) throws ValidationExcpetion {
+	//TODO validation rules are wrong at this time!
+	public static void validateSCVersion(String currenSCVersion, String incomingSCVersion)
+			throws ValidationExcpetion {
 		Pattern pattern = Pattern.compile(SC_VERSION_REGEX);
 
-		Matcher matchCurr = pattern.matcher(currenSCMPVersion);
+		Matcher matchCurr = pattern.matcher(currenSCVersion);
 		matchCurr.find();
 
 		float currReleaseAndVersionNr = Float.parseFloat(matchCurr.group(1));
 		int currRevisionNr = Integer.parseInt(matchCurr.group(2));
 
-		Matcher matchIn = pattern.matcher(incomingSCMPVersion);
+		Matcher matchIn = pattern.matcher(incomingSCVersion);
 		matchIn.find();
 
 		float incReleaseAndVersionNr = Float.parseFloat(matchIn.group(1));
 		int incRevisionNr = Integer.parseInt(matchIn.group(2));
 
 		if (incReleaseAndVersionNr <= currReleaseAndVersionNr) {
-			if (incReleaseAndVersionNr == currReleaseAndVersionNr
-					&& incRevisionNr > currRevisionNr) {
+			if (incReleaseAndVersionNr == currReleaseAndVersionNr && incRevisionNr > currRevisionNr) {
 				throw new ValidationExcpetion("SCVersion not compatible.");
 			}
 		} else {
@@ -63,8 +63,7 @@ public class ValidatorUtility {
 		}
 	}
 
-	public static Date validateLocalDateTime(String localDateTimeString)
-			throws ParseException {
+	public static Date validateLocalDateTime(String localDateTimeString) throws ParseException {
 		if (localDateTimeString == null) {
 			return null;
 		}
@@ -77,8 +76,8 @@ public class ValidatorUtility {
 		return localDateTime;
 	}
 
-	public static Integer convertUnsignedInteger(Map<String, String> map,
-			SCMPHeaderType key, Integer defaultValue) {
+	public static Integer convertUnsignedInteger(Map<String, String> map, SCMPHeaderType key,
+			Integer defaultValue) {
 
 		String obj = map.get(key.getName());
 
@@ -89,14 +88,13 @@ public class ValidatorUtility {
 		return value;
 	}
 
-	public static KeepAlive validateKeepAlive(String keepAliveTimeout,
-			String keepAliveInterval) throws ValidationException {
+	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
+			throws ValidationException {
 		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
 		int keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
 
 		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
-			throw new ValidationException(
-					"keepAliveTimeout or keepAliveInterval is to high.");
+			throw new ValidationException("keepAliveTimeout or keepAliveInterval is to high.");
 		}
 
 		if (keepAliveTimeoutInt > 3600) {
@@ -111,9 +109,8 @@ public class ValidatorUtility {
 		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
 	}
 
-	public static void validateIpAddressList(String ipAddressListString)
-			throws ValidationException {
-		
+	public static void validateIpAddressList(String ipAddressListString) throws ValidationException {
+
 		Pattern pat = Pattern.compile(IP_LIST_REGEX);
 		Matcher m = pat.matcher(ipAddressListString);
 		if (!m.matches()) {
@@ -121,8 +118,7 @@ public class ValidatorUtility {
 		}
 	}
 
-	public static String validateInt(int lowerLimit, String intStringValue)
-			throws ValidationException {
+	public static String validateInt(int lowerLimit, String intStringValue) throws ValidationException {
 		if (intStringValue == null) {
 			throw new ValidationException("intValue must be set.");
 		}
@@ -139,8 +135,8 @@ public class ValidatorUtility {
 		return intStringValue;
 	}
 
-	public static String validateInt(int lowerLimit, String intStringValue,
-			int upperLimit) throws ValidationException {
+	public static String validateInt(int lowerLimit, String intStringValue, int upperLimit)
+			throws ValidationException {
 		if (intStringValue == null) {
 			throw new ValidationException("intValue must be set.");
 		}
@@ -156,16 +152,17 @@ public class ValidatorUtility {
 
 		return intStringValue;
 	}
-	
-	public static void validateString(int minSize, String stringValue,
-			int maxSize) throws ValidationException {
-		if(stringValue == null) {
+
+	public static void validateString(int minSize, String stringValue, int maxSize)
+			throws ValidationException {
+
+		if (stringValue == null) {
 			throw new ValidationException("stringValue must be set.");
 		}
-		
+
 		int length = stringValue.getBytes().length;
-		
-		if(length < minSize || length > maxSize) {
+
+		if (length < minSize || length > maxSize) {
 			throw new ValidationException("stringValue length is not within limits.");
 		}
 	}

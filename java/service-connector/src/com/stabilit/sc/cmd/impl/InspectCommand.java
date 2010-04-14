@@ -2,7 +2,7 @@ package com.stabilit.sc.cmd.impl;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -16,17 +16,17 @@ import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class MaintenanceCommand extends CommandAdapter {
+public class InspectCommand extends CommandAdapter {
 
-	private static Logger log = Logger.getLogger(MaintenanceCommand.class);
+	private static Logger log = Logger.getLogger(InspectCommand.class);
 	
-	public MaintenanceCommand() {
-		this.commandValidator = new MaintenanceCommandValidator();
+	public InspectCommand() {
+		this.commandValidator = new InspectCommandValidator();
 	}
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.MAINTENANCE;
+		return SCMPMsgType.INSPECT;
 	}
 
 	@Override
@@ -44,12 +44,12 @@ public class MaintenanceCommand extends CommandAdapter {
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setLocalDateTime();
-		MaintenanceMessage mainMsg = new MaintenanceMessage();
+		InspectMessage inspectMsg = new InspectMessage();
 		
-		mainMsg.setAttribute("connectionRegistry", connectionRegistry);
-		mainMsg.setAttribute("serviceRegistry", serviceRegistry);
-		mainMsg.setAttribute("sessionRegistry", sessionRegistry);
-		scmpReply.setBody(mainMsg);
+		inspectMsg.setAttribute("connectionRegistry", connectionRegistry);
+		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
+		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);
+		scmpReply.setBody(inspectMsg);
 		response.setSCMP(scmpReply);
 	}
 
@@ -58,11 +58,10 @@ public class MaintenanceCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class MaintenanceCommandValidator implements ICommandValidator {
+	public class InspectCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
 		}
 	}
-
 }

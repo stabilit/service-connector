@@ -44,7 +44,7 @@ public enum SCMPMsgType {
 	DEALLOCATE_SESSION("DEALLOCATE_SESSION"),
 	UNDEFINED("UNDEFINED"),
 	ECHO("ECHO"),
-	MAINTENANCE("MAINTENANCE");
+	INSPECT("INSPECT");
 
 	private String name;
 	private String requestName;

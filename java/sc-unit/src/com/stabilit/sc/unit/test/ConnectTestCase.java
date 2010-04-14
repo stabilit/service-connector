@@ -20,11 +20,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPConnectCall;
 import com.stabilit.sc.cln.service.SCMPDisconnectCall;
-import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
+import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
@@ -65,18 +65,18 @@ public class ConnectTestCase extends SuperTestCase {
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderType.LOCAL_DATE_TIME.getName())));
 
-		/*************** scmp maintenance ********/
-		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+		/*************** scmp inspect ********/
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
 				.newInstance(client);
-		SCMP maintenance = maintenanceCall.invoke();
+		SCMP inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
 						SCMPHeaderType.LOCAL_DATE_TIME.getName()))
 				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
-		String scEntry = (String) mainMsg.getAttribute("connectionRegistry");
+		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
 		scEntry = scEntry.substring(scEntry.indexOf(":"));

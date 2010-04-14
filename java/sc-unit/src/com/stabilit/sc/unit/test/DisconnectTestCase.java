@@ -20,11 +20,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPConnectCall;
 import com.stabilit.sc.cln.service.SCMPDisconnectCall;
-import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
+import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
@@ -67,13 +67,13 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.DISCONNECT
 				.getResponseName());
 
-		/*************** scmp maintenance ********/
-		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+		/*************** scmp inspect ********/
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
 				.newInstance(client);
-		SCMP maintenance = maintenanceCall.invoke();
+		SCMP inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
-		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
-		String scEntry = (String) mainMsg.getAttribute("connectionRegistry");
+		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		Assert.assertEquals("", scEntry);
 		super.simpleConnect();
 	}

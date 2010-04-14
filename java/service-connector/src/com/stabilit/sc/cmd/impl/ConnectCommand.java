@@ -82,7 +82,7 @@ public class ConnectCommand extends CommandAdapter {
 			try {
 
 				Map<String, String> scmpHeader = scmp.getHeader();
-				// scmpVersion
+				// scVersion
 				String scVersion = (String) scmpHeader.get(SCMPHeaderType.SC_VERSION.getName());
 				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
 				request.setAttribute(SCMPHeaderType.SC_VERSION.getName(), scVersion);

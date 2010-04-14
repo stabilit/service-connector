@@ -26,23 +26,23 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPMaintenanceCall extends SCMPCallAdapter {
+public class SCMPInspectCall extends SCMPCallAdapter {
 
-	public SCMPMaintenanceCall() {
+	public SCMPInspectCall() {
 		this(null);
 	}
 
-	public SCMPMaintenanceCall(IClient client) {
+	public SCMPInspectCall(IClient client) {
 		this.client = client;
 	}
 
 	@Override
 	public ISCMPCall newInstance(IClient client) {
-		return new SCMPMaintenanceCall(client);
+		return new SCMPInspectCall(client);
 	}
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.MAINTENANCE;
+		return SCMPMsgType.INSPECT;
 	}
 }

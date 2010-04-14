@@ -16,9 +16,8 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.service.SCMPMaintenanceCall" 
-    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPMaintenanceCall.java" 
-    binary="false">    
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.service.SCMPInspectCall" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPInspectCall.java" binary="false">    
     <position x="276" y="263" width="-1" height="-1"/>    
     <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -67,12 +66,6 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <generalization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPDeleteSessionCall" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPDeleteSessionCall.java" binary="false"/>    
-    <target project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
-  </generalization>  
   <realization>    
     <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
       file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>    
@@ -80,14 +73,14 @@
       file="/sc-client-api/src/com/stabilit/sc/cln/service/ISCMPCall.java" binary="false"/>  
   </realization>  
   <generalization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPConnectCall" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPConnectCall.java" binary="false"/>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPInspectCall" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPInspectCall.java" binary="false"/>    
     <target project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
       file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
   </generalization>  
   <generalization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPMaintenanceCall" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPMaintenanceCall.java" binary="false"/>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPDisconnectCall" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPDisconnectCall.java" binary="false"/>    
     <target project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
       file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
   </generalization>  
@@ -98,8 +91,14 @@
       file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
   </generalization>  
   <generalization>    
-    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPDisconnectCall" 
-      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPDisconnectCall.java" binary="false"/>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPConnectCall" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPConnectCall.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
+  </generalization>  
+  <generalization>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPDeleteSessionCall" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPDeleteSessionCall.java" binary="false"/>    
     <target project="sc-client-api" name="com.stabilit.sc.cln.service.SCMPCallAdapter" 
       file="/sc-client-api/src/com/stabilit/sc/cln/service/SCMPCallAdapter.java" binary="false"/>  
   </generalization>  

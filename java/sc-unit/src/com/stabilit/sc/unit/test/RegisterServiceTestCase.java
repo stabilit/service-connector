@@ -20,10 +20,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.msg.impl.MaintenanceMessage;
+import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.service.SCMPMaintenanceCall;
+import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
@@ -84,15 +84,15 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setPortNumber(9100);
 
 		registerServiceCall.invoke();
-		/*************** scmp maintenance ********/
-		SCMPMaintenanceCall maintenanceCall = (SCMPMaintenanceCall) SCMPCallFactory.MAINTENANCE_CALL
+		/*************** scmp inspect ********/
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
 				.newInstance(client);
-		SCMP maintenance = maintenanceCall.invoke();
+		SCMP inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		MaintenanceMessage mainMsg = (MaintenanceMessage) maintenance.getBody();
+		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = "P01_RTXS_RPRWS1:portNr=9100;maxSessions=10;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;simulation:portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
-		String scEntry = (String) mainMsg.getAttribute("serviceRegistry");
+		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
 	}
 

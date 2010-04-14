@@ -65,8 +65,4 @@ public enum SCMPHeaderType {
 	public String getName() {
 		return name;
 	}
-	
-	public static SCMPHeaderType getMsgHeaderType(String messageId) {
-		return SCMPHeaderType.valueOf(messageId);
-	}
 }

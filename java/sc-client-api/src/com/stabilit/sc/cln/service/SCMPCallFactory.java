@@ -31,7 +31,7 @@ public class SCMPCallFactory {
 	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
 	public static final ISCMPCall CREATE_SESSION_CALL = new SCMPCreateSessionCall();
 	public static final ISCMPCall DELETE_SESSION_CALL = new SCMPDeleteSessionCall();
-	public static final ISCMPCall MAINTENANCE_CALL = new SCMPMaintenanceCall();
+	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
 	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
 	public static final ISCMPCall ECHO_CALL = new SCMPEchoCall();
 	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
