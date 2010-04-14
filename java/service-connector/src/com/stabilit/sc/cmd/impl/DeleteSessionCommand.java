@@ -30,7 +30,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.registry.SessionRegistry;
@@ -93,7 +93,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderType.SERVICE_NAME
+		scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderAttributeType.SERVICE_NAME
 				.getName()));
 		response.setSCMP(scmpReply);
 	}
@@ -112,7 +112,7 @@ public class DeleteSessionCommand extends CommandAdapter {
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}

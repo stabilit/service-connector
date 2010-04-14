@@ -20,7 +20,7 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
@@ -43,19 +43,19 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 	}
 	
 	public void setMaxSessions(int maxSessions) {
-		call.setHeader(SCMPHeaderType.MAX_SESSIONS.getName(), maxSessions);
+		call.setHeader(SCMPHeaderAttributeType.MAX_SESSIONS.getName(), maxSessions);
 	}
 	
 	public void setMultithreaded(boolean multiThreaded) {
-		call.setHeader(SCMPHeaderType.MULTI_THREADED.getName(), multiThreaded);
+		call.setHeader(SCMPHeaderAttributeType.MULTI_THREADED.getName(), multiThreaded);
 	}
 	
 	public void setPortNumber(int portNumber) {
-		call.setHeader(SCMPHeaderType.PORT_NR.getName(), portNumber);
+		call.setHeader(SCMPHeaderAttributeType.PORT_NR.getName(), portNumber);
 	}	
 	
 	@Override

@@ -23,7 +23,7 @@ package com.stabilit.sc.common.io;
  * @author JTraber
  * 
  */
-public enum SCMPHeaderType {
+public enum SCMPHeaderAttributeType {
 
 	MSG_TYPE("msgType"),
 	SC_VERSION("scVersion"),
@@ -59,7 +59,7 @@ public enum SCMPHeaderType {
 	
 	private String name;
 	
-	private SCMPHeaderType(String name) {
+	private SCMPHeaderAttributeType(String name) {
 		this.name = name;	
 	}
 

@@ -10,7 +10,7 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.registry.SessionRegistry;
@@ -77,7 +77,7 @@ public class ClnDataCommand extends CommandAdapter {
 				}
 
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -87,14 +87,14 @@ public class ClnDataCommand extends CommandAdapter {
 				// sequenceNr
 
 				// compression
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeType.COMPRESSION.getName());
 				if (compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeType.COMPRESSION.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader.get(SCMPHeaderType.MESSAGE_INFO.getName());
+				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeType.MESSAGE_INFO.getName());
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

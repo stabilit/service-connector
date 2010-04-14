@@ -27,7 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
 import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSCTestCase;
@@ -59,9 +59,9 @@ public class SCTest {
 
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), msgType.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_TEXT.getName()), error.getErrorText());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.SC_ERROR_CODE.getName()), error.getErrorCode());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName()), msgType.getResponseName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeType.SC_ERROR_TEXT.getName()), error.getErrorText());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeType.SC_ERROR_CODE.getName()), error.getErrorCode());
 	}
 
 	public static String getExpectedOffset(int runIndex, int characterNumber) {

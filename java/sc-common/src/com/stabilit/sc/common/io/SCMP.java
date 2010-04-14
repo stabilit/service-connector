@@ -27,11 +27,11 @@ public class SCMP implements Serializable {
 	}
 
 	public void setMessageType(String messageType) {
-		setHeader(SCMPHeaderType.MSG_TYPE.getName(), messageType);
+		setHeader(SCMPHeaderAttributeType.MSG_TYPE.getName(), messageType);
 	}
 
 	public String getMessageType() {
-		return getHeader(SCMPHeaderType.MSG_TYPE.getName());
+		return getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName());
 	}
 
 	public boolean isFault() {
@@ -110,14 +110,14 @@ public class SCMP implements Serializable {
 	}
 
 	public String getSessionId() {
-		return header.get(SCMPHeaderType.SESSION_ID.getName());
+		return header.get(SCMPHeaderAttributeType.SESSION_ID.getName());
 	}
 
 	public void setSessionId(String sessionId) {
 		if (sessionId == null) {
 			return;
 		}
-		header.put(SCMPHeaderType.SESSION_ID.getName(), sessionId);
+		header.put(SCMPHeaderAttributeType.SESSION_ID.getName(), sessionId);
 	}
 
 	public Map<String, String> getHeader() {

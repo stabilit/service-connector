@@ -25,7 +25,7 @@ import org.junit.Test;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSrvCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
@@ -50,9 +50,9 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		String lastPartBody = sb.substring(start);
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(lastPartBody, result.getBody());
-		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
-		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
-		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
+		Assert.assertNull(header.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));
+		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
@@ -74,9 +74,9 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		String lastPartBody = sb.substring(start);
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(lastPartBody, result.getBody());
-		Assert.assertEquals("string", header.get(SCMPHeaderType.SCMP_BODY_TYPE.getName()));
-		Assert.assertNull(header.get(SCMPHeaderType.SCMP_MESSAGE_ID.getName()));
-		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderType.BODY_LENGTH.getName()));
+		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
+		Assert.assertNull(header.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));
+		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}

@@ -23,7 +23,7 @@ import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.util.MapBean;
 
 /**
@@ -45,8 +45,8 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 	}
 
 	public void setErrorCode(SCMPErrorCode errorCode) {
-		this.setAttribute(SCMPHeaderType.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		this.setAttribute(SCMPHeaderType.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
+		this.setAttribute(SCMPHeaderAttributeType.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
+		this.setAttribute(SCMPHeaderAttributeType.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
 	}
 
 	public void setAttribute(String name, String value) {
@@ -58,7 +58,7 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 	}
 
 	public void setMessageType(String messageType) {
-		this.setAttribute(SCMPHeaderType.MSG_TYPE.getName(), messageType);
+		this.setAttribute(SCMPHeaderAttributeType.MSG_TYPE.getName(), messageType);
 	}
 
 	@Override

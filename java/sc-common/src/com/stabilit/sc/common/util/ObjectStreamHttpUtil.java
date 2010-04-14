@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 
 public class ObjectStreamHttpUtil {
 
@@ -76,12 +76,12 @@ public class ObjectStreamHttpUtil {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		SCMP scmp = (SCMP) obj;
-		scmp.setHeader(SCMPHeaderType.BODY_LENGTH.getName(), scmp.getBodyLength());
+		scmp.setHeader(SCMPHeaderAttributeType.BODY_LENGTH.getName(), scmp.getBodyLength());
 		String bodyType = "array";
 		if (scmp.isString()) {
 			bodyType = "string";
 		}
-		scmp.setHeader(SCMPHeaderType.SCMP_BODY_TYPE.getName(), bodyType);
+		scmp.setHeader(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName(), bodyType);
 		oos.writeObject(obj);
 		oos.flush();
 		oos.close();
@@ -99,12 +99,12 @@ public class ObjectStreamHttpUtil {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		SCMP scmp = (SCMP) obj;
-		scmp.setHeader(SCMPHeaderType.BODY_LENGTH.getName(), scmp.getBodyLength());
+		scmp.setHeader(SCMPHeaderAttributeType.BODY_LENGTH.getName(), scmp.getBodyLength());
 		String bodyType = "array";
 		if (scmp.isString()) {
 			bodyType = "string";
 		}
-		scmp.setHeader(SCMPHeaderType.SCMP_BODY_TYPE.getName(), bodyType);
+		scmp.setHeader(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName(), bodyType);
 		oos.writeObject(obj);
 		oos.flush();
 		byte[] objStream = baos.toByteArray();

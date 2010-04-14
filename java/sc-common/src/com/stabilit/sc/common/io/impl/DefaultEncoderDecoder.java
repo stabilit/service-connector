@@ -19,7 +19,7 @@ import com.stabilit.sc.common.io.IMessage;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderKey;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
@@ -74,8 +74,8 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
-		String scmpBodyType = metaMap.get(SCMPHeaderType.SCMP_BODY_TYPE.getName());
-		String scmpBodyLength = metaMap.get(SCMPHeaderType.BODY_LENGTH.getName());
+		String scmpBodyType = metaMap.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
+		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeType.BODY_LENGTH.getName());
 		TYPE scmpBodyTypEnum = TYPE.getEnumType(scmpBodyType);
 		scmp.setHeader(metaMap);
 		try {
@@ -168,11 +168,11 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			if (body != null) {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(TYPE.STRING.getType());
 					sb.append("\n");
-					sb.append(SCMPHeaderType.BODY_LENGTH.getName());
+					sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(t.length()));
 					sb.append("\n\n");
@@ -184,7 +184,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					return;
 				}
 				if (body instanceof IMessage) {
-					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(TYPE.MESSAGE.getType());
 					sb.append("\n\n");
@@ -198,12 +198,12 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					return;
 				}
 				if (body instanceof byte[]) {
-					sb.append(SCMPHeaderType.SCMP_BODY_TYPE.getName());
+					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(TYPE.ARRAY.getType());
 					sb.append("\n");
 					byte[] ba = (byte[]) body;
-					sb.append(SCMPHeaderType.BODY_LENGTH.getName());
+					sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(ba.length));
 					sb.append("\n\n");

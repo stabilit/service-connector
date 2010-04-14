@@ -14,7 +14,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
@@ -56,14 +56,14 @@ public class SrvDataCommand extends CommandAdapter {
 
 		if (mapBean == null) {
 			log.debug("command error: session not found");
-			scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), request.getAttribute(
-					SCMPHeaderType.SERVICE_NAME.getName()).toString());
-			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_CODE.getName(), SCMPErrorCode.SERVER_ERROR
+			scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), request.getAttribute(
+					SCMPHeaderAttributeType.SERVICE_NAME.getName()).toString());
+			scmpReply.setHeader(SCMPHeaderAttributeType.SC_ERROR_CODE.getName(), SCMPErrorCode.SERVER_ERROR
 					.getErrorCode());
-			scmpReply.setHeader(SCMPHeaderType.SC_ERROR_TEXT.getName(), SCMPErrorCode.SERVER_ERROR
+			scmpReply.setHeader(SCMPHeaderAttributeType.SC_ERROR_TEXT.getName(), SCMPErrorCode.SERVER_ERROR
 					.getErrorText());
-			scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp
-					.getHeader(SCMPHeaderType.SEQUENCE_NR.getName()));
+			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), scmp
+					.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName()));
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 			return;
@@ -71,10 +71,10 @@ public class SrvDataCommand extends CommandAdapter {
 
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(
-				SCMPHeaderType.SERVICE_NAME.getName()).toString());
-		scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
-		scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp.getHeader(SCMPHeaderType.SEQUENCE_NR
+		scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmp.getHeader(
+				SCMPHeaderAttributeType.SERVICE_NAME.getName()).toString());
+		scmpReply.setHeader(SCMPHeaderAttributeType.SESSION_INFO.getName(), "Session info");
+		scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), scmp.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR
 				.getName()));
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION.getName(), request.getAttribute(
 		// SCMPHeaderType.COMPRESSION.getName()).toString());
@@ -82,7 +82,7 @@ public class SrvDataCommand extends CommandAdapter {
 		int scmpOffsetInt = 0;
 		String scmpOffset = null;
 		if (scmp.isPart()) {
-			scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
+			scmpOffset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
 			scmpOffsetInt = Integer.parseInt(scmpOffset);
 		}
 
@@ -104,14 +104,14 @@ public class SrvDataCommand extends CommandAdapter {
 				scmpReply.setMessageType(getKey().getResponseName());
 				((SCMPPart)scmpReply).setMessageId(messageID);
 				scmpReply.setSessionId(sessionId);
-				scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), scmp
-						.getHeader(SCMPHeaderType.SEQUENCE_NR.getName()));
-				scmpReply.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmp.getHeader(
-						SCMPHeaderType.SERVICE_NAME.getName()).toString());
-				scmpReply.setHeader(SCMPHeaderType.SESSION_INFO.getName(), "Session info");
+				scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), scmp
+						.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName()));
+				scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmp.getHeader(
+						SCMPHeaderAttributeType.SERVICE_NAME.getName()).toString());
+				scmpReply.setHeader(SCMPHeaderAttributeType.SESSION_INFO.getName(), "Session info");
 				if (scmp.isPart()) {
-					scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), scmp.getHeader(
-							SCMPHeaderType.SCMP_MESSAGE_ID.getName()).toString());
+					scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), scmp.getHeader(
+							SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()).toString());
 				}
 				scmpReply.setBody(sb.toString());
 				response.setSCMP(scmpReply);
@@ -167,27 +167,27 @@ public class SrvDataCommand extends CommandAdapter {
 				}
 
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeType.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
-				request.setAttribute(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+				request.setAttribute(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 
 				// bodyLength
 
 				// sequenceNr
 
 				// compression
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderType.COMPRESSION.getName());
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeType.COMPRESSION.getName());
 				if (compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderType.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeType.COMPRESSION.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader.get(SCMPHeaderType.MESSAGE_INFO.getName());
+				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeType.MESSAGE_INFO.getName());
 				ValidatorUtility.validateString(0, messageInfo, 256);
-				request.setAttribute(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
+				request.setAttribute(SCMPHeaderAttributeType.MESSAGE_INFO.getName(), messageInfo);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();

@@ -42,11 +42,11 @@ public class SCMPPart extends SCMP {
 	}
 	
 	public void setMessageId(String messageId) {
-		this.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), messageId);
+		this.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
 	}
 	
 	public String getMessageId() {
-		return this.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());		
+		return this.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());		
 	}
 
 

@@ -28,7 +28,7 @@ import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.util.ValidatorUtility;
 
@@ -60,10 +60,10 @@ public class ConnectTestCase extends SuperTestCase {
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderType.MSG_TYPE.getName()), SCMPMsgType.CONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName()), SCMPMsgType.CONNECT
 				.getResponseName());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
-				.getHeader(SCMPHeaderType.LOCAL_DATE_TIME.getName())));
+				.getHeader(SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName())));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
@@ -74,7 +74,7 @@ public class ConnectTestCase extends SuperTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
-						SCMPHeaderType.LOCAL_DATE_TIME.getName()))
+						SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName()))
 				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.

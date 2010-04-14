@@ -25,7 +25,7 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallAdapter;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
@@ -48,11 +48,11 @@ public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 	}
 	
 	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderType.SESSION_ID.getName(), sessionId);
+		call.setHeader(SCMPHeaderAttributeType.SESSION_ID.getName(), sessionId);
 	}
 
 	public void setHeader(Map<String, String> header) {

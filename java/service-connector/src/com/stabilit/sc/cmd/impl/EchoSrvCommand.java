@@ -11,7 +11,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
@@ -47,33 +47,33 @@ public class EchoSrvCommand extends CommandAdapter {
 		SCMP scmp = request.getSCMP();
 		Map<String, String> header = scmp.getHeader();
 
-		int maxNodes = scmp.getHeaderInt(SCMPHeaderType.MAX_NODES.getName());
+		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeType.MAX_NODES.getName());
 		SCMP result = null;
 
-		String ipList = header.get(SCMPHeaderType.IP_ADDRESS_LIST.getName());
+		String ipList = header.get(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderType.IP_ADDRESS_LIST.getName(), ipList);
+			scmp.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(), ipList);
 		}
 
 		if (maxNodes == 1) {
 			if (scmp.isPart()) {
 				result = new SCMPPart();
-				String messageId = scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());
-				result.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), messageId);
-				String callLength = scmp.getHeader(SCMPHeaderType.SCMP_CALL_LENGTH.getName());
-				result.setHeader(SCMPHeaderType.SCMP_CALL_LENGTH.getName(), callLength);
-				String scmpOffset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
-				result.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
+				String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
+				result.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
+				String callLength = scmp.getHeader(SCMPHeaderAttributeType.SCMP_CALL_LENGTH.getName());
+				result.setHeader(SCMPHeaderAttributeType.SCMP_CALL_LENGTH.getName(), callLength);
+				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
+				result.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), scmpOffset);
 			} else {
 				result = new SCMPReply();
 			}
 
 			result.setBody(scmp.getBody());
 			result.setSessionId(scmp.getSessionId());
-			result.setHeader(SCMPHeaderType.IP_ADDRESS_LIST.getName(), ipList);
+			result.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(), ipList);
 		} else {
 			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 			Session session = (Session) sessionRegistry.get(scmp.getSessionId());
@@ -92,9 +92,9 @@ public class EchoSrvCommand extends CommandAdapter {
 			} else {
 				System.out.println("EchoSrvCommand body = " + scmp.getBody().toString());
 			}
-			header.remove(SCMPHeaderType.MAX_NODES.getName());
+			header.remove(SCMPHeaderAttributeType.MAX_NODES.getName());
 			--maxNodes;
-			header.put(SCMPHeaderType.MAX_NODES.getName(), String.valueOf(maxNodes));
+			header.put(SCMPHeaderAttributeType.MAX_NODES.getName(), String.valueOf(maxNodes));
 			result = serviceRegistryItem.echoSrv(scmp);
 		}
 		result.setMessageType(getKey().getResponseName());

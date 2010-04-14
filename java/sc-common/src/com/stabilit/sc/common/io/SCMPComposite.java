@@ -49,15 +49,15 @@ public class SCMPComposite extends SCMP {
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setMessageId(messageId);
 		partRequest.setSessionId(request.getSessionId());
-		String serviceName = request.getHeader(SCMPHeaderType.SERVICE_NAME.getName());
-		partRequest.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
-		String messageInfo = request.getHeader(SCMPHeaderType.MESSAGE_INFO.getName());
-		partRequest.setHeader(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
-		int sequenceNr = request.getHeaderInt(SCMPHeaderType.SEQUENCE_NR.getName());
-		partRequest.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), sequenceNr);
-		this.scmpOffset = scmpPart.getHeaderInt(SCMPHeaderType.SCMP_OFFSET.getName());
+		String serviceName = request.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName());
+		partRequest.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
+		String messageInfo = request.getHeader(SCMPHeaderAttributeType.MESSAGE_INFO.getName());
+		partRequest.setHeader(SCMPHeaderAttributeType.MESSAGE_INFO.getName(), messageInfo);
+		int sequenceNr = request.getHeaderInt(SCMPHeaderAttributeType.SEQUENCE_NR.getName());
+		partRequest.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
+		this.scmpOffset = scmpPart.getHeaderInt(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
 		this.add(scmpPart);
-		partRequest.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), scmpOffset);
+		partRequest.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), scmpOffset);
 	}
 
 	@Override
@@ -77,10 +77,10 @@ public class SCMPComposite extends SCMP {
 		int bodyLength = scmp.getBodyLength();
 		this.scmpOffset += bodyLength;
 		this.scmpList.add(scmp);
-		partRequest.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), String.valueOf(this.scmpOffset));
+		partRequest.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), String.valueOf(this.scmpOffset));
 		if (scmp.isPart() == false) {
 			this.setHeader(scmp.getHeader());
-			this.setHeader(SCMPHeaderType.BODY_LENGTH.getName(), getBodyLength());
+			this.setHeader(SCMPHeaderAttributeType.BODY_LENGTH.getName(), getBodyLength());
 		}
 	}
 

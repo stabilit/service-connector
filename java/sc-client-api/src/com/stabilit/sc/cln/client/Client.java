@@ -28,7 +28,7 @@ import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 
@@ -76,8 +76,8 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
-			if (scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName()) == null) {
-				scmp.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
+			if (scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()) == null) {
+				scmp.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
 			}
 			while (scmp.isPart() == false) {
 				SCMP ret = clientConnection.sendAndReceive(scmp);

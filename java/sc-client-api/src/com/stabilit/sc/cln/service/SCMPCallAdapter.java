@@ -22,7 +22,7 @@ package com.stabilit.sc.cln.service;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPPart;
 
 /**
@@ -53,8 +53,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				this.call = new SCMP();
 			}
 			this.call.setSessionId(scmpSession.getSessionId());
-			this.call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), scmpSession
-					.getHeader(SCMPHeaderType.SERVICE_NAME.getName()));
+			this.call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmpSession
+					.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName()));
 		}
 
 		if (this.call == null) {
@@ -98,7 +98,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderType.COMPRESSION.getName(), compression);
+		call.setHeader(SCMPHeaderAttributeType.COMPRESSION.getName(), compression);
 	}
 	
 }

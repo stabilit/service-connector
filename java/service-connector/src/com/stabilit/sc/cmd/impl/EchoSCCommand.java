@@ -6,7 +6,7 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
@@ -38,13 +38,13 @@ public class EchoSCCommand extends CommandAdapter {
 
 		SCMP scmpReply = null;
 		if (scmp.isPart()) {
-			String messageId = scmp.getHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName());
-			String sequenceNr = scmp.getHeader(SCMPHeaderType.SEQUENCE_NR.getName());
-			String offset = scmp.getHeader(SCMPHeaderType.SCMP_OFFSET.getName());
+			String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
+			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName());
+			String offset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
 			scmpReply = new SCMPPart();
-			scmpReply.setHeader(SCMPHeaderType.SCMP_MESSAGE_ID.getName(), messageId);
-			scmpReply.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), sequenceNr);
-			scmpReply.setHeader(SCMPHeaderType.SCMP_OFFSET.getName(), offset);
+			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
+			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
+			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), offset);
 		} else {
 			scmpReply = new SCMP();
 		}

@@ -24,7 +24,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 
@@ -58,7 +58,7 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	}
 
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 	}
 
 	@Override

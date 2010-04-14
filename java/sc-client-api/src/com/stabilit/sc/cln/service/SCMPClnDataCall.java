@@ -22,7 +22,7 @@ package com.stabilit.sc.cln.service;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
@@ -45,16 +45,16 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	}
 
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 	}
 
 	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderType.MESSAGE_INFO.getName(), messageInfo);
+		call.setHeader(SCMPHeaderAttributeType.MESSAGE_INFO.getName(), messageInfo);
 	}
 	
 	@Override
 	public SCMP invoke() throws Exception {
-		this.call.setHeader(SCMPHeaderType.SEQUENCE_NR.getName(), SequenceNumber.getNextAsString());
+		this.call.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), SequenceNumber.getNextAsString());
 		return super.invoke();
 	}
 

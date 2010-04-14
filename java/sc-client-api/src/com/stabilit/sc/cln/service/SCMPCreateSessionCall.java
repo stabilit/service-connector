@@ -23,7 +23,7 @@ import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.io.SCMPSession;
-import com.stabilit.sc.common.io.SCMPHeaderType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
@@ -43,7 +43,7 @@ public class SCMPCreateSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMPSession invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
-		this.call.setHeader(SCMPHeaderType.IP_ADDRESS_LIST.getName(),localHost.getHostAddress());
+		this.call.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(),localHost.getHostAddress());
 		super.invoke();
 		SCMPSession scmpSession = new SCMPSession(this.result); // register session in internal registry
 		scmpSession.addSessionRegistry();
@@ -56,11 +56,11 @@ public class SCMPCreateSessionCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
 	}
 	
 	public void setSessionInfo(String sessionInfo) {
-		call.setHeader(SCMPHeaderType.SESSION_INFO.getName(), sessionInfo);
+		call.setHeader(SCMPHeaderAttributeType.SESSION_INFO.getName(), sessionInfo);
 	}
 	
 	@Override
