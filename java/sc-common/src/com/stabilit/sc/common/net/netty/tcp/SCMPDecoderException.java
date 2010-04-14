@@ -23,18 +23,18 @@ package com.stabilit.sc.common.net.netty.tcp;
  * @author JTraber
  *
  */
-public class SCMPNettyDecoderException extends Exception {
+public class SCMPDecoderException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6537338790870840933L;
 
-	public SCMPNettyDecoderException() {
+	public SCMPDecoderException() {
 		super();
 	}
 
-	public SCMPNettyDecoderException(String msg) {
+	public SCMPDecoderException(String msg) {
 		super(msg);
 	}
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.stabilit.sc.cln.net.client.nio.tcp;
+package com.stabilit.sc.cln.net.client.nio.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,16 +25,21 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderKey;
 import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
 import com.stabilit.sc.common.net.nio.NioTcpException;
+import com.stabilit.sc.common.net.nio.SCMPNioDecoderException;
+import com.stabilit.sc.common.net.nio.http.SCMPHttpFrameDecoder;
+import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
 
-public class NioTcpClientConnection extends ClientConnectionAdapter {
+public class NioHttpClientConnection extends ClientConnectionAdapter {
 
 	private SocketChannel socketChannel = null;
 	private int port;
 	private String host;
+	private int headLineSize = 0;
 
-	public NioTcpClientConnection() {
+	public NioHttpClientConnection() {
 	}
 
 	@Override
@@ -56,7 +61,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder.encode(baos, scmp);
+		ObjectStreamHttpUtil.writeRequestObject(baos, "localhost", scmp);
 		ByteBuffer writeBuffer = ByteBuffer.wrap(baos.toByteArray());
 		socketChannel.write(writeBuffer);
 		// read response
@@ -66,10 +71,10 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 			throw new NioTcpException("no bytes read");
 		}
 		// parse headline
-		int scmpLengthHeadlineInc = SCMPBasedFrameDecoder.parseScmpFrameSize(byteBuffer.array());
+		int httpFrameSize = SCMPHttpFrameDecoder.parseHttpFrameSize(byteBuffer.array());
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
-		while (scmpLengthHeadlineInc > bytesRead) {
+		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			bytesRead += read;
@@ -77,15 +82,14 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		}
 		baos.flush();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP ret = (SCMP) encoderDecoder.decode(bais);
+		SCMP ret = (SCMP) ObjectStreamHttpUtil.readObject(bais);
 		return ret;
 	}
 
 	@Override
 	public IFactoryable newInstance() {
-		return new NioTcpClientConnection();
+		return new NioHttpClientConnection();
 	}
 
 	@Override

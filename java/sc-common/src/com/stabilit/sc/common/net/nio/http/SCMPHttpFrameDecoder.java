@@ -17,48 +17,47 @@
 /**
  * 
  */
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.net.nio.http;
+
+import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.sc.common.net.netty.tcp.SCMPDecoderException;
 
 /**
  * @author JTraber
- * 
  */
-public enum SCMPHeaderKey {
+public class SCMPHttpFrameDecoder {
 
-	UNDEF, REQ, RES, EXC, PRQ, PRS;
-	
-	public static SCMPHeaderKey getMsgHeaderKey(String headerKey) {
-		return SCMPHeaderKey.valueOf(headerKey);
-	}
-	public static SCMPHeaderKey getMsgHeaderKey(byte[]b) {
-		if (b == null) {
-			return UNDEF;
-		}
-		if (b.length < 3) {
-			return UNDEF;
-		}
-		if (b[0] == 'R' && b[1] == 'E') {
-			if (b[2] == 'Q') {
-				return REQ;
-			}
-			if (b[2] == 'S') {
-				return RES;
-			}
-			return UNDEF;			
-		}
-		if (b[0] == 'P' && b[1] == 'R') {
-			if (b[2] == 'Q') {
-				return PRQ;
-			}
-			if (b[2] == 'S') {
-				return PRS;
-			}
-			return UNDEF;			
-		}
-		if (b[0] == 'E' && b[1] == 'X' &&  b[2] == 'C') {
-			return EXC;
-		}
-		return UNDEF;
-	}
+	static final byte CR = 13;
+	static final byte LF = 10;
+	static final byte[] CRLF = new byte[] { CR, LF };
 
+	public static int parseHttpFrameSize(byte[] buffer) throws SCMPDecoderException {
+		int sizeStart = 0;
+		int sizeEnd = 0;
+		int headerEnd = 0;
+		int bytesRead = buffer.length;
+		
+		
+		label: for (int i = 0; i < bytesRead; i++) {
+			if (buffer[i] == CR && buffer[i + 1] == LF) {
+				i += 2;
+				if (buffer[i] == CR && buffer[i + 1] == LF) {
+					headerEnd = i + 2;
+					break label;
+				}
+				if (buffer[i] == 'C' && buffer[i + 7] == '-' && buffer[i + 8] == 'L' && buffer[i + 14] == ':') {
+					sizeStart = i + 16;
+					sizeEnd = sizeStart + 1;
+					while (sizeEnd < bytesRead) {
+						if (buffer[sizeEnd + 1] == CR && buffer[sizeEnd + 2] == LF) {
+							break;
+						}
+						sizeEnd++;
+					}
+				}
+			}
+		}
+		int contentLength = SCMPBasedFrameDecoder.readInt(buffer, sizeStart, sizeEnd);
+		return contentLength + headerEnd;
+	}
 }

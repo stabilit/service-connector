@@ -56,7 +56,7 @@ public class SuperTestCase {
 	@After
 	public void tearDown() throws Exception {
 		client.disconnect();
-		client.destroy();
+		//client.destroy();
 	}
 	
 	@Override

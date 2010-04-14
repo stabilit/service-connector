@@ -8,15 +8,17 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.ctx.RequestContext;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.sc.common.net.nio.http.SCMPHttpFrameDecoder;
 import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
 
-public class NioTcpRequest implements IRequest {
+public class NioHttpRequest implements IRequest {
 
 	private SocketChannel socketChannel;
 	private SCMP scmp;
@@ -26,7 +28,7 @@ public class NioTcpRequest implements IRequest {
 	private int headLineSize = 0;
 	private SocketAddress socketAddress;
 
-	public NioTcpRequest(SocketChannel socketChannel) {
+	public NioHttpRequest(SocketChannel socketChannel) {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
 		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
@@ -58,13 +60,12 @@ public class NioTcpRequest implements IRequest {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-            throw new NioTcpException("no bytes read");			
-		}
-		// parse headline
-		int scmpLengthHeadlineInc = SCMPBasedFrameDecoder.parseScmpFrameSize(byteBuffer.array());
+			throw new NioTcpException("no bytes read");
+		}		
+		int httpFrameSize = SCMPHttpFrameDecoder.parseHttpFrameSize(byteBuffer.array());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
-		while (scmpLengthHeadlineInc > bytesRead) {
+		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			bytesRead += read;
@@ -72,9 +73,8 @@ public class NioTcpRequest implements IRequest {
 		}
 		baos.flush();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
+		SCMP scmp = (SCMP) ObjectStreamHttpUtil.readObject(bais);
 		this.scmp = scmp;
 	}
 
