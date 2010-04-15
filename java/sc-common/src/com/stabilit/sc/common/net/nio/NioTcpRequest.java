@@ -13,6 +13,7 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.util.MapBean;
@@ -70,17 +71,19 @@ public class NioTcpRequest implements IRequest {
 		if (bytesRead < 0) {
             throw new NioTcpDisconnectException("line disconnected");			
 		}
+		byte[] byteReadBuffer = byteBuffer.array();
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
-		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
+		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array());
+		baos.write(byteReadBuffer);
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			bytesRead += read;
-			baos.write(byteBuffer.array());
+			baos.write(byteReadBuffer);
 		}
 		baos.flush();
 		byte[] buffer = baos.toByteArray();

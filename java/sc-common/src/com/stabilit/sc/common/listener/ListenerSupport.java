@@ -15,12 +15,16 @@ public class ListenerSupport<T extends EventListener> {
 	public boolean isEmpty() {
 		return this.listenerList.isEmpty();
 	}
+	
+	public synchronized void clearAll() {
+		this.listenerList.clear();
+	}
 
-	public void addListener(T listener) {
+	public synchronized void addListener(T listener) {
 		listenerList.add(listener);
 	}
 
-	public void removeListener(T listener) {
+	public synchronized void removeListener(T listener) {
 		listenerList.remove(listener);
 	}
 

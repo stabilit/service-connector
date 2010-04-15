@@ -82,7 +82,8 @@ public class ClientSingleLargeEchoSCTestCase extends SuperSessionTestCase {
 		// }
 		sb.append("ABC");
 		try {
-			while (true) {
+			int index = 0;
+			while (index++ < 10) {
 				SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 				echoCall.setBody(sb.toString());
 				result = echoCall.invoke();
@@ -93,10 +94,10 @@ public class ClientSingleLargeEchoSCTestCase extends SuperSessionTestCase {
 				header = result.getHeader();
 				System.out.println(lastPartBody.length());
 				System.out.println(result.getBodyLength());
-				Assert.assertEquals(lastPartBody, result.getBody());
+				Assert.assertEquals(sb.toString(), result.getBody());
 				Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
 				Assert.assertNull(header.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));
-				Assert.assertEquals(bodyLength + "", header
+				Assert.assertEquals(sb.length() + "", header
 						.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
 				Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 			}

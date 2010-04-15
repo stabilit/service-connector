@@ -1,8 +1,9 @@
 package com.stabilit.sc.common.log;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +12,7 @@ import java.util.Date;
 import com.stabilit.sc.common.util.DateTimeUtility;
 
 public abstract class SimpleLogger implements ILogger {
-	private FileWriter fw;
+	private FileOutputStream fos;
 	protected PrintWriter pw;
 	private String dir;
 	private String fileName;
@@ -35,26 +36,60 @@ public abstract class SimpleLogger implements ILogger {
 		}
 		String fullPath = this.dir + dateFormat + "-" + fileName;
 		logFile = new File(fullPath);
-		fw = new FileWriter(fullPath, true);
-		pw = new PrintWriter(fw);
+		fos = new FileOutputStream(fullPath, true);
+		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
 	protected void closeAndOpen() throws IOException {
 		try {
 			pw.close();
-			fw.close();
+			fos.close();
 		} catch (Exception e) {
 		}
 		this.date = Calendar.getInstance().getTime();
 		String dateFormat = this.dateFormatter.format(date);
 		String fullPath = this.dir + dateFormat + "-" + fileName;
-		fw = new FileWriter(fullPath, true);
-		pw = new PrintWriter(fw);
+		fos = new FileOutputStream(fullPath, true);
+		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
 	@Override
 	public void log(Object obj) throws IOException {
 		throw new IOException("not supported");
+	}
+
+	@Override
+	public void log(byte[] buffer) throws IOException {		
+		if (DateTimeUtility.isSameDay(date) == false) {
+			// day did change
+			closeAndOpen();
+		}
+		try {
+			if (logFile.exists() == false) {
+				closeAndOpen();
+			}
+			fos.write(buffer);
+			fos.flush();
+		} catch (Exception e) {
+			closeAndOpen();
+		}
+	}
+
+	@Override
+	public void log(byte[] buffer, int offset, int length) throws IOException {		
+		if (DateTimeUtility.isSameDay(date) == false) {
+			// day did change
+			closeAndOpen();
+		}
+		try {
+			if (logFile.exists() == false) {
+				closeAndOpen();
+			}
+			fos.write(buffer, offset, length);
+			fos.flush();
+		} catch (Exception e) {
+			closeAndOpen();
+		}
 	}
 
 	@Override
@@ -67,7 +102,7 @@ public abstract class SimpleLogger implements ILogger {
 			if (logFile.exists() == false) {
 				closeAndOpen();
 			}
-			pw.println(msg);
+			pw.print(msg);
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
@@ -87,12 +122,12 @@ public abstract class SimpleLogger implements ILogger {
 				closeAndOpen();
 			}
 			pw.print(this.getLogHead(Level.EXCEPTION));
-			pw.println(t.toString());
+			pw.print(t.toString());
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
 			pw.print(this.getLogHead(Level.EXCEPTION));
-			pw.println(t.toString());
+			pw.print(t.toString());
 			pw.flush();
 		}
 	}

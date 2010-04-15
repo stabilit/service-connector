@@ -30,6 +30,12 @@ public class NioHttpResponse implements IResponse {
 		return ByteBuffer.wrap(buf);
 	}
 
+	
+	@Override
+	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
+		this.encoderDecoder = encoderDecoder;
+	}
+	
 	@Override
 	public void setSession(ISession session) {
 		this.session = session;

@@ -8,9 +8,14 @@ public interface ILogger extends IFactoryable {
 
 	public void log(Object obj) throws IOException;
 
+	public void log(byte[] buffer) throws IOException;
+
+	void log(byte[] buffer, int offset, int length) throws IOException;
+	
 	public void log(String msg) throws IOException;
 
 	public void log(Throwable t) throws IOException;
 
 	public void log(Level level, String msg) throws IOException;
+
 }

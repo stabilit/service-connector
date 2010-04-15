@@ -8,5 +8,7 @@ public interface IResponse {
 	public void setSession(ISession session);
 	
 	public void write() throws Exception;
+	
+	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
 
 }

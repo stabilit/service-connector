@@ -9,6 +9,7 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
 public class NioTcpResponse implements IResponse {
 
@@ -23,12 +24,19 @@ public class NioTcpResponse implements IResponse {
 		this.socketChannel = socketChannel;
 	}
 
-	public ByteBuffer getBuffer() throws Exception {
+	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
+		if (this.encoderDecoder == null) {
+		    this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
+		}
 		encoderDecoder.encode(baos, scmp);
 		byte[] buf = baos.toByteArray();
-		return ByteBuffer.wrap(buf);
+		return buf;
+	}
+
+	@Override
+	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
+		this.encoderDecoder = encoderDecoder;
 	}
 
 	@Override
@@ -54,7 +62,9 @@ public class NioTcpResponse implements IResponse {
 
 	@Override
 	public void write() throws Exception {
-		ByteBuffer buffer = this.getBuffer();
+		byte[] byteWriteBuffer = this.getBuffer();
+		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
+		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer);  // logs inside if registered
 		this.socketChannel.write(buffer);
 	}
 }

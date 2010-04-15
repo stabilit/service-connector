@@ -3,12 +3,14 @@ package com.stabilit.sc.cmd.impl;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
+import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
@@ -47,7 +49,7 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), offset);
 		} else {
-			scmpReply = new SCMP();
+			scmpReply = new SCMPReply();
 		}
 		Object obj = scmp.getBody();
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -59,6 +61,8 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 			System.out.println("EchoCommand not transitive body = " + obj.toString());
 		}
 		response.setSCMP(scmpReply);
+		// don't use large message encoder/decoder
+		response.setEncoderDecoder(EncoderDecoderFactory.newInstance());
 		return;
 	}
 

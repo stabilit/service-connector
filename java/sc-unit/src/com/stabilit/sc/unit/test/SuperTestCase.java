@@ -25,6 +25,8 @@ import org.junit.Before;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.log.ConnectionLogger;
 
 /**
  * @author JTraber
@@ -47,6 +49,8 @@ public class SuperTestCase {
 			config.load("sc-unit.properties");
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
+			// setup loggers
+			ConnectionListenerSupport.getInstance().addListener(new ConnectionLogger());
 			client.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -55,6 +59,7 @@ public class SuperTestCase {
 	
 	@After
 	public void tearDown() throws Exception {
+		ConnectionListenerSupport.getInstance().clearAll();
 		client.disconnect();
 		//client.destroy();
 	}

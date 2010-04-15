@@ -25,7 +25,6 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.listener.ConnectionEvent;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
@@ -61,11 +60,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		if (ConnectionListenerSupport.getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(this,
-					byteWriteBuffer);
-			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
-		}
+		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer);  // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
@@ -74,11 +69,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 			return null;
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		if (ConnectionListenerSupport.getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(this,
-					byteReadBuffer);
-			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
-		}		
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 

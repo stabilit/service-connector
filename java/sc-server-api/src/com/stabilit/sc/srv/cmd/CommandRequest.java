@@ -19,14 +19,13 @@
  */
 package com.stabilit.sc.srv.cmd;
 
-import java.nio.ByteBuffer;
-
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
 import com.stabilit.sc.common.io.SCMPPart;
+import com.stabilit.sc.common.io.SCMPPartReply;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
@@ -65,7 +64,7 @@ public class CommandRequest {
 			String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName());
 			String offset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());			
-			SCMP scmpReply = new SCMPPart();
+			SCMP scmpReply = new SCMPPartReply();
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), offset);
