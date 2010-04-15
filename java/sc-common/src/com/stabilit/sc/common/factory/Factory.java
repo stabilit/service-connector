@@ -28,21 +28,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Factory {
 
-	protected Map<String, IFactoryable> factoryMap = new ConcurrentHashMap<String, IFactoryable>();
+	protected Map<Object, IFactoryable> factoryMap = new ConcurrentHashMap<Object, IFactoryable>();
 
 	public IFactoryable getInstance() {
 		return getInstance("default");
 	}
 
-	public void add(String key, IFactoryable factoryInstance) {
+	public void add(Object key, IFactoryable factoryInstance) {
 		factoryMap.put(key, factoryInstance);
 	}
 
-	public void remove(String key) {
+	public void remove(Object key) {
 		factoryMap.remove(key);
 	}
 
-	public IFactoryable getInstance(String key) {
+	public IFactoryable getInstance(Object key) {
 		IFactoryable factoryInstance = factoryMap.get(key);
 		return factoryInstance;
 	}
@@ -51,7 +51,7 @@ public class Factory {
 		return newInstance("default");
 	}
 
-	public IFactoryable newInstance(String key) {
+	public IFactoryable newInstance(Object key) {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
 			return null;
