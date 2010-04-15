@@ -13,6 +13,8 @@ public interface IRequest {
 		
 	public SCMP getSCMP() throws Exception;
 	
+	public void setSCMP(SCMP scmp);
+	
 	public String getSessionId();
 	
 	public void setAttribute(String key, Object value);
@@ -22,5 +24,7 @@ public interface IRequest {
 	public MapBean<Object> getAttributeMapBean();
 
 	public SocketAddress getSocketAddress();
+	
+	public void read() throws Exception;
 		
 }

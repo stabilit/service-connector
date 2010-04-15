@@ -41,6 +41,11 @@ public class NettyTcpRequest implements IRequest {
 	}
 
 	@Override
+	public void setSCMP(SCMP scmp) {
+		this.scmp = scmp;
+	}
+
+	@Override
 	public String getSessionId() {
 		return scmp.getSessionId();
 	}
@@ -84,5 +89,10 @@ public class NettyTcpRequest implements IRequest {
 	@Override
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
+	}
+
+	@Override
+	public void read() throws Exception {
+		load();
 	}
 }

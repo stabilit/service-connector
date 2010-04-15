@@ -6,5 +6,7 @@ public interface IResponse {
 	public void setSCMP(SCMP scmp);
 
 	public void setSession(ISession session);
+	
+	public void write() throws Exception;
 
 }

@@ -14,10 +14,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.io.IFaultResponse;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
+import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.net.nio.NioHttpRequest;
 import com.stabilit.sc.common.net.nio.NioHttpResponse;
-import com.stabilit.sc.srv.cmd.CommandException;
+import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
@@ -133,26 +139,56 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 		}
 
 		public void run() {
+			
 			try {
 				ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 				serverRegistry.add(this.socketChannel, new ServerRegistryItem(NioHttpServer.this.server));
 				serverRegistry.setThreadLocal(this.socketChannel);
 				while (true) {
+
 					NioHttpRequest request = new NioHttpRequest(socketChannel);
 					NioHttpResponse response = new NioHttpResponse(socketChannel);
-					ICommand command = commandFactory.newCommand(request);
-					if (command == null) {
-						throw new CommandException("invalid command");
+
+					try {
+						ICommand command = commandFactory.newCommand(request);
+						if (command == null) {
+							SCMP scmpReq = request.getSCMP();
+							SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+							scmpFault.setMessageType(scmpReq.getMessageType());
+							scmpFault.setLocalDateTime();
+							response.setSCMP(scmpFault);
+							writeResponse(response);
+							return;
+						}
+
+						ICommandValidator commandValidator = command.getCommandValidator();
+						try {
+							commandValidator.validate(request, response);
+							command.run(request, response);
+						} catch (Exception ex) {
+							if (ex instanceof IFaultResponse) {
+								((IFaultResponse) ex).setFaultResponse(response);
+							}
+						}
+						// TODO error handling immer antworten?
+					} catch (Exception ex) {
+						if (NioTcpDisconnectException.class == ex.getClass()) {
+							throw ex;
+						}
+						SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+						scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
+						scmpFault.setLocalDateTime();
+						response.setSCMP(scmpFault);
 					}
-					command.run(request, response);
 					writeResponse(response);
 				}
-			} catch (Exception e) {
+
+			} catch (Throwable e) {
 				try {
 					socketChannel.close();
 				} catch (IOException ex) {
 				}
-			}
+			}			
 		}
 		private void writeResponse(NioHttpResponse response) throws Exception {
 			ByteBuffer buffer = response.getBuffer();

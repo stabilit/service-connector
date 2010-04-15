@@ -16,27 +16,26 @@ public class NioTcpResponse implements IResponse {
 	private SCMP scmp;
 	private ISession session;
 	private IEncoderDecoder encoderDecoder;
-	
+
 	public NioTcpResponse(SocketChannel socketChannel) {
 		this.scmp = null;
 		this.session = null;
 		this.socketChannel = socketChannel;
 	}
 
-	
 	public ByteBuffer getBuffer() throws Exception {
-	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	   this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
-	   encoderDecoder.encode(baos, scmp);
-	   byte[] buf = baos.toByteArray();
-	   return ByteBuffer.wrap(buf);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
+		encoderDecoder.encode(baos, scmp);
+		byte[] buf = baos.toByteArray();
+		return ByteBuffer.wrap(buf);
 	}
-	
+
 	@Override
 	public void setSession(ISession session) {
-	   this.session = session;	
+		this.session = session;
 	}
-	
+
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
@@ -45,11 +44,17 @@ public class NioTcpResponse implements IResponse {
 		try {
 			this.scmp = scmp;
 			if (this.session != null) {
-			   this.scmp.setSessionId(this.session.getId());
+				this.scmp.setSessionId(this.session.getId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
-		}		
+		}
+	}
+
+	@Override
+	public void write() throws Exception {
+		ByteBuffer buffer = this.getBuffer();
+		this.socketChannel.write(buffer);
 	}
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
@@ -56,6 +57,13 @@ public class NettyHttpResponse implements IResponse {
 			e.printStackTrace();
 			return;
 		}		
+	}
+
+	@Override
+	public void write() throws Exception {
+		ChannelBuffer buffer = this.getBuffer();
+		// Write the response.
+		ChannelFuture future = event.getChannel().write(buffer);
 	}
 
 }

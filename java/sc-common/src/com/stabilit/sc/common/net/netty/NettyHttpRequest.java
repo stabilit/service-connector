@@ -31,7 +31,7 @@ public class NettyHttpRequest implements IRequest {
 		this.socketAddress = socketAddress;
 		this.requestContext = new RequestContext(this.socketAddress);
 	}
-	
+
 	@Override
 	public String getSessionId() {
 		return scmp.getSessionId();
@@ -52,6 +52,11 @@ public class NettyHttpRequest implements IRequest {
 			}
 		}
 		return scmp;
+	}
+
+	@Override
+	public void setSCMP(SCMP scmp) {
+		this.scmp = scmp;
 	}
 
 	@Override
@@ -83,14 +88,19 @@ public class NettyHttpRequest implements IRequest {
 	public void setAttribute(String key, Object value) {
 		mapBean.setAttribute(key, value);
 	}
-	
+
 	@Override
 	public MapBean<Object> getAttributeMapBean() {
 		return mapBean;
 	}
-	
+
 	@Override
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
+	}
+
+	@Override
+	public void read() throws Exception {
+		load();
 	}
 }

@@ -37,7 +37,7 @@ public class SCMPComposite extends SCMP {
 	private int scmpOffset;
 	private ByteArrayOutputStream os;
 	private StringWriter w;
-
+	
 	public SCMPComposite(SCMP request, SCMPPart scmpPart) {
 		this.os = null;
 		this.w = null;

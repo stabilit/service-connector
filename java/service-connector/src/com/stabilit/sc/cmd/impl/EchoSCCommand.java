@@ -12,8 +12,9 @@ import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.srv.cmd.SCOnly;
 
-public class EchoSCCommand extends CommandAdapter {
+public class EchoSCCommand extends CommandAdapter implements SCOnly {
 
 	private static Logger log = Logger.getLogger(EchoSCCommand.class);
 
@@ -40,7 +41,7 @@ public class EchoSCCommand extends CommandAdapter {
 		if (scmp.isPart()) {
 			String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName());
-			String offset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
+			String offset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());			
 			scmpReply = new SCMPPart();
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);

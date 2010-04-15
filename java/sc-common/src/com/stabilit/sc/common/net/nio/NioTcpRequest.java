@@ -13,8 +13,8 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NioTcpRequest implements IRequest {
@@ -35,12 +35,21 @@ public class NioTcpRequest implements IRequest {
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
+	public void read() throws Exception {
+		load();
+	}
+	
 	@Override
 	public SCMP getSCMP() throws Exception {
 		if (scmp == null) {
 			load();
 		}
 		return scmp;
+	}
+	
+	@Override
+	public void setSCMP(SCMP scmp) {
+		this.scmp = scmp;
 	}
 
 	@Override
@@ -59,7 +68,7 @@ public class NioTcpRequest implements IRequest {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-            throw new NioTcpException("no bytes read");			
+            throw new NioTcpDisconnectException("line disconnected");			
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();

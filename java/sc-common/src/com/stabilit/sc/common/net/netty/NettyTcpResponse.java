@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.frame.Delimiters;
 
@@ -19,7 +20,7 @@ public class NettyTcpResponse implements IResponse {
 	private SCMP scmp;
 	private ISession session;
 	private IEncoderDecoder encoderDecoder;
-	
+
 	public NettyTcpResponse(MessageEvent event) {
 		this.scmp = null;
 		this.event = event;
@@ -29,20 +30,20 @@ public class NettyTcpResponse implements IResponse {
 	public MessageEvent getEvent() {
 		return event;
 	}
-	
+
 	public ChannelBuffer getBuffer() throws Exception {
-	   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	   this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
-	   encoderDecoder.encode(baos, scmp);
-	   byte[] buf = baos.toByteArray();
-	   return ChannelBuffers.copiedBuffer(buf);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
+		encoderDecoder.encode(baos, scmp);
+		byte[] buf = baos.toByteArray();
+		return ChannelBuffers.copiedBuffer(buf);
 	}
-	
+
 	@Override
 	public void setSession(ISession session) {
-	   this.session = session;	
+		this.session = session;
 	}
-	
+
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
@@ -51,11 +52,19 @@ public class NettyTcpResponse implements IResponse {
 		try {
 			this.scmp = scmp;
 			if (this.session != null) {
-			   this.scmp.setSessionId(this.session.getId());
+				this.scmp.setSessionId(this.session.getId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
-		}		
+		}
 	}
+
+	@Override
+	public void write() throws Exception {
+		ChannelBuffer buffer = this.getBuffer();
+		// Write the response.
+		ChannelFuture future = event.getChannel().write(buffer);
+	}
+
 }

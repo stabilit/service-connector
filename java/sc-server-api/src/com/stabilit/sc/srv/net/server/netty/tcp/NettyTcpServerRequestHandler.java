@@ -75,7 +75,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
-				writeResponse(response);
+				response.write();
 				return;
 			}
 
@@ -96,14 +96,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
-		writeResponse(response);
+		response.write();
 	}
 
-	private void writeResponse(NettyTcpResponse response) throws Exception {
-		MessageEvent event = response.getEvent();
-		ChannelBuffer buffer = response.getBuffer();
-
-		// Write the response.
-		ChannelFuture future = event.getChannel().write(buffer);
-	}
 }
