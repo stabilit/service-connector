@@ -23,13 +23,10 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderKey;
-import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.net.nio.NioTcpException;
-import com.stabilit.sc.common.net.nio.SCMPNioDecoderException;
-import com.stabilit.sc.common.net.nio.http.SCMPHttpFrameDecoder;
 import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
 
 public class NioHttpClientConnection extends ClientConnectionAdapter {
@@ -71,7 +68,8 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 			throw new NioTcpException("no bytes read");
 		}
 		// parse headline
-		int httpFrameSize = SCMPHttpFrameDecoder.parseHttpFrameSize(byteBuffer.array());
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
+		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
 		while (httpFrameSize > bytesRead) {

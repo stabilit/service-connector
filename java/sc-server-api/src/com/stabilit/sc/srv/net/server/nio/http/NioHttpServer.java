@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.net.nio.NioHttpRequest;
 import com.stabilit.sc.common.net.nio.NioHttpResponse;
-import com.stabilit.sc.common.net.nio.NioTcpResponse;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;

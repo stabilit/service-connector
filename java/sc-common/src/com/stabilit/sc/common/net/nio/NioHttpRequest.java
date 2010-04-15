@@ -11,10 +11,9 @@ import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
-import com.stabilit.sc.common.net.nio.http.SCMPHttpFrameDecoder;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
 
@@ -61,8 +60,10 @@ public class NioHttpRequest implements IRequest {
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
 			throw new NioTcpException("no bytes read");
-		}		
-		int httpFrameSize = SCMPHttpFrameDecoder.parseHttpFrameSize(byteBuffer.array());
+		}
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
+		// warning, returns always the same instance, singleton
+		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
 		while (httpFrameSize > bytesRead) {

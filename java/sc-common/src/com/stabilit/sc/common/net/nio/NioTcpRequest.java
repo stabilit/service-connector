@@ -13,7 +13,8 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NioTcpRequest implements IRequest {
@@ -61,7 +62,9 @@ public class NioTcpRequest implements IRequest {
             throw new NioTcpException("no bytes read");			
 		}
 		// parse headline
-		int scmpLengthHeadlineInc = SCMPBasedFrameDecoder.parseScmpFrameSize(byteBuffer.array());
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		// warning, returns always the same instance, singleton
+		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
 		while (scmpLengthHeadlineInc > bytesRead) {

@@ -17,47 +17,16 @@
 /**
  * 
  */
-package com.stabilit.sc.common.net.nio.http;
+package com.stabilit.sc.common.net;
 
-import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
-import com.stabilit.sc.common.net.netty.tcp.SCMPDecoderException;
+import com.stabilit.sc.common.factory.IFactoryable;
 
 /**
  * @author JTraber
+ * 
  */
-public class SCMPHttpFrameDecoder {
+public interface IFrameDecoder extends IFactoryable {
 
-	static final byte CR = 13;
-	static final byte LF = 10;
-	static final byte[] CRLF = new byte[] { CR, LF };
+	public int parseFrameSize(byte[] buffer) throws Exception;
 
-	public static int parseHttpFrameSize(byte[] buffer) throws SCMPDecoderException {
-		int sizeStart = 0;
-		int sizeEnd = 0;
-		int headerEnd = 0;
-		int bytesRead = buffer.length;
-		
-		
-		label: for (int i = 0; i < bytesRead; i++) {
-			if (buffer[i] == CR && buffer[i + 1] == LF) {
-				i += 2;
-				if (buffer[i] == CR && buffer[i + 1] == LF) {
-					headerEnd = i + 2;
-					break label;
-				}
-				if (buffer[i] == 'C' && buffer[i + 7] == '-' && buffer[i + 8] == 'L' && buffer[i + 14] == ':') {
-					sizeStart = i + 16;
-					sizeEnd = sizeStart + 1;
-					while (sizeEnd < bytesRead) {
-						if (buffer[sizeEnd + 1] == CR && buffer[sizeEnd + 2] == LF) {
-							break;
-						}
-						sizeEnd++;
-					}
-				}
-			}
-		}
-		int contentLength = SCMPBasedFrameDecoder.readInt(buffer, sizeStart, sizeEnd);
-		return contentLength + headerEnd;
-	}
 }

@@ -25,8 +25,11 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
 import com.stabilit.sc.common.net.nio.NioTcpException;
+import com.stabilit.sc.common.net.nio.NioTcpRequest;
 
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 
@@ -66,7 +69,9 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 			throw new NioTcpException("no bytes read");
 		}
 		// parse headline
-		int scmpLengthHeadlineInc = SCMPBasedFrameDecoder.parseScmpFrameSize(byteBuffer.array());
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		// warning, returns always the same instance, singleton
+		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
 		while (scmpLengthHeadlineInc > bytesRead) {

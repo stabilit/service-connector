@@ -25,8 +25,8 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
-import com.stabilit.sc.common.io.SCMPHeaderKey;
-import com.stabilit.sc.common.net.nio.SCMPNioDecoderException;
+import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
 
 /**
  * @author JTraber
@@ -35,21 +35,29 @@ import com.stabilit.sc.common.net.nio.SCMPNioDecoderException;
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
 	private DecodeState decodeState;
+	private IFrameDecoder scmpFrameDecoder;
+	private int scmpFrameSize;
 
 	public SCMPBasedFrameDecoder() {
+		this.scmpFrameSize = 0;
 		this.decodeState = DecodeState.READY;
+		// warning, returns always the same instance, singleton
+		this.scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 	}
 
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer)
 			throws Exception {
-		int scmpFrameSize = 0;
 		switch (this.decodeState) {
 		case READY:
 			// read scmp headline
 			try {
-				scmpFrameSize = SCMPBasedFrameDecoder.parseScmpFrameSize(buffer.toByteBuffer()
-						.array());
+				// parse headline
+				scmpFrameSize = scmpFrameDecoder.parseFrameSize(buffer.toByteBuffer().array());
+				if (scmpFrameSize == 0) {
+					return null;
+				}
+				this.decodeState = DecodeState.SIZE;
 			} catch (SCMPDecoderException e) {
 				decodeState = DecodeState.EXC;
 				throw e;
@@ -70,76 +78,6 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 			}
 		}
 		return null;
-	}
-
-	public static int parseScmpFrameSize(byte[] buffer) throws Exception {
-
-		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
-		int scmpHeadlineLength = 0;
-		int scmpLength = 0;
-
-		int readableBytes = buffer.length;
-		for (int i = 0; i < readableBytes; i++) {
-			byte b = buffer[i];
-			if (b == '\n') {
-				if (i <= 2) {
-					throw new SCMPDecoderException("invalid scmp header line");
-				}
-				headerKey = SCMPHeaderKey.getMsgHeaderKey(buffer);
-				if (headerKey == SCMPHeaderKey.UNDEF) {
-					throw new SCMPDecoderException("invalid scmp header line");
-				}
-
-				int startIndex = 0;
-				int endIndex = 0;
-				label: for (startIndex = 0; startIndex < buffer.length; startIndex++) {
-
-					if (buffer[startIndex] == '/' || buffer[startIndex] == '&') {
-
-						if (buffer[startIndex + 1] == 's' && buffer[startIndex + 2] == '=') {
-
-							startIndex += 3;
-							for (endIndex = startIndex; endIndex < buffer.length; endIndex++) {
-								if (buffer[endIndex] == '&' || buffer[endIndex] == ' ')
-									break label;
-							}
-						}
-					}
-				}
-				// parse scmpLength
-				scmpLength = readInt(buffer, startIndex, endIndex - 1);
-				scmpHeadlineLength = i + 1;
-				return scmpLength + scmpHeadlineLength;
-			}
-		}
-		throw new SCMPNioDecoderException("invalid scmp header line");
-	}
-
-	public static int readInt(byte[] b, int startOffset, int endOffset) throws SCMPDecoderException {
-
-		if (b == null) {
-			throw new SCMPDecoderException("invalid scmp message length");
-		}
-
-		if (endOffset <= 0 || endOffset <= startOffset) {
-			throw new SCMPDecoderException("invalid scmp message length");
-		}
-
-		if ((endOffset - startOffset) > 5) {
-			throw new SCMPDecoderException("invalid scmp message length");
-		}
-
-		int scmpLength = 0;
-		int factor = 1;
-		for (int i = endOffset; i >= startOffset; i--) {
-			if (b[i] >= '0' && b[i] <= '9') {
-				scmpLength += ((int) b[i] - 0x30) * factor;
-				factor *= 10;
-			} else {
-				throw new SCMPDecoderException("invalid scmp message length");
-			}
-		}
-		return scmpLength;
 	}
 
 	private enum DecodeState {
