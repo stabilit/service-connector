@@ -2,6 +2,7 @@ package com.stabilit.sc.common.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DateTimeUtility {
 	
@@ -17,4 +18,26 @@ public class DateTimeUtility {
 			return SDF.format(date);
 		}
 	}
+	
+	@SuppressWarnings("deprecation")
+	public static boolean isSameDay(Date date) {
+		Date now = Calendar.getInstance().getTime();
+		int nowDay = now.getDate();
+		int nowMonth = now.getMonth();
+		int nowYear = now.getYear();
+		int cDay = date.getDate();
+		int cMonth = date.getMonth();
+		int cYear = date.getYear();
+		if (cYear != nowYear) {
+			return false;
+		}
+		if (cMonth != nowMonth) {
+			return false;
+		}
+		if (cDay != nowDay) {
+			return false;
+		}
+		return true;
+	}
+
 }
