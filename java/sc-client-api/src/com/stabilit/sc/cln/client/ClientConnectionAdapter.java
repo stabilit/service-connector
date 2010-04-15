@@ -36,4 +36,5 @@ public abstract class ClientConnectionAdapter implements IClientConnection {
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
 	}
+			
 }

@@ -25,11 +25,11 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.listener.ConnectionEvent;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
-import com.stabilit.sc.common.net.netty.tcp.SCMPBasedFrameDecoder;
 import com.stabilit.sc.common.net.nio.NioTcpException;
-import com.stabilit.sc.common.net.nio.NioTcpRequest;
 
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 
@@ -60,7 +60,13 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder.encode(baos, scmp);
-		ByteBuffer writeBuffer = ByteBuffer.wrap(baos.toByteArray());
+		byte[] byteWriteBuffer = baos.toByteArray();
+		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
+		if (ConnectionListenerSupport.getInstance().isEmpty() == false) {
+			ConnectionEvent connectionEvent = new ConnectionEvent(this,
+					byteWriteBuffer);
+			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
+		}
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
@@ -68,10 +74,17 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		if (bytesRead < 0) {
 			throw new NioTcpException("no bytes read");
 		}
+		byte[] byteReadBuffer = byteBuffer.array();
+		if (ConnectionListenerSupport.getInstance().isEmpty() == false) {
+			ConnectionEvent connectionEvent = new ConnectionEvent(this,
+					byteReadBuffer);
+			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
+		}		
 		// parse headline
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory
+				.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
-		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
+		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array());
 		while (scmpLengthHeadlineInc > bytesRead) {

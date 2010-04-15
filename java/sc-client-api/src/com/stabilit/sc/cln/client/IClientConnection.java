@@ -13,7 +13,7 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
-*/
+ */
 /**
  * 
  */
@@ -22,23 +22,25 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.common.IConnection;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.listener.IConnectionListener;
 
 /**
  * @author JTraber
- *
+ * 
  */
 public interface IClientConnection extends IConnection {
-		
+
 	/**
 	 * @throws ConnectionException
 	 */
 	void connect() throws Exception;
-	
+
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-	
+
 	public void disconnect() throws Exception;
 
-	public void destroy() throws Exception;	
-	
+	public void destroy() throws Exception;
+
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
+
 }
