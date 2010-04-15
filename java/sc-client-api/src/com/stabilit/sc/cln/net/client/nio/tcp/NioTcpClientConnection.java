@@ -21,15 +21,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.cln.client.ClientConnectionAdapter;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.listener.ConnectionEvent;
-import com.stabilit.sc.common.listener.ConnectionListenerSupport;
-import com.stabilit.sc.common.net.FrameDecoderFactory;
-import com.stabilit.sc.common.net.IFrameDecoder;
-import com.stabilit.sc.common.net.nio.NioTcpException;
+
 
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 
@@ -72,7 +64,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			throw new NioTcpException("no bytes read");
+			return null;
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
 		if (ConnectionListenerSupport.getInstance().isEmpty() == false) {
@@ -81,8 +73,9 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
 		}		
 		// parse headline
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory
-				.getDefaultFrameDecoder();
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+
+
 		// warning, returns always the same instance, singleton
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
