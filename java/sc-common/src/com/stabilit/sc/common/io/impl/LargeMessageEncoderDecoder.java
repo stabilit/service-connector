@@ -129,12 +129,8 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
-//		String messageType = scmp.getMessageType(); // messageType is never null
-//		if (messageType == null) {
-//			throw new EncodingDecodingException("No messageType found (null)");
-//		}
-		// message chunking
 
+		// message chunking
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
 		if (scmp.isReply()) {
 			if (scmp.isFault()) {
@@ -149,21 +145,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				headerKey = SCMPHeaderKey.REQ;
 			}
 		}
-		// SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
-		// if (messageType.startsWith("REQ_")) {
-		// if (scmp.isPart() || scmp.isComposite()) {
-		// headerKey = SCMPHeaderKey.PRQ;
-		// } else {
-		// headerKey = SCMPHeaderKey.REQ;
-		//
-		// }
-		// } else if (messageType.startsWith("RES_")) {
-		// if (scmp.isFault()) {
-		// headerKey = SCMPHeaderKey.EXC;
-		// } else {
-		// headerKey = SCMPHeaderKey.PRS;
-		// }
-		// }
+
 		int scmpOffsetInt = 0;
 		int scmpSequenceNrInt = 0;
 		if (scmp.isComposite() == false) {
@@ -187,7 +169,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		// create meta part
 		StringBuilder sb = new StringBuilder();
 
-		// TODO ?? needs to be removed will be set 10 lines down
+		// TODO ?? header fields need to be removed they will be set 10 lines down - otherwise double fields
 		metaMap.remove(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
 		metaMap.remove(SCMPHeaderAttributeType.BODY_LENGTH.getName());
 		metaMap.remove(SCMPHeaderAttributeType.SCMP_CALL_LENGTH.getName());
@@ -298,6 +280,9 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					throw new EncodingDecodingException("unsupported large message body type");
 				}
 			} else {
+				sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
+				sb.append(EQUAL_SIGN);
+				sb.append("0\n");
 				int messageLength = sb.length();
 				writeHeadLine(bw, headerKey, messageLength);
 				bw.write(sb.toString());

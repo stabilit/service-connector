@@ -34,6 +34,7 @@ import com.stabilit.sc.cln.net.client.netty.http.NettyOperationListener;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
 public class NettyTcpClientConnection extends ClientConnectionAdapter {
 
@@ -99,12 +100,14 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
+		ConnectionListenerSupport.fireWrite(this, chBuffer.toByteBuffer().array());  // logs inside if registered
 
 		NettyTcpClientResponseHandler handler = channel.getPipeline()
 				.get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync();
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
+		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		//TODO encoder ?? large

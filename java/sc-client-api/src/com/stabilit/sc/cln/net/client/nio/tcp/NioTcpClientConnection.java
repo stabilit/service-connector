@@ -68,12 +68,10 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		if (bytesRead < 0) {
 			return null;
 		}
-		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
-
-
+		byte[] byteReadBuffer = byteBuffer.array();		
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		// warning, returns always the same instance, singleton
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();

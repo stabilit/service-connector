@@ -12,7 +12,7 @@ public class SCMP implements Serializable {
 	public static final String SCMP_VERSION = "1.0";
 	//TODO implementation version where?
 	public static final String SC_VERSION = "1.0-00";
-	public static final int LARGE_MESSAGE_LIMIT = 1;
+	public static final int LARGE_MESSAGE_LIMIT = 60<<10;
 
 	protected Map<String, String> header;
 	protected Object body;

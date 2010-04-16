@@ -22,9 +22,7 @@ package com.stabilit.sc.srv.net.server.netty.tcp;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -39,6 +37,7 @@ import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
+import com.stabilit.sc.srv.cmd.CommandRequest;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -67,8 +66,9 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			Channel channel = ctx.getChannel();
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
-					
-			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+			
+			CommandRequest commandRequest = new CommandRequest(request, response);
+			ICommand command = commandRequest.readCommand();
 			if (command == null) {
 				SCMP scmpReq = request.getSCMP();
 				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);

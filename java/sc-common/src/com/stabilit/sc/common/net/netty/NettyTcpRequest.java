@@ -13,6 +13,7 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NettyTcpRequest implements IRequest {
@@ -60,6 +61,7 @@ public class NettyTcpRequest implements IRequest {
 	private void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
+		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
 		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);

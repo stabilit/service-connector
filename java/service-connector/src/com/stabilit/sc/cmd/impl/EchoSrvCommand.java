@@ -72,7 +72,6 @@ public class EchoSrvCommand extends CommandAdapter {
 			}
 
 			result.setBody(scmp.getBody());
-			result.setHeader("scmpCompositeSequence", scmp.getHeader("scmpCompositeSequence"));
 			result.setSessionId(scmp.getSessionId());
 			result.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(), ipList);
 		} else {

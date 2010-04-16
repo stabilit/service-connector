@@ -22,7 +22,6 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.common.IConnection;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.listener.IConnectionListener;
 
 /**
  * @author JTraber

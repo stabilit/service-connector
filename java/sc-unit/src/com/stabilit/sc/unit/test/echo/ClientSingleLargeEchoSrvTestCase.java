@@ -16,9 +16,6 @@
  */
 package com.stabilit.sc.unit.test.echo;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -53,16 +50,6 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		int bodyLength = sb.length() - start;
 		String lastPartBody = sb.substring(start);
 		Map<String, String> header = result.getHeader();
-		System.out.println(lastPartBody.length());
-		System.out.println(result.getBodyLength());
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("expected.txt")));
-		bw.write(lastPartBody);
-		bw.flush();
-		bw.close();
-		BufferedWriter bw1 = new BufferedWriter(new FileWriter(new File("actual.txt")));
-		bw1.write(result.getBody().toString());
-		bw1.flush();
-		bw1.close();
 		Assert.assertEquals(lastPartBody, result.getBody());
 		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));
@@ -88,8 +75,6 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		int bodyLength = sb.length() - start;
 		String lastPartBody = sb.substring(start);
 		Map<String, String> header = result.getHeader();
-		System.out.println(lastPartBody.length());
-		System.out.println(result.getBodyLength());
 		Assert.assertEquals(lastPartBody, result.getBody());
 		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
 		Assert.assertNull(header.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));

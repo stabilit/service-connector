@@ -4,6 +4,9 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 
 	private static ConnectionListenerSupport connectionListenerSupport = new ConnectionListenerSupport();
 
+	private ConnectionListenerSupport() {
+	}
+	
 	public static ConnectionListenerSupport getInstance() {
 		return connectionListenerSupport;
 	}
@@ -34,9 +37,6 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer, offset, length);
 			ConnectionListenerSupport.getInstance().fireRead(connectionEvent);
 		}
-	}
-
-	private ConnectionListenerSupport() {
 	}
 
 	public void fireWrite(ConnectionEvent connectionEvent) {

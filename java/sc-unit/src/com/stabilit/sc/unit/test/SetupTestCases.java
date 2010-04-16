@@ -19,7 +19,11 @@
  */
 package com.stabilit.sc.unit.test;
 
+import java.io.File;
+
 import com.stabilit.sc.ServiceConnector;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.log.ConnectionLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.unit.UnitCommandFactory;
@@ -36,7 +40,31 @@ public class SetupTestCases {
 	private SetupTestCases() {
 	}
 	
+	public static void init() {
+		deleteLog();
+		// setup loggers
+		try {
+			ConnectionListenerSupport.getInstance().addListener(new ConnectionLogger());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteLog() {
+		File logDir = new File("log");
+		
+		for (File file : logDir.listFiles()) {
+			
+			if(file.isFile()) {
+				if(file.getAbsolutePath().endsWith(".log")) {
+					file.delete();
+				}
+			}
+		}
+	}
+	
 	public static void setupAll() {
+		init();
 		if (setupTestCases == null) {
 			setupTestCases = new SetupTestCases();
 			try {
@@ -50,6 +78,7 @@ public class SetupTestCases {
 	}
 	
 	public static void setupSC() {
+		init();
 		if (setupTestCases == null) {
 			setupTestCases = new SetupTestCases();
 			try {

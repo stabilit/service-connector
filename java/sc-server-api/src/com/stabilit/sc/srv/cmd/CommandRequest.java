@@ -68,6 +68,7 @@ public class CommandRequest {
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), offset);
+			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
 			response.write();
 			request.read();

@@ -71,19 +71,19 @@ public class NioTcpRequest implements IRequest {
 		if (bytesRead < 0) {
             throw new NioTcpDisconnectException("line disconnected");			
 		}
-		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
+		byte[] byteReadBuffer = byteBuffer.array();
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteReadBuffer);
+		baos.write(byteBuffer.array());
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			bytesRead += read;
-			baos.write(byteReadBuffer);
+			baos.write(byteBuffer.array());
 		}
 		baos.flush();
 		byte[] buffer = baos.toByteArray();

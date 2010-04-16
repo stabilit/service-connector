@@ -79,12 +79,9 @@ public class Client implements IClient {
 			if (scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()) == null) {
 				scmp.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
 			}
-			int scmpCompositeSequence = 0;
 			while (scmp.isPart() == false) {
 				
-				scmp.setHeader("scmpCompositeSequence", ++scmpCompositeSequence);
 				SCMP ret = clientConnection.sendAndReceive(scmp);
-				System.out.println("scmpCompositeSequence : " + ret.getHeader("scmpCompositeSequence"));
 				if (ret.isPart() == false) {
 					return ret;
 				}

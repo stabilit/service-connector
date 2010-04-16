@@ -125,12 +125,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-		
-//		String messageType = scmp.getMessageType(); // messageType is never null
-//		if (messageType == null) {
-//			throw new EncodingDecodingException("No messageType found (null)");
-//		}
-		
+				
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
 		if(scmp.isReply()) {
 			headerKey = SCMPHeaderKey.RES;
@@ -140,15 +135,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		} else {
 			headerKey = SCMPHeaderKey.REQ;
 		}
-//		if (messageType.startsWith("REQ_")) {
-//			headerKey = SCMPHeaderKey.REQ;
-//		} else if (messageType.startsWith("RES_")) {
-//			if (scmp.isFault()) {
-//				headerKey = SCMPHeaderKey.EXC;
-//			} else {
-//				headerKey = SCMPHeaderKey.RES;
-//			}
-//		}
+
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
 
 		for (Entry<String, String> entry : entrySet) {
@@ -218,6 +205,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					throw new EncodingDecodingException("unsupported body type");
 				}
 			} else {
+				sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
+				sb.append(EQUAL_SIGN);
+				sb.append("0\n");
 				int messageLength = sb.length();
 				writeHeadLine(bw, headerKey, messageLength);
 				bw.write(sb.toString());

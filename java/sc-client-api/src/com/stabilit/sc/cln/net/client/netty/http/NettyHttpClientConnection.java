@@ -38,6 +38,7 @@ import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
 public class NettyHttpClientConnection extends ClientConnectionAdapter {
 
@@ -108,6 +109,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		ChannelFuture future = channel.write(request);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
+		ConnectionListenerSupport.fireWrite(this, buffer);  // logs inside if registered
 
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(
 				NettyHttpClientResponseHandler.class);
@@ -115,6 +117,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
+		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		//TODO encoder ?? large

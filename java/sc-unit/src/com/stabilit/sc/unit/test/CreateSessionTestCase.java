@@ -74,7 +74,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		SCMP inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
+		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=bodyLength=0;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
