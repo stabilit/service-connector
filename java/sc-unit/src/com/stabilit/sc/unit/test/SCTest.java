@@ -32,6 +32,7 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
 import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSrvTestCase;
+import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSrvTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
@@ -53,6 +54,7 @@ import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
 	EchoSrvTestCase.class,
 	EchoSCTestCase.class,
 	ClientSingleLargeEchoSrvTestCase.class,
+	ClientSingleLargeEchoSCTestCase.class,
 	ClientPartLargeEchoSrvTestCase.class,
 	ClientPartLargeEchoSCTestCase.class})
 public class SCTest {

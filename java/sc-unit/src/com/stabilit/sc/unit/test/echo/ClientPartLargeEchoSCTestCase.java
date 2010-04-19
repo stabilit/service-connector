@@ -69,7 +69,6 @@ public class ClientPartLargeEchoSCTestCase extends SuperTestCase {
 					SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()), header
 					.get(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()));
 
-			Assert.assertEquals("0", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 			Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 			Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.SCMP_OFFSET.getName()));
 			bodyLength += s.length();

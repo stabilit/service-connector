@@ -39,7 +39,7 @@ public class NioTcpRequest implements IRequest {
 	public void read() throws Exception {
 		load();
 	}
-	
+
 	@Override
 	public SCMP getSCMP() throws Exception {
 		if (scmp == null) {
@@ -47,7 +47,7 @@ public class NioTcpRequest implements IRequest {
 		}
 		return scmp;
 	}
-	
+
 	@Override
 	public void setSCMP(SCMP scmp) {
 		this.scmp = scmp;
@@ -69,24 +69,24 @@ public class NioTcpRequest implements IRequest {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-            throw new NioTcpDisconnectException("line disconnected");			
+			throw new NioTcpDisconnectException("line disconnected");
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array(),0,bytesRead);
+		baos.write(byteBuffer.array(), 0, bytesRead);
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
 				throw new IOException("read failed (<0)");
-			}		
+			}
 			bytesRead += read;
-			baos.write(byteBuffer.array(),0,read);
+			baos.write(byteBuffer.array(), 0, read);
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();

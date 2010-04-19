@@ -61,7 +61,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer);  // logs inside if registered
+		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
@@ -71,12 +71,12 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
-		byte[] byteReadBuffer = byteBuffer.array();		
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
+		byte[] byteReadBuffer = byteBuffer.array();
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
 		// warning, returns always the same instance, singleton
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array());
+		baos.write(byteBuffer.array(), 0, bytesRead);
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
@@ -84,7 +84,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 				throw new NioTcpException("no bytes read");
 			}
 			bytesRead += read;
-			baos.write(byteBuffer.array());
+			baos.write(byteBuffer.array(), 0, read);
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();

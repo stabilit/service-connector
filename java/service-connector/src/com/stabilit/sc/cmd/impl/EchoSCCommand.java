@@ -53,25 +53,6 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 			scmpReply = new SCMPReply();
 		}
 		Object obj = scmp.getBody();
-		String bodyString = (String) obj;
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 19000; i++) {
-			sb.append(i);
-			if (sb.length() > (SCMP.LARGE_MESSAGE_LIMIT))
-				break;
-		}
-		String sbString = sb.toString();
-		if (!sbString.equals(bodyString)) {
-			System.out.println("resultString.length = " + bodyString.length());
-			System.out.println("sbString.length = " + sbString.length());
-			for (int i = 0; i < sbString.length(); i++) {
-				if (bodyString.charAt(i) != sbString.charAt(i)) {
-					System.err.println("char mismatch at index = " + i + " result char is "
-							+ bodyString.charAt(i) + ", sbString char is " + sbString.charAt(i));
-					break;
-				}
-			}
-		}
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmp.getSessionId());
 		scmpReply.setBody(obj);
