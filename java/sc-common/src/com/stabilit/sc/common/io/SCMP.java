@@ -1,6 +1,5 @@
 package com.stabilit.sc.common.io;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +9,9 @@ public class SCMP implements Serializable {
 	private static final long serialVersionUID = -3464445251398033295L;
 
 	public static final String SCMP_VERSION = "1.0";
-	//TODO implementation version where?
+	// TODO implementation version where?
 	public static final String SC_VERSION = "1.0-00";
-	public static final int LARGE_MESSAGE_LIMIT = 60<<10;
+	public static final int LARGE_MESSAGE_LIMIT = 60 << 10;
 
 	protected Map<String, String> header;
 	protected Object body;
@@ -27,17 +26,17 @@ public class SCMP implements Serializable {
 	}
 
 	public void setMessageType(String messageType) {
-		setHeader(SCMPHeaderAttributeType.MSG_TYPE.getName(), messageType);
+		setHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType);
 	}
 
 	public String getMessageType() {
-		return getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName());
+		return getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName());
 	}
 
 	public boolean isFault() {
 		return false;
 	}
-	
+
 	public boolean isReply() {
 		return false;
 	}
@@ -45,7 +44,7 @@ public class SCMP implements Serializable {
 	public boolean isPart() {
 		return false;
 	}
-	
+
 	public boolean isComposite() {
 		return false;
 	}
@@ -62,6 +61,14 @@ public class SCMP implements Serializable {
 			return false;
 		}
 		return String.class == this.body.getClass();
+	}
+
+	public void removeHeader(String name) {
+		header.remove(name);
+	}
+
+	public void removeHeader(SCMPHeaderAttributeKey headerType) {
+		header.remove(headerType.getName());
 	}
 
 	public void setHeader(String name, String value) {
@@ -110,14 +117,14 @@ public class SCMP implements Serializable {
 	}
 
 	public String getSessionId() {
-		return header.get(SCMPHeaderAttributeType.SESSION_ID.getName());
+		return header.get(SCMPHeaderAttributeKey.SESSION_ID.getName());
 	}
 
 	public void setSessionId(String sessionId) {
 		if (sessionId == null) {
 			return;
 		}
-		header.put(SCMPHeaderAttributeType.SESSION_ID.getName(), sessionId);
+		header.put(SCMPHeaderAttributeKey.SESSION_ID.getName(), sessionId);
 	}
 
 	public Map<String, String> getHeader() {
@@ -130,6 +137,33 @@ public class SCMP implements Serializable {
 
 	public void setBody(Object body) {
 		this.body = body;
+		if (this.body == null) {
+			this.removeHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
+			this.removeHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE);
+			return;
+		}
+		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), this.getBodyLength());
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName(), this.getBodyTypeAsString());
+	}
+
+	private String getBodyTypeAsString() {
+		return getBodyType().getName();
+	}
+
+	public SCMPBodyType getBodyType() {
+		if (body == null) {
+			return SCMPBodyType.undefined;
+		}
+		if (String.class == body.getClass()) {
+			return SCMPBodyType.text;
+		}
+		if (byte[].class == body.getClass()) {
+			return SCMPBodyType.binary;
+		}
+		if (body instanceof IMessage) {
+			return SCMPBodyType.message;
+		}
+		return SCMPBodyType.undefined;
 	}
 
 	public Object getBody() {
@@ -141,13 +175,13 @@ public class SCMP implements Serializable {
 			return 0;
 		}
 		if (String.class == body.getClass()) {
-			return ((String)body).length();
-		}		
-		if (byte[].class == body.getClass()) {
-			return ((byte[])body).length;
+			return ((String) body).length();
 		}
-		if(File.class == body.getClass()) {
-			return (int) ((File)body).length();
+		if (byte[].class == body.getClass()) {
+			return ((byte[]) body).length;
+		}
+		if (body instanceof IMessage) {
+			return ((IMessage) body).getLength();
 		}
 		return 0;
 	}

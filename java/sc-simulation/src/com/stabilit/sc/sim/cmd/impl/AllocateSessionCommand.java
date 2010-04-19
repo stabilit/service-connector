@@ -10,7 +10,7 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.io.Session;
@@ -55,14 +55,14 @@ public class AllocateSessionCommand extends CommandAdapter {
 			simSessReg.add(sessionId, (Session) session);
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
-			scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmp
-					.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName()));
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp
+					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
 		} else {
-			scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), scmp
-					.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName()));
-			scmpReply.setHeader(SCMPHeaderAttributeType.REJECT_SESSION.getName(), true);
-			scmpReply.setHeader(SCMPHeaderAttributeType.APP_ERROR_CODE.getName(), 4334591);
-			scmpReply.setHeader(SCMPHeaderAttributeType.APP_ERROR_TEXT.getName(),
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp
+					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
+			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION.getName(), true);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE.getName(), 4334591);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT.getName(),
 					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -82,7 +82,7 @@ public class AllocateSessionCommand extends CommandAdapter {
 			Map<String, String> scmpHeader = scmp.getHeader();
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -92,11 +92,11 @@ public class AllocateSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeType.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

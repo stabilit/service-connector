@@ -41,7 +41,7 @@ public class SCClient extends Client {
 
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		return clientConnection.sendAndReceive(scmp);
 	}

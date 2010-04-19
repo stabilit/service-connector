@@ -8,34 +8,35 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.util.SCMPStreamHttpUtil;
 
 public class NioHttpResponse implements IResponse {
 
 	private SocketChannel socketChannel;
 	private SCMP scmp;
 	private ISession session;
-	private IEncoderDecoder encoderDecoder;
+	private SCMPStreamHttpUtil streamHttpUtil;
 
 	public NioHttpResponse(SocketChannel socketChannel) {
 		this.scmp = null;
 		this.session = null;
 		this.socketChannel = socketChannel;
+		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
-	public ByteBuffer getBuffer() throws Exception {
+	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectStreamHttpUtil.writeResponseObject(baos, scmp);
+		this.streamHttpUtil.writeResponseSCMP(baos, scmp);
 		byte[] buf = baos.toByteArray();
-		return ByteBuffer.wrap(buf);
+		return buf;
 	}
 
-	
 	@Override
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
-		this.encoderDecoder = encoderDecoder;
+		this.streamHttpUtil.setEncoderDecoder(encoderDecoder);
 	}
-	
+
 	@Override
 	public void setSession(ISession session) {
 		this.session = session;
@@ -59,7 +60,9 @@ public class NioHttpResponse implements IResponse {
 
 	@Override
 	public void write() throws Exception {
-		ByteBuffer buffer = this.getBuffer();
+		byte[] byteWriteBuffer = this.getBuffer();
+		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
+		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer); // logs inside if registered
 		this.socketChannel.write(buffer);
 	}
 }

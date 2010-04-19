@@ -28,7 +28,7 @@ import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.impl.LargeMessageEncoderDecoder;
 
@@ -73,11 +73,11 @@ public class Client implements IClient {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		// following code handles large messages. (chunking)
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.newInstance(scmp);
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
-			if (scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()) == null) {
-				scmp.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
+			if (scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()) == null) {
+				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
 			}
 			while (scmp.isPart() == false) {
 				

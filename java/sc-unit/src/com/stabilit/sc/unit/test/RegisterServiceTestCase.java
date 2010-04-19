@@ -91,7 +91,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = "P01_RTXS_RPRWS1:bodyLength=0;portNr=9100;maxSessions=10;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;simulation:bodyLength=0;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
+		String expectedScEntry = "P01_RTXS_RPRWS1:portNr=9100;maxSessions=10;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;simulation:portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
 	}

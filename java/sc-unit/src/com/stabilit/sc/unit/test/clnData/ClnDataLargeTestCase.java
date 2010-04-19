@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
@@ -47,7 +47,7 @@ public class ClnDataLargeTestCase extends SuperSessionTestCase {
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNotNull(scmpReply.getBody());
-		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName()), SCMPMsgType.CLN_DATA
+		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), SCMPMsgType.CLN_DATA
 				.getResponseName());
 	}
 }

@@ -28,7 +28,7 @@ import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class DisconnectTestCase extends SuperConnectTestCase {
@@ -64,7 +64,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 
 		/*********************************** Verify disconnect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeType.MSG_TYPE.getName()), SCMPMsgType.DISCONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), SCMPMsgType.DISCONNECT
 				.getResponseName());
 
 		/*************** scmp inspect ********/

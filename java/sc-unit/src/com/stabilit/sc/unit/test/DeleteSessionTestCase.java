@@ -25,7 +25,7 @@ import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class DeleteSessionTestCase extends SuperSessionTestCase {
@@ -39,7 +39,7 @@ public class DeleteSessionTestCase extends SuperSessionTestCase {
 		/*************************** verify create session **********************************/
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.DELETE_SESSION.getResponseName(), result.getMessageType());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName()));
+		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL

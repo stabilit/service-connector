@@ -13,7 +13,7 @@ import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.KeepAlive;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
@@ -83,26 +83,26 @@ public class ConnectCommand extends CommandAdapter {
 
 				Map<String, String> scmpHeader = scmp.getHeader();
 				// scVersion
-				String scVersion = (String) scmpHeader.get(SCMPHeaderAttributeType.SC_VERSION.getName());
+				String scVersion = (String) scmpHeader.get(SCMPHeaderAttributeKey.SC_VERSION.getName());
 				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
-				request.setAttribute(SCMPHeaderAttributeType.SC_VERSION.getName(), scVersion);
+				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeType.COMPRESSION.getName());
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION.getName());
 				if(compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderAttributeType.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 
 				// localDateTime
 				Date localDateTime = ValidatorUtility.validateLocalDateTime((String) scmpHeader
-						.get(SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName()));
-				request.setAttribute(SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName(), localDateTime);
+						.get(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName()));
+				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
 
 				// KeepAliveTimeout && KeepAliveInterval
 				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive((String) scmpHeader
-						.get(SCMPHeaderAttributeType.KEEP_ALIVE_TIMEOUT.getName()), (String) scmpHeader
-						.get(SCMPHeaderAttributeType.KEEP_ALIVE_INTERVAL.getName()));
-				request.setAttribute(SCMPHeaderAttributeType.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
+						.get(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName()), (String) scmpHeader
+						.get(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL.getName()));
+				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();

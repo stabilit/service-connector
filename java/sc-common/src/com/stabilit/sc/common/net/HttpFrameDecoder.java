@@ -36,7 +36,7 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 
 	@Override
 	public IFactoryable newInstance() {
-		return this;
+		return new HttpFrameDecoder();
 	}
 
 	@Override

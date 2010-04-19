@@ -121,7 +121,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		//TODO encoder ?? large
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);		
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);		
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}

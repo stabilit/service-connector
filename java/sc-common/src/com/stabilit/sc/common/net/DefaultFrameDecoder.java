@@ -20,7 +20,7 @@
 package com.stabilit.sc.common.net;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.SCMPHeaderKey;
+import com.stabilit.sc.common.io.SCMPHeadlineKey;
 
 /**
  * @author JTraber
@@ -39,7 +39,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
-		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
+		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		int scmpHeadlineLength = 0;
 		int scmpLength = 0;
 
@@ -53,8 +53,8 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 				if (i <= 2) {
 					throw new FrameDecoderException("invalid scmp header line");
 				}
-				headerKey = SCMPHeaderKey.getMsgHeaderKey(buffer);
-				if (headerKey == SCMPHeaderKey.UNDEF) {
+				headerKey = SCMPHeadlineKey.getMsgHeaderKey(buffer);
+				if (headerKey == SCMPHeadlineKey.UNDEF) {
 					throw new FrameDecoderException("invalid scmp header line");
 				}
 

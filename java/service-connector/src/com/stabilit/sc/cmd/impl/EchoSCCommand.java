@@ -4,10 +4,11 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
+import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
@@ -41,13 +42,13 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 
 		SCMP scmpReply = null;
 		if (scmp.isPart()) {
-			String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
-			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName());
-			String offset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());			
+			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());
+			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName());
+			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
 			scmpReply = new SCMPPart();
-			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
-			scmpReply.setHeader(SCMPHeaderAttributeType.SEQUENCE_NR.getName(), sequenceNr);
-			scmpReply.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), offset);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), sequenceNr);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), offset);
 		} else {
 			scmpReply = new SCMPReply();
 		}
@@ -56,23 +57,32 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
-			if (sb.length() > (60 << 10))
+			if (sb.length() > (SCMP.LARGE_MESSAGE_LIMIT))
 				break;
 		}
-		if(!sb.toString().equals(bodyString)) {
-			System.out.println("EchoSCCommand.run()");
+		String sbString = sb.toString();
+		if (!sbString.equals(bodyString)) {
+			System.out.println("resultString.length = " + bodyString.length());
+			System.out.println("sbString.length = " + sbString.length());
+			for (int i = 0; i < sbString.length(); i++) {
+				if (bodyString.charAt(i) != sbString.charAt(i)) {
+					System.err.println("char mismatch at index = " + i + " result char is "
+							+ bodyString.charAt(i) + ", sbString char is " + sbString.charAt(i));
+					break;
+				}
+			}
 		}
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmp.getSessionId());
 		scmpReply.setBody(obj);
 		if (obj.toString().length() > 100) {
-			System.out.println("EchoCommand not transitive body = " + obj.toString().substring(0, 100));
+			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));
 		} else {
-			System.out.println("EchoCommand not transitive body = " + obj.toString());
-		}
+			System.out.println("EchoSCCommand body = " + obj.toString());
+		} 
 		response.setSCMP(scmpReply);
 		// don't use large message encoder/decoder
-		response.setEncoderDecoder(EncoderDecoderFactory.newInstance());
+		response.setEncoderDecoder((IEncoderDecoder)EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance());
 		return;
 	}
 

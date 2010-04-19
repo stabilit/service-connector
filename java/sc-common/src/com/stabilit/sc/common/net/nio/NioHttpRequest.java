@@ -2,29 +2,29 @@ package com.stabilit.sc.common.net.nio;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.ctx.RequestContext;
-import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.common.util.ObjectStreamHttpUtil;
+import com.stabilit.sc.common.util.SCMPStreamHttpUtil;
 
 public class NioHttpRequest implements IRequest {
 
 	private SocketChannel socketChannel;
 	private SCMP scmp;
 	private IRequestContext requestContext;
-	private IEncoderDecoder encoderDecoder;
+	private SCMPStreamHttpUtil streamHttpUtil;
 	private MapBean<Object> mapBean;
-	private int headLineSize = 0;
 	private SocketAddress socketAddress;
 
 	public NioHttpRequest(SocketChannel socketChannel) {
@@ -33,6 +33,7 @@ public class NioHttpRequest implements IRequest {
 		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
 		this.scmp = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
+		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
 	@Override
@@ -68,19 +69,25 @@ public class NioHttpRequest implements IRequest {
 		}
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
 		// warning, returns always the same instance, singleton
-		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteBuffer.array());
+		byte[] byteReadBuffer = byteBuffer.array();
+		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array());
+		baos.write(byteReadBuffer, 0, bytesRead);
 		while (httpFrameSize > bytesRead) {
-			byteBuffer.clear();
+			byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 			int read = socketChannel.read(byteBuffer);
+			if (read < 0) {
+				throw new IOException("read failed (<0)");
+			}
 			bytesRead += read;
-			baos.write(byteBuffer.array());
+			baos.write(byteBuffer.array(),0, read);
 		}
-		baos.flush();
+		baos.close();
 		byte[] buffer = baos.toByteArray();
+		ConnectionListenerSupport.fireRead(this, buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) ObjectStreamHttpUtil.readObject(bais);
+		SCMP scmp = (SCMP) streamHttpUtil.readSCMP(bais);
+		bais.close();
 		this.scmp = scmp;
 	}
 

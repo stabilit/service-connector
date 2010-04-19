@@ -28,7 +28,8 @@ import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPBodyType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.SuperTestCase;
@@ -65,12 +66,12 @@ public class ClientPartLargeEchoSCTestCase extends SuperTestCase {
 
 			Map<String, String> header = result.getHeader();
 			Assert.assertEquals(echoCall.getCall().getHeader(
-					SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()), header
-					.get(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName()));
+					SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()), header
+					.get(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()));
 
-			Assert.assertEquals("0", header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
+			Assert.assertEquals("0", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 			Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
-			Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeType.SCMP_OFFSET.getName()));
+			Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.SCMP_OFFSET.getName()));
 			bodyLength += s.length();
 		}
 		String s = "This is the end";
@@ -80,8 +81,8 @@ public class ClientPartLargeEchoSCTestCase extends SuperTestCase {
 		echoCall.setPartMessage(false);
 		SCMP result = echoCall.invoke();
 		Map<String, String> header = result.getHeader();
-		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
-		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
+		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
+		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 		Assert.assertEquals(sb.toString(), result.getBody());
 	}

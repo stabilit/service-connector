@@ -3,7 +3,6 @@ package com.stabilit.sc.srv.net.server.nio.http;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -22,6 +21,7 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.net.nio.NioHttpRequest;
 import com.stabilit.sc.common.net.nio.NioHttpResponse;
 import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
+import com.stabilit.sc.srv.cmd.CommandRequest;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -148,16 +148,17 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 
 					NioHttpRequest request = new NioHttpRequest(socketChannel);
 					NioHttpResponse response = new NioHttpResponse(socketChannel);
+					CommandRequest commandRequest = new CommandRequest(request, response);
+					ICommand command = commandRequest.readCommand();
 
 					try {
-						ICommand command = commandFactory.newCommand(request);
 						if (command == null) {
 							SCMP scmpReq = request.getSCMP();
 							SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 							scmpFault.setMessageType(scmpReq.getMessageType());
 							scmpFault.setLocalDateTime();
 							response.setSCMP(scmpFault);
-							writeResponse(response);
+							response.write();
 							return;
 						}
 
@@ -180,7 +181,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 						scmpFault.setLocalDateTime();
 						response.setSCMP(scmpFault);
 					}
-					writeResponse(response);
+					response.write();
 				}
 
 			} catch (Throwable e) {
@@ -189,10 +190,6 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 				} catch (IOException ex) {
 				}
 			}			
-		}
-		private void writeResponse(NioHttpResponse response) throws Exception {
-			ByteBuffer buffer = response.getBuffer();
-			this.socketChannel.write(buffer);		
 		}
 	}
 }

@@ -27,7 +27,7 @@ public class NioTcpResponse implements IResponse {
 	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (this.encoderDecoder == null) {
-		    this.encoderDecoder = EncoderDecoderFactory.newInstance(this.scmp);
+		    this.encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
 		}
 		encoderDecoder.encode(baos, scmp);
 		byte[] buf = baos.toByteArray();

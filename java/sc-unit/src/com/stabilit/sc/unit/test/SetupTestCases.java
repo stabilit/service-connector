@@ -64,8 +64,8 @@ public class SetupTestCases {
 	}
 	
 	public static void setupAll() {
-		init();
 		if (setupTestCases == null) {
+			init();
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
@@ -78,8 +78,8 @@ public class SetupTestCases {
 	}
 	
 	public static void setupSC() {
-		init();
 		if (setupTestCases == null) {
+			init();
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());

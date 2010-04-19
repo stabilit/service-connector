@@ -28,7 +28,7 @@ import com.stabilit.sc.common.util.DateTimeUtility;
 public class SCMPReply extends SCMP {
 	
 	public void setLocalDateTime() {
-		header.put(SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
+		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
 	@Override

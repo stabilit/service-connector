@@ -84,7 +84,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		}
 		baos.flush();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;

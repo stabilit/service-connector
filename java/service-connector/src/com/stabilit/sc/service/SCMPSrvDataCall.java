@@ -25,7 +25,7 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallAdapter;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 /**
@@ -48,11 +48,11 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
 	}
 	
 	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeType.MESSAGE_INFO.getName(), messageInfo);
+		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO.getName(), messageInfo);
 	}	
 
 	public void setHeader(Map<String, String> header) {

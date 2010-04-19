@@ -21,7 +21,7 @@ package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.util.DateTimeUtility;
 
@@ -52,23 +52,23 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	}
 
 	public void setVersion(String version) {
-		call.setHeader(SCMPHeaderAttributeType.SC_VERSION.getName(), version);
+		call.setHeader(SCMPHeaderAttributeKey.SC_VERSION.getName(), version);
 	}
 
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderAttributeType.COMPRESSION.getName(), compression);
+		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 	}
 
 	private void setLocalDateTime(String localDateTime) {
-		call.setHeader(SCMPHeaderAttributeType.LOCAL_DATE_TIME.getName(), localDateTime);
+		call.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
 	}
 	
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
-		call.setHeader(SCMPHeaderAttributeType.KEEP_ALIVE_TIMEOUT.getName(), keepAliveTimeout);
+		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAliveTimeout);
 	}
 
 	public void setKeepAliveInterval(int keepAliveInterval) {
-		call.setHeader(SCMPHeaderAttributeType.KEEP_ALIVE_INTERVAL.getName(), keepAliveInterval);
+		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL.getName(), keepAliveInterval);
 	}
 	
 	@Override

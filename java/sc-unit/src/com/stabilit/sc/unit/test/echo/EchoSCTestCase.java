@@ -28,7 +28,8 @@ import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPBodyType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.SuperTestCase;
@@ -62,10 +63,10 @@ public class EchoSCTestCase extends SuperTestCase {
 		System.out.println("result = " + result.getBody());
 		header = result.getHeader();
 		Assert.assertEquals("hello world!", result.getBody());
-		Assert.assertNotNull(header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
+		Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 
 		/*************************** verify echo session **********************************/
-		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 	}
 
@@ -84,10 +85,10 @@ public class EchoSCTestCase extends SuperTestCase {
 		}
 		header = result.getHeader();
 		Assert.assertEquals("hello world " + (i-1), result.getBody());
-		Assert.assertNotNull(header.get(SCMPHeaderAttributeType.BODY_LENGTH.getName()));
+		Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 
 		/*************************** verify echo session **********************************/
-		Assert.assertEquals("string", header.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 	}
 

@@ -62,7 +62,7 @@ public class NettyTcpRequest implements IRequest {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
 		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		this.scmp = scmp;

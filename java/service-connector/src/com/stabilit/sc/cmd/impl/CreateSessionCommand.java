@@ -11,7 +11,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.io.Session;
@@ -50,7 +50,7 @@ public class CreateSessionCommand extends CommandAdapter {
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName());
+			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
@@ -78,7 +78,7 @@ public class CreateSessionCommand extends CommandAdapter {
 			SCMPReply scmpReply = new SCMPReply();
 			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(session.getId());
-			scmpReply.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
 			log.debug("command error: fatal error when command runs");
@@ -101,17 +101,17 @@ public class CreateSessionCommand extends CommandAdapter {
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeType.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
 
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeType.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

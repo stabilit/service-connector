@@ -3,6 +3,7 @@ package com.stabilit.sc.common.io;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.io.impl.DefaultEncoderDecoder;
 
-public class Message implements IMessage {
+public class Message implements IMessage, Serializable {
 
 	private static final long serialVersionUID = -1763291531850424661L;
 

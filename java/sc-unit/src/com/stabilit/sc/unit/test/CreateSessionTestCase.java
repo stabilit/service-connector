@@ -29,7 +29,7 @@ import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 
@@ -66,7 +66,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		Assert.assertNull(scmpSession.getBody());
 		Assert.assertEquals(SCMPMsgType.CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
 		Assert.assertNotNull(scmpSession.getSessionId());
-		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName()));
+		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
@@ -74,7 +74,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		SCMP inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=bodyLength=0;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
+		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);

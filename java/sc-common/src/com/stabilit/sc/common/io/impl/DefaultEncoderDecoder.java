@@ -14,18 +14,25 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IMessage;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPBodyType;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderKey;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.io.SCMPHeadlineKey;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
 	public DefaultEncoderDecoder() {
 	}
 
+	@Override
+	public IFactoryable newInstance() {	
+		return this;
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -74,12 +81,12 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
-		String scmpBodyType = metaMap.get(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
-		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeType.BODY_LENGTH.getName());
-		TYPE scmpBodyTypEnum = TYPE.getEnumType(scmpBodyType);
+		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
+		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		scmp.setHeader(metaMap);
-		try {
-			if (scmpBodyTypEnum == TYPE.STRING) {
+		try {		
+			if (scmpBodyType == SCMPBodyType.text) {
 				int caLength = Integer.parseInt(scmpBodyLength);
 				char[] caBuffer = new char[caLength];
 				br.read(caBuffer);
@@ -87,7 +94,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				scmp.setBody(bodyString);
 				return scmp;
 			}
-			if (scmpBodyTypEnum == TYPE.MESSAGE) {
+			if (scmpBodyType == SCMPBodyType.message) {
 				String classLine = br.readLine();
 				if (classLine == null) {
 					return null;
@@ -105,7 +112,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				scmp.setBody(message);
 				return scmp;
 			}
-			if (scmpBodyTypEnum == TYPE.ARRAY) {
+			if (scmpBodyType == SCMPBodyType.binary) {
 				int baLength = Integer.parseInt(scmpBodyLength);
 				byte[] baBuffer = new byte[baLength];
 				is.read(baBuffer);
@@ -126,14 +133,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		// create meta part
 		StringBuilder sb = new StringBuilder();
 				
-		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
+		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		if(scmp.isReply()) {
-			headerKey = SCMPHeaderKey.RES;
+			headerKey = SCMPHeadlineKey.RES;
 			if(scmp.isFault()) {
-				headerKey = SCMPHeaderKey.EXC;
+				headerKey = SCMPHeadlineKey.EXC;
 			}
 		} else {
-			headerKey = SCMPHeaderKey.REQ;
+			headerKey = SCMPHeadlineKey.REQ;
 		}
 
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
@@ -155,26 +162,29 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			if (body != null) {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
-					sb.append(EQUAL_SIGN);
-					sb.append(TYPE.STRING.getType());
+//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
+//					sb.append(EQUAL_SIGN);
+//					sb.append(SCMPBodyType.TEXT.getType());
+//					sb.append("\n");
+//					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+//					sb.append(EQUAL_SIGN);
+//					sb.append(String.valueOf(t.length()));
+//					sb.append("\n\n");
 					sb.append("\n");
-					sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
-					sb.append(EQUAL_SIGN);
-					sb.append(String.valueOf(t.length()));
-					sb.append("\n\n");
 					int messageLength = sb.length() + t.length();
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());  //  write header
+					bw.flush();
 					bw.write(t);              // write body
 					bw.flush();
 					return;
 				}
 				if (body instanceof IMessage) {
-					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
-					sb.append(EQUAL_SIGN);
-					sb.append(TYPE.MESSAGE.getType());
-					sb.append("\n\n");
+//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
+//					sb.append(EQUAL_SIGN);
+//					sb.append(SCMPBodyType.MESSAGE.getType());
+//					sb.append("\n\n");
+					sb.append("\n");
 					IMessage message = (IMessage) body;
 					int messageLength = sb.length() + message.getLength();
 					writeHeadLine(bw, headerKey, messageLength);
@@ -185,16 +195,17 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					return;
 				}
 				if (body instanceof byte[]) {
-					sb.append(SCMPHeaderAttributeType.SCMP_BODY_TYPE.getName());
-					sb.append(EQUAL_SIGN);
-					sb.append(TYPE.ARRAY.getType());
-					sb.append("\n");
+//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
+//					sb.append(EQUAL_SIGN);
+//					sb.append(SCMPBodyType.BINARY.getType());
+//					sb.append("\n");
 					byte[] ba = (byte[]) body;
-					sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
-					sb.append(EQUAL_SIGN);
-					sb.append(String.valueOf(ba.length));
-					sb.append("\n\n");
-					int messageLength = sb.length() + ba.length;
+//					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+//					sb.append(EQUAL_SIGN);
+//					sb.append(String.valueOf(ba.length));
+//					sb.append("\n\n");
+					sb.append("\n");
+				    int messageLength = sb.length() + ba.length;
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
 					bw.flush();
@@ -205,9 +216,11 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					throw new EncodingDecodingException("unsupported body type");
 				}
 			} else {
-				sb.append(SCMPHeaderAttributeType.BODY_LENGTH.getName());
-				sb.append(EQUAL_SIGN);
-				sb.append("0\n");
+//				sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+//				sb.append(EQUAL_SIGN);
+//				sb.append("0\n");
+//				sb.append("\n\n");
+				sb.append("\n");
 				int messageLength = sb.length();
 				writeHeadLine(bw, headerKey, messageLength);
 				bw.write(sb.toString());
@@ -219,7 +232,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		return;
 	}
 
-	private void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageLength)
+	private void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageLength)
 			throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(" /s=");
@@ -227,5 +240,6 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		bw.write("& SCMP/");
 		bw.append(SCMP.SCMP_VERSION);
 		bw.append("\n");
+		bw.flush();
 	}
 }

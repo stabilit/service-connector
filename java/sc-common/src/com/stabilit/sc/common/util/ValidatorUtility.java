@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.io.KeepAlive;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 
 /**
  * @author JTraber
@@ -76,7 +76,7 @@ public class ValidatorUtility {
 		return localDateTime;
 	}
 
-	public static Integer convertUnsignedInteger(Map<String, String> map, SCMPHeaderAttributeType key,
+	public static Integer convertUnsignedInteger(Map<String, String> map, SCMPHeaderAttributeKey key,
 			Integer defaultValue) {
 
 		String obj = map.get(key.getName());

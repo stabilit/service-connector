@@ -24,7 +24,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 
@@ -58,7 +58,7 @@ public class SCMPEchoSrvCall extends SCMPCallAdapter {
 	}
 
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeType.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class SCMPEchoSrvCall extends SCMPCallAdapter {
 	}
 	
 	public void setMaxNodes(int maxNodes) {
-		this.call.setHeader(SCMPHeaderAttributeType.MAX_NODES.getName(), String.valueOf(maxNodes));
+		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
 	}
 	
 	public void setPartMessage(boolean partMessage) {

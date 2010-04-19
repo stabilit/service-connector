@@ -2,6 +2,7 @@ package com.stabilit.sc.common.net.nio;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -25,7 +26,6 @@ public class NioTcpRequest implements IRequest {
 	private IRequestContext requestContext;
 	private IEncoderDecoder encoderDecoder;
 	private MapBean<Object> mapBean;
-	private int headLineSize = 0;
 	private SocketAddress socketAddress;
 
 	public NioTcpRequest(SocketChannel socketChannel) {
@@ -78,18 +78,22 @@ public class NioTcpRequest implements IRequest {
 		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array());
+		baos.write(byteBuffer.array(),0,bytesRead);
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
+			if (read < 0) {
+				throw new IOException("read failed (<0)");
+			}		
 			bytesRead += read;
-			baos.write(byteBuffer.array());
+			baos.write(byteBuffer.array(),0,read);
 		}
-		baos.flush();
+		baos.close();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.newInstance(buffer);
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
+		bais.close();
 		this.scmp = scmp;
 	}
 

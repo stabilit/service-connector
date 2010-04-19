@@ -11,7 +11,7 @@ import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
@@ -28,7 +28,7 @@ public class EchoSrvCommand extends CommandAdapter {
 	private static Logger log = Logger.getLogger(EchoSrvCommand.class);
 
 	public EchoSrvCommand() {
-		this.commandValidator = new EchoSCCommandValidator();
+		this.commandValidator = new EchoSrvCommandValidator();
 	}
 
 	@Override
@@ -47,33 +47,33 @@ public class EchoSrvCommand extends CommandAdapter {
 		SCMP scmp = request.getSCMP();
 		Map<String, String> header = scmp.getHeader();
 
-		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeType.MAX_NODES.getName());
+		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES.getName());
 		SCMP result = null;
 
-		String ipList = header.get(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName());
+		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(), ipList);
+			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName(), ipList);
 		}
 
 		if (maxNodes == 1) {
 			if (scmp.isPart()) {
 				result = new SCMPPart();
-				String messageId = scmp.getHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName());
-				result.setHeader(SCMPHeaderAttributeType.SCMP_MESSAGE_ID.getName(), messageId);
-				String callLength = scmp.getHeader(SCMPHeaderAttributeType.SCMP_CALL_LENGTH.getName());
-				result.setHeader(SCMPHeaderAttributeType.SCMP_CALL_LENGTH.getName(), callLength);
-				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName());
-				result.setHeader(SCMPHeaderAttributeType.SCMP_OFFSET.getName(), scmpOffset);
+				String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
+				String callLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName(), callLength);
+				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffset);
 			} else {
 				result = new SCMPReply();
 			}
 
 			result.setBody(scmp.getBody());
 			result.setSessionId(scmp.getSessionId());
-			result.setHeader(SCMPHeaderAttributeType.IP_ADDRESS_LIST.getName(), ipList);
+			result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName(), ipList);
 		} else {
 			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 			Session session = (Session) sessionRegistry.get(scmp.getSessionId());
@@ -92,9 +92,9 @@ public class EchoSrvCommand extends CommandAdapter {
 			} else {
 				System.out.println("EchoSrvCommand body = " + scmp.getBody().toString());
 			}
-			header.remove(SCMPHeaderAttributeType.MAX_NODES.getName());
+			header.remove(SCMPHeaderAttributeKey.MAX_NODES.getName());
 			--maxNodes;
-			header.put(SCMPHeaderAttributeType.MAX_NODES.getName(), String.valueOf(maxNodes));
+			header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
 			result = serviceRegistryItem.echoSrv(scmp);
 		}
 		result.setMessageType(getKey().getResponseName());
@@ -106,7 +106,7 @@ public class EchoSrvCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class EchoSCCommandValidator implements ICommandValidator {
+	public class EchoSrvCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
