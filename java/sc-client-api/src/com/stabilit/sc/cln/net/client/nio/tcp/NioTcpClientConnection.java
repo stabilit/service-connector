@@ -28,6 +28,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.net.nio.NioTcpException;
 
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 
@@ -66,7 +67,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			return null;
+			throw new NioTcpException("no bytes read");
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
@@ -79,14 +80,18 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
+			if (read < 0) {
+				throw new NioTcpException("no bytes read");
+			}
 			bytesRead += read;
 			baos.write(byteBuffer.array());
 		}
-		baos.flush();
+		baos.close();
 		byte[] buffer = baos.toByteArray();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
+		bais.close();
 		return ret;
 	}
 

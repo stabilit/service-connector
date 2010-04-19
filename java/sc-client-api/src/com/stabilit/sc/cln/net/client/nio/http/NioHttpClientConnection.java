@@ -17,7 +17,6 @@ package com.stabilit.sc.cln.net.client.nio.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -29,7 +28,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
-import com.stabilit.sc.common.net.nio.NioTcpException;
+import com.stabilit.sc.common.net.nio.NioHttpException;
 import com.stabilit.sc.common.util.SCMPStreamHttpUtil;
 
 public class NioHttpClientConnection extends ClientConnectionAdapter {
@@ -79,7 +78,7 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			throw new NioTcpException("no bytes read");
+			throw new NioHttpException("no bytes read");
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
 		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
@@ -89,10 +88,10 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(),0,bytesRead);
 		while (httpFrameSize > bytesRead) {
-			byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
-				throw new IOException("read failed (<0)");
+				throw new NioHttpException("read failed (<0)");
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(),0,read);
