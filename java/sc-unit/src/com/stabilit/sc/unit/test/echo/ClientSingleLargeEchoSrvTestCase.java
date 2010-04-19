@@ -34,7 +34,6 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
-	@Test
 	public void invokeTest() throws Exception {
 
 		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client,

@@ -28,15 +28,15 @@ import com.stabilit.sc.common.io.SCMPPart;
 public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
 	public static final String HEADER_REGEX = "(RES|REQ|PRQ|PRS|EXC) .*";
-	
+
 	public LargeMessageEncoderDecoder() {
 	}
 
 	@Override
-	public IFactoryable newInstance() {	
+	public IFactoryable newInstance() {
 		return this;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -175,7 +175,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-		
+
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
 
 		for (Entry<String, String> entry : entrySet) {
@@ -220,9 +220,15 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(messagePartLength));
 					sb.append("\n");
+					String scmpCallLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
 					sb.append(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
-					sb.append(String.valueOf(bodyLength));
+					// if scmpCallLength is set - we are on SC, take over attribute
+					if (scmpCallLength == null) {
+						sb.append(String.valueOf(bodyLength));
+					} else {
+						sb.append(scmpCallLength);
+					}
 					sb.append("\n\n");
 					int messageLength = sb.length() + messagePartLength;
 					writeHeadLine(bw, headerKey, messageLength);

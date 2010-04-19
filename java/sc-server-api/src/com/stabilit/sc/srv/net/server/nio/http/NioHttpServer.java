@@ -18,6 +18,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.nio.NioHttpRequest;
 import com.stabilit.sc.common.net.nio.NioHttpResponse;
 import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
@@ -186,6 +187,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 
 			} catch (Throwable e) {
 				try {
+					ConnectionListenerSupport.fireDisconnect(this);
 					socketChannel.close();
 				} catch (IOException ex) {
 				}
