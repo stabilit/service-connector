@@ -2,7 +2,6 @@ package com.stabilit.sc.common.net.nio;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -74,10 +73,10 @@ public class NioHttpRequest implements IRequest {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteReadBuffer, 0, bytesRead);
 		while (httpFrameSize > bytesRead) {
-			byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
-				throw new IOException("read failed (<0)");
+				throw new NioHttpException("read failed (<0)");
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(),0, read);

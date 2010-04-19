@@ -2,8 +2,6 @@ package com.stabilit.sc.common.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,8 +11,7 @@ import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.impl.EncodingDecodingException;
-import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.net.nio.NioHttpException;
 
 public class SCMPStreamHttpUtil {
 
@@ -55,12 +52,9 @@ public class SCMPStreamHttpUtil {
 		while (bytesRead < stream.length) {
 		   int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
 		   if (readSize < 0) {
-			   throw new EncodingDecodingException("http stream util read failure  (<0)");
+			   throw new NioHttpException("http stream util read failure  (<0)");
 		   }		   		   
 		   bytesRead += readSize;
-		   if (bytesRead < stream.length) {
-			   System.err.println("xxxxxxxxxx");
-		   }
 		}
 		if (this.encoderDecoder == null) {
 			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(stream);

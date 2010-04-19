@@ -28,6 +28,7 @@ public class NioHttpResponse implements IResponse {
 	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		this.streamHttpUtil.writeResponseSCMP(baos, scmp);
+		baos.close();
 		byte[] buf = baos.toByteArray();
 		return buf;
 	}

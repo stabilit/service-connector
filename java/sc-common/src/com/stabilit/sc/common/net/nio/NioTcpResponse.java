@@ -30,6 +30,7 @@ public class NioTcpResponse implements IResponse {
 		    this.encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
 		}
 		encoderDecoder.encode(baos, scmp);
+		baos.close();
 		byte[] buf = baos.toByteArray();
 		return buf;
 	}
