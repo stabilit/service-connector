@@ -50,7 +50,7 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 		label: for (int i = 0; i < bytesRead; i++) {
 			if (buffer[i] == CR && buffer[i + 1] == LF) {
 				i += 2;
-				if (buffer[i] == CR && buffer[i + 1] == LF) {
+ 				if (buffer[i] == CR && buffer[i + 1] == LF) {
 					headerEnd = i + 2;
 					break label;
 				}

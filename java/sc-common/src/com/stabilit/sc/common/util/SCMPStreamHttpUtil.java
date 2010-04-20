@@ -50,11 +50,11 @@ public class SCMPStreamHttpUtil {
 		byte[] stream = new byte[contentLength];
 		int bytesRead = 0;
 		while (bytesRead < stream.length) {
-		   int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
-		   if (readSize < 0) {
-			   throw new NioHttpException("http stream util read failure  (<0)");
-		   }		   		   
-		   bytesRead += readSize;
+			int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
+			if (readSize < 0) {
+				throw new NioHttpException("http stream util read failure  (<0)");
+			}
+			bytesRead += readSize;
 		}
 		if (this.encoderDecoder == null) {
 			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(stream);
@@ -75,13 +75,13 @@ public class SCMPStreamHttpUtil {
 			case -1:
 			case '\n':
 				break loop;
-		    case '\r':
-		  		int c2 = in.read();
+			case '\r':
+				int c2 = in.read();
 				if ((c2 != '\n') && (c2 != -1)) {
-				    if (!(in instanceof PushbackInputStream)) {
-					    in = new PushbackInputStream(in);
-				    }
-				    ((PushbackInputStream)in).unread(c2);
+					if (!(in instanceof PushbackInputStream)) {
+						in = new PushbackInputStream(in);
+					}
+					((PushbackInputStream) in).unread(c2);
 				}
 				break loop;
 			default:
@@ -152,10 +152,11 @@ public class SCMPStreamHttpUtil {
 		http.append("Content-Length: ");
 		http.append(objStream.length);
 		http.append("\r\n");
-		http.append("\n");
+		http.append("\r\n");
 		os.write(http.toString().getBytes());
 		os.write(objStream);
 		os.flush();
+		os.close();
 	}
 
 }

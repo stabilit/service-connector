@@ -72,9 +72,9 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 		InetSocketAddress inetSocketAddress = (InetSocketAddress) socketChannel.socket()
 				.getRemoteSocketAddress();
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
-		byte[]byteWriteBuffer = baos.toByteArray();
+		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer);  // logs inside if registered
+		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
@@ -83,12 +83,12 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 			throw new NioHttpException("no bytes read");
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead);  // logs inside if registered
+		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array(),0,bytesRead);
+		baos.write(byteBuffer.array(), 0, bytesRead);
 		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
@@ -96,7 +96,7 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 				throw new NioHttpException("read failed (<0)");
 			}
 			bytesRead += read;
-			baos.write(byteBuffer.array(),0,read);
+			baos.write(byteBuffer.array(), 0, read);
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();

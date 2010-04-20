@@ -34,6 +34,7 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
+	@Test
 	public void invokeTest() throws Exception {
 
 		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client,
@@ -51,16 +52,6 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		int bodyLength = sb.length() - start;
 		String lastPartBody = sb.substring(start);
 		Map<String, String> header = result.getHeader();
-		String resultString = (String) result.getBody();
-		System.out.println("resultString.length = " + resultString.length());
-		System.out.println("lastPartBody.length = " + lastPartBody.length());
-		for (int i = 0; i < lastPartBody.length(); i++) {
-			if (resultString.charAt(i) != lastPartBody.charAt(i)) {
-				System.err.println("char mismatch at index = " + i + " result char is "
-						+ resultString.charAt(i) + ", sbString char is " + lastPartBody.charAt(i));
-				break;
-			}
-		}
 		Assert.assertEquals(lastPartBody, result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE
 				.getName()));
