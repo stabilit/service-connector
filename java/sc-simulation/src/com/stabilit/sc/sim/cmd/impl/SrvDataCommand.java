@@ -90,13 +90,13 @@ public class SrvDataCommand extends CommandAdapter {
 			String messageID = MessageID.getNextAsString();
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
-			for (i = scmpOffsetInt; i < 1000000; i++) {
+			for (i = scmpOffsetInt; i < 10000; i++) {
 				if (sb.length() > 60000) {
 					break;
 				}
 				sb.append(i);
 			}
-			if (i >= 1000000) {
+			if (i >= 10000) {
 				scmpReply.setBody(sb.toString());
 				response.setSCMP(scmpReply);
 			} else {

@@ -29,6 +29,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.clnData.ClnDataLargeTestCase;
 import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
 import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSrvTestCase;
@@ -51,6 +52,7 @@ import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
 	RegisterServiceTestCase.class, 
 	DeRegisterServiceTestCase.class,
 	ClnDataTestCase.class,
+	ClnDataLargeTestCase.class,
 	EchoSrvTestCase.class,
 	EchoSCTestCase.class,
 	ClientSingleLargeEchoSrvTestCase.class,
