@@ -61,9 +61,9 @@ public class SCTest {
 
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), msgType.getResponseName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()), error.getErrorText());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()), error.getErrorCode());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
 	}
 
 	public static String getExpectedOffset(int runIndex, int characterNumber) {

@@ -76,8 +76,8 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (LargeMessageEncoderDecoder.class == encoderDecoder.getClass()) {
-			if (scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()) == null) {
-				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), MessageID.getNextAsString());
+			if (scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID) == null) {
+				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, MessageID.getNextAsString());
 			}
 			while (scmp.isPart() == false) {
 				

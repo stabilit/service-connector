@@ -53,8 +53,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				this.call = new SCMP();
 			}
 			this.call.setSessionId(scmpSession.getSessionId());
-			this.call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmpSession
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
+			this.call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession
+					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		}
 
 		if (this.call == null) {
@@ -76,7 +76,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	public SCMP invoke() throws Exception {
 		this.call.setMessageType(getMessageType().getRequestName());
 		this.result = client.sendAndReceive(this.call);
-		
+
 		if (this.result.isFault()) {
 			throw new SCMPServiceException((SCMPFault) result);
 		}
@@ -98,7 +98,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
-	
 }

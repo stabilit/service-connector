@@ -44,19 +44,18 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	}
 
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO.getName(), messageInfo);
+		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO, messageInfo);
 	}
 	
 	@Override
 	public SCMP invoke() throws Exception {
-		this.call.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), SequenceNumber.getNextAsString());
+		this.call.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, SequenceNumber.getNextAsString());
 		return super.invoke();
 	}
-
 
 	@Override
 	public SCMPMsgType getMessageType() {

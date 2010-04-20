@@ -46,7 +46,7 @@ public class ClnDataTestCase extends SuperSessionTestCase {
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNotNull(scmpReply.getBody());
-		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), SCMPMsgType.CLN_DATA
+		Assert.assertEquals(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.CLN_DATA
 				.getResponseName());
 		Assert.assertEquals("Message number 0", result);
 	}

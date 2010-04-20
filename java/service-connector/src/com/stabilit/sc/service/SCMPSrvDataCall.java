@@ -46,19 +46,19 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		return new SCMPSrvDataCall(client, scmpSession);
 	}
-	
+
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-	
+
 	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO.getName(), messageInfo);
-	}	
+		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO, messageInfo);
+	}
 
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);
 	}
-	
+
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_DATA;

@@ -32,7 +32,7 @@ import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class DisconnectTestCase extends SuperConnectTestCase {
-	
+
 	@Test
 	public void secondConnect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
@@ -64,12 +64,11 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 
 		/*********************************** Verify disconnect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), SCMPMsgType.DISCONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.DISCONNECT
 				.getResponseName());
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
-				.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
 		SCMP inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();

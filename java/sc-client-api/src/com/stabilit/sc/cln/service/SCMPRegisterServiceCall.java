@@ -43,19 +43,19 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 	
 	public void setMaxSessions(int maxSessions) {
-		call.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
+		call.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
 	}
 	
 	public void setMultithreaded(boolean multiThreaded) {
-		call.setHeader(SCMPHeaderAttributeKey.MULTI_THREADED.getName(), multiThreaded);
+		call.setHeader(SCMPHeaderAttributeKey.MULTI_THREADED, multiThreaded);
 	}
 	
 	public void setPortNumber(int portNumber) {
-		call.setHeader(SCMPHeaderAttributeKey.PORT_NR.getName(), portNumber);
+		call.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
 	}	
 	
 	@Override

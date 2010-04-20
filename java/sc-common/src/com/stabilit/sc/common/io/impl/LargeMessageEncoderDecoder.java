@@ -157,20 +157,20 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		int scmpSequenceNrInt = 0;
 		if (scmp.isComposite() == false) {
 			// try to get message offset
-			String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
-			String scmpSequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName());
+			String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
+			String scmpSequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			if (scmpOffset == null) {
 				scmpOffset = "0";
 				scmpSequenceNr = "0";
-				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffset);
-				scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), "0");
+				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffset);
+				scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, "0");
 			}
 			scmpOffsetInt = Integer.parseInt(scmpOffset);
 			// TODO wrong here!!
 			// scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
 		} else {
 			scmpOffsetInt = ((SCMPComposite) scmp).getOffset();
-			scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), String.valueOf(scmpOffsetInt));
+			scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, String.valueOf(scmpOffsetInt));
 		}
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
@@ -220,7 +220,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(messagePartLength));
 					sb.append("\n");
-					String scmpCallLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
+					String scmpCallLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH);
 					sb.append(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
 					// if scmpCallLength is set - we are on SC, take over attribute
@@ -240,9 +240,9 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 						bw.write(t, 0, messagePartLength);
 					}
 					scmpOffsetInt += messagePartLength;
-					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffsetInt);
+					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
 					scmpSequenceNrInt++;
-					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), scmpSequenceNrInt);
+					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmpSequenceNrInt);
 					bw.flush();
 					return;
 				}
@@ -283,9 +283,9 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 						os.write((byte[]) ba, 0, messagePartLength);
 					}
 					scmpOffsetInt += messagePartLength;
-					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffsetInt);
+					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
 					scmpSequenceNrInt++;
-					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), scmpSequenceNrInt);
+					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmpSequenceNrInt);
 					os.flush();
 					return;
 				} else {

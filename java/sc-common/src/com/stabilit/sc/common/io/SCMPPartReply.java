@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class SCMPPartReply extends SCMPPart {
 
+	private static final long serialVersionUID = -8015380478464508905L;
+
 	public SCMPPartReply() {
 		super();
 	}
@@ -40,11 +42,11 @@ public class SCMPPartReply extends SCMPPart {
 	}
 	
 	public void setMessageId(String messageId) {
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
 	}
 	
 	public String getMessageId() {
-		return this.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());		
+		return this.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);		
 	}
 
 

@@ -111,8 +111,12 @@ public class SCMPStreamHttpUtil {
 		// Content-Length: 357
 		StringBuilder http = new StringBuilder();
 		http.append("POST / HTTP/1.1\r\n");
-		http.append("User-Agent: " + System.getProperty("java.runtime.version") + "\r\n");
-		http.append("Host: " + path + "\r\n");
+		http.append("User-Agent: ");
+		http.append(System.getProperty("java.runtime.version"));
+		http.append("\r\n");
+		http.append("Host: ");
+		http.append(path);
+		http.append("\r\n");
 		http.append("Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2\r\n");
 		http.append("Connection: keep-alive\r\n");
 		http.append("Content-type: ");
@@ -126,7 +130,9 @@ public class SCMPStreamHttpUtil {
 		encoderDecoder.encode(baos, scmp);
 		baos.close();
 		byte[] objStream = baos.toByteArray();
-		http.append("Content-Length: " + objStream.length + "\r\n");
+		http.append("Content-Length: ");
+		http.append(objStream.length);
+		http.append("\r\n");
 		http.append("\r\n");
 		os.write(http.toString().getBytes());
 		os.flush();

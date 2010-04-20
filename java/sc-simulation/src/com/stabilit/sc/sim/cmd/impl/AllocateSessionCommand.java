@@ -55,14 +55,14 @@ public class AllocateSessionCommand extends CommandAdapter {
 			simSessReg.add(sessionId, (Session) session);
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		} else {
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
-			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION.getName(), true);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE.getName(), 4334591);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT.getName(),
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
 					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -92,7 +92,8 @@ public class AllocateSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST
+						.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
@@ -106,5 +107,4 @@ public class AllocateSessionCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

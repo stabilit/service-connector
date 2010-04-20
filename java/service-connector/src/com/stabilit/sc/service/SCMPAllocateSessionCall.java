@@ -48,7 +48,7 @@ public class SCMPAllocateSessionCall extends SCMPCallAdapter {
 	}
 	
 	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID.getName(), sessionId);
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
 	public void setHeader(Map<String, String> header) {

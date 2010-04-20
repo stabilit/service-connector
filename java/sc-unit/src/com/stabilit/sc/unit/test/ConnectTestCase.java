@@ -60,10 +60,10 @@ public class ConnectTestCase extends SuperTestCase {
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName()), SCMPMsgType.CONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.CONNECT
 				.getResponseName());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
-				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName())));
+				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
@@ -74,7 +74,7 @@ public class ConnectTestCase extends SuperTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
-						SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName()))
+						SCMPHeaderAttributeKey.LOCAL_DATE_TIME))
 				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.

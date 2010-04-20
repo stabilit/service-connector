@@ -48,11 +48,11 @@ public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 	
 	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID.getName(), sessionId);
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
 	public void setHeader(Map<String, String> header) {

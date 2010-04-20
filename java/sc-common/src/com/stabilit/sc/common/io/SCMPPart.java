@@ -21,13 +21,13 @@ package com.stabilit.sc.common.io;
 
 import java.util.Map;
 
-import com.stabilit.sc.common.util.DateTimeUtility;
-
 /**
  * @author JTraber
  * 
  */
 public class SCMPPart extends SCMP {
+	
+	private static final long serialVersionUID = -3379254138164380850L;
 
 	public SCMPPart() {
 		super();
@@ -42,11 +42,11 @@ public class SCMPPart extends SCMP {
 	}
 	
 	public void setMessageId(String messageId) {
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
 	}
 	
 	public String getMessageId() {
-		return this.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());		
+		return this.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);		
 	}
 
 

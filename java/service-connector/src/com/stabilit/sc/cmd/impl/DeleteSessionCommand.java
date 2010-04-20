@@ -93,8 +93,8 @@ public class DeleteSessionCommand extends CommandAdapter {
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME
-				.getName()));
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		response.setSCMP(scmpReply);
 	}
 

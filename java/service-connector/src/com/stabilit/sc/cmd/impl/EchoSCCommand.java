@@ -8,9 +8,7 @@ import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -40,18 +38,7 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 
-		SCMP scmpReply = null;
-		if (scmp.isPart()) {
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());
-			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName());
-			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
-			scmpReply = new SCMPPart();
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), sequenceNr);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), offset);
-		} else {
-			scmpReply = new SCMPReply();
-		}
+		SCMP scmpReply = new SCMPReply();
 		Object obj = scmp.getBody();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmp.getSessionId());
@@ -60,10 +47,11 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));
 		} else {
 			System.out.println("EchoSCCommand body = " + obj.toString());
-		} 
+		}
 		response.setSCMP(scmpReply);
 		// don't use large message encoder/decoder
-		response.setEncoderDecoder((IEncoderDecoder)EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance());
+		response.setEncoderDecoder((IEncoderDecoder) EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
+				.newInstance());
 		return;
 	}
 

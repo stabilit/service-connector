@@ -43,37 +43,43 @@ public class EchoSrvCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 		Map<String, String> header = scmp.getHeader();
 
-		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES.getName());
 		SCMP result = null;
+		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
+		log.debug("Run command " + this.getKey() + " on Node: " + maxNodes);
 
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName(), ipList);
+			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
-
+		
+		if (scmp.getBody().toString().length() > 100) {
+			System.out.println("EchoSrvCommand body = " + scmp.getBody().toString().substring(0, 100));
+		} else {
+			System.out.println("EchoSrvCommand body = " + scmp.getBody().toString());
+		}
+		
 		if (maxNodes == 1) {
 			if (scmp.isPart()) {
 				result = new SCMPPart();
-				String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName());
-				result.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName(), messageId);
-				String callLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName());
-				result.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH.getName(), callLength);
-				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
-				result.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffset);
+				String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
+				String callLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH);
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, callLength);
+				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
+				result.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffset);
 			} else {
 				result = new SCMPReply();
 			}
 
 			result.setBody(scmp.getBody());
 			result.setSessionId(scmp.getSessionId());
-			result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName(), ipList);
+			result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		} else {
 			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 			Session session = (Session) sessionRegistry.get(scmp.getSessionId());
@@ -87,11 +93,7 @@ public class EchoSrvCommand extends CommandAdapter {
 				scmpCommandException.setMessageType(getKey().getResponseName());
 				throw scmpCommandException;
 			}
-			if (scmp.getBody().toString().length() > 100) {
-				System.out.println("EchoSrvCommand body = " + scmp.getBody().toString().substring(0, 100));
-			} else {
-				System.out.println("EchoSrvCommand body = " + scmp.getBody().toString());
-			}
+
 			header.remove(SCMPHeaderAttributeKey.MAX_NODES.getName());
 			--maxNodes;
 			header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));

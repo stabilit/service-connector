@@ -19,6 +19,8 @@
  */
 package com.stabilit.sc.srv.cmd;
 
+import javax.script.ScriptContext;
+
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
@@ -32,52 +34,67 @@ import com.stabilit.sc.srv.cmd.factory.CommandFactory;
  * @author JTraber
  * 
  */
-public class CommandRequest {
-	protected IRequest request;
-	protected IResponse response;
-	protected ICommand command;
+public class NettyCommandRequest extends CommandRequest {
 
-	public CommandRequest(IRequest request, IResponse response) {
-		this.request = request;
-		this.response = response;
-		this.command = null;
+	private boolean complete;
+	private SCMPComposite scmpComposite;
+
+	/**
+	 * @param request
+	 * @param response
+	 */
+	public NettyCommandRequest(IRequest request, IResponse response) {
+		super(request, response);
+		complete = true;
 	}
 
-	public ICommand readCommand() throws Exception {
+	public ICommand readCommand(IRequest request, IResponse response) throws Exception {
+		this.request = request;
+		this.response = response;
+
 		this.request.read();
 		this.command = CommandFactory.getCurrentCommandFactory().newCommand(this.request);
 		if (this.command == null) {
 			return null;
 		}
+
 		SCMP scmp = this.request.getSCMP();
 		if (scmp == null) {
 			return null;
 		}
-		if (!(scmp.isPart() && this.command instanceof SCOnly)) {
+
+		// request not for SC, forward to server
+		if (this.command instanceof SCOnly == false) {
+			complete = true;
 			return this.command;
 		}
-		SCMPComposite scmpComposite = null;
-		while (scmp.isPart()) {
-			if (scmpComposite == null) {
-			   scmpComposite = new SCMPComposite(scmp, (SCMPPart)scmp);
-			}
+		
+		if (scmpComposite == null) {
+			scmpComposite = new SCMPComposite(scmp, scmp);
+		} else {
+			scmpComposite.add(scmp);
+		}
+
+		// request is part of a chunked message
+		if (scmp.isPart()) {
+			complete = false;
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
-			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);			
+			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			SCMP scmpReply = new SCMPPartReply();
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
-			response.write();
-			request.read();
-			scmp = request.getSCMP();
-			if (scmp != null) {
-				scmpComposite.add(scmp);
-			}
-		}
-		this.request.setSCMP(scmpComposite);
+		} else { // last request of a chunked message or request not chunked
+			complete = true;
+			this.request.setSCMP(scmpComposite);
+		}		
 		return this.command;
+	}
+
+	public boolean isComplete() {
+		return complete;
 	}
 }

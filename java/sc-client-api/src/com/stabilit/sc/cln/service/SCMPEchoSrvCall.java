@@ -58,7 +58,7 @@ public class SCMPEchoSrvCall extends SCMPCallAdapter {
 	}
 
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class SCMPEchoSrvCall extends SCMPCallAdapter {
 	}
 	
 	public void setMaxNodes(int maxNodes) {
-		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
+		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
 	}
 	
 	public void setPartMessage(boolean partMessage) {

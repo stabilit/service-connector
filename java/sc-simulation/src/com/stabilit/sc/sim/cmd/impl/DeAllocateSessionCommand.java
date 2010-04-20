@@ -15,7 +15,6 @@ import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
@@ -57,8 +56,8 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 		simSessReg.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME
-				.getName()));
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
 	}
@@ -76,7 +75,7 @@ public class DeAllocateSessionCommand extends CommandAdapter {
 
 			try {
 				// serviceName
-				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}

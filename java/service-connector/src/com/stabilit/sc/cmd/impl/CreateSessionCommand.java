@@ -50,7 +50,7 @@ public class CreateSessionCommand extends CommandAdapter {
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
@@ -78,7 +78,7 @@ public class CreateSessionCommand extends CommandAdapter {
 			SCMPReply scmpReply = new SCMPReply();
 			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(session.getId());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
 			log.debug("command error: fatal error when command runs");

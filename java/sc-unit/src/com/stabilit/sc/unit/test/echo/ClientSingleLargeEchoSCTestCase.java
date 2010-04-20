@@ -57,24 +57,11 @@ public class ClientSingleLargeEchoSCTestCase extends SuperTestCase {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
-			if (sb.length() > (SCMP.LARGE_MESSAGE_LIMIT))
-				break;
 		}
 		echoCall.setBody(sb.toString());
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Map<String, String> header = result.getHeader();
-		String resultString = (String) result.getBody();
-		String sbString = sb.toString();
-		System.out.println("resultString.length = " + resultString.length());
-		System.out.println("sbString.length = " + sbString.length());
-		for (int i = 0; i < sbString.length(); i++) {
-			if (resultString.charAt(i) != sbString.charAt(i)) {
-				System.err.println("char mismatch at index = " + i + " result char is "
-						+ resultString.charAt(i) + ", sbString char is " + sbString.charAt(i));
-				break;
-			}
-		}
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE
 				.getName()));

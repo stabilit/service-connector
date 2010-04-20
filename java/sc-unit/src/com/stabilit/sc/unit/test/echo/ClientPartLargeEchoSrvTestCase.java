@@ -46,7 +46,7 @@ public class ClientPartLargeEchoSrvTestCase extends SuperSessionTestCase {
 
 			Map<String, String> header = result.getHeader();
 			Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName()));
-			Assert.assertEquals(echoCall.getCall().getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()),
+			Assert.assertEquals(echoCall.getCall().getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID),
 					header.get(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()));
 			Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.SESSION_ID.getName()));
 

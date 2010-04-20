@@ -45,7 +45,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 		log.debug("Run command " + this.getKey());
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
@@ -57,7 +57,7 @@ public class DeRegisterServiceCommand extends CommandAdapter {
 		serviceRegistry.remove(serviceName);
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
 	}
 

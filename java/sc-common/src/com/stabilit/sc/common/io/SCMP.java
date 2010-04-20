@@ -26,11 +26,11 @@ public class SCMP implements Serializable {
 	}
 
 	public void setMessageType(String messageType) {
-		setHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType);
+		setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageType);
 	}
 
 	public String getMessageType() {
-		return getHeader(SCMPHeaderAttributeKey.MSG_TYPE.getName());
+		return getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
 	}
 
 	public boolean isFault() {
@@ -63,6 +63,14 @@ public class SCMP implements Serializable {
 		return String.class == this.body.getClass();
 	}
 
+	public boolean isLargeMessage() {
+		if (this.body == null) {
+			return false;
+		}
+		int bodyLength = this.getBodyLength();
+		return bodyLength > LARGE_MESSAGE_LIMIT;
+	}
+
 	public void removeHeader(String name) {
 		header.remove(name);
 	}
@@ -71,28 +79,36 @@ public class SCMP implements Serializable {
 		header.remove(headerType.getName());
 	}
 
-	public void setHeader(String name, String value) {
-		header.put(name, value);
+	// public void setHeader(String name, String value) {
+	// header.put(name, value);
+	// }
+
+	public void setHeader(SCMPHeaderAttributeKey headerAttr, String value) {
+		header.put(headerAttr.getName(), value);
 	}
 
-	public void setHeader(String name, boolean value) {
+	public void setHeader(SCMPHeaderAttributeKey headerAttr, boolean value) {
 		if (value) {
-			header.put(name, "1");
+			header.put(headerAttr.getName(), "1");
 		} else {
-			header.put(name, "0");
+			header.put(headerAttr.getName(), "0");
 		}
 	}
 
-	public void setHeader(String name, int value) {
-		header.put(name, String.valueOf(value));
+	public void setHeader(SCMPHeaderAttributeKey headerAttr, int value) {
+		header.put(headerAttr.getName(), String.valueOf(value));
 	}
 
-	public String getHeader(String name) {
-		return header.get(name);
+	// public String getHeader(String name) {
+	// return header.get(name);
+	// }
+
+	public String getHeader(SCMPHeaderAttributeKey headerAttr) {
+		return header.get(headerAttr.getName());
 	}
 
-	public Boolean getHeaderBoolean(String name) {
-		String value = header.get(name);
+	public Boolean getHeaderBoolean(SCMPHeaderAttributeKey headerAttr) {
+		String value = header.get(headerAttr.getName());
 
 		if ("0".equals(value)) {
 			return false;
@@ -103,8 +119,8 @@ public class SCMP implements Serializable {
 		return null;
 	}
 
-	public Integer getHeaderInt(String name) {
-		String value = header.get(name);
+	public Integer getHeaderInt(SCMPHeaderAttributeKey headerAttr) {
+		String value = header.get(headerAttr.getName());
 		if (value == null)
 			return null;
 		Integer intValue = null;
@@ -142,8 +158,8 @@ public class SCMP implements Serializable {
 			this.removeHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE);
 			return;
 		}
-		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), this.getBodyLength());
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName(), this.getBodyTypeAsString());
+		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE, this.getBodyTypeAsString());
 	}
 
 	private String getBodyTypeAsString() {
@@ -194,13 +210,4 @@ public class SCMP implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
-
-	public boolean isLargeMessage() {
-		if (this.body == null) {
-			return false;
-		}
-		int bodyLength = this.getBodyLength();
-		return bodyLength > LARGE_MESSAGE_LIMIT;
-	}
-
 }

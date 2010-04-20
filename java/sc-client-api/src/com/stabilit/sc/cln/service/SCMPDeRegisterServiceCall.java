@@ -43,7 +43,7 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	}
 	
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}	
 	
 	@Override

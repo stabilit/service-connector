@@ -38,6 +38,16 @@ public class SCMPComposite extends SCMP {
 	private ByteArrayOutputStream os;
 	private StringWriter w;
 	
+	public SCMPComposite(SCMP request, SCMP scmp) {
+		this.os = null;
+		this.w = null;
+		this.scmpOffset = 0;
+		this.scmpFault = null;
+		scmpList = new ArrayList<SCMP>();
+		partRequest = new SCMPPart();
+		this.add(scmp);
+	}
+	
 	public SCMPComposite(SCMP request, SCMPPart scmpPart) {
 		this.os = null;
 		this.w = null;
@@ -49,15 +59,15 @@ public class SCMPComposite extends SCMP {
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setMessageId(messageId);
 		partRequest.setSessionId(request.getSessionId());
-		String serviceName = request.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
-		partRequest.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
-		String messageInfo = request.getHeader(SCMPHeaderAttributeKey.MESSAGE_INFO.getName());
-		partRequest.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO.getName(), messageInfo);
-		int sequenceNr = request.getHeaderInt(SCMPHeaderAttributeKey.SEQUENCE_NR.getName());
-		partRequest.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR.getName(), sequenceNr);
-		this.scmpOffset = scmpPart.getHeaderInt(SCMPHeaderAttributeKey.SCMP_OFFSET.getName());
+		String serviceName = request.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		partRequest.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		String messageInfo = request.getHeader(SCMPHeaderAttributeKey.MESSAGE_INFO);
+		partRequest.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO, messageInfo);
+		int sequenceNr = request.getHeaderInt(SCMPHeaderAttributeKey.SEQUENCE_NR);
+		partRequest.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
+		this.scmpOffset = scmpPart.getHeaderInt(SCMPHeaderAttributeKey.SCMP_OFFSET);
 		this.add(scmpPart);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), scmpOffset);
+		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffset);
 	}
 
 	@Override
@@ -77,10 +87,10 @@ public class SCMPComposite extends SCMP {
 		int bodyLength = scmp.getBodyLength();
 		this.scmpOffset += bodyLength;
 		this.scmpList.add(scmp);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET.getName(), String.valueOf(this.scmpOffset));
+		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, String.valueOf(this.scmpOffset));
 		if (scmp.isPart() == false) {
 			this.setHeader(scmp.getHeader());
-			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), getBodyLength());
+			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, getBodyLength());
 		}
 	}
 

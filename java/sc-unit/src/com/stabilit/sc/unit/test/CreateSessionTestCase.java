@@ -66,7 +66,7 @@ public class CreateSessionTestCase extends SuperConnectTestCase{
 		Assert.assertNull(scmpSession.getBody());
 		Assert.assertEquals(SCMPMsgType.CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
 		Assert.assertNotNull(scmpSession.getSessionId());
-		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getName()));
+		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL

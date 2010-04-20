@@ -18,21 +18,13 @@ package com.stabilit.sc.srv.net.server.netty.http;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
@@ -44,19 +36,20 @@ import com.stabilit.sc.common.net.netty.NettyHttpRequest;
 import com.stabilit.sc.common.net.netty.NettyHttpResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.sc.srv.cmd.NettyCommandRequest;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 
 @ChannelPipelineCoverage("one")
 public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private static Logger log = Logger.getLogger(NettyHttpServerRequestHandler.class);
-	
+	private NettyCommandRequest commandRequest = null;
+
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		
+
 		try {
 			Channel channel = ctx.getChannel();
 			SocketAddress socketAddress = channel.getRemoteAddress();
@@ -64,7 +57,16 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			serverRegistry.setThreadLocal(channel.getParent().getId());
 			IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 			response = new NettyHttpResponse(event);
-			ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+			// ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+
+			if (commandRequest == null) {
+				commandRequest = new NettyCommandRequest(request, response);
+			}
+			ICommand command = commandRequest.readCommand(request, response);
+			if (commandRequest.isComplete() == false) {
+				response.write();
+				return;
+			}
 			SCMP scmpReq = request.getSCMP();
 			if (command == null) {
 				log.debug("Request unkown, " + request);
@@ -72,7 +74,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
-				writeResponse(response);
+				response.write();
 				return;
 			}
 
@@ -96,36 +98,38 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
-		writeResponse(response);
+		response.write();
+		commandRequest = null;
 	}
 
-	private void writeResponse(NettyHttpResponse response) throws Exception {
-		MessageEvent event = response.getEvent();
-		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-
-		// Decide whether to close the connection or not.
-		boolean close = !httpRequest.isKeepAlive();
-		// TODO ?? keepAlive close?
-
-		// Build the response object.
-		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		ChannelBuffer buffer = response.getBuffer();
-
-		httpResponse.setContent(buffer);
-
-		if (!close) {
-			// There's no need to add 'Content-Length' header
-			// if this is the last response.
-			httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		}
-		// Write the response.
-		ChannelFuture future = event.getChannel().write(httpResponse);
-
-		// Close the connection after the write operation is done if necessary.
-		if (close) {
-			future.addListener(ChannelFutureListener.CLOSE);
-		}
-	}
+	//
+	// private void writeResponse(NettyHttpResponse response) throws Exception {
+	// MessageEvent event = response.getEvent();
+	// HttpRequest httpRequest = (HttpRequest) event.getMessage();
+	//
+	// // Decide whether to close the connection or not.
+	// boolean close = !httpRequest.isKeepAlive();
+	// // TODO ?? keepAlive close?
+	//
+	// // Build the response object.
+	// HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+	// ChannelBuffer buffer = response.getBuffer();
+	//
+	// httpResponse.setContent(buffer);
+	//
+	// if (!close) {
+	// // There's no need to add 'Content-Length' header
+	// // if this is the last response.
+	// httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+	// }
+	// // Write the response.
+	// ChannelFuture future = event.getChannel().write(httpResponse);
+	//
+	// // Close the connection after the write operation is done if necessary.
+	// if (close) {
+	// future.addListener(ChannelFutureListener.CLOSE);
+	// }
+	// }
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {

@@ -87,7 +87,7 @@ public class ClnDataCommand extends CommandAdapter {
 				// sequenceNr
 
 				// compression
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION.getName());
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
 				}

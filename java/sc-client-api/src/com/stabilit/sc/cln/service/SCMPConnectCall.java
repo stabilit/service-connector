@@ -52,23 +52,23 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	}
 
 	public void setVersion(String version) {
-		call.setHeader(SCMPHeaderAttributeKey.SC_VERSION.getName(), version);
+		call.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
 
 	private void setLocalDateTime(String localDateTime) {
-		call.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
+		call.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 	
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
-		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAliveTimeout);
+		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
 	}
 
 	public void setKeepAliveInterval(int keepAliveInterval) {
-		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL.getName(), keepAliveInterval);
+		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
 	
 	@Override

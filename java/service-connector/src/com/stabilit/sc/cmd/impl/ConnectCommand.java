@@ -87,7 +87,7 @@ public class ConnectCommand extends CommandAdapter {
 				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION.getName());
+				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if(compression == null) {
 					compression = true;
 				}
@@ -111,5 +111,4 @@ public class ConnectCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }
