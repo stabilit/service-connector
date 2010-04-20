@@ -102,35 +102,6 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		commandRequest = null;
 	}
 
-	//
-	// private void writeResponse(NettyHttpResponse response) throws Exception {
-	// MessageEvent event = response.getEvent();
-	// HttpRequest httpRequest = (HttpRequest) event.getMessage();
-	//
-	// // Decide whether to close the connection or not.
-	// boolean close = !httpRequest.isKeepAlive();
-	// // TODO ?? keepAlive close?
-	//
-	// // Build the response object.
-	// HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-	// ChannelBuffer buffer = response.getBuffer();
-	//
-	// httpResponse.setContent(buffer);
-	//
-	// if (!close) {
-	// // There's no need to add 'Content-Length' header
-	// // if this is the last response.
-	// httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-	// }
-	// // Write the response.
-	// ChannelFuture future = event.getChannel().write(httpResponse);
-	//
-	// // Close the connection after the write operation is done if necessary.
-	// if (close) {
-	// future.addListener(ChannelFutureListener.CLOSE);
-	// }
-	// }
-
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		e.getCause().printStackTrace();

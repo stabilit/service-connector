@@ -84,6 +84,7 @@ public class NettyHttpResponse implements IResponse {
 
 		// Build the response object.
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+		httpResponse.getContentLength();
 		ChannelBuffer buffer = getBuffer();
 
 		httpResponse.setContent(buffer);
@@ -95,14 +96,10 @@ public class NettyHttpResponse implements IResponse {
 		}
 		// Write the response.
 		ChannelFuture future = event.getChannel().write(httpResponse);
-
+		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array()); // logs inside if registered		
 		// Close the connection after the write operation is done if necessary.
 		if (close) {
 			future.addListener(ChannelFutureListener.CLOSE);
 		}
-		// ChannelBuffer buffer = this.getBuffer();
-		// // Write the response.
-		// ChannelFuture future = event.getChannel().write(buffer);
-		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array()); // logs inside if registered
 	}
 }
