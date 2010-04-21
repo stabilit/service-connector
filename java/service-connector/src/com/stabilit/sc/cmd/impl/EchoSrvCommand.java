@@ -67,8 +67,8 @@ public class EchoSrvCommand extends CommandAdapter {
 		if (maxNodes == 1) {
 			if (scmp.isPart()) {
 				result = new SCMPPart();
-				String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);
-				result.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
+				String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
+				result.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 				String callLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH);
 				result.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, callLength);
 				String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);

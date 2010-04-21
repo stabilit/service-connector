@@ -19,35 +19,21 @@
  */
 package com.stabilit.sc.common.io;
 
-import java.util.Map;
-
 /**
  * @author JTraber
  * 
  */
-public class SCMPPartReply extends SCMPPart {
+public enum SCMPInternalStatus {
+	NONE, PRQ, REQ, FAILED;
 
-	private static final long serialVersionUID = -8015380478464508905L;
+	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
+		switch (headerKey) {
+		case PRQ:
+			return SCMPInternalStatus.PRQ;
+		case REQ:
+			return SCMPInternalStatus.REQ;
+		}
+		return SCMPInternalStatus.NONE;
 
-	public SCMPPartReply() {
-		super();
 	}
-
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isReply() {
-		return true;
-	}
-	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
-	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
-	}
-
-
 }

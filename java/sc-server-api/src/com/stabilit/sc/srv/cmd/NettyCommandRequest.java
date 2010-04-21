@@ -19,8 +19,6 @@
  */
 package com.stabilit.sc.srv.cmd;
 
-import javax.script.ScriptContext;
-
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
@@ -68,9 +66,13 @@ public class NettyCommandRequest extends CommandRequest {
 			complete = true;
 			return this.command;
 		}
-		
+
 		if (scmpComposite == null) {
-			scmpComposite = new SCMPComposite(scmp, scmp);
+			//request not chunked
+			if (scmp.isPart() == false) {
+				return this.command;
+			}
+			scmpComposite = new SCMPComposite(scmp, (SCMPPart) scmp);
 		} else {
 			scmpComposite.add(scmp);
 		}
@@ -78,19 +80,19 @@ public class NettyCommandRequest extends CommandRequest {
 		// request is part of a chunked message
 		if (scmp.isPart()) {
 			complete = false;
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);
+			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			SCMP scmpReply = new SCMPPartReply();
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
-		} else { // last request of a chunked message or request not chunked
+		} else { // last request of a chunked message
 			complete = true;
 			this.request.setSCMP(scmpComposite);
-		}		
+		}
 		return this.command;
 	}
 

@@ -27,8 +27,17 @@ public class EncoderDecoderFactory extends Factory {
 		return newInstance("default");
 	}
 
+	public boolean isLarge(SCMP scmp) {
+		if (scmp.isPart() || scmp.isBodyOffset()) {
+			return true;
+		}
+		if (scmp.isLargeMessage()) {
+			return true;
+		}
+		return false;
+	}
 	public IEncoderDecoder newInstance(SCMP scmp) {
-		if (scmp.isPart()) {
+		if (scmp.isPart() || scmp.isBodyOffset()) {
 			return newInstance("large");
 		}
 		if (scmp.isLargeMessage()) {

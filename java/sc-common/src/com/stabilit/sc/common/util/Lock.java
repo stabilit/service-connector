@@ -17,37 +17,34 @@
 /**
  * 
  */
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.util;
 
-import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPPartReply extends SCMPPart {
+public class Lock<T> {
 
-	private static final long serialVersionUID = -8015380478464508905L;
+	final ReentrantLock reentrantLock = new ReentrantLock();
 
-	public SCMPPartReply() {
-		super();
+	public void lock() throws InterruptedException {
+		reentrantLock.lock(); // will wait until this thread gets the lock
 	}
 
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
+	public T runLocked(Lockable<T> lockable, T... params) {
+		try {
+			reentrantLock.lock();
+			return lockable.run(params);
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.unlock();
+		}
 	}
 
-	public boolean isReply() {
-		return true;
+	public void unlock() {
+		reentrantLock.unlock();
 	}
-	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
-	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
-	}
-
-
 }

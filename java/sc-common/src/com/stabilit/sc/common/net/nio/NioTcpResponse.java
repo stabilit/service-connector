@@ -6,15 +6,14 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.ISession;
+import com.stabilit.sc.common.io.ResponseAdapter;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
-public class NioTcpResponse implements IResponse {
+public class NioTcpResponse extends ResponseAdapter {
 
 	private SocketChannel socketChannel;
-	private SCMP scmp;
 	private ISession session;
 	private IEncoderDecoder encoderDecoder;
 

@@ -17,21 +17,14 @@
 /**
  * 
  */
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.common.util;
 
 /**
  * @author JTraber
  *
  */
-public class MessageID {
+public interface Lockable<T> {
 
-	private static int messageID = 1;
-	
-	public synchronized static int getNext() {
-		return ++messageID;
-	}
-	
-	public static String getNextAsString() {
-		return String.valueOf(getNext());
-	}
+	public T run(T ...objects) throws Exception;
+
 }

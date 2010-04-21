@@ -8,7 +8,6 @@ import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.cln.service.MessageID;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -17,6 +16,7 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPPart;
+import com.stabilit.sc.common.io.SCMPPartID;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
@@ -87,7 +87,7 @@ public class SrvDataCommand extends CommandAdapter {
 		}
 
 		if ("large".equals(scmp.getBody()) || scmp.isPart()) {
-			String messageID = MessageID.getNextAsString();
+			String partID = SCMPPartID.getNextAsString(); // identifies message
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			for (i = scmpOffsetInt; i < 10000; i++) {
@@ -102,7 +102,7 @@ public class SrvDataCommand extends CommandAdapter {
 			} else {
 				scmpReply = new SCMPPart();
 				scmpReply.setMessageType(getKey().getResponseName());
-				((SCMPPart) scmpReply).setMessageId(messageID);
+				((SCMPPart) scmpReply).setPartId(partID);
 				scmpReply.setSessionId(sessionId);
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmp
 						.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR));
@@ -110,8 +110,8 @@ public class SrvDataCommand extends CommandAdapter {
 						SCMPHeaderAttributeKey.SERVICE_NAME).toString());
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
 				if (scmp.isPart()) {
-					scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, scmp.getHeader(
-							SCMPHeaderAttributeKey.SCMP_MESSAGE_ID).toString());
+					scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, scmp.getHeader(
+							SCMPHeaderAttributeKey.PART_ID).toString());
 				}
 				scmpReply.setBody(sb.toString());
 				response.setSCMP(scmpReply);

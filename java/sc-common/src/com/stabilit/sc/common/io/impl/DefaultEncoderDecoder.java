@@ -22,6 +22,7 @@ import com.stabilit.sc.common.io.SCMPBodyType;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPHeadlineKey;
+import com.stabilit.sc.common.io.SCMPInternalStatus;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
@@ -129,6 +130,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
+		scmp.setInternalStatus(SCMPInternalStatus.NONE);
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
@@ -177,6 +179,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					bw.flush();
 					bw.write(t);              // write body
 					bw.flush();
+					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
 				if (body instanceof IMessage) {
@@ -192,6 +195,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					bw.flush();
 					message.encode(bw);
 					bw.flush();
+					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
 				if (body instanceof byte[]) {
@@ -211,8 +215,10 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					bw.flush();
 					os.write((byte[]) ba);
 					os.flush();
+					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				} else {
+					scmp.setInternalStatus(SCMPInternalStatus.FAILED);
 					throw new EncodingDecodingException("unsupported body type");
 				}
 			} else {
@@ -227,8 +233,10 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				bw.flush();
 			}
 		} catch (IOException e1) {
+			scmp.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
+		scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		return;
 	}
 

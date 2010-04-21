@@ -18,13 +18,15 @@ import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.ISession;
+import com.stabilit.sc.common.io.ResponseAdapter;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.io.SCMPPartID;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
-public class NettyHttpResponse implements IResponse {
+public class NettyHttpResponse extends ResponseAdapter {
 
 	private MessageEvent event;
-	private SCMP scmp;
 	private ISession session;
 	private IEncoderDecoder encoderDecoder;
 
@@ -40,9 +42,16 @@ public class NettyHttpResponse implements IResponse {
 
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		EncoderDecoderFactory encoderDecoderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
 		if (this.encoderDecoder == null) {
-			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
+			encoderDecoder = encoderDecoderFactory.newInstance(this.scmp);
 		}
+		if (encoderDecoderFactory.isLarge(scmp)) {
+			if (this.scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
+				this.scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
+			}
+		}
+
 		encoderDecoder.encode(baos, this.scmp);
 		byte[] buf = baos.toByteArray();
 		return ChannelBuffers.copiedBuffer(buf);

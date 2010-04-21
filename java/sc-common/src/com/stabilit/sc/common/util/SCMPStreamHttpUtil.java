@@ -11,6 +11,8 @@ import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPBodyType;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.io.SCMPPartID;
 import com.stabilit.sc.common.net.nio.NioHttpException;
 
 public class SCMPStreamHttpUtil {
@@ -149,8 +151,14 @@ public class SCMPStreamHttpUtil {
 		StringBuilder http = new StringBuilder();
 		http.append("HTTP/1.1 200 OK\r\n");
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		EncoderDecoderFactory encoderDecoderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
 		if (this.encoderDecoder == null) {
-			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
+			encoderDecoder = encoderDecoderFactory.newInstance(scmp);
+		}
+		if (encoderDecoderFactory.isLarge(scmp)) {
+			if (scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
+				scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
+			}
 		}
 		encoderDecoder.encode(baos, scmp);
 		baos.close();

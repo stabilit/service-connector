@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jboss.netty.channel.MessageEvent;
+
 public class SCMP implements Serializable {
 
 	private static final long serialVersionUID = -3464445251398033295L;
@@ -14,9 +16,11 @@ public class SCMP implements Serializable {
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10;
 
 	protected Map<String, String> header;
+	protected SCMPInternalStatus internalStatus; // internal usage only
 	protected Object body;
 
 	public SCMP() {
+		this.internalStatus = SCMPInternalStatus.NONE;
 		header = new HashMap<String, String>();
 	}
 
@@ -45,6 +49,10 @@ public class SCMP implements Serializable {
 		return false;
 	}
 
+	public boolean isBodyOffset() {
+		return false;
+	}
+
 	public boolean isComposite() {
 		return false;
 	}
@@ -65,6 +73,9 @@ public class SCMP implements Serializable {
 
 	public boolean isLargeMessage() {
 		if (this.body == null) {
+			return false;
+		}
+		if(this.body instanceof IMessage) {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
@@ -97,6 +108,18 @@ public class SCMP implements Serializable {
 
 	public void setHeader(SCMPHeaderAttributeKey headerAttr, int value) {
 		header.put(headerAttr.getName(), String.valueOf(value));
+	}
+
+	public void setHeader(SCMP scmp) {
+		this.setHeader(scmp.getHeader());
+	}
+
+	public void setHeader(SCMP scmp, SCMPHeaderAttributeKey key) {
+		String value = scmp.getHeader(key);
+		if (value == null) {
+			return;
+		}
+		this.setHeader(key, value);
 	}
 
 	// public String getHeader(String name) {
@@ -209,5 +232,13 @@ public class SCMP implements Serializable {
 		builder.append(header);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public void setInternalStatus(SCMPInternalStatus internalStatus) {
+		this.internalStatus = internalStatus;
+	}
+
+	public boolean isRequest() {
+		return internalStatus == SCMPInternalStatus.REQ;
 	}
 }

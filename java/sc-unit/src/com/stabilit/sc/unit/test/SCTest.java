@@ -31,8 +31,6 @@ import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.clnData.ClnDataLargeTestCase;
 import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
-import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.ClientPartLargeEchoSrvTestCase;
 import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSrvTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
@@ -56,9 +54,7 @@ import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
 	EchoSrvTestCase.class,
 	EchoSCTestCase.class,
 	ClientSingleLargeEchoSrvTestCase.class,
-	ClientSingleLargeEchoSCTestCase.class,
-	ClientPartLargeEchoSrvTestCase.class,
-	ClientPartLargeEchoSCTestCase.class})
+	ClientSingleLargeEchoSCTestCase.class})
 public class SCTest {
 
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {

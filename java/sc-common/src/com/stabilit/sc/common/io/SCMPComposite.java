@@ -38,40 +38,27 @@ public class SCMPComposite extends SCMP {
 	private ByteArrayOutputStream os;
 	private StringWriter w;
 	
-	public SCMPComposite(SCMP request, SCMP scmp) {
-		this.os = null;
-		this.w = null;
-		this.scmpOffset = 0;
-		this.scmpFault = null;
-		scmpList = new ArrayList<SCMP>();
-		partRequest = new SCMPPart();
-		this.add(scmp);
-	}
-	
 	public SCMPComposite(SCMP request, SCMPPart scmpPart) {
 		this.os = null;
 		this.w = null;
 		this.scmpOffset = 0;
 		this.scmpFault = null;
-		scmpList = new ArrayList<SCMP>();
-		String messageId = scmpPart.getMessageId();
-		partRequest = new SCMPPart();
+		scmpList = new ArrayList<SCMP>();		
+		partRequest = new SCMPPart();		
+		String messageId = scmpPart.getPartId();		
 		partRequest.setMessageType(request.getMessageType());
-		partRequest.setMessageId(messageId);
-		partRequest.setSessionId(request.getSessionId());
-		String serviceName = request.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		String messageInfo = request.getHeader(SCMPHeaderAttributeKey.MESSAGE_INFO);
-		partRequest.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO, messageInfo);
-		int sequenceNr = request.getHeaderInt(SCMPHeaderAttributeKey.SEQUENCE_NR);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
-		this.scmpOffset = scmpPart.getHeaderInt(SCMPHeaderAttributeKey.SCMP_OFFSET);
+		partRequest.setPartId(messageId);
+		partRequest.setSessionId(request.getSessionId());		
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_BODY_TYPE);  // tries to set service name if any
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME);  // tries to set service name if any
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SEQUENCE_NR);  // tries to set sequence number if any
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_OFFSET);  // tries to set sequence number if any
 		this.add(scmpPart);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffset);
 	}
 
 	@Override
 	public Map<String, String> getHeader() {
+		partRequest.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		return partRequest.getHeader();
 	}
 			

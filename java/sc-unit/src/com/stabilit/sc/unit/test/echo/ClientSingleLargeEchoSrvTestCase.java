@@ -55,7 +55,7 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(lastPartBody, result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE
 				.getName()));
-		Assert.assertNull(header.get(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()));
+		Assert.assertNull(header.get(SCMPHeaderAttributeKey.PART_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
@@ -81,7 +81,7 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(lastPartBody, result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE
 				.getName()));
-		Assert.assertNull(header.get(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID.getName()));
+		Assert.assertNull(header.get(SCMPHeaderAttributeKey.PART_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());

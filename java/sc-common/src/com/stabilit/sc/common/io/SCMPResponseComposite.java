@@ -19,35 +19,44 @@
  */
 package com.stabilit.sc.common.io;
 
-import java.util.Map;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPPartReply extends SCMPPart {
+public class SCMPResponseComposite extends SCMP {
 
-	private static final long serialVersionUID = -8015380478464508905L;
-
-	public SCMPPartReply() {
-		super();
-	}
-
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isReply() {
-		return true;
+	private SCMP scmp;
+	private int offset;
+	private int scmpCallLength;
+	private SCMP current;
+	
+	public SCMPResponseComposite(IResponse response) {
+		this.scmp = response.getSCMP();
+		this.scmpCallLength = this.scmp.getBodyLength();
+		this.offset = 0;
+		this.current = null;
 	}
 	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
+	public SCMP getFirst() {
+		this.offset = 0;
+		this.current = new SCMPResponsePart(scmp, this.offset);
+		this.offset += current.getBodyLength();		
+		return this.current;
 	}
 	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
+	public boolean hasNext() {
+        return this.offset < this.scmpCallLength;		
 	}
-
-
+	
+	public SCMP getNext() {
+	    if (this.hasNext()) {
+			this.current = new SCMPResponsePart(scmp, this.offset);			    
+			this.offset += current.getBodyLength();
+			return this.current;
+	    }
+	    this.current = null;
+	    return this.current;
+	}
+			
 }

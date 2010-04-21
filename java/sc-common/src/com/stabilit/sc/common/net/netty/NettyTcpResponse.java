@@ -9,15 +9,14 @@ import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.ISession;
+import com.stabilit.sc.common.io.ResponseAdapter;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 
-public class NettyTcpResponse implements IResponse {
+public class NettyTcpResponse extends ResponseAdapter {
 
 	private MessageEvent event;
-	private SCMP scmp;
 	private ISession session;
 	private IEncoderDecoder encoderDecoder;
 

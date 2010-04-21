@@ -43,6 +43,11 @@ public class CommandRequest {
 		this.command = null;
 	}
 
+	public IRequest readRequest() throws Exception {		
+		this.request.read();
+		return this.request;
+	}
+	
 	public ICommand readCommand() throws Exception {
 		this.request.read();
 		this.command = CommandFactory.getCurrentCommandFactory().newCommand(this.request);
@@ -61,11 +66,11 @@ public class CommandRequest {
 			if (scmpComposite == null) {
 			   scmpComposite = new SCMPComposite(scmp, (SCMPPart)scmp);
 			}
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID);
+			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);			
 			SCMP scmpReply = new SCMPPartReply();
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_MESSAGE_ID, messageId);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 			scmpReply.setMessageType(scmp.getMessageType());

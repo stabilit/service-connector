@@ -19,35 +19,32 @@
  */
 package com.stabilit.sc.common.io;
 
-import java.util.Map;
-
 /**
  * @author JTraber
  * 
  */
-public class SCMPPartReply extends SCMPPart {
+public abstract class ResponseAdapter implements IResponse {
+	protected SCMP scmp;
 
-	private static final long serialVersionUID = -8015380478464508905L;
-
-	public SCMPPartReply() {
-		super();
+	public ResponseAdapter() {
+		this.scmp = scmp;
 	}
 
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isReply() {
-		return true;
+	@Override
+	public SCMP getSCMP() {
+		return this.scmp;
 	}
 	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
-	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
+	@Override
+	public void setSCMP(SCMP scmp) {
+		this.scmp = scmp;
 	}
 
-
+	@Override
+	public boolean isLarge() {
+		if (this.scmp == null) {
+			return false;
+		}
+		return this.scmp.isLargeMessage();
+	}
 }

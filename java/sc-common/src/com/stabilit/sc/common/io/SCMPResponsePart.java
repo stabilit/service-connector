@@ -13,41 +13,49 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
 package com.stabilit.sc.common.io;
 
-import java.util.Map;
-
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCMPPartReply extends SCMPPart {
+public class SCMPResponsePart extends SCMPPart {
 
-	private static final long serialVersionUID = -8015380478464508905L;
-
-	public SCMPPartReply() {
-		super();
+	private int offset;
+	private int size;
+	private int callLength;
+	
+	public SCMPResponsePart(SCMP scmp, int offset) {
+		this.offset = offset;
+		this.callLength = scmp.getBodyLength();
+		this.size = this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset : SCMP.LARGE_MESSAGE_LIMIT; 
+		this.setHeader(scmp);		
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH,scmp.getBodyLength());
+		this.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
+		this.setBody(scmp.getBody());
+	}
+	
+	@Override
+	public boolean isPart() {	
+		return offset + size < callLength;
+	}
+	@Override
+	public boolean isReply() {	   
+		return true;
 	}
 
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isReply() {
+	@Override
+	public boolean isBodyOffset() {
 		return true;
 	}
 	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
+	@Override
+	public int getBodyLength() {		
+		return this.size;
 	}
 	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
-	}
-
-
 }

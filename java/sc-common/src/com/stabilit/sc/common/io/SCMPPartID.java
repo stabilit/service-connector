@@ -13,41 +13,25 @@
  *                                                                             *
  * All referenced products are trademarks of their respective owners.          *
  *-----------------------------------------------------------------------------*
- */
+*/
 /**
  * 
  */
 package com.stabilit.sc.common.io;
 
-import java.util.Map;
-
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCMPPartReply extends SCMPPart {
+public class SCMPPartID {
 
-	private static final long serialVersionUID = -8015380478464508905L;
-
-	public SCMPPartReply() {
-		super();
-	}
-
-	public SCMPPartReply(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isReply() {
-		return true;
+	private static int messageID = 1;
+	
+	public synchronized static int getNext() {
+		return ++messageID;
 	}
 	
-	public void setPartId(String partId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, partId);
+	public static String getNextAsString() {
+		return String.valueOf(getNext());
 	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
-	}
-
-
 }

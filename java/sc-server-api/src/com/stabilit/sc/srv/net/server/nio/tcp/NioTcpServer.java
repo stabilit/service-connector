@@ -18,6 +18,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.common.net.nio.NioTcpRequest;
 import com.stabilit.sc.common.net.nio.NioTcpResponse;
@@ -139,6 +140,8 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 		}
 
 		public void run() {
+			SCMPResponseComposite scmpResponseComposite = null;
+
 			try {
 				ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 				serverRegistry.add(this.socketChannel, new ServerRegistryItem(NioTcpServer.this.server));
@@ -147,6 +150,19 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 					NioTcpRequest request = new NioTcpRequest(socketChannel);
 					NioTcpResponse response = new NioTcpResponse(socketChannel);
 					CommandRequest commandRequest = new CommandRequest(request, response);
+					if (scmpResponseComposite != null) {
+						if (scmpResponseComposite.hasNext()) {
+							commandRequest.readRequest();
+							SCMP nextSCMP = scmpResponseComposite.getNext();
+							response.setSCMP(nextSCMP);
+						    response.write();
+							if (scmpResponseComposite.hasNext() == false) {
+								scmpResponseComposite = null;
+							}
+						    continue;
+						}
+						scmpResponseComposite = null;
+					}
 					ICommand command = commandRequest.readCommand();
 					try {
 						if (command == null) {
@@ -177,6 +193,12 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 						scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 						scmpFault.setLocalDateTime();
 						response.setSCMP(scmpFault);
+					}
+					// check if response is large, if so create a composite for this reply
+					if (response.isLarge()) {
+						scmpResponseComposite = new SCMPResponseComposite(response);
+						SCMP firstSCMP = scmpResponseComposite.getFirst();
+						response.setSCMP(firstSCMP);
 					}
 					response.write();
 				}
