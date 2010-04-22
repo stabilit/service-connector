@@ -26,6 +26,8 @@ package com.stabilit.sc.common.io;
 public class SCMPPartID {
 
 	private static int messageID = 1;
+	private static int partID = 1;
+	private static int callID = 1;
 	
 	public synchronized static int getNext() {
 		return ++messageID;
