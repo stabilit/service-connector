@@ -26,10 +26,16 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.connect.ConnectTestCase;
+import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
+import com.stabilit.sc.unit.test.register.DeRegisterServiceTestCase;
+import com.stabilit.sc.unit.test.register.RegisterServiceTestCase;
+import com.stabilit.sc.unit.test.session.ClnCreateSessionTestCase;
+import com.stabilit.sc.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 

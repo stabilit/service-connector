@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.register;
 
 import junit.framework.Assert;
 
@@ -29,6 +29,8 @@ import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.sc.unit.test.SuperTestCase;
 
 public class RegisterServiceTestCase extends SuperTestCase {
 

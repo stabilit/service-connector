@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.connect;
 
 import junit.framework.Assert;
 
@@ -30,11 +30,27 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.util.ValidatorUtility;
+import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.sc.unit.test.SuperTestCase;
 
-public class DisconnectTestCase extends SuperConnectTestCase {
+public class ConnectTestCase extends SuperTestCase {
 
 	@Test
-	public void secondConnect() throws Exception {
+	public void failConnect() throws Exception {
+		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+		/******************* incompatible scmp version ******************/
+		connectCall.setVersion("2.0-00");
+		try {
+			connectCall.invoke();
+			Assert.fail("Should throw Exception!");
+		} catch (SCMPServiceException ex) {
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CONNECT);
+		}
+	}
+
+	@Test
+	public void connect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
 		connectCall.setVersion("1.0-00");
@@ -42,51 +58,35 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
 
-		try {
-			connectCall.invoke();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_CONNECTED, SCMPMsgType.CONNECT);
-		}
-	}
+		SCMP result = connectCall.invoke();
 
-	@Test
-	public void disconnect() throws Exception {
-		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
-				.newInstance(client);
-
-		SCMP result = null;
-		try {
-			result = disconnectCall.invoke();
-		} catch (SCMPServiceException e) {
-			Assert.fail();
-		}
-
-		/*********************************** Verify disconnect response msg **********************************/
+		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.DISCONNECT
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.CONNECT
 				.getResponseName());
+		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
+				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
+				.newInstance(client);
 		SCMP inspect = inspectCall.invoke();
-		/*********************************** Verify registry entries in SC ***********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
-		Assert.assertEquals("", scEntry);
-		super.simpleConnect();
-	}
 
-	@Test
-	public void secondDisconnect() throws Exception {
-		super.simpleDisconnect();
+		/*********************************** Verify registry entries in SC ********************************/
+		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String expectedScEntry = ":compression=false;localDateTime="
+				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
+						SCMPHeaderAttributeKey.LOCAL_DATE_TIME))
+				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
+		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
+		// truncate /127.0.0.1:3640 because port may vary.
+		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
+		scEntry = scEntry.substring(scEntry.indexOf(":"));
+
+		Assert.assertEquals(expectedScEntry, scEntry);
+
 		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
 				.newInstance(client);
-		try {
-			disconnectCall.invoke();
-		} catch (SCMPServiceException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
-		}
-		super.simpleConnect();
+		disconnectCall.invoke();
 	}
 }

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.register;
 
 import junit.framework.Assert;
 
@@ -22,33 +22,52 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
+import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.unit.test.SCTest;
 
-public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
+public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 
 	@Test
-	public void clnDeleteSession() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, scmpSession);
-		SCMP result = deleteSessionCall.invoke();
+	public void deRegisterServiceCall() throws Exception {
+		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+				.newInstance(client);
 
-		/*************************** verify create session **********************************/
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getResponseName(), result.getMessageType());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+		deRegisterServiceCall.invoke();
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
+				.newInstance(client);
 		SCMP inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
-		Assert.assertEquals("", scEntry);
-		super.createSession();
+		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
+		String expectedEnty = "simulation:portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
+		Assert.assertEquals(expectedEnty, scEntry);
+		super.registerService();
+	}
+
+	@Test
+	public void secondDeRegisterServiceCall() throws Exception {
+		super.deRegisterService();
+		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+				.newInstance(client);
+
+		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+
+		try {
+			deRegisterServiceCall.invoke();
+			Assert.fail("Should throw Exception!");
+		} catch (SCMPServiceException e) {
+			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_REGISTERED,
+					SCMPMsgType.DEREGISTER_SERVICE);
+		}
+		super.registerService();
 	}
 }

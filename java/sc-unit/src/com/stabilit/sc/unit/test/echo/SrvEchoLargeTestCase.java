@@ -26,7 +26,7 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPBodyType;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.unit.test.SuperSessionTestCase;
+import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 

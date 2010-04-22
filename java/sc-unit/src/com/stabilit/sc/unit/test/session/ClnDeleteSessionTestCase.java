@@ -14,52 +14,41 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit.test.session;
 
-import org.junit.After;
-import org.junit.Before;
+import junit.framework.Assert;
 
-import com.stabilit.sc.cln.io.SCMPSession;
+import org.junit.Test;
+
+import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPInspectCall;
+import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.io.SCMPMsgType;
 
-/**
- * @author JTraber
- * 
- */
-public abstract class SuperSessionTestCase extends SuperConnectTestCase {
+public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 
-	protected SCMPSession scmpSession = null;
-
-	public SuperSessionTestCase() {
-		super();
-	}
-
-	@Before
-	public void setup() throws Exception {
-		super.setup();
-		createSession();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		clnDeleteSession();
-		super.tearDown();
-	}
-
-	public void createSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(client);
-
-		createSessionCall.setServiceName("simulation");
-		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		scmpSession = createSessionCall.invoke();
-	}
-
+	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client, scmpSession);
-		deleteSessionCall.invoke();
+		SCMP result = deleteSessionCall.invoke();
+
+		/*************************** verify create session **********************************/
+		Assert.assertNull(result.getBody());
+		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getResponseName(), result.getMessageType());
+		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+
+		/*************** scmp inspect ********/
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMP inspect = inspectCall.invoke();
+
+		/*********************************** Verify registry entries in SC ********************************/
+		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
+		Assert.assertEquals("", scEntry);
+		super.createSession();
 	}
 }
