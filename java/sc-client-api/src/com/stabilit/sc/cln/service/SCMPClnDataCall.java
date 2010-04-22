@@ -52,12 +52,6 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	}
 	
 	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, SequenceNumber.getNextAsString());
-		return super.invoke();
-	}
-
-	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_DATA;
 	}

@@ -46,7 +46,6 @@ public enum SCMPHeaderAttributeKey {
 	MULTI_THREADED("multiThreaded"),
 	NO_DATA("noData"),
 	REJECT_SESSION("rejectSession"),
-	SEQUENCE_NR("sequenceNr"),
 	SERVICE_NAME("serviceName"),
 	SESSION_ID("sessionId"),
 	SESSION_INFO("sessionInfo"),

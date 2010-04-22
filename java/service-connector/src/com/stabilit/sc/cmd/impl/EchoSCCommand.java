@@ -6,7 +6,6 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
@@ -41,7 +40,6 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 		Object obj = scmp.getBody();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmp.getSessionId());
-		scmpReply.setHeader(scmp, SCMPHeaderAttributeKey.SEQUENCE_NR);
 		scmpReply.setBody(obj);
 		if (obj.toString().length() > 100) {
 			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));
@@ -49,8 +47,6 @@ public class EchoSCCommand extends CommandAdapter implements SCOnly {
 			System.out.println("EchoSCCommand body = " + obj.toString());
 		}
 		response.setSCMP(scmpReply);
-		// don't use large message encoder/decoder
-		//response.setEncoderDecoder((IEncoderDecoder) EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance());
 		return;
 	}
 

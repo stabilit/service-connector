@@ -139,7 +139,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		SCMP scmp = (SCMP) obj;
 
 		scmp.setInternalStatus(SCMPInternalStatus.NONE);
-		
+
 		// message chunking
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		if (scmp.isReply()) {
@@ -147,9 +147,9 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				headerKey = SCMPHeadlineKey.EXC;
 			} else {
 				if (scmp.isPart()) {
-				    headerKey = SCMPHeadlineKey.PRS;
+					headerKey = SCMPHeadlineKey.PRS;
 				} else {
-				    headerKey = SCMPHeadlineKey.RES;				
+					headerKey = SCMPHeadlineKey.RES;
 				}
 			}
 		} else {
@@ -159,18 +159,16 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				headerKey = SCMPHeadlineKey.REQ;
 			}
 		}
-		
+
 		int scmpOffsetInt = 0;
-		int scmpSequenceNrInt = 0;
 		if (scmp.isComposite() == false) {
 			// try to get message offset
 			String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			if (scmpOffset == null) {
 				scmpOffsetInt = 0;
-				scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, "0");
 				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
 			} else {
-			   scmpOffsetInt = Integer.parseInt(scmpOffset);
+				scmpOffsetInt = Integer.parseInt(scmpOffset);
 			}
 		} else {
 			scmpOffsetInt = ((SCMPComposite) scmp).getOffset();
@@ -186,7 +184,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			String key = entry.getKey();
 			if (this.isIgnoreHeader(key) == false) {
 				String value = entry.getValue();
-				if (value == null) {					
+				if (value == null) {
 					throw new EncodingDecodingException("key [" + key + "] has null value");
 				}
 				/********* escaping *************/
@@ -216,12 +214,12 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 							messagePartLength = (bodyLength - scmpOffsetInt) > SCMP.LARGE_MESSAGE_LIMIT ? SCMP.LARGE_MESSAGE_LIMIT
 									: bodyLength - scmpOffsetInt;
 							if (headerKey == SCMPHeadlineKey.REQ) {
-								if (bodyLength > messagePartLength + scmpOffsetInt) {									
+								if (bodyLength > messagePartLength + scmpOffsetInt) {
 									headerKey = SCMPHeadlineKey.PRQ;
 								}
 							}
 							if (headerKey == SCMPHeadlineKey.RES) {
-								if (bodyLength > messagePartLength + scmpOffsetInt) {									
+								if (bodyLength > messagePartLength + scmpOffsetInt) {
 									headerKey = SCMPHeadlineKey.PRS;
 								}
 							}
@@ -250,15 +248,13 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 						bw.write(t, scmpOffsetInt, messagePartLength);
 					} else {
 						if (scmp.isBodyOffset()) {
-						    bw.write(t, scmpOffsetInt, messagePartLength);
+							bw.write(t, scmpOffsetInt, messagePartLength);
 						} else {
-						    bw.write(t, 0, messagePartLength);						
+							bw.write(t, 0, messagePartLength);
 						}
 					}
 					scmpOffsetInt += messagePartLength;
 					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
-					scmpSequenceNrInt++;
-					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmpSequenceNrInt);
 					bw.flush();
 					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
@@ -304,8 +300,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					}
 					scmpOffsetInt += messagePartLength;
 					scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
-					scmpSequenceNrInt++;
-					scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmpSequenceNrInt);
 					os.flush();
 					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;

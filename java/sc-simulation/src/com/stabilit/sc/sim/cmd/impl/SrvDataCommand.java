@@ -61,8 +61,6 @@ public class SrvDataCommand extends CommandAdapter {
 					.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPErrorCode.SERVER_ERROR
 					.getErrorText());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmp
-					.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR));
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 			return;
@@ -73,8 +71,6 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp.getHeader(
 				SCMPHeaderAttributeKey.SERVICE_NAME).toString());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmp
-				.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR));
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
 		// SCMPHeaderType.COMPRESSION).toString());
 
@@ -103,8 +99,6 @@ public class SrvDataCommand extends CommandAdapter {
 				scmpReply.setMessageType(getKey().getResponseName());
 				((SCMPPart) scmpReply).setPartId(partID);
 				scmpReply.setSessionId(sessionId);
-				scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, scmp
-						.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR));
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp.getHeader(
 						SCMPHeaderAttributeKey.SERVICE_NAME).toString());
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");

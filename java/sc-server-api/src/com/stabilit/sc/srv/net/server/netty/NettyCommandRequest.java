@@ -78,12 +78,10 @@ public class NettyCommandRequest {
 		if (scmp.isPart()) {
 			complete = false;
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			SCMPPart scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);

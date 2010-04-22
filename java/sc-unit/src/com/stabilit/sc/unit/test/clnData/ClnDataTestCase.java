@@ -53,10 +53,8 @@ public class ClnDataTestCase extends SuperSessionTestCase {
 			Assert.assertEquals(bodyLength + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 			Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 			Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
-			String sequenceNr = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String serviceName = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			String sessionId = clnDataCall.getCall().getSessionId();
-			Assert.assertEquals(sequenceNr, scmpReply.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR));
 			Assert.assertEquals(serviceName, scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
 		}
