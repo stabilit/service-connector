@@ -51,7 +51,7 @@ public class SCMPComposite extends SCMP {
 		partRequest.setSessionId(request.getSessionId());		
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_BODY_TYPE);  // tries to set service name if any
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME);  // tries to set service name if any
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_OFFSET);  // tries to set sequence number if any
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_OFFSET);  // tries to set scmpOffset if any
 		this.add(scmpPart);
 	}
 

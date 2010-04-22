@@ -168,8 +168,6 @@ public class SrvDataCommand extends CommandAdapter {
 
 				// bodyLength
 
-				// sequenceNr
-
 				// compression
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {

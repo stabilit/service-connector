@@ -73,7 +73,7 @@ public class ClnDataCommand extends CommandAdapter {
 					throw new ValidationException("sessionId must be set!");
 				}
 				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
-					throw new ValidationException("sessoion does not exists!");
+					throw new ValidationException("session does not exists!");
 				}
 
 				// serviceName
@@ -83,8 +83,6 @@ public class ClnDataCommand extends CommandAdapter {
 				}
 
 				// bodyLength
-
-				// sequenceNr
 
 				// compression
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
