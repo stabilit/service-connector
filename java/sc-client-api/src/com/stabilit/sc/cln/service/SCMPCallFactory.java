@@ -26,10 +26,10 @@ public class SCMPCallFactory {
 	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
 	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
 	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
-	public static final ISCMPCall CREATE_SESSION_CALL = new SCMPCreateSessionCall();
-	public static final ISCMPCall DELETE_SESSION_CALL = new SCMPDeleteSessionCall();
+	public static final ISCMPCall CLN_CREATE_SESSION_CALL = new SCMPClnCreateSessionCall();
+	public static final ISCMPCall CLN_DELETE_SESSION_CALL = new SCMPClnDeleteSessionCall();
 	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
 	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
-	public static final ISCMPCall ECHO_SRV_CALL = new SCMPEchoSrvCall();
+	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
 	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
 }

@@ -46,13 +46,13 @@ public final class ServiceRegistry extends Registry {
 		if (item.isAllocated()) {
 			return null;
 		}
-		item.allocate(scmp);
+		item.srvCreateSession(scmp);
 		return item;
 	}
 
 	public synchronized void deallocate(ServiceRegistryItem item, SCMP scmp) throws Exception {
 		if (item.isAllocated()) {
-			item.deallocate(scmp);
+			item.srvDeleteSession(scmp);
 		}
 		return;
 	}

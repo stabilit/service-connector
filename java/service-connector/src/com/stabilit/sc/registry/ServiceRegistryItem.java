@@ -21,14 +21,15 @@ import java.net.SocketAddress;
 
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.SCMPEchoSrvCall;
+import com.stabilit.sc.cln.service.SCMPClnEchoCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.service.SCMPAllocateSessionCall;
 import com.stabilit.sc.service.SCMPCallFactory;
-import com.stabilit.sc.service.SCMPDeAllocateSessionCall;
+import com.stabilit.sc.service.SCMPSrvCreateSessionCall;
 import com.stabilit.sc.service.SCMPSrvDataCall;
+import com.stabilit.sc.service.SCMPSrvDeleteSessionCall;
+import com.stabilit.sc.service.SCMPSrvEchoCall;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.ctx.ServerContext;
@@ -57,7 +58,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 		client = clientFactory.newInstance(serverHost, serverPort, serverCon);
 	}
 
-	public void allocate(SCMP scmp) throws Exception {
+	public void srvCreateSession(SCMP scmp) throws Exception {
 		// TODO client.disconnect and error log
 		try {
 			client.connect();
@@ -65,20 +66,20 @@ public class ServiceRegistryItem extends MapBean<String> {
 			e.printStackTrace();
 		}
 		try {
-			SCMPAllocateSessionCall allocateSessionCall = (SCMPAllocateSessionCall) SCMPCallFactory.ALLOCATE_SESSION_CALL
+			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 					.newInstance(client, scmp);
-			allocateSessionCall.setHeader(scmp.getHeader());
-			allocateSessionCall.invoke();
+			createSessionCall.setHeader(scmp.getHeader());
+			createSessionCall.invoke();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void deallocate(SCMP scmp) throws Exception {
-		SCMPDeAllocateSessionCall deAllocateSessionCall = (SCMPDeAllocateSessionCall) SCMPCallFactory.DEALLOCATE_SESSION_CALL
+	public void srvDeleteSession(SCMP scmp) throws Exception {
+		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(client, scmp);
-		deAllocateSessionCall.setHeader(scmp.getHeader());
-		deAllocateSessionCall.invoke();
+		deleteSessionCall.setHeader(scmp.getHeader());
+		deleteSessionCall.invoke();
 		client.disconnect();
 	}
 
@@ -86,8 +87,15 @@ public class ServiceRegistryItem extends MapBean<String> {
 		return false;
 	}
 
-	public SCMP echoSrv(SCMP scmp) throws Exception {
-		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client, scmp);
+	public SCMP clnEcho(SCMP scmp) throws Exception {
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, scmp);
+		echoCall.setHeader(scmp.getHeader());
+		echoCall.setBody(scmp.getBody());
+		return echoCall.invoke();
+	}
+	
+	public SCMP srvEcho(SCMP scmp) throws Exception {
+		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setBody(scmp.getBody());
 		return echoCall.invoke();

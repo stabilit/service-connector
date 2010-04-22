@@ -14,9 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cmd.impl;
-
-import java.util.Map;
+package com.stabilit.sc.sim.cmd.impl;
 
 import javax.xml.bind.ValidationException;
 
@@ -30,29 +28,24 @@ import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
-import com.stabilit.sc.common.io.Session;
-import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.common.util.ValidatorUtility;
-import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.ServiceRegistryItem;
+import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class CreateSessionCommand extends CommandAdapter {
+public class SrvDeleteSessionCommand extends CommandAdapter {
 
-	private static Logger log = Logger.getLogger(CreateSessionCommand.class);
+	private static Logger log = Logger.getLogger(SrvDeleteSessionCommand.class);
 
-	public CreateSessionCommand() {
-		this.commandValidator = new CreateSessionCommandValidator();
+	public SrvDeleteSessionCommand() {
+		this.commandValidator = new SrvDeleteSessionCommandValidator();
 	}
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CREATE_SESSION;
+		return SCMPMsgType.SRV_DELETE_SESSION;
 	}
 
 	@Override
@@ -60,48 +53,29 @@ public class CreateSessionCommand extends CommandAdapter {
 		return super.getCommandValidator();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
-		try {
-			// get free service
-			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		SCMP scmp = request.getSCMP();
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
-			MapBean<?> mapBean = serviceRegistry.get(serviceName);
+		String sessionId = scmp.getSessionId();
+		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
-			if (mapBean == null) {
-				log.debug("command error: unknown service requested");
-				SCMPCommandException scmpCommandException = new SCMPCommandException(
-						SCMPErrorCode.UNKNOWN_SERVICE);
-				scmpCommandException.setMessageType(getKey().getResponseName());
-				throw scmpCommandException;
-			}
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-
-			// create session
-			Session session = new Session();
-			scmp.setSessionId(session.getId());
-			// try to allocate session
-			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
-
-			// finally save session
-			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
-			sessionRegistry.add(session.getId(), session);
-
-			// reply
-			SCMPReply scmpReply = new SCMPReply();
-			scmpReply.setMessageType(getKey().getResponseName());
-			scmpReply.setSessionId(session.getId());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-			response.setSCMP(scmpReply);
-		} catch (Throwable e) {
-			log.debug("command error: fatal error when command runs");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
+		if (mapBean == null) {
+			log.debug("command error: session is no allocated");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
+		simSessReg.remove(sessionId);
+
+		SCMPReply scmpReply = new SCMPReply();
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		scmpReply.setMessageType(getKey().getResponseName());
+		response.setSCMP(scmpReply);
 	}
 
 	@Override
@@ -109,26 +83,23 @@ public class CreateSessionCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class CreateSessionCommandValidator implements ICommandValidator {
+	public class SrvDeleteSessionCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws Exception {
-			Map<String, String> scmpHeader = request.getSCMP().getHeader();
+			SCMP scmp = request.getSCMP();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
-
-				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
-				ValidatorUtility.validateIpAddressList(ipAddressList);
-
-				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
-				ValidatorUtility.validateString(0, sessionInfo, 256);
+				// sessionId
+				String sessionId = scmp.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessonId must be set!");
+				}
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
@@ -137,5 +108,4 @@ public class CreateSessionCommand extends CommandAdapter {
 			}
 		}
 	}
-
 }

@@ -42,8 +42,8 @@ import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
 @SuiteClasses( { 
 	ConnectTestCase.class, 
 	DisconnectTestCase.class, 
-	CreateSessionTestCase.class,
-	DeleteSessionTestCase.class, 
+	ClnCreateSessionTestCase.class,
+	ClnDeleteSessionTestCase.class, 
 	RegisterServiceTestCase.class, 
 	DeRegisterServiceTestCase.class,
 	ClnDataTestCase.class,

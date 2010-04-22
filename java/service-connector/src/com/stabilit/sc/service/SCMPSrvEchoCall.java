@@ -14,41 +14,58 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.service;
 
-import junit.framework.Assert;
+import java.util.Map;
 
-import org.junit.Test;
-
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
-import com.stabilit.sc.cln.service.SCMPInspectCall;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.service.ISCMPCall;
+import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
-public class DeleteSessionTestCase extends SuperSessionTestCase {
+/**
+ * @author JTraber
+ * 
+ */
+public class SCMPSrvEchoCall extends SCMPCallAdapter {
 
-	@Test
-	public void deleteSession() throws Exception {
-		SCMPDeleteSessionCall deleteSessionCall = (SCMPDeleteSessionCall) SCMPCallFactory.DELETE_SESSION_CALL
-				.newInstance(client, scmpSession);
-		SCMP result = deleteSessionCall.invoke();
+	public SCMPSrvEchoCall() {
+		this(null, null);
+	}
 
-		/*************************** verify create session **********************************/
-		Assert.assertNull(result.getBody());
-		Assert.assertEquals(SCMPMsgType.DELETE_SESSION.getResponseName(), result.getMessageType());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+	public SCMPSrvEchoCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
 
-		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+	@Override
+	public SCMP invoke() throws Exception {
+		this.call.setMessageType(getMessageType().getRequestName());
+		this.result = client.sendAndReceive(this.call);
+		if (this.result.isFault()) {
+			throw new SCMPServiceException((SCMPFault) result);
+		}
+		return this.result;
+	}
 
-		/*********************************** Verify registry entries in SC ********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
-		Assert.assertEquals("", scEntry);
-		super.createSession();
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPSrvEchoCall(client, scmpSession);
+	}
+
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
+
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_ECHO;
+	}
+	
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);		
 	}
 }

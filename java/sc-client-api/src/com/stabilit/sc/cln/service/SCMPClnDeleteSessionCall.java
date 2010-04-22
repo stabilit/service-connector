@@ -14,13 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
-
-import java.util.Map;
+package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
@@ -29,35 +26,35 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPDeAllocateSessionCall extends SCMPCallAdapter {
+public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 
-	public SCMPDeAllocateSessionCall() {
+	public SCMPClnDeleteSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPDeAllocateSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPClnDeleteSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPDeAllocateSessionCall(client, scmpSession);
+		return new SCMPClnDeleteSessionCall(client, scmpSession);
 	}
-	
+
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-	
-	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+
+	@Override
+	public SCMP invoke() throws Exception {
+		super.invoke(); // throws exception in case of error
+		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession)
+		((SCMPSession)this.scmpSession).removeSessionRegistry();
+		return this.result;
 	}
 
-	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
-	}
-	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.DEALLOCATE_SESSION;
+		return SCMPMsgType.CLN_DELETE_SESSION;
 	}
 }

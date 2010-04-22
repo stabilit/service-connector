@@ -23,7 +23,7 @@ public class EchoMessage extends Message {
 	
 	private static final long serialVersionUID = -5461603317301105352L;
 	
-	public static SCMPMsgType ID = SCMPMsgType.ECHO_SRV;
+	public static SCMPMsgType ID = SCMPMsgType.CLN_ECHO;
 
 	public EchoMessage() {
     	super(ID);

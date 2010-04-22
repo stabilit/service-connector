@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.sim.cmd.impl;
+package com.stabilit.sc.cmd.impl;
 
 import java.util.Map;
 
@@ -26,28 +26,33 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.io.SCMPReply;
-import com.stabilit.sc.common.io.Session;
+import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.common.util.ValidatorUtility;
-import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
+import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class AllocateSessionCommand extends CommandAdapter {
+/**
+ * @author JTraber
+ * 
+ */
+public class ClnDeleteSessionCommand extends CommandAdapter {
 
-	private static Logger log = Logger.getLogger(AllocateSessionCommand.class);
+	private static Logger log = Logger.getLogger(ClnDeleteSessionCommand.class);
 
-	public AllocateSessionCommand() {
-		this.commandValidator = new AllocateSessionCommandValidator();
+	public ClnDeleteSessionCommand() {
+		this.commandValidator = new ClnDeleteSessionCommandValidator();
 	}
 
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ALLOCATE_SESSION;
+		return SCMPMsgType.CLN_DELETE_SESSION;
 	}
 
 	@Override
@@ -58,30 +63,34 @@ public class AllocateSessionCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
-		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = scmp.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
-		SCMPReply scmpReply = new SCMPReply();
+		MapBean<?> mapBean = sessionRegistry.get(sessionId);
 
 		if (mapBean == null) {
-			Session session = new Session();
-			session.setAttribute("available", false);
-			simSessReg.add(sessionId, (Session) session);
-		} else if ((Boolean) mapBean.getAttribute("available")) {
-			mapBean.setAttribute("available", false);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
-		} else {
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
-			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
-					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
+			log.debug("command error: no session found for id :" + sessionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
 		}
+
+		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) mapBean
+				.getAttribute(ServiceRegistryItem.class.getName());
+
+		try {
+			serviceRegistryItem.srvDeleteSession(scmp);
+		} catch (Exception e) {
+			log.debug("command error: deallocating failed for scmp: " + scmp);
+		}
+
+		sessionRegistry.remove(sessionId);
+
+		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		response.setSCMP(scmpReply);
 	}
 
@@ -90,12 +99,13 @@ public class AllocateSessionCommand extends CommandAdapter {
 		return this;
 	}
 
-	public class AllocateSessionCommandValidator implements ICommandValidator {
+	public class ClnDeleteSessionCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
 			Map<String, String> scmpHeader = scmp.getHeader();
+
 			try {
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
@@ -107,14 +117,9 @@ public class AllocateSessionCommand extends CommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
 				}
-				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST
-						.getName());
-				ValidatorUtility.validateIpAddressList(ipAddressList);
-
-				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
-				ValidatorUtility.validateString(0, sessionInfo, 256);
+				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
+					throw new ValidationException("session does not exists!");
+				}
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();

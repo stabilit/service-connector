@@ -23,7 +23,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPEchoSrvCall;
+import com.stabilit.sc.cln.service.SCMPClnEchoCall;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPBodyType;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
@@ -37,7 +37,7 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeTest() throws Exception {
 
-		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client,
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
 
 		StringBuilder sb = new StringBuilder();
@@ -57,13 +57,13 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 				.getName()));
 		Assert.assertNull(header.get(SCMPHeaderAttributeKey.PART_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
 	@Test
 	public void invokeTestTransitive() throws Exception {
-		SCMPEchoSrvCall echoCall = (SCMPEchoSrvCall) SCMPCallFactory.ECHO_SRV_CALL.newInstance(client,
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
 
 		StringBuilder sb = new StringBuilder();
@@ -83,7 +83,7 @@ public class ClientSingleLargeEchoSrvTestCase extends SuperSessionTestCase {
 				.getName()));
 		Assert.assertNull(header.get(SCMPHeaderAttributeKey.PART_ID.getName()));
 		Assert.assertEquals(bodyLength + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.ECHO_SRV.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 }

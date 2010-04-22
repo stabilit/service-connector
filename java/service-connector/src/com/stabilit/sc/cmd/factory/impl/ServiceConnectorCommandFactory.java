@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.factory.impl;
 
+import com.stabilit.sc.cmd.impl.ClnCreateSessionCommand;
 import com.stabilit.sc.cmd.impl.ClnDataCommand;
+import com.stabilit.sc.cmd.impl.ClnDeleteSessionCommand;
 import com.stabilit.sc.cmd.impl.ConnectCommand;
-import com.stabilit.sc.cmd.impl.CreateSessionCommand;
 import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
-import com.stabilit.sc.cmd.impl.DeleteSessionCommand;
 import com.stabilit.sc.cmd.impl.DisconnectCommand;
 import com.stabilit.sc.cmd.impl.EchoSCCommand;
-import com.stabilit.sc.cmd.impl.EchoSrvCommand;
+import com.stabilit.sc.cmd.impl.ClnEchoCommand;
 import com.stabilit.sc.cmd.impl.InspectCommand;
 import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -40,24 +40,24 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	}
 
 	public void init(CommandFactory commandFactory) {
-		ICommand echoSrvCommand = new EchoSrvCommand();
-		commandFactory.add(echoSrvCommand.getRequestKeyName(), echoSrvCommand);
-		ICommand echoSCCommand = new EchoSCCommand();
-		commandFactory.add(echoSCCommand.getRequestKeyName(), echoSCCommand);
-		ICommand inspectCommand = new InspectCommand();
-		commandFactory.add(inspectCommand.getRequestKeyName(), inspectCommand);
 		ICommand connectCommand = new ConnectCommand();
 		commandFactory.add(connectCommand.getRequestKeyName(), connectCommand);
 		ICommand disconnectCommand = new DisconnectCommand();
 		commandFactory.add(disconnectCommand.getRequestKeyName(), disconnectCommand);
-		ICommand createSessionCommand = new CreateSessionCommand();
-		commandFactory.add(createSessionCommand.getRequestKeyName(), createSessionCommand);
-		ICommand deleteSessionCommand = new DeleteSessionCommand();
-		commandFactory.add(deleteSessionCommand.getRequestKeyName(), deleteSessionCommand);
+		ICommand inspectCommand = new InspectCommand();
+		commandFactory.add(inspectCommand.getRequestKeyName(), inspectCommand);
+		ICommand echoSCCommand = new EchoSCCommand();
+		commandFactory.add(echoSCCommand.getRequestKeyName(), echoSCCommand);
+		ICommand clnCreateSessionCommand = new ClnCreateSessionCommand();
+		commandFactory.add(clnCreateSessionCommand.getRequestKeyName(), clnCreateSessionCommand);
+		ICommand clnDeleteSessionCommand = new ClnDeleteSessionCommand();
+		commandFactory.add(clnDeleteSessionCommand.getRequestKeyName(), clnDeleteSessionCommand);
 		ICommand registerServiceCommand = new RegisterServiceCommand();
 		commandFactory.add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
 		commandFactory.add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
+		ICommand clnEchoCommand = new ClnEchoCommand();
+		commandFactory.add(clnEchoCommand.getRequestKeyName(), clnEchoCommand);
 		ICommand clnDataCommand = new ClnDataCommand();
 		commandFactory.add(clnDataCommand.getRequestKeyName(), clnDataCommand);
 	}

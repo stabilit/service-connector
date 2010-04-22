@@ -29,19 +29,23 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPAllocateSessionCall extends SCMPCallAdapter {
+public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
-	public SCMPAllocateSessionCall() {
+	public SCMPSrvDeleteSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPAllocateSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvDeleteSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
-	
+
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPAllocateSessionCall(client, scmpSession);
+		return new SCMPSrvDeleteSessionCall(client, scmpSession);
+	}
+	
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 	
 	public void setSessionId(String sessionId) {
@@ -49,11 +53,11 @@ public class SCMPAllocateSessionCall extends SCMPCallAdapter {
 	}
 
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.call.setHeader(header);		
 	}
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.ALLOCATE_SESSION;
+		return SCMPMsgType.SRV_DELETE_SESSION;
 	}
 }

@@ -21,8 +21,8 @@ import org.junit.Before;
 
 import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPCreateSessionCall;
-import com.stabilit.sc.cln.service.SCMPDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
 
 /**
  * @author JTraber
@@ -44,12 +44,12 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		deleteSession();
+		clnDeleteSession();
 		super.tearDown();
 	}
 
 	public void createSession() throws Exception {
-		SCMPCreateSessionCall createSessionCall = (SCMPCreateSessionCall) SCMPCallFactory.CREATE_SESSION_CALL
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
 
 		createSessionCall.setServiceName("simulation");
@@ -57,8 +57,8 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 		scmpSession = createSessionCall.invoke();
 	}
 
-	public void deleteSession() throws Exception {
-		SCMPDeleteSessionCall deleteSessionCall = (SCMPDeleteSessionCall) SCMPCallFactory.DELETE_SESSION_CALL
+	public void clnDeleteSession() throws Exception {
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client, scmpSession);
 		deleteSessionCall.invoke();
 	}

@@ -14,14 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.cln.service;
 
-import java.util.Map;
+import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
-import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 
@@ -29,31 +27,41 @@ import com.stabilit.sc.common.io.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPAbortSessionCall extends SCMPCallAdapter {
-
-	public SCMPAbortSessionCall() {
-		this(null, null);
+public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
+	
+	public SCMPClnCreateSessionCall() {
+		this(null);
 	}
-
-	public SCMPAbortSessionCall(IClient client, SCMP scmpSession) {
-		super(client, scmpSession);
+	
+	public SCMPClnCreateSessionCall(IClient client) {
+		this.client = client;
 	}
 
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPAbortSessionCall(client, scmpSession);
-	}
-	
-	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+	public SCMPSession invoke() throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,localHost.getHostAddress());
+		super.invoke();
+		SCMPSession scmpSession = new SCMPSession(this.result); // register session in internal registry
+		scmpSession.addSessionRegistry();
+		return scmpSession;
 	}
 
-	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+	@Override
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPClnCreateSessionCall(client);
+	}
+	
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
+	
+	public void setSessionInfo(String sessionInfo) {
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.ABORT_SESSION;
+		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
 }
