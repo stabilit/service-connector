@@ -38,13 +38,14 @@ import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class ConnectCommand extends CommandAdapter {
-	
+public class ConnectCommand extends CommandAdapter implements IPassThrough {
+
 	private static Logger log = Logger.getLogger(ConnectCommand.class);
-	
+
 	public ConnectCommand() {
 		this.commandValidator = new ConnectCommandValidator();
 	}
@@ -104,7 +105,7 @@ public class ConnectCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
-				if(compression == null) {
+				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);

@@ -34,9 +34,10 @@ import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class ClnDataCommand extends CommandAdapter {
+public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(ClnDataCommand.class);
 

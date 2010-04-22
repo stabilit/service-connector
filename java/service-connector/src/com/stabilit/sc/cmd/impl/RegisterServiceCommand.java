@@ -38,10 +38,11 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class RegisterServiceCommand extends CommandAdapter {
+public class RegisterServiceCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(RegisterServiceCommand.class);
 

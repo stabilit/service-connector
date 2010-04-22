@@ -27,9 +27,8 @@ import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.srv.cmd.SCOnly;
 
-public class EchoSCCommand extends CommandAdapter implements SCOnly {
+public class EchoSCCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(EchoSCCommand.class);
 

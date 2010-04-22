@@ -28,7 +28,6 @@ import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -68,24 +67,17 @@ public class SrvEchoCommand extends CommandAdapter {
 			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		if (scmp.getBody().toString().length() > 100) {
-			System.out.println("EchoSrvCommand body = " + scmp.getBody().toString().substring(0, 100));
+		if (scmp.getBodyLength() > 0) {
+			if (scmp.getBody().toString().length() > 100) {
+				System.out.println("SrvEchoCommand body = " + scmp.getBody().toString().substring(0, 100));
+			} else {
+				System.out.println("SrvEchoCommand body = " + scmp.getBody().toString());
+			}
 		} else {
-			System.out.println("EchoSrvCommand body = " + scmp.getBody().toString());
+			System.out.println("SrvEchoCommand empty body");
 		}
 
-		if (scmp.isPart()) {
-			result = new SCMPPart();
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			result.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-			String callLength = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH);
-			result.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, callLength);
-			String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
-			result.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffset);
-		} else {
-			result = new SCMPReply();
-		}
-
+		result = new SCMPReply();
 		result.setBody(scmp.getBody());
 		result.setSessionId(scmp.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);

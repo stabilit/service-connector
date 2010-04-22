@@ -23,7 +23,7 @@ import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.SCOnly;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
@@ -56,7 +56,7 @@ public class NettyCommandRequest {
 		}
 
 		// request not for SC, forward to server
-		if (command instanceof SCOnly == false) {
+		if (command instanceof IPassThrough) {
 			complete = true;
 			return command;
 		}

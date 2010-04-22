@@ -34,10 +34,11 @@ import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class ClnEchoCommand extends CommandAdapter {
+public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(ClnEchoCommand.class);
 
@@ -72,10 +73,14 @@ public class ClnEchoCommand extends CommandAdapter {
 			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		if (scmp.getBody().toString().length() > 100) {
-			System.out.println("ClnEchoCommand body = " + scmp.getBody().toString().substring(0, 100));
+		if (scmp.getBodyLength() > 0) {
+			if (scmp.getBody().toString().length() > 100) {
+				System.out.println("ClnEchoCommand body = " + scmp.getBody().toString().substring(0, 100));
+			} else {
+				System.out.println("ClnEchoCommand body = " + scmp.getBody().toString());
+			}
 		} else {
-			System.out.println("ClnEchoCommand body = " + scmp.getBody().toString());
+			System.out.println("ClnEchoCommand empty body");
 		}
 
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();

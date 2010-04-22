@@ -23,7 +23,7 @@ import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.SCOnly;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
@@ -41,10 +41,10 @@ public class NioCommandRequest {
 		this.command = null;
 	}
 
-	public void readRequest() throws Exception {		
+	public void readRequest() throws Exception {
 		this.request.read();
 	}
-	
+
 	public ICommand readCommand() throws Exception {
 		this.request.read();
 		this.command = CommandFactory.getCurrentCommandFactory().newCommand(this.request);
@@ -55,16 +55,17 @@ public class NioCommandRequest {
 		if (scmp == null) {
 			return null;
 		}
-		if (!(scmp.isPart() && this.command instanceof SCOnly)) {
+		if (scmp.isPart() || this.command instanceof IPassThrough) {
 			return this.command;
 		}
+		
 		SCMPComposite scmpComposite = null;
 		while (scmp.isPart()) {
 			if (scmpComposite == null) {
-			   scmpComposite = new SCMPComposite(scmp, (SCMPPart)scmp);
+				scmpComposite = new SCMPComposite(scmp, (SCMPPart) scmp);
 			}
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);			
+			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			SCMPPart scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);

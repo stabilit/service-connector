@@ -32,10 +32,11 @@ import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class DisconnectCommand extends CommandAdapter {
+public class DisconnectCommand extends CommandAdapter implements IPassThrough  {
 
 	private static Logger log = Logger.getLogger(DisconnectCommand.class);
 	

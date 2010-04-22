@@ -35,6 +35,7 @@ import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -42,7 +43,7 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
  * @author JTraber
  * 
  */
-public class ClnDeleteSessionCommand extends CommandAdapter {
+public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(ClnDeleteSessionCommand.class);
 

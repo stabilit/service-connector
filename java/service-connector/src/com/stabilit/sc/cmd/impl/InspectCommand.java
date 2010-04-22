@@ -30,12 +30,13 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class InspectCommand extends CommandAdapter {
+public class InspectCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(InspectCommand.class);
-	
+
 	public InspectCommand() {
 		this.commandValidator = new InspectCommandValidator();
 	}
@@ -61,7 +62,7 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setLocalDateTime();
 		InspectMessage inspectMsg = new InspectMessage();
-		
+
 		inspectMsg.setAttribute("connectionRegistry", connectionRegistry);
 		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
 		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);

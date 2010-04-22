@@ -39,10 +39,11 @@ import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
+import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class ClnCreateSessionCommand extends CommandAdapter {
+public class ClnCreateSessionCommand extends CommandAdapter implements IPassThrough {
 
 	private static Logger log = Logger.getLogger(ClnCreateSessionCommand.class);
 
@@ -123,7 +124,8 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				}
 
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST
+						.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
