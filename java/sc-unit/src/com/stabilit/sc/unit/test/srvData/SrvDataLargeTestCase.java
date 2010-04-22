@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.clnData;
+package com.stabilit.sc.unit.test.srvData;
 
 import junit.framework.Assert;
 
@@ -32,28 +32,30 @@ import com.stabilit.sc.unit.test.SuperSessionTestCase;
  * @author JTraber
  * 
  */
-public class ClnDataTestCase extends SuperSessionTestCase {
+public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
-	public void multipleClnDataTest() throws Exception {
+	public void srvDataLargeTest() throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
+		clnDataCall.setMessagInfo("message info");
+		clnDataCall.setBody("large");
+		SCMP scmpReply = clnDataCall.invoke();
 
-		for (int i = 0; i < 100; i++) {
-			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-					scmpSession);
-			clnDataCall.setMessagInfo("message info");
-			SCMP scmpReply = clnDataCall.invoke();
-
-			Assert.assertEquals("Message number " + i, scmpReply.getBody());
-			Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply
-					.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
-			int bodyLength = (i + "").length() + 15;
-			Assert.assertEquals(bodyLength + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-			Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-			Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
-			String serviceName = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-			String sessionId = clnDataCall.getCall().getSessionId();
-			Assert.assertEquals(serviceName, scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
-			Assert.assertEquals(sessionId, scmpReply.getSessionId());
+		/*********************************** Verify connect response msg **********************************/
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 10000; i++) {
+			sb.append(i);
 		}
+		Assert.assertEquals(sb.toString(), scmpReply.getBody());
+		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply
+				.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
+		Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
+		Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
+		String serviceName = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String sessionId = clnDataCall.getCall().getSessionId();
+		Assert.assertEquals(serviceName, scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertEquals(sessionId, scmpReply.getSessionId());
 	}
 }

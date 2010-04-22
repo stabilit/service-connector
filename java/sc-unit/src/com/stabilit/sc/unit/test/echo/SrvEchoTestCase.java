@@ -30,10 +30,10 @@ import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.unit.test.SuperSessionTestCase;
 
-public class EchoSrvTestCase extends SuperSessionTestCase {
+public class SrvEchoTestCase extends SuperSessionTestCase {
 
 	@Test
-	public void invokeSingleClnEchoTest() throws Exception {
+	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMP result = null;
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
@@ -50,7 +50,7 @@ public class EchoSrvTestCase extends SuperSessionTestCase {
 	}
 
 	@Test
-	public void invokeMultipleClnEchoTest() throws Exception {
+	public void invokeMultipleSrvEchoTest() throws Exception {
 
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;
@@ -70,7 +70,7 @@ public class EchoSrvTestCase extends SuperSessionTestCase {
 	}
 
 	@Test
-	public void invokeMultipleSessionClnEchoTest() throws Exception {
+	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		clnDeleteSession();
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;

@@ -26,12 +26,12 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.unit.test.clnData.ClnDataLargeTestCase;
-import com.stabilit.sc.unit.test.clnData.ClnDataTestCase;
-import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.ClientSingleLargeEchoSrvTestCase;
+import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
+import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
+import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
+import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
+import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 
 /**
  * @author JTraber
@@ -46,12 +46,12 @@ import com.stabilit.sc.unit.test.echo.EchoSrvTestCase;
 	ClnDeleteSessionTestCase.class, 
 	RegisterServiceTestCase.class, 
 	DeRegisterServiceTestCase.class,
-	ClnDataTestCase.class,
-	ClnDataLargeTestCase.class,
-	EchoSrvTestCase.class,
+	SrvDataTestCase.class,
+	SrvDataLargeTestCase.class,
+	SrvEchoTestCase.class,
 	EchoSCTestCase.class,
-	ClientSingleLargeEchoSrvTestCase.class,
-	ClientSingleLargeEchoSCTestCase.class})
+	SrvEchoLargeTestCase.class,
+	EchoSCLargeTestCase.class})
 public class SCTest {
 
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
@@ -59,22 +59,5 @@ public class SCTest {
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
-	}
-
-	public static String getExpectedOffset(int runIndex, int characterNumber) {
-		if (runIndex > 10) {
-			if (runIndex % 10 == 0) {
-				return (characterNumber * 10 + (((runIndex / 10) - 1) * (characterNumber + 1)) * 10) + "";
-			} else {
-				if (runIndex / 10 > 0) {
-					return (runIndex % 10 * (characterNumber + 1) + (characterNumber * 10) + (((runIndex / 10) - 1) * (characterNumber + 1)) * 10)
-							+ "";
-				} else {
-					return (runIndex % 10 * (characterNumber + 1) + (characterNumber * 10)) + "";
-				}
-			}
-		} else {
-			return (runIndex * characterNumber) + "";
-		}
 	}
 }
