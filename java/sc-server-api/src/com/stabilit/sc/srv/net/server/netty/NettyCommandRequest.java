@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.sc.srv.net.server.netty;
 
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -25,14 +25,15 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPPart;
-import com.stabilit.sc.common.io.SCMPPartReply;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.SCOnly;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
  * @author JTraber
  * 
  */
-public class NettyCommandRequest extends CommandRequest {
+public class NettyCommandRequest {
 
 	private boolean complete;
 	private SCMPComposite scmpComposite;
@@ -41,36 +42,32 @@ public class NettyCommandRequest extends CommandRequest {
 	 * @param request
 	 * @param response
 	 */
-	public NettyCommandRequest(IRequest request, IResponse response) {
-		super(request, response);
+	public NettyCommandRequest() {
 		complete = true;
 	}
 
 	public ICommand readCommand(IRequest request, IResponse response) throws Exception {
-		this.request = request;
-		this.response = response;
-
-		this.request.read();
-		this.command = CommandFactory.getCurrentCommandFactory().newCommand(this.request);
-		if (this.command == null) {
+		request.read();
+		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+		if (command == null) {
 			return null;
 		}
 
-		SCMP scmp = this.request.getSCMP();
+		SCMP scmp = request.getSCMP();
 		if (scmp == null) {
 			return null;
 		}
 
 		// request not for SC, forward to server
-		if (this.command instanceof SCOnly == false) {
+		if (command instanceof SCOnly == false) {
 			complete = true;
-			return this.command;
+			return command;
 		}
 
 		if (scmpComposite == null) {
-			//request not chunked
+			// request not chunked
 			if (scmp.isPart() == false) {
-				return this.command;
+				return command;
 			}
 			scmpComposite = new SCMPComposite(scmp, (SCMPPart) scmp);
 		} else {
@@ -83,7 +80,8 @@ public class NettyCommandRequest extends CommandRequest {
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
-			SCMP scmpReply = new SCMPPartReply();
+			SCMPPart scmpReply = new SCMPPart();
+			scmpReply.setIsReply(true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
@@ -91,9 +89,9 @@ public class NettyCommandRequest extends CommandRequest {
 			response.setSCMP(scmpReply);
 		} else { // last request of a chunked message
 			complete = true;
-			this.request.setSCMP(scmpComposite);
+			request.setSCMP(scmpComposite);
 		}
-		return this.command;
+		return command;
 	}
 
 	public boolean isComplete() {

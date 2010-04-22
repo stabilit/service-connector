@@ -15,8 +15,6 @@ public interface IRequest {
 	
 	public void setSCMP(SCMP scmp);
 	
-	public String getSessionId();
-	
 	public void setAttribute(String key, Object value);
 	
 	public Object getAttribute(String key);

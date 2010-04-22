@@ -27,7 +27,7 @@ public abstract class ResponseAdapter implements IResponse {
 	protected SCMP scmp;
 
 	public ResponseAdapter() {
-		this.scmp = scmp;
+		this.scmp = null;
 	}
 
 	@Override

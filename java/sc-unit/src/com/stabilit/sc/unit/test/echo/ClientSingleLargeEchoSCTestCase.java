@@ -55,7 +55,7 @@ public class ClientSingleLargeEchoSCTestCase extends SuperTestCase {
 	public void invokeTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 190000; i++) {
+		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
 		}
 		echoCall.setBody(sb.toString());

@@ -9,7 +9,6 @@ import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.ResponseAdapter;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
@@ -17,13 +16,11 @@ import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 public class NettyTcpResponse extends ResponseAdapter {
 
 	private MessageEvent event;
-	private ISession session;
 	private IEncoderDecoder encoderDecoder;
 
 	public NettyTcpResponse(MessageEvent event) {
 		this.scmp = null;
 		this.event = event;
-		this.session = null;
 	}
 
 	public MessageEvent getEvent() {
@@ -44,26 +41,13 @@ public class NettyTcpResponse extends ResponseAdapter {
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
 	}
-	
-	@Override
-	public void setSession(ISession session) {
-		this.session = session;
-	}
 
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
 			return;
 		}
-		try {
-			this.scmp = scmp;
-			if (this.session != null) {
-				this.scmp.setSessionId(this.session.getId());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+		this.scmp = scmp;
 	}
 
 	@Override
@@ -73,5 +57,4 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelFuture future = event.getChannel().write(buffer);
 		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array());  // logs inside if registered
 	}
-
 }

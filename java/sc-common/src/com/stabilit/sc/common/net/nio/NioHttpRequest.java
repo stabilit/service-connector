@@ -47,11 +47,6 @@ public class NioHttpRequest implements IRequest {
 	public void setSCMP(SCMP scmp) {
 		this.scmp = scmp;
 	}
-	
-	@Override
-	public String getSessionId() {
-		return scmp.getSessionId();
-	}
 
 	@Override
 	public SCMPMsgType getKey() throws Exception {

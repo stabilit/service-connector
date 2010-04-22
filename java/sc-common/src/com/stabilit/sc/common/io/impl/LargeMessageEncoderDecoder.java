@@ -165,17 +165,13 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		if (scmp.isComposite() == false) {
 			// try to get message offset
 			String scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
-			String scmpSequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			if (scmpOffset == null) {
 				scmpOffsetInt = 0;
-				scmpSequenceNr = "0";
 				scmp.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, "0");
 				scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
 			} else {
 			   scmpOffsetInt = Integer.parseInt(scmpOffset);
 			}
-			// TODO wrong here!!
-			// scmpSequenceNrInt = Integer.parseInt(scmpSequenceNr);
 		} else {
 			scmpOffsetInt = ((SCMPComposite) scmp).getOffset();
 			scmp.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, scmpOffsetInt);
@@ -318,9 +314,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					throw new EncodingDecodingException("unsupported large message body type");
 				}
 			} else {
-				// sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
-				// sb.append(EQUAL_SIGN);
-				// sb.append("0\n");
 				sb.append("\n");
 				int messageLength = sb.length();
 				writeHeadLine(bw, headerKey, messageLength);

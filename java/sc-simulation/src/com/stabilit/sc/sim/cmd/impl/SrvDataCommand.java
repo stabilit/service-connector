@@ -47,13 +47,12 @@ public class SrvDataCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		log.debug("Run command " + this.getKey());
-		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
-
-		String sessionId = request.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();	
 		SCMP scmpReply = new SCMPReply();
 		SCMP scmp = request.getSCMP();
-
+		String sessionId = scmp.getSessionId();
+		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
+		
 		if (mapBean == null) {
 			log.debug("command error: session not found");
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, request.getAttribute(

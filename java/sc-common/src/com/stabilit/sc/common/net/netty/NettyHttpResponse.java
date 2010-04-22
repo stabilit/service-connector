@@ -16,8 +16,6 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.common.io.EncoderDecoderFactory;
 import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.ISession;
 import com.stabilit.sc.common.io.ResponseAdapter;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
@@ -27,13 +25,11 @@ import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 public class NettyHttpResponse extends ResponseAdapter {
 
 	private MessageEvent event;
-	private ISession session;
 	private IEncoderDecoder encoderDecoder;
 
 	public NettyHttpResponse(MessageEvent event) {
 		this.scmp = null;
 		this.event = event;
-		this.session = null;
 	}
 
 	public MessageEvent getEvent() {
@@ -61,26 +57,13 @@ public class NettyHttpResponse extends ResponseAdapter {
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
 	}
-
-	@Override
-	public void setSession(ISession session) {
-		this.session = session;
-	}
-
+	
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
 			return;
 		}
-		try {
-			this.scmp = scmp;
-			if (this.session != null) {
-				this.scmp.setSessionId(this.session.getId());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+		this.scmp = scmp;
 	}
 
 	@Override
@@ -93,9 +76,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 
 		// Build the response object.
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		httpResponse.getContentLength();
 		ChannelBuffer buffer = getBuffer();
-
 		httpResponse.setContent(buffer);
 
 		if (!close) {

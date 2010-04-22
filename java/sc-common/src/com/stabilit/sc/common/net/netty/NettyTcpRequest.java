@@ -47,11 +47,6 @@ public class NettyTcpRequest implements IRequest {
 	}
 
 	@Override
-	public String getSessionId() {
-		return scmp.getSessionId();
-	}
-
-	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMP scmp = this.getSCMP();
 		String messageType = scmp.getMessageType();
@@ -97,6 +92,8 @@ public class NettyTcpRequest implements IRequest {
 
 	@Override
 	public void read() throws Exception {
-		load();
+		if (scmp == null) {
+			load();
+		}
 	}
 }

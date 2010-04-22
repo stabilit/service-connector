@@ -57,6 +57,5 @@ public class SCMPResponseComposite extends SCMP {
 	    }
 	    this.current = null;
 	    return this.current;
-	}
-			
+	}			
 }

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.netty.channel.MessageEvent;
-
 public class SCMP implements Serializable {
 
 	private static final long serialVersionUID = -3464445251398033295L;
@@ -90,9 +88,9 @@ public class SCMP implements Serializable {
 		header.remove(headerType.getName());
 	}
 
-	// public void setHeader(String name, String value) {
-	// header.put(name, value);
-	// }
+	 public void setHeader(String name, String value) {
+		header.put(name, value);
+	}
 
 	public void setHeader(SCMPHeaderAttributeKey headerAttr, String value) {
 		header.put(headerAttr.getName(), value);
@@ -122,9 +120,9 @@ public class SCMP implements Serializable {
 		this.setHeader(key, value);
 	}
 
-	// public String getHeader(String name) {
-	// return header.get(name);
-	// }
+	 public String getHeader(String name) {
+		return header.get(name);
+	}
 
 	public String getHeader(SCMPHeaderAttributeKey headerAttr) {
 		return header.get(headerAttr.getName());

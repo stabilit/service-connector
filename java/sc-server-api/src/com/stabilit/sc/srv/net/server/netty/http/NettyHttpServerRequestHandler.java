@@ -28,12 +28,10 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.common.io.IFaultResponse;
 import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
 import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPPart;
 import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.netty.NettyHttpRequest;
 import com.stabilit.sc.common.net.netty.NettyHttpResponse;
@@ -41,7 +39,7 @@ import com.stabilit.sc.common.util.Lock;
 import com.stabilit.sc.common.util.Lockable;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.NettyCommandRequest;
+import com.stabilit.sc.srv.net.server.netty.NettyCommandRequest;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 
 @ChannelPipelineCoverage("one")
@@ -51,25 +49,18 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 	private NettyCommandRequest commandRequest = null;
 	private SCMPResponseComposite scmpResponseComposite = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
-	
+
 	private Lockable<Object> commandRequestLock = new Lockable<Object>() {
 
 		@Override
-		public Object run(Object ...params) throws Exception {
+		public Object run(Object... params) throws Exception {
+			// we are locked here
 			if (commandRequest != null) {
 				return commandRequest;
 			}
-			// we are locked here
-			if (params == null) {
-				return null;
-			}
-			if (params.length < 2) {
-				return null;
-			}			
-			commandRequest = new NettyCommandRequest((IRequest)params[0], (IResponse)params[1]);
+			commandRequest = new NettyCommandRequest();
 			return commandRequest;
 		}
-		
 	};
 
 	public NettyHttpServerRequestHandler() {
@@ -78,35 +69,36 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(event);
-		if (this.scmpResponseComposite != null) {
+		HttpRequest httpRequest = (HttpRequest) event.getMessage();
+		Channel channel = ctx.getChannel();
+		SocketAddress socketAddress = channel.getRemoteAddress();
+		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
+		SCMP scmpReq = request.getSCMP();
+		
+		if (this.scmpResponseComposite != null && scmpReq.isPart()) {
 			if (this.scmpResponseComposite.hasNext()) {
 				SCMP nextSCMP = this.scmpResponseComposite.getNext();
 				response.setSCMP(nextSCMP);
-			    response.write();
+				response.write();
 				if (this.scmpResponseComposite.hasNext() == false) {
 					this.scmpResponseComposite = null;
 				}
-			    return;
+				return;
 			}
 			this.scmpResponseComposite = null;
-		}
-		HttpRequest httpRequest = (HttpRequest) event.getMessage();
+		}		
 
-		try {
-			Channel channel = ctx.getChannel();
-			SocketAddress socketAddress = channel.getRemoteAddress();
+		try {		
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
-			IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
-			response = new NettyHttpResponse(event);
-			// ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
-			lock.runLocked(commandRequestLock, request, response);  // init commandRequest if not set
+
+			lock.runLocked(commandRequestLock); // init commandRequest if not set
 			ICommand command = this.commandRequest.readCommand(request, response);
 			if (commandRequest.isComplete() == false) {
 				response.write();
 				return;
 			}
-			SCMP scmpReq = request.getSCMP();
+			scmpReq = request.getSCMP();
 			if (command == null) {
 				log.debug("Request unkown, " + request);
 				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
@@ -118,7 +110,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			}
 
 			ICommandValidator commandValidator = command.getCommandValidator();
-			try {				
+			try {
 				commandValidator.validate(request, response);
 				command.run(request, response);
 			} catch (Throwable ex) {
@@ -143,16 +135,8 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
 			response.setSCMP(firstSCMP);
 		}
-		response.write();		
+		response.write();
 		commandRequest = null;
-	}
-
-	private NettyCommandRequest getCommandRequest(IRequest request, IResponse response) {
-		if (this.commandRequest != null) {
-			return this.commandRequest;
-		}
-		this.commandRequest = new NettyCommandRequest(request, response);
-		return this.commandRequest;
 	}
 
 	@Override

@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.sc.srv.net.server.nio;
 
 import com.stabilit.sc.common.io.IRequest;
 import com.stabilit.sc.common.io.IResponse;
@@ -25,27 +25,27 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPComposite;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPPart;
-import com.stabilit.sc.common.io.SCMPPartReply;
+import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.sc.srv.cmd.SCOnly;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
  * @author JTraber
  * 
  */
-public class CommandRequest {
+public class NioCommandRequest {
 	protected IRequest request;
 	protected IResponse response;
 	protected ICommand command;
 
-	public CommandRequest(IRequest request, IResponse response) {
+	public NioCommandRequest(IRequest request, IResponse response) {
 		this.request = request;
 		this.response = response;
 		this.command = null;
 	}
 
-	public IRequest readRequest() throws Exception {		
+	public void readRequest() throws Exception {		
 		this.request.read();
-		return this.request;
 	}
 	
 	public ICommand readCommand() throws Exception {
@@ -69,7 +69,8 @@ public class CommandRequest {
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
 			String sequenceNr = scmp.getHeader(SCMPHeaderAttributeKey.SEQUENCE_NR);
 			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);			
-			SCMP scmpReply = new SCMPPartReply();
+			SCMPPart scmpReply = new SCMPPart();
+			scmpReply.setIsReply(true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SEQUENCE_NR, sequenceNr);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);

@@ -26,7 +26,6 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPPart;
 
 /**
  * @author JTraber
@@ -68,27 +67,5 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);
-	}
-
-	public void setPartMessage(boolean partMessage) {
-		if (partMessage == true) {
-			if (this.call.isPart()) {
-				return;
-			}
-			SCMPPart scmpPart = new SCMPPart();
-			scmpPart.setHeader(this.call.getHeader());
-			scmpPart.setBody(this.call.getBody());
-			this.call = scmpPart;
-			return;
-		}
-		if (this.call.isPart() == false) {
-			return;
-		}
-		SCMP scmp = new SCMP();
-		scmp.setHeader(this.call.getHeader());
-		scmp.removeHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
-		scmp.setBody(this.call.getBody());
-		this.call = scmp;
-		return;
 	}
 }

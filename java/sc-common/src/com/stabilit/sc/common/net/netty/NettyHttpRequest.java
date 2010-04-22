@@ -32,12 +32,7 @@ public class NettyHttpRequest implements IRequest {
 		this.socketAddress = socketAddress;
 		this.requestContext = new RequestContext(this.socketAddress);
 	}
-
-	@Override
-	public String getSessionId() {
-		return scmp.getSessionId();
-	}
-
+	
 	@Override
 	public IRequestContext getContext() {
 		return requestContext;
@@ -74,7 +69,7 @@ public class NettyHttpRequest implements IRequest {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
-		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
+		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
 		if (this.encoderDecoder == null) {
 			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		}
@@ -105,6 +100,8 @@ public class NettyHttpRequest implements IRequest {
 
 	@Override
 	public void read() throws Exception {
-		load();
+		if (scmp == null) {
+			load();
+		}
 	}
 }

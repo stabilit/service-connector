@@ -54,11 +54,6 @@ public class NioTcpRequest implements IRequest {
 	}
 
 	@Override
-	public String getSessionId() {
-		return scmp.getSessionId();
-	}
-
-	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMP scmp = this.getSCMP();
 		String messageType = scmp.getMessageType();

@@ -35,11 +35,14 @@ import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.io.SCMPErrorCode;
 import com.stabilit.sc.common.io.SCMPFault;
 import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
+import com.stabilit.sc.common.util.Lock;
+import com.stabilit.sc.common.util.Lockable;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.NettyCommandRequest;
+import com.stabilit.sc.srv.net.server.netty.NettyCommandRequest;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 
 /**
@@ -51,32 +54,54 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private Logger log = Logger.getLogger(NettyTcpServerRequestHandler.class);
 	private NettyCommandRequest commandRequest = null;
+	private SCMPResponseComposite scmpResponseComposite = null;
+	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		log.error("Exception :" + e.getCause().getMessage());
-	}
+	private Lockable<Object> commandRequestLock = new Lockable<Object>() {
+
+		@Override
+		public Object run(Object... params) throws Exception {
+			// we are locked here
+			if (commandRequest != null) {
+				return commandRequest;
+			}
+			commandRequest = new NettyCommandRequest();
+			return commandRequest;
+		}
+	};
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
 		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
 		IRequest request = new NettyTcpRequest(event, socketAddress);
+		SCMP scmpReq = request.getSCMP();
+		
+		if (this.scmpResponseComposite != null && scmpReq.isPart()) {
+			if (this.scmpResponseComposite.hasNext()) {
+				SCMP nextSCMP = this.scmpResponseComposite.getNext();
+				response.setSCMP(nextSCMP);
+				response.write();
+				if (this.scmpResponseComposite.hasNext() == false) {
+					this.scmpResponseComposite = null;
+				}
+				return;
+			}
+			this.scmpResponseComposite = null;
+		}
 		try {
 			Channel channel = ctx.getChannel();
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
 
-			if (commandRequest == null) {
-				commandRequest = new NettyCommandRequest(request, response);
-			}
-			ICommand command = commandRequest.readCommand(request, response);
-			if(commandRequest.isComplete() == false) {
+			lock.runLocked(commandRequestLock); // init commandRequest if not set
+			ICommand command = this.commandRequest.readCommand(request, response);
+			if (commandRequest.isComplete() == false) {
 				response.write();
 				return;
-			}			
+			}
 			if (command == null) {
-				SCMP scmpReq = request.getSCMP();
+				scmpReq = request.getSCMP();
 				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
@@ -94,7 +119,6 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 					((IFaultResponse) ex).setFaultResponse(response);
 				}
 			}
-
 			// TODO error handling immer antworten?
 		} catch (Throwable th) {
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
@@ -102,7 +126,18 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
+		// check if response is large, if so create a composite for this reply
+		if (response.isLarge()) {
+			this.scmpResponseComposite = new SCMPResponseComposite(response);
+			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
+			response.setSCMP(firstSCMP);
+		}
 		response.write();
 		commandRequest = null;
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		log.error("Exception :" + e.getCause().getMessage());
 	}
 }

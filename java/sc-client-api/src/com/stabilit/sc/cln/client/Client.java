@@ -122,7 +122,7 @@ public class Client implements IClient {
 		}
 		while (true) {
 			SCMP ret = clientConnection.sendAndReceive(scmp);
-			// check if request has been sent
+			// check if request has been sent completely
 			if (scmp.isRequest()) {
 				// the response can be small or large, this doesn't matter,
 				// we continue reading any large response later
