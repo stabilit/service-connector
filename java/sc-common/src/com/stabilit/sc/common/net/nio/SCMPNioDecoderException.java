@@ -1,22 +1,19 @@
-/*
- *-----------------------------------------------------------------------------*
- *                            Copyright © 2010 by                              *
- *                    STABILIT Informatik AG, Switzerland                      *
- *                            ALL RIGHTS RESERVED                              *
+/*-----------------------------------------------------------------------------*
  *                                                                             *
- * Valid license from STABILIT is required for possession, use or copying.     *
- * This software or any other copies thereof may not be provided or otherwise  *
- * made available to any other person. No title to and ownership of the        *
- * software is hereby transferred. The information in this software is subject *
- * to change without notice and should not be construed as a commitment by     *
- * STABILIT Informatik AG.                                                     *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
- * All referenced products are trademarks of their respective owners.          *
- *-----------------------------------------------------------------------------*
-*/
-/**
- * 
- */
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.net.nio;
 
 /**
