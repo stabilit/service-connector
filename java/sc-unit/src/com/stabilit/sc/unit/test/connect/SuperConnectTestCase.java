@@ -30,10 +30,6 @@ import com.stabilit.sc.unit.test.SuperTestCase;
  */
 public abstract class SuperConnectTestCase extends SuperTestCase {
 
-	public SuperConnectTestCase() {
-		super();
-	}
-
 	@Before
 	public void setup() throws Exception {
 		super.setup();

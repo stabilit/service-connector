@@ -30,8 +30,8 @@ import com.stabilit.sc.unit.test.connect.ConnectTestCase;
 import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
+import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.sc.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.sc.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.sc.unit.test.session.ClnCreateSessionTestCase;
@@ -46,7 +46,7 @@ import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 
 @RunWith(Suite.class)
 @SuiteClasses( { 
-	ConnectTestCase.class, 
+	ConnectTestCase.class,
 	DisconnectTestCase.class, 
 	ClnCreateSessionTestCase.class,
 	ClnDeleteSessionTestCase.class, 
@@ -59,11 +59,11 @@ import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 	SrvEchoLargeTestCase.class,
 	EchoSCLargeTestCase.class})
 public class SCTest {
-
+	
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
-	}
+	}	
 }

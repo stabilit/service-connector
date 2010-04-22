@@ -35,7 +35,7 @@ import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
 public class ConnectTestCase extends SuperTestCase {
-
+	
 	@Test
 	public void failConnect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);

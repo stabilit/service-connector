@@ -28,14 +28,10 @@ import com.stabilit.sc.common.listener.ConnectionListenerSupport;
  * @author JTraber
  * 
  */
-public class SuperTestCase {
+public abstract class SuperTestCase {
 
 	protected ClientConfig config = null;
 	protected IClient client = null;
-
-	public SuperTestCase() {
-		super();
-	}
 
 	@Before
 	public void setup() throws Exception {
@@ -50,13 +46,13 @@ public class SuperTestCase {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		client.disconnect();
-		//client.destroy();
+		// client.destroy();
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		client.disconnect(); // physical disconnect
