@@ -30,13 +30,20 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 
 public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public ClnDeleteSessionTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client, scmpSession);
 		SCMP result = deleteSessionCall.invoke();
 
-		/*************************** verify create session **********************************/
+		/*************************** verify delete session **********************************/
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
@@ -49,6 +56,6 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		Assert.assertEquals("", scEntry);
-		super.createSession();
+		super.clnCreateSessionBefore();
 	}
 }

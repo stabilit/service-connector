@@ -30,19 +30,26 @@ import com.stabilit.sc.unit.test.SuperTestCase;
  */
 public abstract class SuperConnectTestCase extends SuperTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public SuperConnectTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		simpleConnect();
+		clnConnectBefore();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		simpleDisconnect();
+		clnDisconnectAfter();
 		super.tearDown();
 	}
 
-	public void simpleConnect() throws Exception {
+	public void clnConnectBefore() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
 		connectCall.setVersion("1.0-00");
@@ -52,7 +59,7 @@ public abstract class SuperConnectTestCase extends SuperTestCase {
 		connectCall.invoke();
 	}
 
-	public void simpleDisconnect() throws Exception {
+	public void clnDisconnectAfter() throws Exception {
 		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
 				.newInstance(client);
 		disconnectCall.invoke();

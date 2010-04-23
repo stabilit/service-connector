@@ -43,17 +43,20 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	private Channel channel;
 	private String host;
 	private int port;
+	NioServerSocketChannelFactory channelFactory = null;
 
 	public NettyTcpServerConnection() {
 		this.bootstrap = null;
 		this.channel = null;
+		// Configure the server.
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
+				.newFixedThreadPool(10));
 	}
 
 	@Override
 	public void create() {
-		// Configure the server.
-		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
-				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+
+		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory());
 	}
@@ -79,7 +82,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		try {
 			runSync();
 		} catch (InterruptedException e) {
-			//TODO
+			// TODO
 			e.printStackTrace();
 		}
 	}
@@ -111,5 +114,5 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 }

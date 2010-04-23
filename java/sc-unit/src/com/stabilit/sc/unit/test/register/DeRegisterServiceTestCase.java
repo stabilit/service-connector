@@ -32,6 +32,13 @@ import com.stabilit.sc.unit.test.SCTest;
 
 public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public DeRegisterServiceTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL

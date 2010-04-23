@@ -31,25 +31,28 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
  */
 public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 
-	protected SCMPSession scmpSession = null;
-
-	public SuperSessionTestCase() {
-		super();
+	/**
+	 * @param fileName
+	 */
+	public SuperSessionTestCase(String fileName) {
+		super(fileName);
 	}
 
+	protected SCMPSession scmpSession = null;
+	
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		createSession();
+		clnCreateSessionBefore();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		clnDeleteSession();
+		clnDeleteSessionAfter();
 		super.tearDown();
 	}
 
-	public void createSession() throws Exception {
+	public void clnCreateSessionBefore() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
 
@@ -58,7 +61,7 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 		scmpSession = createSessionCall.invoke();
 	}
 
-	public void clnDeleteSession() throws Exception {
+	public void clnDeleteSessionAfter() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client, scmpSession);
 		deleteSessionCall.invoke();

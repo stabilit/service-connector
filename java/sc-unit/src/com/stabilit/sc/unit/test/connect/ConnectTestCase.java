@@ -34,8 +34,16 @@ import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
+
 public class ConnectTestCase extends SuperTestCase {
 	
+	/**
+	 * @param parameter
+	 */
+	public ConnectTestCase(String parameter) {
+		super(parameter);
+	}
+
 	@Test
 	public void failConnect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);

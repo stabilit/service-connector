@@ -34,6 +34,13 @@ import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
  */
 public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public SrvDataLargeTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void srvDataLargeTest() throws Exception {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,

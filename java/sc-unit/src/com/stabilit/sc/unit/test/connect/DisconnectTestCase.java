@@ -34,6 +34,13 @@ import com.stabilit.sc.unit.test.SCTest;
 
 public class DisconnectTestCase extends SuperConnectTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public DisconnectTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void secondConnect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
@@ -75,12 +82,12 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		Assert.assertEquals("", scEntry);
-		super.simpleConnect();
+		super.clnConnectBefore();
 	}
 
 	@Test
 	public void secondDisconnect() throws Exception {
-		super.simpleDisconnect();
+		super.clnDisconnectAfter();
 		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
 				.newInstance(client);
 		try {
@@ -88,6 +95,6 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		} catch (SCMPServiceException e) {
 			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
 		}
-		super.simpleConnect();
+		super.clnConnectBefore();
 	}
 }

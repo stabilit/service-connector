@@ -31,11 +31,14 @@ import com.stabilit.sc.unit.test.SuperTestCase;
  */
 public abstract class SuperRegisterTestCase extends SuperTestCase {
 
-	protected SCMPSession scmpSession = null;
-
-	public SuperRegisterTestCase() {
-		super();
+	/**
+	 * @param fileName
+	 */
+	public SuperRegisterTestCase(String fileName) {
+		super(fileName);
 	}
+
+	protected SCMPSession scmpSession = null;
 
 	@Before
 	public void setup() throws Exception {

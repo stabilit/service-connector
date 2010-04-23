@@ -29,7 +29,7 @@ import com.stabilit.sc.common.util.MapBean;
  * @author JTraber
  *
  */
-public class SCMPSessionRegistry extends Registry {
+public final class SCMPSessionRegistry extends Registry {
 
 	private static SCMPSessionRegistry sessionRegistry = new SCMPSessionRegistry();
 	

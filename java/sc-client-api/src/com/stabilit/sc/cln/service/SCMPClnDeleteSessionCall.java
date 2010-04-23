@@ -48,8 +48,9 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMP invoke() throws Exception {
 		super.invoke(); // throws exception in case of error
-		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession)
-		((SCMPSession)this.scmpSession).removeSessionRegistry();
+		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession) {
+			((SCMPSession) this.scmpSession).removeSessionRegistry();
+		}
 		return this.result;
 	}
 

@@ -49,16 +49,18 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 	private int port;
 	private String host;
 	private NettyOperationListener operationListener;
+	NioClientSocketChannelFactory channelFactory = null;
 
 	public NettyHttpClientConnection() {
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
+				.newFixedThreadPool(10));
 	}
 
 	@Override
 	public void connect() throws ConnectionException {
 
 		// Configure the client.
-		this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors
-				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+		this.bootstrap = new ClientBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
 
@@ -67,7 +69,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 			operationListener = new NettyOperationListener();
 			future.addListener(operationListener);
-			
+
 			// Wait until the connection attempt succeeds or fails.
 			this.channel = operationListener.awaitUninterruptibly().getChannel();
 			if (!future.isSuccess()) {
@@ -100,7 +102,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		encoderDecoder.encode(baos, scmp);
-		url = new URL("http", host, port,"/");
+		url = new URL("http", host, port, "/");
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
 				.getPath());
 		byte[] buffer = baos.toByteArray();
@@ -110,19 +112,18 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		ChannelFuture future = channel.write(request);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
-		ConnectionListenerSupport.fireWrite(this, buffer);  // logs inside if registered
+		ConnectionListenerSupport.fireWrite(this, buffer); // logs inside if registered
 
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(
 				NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
-		
+
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionListenerSupport.fireRead(this, buffer);  // logs inside if registered
+		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
-		//TODO encoder ?? large
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);		
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}

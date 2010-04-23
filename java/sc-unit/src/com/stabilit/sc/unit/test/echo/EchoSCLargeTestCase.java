@@ -36,13 +36,20 @@ import com.stabilit.sc.unit.test.SuperTestCase;
 
 public class EchoSCLargeTestCase extends SuperTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public EchoSCLargeTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Before
 	@Override
 	public void setup() throws Exception {
 		SetupTestCases.setupSC();
 		try {
 			config = new ClientConfig();
-			config.load("sc-unit.properties");
+			config.load(fileName);
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect

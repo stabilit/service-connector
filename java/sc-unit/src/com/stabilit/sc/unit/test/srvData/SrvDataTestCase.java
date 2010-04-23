@@ -34,6 +34,13 @@ import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
  */
 public class SrvDataTestCase extends SuperSessionTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public SrvDataTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void multipleSrvDataTest() throws Exception {
 

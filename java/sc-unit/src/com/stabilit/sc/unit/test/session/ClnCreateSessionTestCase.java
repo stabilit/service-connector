@@ -37,6 +37,13 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 public class ClnCreateSessionTestCase extends SuperConnectTestCase{
 
+	/**
+	 * @param fileName
+	 */
+	public ClnCreateSessionTestCase(String fileName) {
+		super(fileName);
+	}
+
 	private SCMPSession scmpSession = null;
 
 	@Test

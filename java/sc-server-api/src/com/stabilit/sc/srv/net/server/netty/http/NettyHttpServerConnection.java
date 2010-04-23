@@ -43,17 +43,19 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	private Channel channel;
 	private String host;
 	private int port;
+	NioServerSocketChannelFactory channelFactory = null;
 
 	public NettyHttpServerConnection() {
 		this.bootstrap = null;
 		this.channel = null;
+		// Configure the server.
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
+				.newFixedThreadPool(10));
 	}
 
 	@Override
 	public void create() {
-		// Configure the server.
-		this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors
-				.newCachedThreadPool(), Executors.newCachedThreadPool()));
+		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory());
 	}
@@ -87,6 +89,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	@Override
 	public void destroy() {
 		this.channel.close();
+		this.bootstrap.releaseExternalResources();
 	}
 
 	@Override

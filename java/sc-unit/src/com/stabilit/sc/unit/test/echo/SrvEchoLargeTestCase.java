@@ -30,6 +30,13 @@ import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public SrvEchoLargeTestCase(String fileName) {
+		super(fileName);
+	}
+
 	protected Integer index = null;
 
 	@Test

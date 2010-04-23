@@ -16,8 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
@@ -28,17 +34,32 @@ import com.stabilit.sc.common.listener.ConnectionListenerSupport;
  * @author JTraber
  * 
  */
+@RunWith(Parameterized.class)
 public abstract class SuperTestCase {
 
+	protected String fileName;
 	protected ClientConfig config = null;
 	protected IClient client = null;
+	
+	public SuperTestCase(final String fileName) {
+		this.fileName = fileName;
+	}
+
+	@Parameters
+	public static Collection<String[]> getParameters() {
+		return Arrays
+				.asList(new String[] { "sc-unit-netty-http.properties" },
+						new String[] { "sc-unit-netty-tcp.properties" },
+						new String[] { "sc-unit-nio-http.properties" },
+						new String[] { "sc-unit-nio-tcp.properties" });
+	}
 
 	@Before
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
 			config = new ClientConfig();
-			config.load("sc-unit.properties");
+			config.load(fileName);
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect

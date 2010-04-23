@@ -28,7 +28,7 @@ import com.stabilit.sc.common.io.SCMPMsgType;
 public class SCMPClnDataCall extends SCMPCallAdapter {
 
 	public SCMPClnDataCall() {
-		this(null,null);
+		this(null, null);
 	}
 
 	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
@@ -47,7 +47,7 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	public void setMessagInfo(String messageInfo) {
 		call.setHeader(SCMPHeaderAttributeKey.MESSAGE_INFO, messageInfo);
 	}
-	
+
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_DATA;

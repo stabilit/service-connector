@@ -34,6 +34,13 @@ import com.stabilit.sc.unit.test.SuperTestCase;
 
 public class RegisterServiceTestCase extends SuperTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public RegisterServiceTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void failRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

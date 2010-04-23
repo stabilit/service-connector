@@ -32,6 +32,13 @@ import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoTestCase extends SuperSessionTestCase {
 
+	/**
+	 * @param fileName
+	 */
+	public SrvEchoTestCase(String fileName) {
+		super(fileName);
+	}
+
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMP result = null;
@@ -71,13 +78,13 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
-		clnDeleteSession();
+		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;
 		SCMP result = null;	
 
 		for (int i = 0; i < anzMsg; i++) {
-			createSession();
+			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 					scmpSession);
 			clnEchoCall.setMaxNodes(2);
@@ -85,9 +92,9 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			clnEchoCall.setBody("hello world, index = " + i);
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i, result.getBody());			
-			clnDeleteSession();
+			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
-		createSession();
+		super.clnCreateSessionBefore();
 	}
 }
