@@ -33,7 +33,7 @@ public enum SCMPHeaderAttributeKey {
 	APP_ERROR_CODE("appErrorCode"),
 	APP_ERROR_TEXT("appErrorText"),
 	BODY_LENGTH("bodyLength"),
-	CACHE_SIGNATURE("cacheSignature"),
+	CACHE_ID("cacheId"),
 	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
 	IP_ADDRESS_LIST("ipAddressList"),
 	PORT_NR("portNr"),
