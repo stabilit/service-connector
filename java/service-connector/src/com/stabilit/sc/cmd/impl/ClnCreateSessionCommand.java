@@ -98,6 +98,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
+			//TODO aufräumen
 			log.debug("command error: fatal error when command runs");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());

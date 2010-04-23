@@ -80,10 +80,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 		@Override
 		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
-
 			try {
-				Map<String, String> scmpHeader = scmp.getHeader();
-
 				// sessionId
 				String sessionId = scmp.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
@@ -94,14 +91,19 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				}
 
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
 
 				// bodyLength
+				String bodyLengthString = scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
+				String bodyLength = ValidatorUtility.validateInt(1, bodyLengthString);
+				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), bodyLength);
 
-				// compression
+				// TODO messageId
+
+				// compression default = true
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
@@ -109,7 +111,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_INFO.getName());
+				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

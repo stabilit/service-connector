@@ -30,10 +30,9 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
-public class InspectCommand extends CommandAdapter implements IPassThrough {
+public class InspectCommand extends CommandAdapter {
 
 	private static Logger log = Logger.getLogger(InspectCommand.class);
 

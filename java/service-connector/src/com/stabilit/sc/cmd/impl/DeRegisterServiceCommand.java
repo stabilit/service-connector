@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import java.util.Map;
-
 import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
@@ -43,7 +41,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	private static Logger log = Logger.getLogger(DeRegisterServiceCommand.class);
 
 	public DeRegisterServiceCommand() {
-		this.commandValidator = new UnRegisterServiceCommandValidator();
+		this.commandValidator = new DeRegisterServiceCommandValidator();
 	}
 
 	@Override
@@ -82,15 +80,15 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		return this;
 	}
 
-	public class UnRegisterServiceCommandValidator implements ICommandValidator {
+	public class DeRegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
 		public void validate(IRequest request, IResponse response) throws Exception {
-			Map<String, String> scmpHeader = request.getSCMP().getHeader();
+			SCMP scmp = request.getSCMP();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}

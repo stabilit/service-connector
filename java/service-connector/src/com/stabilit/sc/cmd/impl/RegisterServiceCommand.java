@@ -17,7 +17,6 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
-import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
@@ -99,30 +98,29 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		@Override
 		public void validate(IRequest request, IResponse response) throws Exception {
 			SCMP scmp = request.getSCMP();
-			Map<String, String> scmpHeader = scmp.getHeader();
-
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
 
 				// maxSessions
-				String maxSessions = (String) scmpHeader.get(SCMPHeaderAttributeKey.MAX_SESSIONS.getName());
+				String maxSessions = (String) scmp.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				maxSessions = ValidatorUtility.validateInt(0, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
-				// compression
+
+				// multiThreaded default = false
 				Boolean multiThreaded = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED);
 				if (multiThreaded == null) {
 					multiThreaded = false;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.MULTI_THREADED.getName(), multiThreaded);
+
 				// portNr
-				String portNr = (String) scmpHeader.get(SCMPHeaderAttributeKey.PORT_NR.getName());
+				String portNr = (String) scmp.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				portNr = ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
-
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();

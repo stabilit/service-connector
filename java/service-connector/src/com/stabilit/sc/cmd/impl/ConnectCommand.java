@@ -99,11 +99,12 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 			try {
 
 				Map<String, String> scmpHeader = scmp.getHeader();
-				// scVersion
+				// scVersion TODO correct validation
 				String scVersion = (String) scmpHeader.get(SCMPHeaderAttributeKey.SC_VERSION.getName());
 				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 
+				//compression default = true
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;

@@ -48,6 +48,7 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
 					scmpSession);
 			clnDataCall.setMessagInfo("message info");
+			clnDataCall.setBody("get Data (query)");
 			SCMP scmpReply = clnDataCall.invoke();
 
 			Assert.assertEquals("Message number " + i, scmpReply.getBody());

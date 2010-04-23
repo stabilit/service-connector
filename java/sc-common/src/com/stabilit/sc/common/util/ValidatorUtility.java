@@ -34,7 +34,7 @@ public class ValidatorUtility {
 	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/??)+";
 
-	//TODO validation rules are wrong at this time!
+	// TODO validation rules are wrong at this time!
 	public static void validateSCVersion(String currenSCVersion, String incomingSCVersion)
 			throws ValidationExcpetion {
 		Pattern pattern = Pattern.compile(SC_VERSION_REGEX);
@@ -90,12 +90,12 @@ public class ValidatorUtility {
 		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
 		int keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
 
-		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
-			throw new ValidationException("keepAliveTimeout or keepAliveInterval is to high.");
+		if (keepAliveInterval == null || keepAliveTimeout == null) {
+			throw new ValidationException("keepAliveTimeout/keepAliveInterval need to be set");
 		}
 
-		if (keepAliveTimeoutInt > 3600) {
-			throw new ValidationException("keepAliveTimeout is to high.");
+		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
+			throw new ValidationException("keepAliveTimeout or keepAliveInterval is to high.");
 		}
 
 		if ((keepAliveTimeoutInt == 0 && keepAliveIntervalInt != 0)
