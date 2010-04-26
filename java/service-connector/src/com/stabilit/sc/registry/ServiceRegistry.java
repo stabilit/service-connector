@@ -18,8 +18,8 @@ package com.stabilit.sc.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.registry.Registry;
+import com.stabilit.sc.common.scmp.SCMP;
 
 /**
  * @author JTraber

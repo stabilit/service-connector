@@ -23,13 +23,13 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.Session;
 import com.stabilit.sc.common.registry.SessionRegistry;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.Session;
 import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
@@ -111,7 +111,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_INFO);
+				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());

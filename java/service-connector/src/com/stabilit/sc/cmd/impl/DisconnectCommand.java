@@ -22,11 +22,11 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;

@@ -18,9 +18,9 @@ package com.stabilit.sc.srv.client;
 
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.SCMP;
 
 /**
  * @author JTraber
