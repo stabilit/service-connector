@@ -26,15 +26,15 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.common.io.IFaultResponse;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
+import com.stabilit.sc.common.scmp.IFaultResponse;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.common.util.Lock;
 import com.stabilit.sc.common.util.Lockable;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -51,7 +51,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private Logger log = Logger.getLogger(NettyTcpServerRequestHandler.class);
 	private NettyCommandRequest commandRequest = null;
-	private SCMPResponseComposite scmpResponseComposite = null;
+	private SCMPLargeResponse scmpResponseComposite = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
 
 	private Lockable<Object> commandRequestLock = new Lockable<Object>() {
@@ -125,7 +125,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 		// check if response is large, if so create a composite for this reply
 		if (response.isLarge()) {
-			this.scmpResponseComposite = new SCMPResponseComposite(response);
+			this.scmpResponseComposite = new SCMPLargeResponse(response);
 			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
 			response.setSCMP(firstSCMP);
 		}

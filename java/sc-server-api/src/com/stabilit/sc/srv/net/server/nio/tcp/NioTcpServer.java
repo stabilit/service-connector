@@ -25,15 +25,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IFaultResponse;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.common.net.nio.NioTcpRequest;
 import com.stabilit.sc.common.net.nio.NioTcpResponse;
+import com.stabilit.sc.common.scmp.IFaultResponse;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -132,7 +132,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 		}
 
 		public void run() {
-			SCMPResponseComposite scmpResponseComposite = null;
+			SCMPLargeResponse scmpResponseComposite = null;
 
 			try {
 				ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
@@ -188,7 +188,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 					}
 					// check if response is large, if so create a composite for this reply
 					if (response.isLarge()) {
-						scmpResponseComposite = new SCMPResponseComposite(response);
+						scmpResponseComposite = new SCMPLargeResponse(response);
 						SCMP firstSCMP = scmpResponseComposite.getFirst();
 						response.setSCMP(firstSCMP);
 					}

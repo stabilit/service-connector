@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.srv.net.server.netty;
 
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPComposite;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPPart;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPPart;
+import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -75,11 +75,9 @@ public class NettyCommandRequest {
 		if (scmp.isPart()) {
 			complete = false;
 			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			String offset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
 			SCMPPart scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
 		} else { // last request of a chunked message

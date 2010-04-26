@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.srv.cmd;
 
-import com.stabilit.sc.common.io.IFaultResponse;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.IFaultResponse;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.util.MapBean;
 
 /**

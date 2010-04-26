@@ -17,9 +17,9 @@
 package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 public interface ICommand extends IFactoryable {
 

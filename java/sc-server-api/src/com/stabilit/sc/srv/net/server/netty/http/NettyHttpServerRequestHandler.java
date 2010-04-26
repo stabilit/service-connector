@@ -27,15 +27,15 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
-import com.stabilit.sc.common.io.IFaultResponse;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPResponseComposite;
 import com.stabilit.sc.common.net.netty.NettyHttpRequest;
 import com.stabilit.sc.common.net.netty.NettyHttpResponse;
+import com.stabilit.sc.common.scmp.IFaultResponse;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.common.util.Lock;
 import com.stabilit.sc.common.util.Lockable;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -48,7 +48,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 	private static Logger log = Logger.getLogger(NettyHttpServerRequestHandler.class);
 	private NettyCommandRequest commandRequest = null;
-	private SCMPResponseComposite scmpResponseComposite = null;
+	private SCMPLargeResponse scmpLargeResponse = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
 
 	private Lockable<Object> commandRequestLock = new Lockable<Object>() {
@@ -76,17 +76,17 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		SCMP scmpReq = request.getSCMP();
 		
-		if (this.scmpResponseComposite != null && scmpReq.isPart()) {
-			if (this.scmpResponseComposite.hasNext()) {
-				SCMP nextSCMP = this.scmpResponseComposite.getNext();
+		if (this.scmpLargeResponse != null && scmpReq.isPart()) {
+			if (this.scmpLargeResponse.hasNext()) {
+				SCMP nextSCMP = this.scmpLargeResponse.getNext();
 				response.setSCMP(nextSCMP);
 				response.write();
-				if (this.scmpResponseComposite.hasNext() == false) {
-					this.scmpResponseComposite = null;
+				if (this.scmpLargeResponse.hasNext() == false) {
+					this.scmpLargeResponse = null;
 				}
 				return;
 			}
-			this.scmpResponseComposite = null;
+			this.scmpLargeResponse = null;
 		}		
 
 		try {		
@@ -130,10 +130,10 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
-		// check if response is large, if so create a composite for this reply
+		// check if response is large, if so create a large response for this reply
 		if (response.isLarge()) {
-			this.scmpResponseComposite = new SCMPResponseComposite(response);
-			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
+			this.scmpLargeResponse = new SCMPLargeResponse(response);
+			SCMP firstSCMP = this.scmpLargeResponse.getFirst();
 			response.setSCMP(firstSCMP);
 		}
 		response.write();
