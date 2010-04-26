@@ -25,15 +25,15 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.IResponse;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
-import com.stabilit.sc.common.io.SCMPPart;
-import com.stabilit.sc.common.io.SCMPPartID;
-import com.stabilit.sc.common.io.SCMPReply;
+import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMPPart;
+import com.stabilit.sc.common.scmp.SCMPPartID;
+import com.stabilit.sc.common.scmp.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
@@ -90,18 +90,11 @@ public class SrvDataCommand extends CommandAdapter {
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
 		// SCMPHeaderType.COMPRESSION).toString());
 
-		int scmpOffsetInt = 0;
-		String scmpOffset = null;
-		if (scmp.isPart()) {
-			scmpOffset = scmp.getHeader(SCMPHeaderAttributeKey.SCMP_OFFSET);
-			scmpOffsetInt = Integer.parseInt(scmpOffset);
-		}
-
 		if ("large".equals(scmp.getBody()) || scmp.isPart()) {
 			String partID = SCMPPartID.getNextAsString(); // identifies message
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
-			for (i = scmpOffsetInt; i < 10000; i++) {
+			for (i = 0; i < 10000; i++) {
 				if (sb.length() > 60000) {
 					break;
 				}
@@ -192,9 +185,9 @@ public class SrvDataCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_INFO.getName());
+				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.MSG_INFO.getName());
 				ValidatorUtility.validateString(0, messageInfo, 256);
-				request.setAttribute(SCMPHeaderAttributeKey.MESSAGE_INFO.getName(), messageInfo);
+				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(), messageInfo);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
