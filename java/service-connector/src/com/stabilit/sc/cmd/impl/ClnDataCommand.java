@@ -16,13 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import java.util.Map;
-
 import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.registry.SessionRegistry;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
@@ -115,6 +114,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
+				ExceptionListenerSupport.fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;
