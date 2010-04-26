@@ -20,7 +20,9 @@ import java.io.File;
 
 import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.log.ConnectionLogger;
+import com.stabilit.sc.common.log.ExceptionLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.unit.UnitCommandFactory;
@@ -42,6 +44,7 @@ public class SetupTestCases {
 		// setup loggers
 		try {
 			ConnectionListenerSupport.getInstance().addListener(new ConnectionLogger());
+			ExceptionListenerSupport.getInstance().addListener(new ExceptionLogger());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
