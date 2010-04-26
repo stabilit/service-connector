@@ -17,7 +17,6 @@
 package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.common.scmp.IRequest;
-import com.stabilit.sc.common.scmp.IResponse;
 
 /**
  * @author JTraber
@@ -35,7 +34,7 @@ public class NullCommandValidator implements ICommandValidator {
 	}
 	
 	@Override
-	public void validate(IRequest request, IResponse resonse) throws ValidatorException {
+	public void validate(IRequest request) throws ValidatorException {
         throw new ValidatorException("no validator implemented");
 	}
 

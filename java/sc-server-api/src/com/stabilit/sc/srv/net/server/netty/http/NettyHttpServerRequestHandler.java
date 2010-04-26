@@ -112,7 +112,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
-				commandValidator.validate(request, response);
+				commandValidator.validate(request);
 				command.run(request, response);
 			} catch (Throwable ex) {
 				if (ex instanceof IFaultResponse) {

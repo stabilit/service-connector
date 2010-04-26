@@ -114,7 +114,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	public class ClnCreateSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws Exception {
+		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {

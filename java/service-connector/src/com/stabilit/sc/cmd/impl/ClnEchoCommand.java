@@ -115,7 +115,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 	public class ClnEchoCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request) throws SCMPValidatorException {
 		}
 	}
 }

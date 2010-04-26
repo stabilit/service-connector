@@ -171,7 +171,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 
 						ICommandValidator commandValidator = command.getCommandValidator();
 						try {
-							commandValidator.validate(request, response);
+							commandValidator.validate(request);
 							command.run(request, response);
 						} catch (Exception ex) {
 							if (ex instanceof IFaultResponse) {

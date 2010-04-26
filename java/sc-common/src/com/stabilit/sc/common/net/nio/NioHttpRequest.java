@@ -25,10 +25,10 @@ import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.common.scmp.RequestAdapter;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.util.MapBean;
-import com.stabilit.sc.common.util.SCMPStreamHttpUtil;
 
 public class NioHttpRequest extends RequestAdapter {
 

@@ -27,10 +27,10 @@ import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.common.net.nio.NioHttpException;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.util.SCMPStreamHttpUtil;
 
 public class NioHttpClientConnection extends ClientConnectionAdapter {
 

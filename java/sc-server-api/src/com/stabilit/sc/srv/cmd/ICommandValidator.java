@@ -17,7 +17,6 @@
 package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.common.scmp.IRequest;
-import com.stabilit.sc.common.scmp.IResponse;
 
 /**
  * @author JTraber
@@ -25,5 +24,5 @@ import com.stabilit.sc.common.scmp.IResponse;
  */
 public interface ICommandValidator {
 
-	public void validate(IRequest request, IResponse response) throws Exception;
+	public void validate(IRequest request) throws Exception;
 }

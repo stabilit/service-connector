@@ -86,7 +86,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 	public class SrvDeleteSessionCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws Exception {
+		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {

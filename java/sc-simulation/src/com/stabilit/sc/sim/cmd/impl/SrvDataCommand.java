@@ -150,7 +150,7 @@ public class SrvDataCommand extends CommandAdapter {
 	public class SrvDataCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws Exception {
+		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			if (scmp.isPart()) {

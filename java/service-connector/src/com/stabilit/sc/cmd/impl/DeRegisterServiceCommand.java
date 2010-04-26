@@ -83,7 +83,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	public class DeRegisterServiceCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws Exception {
+		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {

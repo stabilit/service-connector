@@ -93,7 +93,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 	public class ConnectCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws Exception {
+		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {

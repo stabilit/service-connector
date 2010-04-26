@@ -30,7 +30,7 @@ public class DateTimeUtility {
 		cal.setTimeInMillis(timeInMillis);
 		java.util.Date date = cal.getTime();
 
-		synchronized (SDF) {
+		synchronized (SDF) { //SDF is not thread safe
 			return SDF.format(date);
 		}
 	}

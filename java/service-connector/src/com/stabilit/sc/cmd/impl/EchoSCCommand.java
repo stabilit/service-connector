@@ -73,7 +73,7 @@ public class EchoSCCommand extends CommandAdapter {
 	public class EchoSCCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request) throws SCMPValidatorException {
 		}
 	}
 

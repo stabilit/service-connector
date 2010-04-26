@@ -82,7 +82,7 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough  {
 	public class DisconnectCommandValidator implements ICommandValidator {
 
 		@Override
-		public void validate(IRequest request, IResponse response) throws SCMPValidatorException {
+		public void validate(IRequest request) throws SCMPValidatorException {
 			//no header values to validate
 		}
 	}
