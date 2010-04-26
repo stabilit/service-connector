@@ -27,10 +27,10 @@ import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPErrorCode;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 

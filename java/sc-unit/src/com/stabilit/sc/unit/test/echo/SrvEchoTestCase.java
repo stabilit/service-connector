@@ -24,10 +24,10 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoTestCase extends SuperSessionTestCase {
@@ -51,7 +51,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals("hello world", result.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
 		Assert.assertNotNull(result.getSessionId());
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
 	}

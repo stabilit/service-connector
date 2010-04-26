@@ -22,10 +22,10 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 /**
@@ -53,7 +53,7 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 
 			Assert.assertEquals("Message number " + i, scmpReply.getBody());
 			Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply
-					.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
+					.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			int bodyLength = (i + "").length() + 15;
 			Assert.assertEquals(bodyLength + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 			Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));

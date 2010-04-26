@@ -27,10 +27,10 @@ import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
@@ -70,7 +70,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		/*************************** verify echo session **********************************/
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(sb.toString(), result.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE
+		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE
 				.getName()));
 		Assert.assertEquals(sb.length() + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());

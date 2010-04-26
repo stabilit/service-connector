@@ -22,10 +22,10 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 /**
@@ -57,7 +57,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
 		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply
-				.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
+				.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
 		String serviceName = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);

@@ -22,10 +22,10 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoLargeTestCase extends SuperSessionTestCase {
@@ -54,7 +54,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		SCMP result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNull(result.getHeader(SCMPHeaderAttributeKey.PART_ID));
 		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
@@ -76,7 +76,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), result
-				.getHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE));
+				.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNull(result.getHeader(SCMPHeaderAttributeKey.PART_ID));
 		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
