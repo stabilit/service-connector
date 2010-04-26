@@ -14,13 +14,18 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPPart;
 
 /**
  * @author JTraber
@@ -46,11 +51,10 @@ public class SCMPComposite extends SCMP {
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setPartId(messageId);
 		partRequest.setSessionId(request.getSessionId());
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_BODY_TYPE); // tries to set service name if
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set service name if
 																				// any
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name if
 																				// any
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.SCMP_OFFSET); // tries to set scmpOffset if any
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes if any
 		this.add(scmpPart);
 	}
@@ -73,7 +77,6 @@ public class SCMPComposite extends SCMP {
 		int bodyLength = scmp.getBodyLength();
 		this.scmpOffset += bodyLength;
 		this.scmpList.add(scmp);
-		partRequest.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, String.valueOf(this.scmpOffset));
 		if (scmp.isPart() == false) {
 			this.setHeader(scmp.getHeader());
 			this.removeHeader(SCMPHeaderAttributeKey.PART_ID);

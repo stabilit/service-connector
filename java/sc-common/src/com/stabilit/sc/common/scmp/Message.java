@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.common.io.impl.DefaultEncoderDecoder;
+import com.stabilit.sc.common.scmp.impl.DefaultEncoderDecoder;
 
 public class Message implements IMessage, Serializable {
 

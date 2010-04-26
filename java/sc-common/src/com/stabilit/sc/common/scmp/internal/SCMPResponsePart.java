@@ -14,7 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp.internal;
+
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPPart;
+import com.stabilit.sc.common.scmp.SCMPPartID;
 
 /**
  * @author JTraber
@@ -33,7 +38,6 @@ public class SCMPResponsePart extends SCMPPart {
 				: SCMP.LARGE_MESSAGE_LIMIT;
 		this.setHeader(scmp);
 		this.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, scmp.getBodyLength());
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_OFFSET, offset);
 		String partIdString = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
 		if (partIdString != null) {
 			this.setPartId(partIdString);
@@ -56,6 +60,10 @@ public class SCMPResponsePart extends SCMPPart {
 	@Override
 	public boolean isBodyOffset() {
 		return true;
+	}
+
+	public int getBodyOffset() {
+		return offset;
 	}
 
 	public void setPartId(String messageId) {

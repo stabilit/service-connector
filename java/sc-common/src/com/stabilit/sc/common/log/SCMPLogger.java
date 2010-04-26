@@ -19,7 +19,7 @@ package com.stabilit.sc.common.log;
 import java.io.IOException;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.scmp.SCMP;
 
 public class SCMPLogger extends SimpleLogger {
 

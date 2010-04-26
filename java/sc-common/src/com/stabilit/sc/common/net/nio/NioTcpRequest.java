@@ -19,30 +19,23 @@ package com.stabilit.sc.common.net.nio;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.ctx.RequestContext;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.IRequest;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPMsgType;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.RequestAdapter;
+import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.util.MapBean;
 
-public class NioTcpRequest implements IRequest {
+public class NioTcpRequest extends RequestAdapter {
 
 	private SocketChannel socketChannel;
-	private SCMP scmp;
-	private IRequestContext requestContext;
 	private IEncoderDecoder encoderDecoder;
-	private MapBean<Object> mapBean;
-	private SocketAddress socketAddress;
 
 	public NioTcpRequest(SocketChannel socketChannel) {
 		this.mapBean = new MapBean<Object>();
@@ -52,31 +45,8 @@ public class NioTcpRequest implements IRequest {
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
-	public void read() throws Exception {
-		load();
-	}
-
 	@Override
-	public SCMP getSCMP() throws Exception {
-		if (scmp == null) {
-			load();
-		}
-		return scmp;
-	}
-
-	@Override
-	public void setSCMP(SCMP scmp) {
-		this.scmp = scmp;
-	}
-
-	@Override
-	public SCMPMsgType getKey() throws Exception {
-		SCMP scmp = this.getSCMP();
-		String messageType = scmp.getMessageType();
-		return SCMPMsgType.getMsgType(messageType);
-	}
-
-	private void load() throws Exception {
+	public void load() throws Exception {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
@@ -106,30 +76,5 @@ public class NioTcpRequest implements IRequest {
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		bais.close();
 		this.scmp = scmp;
-	}
-
-	@Override
-	public IRequestContext getContext() {
-		return requestContext;
-	}
-
-	@Override
-	public Object getAttribute(String key) {
-		return mapBean.getAttribute(key);
-	}
-
-	@Override
-	public void setAttribute(String key, Object value) {
-		mapBean.setAttribute(key, value);
-	}
-
-	@Override
-	public MapBean<Object> getAttributeMapBean() {
-		return mapBean;
-	}
-
-	@Override
-	public SocketAddress getSocketAddress() {
-		return socketAddress;
 	}
 }

@@ -14,46 +14,24 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
-
-import java.util.Map;
+package com.stabilit.sc.common.scmp.impl;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCMPPart extends SCMP {
-	
-	private static final long serialVersionUID = -3379254138164380850L;
-	private boolean isReply;
+public class EncodingDecodingException extends Exception {
 
-	public SCMPPart() {
-		super();
-		isReply = false;
-	}
-
-	public SCMPPart(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public boolean isPart() {
-		return true;
+	public EncodingDecodingException(String message) {
+		super(message);
 	}
 	
-	public void setPartId(String messageId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
+	public EncodingDecodingException(Throwable cause) {
+		super(cause);
 	}
 
-	@Override
-	public boolean isReply() {
-		return isReply;
+	public EncodingDecodingException(String message, Throwable cause) {
+		super(message, cause);
 	}
-	
-	public void setIsReply(boolean isReply) {
-		this.isReply = isReply;
-	}
+
 }

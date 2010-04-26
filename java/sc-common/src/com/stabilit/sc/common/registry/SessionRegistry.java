@@ -18,7 +18,7 @@ package com.stabilit.sc.common.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.io.Session;
+import com.stabilit.sc.common.scmp.Session;
 
 /**
  * @author JTraber

@@ -14,19 +14,34 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
+/**
+ * @author JTraber
+ * 
+ */
+public abstract class ResponseAdapter implements IResponse {
+	protected SCMP scmp;
 
-public interface IResponse {
+	public ResponseAdapter() {
+		this.scmp = null;
+	}
 
-	public SCMP getSCMP();
+	@Override
+	public SCMP getSCMP() {
+		return this.scmp;
+	}
 	
-	public void setSCMP(SCMP scmp);
-	
-	public void write() throws Exception;
-	
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
-	
-	public boolean isLarge();		
+	@Override
+	public void setSCMP(SCMP scmp) {
+		this.scmp = scmp;
+	}
 
+	@Override
+	public boolean isLarge() {
+		if (this.scmp == null) {
+			return false;
+		}
+		return this.scmp.isLargeMessage();
+	}
 }

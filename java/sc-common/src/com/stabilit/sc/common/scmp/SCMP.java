@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -65,6 +65,10 @@ public class SCMP implements Serializable {
 
 	public boolean isBodyOffset() {
 		return false;
+	}
+	
+	public int getBodyOffset() {
+		return 0;
 	}
 
 	public boolean isComposite() {
@@ -192,11 +196,11 @@ public class SCMP implements Serializable {
 		this.body = body;
 		if (this.body == null) {
 			this.removeHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
-			this.removeHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE);
+			this.removeHeader(SCMPHeaderAttributeKey.BODY_TYPE);
 			return;
 		}
 		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_BODY_TYPE, this.getBodyTypeAsString());
+		this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, this.getBodyTypeAsString());
 	}
 
 	private String getBodyTypeAsString() {

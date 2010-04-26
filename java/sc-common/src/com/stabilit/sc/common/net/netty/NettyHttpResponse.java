@@ -30,13 +30,13 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.ResponseAdapter;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPPartID;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.ResponseAdapter;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPPartID;
 
 public class NettyHttpResponse extends ResponseAdapter {
 

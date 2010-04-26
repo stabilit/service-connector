@@ -14,53 +14,48 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp.internal;
 
-import java.util.Map;
+import com.stabilit.sc.common.scmp.IResponse;
+import com.stabilit.sc.common.scmp.SCMP;
 
-import com.stabilit.sc.common.util.DateTimeUtility;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPFault extends SCMP {
+public class SCMPLargeResponse extends SCMP {
 
-	private static final long serialVersionUID = -4041668035605907106L;
-
-	public SCMPFault() {
-		super();
+	private SCMP scmp;
+	private int offset;
+	private int scmpCallLength;
+	private SCMP current;
+	
+	public SCMPLargeResponse(IResponse response) {
+		this.scmp = response.getSCMP();
+		this.scmpCallLength = this.scmp.getBodyLength();
+		this.offset = 0;
+		this.current = null;
 	}
 	
-	public SCMPFault(Map<String, String> map) {
-		this.header = map;
-	}
-
-	public SCMPFault(SCMPErrorCode errorCode) {
-		setError(errorCode);
-	}
-	
-	public void setLocalDateTime() {
-		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
+	public SCMP getFirst() {
+		this.offset = 0;
+		this.current = new SCMPResponsePart(scmp, this.offset);
+		this.offset += current.getBodyLength();		
+		return this.current;
 	}
 	
-	@Override
-	public boolean isFault() {
-		return true;
+	public boolean hasNext() {
+        return this.offset < this.scmpCallLength;		
 	}
-
-	@Override
-	public boolean isReply() {
-		return true;
-	}
-
-	public void setError(String errorCode, String errorText) {
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode);
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorText);
-	}
-
-	public void setError(SCMPErrorCode errorCode) {
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
-	}
+	
+	public SCMP getNext() {
+	    if (this.hasNext()) {
+			this.current = new SCMPResponsePart(scmp, this.offset);			    
+			this.offset += current.getBodyLength();
+			return this.current;
+	    }
+	    this.current = null;
+	    return this.current;
+	}			
 }

@@ -14,18 +14,41 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
+/**
+ * @author JTraber
+ * 
+ */
+public class KeepAlive {
 
-public interface ISubscribe {
+	int keepAliveTimeout = 0;
+	int keepAliveInterval = 0;
 
-	public String subscribe() throws Exception;
-	
-	public void unsubscribe(String subscribeId);
-	
-	public void stopSubscriptionActionOnConnection();
-	
-	public boolean continueSubscriptionOnConnection();
-	
-	void releaseConnection();	
+	public KeepAlive(int keepAliveTimeout, int keepAliveInterval) {
+		super();
+		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveTimeout = keepAliveTimeout;
+	}
+
+	public int getKeepAliveInterval() {
+		return keepAliveInterval;
+	}
+
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
+
+	public int getKeepAliveTimeout() {
+		return keepAliveTimeout;
+	}
+
+	public void setKeepAliveTimeout(int keepAliveTimeout) {
+		this.keepAliveTimeout = keepAliveTimeout;
+	}
+
+	@Override
+	public String toString() {
+		return keepAliveTimeout + "," + keepAliveInterval;
+	}
 }

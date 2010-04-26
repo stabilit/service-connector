@@ -14,23 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-/**
- * @author JTraber
- * 
- */
-public enum SCMPInternalStatus {
-	NONE, PRQ, REQ, FAILED;
+import java.util.UUID;
 
-	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
-		switch (headerKey) {
-		case PRQ:
-			return SCMPInternalStatus.PRQ;
-		case REQ:
-			return SCMPInternalStatus.REQ;
-		}
-		return SCMPInternalStatus.NONE;
+import com.stabilit.sc.common.util.MapBean;
 
+public class Session extends MapBean<Object> implements ISession {
+
+	private String id;
+	
+	public Session() {
+		  UUID uuid = UUID.randomUUID();
+		  this.id = uuid.toString();
+	}	
+	
+	@Override
+	public String getId() {
+		return this.id;
 	}
 }

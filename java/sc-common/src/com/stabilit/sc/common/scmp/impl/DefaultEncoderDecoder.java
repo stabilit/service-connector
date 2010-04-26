@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io.impl;
+package com.stabilit.sc.common.scmp.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,14 +31,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.IMessage;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPBodyType;
-import com.stabilit.sc.common.io.SCMPFault;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPHeadlineKey;
-import com.stabilit.sc.common.io.SCMPInternalStatus;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.IMessage;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPHeadlineKey;
+import com.stabilit.sc.common.scmp.SCMPInternalStatus;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
@@ -98,7 +98,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
-		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
+		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		scmp.setHeader(metaMap);

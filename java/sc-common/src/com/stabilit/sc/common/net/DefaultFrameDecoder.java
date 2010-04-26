@@ -17,7 +17,7 @@
 package com.stabilit.sc.common.net;
 
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.SCMPHeadlineKey;
+import com.stabilit.sc.common.scmp.SCMPHeadlineKey;
 
 /**
  * @author JTraber

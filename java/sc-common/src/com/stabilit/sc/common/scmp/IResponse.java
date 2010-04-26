@@ -14,23 +14,19 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.impl.EncodingDecodingException;
+public interface IResponse {
 
-public interface IEncoderDecoder extends IFactoryable {
+	public SCMP getSCMP();
+	
+	public void setSCMP(SCMP scmp);
+	
+	public void write() throws Exception;
+	
+	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
+	
+	public boolean isLarge();		
 
-	public static final String HEADER_REGEX = "(RES|REQ|EXC) .*";
-	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
-	public static final String ESCAPED_EQUAL_SIGN = "\\=";
-	public static final String EQUAL_SIGN = "=";
-	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
-
-	public void encode(OutputStream os, Object obj) throws EncodingDecodingException;
-
-	public Object decode(InputStream is) throws EncodingDecodingException;
 }

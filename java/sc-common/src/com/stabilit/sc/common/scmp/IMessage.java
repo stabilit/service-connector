@@ -14,60 +14,27 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-/**
- * @author JTraber
- * 
- */
-public enum SCMPMsgType {
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Map;
 
-	CONNECT("CONNECT"),
-	DISCONNECT("DISCONNECT"),
-	KEEP_ALIVE("KEEP_ALIVE"),
-	CLN_CREATE_SESSION("CLN_CREATE_SESSION"),
-	SRV_CREATE_SESSION("SRV_CREATE_SESSION"),
-	CLN_DELETE_SESSION("CLN_DELETE_SESSION"),
-	SRV_DELETE_SESSION("SRV_DELETE_SESSION"),
-	SRV_ABORT_SESSION("SRV_ABORT_SESSION"),
-	CLN_DATA("CLN_DATA"),
-	SRV_DATA("SRV_DATA"),
-	SUBSCRIBE("SUBSCRIBE"), 
-	UNSUBSCRIBE("UNSUBSCRIBE"),
-	CHANGE_SUBSCRIPTION("CHANGE_SUBSCRIPTION"),
-	RECEIVE_PUBLICATION("RECEIVE_PUBLICATION"),
-	PUBLISH("PUBLISH"),
-	REGISTER_SERVICE("REGISTER_SERVICE"),  
-	DEREGISTER_SERVICE("DEREGISTER_SERVICE"),
-	UNDEFINED("UNDEFINED"),
-	CLN_ECHO("CLN_ECHO"),
-	SRV_ECHO("SRV_ECHO"),
-	ECHO_SC("ECHO_SC"),
-	INSPECT("INSPECT");
+public interface IMessage {
+	public SCMPMsgType getKey();
 
-	private String name;
-	private String requestName;
-	private String responseName;
+	public IMessage newInstance();
 
-	private SCMPMsgType(String name) {
-		this.name = name;
-		this.requestName = name;
-		this.responseName = name;		
-	}
+	public Object getAttribute(String name);
+
+	public void setAttribute(String name, Object value);
+
+	Map<String, Object> getAttributeMap();
+
+	public void encode(BufferedWriter bw) throws IOException;
 	
-	public String getRequestName() {
-		return requestName;
-	}
-	
-	public String getResponseName() {
-		return responseName;
-	}
+	public void decode(BufferedReader br) throws IOException;
 
-	public String toString() {
-		return name;
-	}
-
-	public static SCMPMsgType getMsgType(String messageId) {
-		return SCMPMsgType.valueOf(messageId);
-	}
+	public int getLength();
 }

@@ -14,31 +14,48 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-import java.net.SocketAddress;
+/**
+ * @author JTraber
+ * 
+ */
+public enum SCMPHeadlineKey {
 
-import com.stabilit.sc.common.ctx.IRequestContext;
-import com.stabilit.sc.common.util.MapBean;
-
-public interface IRequest {
-
-	public SCMPMsgType getKey() throws Exception;
-
-	public IRequestContext getContext();
-		
-	public SCMP getSCMP() throws Exception;
+	UNDEF, REQ, RES, EXC, PRQ, PRS;
 	
-	public void setSCMP(SCMP scmp);
-	
-	public void setAttribute(String key, Object value);
-	
-	public Object getAttribute(String key);
+	public static SCMPHeadlineKey getMsgHeaderKey(String headerKey) {
+		return SCMPHeadlineKey.valueOf(headerKey);
+	}
+	public static SCMPHeadlineKey getMsgHeaderKey(byte[]b) {
+		if (b == null) {
+			return UNDEF;
+		}
+		if (b.length < 3) {
+			return UNDEF;
+		}
+		if (b[0] == 'R' && b[1] == 'E') {
+			if (b[2] == 'Q') {
+				return REQ;
+			}
+			if (b[2] == 'S') {
+				return RES;
+			}
+			return UNDEF;			
+		}
+		if (b[0] == 'P' && b[1] == 'R') {
+			if (b[2] == 'Q') {
+				return PRQ;
+			}
+			if (b[2] == 'S') {
+				return PRS;
+			}
+			return UNDEF;			
+		}
+		if (b[0] == 'E' && b[1] == 'X' &&  b[2] == 'C') {
+			return EXC;
+		}
+		return UNDEF;
+	}
 
-	public MapBean<Object> getAttributeMapBean();
-
-	public SocketAddress getSocketAddress();
-	
-	public void read() throws Exception;
-		
 }

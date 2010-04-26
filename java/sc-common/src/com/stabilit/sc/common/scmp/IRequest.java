@@ -14,44 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-/**
- * @author JTraber
- * 
- */
-public enum SCMPBodyType {
+import java.net.SocketAddress;
 
-	binary("binary"), text("text"), message("message"), undefined("undefined");
+import com.stabilit.sc.common.ctx.IRequestContext;
+import com.stabilit.sc.common.util.MapBean;
 
-	private String name;
+public interface IRequest {
 
-	private SCMPBodyType(String name) {
-		this.name = name;
-	}
+	public SCMPMsgType getKey() throws Exception;
 
-	public String getName() {
-		return name;
-	}
+	public IRequestContext getContext();
+		
+	public SCMP getSCMP() throws Exception;
+	
+	public void setSCMP(SCMP scmp);
+	
+	public void setAttribute(String key, Object value);
+	
+	public Object getAttribute(String key);
 
-	public static SCMPBodyType getBodyType(String bodyType) {
-		if (bodyType == null) {
-			return undefined;
-		}
-		return SCMPBodyType.valueOf(bodyType);
-	}
+	public MapBean<Object> getAttributeMapBean();
 
-	// mime types http://msdn.microsoft.com/en-us/library/ms775147%28VS.85%29.aspx
-	public String getMimeType() {
-		switch (this) {
-		case binary:
-			return "application/octet-stream";
-		case text:
-			return "text/plain";
-		case message:
-			return "text/plain";
-		default:
-			return "application/octet-stream";
-		}
-	}
+	public SocketAddress getSocketAddress();
+	
+	public void read() throws Exception;
+	
+	public void load() throws Exception;		
 }

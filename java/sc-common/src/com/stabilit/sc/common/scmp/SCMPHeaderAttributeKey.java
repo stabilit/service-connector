@@ -14,27 +14,51 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.Map;
+/**
+ * @author JTraber
+ * 
+ */
+public enum SCMPHeaderAttributeKey {
 
-public interface IMessage {
-	public SCMPMsgType getKey();
-
-	public IMessage newInstance();
-
-	public Object getAttribute(String name);
-
-	public void setAttribute(String name, Object value);
-
-	Map<String, Object> getAttributeMap();
-
-	public void encode(BufferedWriter bw) throws IOException;
+	MSG_TYPE("msgType"),
+	SC_VERSION("scVersion"),
+	COMPRESSION("compression"),
+	LOCAL_DATE_TIME("localDateTime"),
+	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
+	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
+	SC_ERROR_CODE("scErrorCode"),
+	SC_ERROR_TEXT("scErrorText"),
+	APP_ERROR_CODE("appErrorCode"),
+	APP_ERROR_TEXT("appErrorText"),
+	BODY_LENGTH("bodyLength"),
+	CACHE_SIGNATURE("cacheSignature"),
+	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
+	IP_ADDRESS_LIST("ipAddressList"),
+	PORT_NR("portNr"),
+	MASK("mask"),
+	MAX_SESSIONS("maxSessions"),
+	MSG_INFO("msgInfo"),
+	MULTI_THREADED("multiThreaded"),
+	NO_DATA("noData"),
+	REJECT_SESSION("rejectSession"),
+	SERVICE_NAME("serviceName"),
+	SESSION_ID("sessionId"),
+	SESSION_INFO("sessionInfo"),
+	TRANSITIVE("transitive"),
+	PART_ID("partID"),
+	SCMP_CALL_LENGTH("scmpCallLength"),
+	BODY_TYPE("bodyType"),
+	MAX_NODES("maxNodes"); 
 	
-	public void decode(BufferedReader br) throws IOException;
+	private String name;
+	
+	private SCMPHeaderAttributeKey(String name) {
+		this.name = name;	
+	}
 
-	public int getLength();
+	public String getName() {
+		return name;
+	}
 }

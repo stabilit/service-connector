@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.common.io.KeepAlive;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.KeepAlive;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 
 /**
  * @author JTraber

@@ -14,22 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
-
-import com.stabilit.sc.common.util.DateTimeUtility;
+package com.stabilit.sc.common.scmp;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class SCMPReply extends SCMP {
-	
-	public void setLocalDateTime() {
-		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
-	}
+public class SCMPPartID {
 
-	@Override
-	public boolean isReply() {
-		return true;
-	}	
+	private static int messageID = 1;
+	private static int partID = 1;
+	private static int callID = 1;
+	
+	public synchronized static int getNext() {
+		return ++messageID;
+	}
+	
+	public static String getNextAsString() {
+		return String.valueOf(getNext());
+	}
 }

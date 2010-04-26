@@ -14,23 +14,22 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-import java.util.UUID;
+import com.stabilit.sc.common.util.DateTimeUtility;
 
-import com.stabilit.sc.common.util.MapBean;
-
-public class Session extends MapBean<Object> implements ISession {
-
-	private String id;
+/**
+ * @author JTraber
+ * 
+ */
+public class SCMPReply extends SCMP {
 	
-	public Session() {
-		  UUID uuid = UUID.randomUUID();
-		  this.id = uuid.toString();
-	}	
-	
-	@Override
-	public String getId() {
-		return this.id;
+	public void setLocalDateTime() {
+		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
+
+	@Override
+	public boolean isReply() {
+		return true;
+	}	
 }

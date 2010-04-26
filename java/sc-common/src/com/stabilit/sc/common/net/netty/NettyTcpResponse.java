@@ -23,11 +23,11 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.ResponseAdapter;
-import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.ResponseAdapter;
+import com.stabilit.sc.common.scmp.SCMP;
 
 public class NettyTcpResponse extends ResponseAdapter {
 

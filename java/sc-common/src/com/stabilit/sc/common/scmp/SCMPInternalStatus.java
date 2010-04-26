@@ -14,8 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.io;
+package com.stabilit.sc.common.scmp;
 
-public interface ISession {
-	public String getId();
+/**
+ * @author JTraber
+ * 
+ */
+public enum SCMPInternalStatus {
+	NONE, PRQ, REQ, FAILED;
+
+	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
+		switch (headerKey) {
+		case PRQ:
+			return SCMPInternalStatus.PRQ;
+		case REQ:
+			return SCMPInternalStatus.REQ;
+		}
+		return SCMPInternalStatus.NONE;
+
+	}
 }
