@@ -30,6 +30,50 @@ public class Lock<T> {
 		reentrantLock.lock(); // will wait until this thread gets the lock
 	}
 
+	public T runLocked(Lockable<T> lockable) {
+		try {
+			reentrantLock.lock();
+			return lockable.run();
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.unlock();
+		}
+	}
+
+	public T runLocked(Lockable<T> lockable, T object) {
+		try {
+			reentrantLock.lock();
+			return lockable.run(object);
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.unlock();
+		}
+	}
+
+	public T runLocked(Lockable<T> lockable, T obj1, T obj2) {
+		try {
+			reentrantLock.lock();
+			return lockable.run(obj1, obj2);
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.unlock();
+		}
+	}
+
+	public T runLocked(Lockable<T> lockable, T obj1, T obj2, T obj3) {
+		try {
+			reentrantLock.lock();
+			return lockable.run(obj1, obj2, obj3);
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.unlock();
+		}
+	}
+
 	public T runLocked(Lockable<T> lockable, T... params) {
 		try {
 			reentrantLock.lock();

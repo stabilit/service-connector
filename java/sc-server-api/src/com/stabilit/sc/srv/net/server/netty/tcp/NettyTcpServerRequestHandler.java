@@ -36,6 +36,7 @@ import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.common.util.Lock;
+import com.stabilit.sc.common.util.LockAdapter;
 import com.stabilit.sc.common.util.Lockable;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -54,10 +55,10 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	private SCMPLargeResponse scmpResponseComposite = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
 
-	private Lockable<Object> commandRequestLock = new Lockable<Object>() {
+	private Lockable<Object> commandRequestLock = new LockAdapter<Object>() {
 
 		@Override
-		public Object run(Object... params) throws Exception {
+		public Object run() throws Exception {
 			// we are locked here
 			if (commandRequest != null) {
 				return commandRequest;

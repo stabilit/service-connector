@@ -22,6 +22,10 @@ package com.stabilit.sc.common.util;
  */
 public interface Lockable<T> {
 
+	public T run() throws Exception;
+	public T run(T obj) throws Exception;
+	public T run(T obj1, T obj2) throws Exception;
+	public T run(T obj1, T obj2, T obj3) throws Exception;
 	public T run(T ...objects) throws Exception;
 
 }
