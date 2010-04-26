@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.client;
 
-import com.stabilit.sc.common.io.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
 
 /**
  * @author JTraber

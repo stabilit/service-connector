@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.service;
 
-import com.stabilit.sc.common.io.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPFault;
 
 /**
  * @author JTraber

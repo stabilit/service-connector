@@ -17,8 +17,8 @@
 package com.stabilit.sc.cln.service;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber

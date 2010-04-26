@@ -18,7 +18,7 @@ package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.scmp.SCMP;
 
 /**
  * @author JTraber

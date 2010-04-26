@@ -23,7 +23,7 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 
-import com.stabilit.sc.common.io.SCMP;
+import com.stabilit.sc.common.scmp.SCMP;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)

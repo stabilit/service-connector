@@ -37,9 +37,9 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.SCMP;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.SCMP;
 
 public class NettyHttpClientConnection extends ClientConnectionAdapter {
 

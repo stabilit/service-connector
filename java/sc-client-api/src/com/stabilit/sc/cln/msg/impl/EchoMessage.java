@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.msg.impl;
 
-import com.stabilit.sc.common.io.Message;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.Message;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 public class EchoMessage extends Message {
 	

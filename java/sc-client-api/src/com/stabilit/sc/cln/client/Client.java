@@ -19,13 +19,14 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.io.EncoderDecoderFactory;
-import com.stabilit.sc.common.io.IEncoderDecoder;
-import com.stabilit.sc.common.io.SCMP;
-import com.stabilit.sc.common.io.SCMPComposite;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPPart;
-import com.stabilit.sc.common.io.SCMPPartID;
+import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPPart;
+import com.stabilit.sc.common.scmp.SCMPPartID;
+import com.stabilit.sc.common.scmp.internal.SCMPComposite;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeRequest;
 
 /**
  * @author JTraber
@@ -117,10 +118,12 @@ public class Client implements IClient {
 		if (scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
 			scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
 		}
-		while (true) {
-			SCMP ret = clientConnection.sendAndReceive(scmp);
+		SCMPLargeRequest scmpLargeRequest = new SCMPLargeRequest(scmp);
+		SCMP part = scmpLargeRequest.getFirst();
+		while (part != null) {
+			SCMP ret = clientConnection.sendAndReceive(part);
 			// check if request has been sent completely
-			if (scmp.isRequest()) {
+			if (part.isRequest()) {
 				// the response can be small or large, this doesn't matter,
 				// we continue reading any large response later
 				return ret;
@@ -129,7 +132,12 @@ public class Client implements IClient {
 				// this part return belongs to the request, not to the response
 				return ret;
 			}
+			if (scmpLargeRequest.hasNext() == false) {
+				return null;
+			}
+			part = scmpLargeRequest.getNext();
 		}
+		return null;
 	}
 
 	/**

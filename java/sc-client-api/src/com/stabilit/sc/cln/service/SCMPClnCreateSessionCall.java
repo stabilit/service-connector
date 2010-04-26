@@ -20,8 +20,8 @@ import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.io.SCMPSession;
-import com.stabilit.sc.common.io.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.io.SCMPMsgType;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber
