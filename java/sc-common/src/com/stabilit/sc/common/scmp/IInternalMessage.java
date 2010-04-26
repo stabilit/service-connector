@@ -21,10 +21,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Map;
 
-public interface IMessage {
+public interface IInternalMessage {
 	public SCMPMsgType getKey();
 
-	public IMessage newInstance();
+	public IInternalMessage newInstance();
 
 	public Object getAttribute(String name);
 

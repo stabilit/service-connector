@@ -50,7 +50,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 				if (i <= 2) {
 					throw new FrameDecoderException("invalid scmp header line");
 				}
-				headerKey = SCMPHeadlineKey.getMsgHeaderKey(buffer);
+				headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
 				if (headerKey == SCMPHeadlineKey.UNDEF) {
 					throw new FrameDecoderException("invalid scmp header line");
 				}

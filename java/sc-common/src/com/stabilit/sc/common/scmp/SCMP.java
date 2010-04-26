@@ -93,7 +93,7 @@ public class SCMP implements Serializable {
 		if (this.body == null) {
 			return false;
 		}
-		if(this.body instanceof IMessage) {
+		if(this.body instanceof IInternalMessage) {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
@@ -217,7 +217,7 @@ public class SCMP implements Serializable {
 		if (byte[].class == body.getClass()) {
 			return SCMPBodyType.binary;
 		}
-		if (body instanceof IMessage) {
+		if (body instanceof IInternalMessage) {
 			return SCMPBodyType.message;
 		}
 		return SCMPBodyType.undefined;
@@ -237,8 +237,8 @@ public class SCMP implements Serializable {
 		if (byte[].class == body.getClass()) {
 			return ((byte[]) body).length;
 		}
-		if (body instanceof IMessage) {
-			return ((IMessage) body).getLength();
+		if (body instanceof IInternalMessage) {
+			return ((IInternalMessage) body).getLength();
 		}
 		return 0;
 	}

@@ -14,10 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.registry;
+package com.stabilit.sc.registry;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.common.registry.Registry;
 import com.stabilit.sc.common.scmp.Session;
 
 /**

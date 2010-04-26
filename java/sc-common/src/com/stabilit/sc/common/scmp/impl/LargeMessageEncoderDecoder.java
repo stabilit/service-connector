@@ -28,11 +28,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
-import com.stabilit.sc.common.scmp.IMessage;
+import com.stabilit.sc.common.scmp.IInternalMessage;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
 import com.stabilit.sc.common.scmp.SCMPFault;
@@ -40,11 +39,8 @@ import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPHeadlineKey;
 import com.stabilit.sc.common.scmp.SCMPInternalStatus;
 import com.stabilit.sc.common.scmp.SCMPPart;
-import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 
 public class LargeMessageEncoderDecoder implements IEncoderDecoder {
-
-	public static final String HEADER_REGEX = "(RES|REQ|PRQ|PRS|EXC) .*";
 
 	public LargeMessageEncoderDecoder() {
 	}
@@ -69,31 +65,28 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			}
 			scmp = null;
 
-			Pattern decodHeadReg = Pattern.compile(HEADER_REGEX);
-			Matcher matchHeadline = decodHeadReg.matcher(line);
-
-			if (matchHeadline.matches() == false) {
-				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
-			}
-
-			if (line.startsWith("EXC ")) {
+			SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(line);
+			switch (headlineKey) {
+			case PRQ:
+			case PRS:
+				scmp = new SCMPPart();
+				break;
+			case EXC:
 				scmp = new SCMPFault();
-			} else {
-				// message chunking
-				if (line.charAt(0) == 'P') {
-					scmp = new SCMPPart();
-				} else {
-					scmp = new SCMP();
-				}
+				break;
+			case UNDEF:
+				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
+			default:
+				scmp = new SCMP();
 			}
+
 			while (true) {
 				line = br.readLine(); // TODO
 				if (line == null || line.length() <= 0) {
 					break;
 				}
-				Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
-				Matcher match = decodReg.matcher(line);
-
+				
+				Matcher match = IEncoderDecoder.DECODE_REG.matcher(line);
 				if (match.matches() && match.groupCount() == 2) {
 					/********* escaping *************/
 					String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
@@ -124,14 +117,14 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					return null;
 				}
 				String[] t = classLine.split(EQUAL_SIGN);
-				if (IMessage.class.getName().equals(t[0]) == false) {
+				if (IInternalMessage.class.getName().equals(t[0]) == false) {
 					return null;
 				}
 				if (t.length != 2) {
 					return null;
 				}
 				Class messageClass = Class.forName(t[1]);
-				IMessage message = (IMessage) messageClass.newInstance();
+				IInternalMessage message = (IInternalMessage) messageClass.newInstance();
 				message.decode(br);
 				scmp.setBody(message);
 				return scmp;
@@ -204,7 +197,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
 					// message chunking
-					int bodyLength = scmp.getBodyLength();  // returns body of part only
+					int bodyLength = scmp.getBodyLength(); // returns body of part only
 					// this is a scmp part, we need to redefine the body length (message part length)
 					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
@@ -222,10 +215,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				}
 
 				if (byte[].class == body.getClass()) {
-					// sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
-					// sb.append(EQUAL_SIGN);
-					// sb.append(TYPE.ARRAY.getType());
-					// sb.append("\n");
 					byte[] ba = (byte[]) body;
 					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);

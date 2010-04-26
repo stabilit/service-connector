@@ -27,7 +27,8 @@ public enum SCMPHeadlineKey {
 	public static SCMPHeadlineKey getMsgHeaderKey(String headerKey) {
 		return SCMPHeadlineKey.valueOf(headerKey);
 	}
-	public static SCMPHeadlineKey getMsgHeaderKey(byte[]b) {
+	
+	public static SCMPHeadlineKey getKeyByHeadline(byte[]b) {
 		if (b == null) {
 			return UNDEF;
 		}
@@ -57,5 +58,9 @@ public enum SCMPHeadlineKey {
 		}
 		return UNDEF;
 	}
-
+	
+	public static SCMPHeadlineKey getKeyByHeadline(String string) {
+		byte[] b = string.getBytes(); 
+		return getKeyByHeadline(b);
+	}
 }

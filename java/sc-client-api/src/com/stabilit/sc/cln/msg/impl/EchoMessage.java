@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.msg.impl;
 
-import com.stabilit.sc.common.scmp.Message;
+import com.stabilit.sc.common.scmp.InternalMessage;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 
-public class EchoMessage extends Message {
+public class EchoMessage extends InternalMessage {
 	
 	private static final long serialVersionUID = -5461603317301105352L;
 	

@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.msg.impl;
 
-import com.stabilit.sc.common.scmp.Message;
+import com.stabilit.sc.common.scmp.InternalMessage;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 
-public class InspectMessage extends Message {
+public class InspectMessage extends InternalMessage {
 
 	public static SCMPMsgType ID = SCMPMsgType.INSPECT;
 

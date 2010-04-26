@@ -26,7 +26,6 @@ public class KeepAlive {
 	int keepAliveInterval = 0;
 
 	public KeepAlive(int keepAliveTimeout, int keepAliveInterval) {
-		super();
 		this.keepAliveInterval = keepAliveInterval;
 		this.keepAliveTimeout = keepAliveTimeout;
 	}

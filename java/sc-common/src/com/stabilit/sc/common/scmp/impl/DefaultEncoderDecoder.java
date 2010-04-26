@@ -28,11 +28,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
-import com.stabilit.sc.common.scmp.IMessage;
+import com.stabilit.sc.common.scmp.IInternalMessage;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
 import com.stabilit.sc.common.scmp.SCMPFault;
@@ -46,10 +45,10 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 	}
 
 	@Override
-	public IFactoryable newInstance() {	
+	public IFactoryable newInstance() {
 		return this;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -67,25 +66,24 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				return null;
 			}
 
-			Pattern decodHeadReg = Pattern.compile(HEADER_REGEX);
-			Matcher matchHeadline = decodHeadReg.matcher(line);
-
-			if (matchHeadline.matches() == false) {
-				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
-			}
-
-			if (line.startsWith("EXC ")) {
+			SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(line);
+			switch (headlineKey) {
+			case EXC:
 				scmp = new SCMPFault();
-			} else {
+				break;
+			case UNDEF:
+				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
+			default:
 				scmp = new SCMP();
 			}
+
 			while (true) {
 				line = br.readLine(); // TODO
 				if (line == null || line.length() <= 0) {
 					break;
 				}
-				Pattern decodReg = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
-				Matcher match = decodReg.matcher(line);
+
+				Matcher match = IEncoderDecoder.DECODE_REG.matcher(line);
 
 				if (match.matches() && match.groupCount() == 2) {
 					/********* escaping *************/
@@ -102,7 +100,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		scmp.setHeader(metaMap);
-		try {		
+		try {
 			if (scmpBodyType == SCMPBodyType.text) {
 				int caLength = Integer.parseInt(scmpBodyLength);
 				char[] caBuffer = new char[caLength];
@@ -117,14 +115,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					return null;
 				}
 				String[] t = classLine.split(EQUAL_SIGN);
-				if (IMessage.class.getName().equals(t[0]) == false) {
+				if (IInternalMessage.class.getName().equals(t[0]) == false) {
 					return null;
 				}
 				if (t.length != 2) {
 					return null;
 				}
 				Class messageClass = Class.forName(t[1]);
-				IMessage message = (IMessage) messageClass.newInstance();
+				IInternalMessage message = (IInternalMessage) messageClass.newInstance();
 				message.decode(br);
 				scmp.setBody(message);
 				return scmp;
@@ -150,11 +148,11 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
-				
+
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
-		if(scmp.isReply()) {
+		if (scmp.isReply()) {
 			headerKey = SCMPHeadlineKey.RES;
-			if(scmp.isFault()) {
+			if (scmp.isFault()) {
 				headerKey = SCMPHeadlineKey.EXC;
 			}
 		} else {
@@ -180,31 +178,19 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			if (body != null) {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
-//					sb.append(EQUAL_SIGN);
-//					sb.append(SCMPBodyType.TEXT.getType());
-//					sb.append("\n");
-//					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
-//					sb.append(EQUAL_SIGN);
-//					sb.append(String.valueOf(t.length()));
-//					sb.append("\n\n");
 					sb.append("\n");
 					int messageLength = sb.length() + t.length();
 					writeHeadLine(bw, headerKey, messageLength);
-					bw.write(sb.toString());  //  write header
+					bw.write(sb.toString()); // write header
 					bw.flush();
-					bw.write(t);              // write body
+					bw.write(t); // write body
 					bw.flush();
 					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
-				if (body instanceof IMessage) {
-//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
-//					sb.append(EQUAL_SIGN);
-//					sb.append(SCMPBodyType.MESSAGE.getType());
-//					sb.append("\n\n");
+				if (body instanceof IInternalMessage) {
 					sb.append("\n");
-					IMessage message = (IMessage) body;
+					IInternalMessage message = (IInternalMessage) body;
 					int messageLength = sb.length() + message.getLength();
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
@@ -215,17 +201,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					return;
 				}
 				if (body instanceof byte[]) {
-//					sb.append(SCMPHeaderAttributeKey.SCMP_BODY_TYPE.getName());
-//					sb.append(EQUAL_SIGN);
-//					sb.append(SCMPBodyType.BINARY.getType());
-//					sb.append("\n");
 					byte[] ba = (byte[]) body;
-//					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
-//					sb.append(EQUAL_SIGN);
-//					sb.append(String.valueOf(ba.length));
-//					sb.append("\n\n");
 					sb.append("\n");
-				    int messageLength = sb.length() + ba.length;
+					int messageLength = sb.length() + ba.length;
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
 					bw.flush();
@@ -238,10 +216,6 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 					throw new EncodingDecodingException("unsupported body type");
 				}
 			} else {
-//				sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
-//				sb.append(EQUAL_SIGN);
-//				sb.append("0\n");
-//				sb.append("\n\n");
 				sb.append("\n");
 				int messageLength = sb.length();
 				writeHeadLine(bw, headerKey, messageLength);

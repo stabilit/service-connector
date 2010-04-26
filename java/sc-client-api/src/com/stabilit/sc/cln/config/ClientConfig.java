@@ -32,7 +32,6 @@ public class ClientConfig {
 	private List<ClientConfigItem> clientConfigItemList;
 
 	public ClientConfig() {
-		super();
 		clientConfigItemList = null;
 		props = null;
 	}

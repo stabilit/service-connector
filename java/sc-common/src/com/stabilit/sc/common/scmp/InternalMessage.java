@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 
 import com.stabilit.sc.common.scmp.impl.DefaultEncoderDecoder;
 
-public class Message implements IMessage, Serializable {
+public class InternalMessage implements IInternalMessage, Serializable {
 
 	private static final long serialVersionUID = -1763291531850424661L;
 
@@ -39,19 +39,19 @@ public class Message implements IMessage, Serializable {
 	
 	protected StringBuilder encodedBuilder;
 
-	public Message() {
+	public InternalMessage() {
 		this(SCMPMsgType.UNDEFINED);
 	}
 	
-	public Message(SCMPMsgType key) {
+	public InternalMessage(SCMPMsgType key) {
 		this.key = key;
 		this.attrMap = new HashMap<String, Object>();
 		this.encodedBuilder = null;
 	}
 
 	@Override
-	public IMessage newInstance() {
-		return new Message();
+	public IInternalMessage newInstance() {
+		return new InternalMessage();
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class Message implements IMessage, Serializable {
 	private void encode(StringBuilder eb) {		
 		Map<String, Object> attrMap = this.getAttributeMap();
 		Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
-		eb.append(IMessage.class.getName());
+		eb.append(IInternalMessage.class.getName());
 		eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
 		eb.append(this.getClass().getName());
 		eb.append("\n");

@@ -32,7 +32,6 @@ public class ServerConfig {
 	private List<ServerConfigItem> serverConfigList;
 
 	public ServerConfig() {
-		super();
 		serverConfigList = null;
 		props = null;
 	}
