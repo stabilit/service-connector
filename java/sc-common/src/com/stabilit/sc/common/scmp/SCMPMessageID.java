@@ -14,47 +14,70 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp.internal;
-
-import com.stabilit.sc.common.scmp.SCMP;
+package com.stabilit.sc.common.scmp;
 
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPLargeRequest extends SCMP {
+public class SCMPMessageID {
 
-	private SCMP scmp;
-	private int offset;
-	private int scmpCallLength;
-	private SCMP current;
+	private int msgSequenceNr;
+	private int partSequenceNr;
+	private StringBuilder sb;
+
+	public SCMPMessageID() {
+		this.msgSequenceNr = 0;
+		this.partSequenceNr = 0;
+		this.sb = null;
+	}
+
+//	public String getNextMessageId(SCMP scmp) {
+//		if (scmp.isPart()) {
+//			sb = new StringBuilder();
+//			if (partSequenceNr == 0)
+//				msgSequenceNr++;
+//			sb.append(msgSequenceNr);
+//			sb.append("/");
+//			sb.append(++partSequenceNr);
+//			return sb.toString();
+//		}
+//		if (partSequenceNr != 0) {
+//			sb = new StringBuilder();
+//			sb.append(msgSequenceNr);
+//			sb.append("/");
+//			sb.append(++partSequenceNr);
+//			partSequenceNr = 0;
+//			return sb.toString();
+//		}
+//		return String.valueOf(++msgSequenceNr);
+//	}
 	
-	public SCMPLargeRequest(SCMP scmp) {
-		this.scmp = scmp;
-		this.scmpCallLength = this.scmp.getBodyLength();
-		this.offset = 0;
-		this.current = null;
+	public String getNextMessageID() {
+		if(partSequenceNr == 0) {
+			return String.valueOf(msgSequenceNr);
+		}
+		sb = new StringBuilder();
+		sb.append(msgSequenceNr);
+		sb.append("/");
+		sb.append(partSequenceNr);
+		return sb.toString();
 	}
 	
-	public SCMP getFirst() {
-		this.offset = 0;
-		this.current = new SCMPRequestPart(scmp, this.offset);
-		this.offset += current.getBodyLength();		
-		return this.current;
+	public void incrementPartSequenceNr() {
+		partSequenceNr++;
 	}
 	
-	public boolean hasNext() {
-        return this.offset < this.scmpCallLength;		
+	public void incrementMsgSequenceNr() {
+		msgSequenceNr++;
 	}
-	
-	public SCMP getNext() {
-	    if (this.hasNext()) {
-			this.current = new SCMPRequestPart(scmp, this.offset);			    
-			this.offset += current.getBodyLength();
-			return this.current;
-	    }
-	    this.current = null;
-	    return this.current;
-	}			
+
+	public Integer getMessageSequenceNr() {
+		return msgSequenceNr;
+	}
+
+	public Integer getPartSequenceNr() {
+		return partSequenceNr;
+	}
 }
