@@ -28,8 +28,6 @@ import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPPartID;
 
 public class SCMPStreamHttpUtil {
 
@@ -170,11 +168,6 @@ public class SCMPStreamHttpUtil {
 		EncoderDecoderFactory encoderDecoderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
 		if (this.encoderDecoder == null) {
 			encoderDecoder = encoderDecoderFactory.newInstance(scmp);
-		}
-		if (encoderDecoderFactory.isLarge(scmp)) {
-			if (scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
-				scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
-			}
 		}
 		encoderDecoder.encode(baos, scmp);
 		baos.close();

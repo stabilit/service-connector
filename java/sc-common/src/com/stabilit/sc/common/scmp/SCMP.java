@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+
 public class SCMP implements Serializable {
 
 	private static final long serialVersionUID = -3464445251398033295L;
@@ -28,7 +30,7 @@ public class SCMP implements Serializable {
 	// TODO implementation version where?
 	public static final String SC_VERSION = "1.0-00";
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10;
-
+	private boolean isReply;
 	protected Map<String, String> header;
 	protected SCMPInternalStatus internalStatus; // internal usage only
 	protected Object body;
@@ -36,6 +38,7 @@ public class SCMP implements Serializable {
 	public SCMP() {
 		this.internalStatus = SCMPInternalStatus.NONE;
 		header = new HashMap<String, String>();
+		isReply = false;
 	}
 
 	public SCMP(Object body) {
@@ -52,10 +55,6 @@ public class SCMP implements Serializable {
 	}
 
 	public boolean isFault() {
-		return false;
-	}
-
-	public boolean isReply() {
 		return false;
 	}
 
@@ -168,6 +167,7 @@ public class SCMP implements Serializable {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Throwable th) {
+			ExceptionListenerSupport.fireException(this, th);
 			return null;
 		}
 		return intValue;
@@ -258,5 +258,13 @@ public class SCMP implements Serializable {
 
 	public boolean isRequest() {
 		return internalStatus == SCMPInternalStatus.REQ;
+	}
+
+	public boolean isReply() {
+		return isReply;
+	}
+
+	public void setIsReply(boolean isReply) {
+		this.isReply = isReply;
 	}
 }

@@ -25,6 +25,7 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -32,7 +33,6 @@ import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.SCMPPart;
-import com.stabilit.sc.common.scmp.SCMPPartID;
 import com.stabilit.sc.common.scmp.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
 import com.stabilit.sc.common.util.ValidatorUtility;
@@ -91,7 +91,6 @@ public class SrvDataCommand extends CommandAdapter {
 		// SCMPHeaderType.COMPRESSION).toString());
 
 		if ("large".equals(scmp.getBody()) || scmp.isPart()) {
-			String partID = SCMPPartID.getNextAsString(); // identifies message
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			for (i = 0; i < 10000; i++) {
@@ -106,15 +105,10 @@ public class SrvDataCommand extends CommandAdapter {
 			} else {
 				scmpReply = new SCMPPart();
 				scmpReply.setMessageType(getKey().getResponseName());
-				((SCMPPart) scmpReply).setPartId(partID);
 				scmpReply.setSessionId(sessionId);
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp.getHeader(
 						SCMPHeaderAttributeKey.SERVICE_NAME).toString());
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
-				if (scmp.isPart()) {
-					scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, scmp.getHeader(
-							SCMPHeaderAttributeKey.PART_ID).toString());
-				}
 				scmpReply.setBody(sb.toString());
 				response.setSCMP(scmpReply);
 			}
@@ -189,6 +183,7 @@ public class SrvDataCommand extends CommandAdapter {
 				ValidatorUtility.validateString(0, messageInfo, 256);
 				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(), messageInfo);
 			} catch (Throwable e) {
+				ExceptionListenerSupport.fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

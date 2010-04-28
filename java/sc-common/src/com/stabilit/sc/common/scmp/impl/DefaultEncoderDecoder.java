@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.IInternalMessage;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -93,6 +94,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				}
 			}
 		} catch (IOException e1) {
+			ExceptionListenerSupport.fireException(this, e1);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
@@ -135,6 +137,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				return scmp;
 			}
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 		}
 		return scmp;
 	}
@@ -223,6 +226,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				bw.flush();
 			}
 		} catch (IOException e1) {
+			ExceptionListenerSupport.fireException(this, e1);
 			scmp.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}

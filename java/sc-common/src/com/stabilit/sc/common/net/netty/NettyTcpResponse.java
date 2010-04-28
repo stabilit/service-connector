@@ -63,6 +63,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 		if (scmp == null) {
 			return;
 		}
+		scmp.setIsReply(true);
 		this.scmp = scmp;
 	}
 

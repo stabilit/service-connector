@@ -35,8 +35,6 @@ import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.ResponseAdapter;
 import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPPartID;
 
 public class NettyHttpResponse extends ResponseAdapter {
 
@@ -58,11 +56,6 @@ public class NettyHttpResponse extends ResponseAdapter {
 		if (this.encoderDecoder == null) {
 			encoderDecoder = encoderDecoderFactory.newInstance(this.scmp);
 		}
-		if (encoderDecoderFactory.isLarge(scmp)) {
-			if (this.scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
-				this.scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
-			}
-		}
 
 		encoderDecoder.encode(baos, this.scmp);
 		byte[] buf = baos.toByteArray();
@@ -73,12 +66,13 @@ public class NettyHttpResponse extends ResponseAdapter {
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
 	}
-	
+
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
 			return;
 		}
+		scmp.setIsReply(true);
 		this.scmp = scmp;
 	}
 
@@ -102,7 +96,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 		}
 		// Write the response.
 		ChannelFuture future = event.getChannel().write(httpResponse);
-		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array()); // logs inside if registered		
+		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array()); // logs inside if registered
 		// Close the connection after the write operation is done if necessary.
 		if (close) {
 			future.addListener(ChannelFutureListener.CLOSE);

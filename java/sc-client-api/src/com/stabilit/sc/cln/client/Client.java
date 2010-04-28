@@ -23,8 +23,7 @@ import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPPart;
-import com.stabilit.sc.common.scmp.SCMPPartID;
+import com.stabilit.sc.common.scmp.SCMPMessageID;
 import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeRequest;
 
@@ -36,6 +35,11 @@ public class Client implements IClient {
 
 	private ClientConfigItem clientConfig;
 	protected IClientConnection clientConnection;
+	private SCMPMessageID msgID;
+
+	public Client() {
+		msgID = new SCMPMessageID();
+	}
 
 	@Override
 	public IFactoryable newInstance() {
@@ -69,14 +73,10 @@ public class Client implements IClient {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		SCMP ret = null;
-		if (scmp.isPart()) {
-			ret = sendAndReceiveSCMPPart((SCMPPart) scmp);
+		if (scmp.isLargeMessage()) {
+			ret = sendLargeSCMPAndReceive(scmp);
 		} else {
-			if (scmp.isLargeMessage()) {
-				ret = sendLargeSCMPAndReceive(scmp);
-			} else {
-				ret = sendSmallSCMPAndReceive(scmp);
-			}
+			ret = sendSmallSCMPAndReceive(scmp);
 		}
 		return ret;
 	}
@@ -88,11 +88,13 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
 				scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
+		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		SCMP ret = clientConnection.sendAndReceive(scmp);
 		if (ret.isPart()) {
 			// request is small, response is large
-			return receiveLargeResponse(scmp, (SCMPPart) ret);
+			return receiveLargeResponse(scmp, (SCMP) ret);
 		}
+		msgID.incrementMsgSequenceNr();
 		return ret;
 	}
 
@@ -109,18 +111,18 @@ public class Client implements IClient {
 		SCMP ret = this.sendLargeSCMP(scmp); // send large request scmp
 		if (ret.isPart()) {
 			// request is small, response is large
-			ret = receiveLargeResponse(scmp, (SCMPPart) ret);
+			ret = receiveLargeResponse(scmp, (SCMP) ret);
 		}
+		msgID.incrementMsgSequenceNr();
 		return ret;
 	}
 
 	private SCMP sendLargeSCMP(SCMP scmp) throws Exception {
-		if (scmp.getHeader(SCMPHeaderAttributeKey.PART_ID) == null) {
-			scmp.setHeader(SCMPHeaderAttributeKey.PART_ID, SCMPPartID.getNextAsString());
-		}
 		SCMPLargeRequest scmpLargeRequest = new SCMPLargeRequest(scmp);
 		SCMP part = scmpLargeRequest.getFirst();
+		msgID.incrementPartSequenceNr();
 		while (part != null) {
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 			SCMP ret = clientConnection.sendAndReceive(part);
 			// check if request has been sent completely
 			if (part.isRequest()) {
@@ -136,30 +138,19 @@ public class Client implements IClient {
 				return null;
 			}
 			part = scmpLargeRequest.getNext();
+			msgID.incrementPartSequenceNr();
 		}
 		return null;
 	}
 
-	/**
-	 * This method sends a unqiue scmp part. An scmp part is never large, but the response can be large
-	 */
-	private SCMP sendAndReceiveSCMPPart(SCMPPart scmpPart) throws Exception {
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
-				scmpPart);
-		clientConnection.setEncoderDecoder(encoderDecoder);
-		SCMP ret = clientConnection.sendAndReceive(scmpPart);
-		if (ret.isPart()) {
-			// response is large
-			return receiveLargeResponse(scmpPart, (SCMPPart) ret);
-		}
-		return ret;
-	}
-
-	private SCMP receiveLargeResponse(SCMP request, SCMPPart response) throws Exception {
+	private SCMP receiveLargeResponse(SCMP request, SCMP response) throws Exception {
 		SCMPComposite scmpComposite = new SCMPComposite(request, response);
 		SCMP ret = null;
+		msgID.incrementPartSequenceNr();
 		while (true) {
-			ret = clientConnection.sendAndReceive(scmpComposite.getPartRequest());
+			SCMP scmp = scmpComposite.getPartRequest();
+			scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			ret = clientConnection.sendAndReceive(scmp);
 			if (ret == null) {
 				return ret;
 			}
@@ -170,6 +161,7 @@ public class Client implements IClient {
 			if (ret.isPart() == false) {
 				break;
 			}
+			msgID.incrementPartSequenceNr();
 		}
 		return scmpComposite;
 	}

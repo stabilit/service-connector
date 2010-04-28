@@ -23,6 +23,7 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -116,6 +117,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
+				ExceptionListenerSupport.fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

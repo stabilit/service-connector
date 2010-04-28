@@ -26,6 +26,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+
 @ChannelPipelineCoverage("one")
 public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
@@ -47,6 +49,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 				response = answer.take();
 				break;
 			} catch (InterruptedException e) {
+				ExceptionListenerSupport.fireException(this, e);
 				interrupted = true;
 			}
 		}

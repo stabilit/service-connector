@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
@@ -34,22 +35,20 @@ import com.stabilit.sc.common.scmp.SCMPPart;
 public class SCMPComposite extends SCMP {
 
 	private List<SCMP> scmpList;
-	private SCMPPart partRequest;
+	private SCMP partRequest;
 	private SCMPFault scmpFault;
 	private int scmpOffset;
 	private ByteArrayOutputStream os;
 	private StringWriter w;
 
-	public SCMPComposite(SCMP request, SCMPPart scmpPart) {
+	public SCMPComposite(SCMP request, SCMP scmpPart) {
 		this.os = null;
 		this.w = null;
 		this.scmpOffset = 0;
 		this.scmpFault = null;
 		scmpList = new ArrayList<SCMP>();
 		partRequest = new SCMPPart();
-		String messageId = scmpPart.getPartId();
 		partRequest.setMessageType(request.getMessageType());
-		partRequest.setPartId(messageId);
 		partRequest.setSessionId(request.getSessionId());
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set service name if
 																				// any
@@ -79,7 +78,6 @@ public class SCMPComposite extends SCMP {
 		this.scmpList.add(scmp);
 		if (scmp.isPart() == false) {
 			this.setHeader(scmp.getHeader());
-			this.removeHeader(SCMPHeaderAttributeKey.PART_ID);
 			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, getBodyLength());
 		}
 	}
@@ -142,6 +140,7 @@ public class SCMPComposite extends SCMP {
 				}
 				this.os.flush();
 			} catch (Exception e) {
+				ExceptionListenerSupport.fireException(this, e);
 				return null;
 			}
 			this.os.toByteArray();
@@ -158,6 +157,7 @@ public class SCMPComposite extends SCMP {
 				}
 				this.w.flush();
 			} catch (Exception e) {
+				ExceptionListenerSupport.fireException(this, e);
 				return null;
 			}
 			return this.w.toString();
@@ -170,7 +170,7 @@ public class SCMPComposite extends SCMP {
 		return partRequest.getMessageType();
 	}
 
-	public SCMPPart getPartRequest() {
+	public SCMP getPartRequest() {
 		return partRequest;
 	}
 

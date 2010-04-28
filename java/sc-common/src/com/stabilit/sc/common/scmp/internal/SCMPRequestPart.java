@@ -19,7 +19,6 @@ package com.stabilit.sc.common.scmp.internal;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPPart;
-import com.stabilit.sc.common.scmp.SCMPPartID;
 
 /**
  * @author JTraber
@@ -38,12 +37,6 @@ public class SCMPRequestPart extends SCMPPart {
 				: SCMP.LARGE_MESSAGE_LIMIT;
 		this.setHeader(scmp);
 		this.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, scmp.getBodyLength());
-		String partIdString = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-		if (partIdString != null) {
-			this.setPartId(partIdString);
-		} else {
-			this.setPartId(SCMPPartID.getNextAsString());
-		}
 		this.setBody(scmp.getBody());
 	}
 
@@ -59,14 +52,6 @@ public class SCMPRequestPart extends SCMPPart {
 
 	public int getBodyOffset() {
 		return offset;
-	}
-
-	public void setPartId(String messageId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-	}
-
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);
 	}
 
 	@Override

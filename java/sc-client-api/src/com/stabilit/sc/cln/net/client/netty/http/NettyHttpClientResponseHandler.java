@@ -26,6 +26,8 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+
 /**
  * @author JTraber
  * 
@@ -49,6 +51,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 				responseMessage = answer.take();
 				break;
 			} catch (InterruptedException e) {
+				ExceptionListenerSupport.fireException(this, e);
 				interrupted = true;
 			}
 		}

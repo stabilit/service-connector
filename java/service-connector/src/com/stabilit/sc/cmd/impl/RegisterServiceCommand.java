@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.ctx.IRequestContext;
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -122,6 +123,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				portNr = ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {
+				ExceptionListenerSupport.fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

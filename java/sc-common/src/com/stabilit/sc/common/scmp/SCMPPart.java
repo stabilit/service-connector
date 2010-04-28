@@ -25,35 +25,15 @@ import java.util.Map;
 public class SCMPPart extends SCMP {
 	
 	private static final long serialVersionUID = -3379254138164380850L;
-	private boolean isReply;
-
+	
 	public SCMPPart() {
-		super();
-		isReply = false;
 	}
-
+	
 	public SCMPPart(Map<String, String> map) {
 		this.header = map;
 	}
 
 	public boolean isPart() {
 		return true;
-	}
-	
-	public void setPartId(String messageId) {
-		this.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
-	}
-	
-	public String getPartId() {
-		return this.getHeader(SCMPHeaderAttributeKey.PART_ID);		
-	}
-
-	@Override
-	public boolean isReply() {
-		return isReply;
-	}
-	
-	public void setIsReply(boolean isReply) {
-		this.isReply = isReply;
 	}
 }

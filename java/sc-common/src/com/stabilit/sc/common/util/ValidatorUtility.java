@@ -123,6 +123,7 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
+			//TODO ExceptionListenerSupport.fireException(this, ex);
 			throw new ValidationException("intValue must be numeric.");
 		}
 
@@ -141,6 +142,7 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
+			//TODO ExceptionListenerSupport.fireException(this, ex);
 			throw new ValidationException("intValue must be numeric.");
 		}
 

@@ -22,6 +22,7 @@ import java.net.SocketAddress;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.util.MapBean;
@@ -63,6 +64,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 		try {
 			client.connect();
 		} catch (ConnectionException e) {
+			ExceptionListenerSupport.fireException(this, e);
 			e.printStackTrace();
 		}
 		try {
@@ -71,6 +73,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 			createSessionCall.setHeader(scmp.getHeader());
 			createSessionCall.invoke();
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			e.printStackTrace();
 		}
 	}

@@ -25,6 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.common.net.nio.NioTcpRequest;
 import com.stabilit.sc.common.net.nio.NioTcpResponse;
@@ -32,6 +33,8 @@ import com.stabilit.sc.common.scmp.IFaultResponse;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessageID;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -49,7 +52,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	// The host:port combination to listen on
 	private String host;
 	private int port;
-
+	private SCMPMessageID msgID;
 	// The channel on which we'll accept connections
 	private ServerSocketChannel serverChannel;
 
@@ -62,6 +65,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	public NioTcpServer(String host, int port) throws IOException {
 		this.host = host;
 		this.port = port;
+		this.msgID = new SCMPMessageID();
 	}
 
 	@Override
@@ -75,6 +79,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 			InetSocketAddress isa = new InetSocketAddress(this.host, this.port);
 			serverChannel.socket().bind(isa);
 		} catch (IOException e) {
+			ExceptionListenerSupport.fireException(this, e);
 			e.printStackTrace();
 		}
 	}
@@ -92,6 +97,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 				socketChannel = serverChannel.accept();
 				pool.execute(new RequestThread(socketChannel));
 			} catch (IOException e) {
+				ExceptionListenerSupport.fireException(this, e);
 				e.printStackTrace();
 			}
 		}
@@ -137,47 +143,53 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 			try {
 				ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 				serverRegistry.add(this.socketChannel, new ServerRegistryItem(NioTcpServer.this.server));
-				serverRegistry.setThreadLocal(this.socketChannel);
+				serverRegistry.setThreadLocal(this.socketChannel);				
 				while (true) {
 					NioTcpRequest request = new NioTcpRequest(socketChannel);
 					NioTcpResponse response = new NioTcpResponse(socketChannel);
 					NioCommandRequest commandRequest = new NioCommandRequest(request, response);
+					SCMP scmpReq = request.getSCMP();
 					if (scmpResponseComposite != null) {
 						if (scmpResponseComposite.hasNext()) {
 							commandRequest.readRequest();
 							SCMP nextSCMP = scmpResponseComposite.getNext();
+							nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+							msgID.incrementPartSequenceNr();
 							response.setSCMP(nextSCMP);
-						    response.write();
+							response.write();
 							if (scmpResponseComposite.hasNext() == false) {
 								scmpResponseComposite = null;
 							}
-						    continue;
+							continue;
 						}
 						scmpResponseComposite = null;
 					}
 					ICommand command = commandRequest.readCommand();
 					try {
 						if (command == null) {
-							SCMP scmpReq = request.getSCMP();                    				
 							SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 							scmpFault.setMessageType(scmpReq.getMessageType());
 							scmpFault.setLocalDateTime();
 							response.setSCMP(scmpFault);
+							scmpFault.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+							msgID.incrementMsgSequenceNr();
 							response.write();
 							return;
 						}
-						
+
 						ICommandValidator commandValidator = command.getCommandValidator();
 						try {
 							commandValidator.validate(request);
 							command.run(request, response);
 						} catch (Exception ex) {
+							ExceptionListenerSupport.fireException(this, ex);
 							if (ex instanceof IFaultResponse) {
 								((IFaultResponse) ex).setFaultResponse(response);
 							}
 						}
 						// TODO error handling immer antworten?
 					} catch (Exception ex) {
+						ExceptionListenerSupport.fireException(this, ex);
 						if (NioTcpDisconnectException.class == ex.getClass()) {
 							throw ex;
 						}
@@ -191,14 +203,25 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 						scmpResponseComposite = new SCMPLargeResponse(response);
 						SCMP firstSCMP = scmpResponseComposite.getFirst();
 						response.setSCMP(firstSCMP);
+					} else {
+						SCMP scmp = response.getSCMP();
+						if (scmp.isPart() || scmpReq.isPart()) {
+							msgID.incrementPartSequenceNr();
+							scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+						} else {
+							scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+							msgID.incrementMsgSequenceNr();
+						}
 					}
 					response.write();
 				}
 
 			} catch (Throwable e) {
+				ExceptionListenerSupport.fireException(this, e);
 				try {
 					socketChannel.close();
 				} catch (IOException ex) {
+					ExceptionListenerSupport.fireException(this, ex);
 				}
 			}
 		}

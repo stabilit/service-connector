@@ -28,7 +28,7 @@ public class SCMPMessageID {
 	private StringBuilder sb;
 
 	public SCMPMessageID() {
-		this.msgSequenceNr = 0;
+		this.msgSequenceNr = 1;
 		this.partSequenceNr = 0;
 		this.sb = null;
 	}
@@ -70,6 +70,7 @@ public class SCMPMessageID {
 	}
 	
 	public void incrementMsgSequenceNr() {
+		partSequenceNr = 0;
 		msgSequenceNr++;
 	}
 

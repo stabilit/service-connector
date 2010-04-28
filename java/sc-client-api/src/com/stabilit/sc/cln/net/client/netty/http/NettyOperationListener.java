@@ -22,6 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+
 /**
  * @author JTraber
  *
@@ -39,6 +41,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 				response = answer.take();
 				break;
 			} catch (InterruptedException e) {
+				ExceptionListenerSupport.fireException(this, e);
 				interrupted = true;
 			}
 		}

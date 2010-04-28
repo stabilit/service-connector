@@ -23,6 +23,7 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -99,6 +100,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
 			//TODO aufräumen
+			ExceptionListenerSupport.fireException(this, e);
 			log.debug("command error: fatal error when command runs");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -134,6 +136,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
+				ExceptionListenerSupport.fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

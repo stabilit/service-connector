@@ -19,7 +19,6 @@ package com.stabilit.sc.srv.net.server.nio;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPPart;
 import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -62,12 +61,10 @@ public class NioCommandRequest {
 		SCMPComposite scmpComposite = null;
 		while (scmp.isPart()) {
 			if (scmpComposite == null) {
-				scmpComposite = new SCMPComposite(scmp, (SCMPPart) scmp);
+				scmpComposite = new SCMPComposite(scmp, (SCMP) scmp);
 			}
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			SCMPPart scmpReply = new SCMPPart();
+			SCMP scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
 			response.write();

@@ -24,6 +24,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.srv.server.ServerConnectionAdapter;
@@ -82,6 +83,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		try {
 			runSync();
 		} catch (InterruptedException e) {
+			ExceptionListenerSupport.fireException(this, e);
 			// TODO
 			e.printStackTrace();
 		}

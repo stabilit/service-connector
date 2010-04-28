@@ -19,7 +19,6 @@ package com.stabilit.sc.srv.net.server.netty;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPPart;
 import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -66,7 +65,7 @@ public class NettyCommandRequest {
 			if (scmp.isPart() == false) {
 				return command;
 			}
-			scmpComposite = new SCMPComposite(scmp, (SCMPPart) scmp);
+			scmpComposite = new SCMPComposite(scmp, (SCMP) scmp);
 		} else {
 			scmpComposite.add(scmp);
 		}
@@ -74,10 +73,8 @@ public class NettyCommandRequest {
 		// request is part of a chunked message
 		if (scmp.isPart()) {
 			complete = false;
-			String messageId = scmp.getHeader(SCMPHeaderAttributeKey.PART_ID);
-			SCMPPart scmpReply = new SCMPPart();
+			SCMP scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.PART_ID, messageId);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
 		} else { // last request of a chunked message

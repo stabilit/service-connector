@@ -38,6 +38,7 @@ import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.SCMP;
 
@@ -79,6 +80,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 				throw new ConnectionException("Connection could not be established.", e);
 			}
 		} catch (ChannelPipelineException e) {
+			ExceptionListenerSupport.fireException(this, e);
 			throw new ConnectionException("Connection could not be established.", e);
 		}
 	}

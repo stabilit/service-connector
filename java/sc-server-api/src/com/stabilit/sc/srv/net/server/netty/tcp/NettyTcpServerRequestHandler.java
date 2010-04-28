@@ -26,6 +26,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.net.netty.NettyTcpRequest;
 import com.stabilit.sc.common.net.netty.NettyTcpResponse;
 import com.stabilit.sc.common.scmp.IFaultResponse;
@@ -33,6 +34,8 @@ import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessageID;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeResponse;
 import com.stabilit.sc.common.util.Lock;
@@ -54,6 +57,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	private NettyCommandRequest commandRequest = null;
 	private SCMPLargeResponse scmpResponseComposite = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
+	private SCMPMessageID msgID;
 
 	private Lockable<Object> commandRequestLock = new LockAdapter<Object>() {
 
@@ -68,17 +72,23 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 	};
 
+	public NettyTcpServerRequestHandler() {
+		msgID = new SCMPMessageID();
+	}
+
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
 		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
 		IRequest request = new NettyTcpRequest(event, socketAddress);
 		SCMP scmpReq = request.getSCMP();
-		
+
 		if (this.scmpResponseComposite != null && scmpReq.isPart()) {
 			if (this.scmpResponseComposite.hasNext()) {
 				SCMP nextSCMP = this.scmpResponseComposite.getNext();
 				response.setSCMP(nextSCMP);
+				msgID.incrementPartSequenceNr();
+				nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 				response.write();
 				if (this.scmpResponseComposite.hasNext() == false) {
 					this.scmpResponseComposite = null;
@@ -95,6 +105,9 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			lock.runLocked(commandRequestLock); // init commandRequest if not set
 			ICommand command = this.commandRequest.readCommand(request, response);
 			if (commandRequest.isComplete() == false) {
+				SCMP scmp = response.getSCMP();
+				msgID.incrementPartSequenceNr();
+				scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 				response.write();
 				return;
 			}
@@ -104,6 +117,8 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
+				scmpFault.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+				msgID.incrementMsgSequenceNr();
 				response.write();
 				return;
 			}
@@ -112,13 +127,15 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			try {
 				commandValidator.validate(request);
 				command.run(request, response);
-			} catch (Throwable ex) {
+			} catch (Exception  ex) {
+				ExceptionListenerSupport.fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				}
 			}
 			// TODO error handling immer antworten?
 		} catch (Throwable th) {
+			ExceptionListenerSupport.fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 			scmpFault.setLocalDateTime();
@@ -129,6 +146,17 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			this.scmpResponseComposite = new SCMPLargeResponse(response);
 			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
 			response.setSCMP(firstSCMP);
+			msgID.incrementPartSequenceNr();
+			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+		} else {
+			SCMP scmp = response.getSCMP();
+			if (scmp.isPart() || scmpReq.isPart()) {			
+				msgID.incrementPartSequenceNr();
+				scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			} else {
+				scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+				msgID.incrementMsgSequenceNr();
+			}
 		}
 		response.write();
 		commandRequest = null;

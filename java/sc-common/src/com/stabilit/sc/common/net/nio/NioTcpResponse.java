@@ -57,6 +57,7 @@ public class NioTcpResponse extends ResponseAdapter {
 		if (scmp == null) {
 			return;
 		}
+		scmp.setIsReply(true);
 		this.scmp = scmp;
 	}
 

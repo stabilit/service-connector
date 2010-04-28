@@ -23,6 +23,7 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -83,6 +84,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		try {
 			serviceRegistryItem.srvDeleteSession(scmp);
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			log.debug("command error: deallocating failed for scmp: " + scmp);
 		}
 
@@ -122,6 +124,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 					throw new ValidationException("session does not exists!");
 				}
 			} catch (Throwable e) {
+				ExceptionListenerSupport.fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

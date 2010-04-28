@@ -18,6 +18,8 @@ package com.stabilit.sc.common.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+
 /**
  * @author JTraber
  * 
@@ -35,6 +37,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run();
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -46,6 +49,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(object);
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -57,6 +61,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(obj1, obj2);
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -68,6 +73,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(obj1, obj2, obj3);
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -79,6 +85,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(params);
 		} catch (Exception e) {
+			ExceptionListenerSupport.fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
