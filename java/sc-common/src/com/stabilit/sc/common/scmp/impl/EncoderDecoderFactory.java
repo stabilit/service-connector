@@ -14,12 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp;
+package com.stabilit.sc.common.scmp.impl;
 
 import com.stabilit.sc.common.factory.Factory;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.impl.DefaultEncoderDecoder;
-import com.stabilit.sc.common.scmp.impl.LargeMessageEncoderDecoder;
+import com.stabilit.sc.common.scmp.SCMP;
 
 public class EncoderDecoderFactory extends Factory {
 
@@ -77,5 +76,4 @@ public class EncoderDecoderFactory extends Factory {
 	public Object[] getEncoderDecoders() {
 		return this.factoryMap.keySet().toArray();
 	}
-
 }

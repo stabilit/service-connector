@@ -14,37 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.net;
+package com.stabilit.sc.common.scmp.impl;
 
-import com.stabilit.sc.common.factory.Factory;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.regex.Pattern;
 
+import com.stabilit.sc.common.factory.IFactoryable;
 
-/**
- * @author JTraber
- *
- */
-public class FrameDecoderFactory extends Factory {
+public interface IEncoderDecoder extends IFactoryable {
 
-	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
-	
-	public static FrameDecoderFactory getCurrentInstance() {
-		return decoderFactory;
-	}
-	
-	private FrameDecoderFactory() {
-		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add("default", frameDecoder);
-		frameDecoder = new HttpFrameDecoder();
-		this.add("http", frameDecoder);
-	}
+	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
+	public static final String ESCAPED_EQUAL_SIGN = "\\=";
+	public static final String EQUAL_SIGN = "=";
+	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
+	public static final Pattern DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
 
-	public static IFrameDecoder getDefaultFrameDecoder()
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance("default");
-	}
+	public void encode(OutputStream os, Object obj) throws EncodingDecodingException;
 
-	public static IFrameDecoder getFrameDecoder(String key)
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance(key);
-	}	
+	public Object decode(InputStream is) throws EncodingDecodingException;
 }

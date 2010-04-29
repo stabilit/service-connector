@@ -39,8 +39,8 @@ import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
 
 public class NettyHttpClientConnection extends ClientConnectionAdapter {
 

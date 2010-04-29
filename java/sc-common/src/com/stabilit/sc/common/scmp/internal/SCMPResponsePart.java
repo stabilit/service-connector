@@ -17,7 +17,6 @@
 package com.stabilit.sc.common.scmp.internal;
 
 import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPPart;
 
 /**
@@ -36,7 +35,6 @@ public class SCMPResponsePart extends SCMPPart {
 		this.size = this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
 				: SCMP.LARGE_MESSAGE_LIMIT;
 		this.setHeader(scmp);
-		this.setHeader(SCMPHeaderAttributeKey.SCMP_CALL_LENGTH, scmp.getBodyLength());
 		this.setBody(scmp.getBody());
 	}
 

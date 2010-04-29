@@ -19,7 +19,6 @@ package com.stabilit.sc.common.scmp.internal;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
 
-
 /**
  * @author JTraber
  * 
@@ -30,32 +29,39 @@ public class SCMPLargeResponse extends SCMP {
 	private int offset;
 	private int scmpCallLength;
 	private SCMP current;
-	
+
 	public SCMPLargeResponse(IResponse response) {
 		this.scmp = response.getSCMP();
 		this.scmpCallLength = this.scmp.getBodyLength();
 		this.offset = 0;
 		this.current = null;
 	}
-	
+
+	public SCMPLargeResponse(SCMP scmp) {
+		this.scmp = scmp;
+		this.scmpCallLength = this.scmp.getBodyLength();
+		this.offset = 0;
+		this.current = null;
+	}
+
 	public SCMP getFirst() {
 		this.offset = 0;
 		this.current = new SCMPResponsePart(scmp, this.offset);
-		this.offset += current.getBodyLength();		
+		this.offset += current.getBodyLength();
 		return this.current;
 	}
-	
+
 	public boolean hasNext() {
-        return this.offset < this.scmpCallLength;		
+		return this.offset < this.scmpCallLength;
 	}
-	
+
 	public SCMP getNext() {
-	    if (this.hasNext()) {
-			this.current = new SCMPResponsePart(scmp, this.offset);			    
+		if (this.hasNext()) {
+			this.current = new SCMPResponsePart(scmp, this.offset);
 			this.offset += current.getBodyLength();
 			return this.current;
-	    }
-	    this.current = null;
-	    return this.current;
-	}			
+		}
+		this.current = null;
+		return this.current;
+	}
 }

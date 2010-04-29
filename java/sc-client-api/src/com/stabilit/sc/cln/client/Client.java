@@ -19,11 +19,11 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMessageID;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeRequest;
 

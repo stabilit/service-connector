@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.scmp;
 
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
+
 
 public interface IResponse {
 

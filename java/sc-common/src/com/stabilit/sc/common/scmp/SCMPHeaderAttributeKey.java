@@ -48,7 +48,6 @@ public enum SCMPHeaderAttributeKey {
 	SESSION_INFO("sessionInfo"),
 	TRANSITIVE("transitive"),
 	MESSAGE_ID("messageID"),
-	SCMP_CALL_LENGTH("scmpCallLength"),
 	BODY_TYPE("bodyType"),
 	MAX_NODES("maxNodes"); 
 	

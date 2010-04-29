@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,25 +14,32 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.common.test;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.regex.Pattern;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.impl.EncodingDecodingException;
+import com.stabilit.sc.common.net.DefaultFrameDecoderTest;
+import com.stabilit.sc.common.net.HttpFrameDecoderTest;
+import com.stabilit.sc.common.scmp.internal.SCMPCompositeTest;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeRequestTest;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeResponseTest;
 
-public interface IEncoderDecoder extends IFactoryable {
-
-	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
-	public static final String ESCAPED_EQUAL_SIGN = "\\=";
-	public static final String EQUAL_SIGN = "=";
-	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
-	public static final Pattern DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
-
-	public void encode(OutputStream os, Object obj) throws EncodingDecodingException;
-
-	public Object decode(InputStream is) throws EncodingDecodingException;
+/**
+ * @author JTraber
+ * 
+ */
+@RunWith(Suite.class)
+@SuiteClasses( { DefaultFrameDecoderTest.class,
+				 HttpFrameDecoderTest.class,
+				 SCMPCompositeTest.class,
+				 SCMPLargeRequestTest.class,
+				 SCMPLargeResponseTest.class})
+public class CommonTest {
 }

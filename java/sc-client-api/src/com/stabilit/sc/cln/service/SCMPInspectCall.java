@@ -16,7 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.service;
 
+import java.net.InetAddress;
+
 import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 /**
@@ -27,6 +31,13 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 
 	public SCMPInspectCall() {
 		this(null);
+	}
+	
+	@Override
+	public SCMP invoke() throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		return super.invoke();
 	}
 
 	public SCMPInspectCall(IClient client) {

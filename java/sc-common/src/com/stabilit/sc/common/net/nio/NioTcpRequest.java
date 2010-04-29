@@ -26,10 +26,10 @@ import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.RequestAdapter;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NioTcpRequest extends RequestAdapter {

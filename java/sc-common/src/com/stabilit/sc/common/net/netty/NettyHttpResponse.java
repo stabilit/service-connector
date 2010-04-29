@@ -31,10 +31,10 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.ResponseAdapter;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 
 public class NettyHttpResponse extends ResponseAdapter {
 

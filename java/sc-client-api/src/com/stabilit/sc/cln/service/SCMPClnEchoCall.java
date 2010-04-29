@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.service;
 
+import java.net.InetAddress;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
@@ -40,6 +41,8 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 
 	@Override
 	public SCMP invoke() throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		this.call.setMessageType(getMessageType().getRequestName());
 		this.result = client.sendAndReceive(this.call);
 		if (this.result.isFault()) {

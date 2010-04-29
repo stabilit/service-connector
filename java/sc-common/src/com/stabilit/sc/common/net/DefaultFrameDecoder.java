@@ -25,25 +25,25 @@ import com.stabilit.sc.common.scmp.SCMPHeadlineKey;
  */
 public class DefaultFrameDecoder implements IFrameDecoder {
 
-	public DefaultFrameDecoder() {
+	protected DefaultFrameDecoder() {
 	}
-	
+
 	@Override
-	public IFactoryable newInstance() {	
-		return this;  //singleton
+	public IFactoryable newInstance() {
+		return this; // singleton
 	}
-	
+
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
+		if (buffer == null || buffer.length <= 0) {
+			throw new FrameDecoderException("invalid scmp header line");
+		}
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		int scmpHeadlineLength = 0;
 		int scmpLength = 0;
-
 		int readableBytes = buffer.length;
-		if (readableBytes == 0) {
-			return 0;
-		}
+
 		for (int i = 0; i < readableBytes; i++) {
 			byte b = buffer[i];
 			if (b == '\n') {

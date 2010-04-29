@@ -78,9 +78,5 @@ public final class SCMPSessionRegistry extends Registry {
         if (serviceNameList != null) {
         	serviceNameList.remove(sessionId);
         }
-	}
-	
-	
-	
-	
+	}	
 }

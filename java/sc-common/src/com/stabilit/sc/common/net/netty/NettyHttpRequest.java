@@ -24,10 +24,10 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.common.ctx.RequestContext;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.RequestAdapter;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 import com.stabilit.sc.common.util.MapBean;
 
 public class NettyHttpRequest extends RequestAdapter {

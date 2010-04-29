@@ -24,10 +24,10 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 import com.stabilit.sc.common.net.nio.NioHttpException;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 
 public class SCMPStreamHttpUtil {
 

@@ -28,26 +28,31 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 	static final byte LF = 10;
 	static final byte[] CRLF = new byte[] { CR, LF };
 
-	public HttpFrameDecoder() {
+	protected HttpFrameDecoder() {
 	}
 
 	@Override
 	public IFactoryable newInstance() {
-		return new HttpFrameDecoder();
+		return this;
 	}
 
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
+
+		if (buffer == null || buffer.length <= 0) {
+			throw new FrameDecoderException("invalid scmp header line");
+		}
 
 		int sizeStart = 0;
 		int sizeEnd = 0;
 		int headerEnd = 0;
 		int bytesRead = buffer.length;
 
-		label: for (int i = 0; i < bytesRead; i++) {
+		//(bytesRead - 3) avoids IndexOutOfBoundException
+		label: for (int i = 0; i < (bytesRead - 3); i++) {
 			if (buffer[i] == CR && buffer[i + 1] == LF) {
 				i += 2;
- 				if (buffer[i] == CR && buffer[i + 1] == LF) {
+				if (buffer[i] == CR && buffer[i + 1] == LF) {
 					headerEnd = i + 2;
 					break label;
 				}

@@ -14,37 +14,24 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.net;
+package com.stabilit.sc.cln.io;
 
-import com.stabilit.sc.common.factory.Factory;
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 
 
 /**
  * @author JTraber
  *
  */
-public class FrameDecoderFactory extends Factory {
+public class SCMPSessionRegistryTest {
 
-	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
-	
-	public static FrameDecoderFactory getCurrentInstance() {
-		return decoderFactory;
+	@Test
+	public void singeltonTest() {
+		SCMPSessionRegistry sessReg1 = SCMPSessionRegistry.getCurrentInstance();
+		SCMPSessionRegistry sessReg2 = SCMPSessionRegistry.getCurrentInstance();
+		Assert.assertEquals(sessReg1, sessReg2);
 	}
-	
-	private FrameDecoderFactory() {
-		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add("default", frameDecoder);
-		frameDecoder = new HttpFrameDecoder();
-		this.add("http", frameDecoder);
-	}
-
-	public static IFrameDecoder getDefaultFrameDecoder()
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance("default");
-	}
-
-	public static IFrameDecoder getFrameDecoder(String key)
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance(key);
-	}	
 }

@@ -31,7 +31,6 @@ import java.util.regex.Matcher;
 
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
-import com.stabilit.sc.common.scmp.IEncoderDecoder;
 import com.stabilit.sc.common.scmp.IInternalMessage;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
@@ -42,7 +41,7 @@ import com.stabilit.sc.common.scmp.SCMPInternalStatus;
 
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
-	public DefaultEncoderDecoder() {
+	DefaultEncoderDecoder() {
 	}
 
 	@Override

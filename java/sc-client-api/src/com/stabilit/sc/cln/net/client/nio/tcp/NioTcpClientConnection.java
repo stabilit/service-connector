@@ -28,8 +28,8 @@ import com.stabilit.sc.common.listener.ConnectionListenerSupport;
 import com.stabilit.sc.common.net.FrameDecoderFactory;
 import com.stabilit.sc.common.net.IFrameDecoder;
 import com.stabilit.sc.common.net.nio.NioTcpException;
-import com.stabilit.sc.common.scmp.EncoderDecoderFactory;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
 
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 

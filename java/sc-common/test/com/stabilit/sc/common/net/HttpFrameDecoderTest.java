@@ -16,35 +16,38 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.net;
 
-import com.stabilit.sc.common.factory.Factory;
+import org.junit.Assert;
+import org.junit.Test;
 
+import com.stabilit.sc.common.factory.IFactoryable;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public class FrameDecoderFactory extends Factory {
+public class HttpFrameDecoderTest {
 
-	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
-	
-	public static FrameDecoderFactory getCurrentInstance() {
-		return decoderFactory;
-	}
-	
-	private FrameDecoderFactory() {
-		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add("default", frameDecoder);
-		frameDecoder = new HttpFrameDecoder();
-		this.add("http", frameDecoder);
+	private HttpFrameDecoder decoder = new HttpFrameDecoder();
+
+	@Test
+	public void singeltonTest() {
+		IFactoryable decoder2 = decoder.newInstance();
+		Assert.assertEquals(decoder, decoder2);
 	}
 
-	public static IFrameDecoder getDefaultFrameDecoder()
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance("default");
-	}
+	@Test
+	public void parseFrameSizeTest() {
+		String httpHeader = "POST / HTTP/1.1\r\n" + "Host: www.google.com\r\n" + "Connection: close\r\n"
+				+ "User-Agent: Web-sniffer/1.0.31 (+http://web-sniffer.net/)\r\n"
+				+ "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n" + "Cache-Control: no\r\n"
+				+ "Accept-Language: de,en;q=0.7,en-us;q=0.3\r\n" + "Referer: http://web-sniffer.net/\r\n"
+				+ "Content-type: application/x-www-form-urlencoded\r\n" + "Content-Length: 122\r\n";
 
-	public static IFrameDecoder getFrameDecoder(String key)
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance(key);
-	}	
+		try {
+			int frameSize = decoder.parseFrameSize(httpHeader.getBytes());
+			Assert.assertEquals("122", frameSize + "");
+		} catch (FrameDecoderException e) {
+			Assert.fail("Should not throw Exception");
+		}
+	}
 }

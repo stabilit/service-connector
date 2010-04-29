@@ -50,11 +50,9 @@ public class SCMPComposite extends SCMP {
 		partRequest = new SCMPPart();
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setSessionId(request.getSessionId());
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set service name if
-																				// any
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name if
-																				// any
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes if any
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
+		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
+		partRequest.setHeader(scmpPart, SCMPHeaderAttributeKey.BODY_TYPE); //tries to set bodyType
 		this.add(scmpPart);
 	}
 
