@@ -36,7 +36,7 @@ public class ValidatorUtility {
 
 	// TODO validation rules are wrong at this time!
 	public static void validateSCVersion(String currenSCVersion, String incomingSCVersion)
-			throws ValidationExcpetion {
+			throws ValidationException {
 		Pattern pattern = Pattern.compile(SC_VERSION_REGEX);
 
 		Matcher matchCurr = pattern.matcher(currenSCVersion);
@@ -53,10 +53,10 @@ public class ValidatorUtility {
 
 		if (incReleaseAndVersionNr <= currReleaseAndVersionNr) {
 			if (incReleaseAndVersionNr == currReleaseAndVersionNr && incRevisionNr > currRevisionNr) {
-				throw new ValidationExcpetion("SCVersion not compatible.");
+				throw new ValidationException("SCVersion not compatible.");
 			}
 		} else {
-			throw new ValidationExcpetion("SCVersion not compatible.");
+			throw new ValidationException("SCVersion not compatible.");
 		}
 	}
 

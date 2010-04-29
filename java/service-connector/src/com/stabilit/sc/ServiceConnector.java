@@ -23,7 +23,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.SessionRegistry;
