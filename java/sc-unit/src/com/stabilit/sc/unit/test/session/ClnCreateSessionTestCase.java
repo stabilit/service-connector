@@ -31,11 +31,12 @@ import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.sim.Simulation;
+import com.stabilit.sc.sim.server.SimluationServer;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
-
-public class ClnCreateSessionTestCase extends SuperConnectTestCase{
+public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
 	/**
 	 * @param fileName
@@ -78,8 +79,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase{
 		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
-				.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
 		SCMP inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
@@ -87,8 +87,22 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase{
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
-		
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(client, scmpSession);
+
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
 		deleteSessionCall.invoke();
+	}
+	
+	public void clnCreateSessionLooseSimluationServer() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(client);
+
+		createSessionCall.setServiceName("simulation");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		scmpSession = createSessionCall.invoke();
+		
+		Simulation.simulationThreads.get(0).stop();
+		Simulation.simulationThreads.remove(0);
+		//TODO where dies client in SC realize that he lost connection to server ???
 	}
 }

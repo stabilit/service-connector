@@ -38,21 +38,17 @@ public class DefaultFrameDecoderTest {
 	@Test
 	public void parseFrameSizeFailTest() {
 		try {
-			decoder.parseFrameSize(null);
-			Assert.fail("Should throw Exception!");
+			int frameSize = decoder.parseFrameSize(null);
+			Assert.assertEquals("0", frameSize + "");
+			frameSize = decoder.parseFrameSize(new byte[0]);
+			Assert.assertEquals("0", frameSize + "");
 		} catch (FrameDecoderException e) {
-		}
-
-		byte[] b = new byte[0];
-		try {
-			decoder.parseFrameSize(b);
-			Assert.fail("Should throw Exception!");
-		} catch (FrameDecoderException e) {
+			Assert.fail("Should not throw Exception!");
 		}
 
 		String headline = "REQ /=87& SCMP/1.0";
 		try {
-			b = headline.getBytes();
+			byte[] b = headline.getBytes();
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (FrameDecoderException e) {

@@ -37,7 +37,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
 		if (buffer == null || buffer.length <= 0) {
-			throw new FrameDecoderException("invalid scmp header line");
+			return 0; //don't throw exception it is the case if client disconnects 
 		}
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		int scmpHeadlineLength = 0;

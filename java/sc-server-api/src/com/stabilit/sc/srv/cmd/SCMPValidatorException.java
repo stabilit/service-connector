@@ -22,6 +22,7 @@ import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.common.util.ValidatorException;
 
 /**
  * @author JTraber

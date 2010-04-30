@@ -17,6 +17,7 @@
 package com.stabilit.sc.sim;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.stabilit.sc.cln.config.ClientConfig;
@@ -30,9 +31,18 @@ import com.stabilit.sc.srv.server.IServer;
 import com.stabilit.sc.srv.server.ServerFactory;
 
 public class Simulation {
+	
+	public static List<Thread> simulationThreads;
 
-	public static void main(String[] args) throws IOException {
+ 	public static void main(String[] args) throws IOException {
+		if (args != null && new String(args[0]).equals("test")) {
+			runForTest();
+		} else {
+			run();
+		}
+	}
 
+	private static void run() throws IOException {
 		ServerConfig srvConfig = new ServerConfig();
 		srvConfig.load("sc-sim.properties");
 		ClientConfig clientConfig = new ClientConfig();
@@ -57,12 +67,29 @@ public class Simulation {
 		}
 	}
 
-	/**
-	 * @throws IOException
-	 * 
-	 */
-	public static Process startup() throws IOException {
-		Process process = Runtime.getRuntime().exec("java ch.stabilit.sc.sim.Simluation");
-		return process;
+	private static void runForTest() throws IOException {
+		ServerConfig srvConfig = new ServerConfig();
+		srvConfig.load("sc-sim.properties");
+		ClientConfig clientConfig = new ClientConfig();
+		clientConfig.load("sc-sim.properties");
+		simulationThreads = new ArrayList<Thread>();
+
+		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
+		if (commandFactory == null) {
+			CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
+		}
+		List<ServerConfigItem> serverConfigList = srvConfig.getServerConfigList();
+		ServerFactory serverFactory = new SimluationServerFactory();		
+		for (ServerConfigItem serverConfigItem : serverConfigList) {
+			IServer server = serverFactory.newInstance(serverConfigItem);
+			IServerContext serverContext = server.getServerContext();
+			serverContext.setAttribute(ClientConfig.class.getName(), clientConfig);
+			try {
+				server.create();
+				simulationThreads.add(server.runAsyncForTest());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

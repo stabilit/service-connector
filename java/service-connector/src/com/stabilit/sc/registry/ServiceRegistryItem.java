@@ -65,7 +65,6 @@ public class ServiceRegistryItem extends MapBean<String> {
 			client.connect();
 		} catch (ConnectionException e) {
 			ExceptionListenerSupport.fireException(this, e);
-			e.printStackTrace();
 		}
 		try {
 			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
@@ -74,7 +73,6 @@ public class ServiceRegistryItem extends MapBean<String> {
 			createSessionCall.invoke();
 		} catch (Exception e) {
 			ExceptionListenerSupport.fireException(this, e);
-			e.printStackTrace();
 		}
 	}
 

@@ -27,7 +27,6 @@ import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.unit.UnitCommandFactory;
 
-
 /**
  * @author JTraber
  * 
@@ -38,7 +37,7 @@ public class SetupTestCases {
 
 	private SetupTestCases() {
 	}
-	
+
 	public static void init() {
 		deleteLog();
 		// setup loggers
@@ -49,41 +48,40 @@ public class SetupTestCases {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void deleteLog() {
 		File logDir = new File("log");
-		
+
 		for (File file : logDir.listFiles()) {
-			
-			if(file.isFile()) {
-				if(file.getAbsolutePath().endsWith(".log")) {
+			if (file.isFile()) {
+				if (file.getAbsolutePath().endsWith(".log")) {
 					file.delete();
 				}
 			}
 		}
 	}
-	
+
 	public static void setupAll() {
 		if (setupTestCases == null) {
 			init();
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(null);
-				Simulation.main(null);			
+				ServiceConnector.main(new String[] { "test" });
+				Simulation.main(new String[] { "test" });
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public static void setupSC() {
 		if (setupTestCases == null) {
 			init();
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(null);			
+				ServiceConnector.main(new String[] { "test" });
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

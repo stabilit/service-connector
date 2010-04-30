@@ -34,5 +34,7 @@ public interface IServerConnection extends IConnection {
 	public IServer getServer();
 	
 	public void setServer (IServer server);
+
+	public Thread runAsyncForTest();
 		
 }

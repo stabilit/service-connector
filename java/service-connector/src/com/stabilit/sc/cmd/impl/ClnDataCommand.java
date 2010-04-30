@@ -96,8 +96,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				}
 
 				// bodyLength
-				String bodyLengthString = scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
-				String bodyLength = ValidatorUtility.validateInt(1, bodyLengthString);
+				String bodyLength = scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
+				ValidatorUtility.validateInt(1, bodyLength);
 				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), bodyLength);
 
 				// TODO messageId

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Map;
 
 import javax.xml.bind.ValidationException;
@@ -71,8 +73,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
+			String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			SocketAddress socketAddress = request.getSocketAddress();
+			if (socketAddress instanceof InetSocketAddress) {
+				InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+				ipList += inetSocketAddress.getAddress();
+				scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			}		
+			
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
-
 			if (mapBean == null) {
 				log.debug("command error: unknown service requested");
 				SCMPCommandException scmpCommandException = new SCMPCommandException(

@@ -58,8 +58,11 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		Map<String, String> metaMap = new HashMap<String, String>();
 		// read heading line
 		SCMP scmp;
+		int readBytes = 0;
 		try {
 			String line = br.readLine(); // TODO
+			readBytes += line.getBytes().length;
+			readBytes += 1; //read LF
 			if (line == null || line.length() <= 0) {
 				return null;
 			}
@@ -82,6 +85,8 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			
 			while (true) {
 				line = br.readLine(); // TODO
+				readBytes += line.getBytes().length;
+				readBytes += 1; //read LF
 				if (line == null || line.length() <= 0) {
 					break;
 				}
@@ -133,6 +138,8 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			if (scmpBodyTypEnum == SCMPBodyType.binary) {
 				int baLength = Integer.parseInt(scmpBodyLength);
 				byte[] baBuffer = new byte[baLength];
+				is.reset();
+				is.skip(readBytes);
 				is.read(baBuffer);
 				scmp.setBody(baBuffer);
 				return scmp;

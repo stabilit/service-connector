@@ -51,6 +51,11 @@ public abstract class Server implements IServer {
 	public void runAsync() throws Exception {
 		serverConnection.runAsync();
 	}
+	
+	@Override
+	public Thread runAsyncForTest() {
+		return serverConnection.runAsyncForTest();
+	}
 
 	@Override
 	public void runSync() throws Exception {

@@ -27,9 +27,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.stabilit.sc.common.net.DefaultFrameDecoderTest;
 import com.stabilit.sc.common.net.HttpFrameDecoderTest;
+import com.stabilit.sc.common.scmp.impl.LargeMessageEncoderDecoderTest;
 import com.stabilit.sc.common.scmp.internal.SCMPCompositeTest;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeRequestTest;
 import com.stabilit.sc.common.scmp.internal.SCMPLargeResponseTest;
+import com.stabilit.sc.common.util.ValidatorUtilityTest;
 
 /**
  * @author JTraber
@@ -40,6 +42,9 @@ import com.stabilit.sc.common.scmp.internal.SCMPLargeResponseTest;
 				 HttpFrameDecoderTest.class,
 				 SCMPCompositeTest.class,
 				 SCMPLargeRequestTest.class,
-				 SCMPLargeResponseTest.class})
+				 SCMPLargeResponseTest.class,
+				 DefaultFrameDecoderTest.class,
+				 LargeMessageEncoderDecoderTest.class, 
+				 ValidatorUtilityTest.class})
 public class CommonTest {
 }

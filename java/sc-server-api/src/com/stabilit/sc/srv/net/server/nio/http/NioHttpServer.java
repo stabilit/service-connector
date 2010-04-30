@@ -110,6 +110,13 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
+	
+	@Override
+	public Thread runAsyncForTest() {
+		Thread serverThread = new Thread(this);
+		serverThread.start();
+		return serverThread;
+	}
 
 	@Override
 	public void runSync() throws InterruptedException {

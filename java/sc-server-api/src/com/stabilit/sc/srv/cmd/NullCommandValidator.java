@@ -17,6 +17,7 @@
 package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.common.scmp.IRequest;
+import com.stabilit.sc.common.util.ValidatorException;
 
 /**
  * @author JTraber

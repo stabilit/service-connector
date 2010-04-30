@@ -108,7 +108,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 				// maxSessions
 				String maxSessions = (String) scmp.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
-				maxSessions = ValidatorUtility.validateInt(0, maxSessions);
+				ValidatorUtility.validateInt(0, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
 
 				// multiThreaded default = false
@@ -120,7 +120,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 				// portNr
 				String portNr = (String) scmp.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-				portNr = ValidatorUtility.validateInt(1, portNr, 99999);
+				ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.fireException(this, e);

@@ -25,10 +25,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.sim.Simulation;
 
 /**
  * @author JTraber
@@ -80,5 +82,7 @@ public abstract class SuperTestCase {
 		client.destroy();
 		ConnectionListenerSupport.getInstance().clearAll();
 		client = null;
+		Simulation.simulationThreads.clear();
+		ServiceConnector.SCThreads.clear();
 	}
 }

@@ -20,41 +20,86 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author JTraber
+ * The Class MapBean, abstracts the java map construct.
  * 
+ * @author JTraber
  */
 public class MapBean<T> {
 
+	/** The attr map. */
 	protected Map<String, T> attrMap;
 
+	/**
+	 * Instantiates a new map bean.
+	 */
 	public MapBean() {
 		attrMap = new HashMap<String, T>();
 	}
 
+	/**
+	 * Instantiates a new map bean of a given map.
+	 * 
+	 * @param map the map
+	 */
 	public MapBean(Map<String, T> map) {
 		attrMap = map;
 	}
 
+	/**
+	 * Gets the attribute map.
+	 * 
+	 * @return the attribute map
+	 */
 	public Map<String, T> getAttributeMap() {
 		return this.attrMap;
 	}
 
+	/**
+	 * Sets the attribute map.
+	 * 
+	 * @param attrMap the attr map
+	 */
 	protected void setAttributeMap(Map<String, T> attrMap) {
 		this.attrMap = attrMap;
 	}
 
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param name the name
+	 * 
+	 * @return the attribute
+	 */
 	public T getAttribute(String name) {
 		return this.attrMap.get(name);
 	}
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name the name
+	 * @param value the value
+	 */
 	public void setAttribute(String name, T value) {
 		this.attrMap.put(name, value);
 	}
 
+	/**
+	 * Removes the attribute.
+	 * 
+	 * @param name the name
+	 * 
+	 * @return the t
+	 */
 	public T removeAttribute(String name) {
 		return this.attrMap.remove(name);
 	}
 
+	/**
+	 * Returns key=value; pairs in a string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		String string = "";

@@ -63,6 +63,13 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	}
 
 	@Override
+	public Thread runAsyncForTest() {
+		Thread serverThread = new Thread(this);
+		serverThread.start();
+		return serverThread;
+	}
+	
+	@Override
 	public void runAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
@@ -82,16 +89,16 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	public void run() {
 		try {
 			runSync();
-		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			ExceptionListenerSupport.fireException(this, e);
-			// TODO
-			e.printStackTrace();
+			this.destroy();
 		}
 	}
 
 	@Override
 	public void destroy() {
 		this.channel.close();
+		this.bootstrap.releaseExternalResources();
 	}
 
 	@Override
