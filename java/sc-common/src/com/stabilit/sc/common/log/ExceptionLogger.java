@@ -46,7 +46,7 @@ public class ExceptionLogger extends SimpleLogger implements IExceptionListener 
 	}
 
 	@Override
-	public void exceptionEvent(ExceptionEvent exceptionEvent) {
+	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
 		try {
 			this.log(exceptionEvent.getThrowable());
 			this.log("\r\n");
