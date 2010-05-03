@@ -20,6 +20,7 @@ import com.stabilit.sc.cmd.impl.ClnCreateSessionCommand;
 import com.stabilit.sc.cmd.impl.ClnDataCommand;
 import com.stabilit.sc.cmd.impl.ClnDeleteSessionCommand;
 import com.stabilit.sc.cmd.impl.ClnEchoCommand;
+import com.stabilit.sc.cmd.impl.ClnSystemCommand;
 import com.stabilit.sc.cmd.impl.ConnectCommand;
 import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
 import com.stabilit.sc.cmd.impl.DisconnectCommand;
@@ -60,5 +61,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.add(clnEchoCommand.getRequestKeyName(), clnEchoCommand);
 		ICommand clnDataCommand = new ClnDataCommand();
 		commandFactory.add(clnDataCommand.getRequestKeyName(), clnDataCommand);
+		ICommand clnSystemCommand = new ClnSystemCommand();
+		commandFactory.add(clnSystemCommand.getRequestKeyName(), clnSystemCommand);
 	}
 }

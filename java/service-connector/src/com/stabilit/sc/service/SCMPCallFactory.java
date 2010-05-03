@@ -30,4 +30,5 @@ public class SCMPCallFactory {
 	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
 	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
 	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
+	public static final ISCMPCall SRV_SYSTEM_CALL = new SCMPSrvSystemCall();
 }
