@@ -24,9 +24,11 @@ import java.util.List;
 public class ListenerSupport<T extends EventListener> {
 
 	protected List<T> listenerList;
+	protected List<T> unmodifiableList;
 
 	public ListenerSupport() {
-		this.listenerList = Collections.synchronizedList(new ArrayList<T>());
+		this.listenerList = new ArrayList<T>();
+		this.unmodifiableList = this.listenerList;
 	}
 
 	public boolean isEmpty() {
@@ -39,10 +41,12 @@ public class ListenerSupport<T extends EventListener> {
 
 	public synchronized void addListener(T listener) {
 		listenerList.add(listener);
+		this.unmodifiableList = listenerList;
 	}
 
 	public synchronized void removeListener(T listener) {
 		listenerList.remove(listener);
+		this.unmodifiableList = listenerList;
 	}
 
 }

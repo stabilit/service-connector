@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 public class ConnectionListenerSupport extends
@@ -79,7 +80,12 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireConnect(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = listenerList.iterator();
+		synchronized (this) {
+			if (this.listenerList == this.unmodifiableList) {
+				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
+			}
+		}
+		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();

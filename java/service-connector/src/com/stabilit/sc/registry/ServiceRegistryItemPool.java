@@ -70,7 +70,9 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 	
 	public synchronized void freeItem(ServiceRegistryItem item) {
 		this.allocatedItemList.remove(item);
-		this.freeItemList.add(item);
+		if (this.isNoLimit() == false) {
+		    this.freeItemList.add(item);
+		}
 	}
 
 }

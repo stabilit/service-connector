@@ -35,8 +35,6 @@ import com.stabilit.sc.service.SCMPSrvEchoCall;
 import com.stabilit.sc.service.SCMPSrvSystemCall;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.ctx.ServerContext;
-import com.stabilit.sc.srv.server.IServer;
 
 /**
  * @author JTraber

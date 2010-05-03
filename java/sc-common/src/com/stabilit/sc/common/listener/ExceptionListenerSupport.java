@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 public class ExceptionListenerSupport extends
@@ -39,7 +40,13 @@ public class ExceptionListenerSupport extends
 	}
 
 	public void fireException(ExceptionEvent exceptionEvent) {
-		Iterator<IExceptionListener> iter = listenerList.iterator();
+		synchronized (this) {
+			if (this.listenerList == this.unmodifiableList) {
+				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
+			}
+		}
+
+		Iterator<IExceptionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IExceptionListener exceptionListener = iter.next();
