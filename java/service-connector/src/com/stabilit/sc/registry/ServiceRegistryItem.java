@@ -32,6 +32,7 @@ import com.stabilit.sc.service.SCMPSrvCreateSessionCall;
 import com.stabilit.sc.service.SCMPSrvDataCall;
 import com.stabilit.sc.service.SCMPSrvDeleteSessionCall;
 import com.stabilit.sc.service.SCMPSrvEchoCall;
+import com.stabilit.sc.service.SCMPSrvSystemCall;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.ctx.ServerContext;
@@ -117,6 +118,18 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		return srvDataCall.invoke();
 	}
 
+	public SCMP srvSystem(SCMP scmp) throws Exception {
+		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
+				scmp);
+		srvSystemCall.setHeader(scmp.getHeader());
+		srvSystemCall.setBody(scmp.getBody());
+		return srvSystemCall.invoke();
+	}
+
+	public SCMP clnSystem(SCMP scmp) {
+		return null;
+	}
+	
 	@Override
 	public IFactoryable newInstance() {
 		return this;

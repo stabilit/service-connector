@@ -16,21 +16,36 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.service;
 
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+
 /**
  * @author JTraber
  * 
  */
-public class SCMPCallFactory {
+public class SCMPClnSystemCall extends SCMPCallAdapter {
 
-	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
-	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
-	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
-	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
-	public static final ISCMPCall CLN_CREATE_SESSION_CALL = new SCMPClnCreateSessionCall();
-	public static final ISCMPCall CLN_DELETE_SESSION_CALL = new SCMPClnDeleteSessionCall();
-	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
-	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
-	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
-	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
-	public static final ISCMPCall CLN_SYSTEM_CALL = new SCMPClnSystemCall();
+	public SCMPClnSystemCall() {
+		this(null, null);
+	}
+
+	public SCMPClnSystemCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
+
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPClnSystemCall(client, scmpSession);
+	}
+
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_SYSTEM;
+	}
+	
+	public void setMaxNodes(int maxNodes) {
+		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+	}
 }

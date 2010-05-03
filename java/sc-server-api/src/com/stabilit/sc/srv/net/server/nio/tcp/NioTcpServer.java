@@ -222,6 +222,9 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 						}
 					}
 					response.write();
+					if ("true".equals(response.getSCMP().getHeader("kill"))) {
+						return;
+					}
 				}
 
 			} catch (Throwable e) {

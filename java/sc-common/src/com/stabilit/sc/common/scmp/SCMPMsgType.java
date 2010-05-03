@@ -43,7 +43,9 @@ public enum SCMPMsgType {
 	CLN_ECHO("CLN_ECHO"),
 	SRV_ECHO("SRV_ECHO"),
 	ECHO_SC("ECHO_SC"),
-	INSPECT("INSPECT");
+	INSPECT("INSPECT"),
+	CLN_SYSTEM("CLN_SYSTEM"),
+	SRV_SYSTEM("SRV_SYSTEM");
 
 	private String name;
 	private String requestName;

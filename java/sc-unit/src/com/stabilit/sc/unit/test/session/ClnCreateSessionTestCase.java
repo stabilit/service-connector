@@ -26,13 +26,13 @@ import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPClnSystemCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
@@ -101,15 +101,21 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		scmpSession = createSessionCall.invoke();
 
-		Simulation.simulationThreads.get(0).stop();
-		Simulation.simulationThreads.remove(0);
-		// TODO where dies client in SC realize that he lost connection to server ???
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(
+				client, scmpSession);
 
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, scmpSession);
+		systemCall.setMaxNodes(2);
+		systemCall.invoke();
+
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
 
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setBody("hello");
 		clnDataCall.invoke();
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
+		deleteSessionCall.invoke();
 	}
 }

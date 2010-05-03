@@ -14,23 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.service;
+
+import java.util.Map;
+
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.service.ISCMPCall;
+import com.stabilit.sc.cln.service.SCMPCallAdapter;
+import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPCallFactory {
+public class SCMPSrvSystemCall extends SCMPCallAdapter {
 
-	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
-	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
-	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
-	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
-	public static final ISCMPCall CLN_CREATE_SESSION_CALL = new SCMPClnCreateSessionCall();
-	public static final ISCMPCall CLN_DELETE_SESSION_CALL = new SCMPClnDeleteSessionCall();
-	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
-	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
-	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
-	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
-	public static final ISCMPCall CLN_SYSTEM_CALL = new SCMPClnSystemCall();
+	public SCMPSrvSystemCall() {
+		this(null, null);
+	}
+
+	public SCMPSrvSystemCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
+
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPSrvSystemCall(client, scmpSession);
+	}
+
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
+
+	public void setMessagInfo(String messageInfo) {
+		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+	}
+
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);
+	}
+
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_SYSTEM;
+	}
 }
