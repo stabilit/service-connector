@@ -49,19 +49,16 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	protected ServiceRegistryItemPool myItemPool;
 	private boolean allocated;
 	
-	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress) {
+	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress, IServerContext serverContext) {
 		this.registerScmp = scmp;
 		this.allocated = false;
 		this.myItemPool = null;
 		this.attrMap = scmp.getHeader();
 
-		IServerContext currentServerContext = ServerContext.getCurrentInstance();
-		IServer server = currentServerContext.getServer();
-
 		SCClientFactory clientFactory = new SCClientFactory();
 		int serverPort = Integer.parseInt(registerScmp.getHeader(SCMPHeaderAttributeKey.PORT_NR));
 		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
-		String serverCon = server.getServerConfig().getCon();
+		String serverCon = serverContext.getServer().getServerConfig().getCon();
 		client = clientFactory.newInstance(serverHost, serverPort, serverCon);
 	}
 

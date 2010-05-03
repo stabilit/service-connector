@@ -7,12 +7,15 @@ import java.util.List;
 
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.srv.registry.ServerRegistry;
 
 public class ServiceRegistryItemPool extends MapBean<String>{
 
 	private int maxItems = -1;
 	private SCMP scmp;
 	private SocketAddress socketAddress;
+	private IServerContext serverContext;
 	private List<ServiceRegistryItem> freeItemList;
 	private List<ServiceRegistryItem> allocatedItemList;
 	
@@ -21,6 +24,12 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 		this.socketAddress = socketAddress;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		this.allocatedItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+        this.serverContext = serverRegistry.getCurrentContext();
+	}
+	
+	public IServerContext getServerContext() {
+		return this.serverContext;
 	}
 	
 	public SCMP getScmp() {
@@ -48,7 +57,7 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 			return null;
 		}
 		if (this.isNoLimit()) {
-			ServiceRegistryItem item = new ServiceRegistryItem(this.scmp, this.socketAddress);
+			ServiceRegistryItem item = new ServiceRegistryItem(this.scmp, this.socketAddress, this.serverContext);
 			item.myItemPool = this;
 			this.allocatedItemList.add(item);
 			return item;
