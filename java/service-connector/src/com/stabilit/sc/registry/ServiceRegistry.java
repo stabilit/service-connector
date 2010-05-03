@@ -18,6 +18,7 @@ package com.stabilit.sc.registry;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.common.listener.WarningListenerSupport;
 import com.stabilit.sc.common.registry.Registry;
 import com.stabilit.sc.common.scmp.SCMP;
 
@@ -37,15 +38,16 @@ public final class ServiceRegistry extends Registry {
 		return instance;
 	}
 
-	public void add(Object key, ServiceRegistryItem item) {
-		this.put(key, item);
+	public void add(Object key, ServiceRegistryItemPool itemPool) {
+		this.put(key, itemPool);
 	}
 
 	public synchronized ServiceRegistryItem allocate(Object key, SCMP scmp) throws Exception {
-		ServiceRegistryItem item = (ServiceRegistryItem) this.get(key); // is this a list, TODO
-		if (item.isAllocated()) {
+		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(key); // is this a list, TODO
+		if (itemPool.isAvailable() == false) {
 			return null;
 		}
+		ServiceRegistryItem item = itemPool.getAvailableItem();
 		item.srvCreateSession(scmp);
 		return item;
 	}
@@ -54,6 +56,12 @@ public final class ServiceRegistry extends Registry {
 		if (item.isAllocated()) {
 			item.srvDeleteSession(scmp);
 		}
+		ServiceRegistryItemPool itemPool = item.myItemPool;
+		if (itemPool == null) {
+			WarningListenerSupport.getInstance().fireWarning(this, "ServiceRegistryItem has not item pool.");
+			return;
+		}
+		itemPool.freeItem(item);
 		return;
 	}
 

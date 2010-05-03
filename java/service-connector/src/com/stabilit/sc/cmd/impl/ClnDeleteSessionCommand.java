@@ -32,6 +32,7 @@ import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.SCMPReply;
 import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
@@ -81,8 +82,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) mapBean
 				.getAttribute(ServiceRegistryItem.class.getName());
 
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+
 		try {
-			serviceRegistryItem.srvDeleteSession(scmp);
+			serviceRegistry.deallocate(serviceRegistryItem, scmp);  // calls srvDeleteSession inside
 		} catch (Exception e) {
 			ExceptionListenerSupport.fireException(this, e);
 			log.debug("command error: deallocating failed for scmp: " + scmp);

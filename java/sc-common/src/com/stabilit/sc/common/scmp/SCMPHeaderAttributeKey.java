@@ -53,7 +53,8 @@ public enum SCMPHeaderAttributeKey {
 	CLIENT_ID("clientId"), 
 	SCCLIENT_ID("scclientId"),
 	SCSERVER_ID("scserverId"),
-	SERVER_ID("serverId"); 
+	SERVER_ID("serverId"), 
+	SERVICE_REGISTRY_ID("serviceRegistryId"); 
 	
 	private String name;
 	

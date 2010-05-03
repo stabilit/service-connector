@@ -69,4 +69,13 @@ public class SCMPSrvEchoCall extends SCMPCallAdapter {
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);		
 	}
+	
+	public void setHeader(SCMPHeaderAttributeKey attr, String value) {
+		this.call.setHeader(attr, value);		
+	}
+
+	public void setHeader(SCMPHeaderAttributeKey attr, int value) {
+		this.call.setHeader(attr, value);		
+	}
+
 }

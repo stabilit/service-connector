@@ -32,24 +32,32 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 
 	@Test
 	public void invokeMultipleSrvEchoTest() throws Exception {
-		SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
-		srvEchoTestCase.setClient(this.newClient());
-		srvEchoTestCase.clnConnectBefore();
-		srvEchoTestCase.clnCreateSessionBefore();
-		Thread th1 = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
+		SrvEchoTestCase srvEchoTestCase1 = new SrvEchoTestCase(fileName);
+		srvEchoTestCase1.setClient(this.newClient());
+		srvEchoTestCase1.clnConnectBefore();
+		srvEchoTestCase1.clnCreateSessionBefore();
+		Thread th1 = new MTClientThread(srvEchoTestCase1, "invokeMultipleSrvEchoTest");
 		th1.start();
-		srvEchoTestCase = new SrvEchoTestCase(fileName);
-		srvEchoTestCase.setClient(this.newClient());
-		srvEchoTestCase.clnConnectBefore();
-		srvEchoTestCase.clnCreateSessionBefore();
-		Thread th2 = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
+		SrvEchoTestCase srvEchoTestCase2 = new SrvEchoTestCase(fileName);
+		srvEchoTestCase2.setClient(this.newClient());
+		srvEchoTestCase2.clnConnectBefore();
+		srvEchoTestCase2.clnCreateSessionBefore();
+		Thread th2 = new MTClientThread(srvEchoTestCase2, "invokeMultipleSrvEchoTest");
 		th2.start();
-		srvEchoTestCase = new SrvEchoTestCase(fileName);
-		srvEchoTestCase.setClient(this.newClient());
-		Thread th3 = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
-//		th3.start();
+		SrvEchoTestCase srvEchoTestCase3 = new SrvEchoTestCase(fileName);
+		srvEchoTestCase3.setClient(this.newClient());
+		srvEchoTestCase3.clnConnectBefore();
+		srvEchoTestCase3.clnCreateSessionBefore();
+		Thread th3 = new MTClientThread(srvEchoTestCase3, "invokeMultipleSrvEchoTest");
+    	th3.start();
 		th1.join();
+		srvEchoTestCase1.clnDeleteSessionAfter();
+		srvEchoTestCase1.clnDisconnectAfter();
 		th2.join();
-//		th3.join();
+		srvEchoTestCase2.clnDeleteSessionAfter();
+		srvEchoTestCase2.clnDisconnectAfter();
+		th3.join();
+		srvEchoTestCase3.clnDeleteSessionAfter();
+		srvEchoTestCase3.clnDisconnectAfter();
 	}
 }

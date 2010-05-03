@@ -22,6 +22,7 @@ import java.net.SocketAddress;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
+import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
@@ -40,13 +41,17 @@ import com.stabilit.sc.srv.server.IServer;
  * @author JTraber
  * 
  */
-public class ServiceRegistryItem extends MapBean<String> {
+public class ServiceRegistryItem extends MapBean<String> implements IFactoryable {
 
 	private IClient client;
 	private SCMP registerScmp;
+	protected ServiceRegistryItemPool myItemPool;
+	private boolean allocated;
 	
 	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress) {
 		this.registerScmp = scmp;
+		this.allocated = false;
+		this.myItemPool = null;
 		this.attrMap = scmp.getHeader();
 
 		IServerContext currentServerContext = ServerContext.getCurrentInstance();
@@ -71,6 +76,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 					.newInstance(client, scmp);
 			createSessionCall.setHeader(scmp.getHeader());
 			createSessionCall.invoke();
+			this.allocated = true;
 		} catch (Exception e) {
 			ExceptionListenerSupport.fireException(this, e);
 		}
@@ -82,10 +88,11 @@ public class ServiceRegistryItem extends MapBean<String> {
 		deleteSessionCall.setHeader(scmp.getHeader());
 		deleteSessionCall.invoke();
 		client.disconnect();
+		this.allocated = false;
 	}
 
 	public boolean isAllocated() {
-		return false;
+		return this.allocated;
 	}
 
 	public SCMP clnEcho(SCMP scmp) throws Exception {
@@ -98,6 +105,7 @@ public class ServiceRegistryItem extends MapBean<String> {
 	public SCMP srvEcho(SCMP scmp) throws Exception {
 		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
+		echoCall.setHeader(SCMPHeaderAttributeKey.SERVICE_REGISTRY_ID, this.hashCode());
 		echoCall.setBody(scmp.getBody());
 		return echoCall.invoke();
 	}
@@ -107,5 +115,10 @@ public class ServiceRegistryItem extends MapBean<String> {
 		srvDataCall.setHeader(scmp.getHeader());
 		srvDataCall.setBody(scmp.getBody());
 		return srvDataCall.invoke();
+	}
+
+	@Override
+	public IFactoryable newInstance() {
+		return this;
 	}
 }
