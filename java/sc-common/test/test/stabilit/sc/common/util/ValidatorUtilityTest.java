@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.util;
+package test.stabilit.sc.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +24,9 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
+
+import com.stabilit.sc.common.util.ValidatorException;
+import com.stabilit.sc.common.util.ValidatorUtility;
 
 /**
  * @author JTraber

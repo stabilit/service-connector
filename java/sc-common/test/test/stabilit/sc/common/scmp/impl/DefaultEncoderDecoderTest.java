@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp.impl;
+package test.stabilit.sc.common.scmp.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,10 +31,12 @@ import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPHeadlineKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.common.scmp.SCMPPart;
 import com.stabilit.sc.common.scmp.SCMPReply;
+import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
+import com.stabilit.sc.common.scmp.impl.EncodingDecodingException;
+import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
 
-public class LargeMessageEncoderDecoderTest {
+public class DefaultEncoderDecoderTest {
 
 	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
 	private SCMPHeadlineKey headKey;
@@ -55,9 +57,9 @@ public class LargeMessageEncoderDecoderTest {
 		this.body = "hello world!";
 
 		encodeScmp = new SCMP();
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getRequestName());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getRequestName());
 		encodeScmp.setBody(body.getBytes());
 	}
 
@@ -69,7 +71,7 @@ public class LargeMessageEncoderDecoderTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
 		SCMP scmp = null;
 		try {
@@ -89,7 +91,7 @@ public class LargeMessageEncoderDecoderTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
 		SCMP scmp = null;
 		try {
@@ -109,7 +111,7 @@ public class LargeMessageEncoderDecoderTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
 		SCMP scmp = null;
 		try {
@@ -130,57 +132,13 @@ public class LargeMessageEncoderDecoderTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
 		try {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (EncodingDecodingException e) {
 		}
-	}
-
-	@Test
-	public void decodePRQTest() {
-		headKey = SCMPHeadlineKey.PRQ;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getRequestName() + "\n\n" + body + "\n";
-
-		byte[] buffer = requestString.getBytes();
-		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
-
-		SCMP scmp = null;
-		try {
-			scmp = (SCMP) coder.decode(is);
-		} catch (EncodingDecodingException e) {
-			Assert.fail("Should not throw exception");
-		}
-		verifySCMP(scmp);
-		if (scmp.isPart() == false)
-			Assert.fail("scmp should be of type part");
-	}
-
-	@Test
-	public void decodePRSTest() {
-		headKey = SCMPHeadlineKey.PRS;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getRequestName() + "\n\n" + body + "\n";
-
-		byte[] buffer = requestString.getBytes();
-		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
-
-		SCMP scmp = null;
-		try {
-			scmp = (SCMP) coder.decode(is);
-		} catch (EncodingDecodingException e) {
-			Assert.fail("Should not throw exception");
-		}
-		verifySCMP(scmp);
-		if (scmp.isPart() == false)
-			Assert.fail("scmp should be of type part");
 	}
 
 	@Test
@@ -191,7 +149,7 @@ public class LargeMessageEncoderDecoderTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
 		SCMP scmp = null;
 		try {
@@ -208,7 +166,7 @@ public class LargeMessageEncoderDecoderTest {
 
 		buffer = requestString.getBytes();
 		is = new ByteArrayInputStream(buffer);
-		coder = coderFactory.newInstance(new SCMPPart());
+		coder = coderFactory.newInstance(buffer);
 
 		scmp = null;
 		try {
@@ -221,11 +179,11 @@ public class LargeMessageEncoderDecoderTest {
 
 	@Test
 	public void encodeREQTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
+				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+				+ msgType.getRequestName() + "\n\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -238,13 +196,12 @@ public class LargeMessageEncoderDecoderTest {
 
 	@Test
 	public void encodeRESTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.RES;
-
 		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
+				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+				+ msgType.getRequestName() + "\n\n" + body;
 
 		SCMP encodeRes = new SCMPReply();
 		encodeRes.setHeader(encodeScmp);
@@ -261,12 +218,12 @@ public class LargeMessageEncoderDecoderTest {
 
 	@Test
 	public void encodeEXCTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.EXC;
 		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
+				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+				+ msgType.getRequestName() + "\n\n" + body;
 
 		SCMP encodeExc = new SCMPFault();
 		encodeExc.setHeader(encodeScmp);
@@ -282,57 +239,12 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	@Test
-	public void encodePRQTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
-
-		this.headKey = SCMPHeadlineKey.PRQ;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
-
-		SCMP encodeRes = new SCMPPart();
-		encodeRes.setHeader(encodeScmp);
-		encodeRes.setBody(body.getBytes());
-
-		OutputStream os = new ByteArrayOutputStream();
-		try {
-			coder.encode(os, encodeRes);
-		} catch (EncodingDecodingException e) {
-			Assert.fail("Should not throw exception");
-		}
-		Assert.assertEquals(expectedString, os.toString());
-	}
-
-	@Test
-	public void encodePRSTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
-
-		this.headKey = SCMPHeadlineKey.PRS;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
-
-		SCMP encodeRes = new SCMPPart();
-		encodeRes.setIsReply(true);
-		encodeRes.setHeader(encodeScmp);
-		encodeRes.setBody(body.getBytes());
-
-		OutputStream os = new ByteArrayOutputStream();
-		try {
-			coder.encode(os, encodeRes);
-		} catch (EncodingDecodingException e) {
-			Assert.fail("Should not throw exception");
-		}
-		Assert.assertEquals(expectedString, os.toString());
-	}
-
-	@Test
 	public void encodeBodyTypesTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n"
-				+ "bodyLength=" + bodyLength + "\n\n" + body;
+				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+				+ msgType.getRequestName() + "\n\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {

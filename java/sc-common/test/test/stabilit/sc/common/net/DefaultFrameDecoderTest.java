@@ -14,12 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.net;
+package test.stabilit.sc.common.net;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.net.FrameDecoderException;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 
 /**
  * @author JTraber
@@ -27,7 +30,7 @@ import com.stabilit.sc.common.factory.IFactoryable;
  */
 public class DefaultFrameDecoderTest {
 
-	private DefaultFrameDecoder decoder = new DefaultFrameDecoder();
+	private IFrameDecoder decoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
 	@Test
 	public void singeltonTest() {
@@ -36,7 +39,7 @@ public class DefaultFrameDecoderTest {
 	}
 
 	@Test
-	public void parseFrameSizeFailTest() {
+	public void parseFrameSizeFailTest() throws Exception {
 		try {
 			int frameSize = decoder.parseFrameSize(null);
 			Assert.assertEquals("0", frameSize + "");
@@ -64,7 +67,7 @@ public class DefaultFrameDecoderTest {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
 			Assert.assertEquals("107", frameSize + "");
-		} catch (FrameDecoderException e) {
+		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
 
@@ -73,7 +76,7 @@ public class DefaultFrameDecoderTest {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
 			Assert.assertEquals("21", frameSize + "");
-		} catch (FrameDecoderException e) {
+		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
 	}
@@ -86,7 +89,7 @@ public class DefaultFrameDecoderTest {
 			b = headline.getBytes();
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
-		} catch (FrameDecoderException e) {
+		} catch (Exception e) {
 		}
 
 		headline = "REQ /s=& SCMP/1.0\n";
@@ -94,7 +97,7 @@ public class DefaultFrameDecoderTest {
 			b = headline.getBytes();
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
-		} catch (FrameDecoderException e) {
+		} catch (Exception e) {
 		}
 
 		headline = "REQ /s=0& SCMP/1.0\n";
@@ -102,7 +105,7 @@ public class DefaultFrameDecoderTest {
 			b = headline.getBytes();
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
-		} catch (FrameDecoderException e) {
+		} catch (Exception e) {
 		}
 	}
 }

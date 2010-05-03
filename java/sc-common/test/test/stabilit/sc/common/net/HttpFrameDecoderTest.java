@@ -14,12 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.net;
+package test.stabilit.sc.common.net;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.net.FrameDecoderException;
+import com.stabilit.sc.common.net.FrameDecoderFactory;
+import com.stabilit.sc.common.net.IFrameDecoder;
 
 /**
  * @author JTraber
@@ -27,7 +30,7 @@ import com.stabilit.sc.common.factory.IFactoryable;
  */
 public class HttpFrameDecoderTest {
 
-	private HttpFrameDecoder decoder = new HttpFrameDecoder();
+	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder("http");
 
 	@Test
 	public void singeltonTest() {
@@ -36,7 +39,7 @@ public class HttpFrameDecoderTest {
 	}
 
 	@Test
-	public void parseFrameSizeTest() {
+	public void parseFrameSizeTest() throws Exception {
 		String httpHeader = "POST / HTTP/1.1\r\n" + "Host: www.google.com\r\n" + "Connection: close\r\n"
 				+ "User-Agent: Web-sniffer/1.0.31 (+http://web-sniffer.net/)\r\n"
 				+ "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n" + "Cache-Control: no\r\n"

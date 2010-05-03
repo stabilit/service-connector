@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp.internal;
+package test.stabilit.sc.common.scmp.internal;
 
 import junit.framework.Assert;
 
@@ -25,6 +25,7 @@ import com.stabilit.sc.common.scmp.SCMPBodyType;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.SCMPPart;
+import com.stabilit.sc.common.scmp.internal.SCMPComposite;
 
 /**
  * @author JTraber

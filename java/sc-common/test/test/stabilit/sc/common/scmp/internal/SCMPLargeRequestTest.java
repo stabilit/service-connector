@@ -14,49 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp.internal;
+package test.stabilit.sc.common.scmp.internal;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.internal.SCMPLargeRequest;
+import com.stabilit.sc.common.scmp.internal.SCMPRequestPart;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPLargeResponseTest extends SCMP {
+public class SCMPLargeRequestTest extends SCMP {
 
 	@Test
-	public void scmpLargeResponseTest() {
+	public void scmpLargeRequestTest() {
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < 100000; i++) {
 			sb.append(i);
-		}
-		
+		}		
 		
 		SCMP largeScmp = new SCMP();
 		largeScmp.setBody(sb.toString());
 		
-		SCMPLargeResponse largeResponse = new SCMPLargeResponse(largeScmp);
+		SCMPLargeRequest largeRequest = new SCMPLargeRequest(largeScmp);
 		
 		int offset = 0;
-		while(largeResponse.hasNext()) {
+		while(largeRequest.hasNext()) {
 			
-			SCMPResponsePart responsePart = new SCMPResponsePart(largeScmp, offset);
+			SCMPRequestPart responsePart = new SCMPRequestPart(largeScmp, offset);
 			offset += responsePart.getBodyLength();
 			
-			SCMP scmp = largeResponse.getNext();
+			SCMP scmp = largeRequest.getNext();
 			Assert.assertEquals(responsePart.getBody().toString(), scmp.getBody().toString());
 			Assert.assertEquals(responsePart.getBodyLength(), scmp.getBodyLength());
 			Assert.assertEquals(responsePart.getBodyOffset(), scmp.getBodyOffset());
 			Assert.assertEquals(responsePart.getBodyType(), scmp.getBodyType());
 		}
 		
-		SCMPResponsePart firstPart = new SCMPResponsePart(largeScmp, 0);
-		SCMP scmp = largeResponse.getFirst();
+		SCMPRequestPart firstPart = new SCMPRequestPart(largeScmp, 0);
+		SCMP scmp = largeRequest.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), scmp.getBody().toString());
 		Assert.assertEquals(firstPart.getBodyLength(), scmp.getBodyLength());
 		Assert.assertEquals(firstPart.getBodyOffset(), scmp.getBodyOffset());

@@ -19,19 +19,20 @@
 /**
  * 
  */
-package com.stabilit.sc.common.test;
+package test.stabilit.sc.common.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.stabilit.sc.common.net.DefaultFrameDecoderTest;
-import com.stabilit.sc.common.net.HttpFrameDecoderTest;
-import com.stabilit.sc.common.scmp.impl.LargeMessageEncoderDecoderTest;
-import com.stabilit.sc.common.scmp.internal.SCMPCompositeTest;
-import com.stabilit.sc.common.scmp.internal.SCMPLargeRequestTest;
-import com.stabilit.sc.common.scmp.internal.SCMPLargeResponseTest;
-import com.stabilit.sc.common.util.ValidatorUtilityTest;
+import test.stabilit.sc.common.net.DefaultFrameDecoderTest;
+import test.stabilit.sc.common.net.HttpFrameDecoderTest;
+import test.stabilit.sc.common.scmp.impl.LargeMessageEncoderDecoderTest;
+import test.stabilit.sc.common.scmp.internal.SCMPCompositeTest;
+import test.stabilit.sc.common.scmp.internal.SCMPLargeRequestTest;
+import test.stabilit.sc.common.scmp.internal.SCMPLargeResponseTest;
+import test.stabilit.sc.common.util.ValidatorUtilityTest;
+
 
 /**
  * @author JTraber
