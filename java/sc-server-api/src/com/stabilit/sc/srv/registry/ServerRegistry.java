@@ -69,6 +69,4 @@ public final class ServerRegistry extends Registry {
 			return server.getServerContext();
 		}
 	}
-
-
 }
