@@ -41,5 +41,7 @@ public interface IRequest {
 	
 	public void read() throws Exception;
 	
+	public void readNext() throws Exception;
+	
 	public void load() throws Exception;		
 }

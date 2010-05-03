@@ -70,7 +70,7 @@ public class NioCommandRequest {
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
 			response.write();
-			request.read();
+			request.readNext();
 			scmp = request.getSCMP();
 			if (scmp != null) {
 				scmpComposite.add(scmp);

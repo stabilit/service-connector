@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
+import java.util.Iterator;
+
 public class ConnectionListenerSupport extends
 		ListenerSupport<IConnectionListener> {
 
@@ -77,8 +79,10 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireConnect(ConnectionEvent connectionEvent) {
-		for (IConnectionListener connectionListener : listenerList) {
+		Iterator<IConnectionListener> iter = listenerList.iterator();
+		while (iter.hasNext()) {
 			try {
+				IConnectionListener connectionListener = iter.next();
 				connectionListener.connectEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -87,8 +91,10 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireDisconnect(ConnectionEvent connectionEvent) {
-		for (IConnectionListener connectionListener : listenerList) {
+		Iterator<IConnectionListener> iter = listenerList.iterator();
+		while (iter.hasNext()) {
 			try {
+				IConnectionListener connectionListener = iter.next();
 				connectionListener.disconnectEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -97,8 +103,10 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireWrite(ConnectionEvent connectionEvent) {
-		for (IConnectionListener connectionListener : listenerList) {
+		Iterator<IConnectionListener> iter = listenerList.iterator();
+		while (iter.hasNext()) {
 			try {
+				IConnectionListener connectionListener = iter.next();
 				connectionListener.writeEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -107,8 +115,10 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireRead(ConnectionEvent connectionEvent) {
-		for (IConnectionListener connectionListener : listenerList) {
+		Iterator<IConnectionListener> iter = listenerList.iterator();
+		while (iter.hasNext()) {
 			try {
+				IConnectionListener connectionListener = iter.next();
 				connectionListener.readEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();

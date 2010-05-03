@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
+import java.util.Iterator;
+
 public class ExceptionListenerSupport extends
 		ListenerSupport<IExceptionListener> {
 
@@ -31,19 +33,20 @@ public class ExceptionListenerSupport extends
 	public static void fireException(Object source, Throwable th) {
 		if (getInstance().isEmpty() == false) {
 			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			ExceptionListenerSupport.getInstance().fireException(exceptionEvent);
+			ExceptionListenerSupport.getInstance()
+					.fireException(exceptionEvent);
 		}
 	}
-	
+
 	public void fireException(ExceptionEvent exceptionEvent) {
-		for (IExceptionListener exceptionListener : listenerList) {
+		Iterator<IExceptionListener> iter = listenerList.iterator();
+		while (iter.hasNext()) {
 			try {
+				IExceptionListener exceptionListener = iter.next();
 				exceptionListener.exceptionEvent(exceptionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
-
 }

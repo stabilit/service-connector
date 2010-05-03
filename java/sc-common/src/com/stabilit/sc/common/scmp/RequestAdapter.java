@@ -82,6 +82,12 @@ public abstract class RequestAdapter implements IRequest {
 	}
 	
 	@Override
+	public void readNext() throws Exception {
+		this.scmp = null;
+		read();
+	}
+	
+	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMP scmp = this.getSCMP();
 		if (scmp == null) {
