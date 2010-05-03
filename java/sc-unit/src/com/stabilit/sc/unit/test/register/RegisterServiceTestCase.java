@@ -55,8 +55,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR,
-					SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
@@ -66,8 +65,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR,
-					SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
@@ -77,8 +75,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR,
-					SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 	}
 
@@ -94,13 +91,12 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		registerServiceCall.invoke();
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
-				.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
 		SCMP inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = "P01_RTXS_RPRWS1:messageID=1;portNr=9100;maxSessions=10;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=P01_RTXS_RPRWS1;simulation:messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
+		String expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=1, portNr=9100, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
 	}
@@ -119,8 +115,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPServiceException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_REGISTERED,
-					SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
 		}
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL

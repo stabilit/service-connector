@@ -74,5 +74,15 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 		    this.freeItemList.add(item);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(scmp.toString());
+		for (ServiceRegistryItem serviceRegistryItem : allocatedItemList) {
+			sb.append(serviceRegistryItem.toString());
+		}
+		return sb.toString();
+	}
 
 }

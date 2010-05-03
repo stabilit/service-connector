@@ -55,7 +55,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
-		String expectedEnty = "simulation:messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;";
+		String expectedEnty = "simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
 		Assert.assertEquals(expectedEnty, scEntry);
 		super.registerService();
 	}
