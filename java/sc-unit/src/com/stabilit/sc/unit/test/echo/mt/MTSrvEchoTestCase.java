@@ -43,7 +43,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		srvEchoTestCase.clnConnectBefore();
 		srvEchoTestCase.clnCreateSessionBefore();
 		Thread th2 = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
-//		th2.start();
+		th2.start();
 		srvEchoTestCase = new SrvEchoTestCase(fileName);
 		srvEchoTestCase.setClient(this.newClient());
 		Thread th3 = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
