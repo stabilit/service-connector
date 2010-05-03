@@ -14,28 +14,46 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.sc.unit.test.echo.mt;
 
-import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.SCMP;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- * @author JTraber
- * 
- */
-public interface IClient extends IFactoryable {
-	
-	public void disconnect() throws Exception;
+import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
+import com.stabilit.sc.unit.test.mt.MTSuperTestCase;
 
-	public void destroy() throws Exception;
+public class MTEchoSCTestCase extends MTSuperTestCase {
 
-	public void connect() throws Exception;
+	/**
+	 * @param fileName
+	 */
+	public MTEchoSCTestCase(String fileName) {
+		super(fileName);
+	}
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	@Before
+	@Override
+	public void setup() throws Exception {
+		SetupTestCases.setupSC();
+	}
 
-	public void setClientConfig(ClientConfigItem clientConfig);
-
-	public String toHashCodeString();
-	
+	@Test
+	public void invokeMultipleEchoSCTest() throws Exception {
+		EchoSCTestCase echoSCTestCase = new EchoSCTestCase(fileName);
+		echoSCTestCase.setClient(this.newClient());
+		Thread th1 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
+		th1.start();
+		echoSCTestCase = new EchoSCTestCase(fileName);
+		echoSCTestCase.setClient(this.newClient());
+		Thread th2 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
+		th2.start();
+		echoSCTestCase = new EchoSCTestCase(fileName);
+		echoSCTestCase.setClient(this.newClient());
+		Thread th3 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
+		th3.start();
+		th1.join();
+		th2.join();
+		th3.join();
+	}
 }

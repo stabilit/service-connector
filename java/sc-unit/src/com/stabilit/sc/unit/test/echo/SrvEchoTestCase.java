@@ -69,9 +69,9 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		ClnEchoCall.setServiceName("simulation");
 
 		for (int i = 0; i < anzMsg; i++) {
-			ClnEchoCall.setBody("hello world, index = " + i);
+			ClnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
 			result = ClnEchoCall.invoke();
-			Assert.assertEquals("hello world, index = " + i, result.getBody());
+			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
 	}

@@ -44,6 +44,7 @@ public class SCMPSrvEchoCall extends SCMPCallAdapter {
 	@Override
 	public SCMP invoke() throws Exception {
 		this.call.setMessageType(getMessageType().getRequestName());
+		this.call.setHeader(SCMPHeaderAttributeKey.SCCLIENT_ID, client.hashCode());
 		this.result = client.sendAndReceive(this.call);
 		if (this.result.isFault()) {
 			throw new SCMPServiceException((SCMPFault) result);

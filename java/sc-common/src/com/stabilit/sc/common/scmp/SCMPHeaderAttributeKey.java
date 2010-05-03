@@ -49,7 +49,11 @@ public enum SCMPHeaderAttributeKey {
 	TRANSITIVE("transitive"),
 	MESSAGE_ID("messageID"),
 	BODY_TYPE("bodyType"),
-	MAX_NODES("maxNodes"); 
+	MAX_NODES("maxNodes"), 
+	CLIENT_ID("clientId"), 
+	SCCLIENT_ID("scclientId"),
+	SCSERVER_ID("scserverId"),
+	SERVER_ID("serverId"); 
 	
 	private String name;
 	

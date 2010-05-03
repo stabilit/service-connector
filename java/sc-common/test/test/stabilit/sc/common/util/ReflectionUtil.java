@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,29 +14,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package test.stabilit.sc.common.util;
 
-import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.SCMP;
+import java.lang.reflect.Method;
 
 /**
  * @author JTraber
  * 
  */
-public interface IClient extends IFactoryable {
-	
-	public void disconnect() throws Exception;
+public class ReflectionUtil {
 
-	public void destroy() throws Exception;
+	public static Method getCurrentMethod(Object obj, Class<?>... args) throws Exception {
+		String currentMethodName = getCurrentMethodName(3);
+		Class<?> cl = obj.getClass();
+		return cl.getMethod(currentMethodName, args);
+	}
 
-	public void connect() throws Exception;
+	public static String getCurrentMethodName(int index) {
+		StackTraceElement[] stackTraceElement = Thread.currentThread().getStackTrace();
+		return stackTraceElement[index].getMethodName();
+	}
 
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
-
-	public void setClientConfig(ClientConfigItem clientConfig);
-
-	public String toHashCodeString();
-	
+	public static Method getMethod(Class<?> cl, String methodName, Class<?>... args) throws Exception {
+		return cl.getMethod(methodName, args);
+	}
 }

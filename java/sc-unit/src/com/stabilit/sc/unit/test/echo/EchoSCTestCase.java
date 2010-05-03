@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.client.ClientFactory;
+import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
@@ -39,6 +40,7 @@ public class EchoSCTestCase extends SuperTestCase {
 	/**
 	 * @param fileName
 	 */
+	
 	public EchoSCTestCase(String fileName) {
 		super(fileName);
 	}
@@ -65,11 +67,11 @@ public class EchoSCTestCase extends SuperTestCase {
 		SCMP result = null;
 		Map<String, String> header = null;
 
-		echoCall.setBody("hello world!");
+		echoCall.setBody("hello world!" + client.toHashCodeString());
 		result = echoCall.invoke();
 		System.out.println("result = " + result.getBody());
 		header = result.getHeader();
-		Assert.assertEquals("hello world!", result.getBody());
+		Assert.assertEquals("hello world!" + client.toHashCodeString(), result.getBody());
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 
@@ -87,10 +89,10 @@ public class EchoSCTestCase extends SuperTestCase {
 		int i = 0;
 		String echoString = null;
 		for (i = 0; i < 10000; i++) {
-			echoString = "hello world " + i;
+			echoString = "hello world " + i + client.toHashCodeString();
 			echoCall.setBody(echoString);
 			result = echoCall.invoke();
-			Assert.assertEquals("hello world " + i, result.getBody());
+			Assert.assertEquals("hello world " + i + client.toHashCodeString(), result.getBody());
 			Assert.assertEquals(echoString.length() + "", result
 					.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 			Assert.assertEquals(SCMPBodyType.text.getName(), result
@@ -98,7 +100,7 @@ public class EchoSCTestCase extends SuperTestCase {
 			Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 			Assert.assertEquals(i + 1 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
-		Assert.assertEquals("hello world " + (i - 1), result.getBody());
+		Assert.assertEquals("hello world " + (i - 1) + client.toHashCodeString(), result.getBody());
 		Assert.assertEquals(echoString.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());

@@ -104,6 +104,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 			result = serviceRegistryItem.clnEcho(scmp);
 		}
 		result.setMessageType(getKey().getResponseName());
+		result.setHeader(SCMPHeaderAttributeKey.SCSERVER_ID, socketAddress.hashCode());
 		response.setSCMP(result);
 	}
 

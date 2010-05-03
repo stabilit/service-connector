@@ -62,9 +62,10 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 			TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>());
 
 	public NioHttpServer() {
+		this(null, 0);
 	}
 
-	public NioHttpServer(String host, int port) throws IOException {
+	public NioHttpServer(String host, int port) {
 		this.host = host;
 		this.port = port;
 		this.msgID = new SCMPMessageID();
@@ -158,7 +159,6 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 					NioHttpRequest request = new NioHttpRequest(socketChannel);
 					NioHttpResponse response = new NioHttpResponse(socketChannel);
 					NioCommandRequest commandRequest = new NioCommandRequest(request, response);
-					SCMP scmpReq = request.getSCMP();
 					if (scmpResponseComposite != null) {
 						if (scmpResponseComposite.hasNext()) {
 							commandRequest.readRequest();
@@ -177,6 +177,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 					ICommand command = commandRequest.readCommand();
 					try {
 						if (command == null) {
+							SCMP scmpReq = request.getSCMP();
 							SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 							scmpFault.setMessageType(scmpReq.getMessageType());
 							scmpFault.setLocalDateTime();
@@ -215,7 +216,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 						response.setSCMP(firstSCMP);
 					} else {
 						SCMP scmp = response.getSCMP();
-						if (scmp.isPart() || scmpReq.isPart()) {
+						if (scmp.isPart() || request.getSCMP().isPart()) {
 							msgID.incrementPartSequenceNr();
 							scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 						} else {

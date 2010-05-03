@@ -16,17 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test;
 
+import java.lang.reflect.Method;
+
 import junit.framework.Assert;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import test.stabilit.sc.common.test.CommonTest;
+import test.stabilit.sc.common.util.ReflectionUtil;
+
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.common.test.CommonTest;
 import com.stabilit.sc.unit.test.connect.ConnectTestCase;
 import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;

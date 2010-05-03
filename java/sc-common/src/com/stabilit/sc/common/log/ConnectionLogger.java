@@ -46,7 +46,7 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	}
 
 	@Override
-	public void connectEvent(ConnectionEvent connectionEvent) {
+	public synchronized void connectEvent(ConnectionEvent connectionEvent) {
 		try {
 			this.log("------- connect -------\r\n");
 			this.log("connect by class " + connectionEvent.getSource().getClass().getName());
@@ -57,7 +57,7 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	}
 
 	@Override
-	public void disconnectEvent(ConnectionEvent connectionEvent) {
+	public synchronized void disconnectEvent(ConnectionEvent connectionEvent) {
 		try {
 			this.log("------- disconnect -------\r\n");
 			this.log("disconnect by class " + connectionEvent.getSource().getClass().getName());
@@ -68,7 +68,7 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	}
 
 	@Override
-	public void readEvent(ConnectionEvent connectionEvent) {
+	public synchronized void readEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
 			this.log(">>>>>>>> read >>>>>>>\r\n");
@@ -84,7 +84,7 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	}
 
 	@Override
-	public void writeEvent(ConnectionEvent connectionEvent) {
+	public synchronized void writeEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
 			this.log("<<<<<<<< write <<<<<<<<\r\n");

@@ -60,9 +60,10 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 			TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>());
 
 	public NioTcpServer() {
+		this(null, 0);
 	}
 
-	public NioTcpServer(String host, int port) throws IOException {
+	public NioTcpServer(String host, int port) {
 		this.host = host;
 		this.port = port;
 		this.msgID = new SCMPMessageID();
@@ -108,7 +109,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
-	
+
 	@Override
 	public Thread runAsyncForTest() {
 		Thread serverThread = new Thread(this);
@@ -150,12 +151,11 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 			try {
 				ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 				serverRegistry.add(this.socketChannel, new ServerRegistryItem(NioTcpServer.this.server));
-				serverRegistry.setThreadLocal(this.socketChannel);				
+				serverRegistry.setThreadLocal(this.socketChannel);
 				while (true) {
 					NioTcpRequest request = new NioTcpRequest(socketChannel);
 					NioTcpResponse response = new NioTcpResponse(socketChannel);
 					NioCommandRequest commandRequest = new NioCommandRequest(request, response);
-					SCMP scmpReq = request.getSCMP();
 					if (scmpResponseComposite != null) {
 						if (scmpResponseComposite.hasNext()) {
 							commandRequest.readRequest();
@@ -174,6 +174,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 					ICommand command = commandRequest.readCommand();
 					try {
 						if (command == null) {
+							SCMP scmpReq = request.getSCMP();
 							SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 							scmpFault.setMessageType(scmpReq.getMessageType());
 							scmpFault.setLocalDateTime();
@@ -212,7 +213,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 						response.setSCMP(firstSCMP);
 					} else {
 						SCMP scmp = response.getSCMP();
-						if (scmp.isPart() || scmpReq.isPart()) {
+						if (scmp.isPart() || request.getSCMP().isPart()) {
 							msgID.incrementPartSequenceNr();
 							scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 						} else {

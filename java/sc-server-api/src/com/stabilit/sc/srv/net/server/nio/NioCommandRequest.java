@@ -54,10 +54,12 @@ public class NioCommandRequest {
 		if (scmp == null) {
 			return null;
 		}
-		if (scmp.isPart() || this.command instanceof IPassThrough) {
+		if (scmp.isPart() == false) {
 			return this.command;
 		}
-		
+		if (this.command instanceof IPassThrough) {
+			return this.command;
+		}		
 		SCMPComposite scmpComposite = null;
 		while (scmp.isPart()) {
 			if (scmpComposite == null) {

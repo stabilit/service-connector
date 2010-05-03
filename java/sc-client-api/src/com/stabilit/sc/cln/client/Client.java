@@ -81,6 +81,10 @@ public class Client implements IClient {
 		return ret;
 	}
 
+	@Override
+	public synchronized String toHashCodeString() {
+	    return " [" + this.hashCode() + "]";	
+	}
 	/**
 	 * request is small, but response could be small or large
 	 */
