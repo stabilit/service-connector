@@ -80,10 +80,14 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
-		int anzMsg = 1000;
+		int anzMsg = 100000;
 		SCMP result = null;	
 
 		for (int i = 0; i < anzMsg; i++) {
+			//is used otherwise you get an "Address already in us" failure
+			//obviously client needs some time after disconnect to get ready to connect again
+			//problem only when testing locally so sleeping for 10Ms is fine
+			Thread.currentThread().sleep(10); 
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 					scmpSession);

@@ -50,7 +50,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		this.bootstrap = null;
 		this.channel = null;
 		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(10), Executors
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
 				.newFixedThreadPool(5));
 	}
 

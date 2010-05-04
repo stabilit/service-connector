@@ -70,8 +70,8 @@ public class SetupTestCases {
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(new String[] { "test" });
-				Simulation.main(new String[] { "test" });
+				ServiceConnector.main(null);
+				Simulation.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -84,7 +84,7 @@ public class SetupTestCases {
 			setupTestCases = new SetupTestCases();
 			try {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(new String[] { "test" });
+				ServiceConnector.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

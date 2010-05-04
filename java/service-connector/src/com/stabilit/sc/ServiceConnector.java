@@ -17,7 +17,6 @@
 package com.stabilit.sc;
 
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.management.MBeanServer;
@@ -41,11 +40,7 @@ public final class ServiceConnector {
 	}
 
 	public static void main(String[] args) throws Exception {
-		if (args != null && new String(args[0]).equals("test")) {
-			runForTest();
-		} else {
-			run();
-		}
+		ServiceConnector.run();
 	}
 
 	private static void run() throws Exception {
@@ -80,40 +75,4 @@ public final class ServiceConnector {
 			}
 		}
 	}
-
-	private static void runForTest() throws Exception {
-		ServerConfig config = new ServerConfig();
-		config.load("sc.properties");
-
-		SCThreads = new ArrayList<Thread>();
-
-		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
-		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
-		}
-
-		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
-		ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
-		ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
-
-		// Register the Queue Sampler MXBean
-		mbs.registerMBean(ConnectionRegistry.getCurrentInstance(), mxbeanNameConnReg);
-		mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
-		mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
-
-		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
-		SCServerFactory serverFactory = new SCServerFactory();
-		for (ServerConfigItem serverConfig : serverConfigList) {
-			IServer server = serverFactory.newInstance(serverConfig);
-			try {
-				server.create();
-				SCThreads.add(server.runAsyncForTest());
-			} catch (Exception e) {
-				// TODO ExceptionListenerSupport.fireException(this, e);
-				e.printStackTrace();
-			}
-		}
-	}
-
 }

@@ -32,5 +32,4 @@ public interface IServer extends IFactoryable {
 	public void runAsync() throws Exception;
 	public void runSync() throws Exception;
 	public ServerConfigItem getServerConfig();
-	Thread runAsyncForTest();
 }

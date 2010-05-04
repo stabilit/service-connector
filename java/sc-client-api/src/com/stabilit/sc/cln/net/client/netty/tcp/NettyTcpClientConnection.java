@@ -49,8 +49,8 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 
 	public NettyTcpClientConnection() {
 		// Configure the client.
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(5), Executors
-				.newFixedThreadPool(2));
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
+				.newFixedThreadPool(5));
 	}
 
 	@Override
