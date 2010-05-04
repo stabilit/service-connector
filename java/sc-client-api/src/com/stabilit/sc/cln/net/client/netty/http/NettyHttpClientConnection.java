@@ -53,8 +53,8 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 	NioClientSocketChannelFactory channelFactory = null;
 
 	public NettyHttpClientConnection() {
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
-				.newFixedThreadPool(10));
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(5), Executors
+				.newFixedThreadPool(2));
 	}
 
 	@Override
@@ -89,6 +89,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 	public void disconnect() {
 		// Wait for the server to close the connection.
 		ChannelFuture future = this.channel.disconnect();
+		bootstrap.releaseExternalResources();
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
 	}
