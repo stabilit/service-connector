@@ -18,15 +18,11 @@ package com.stabilit.sc.unit.test.session;
 
 import junit.framework.Assert;
 
-import org.junit.Test;
-
 import com.stabilit.sc.cln.io.SCMPSession;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnSystemCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -47,7 +43,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
 	private SCMPSession scmpSession = null;
 
-	@Test
+	// @Test
 	public void failClnCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
@@ -63,7 +59,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		}
 	}
 
-	@Test
+	// @Test
 	public void clnCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
@@ -88,32 +84,6 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, scmpSession);
-		deleteSessionCall.invoke();
-	}
-
-	public void clnCreateSessionLooseSimluationServer() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(client);
-
-		createSessionCall.setServiceName("simulation");
-		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		scmpSession = createSessionCall.invoke();
-
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(
-				client, scmpSession);
-
-		systemCall.setMaxNodes(2);
-		systemCall.invoke();
-
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
-
-		clnDataCall.setServiceName("simulation");
-		clnDataCall.setMessagInfo("asdasd");
-		clnDataCall.setBody("hello");
-		clnDataCall.invoke();
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client, scmpSession);
 		deleteSessionCall.invoke();

@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.client.ClientFactory;
-import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;

@@ -72,7 +72,7 @@ public abstract class MTSuperTestCase {
 
 	@Parameters
 	public static Collection<String[]> getParameters() {
-		String[][] sa = {{"sc-unit-nio-tcp.properties"}};
+		String[][] sa = {{"sc-unit-netty-tcp.properties"}};
 		return Arrays.asList(sa);
 	}
 

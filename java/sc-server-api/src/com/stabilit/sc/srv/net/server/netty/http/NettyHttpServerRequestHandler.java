@@ -165,6 +165,10 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		}
 		response.write();
 		commandRequest = null;
+		if ("true".equals(response.getSCMP().getHeader("kill"))) {
+			ctx.getChannel().disconnect();
+			return;
+		}
 	}
 
 	@Override

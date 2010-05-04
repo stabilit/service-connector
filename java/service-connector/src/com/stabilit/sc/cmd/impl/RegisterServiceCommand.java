@@ -41,7 +41,6 @@ import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.srv.registry.ServerRegistry;
 
 public class RegisterServiceCommand extends CommandAdapter implements IPassThrough {
 

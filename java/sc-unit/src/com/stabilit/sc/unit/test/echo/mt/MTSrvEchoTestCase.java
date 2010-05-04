@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test.echo.mt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
@@ -49,7 +52,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		srvEchoTestCase3.clnConnectBefore();
 		srvEchoTestCase3.clnCreateSessionBefore();
 		Thread th3 = new MTClientThread(srvEchoTestCase3, "invokeMultipleSrvEchoTest");
-    	th3.start();
+		th3.start();
 		th1.join();
 		srvEchoTestCase1.clnDeleteSessionAfter();
 		srvEchoTestCase1.clnDisconnectAfter();
@@ -59,5 +62,26 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		th3.join();
 		srvEchoTestCase3.clnDeleteSessionAfter();
 		srvEchoTestCase3.clnDisconnectAfter();
+	}
+
+	@Test
+	public void invokeMultipleSessionSrvEchoTest() throws Exception {
+		Map<SrvEchoTestCase, Thread> map = new HashMap<SrvEchoTestCase, Thread>();
+
+		for (int i = 0; i < 15; i++) {
+			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
+			srvEchoTestCase.setClient(this.newClient());
+			srvEchoTestCase.clnConnectBefore();
+			srvEchoTestCase.clnCreateSessionBefore();
+			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSessionSrvEchoTest");
+			th.start();
+			map.put(srvEchoTestCase, th);
+		}
+
+		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {
+			map.get(srvEchoTestCase).join();
+			srvEchoTestCase.clnDeleteSessionAfter();
+			srvEchoTestCase.clnDisconnectAfter();
+		}
 	}
 }

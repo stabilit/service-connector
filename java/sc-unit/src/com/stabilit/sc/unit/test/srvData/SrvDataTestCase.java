@@ -21,11 +21,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
+import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
+import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.service.SCMPClnSystemCall;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPBodyType;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 /**
@@ -63,5 +68,39 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 			Assert.assertEquals(serviceName, scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
 		}
+	}
+	
+	@Test
+	public void clnDataSimulationServerDisconnectAfterCreateSession() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(client);
+
+		createSessionCall.setServiceName("simulation");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		scmpSession = createSessionCall.invoke();
+
+		// disconnects simulation server from SC after sending response
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(
+				client, scmpSession);
+		systemCall.setMaxNodes(2);
+		systemCall.invoke();
+
+		// data call should fail because connection lost to simulation server
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
+		clnDataCall.setServiceName("simulation");
+		clnDataCall.setMessagInfo("asdasd");
+		clnDataCall.setBody("hello");
+		clnDataCall.invoke();
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
+
+		SCMP result = null;
+		try {
+			result = deleteSessionCall.invoke();
+		} catch (Exception e) {
+			SCTest.verifyError(result, SCMPErrorCode.SERVER_ERROR, SCMPMsgType.CLN_DATA);
+		}
+		//TODO verify that session is not longer available on SC with an inspect
 	}
 }

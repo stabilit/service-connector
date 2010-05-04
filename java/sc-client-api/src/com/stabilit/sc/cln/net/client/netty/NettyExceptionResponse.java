@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,39 +14,32 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.listener;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.cln.net.client.netty;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
+/**
+ * @author JTraber
+ * 
+ */
+public class NettyExceptionResponse extends NettyResponse {
 
-public class ListenerSupport<T extends EventListener> {
+	private Throwable th;
 
-	protected List<T> listenerList;
-	protected List<T> unmodifiableList;
-
-	public ListenerSupport() {
-		this.listenerList = new ArrayList<T>();
-		this.unmodifiableList = this.listenerList;
+	public NettyExceptionResponse(Throwable th) {
+		super(null);
+		this.th = th;
 	}
 
-	public boolean isEmpty() {
-		return this.listenerList.isEmpty();
-	}
-	
-	public synchronized void clearAll() {
-		this.listenerList.clear();
+	@Override
+	public boolean isFault() {
+		return true;
 	}
 
-	public synchronized void addListener(T listener) {
-		listenerList.add(listener);
-		this.unmodifiableList = listenerList;
+	public Throwable getFault() {
+		return th;
 	}
-
-	public synchronized void removeListener(T listener) {
-		listenerList.remove(listener);
-		this.unmodifiableList = listenerList;
-	}
-
 }

@@ -14,38 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.listener;
+package com.stabilit.sc.cln.net.client.netty;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class ListenerSupport<T extends EventListener> {
+import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
 
-	protected List<T> listenerList;
-	protected List<T> unmodifiableList;
+import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 
-	public ListenerSupport() {
-		this.listenerList = new ArrayList<T>();
-		this.unmodifiableList = this.listenerList;
+/**
+ * @author JTraber
+ * 
+ */
+public class NettyOperationListener implements ChannelFutureListener {
+
+	private final BlockingQueue<ChannelFuture> answer = new LinkedBlockingQueue<ChannelFuture>();
+
+	public ChannelFuture awaitUninterruptibly() throws TransportException {
+		ChannelFuture response;
+		boolean interrupted = false;
+		for (;;) {
+			try {
+				// take() wartet bis Message in Queue kommt!
+				response = answer.take();
+				if (response.isSuccess() == false) {
+					throw new TransportException("Operation could not be completed");
+				}
+				break;
+			} catch (InterruptedException e) {
+				ExceptionListenerSupport.fireException(this, e);
+				interrupted = true;
+			}
+		}
+
+		if (interrupted) {
+			Thread.currentThread().interrupt();
+		}
+		return response;
 	}
 
-	public boolean isEmpty() {
-		return this.listenerList.isEmpty();
+	@Override
+	public void operationComplete(ChannelFuture future) throws Exception {
+		answer.offer(future);
 	}
-	
-	public synchronized void clearAll() {
-		this.listenerList.clear();
-	}
-
-	public synchronized void addListener(T listener) {
-		listenerList.add(listener);
-		this.unmodifiableList = listenerList;
-	}
-
-	public synchronized void removeListener(T listener) {
-		listenerList.remove(listener);
-		this.unmodifiableList = listenerList;
-	}
-
 }

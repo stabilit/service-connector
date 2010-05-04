@@ -63,14 +63,14 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		int anzMsg = 1000;
 		SCMP result = null;
 
-		SCMPClnEchoCall ClnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
-		ClnEchoCall.setMaxNodes(2);
-		ClnEchoCall.setServiceName("simulation");
+		clnEchoCall.setMaxNodes(2);
+		clnEchoCall.setServiceName("simulation");
 
 		for (int i = 0; i < anzMsg; i++) {
-			ClnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
-			result = ClnEchoCall.invoke();
+			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
+			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
@@ -84,18 +84,14 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		SCMP result = null;	
 
 		for (int i = 0; i < anzMsg; i++) {
-			//is used otherwise you get an "Address already in us" failure
-			//obviously client needs some time after disconnect to get ready to connect again
-			//problem only when testing locally so sleeping for 10Ms is fine
-			Thread.currentThread().sleep(10); 
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 					scmpSession);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
-			clnEchoCall.setBody("hello world, index = " + i);
+			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
-			Assert.assertEquals("hello world, index = " + i, result.getBody());			
+			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");

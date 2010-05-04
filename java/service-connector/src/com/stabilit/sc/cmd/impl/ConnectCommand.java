@@ -67,7 +67,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		// TODO is socketAddress the right thing to save a a unique key?
+		// TODO is socketAddress the right thing to save as a unique key?
 
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 

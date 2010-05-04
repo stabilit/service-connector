@@ -26,73 +26,61 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipelineException;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
-import com.stabilit.sc.cln.client.ConnectionException;
-import com.stabilit.sc.cln.net.client.netty.http.NettyOperationListener;
+import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
 
 public class NettyTcpClientConnection extends ClientConnectionAdapter {
 
-	private ClientBootstrap bootstrap = null;
-	private Channel channel = null;
+	private ClientBootstrap bootstrap;
+	private Channel channel;
 	private int port;
 	private String host;
 	private NettyOperationListener operationListener;
-	NioClientSocketChannelFactory channelFactory = null;
+	private NioClientSocketChannelFactory channelFactory;
 
 	public NettyTcpClientConnection() {
-		// Configure the client.
+		this.bootstrap = null;
+		this.channel = null;
+		this.port = 0;
+		this.host = null;
+		this.operationListener = null;
+		this.channelFactory = null;
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
 				.newFixedThreadPool(5));
 	}
 
 	@Override
-	public void connect() throws ConnectionException {
-
+	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
-
-		// Set up the event pipeline factory.
 		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory());
 
 		// Start the connection attempt.
-		try {
-			ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-
-			operationListener = new NettyOperationListener();
-			future.addListener(operationListener);
-			// Wait until the connection attempt succeeds or fails.
-			this.channel = operationListener.awaitUninterruptibly().getChannel();
-			if (!future.isSuccess()) {
-				Exception e = (Exception) future.getCause();
-				future.getCause().printStackTrace();
-				this.bootstrap.releaseExternalResources();
-				throw new ConnectionException("Connection could not be established.", e);
-			}
-		} catch (ChannelPipelineException e) {
-			ExceptionListenerSupport.fireException(this, e);
-			throw new ConnectionException("Connection could not be established.", e);
-		}
+		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+		operationListener = new NettyOperationListener();
+		future.addListener(operationListener);
+		this.channel = operationListener.awaitUninterruptibly().getChannel();
 	}
 
 	@Override
-	public void disconnect() {
-		// Wait for the server to close the connection.
+	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
-		bootstrap.releaseExternalResources();
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
+		this.bootstrap.releaseExternalResources();
 	}
 
 	@Override
-	public void destroy() {
-		this.channel.close();
+	public void destroy() throws TransportException {
+		ChannelFuture future = this.channel.close();
+		future.addListener(operationListener);
+		operationListener.awaitUninterruptibly();
 		this.bootstrap.releaseExternalResources();
 	}
 
@@ -102,23 +90,20 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		encoderDecoder.encode(baos, scmp);
 
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
-
 		chBuffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
-		ConnectionListenerSupport.fireWrite(this, chBuffer.toByteBuffer().array()); // logs inside if
-		// registered
+		ConnectionListenerSupport.fireWrite(this, chBuffer.toByteBuffer().array());
 
 		NettyTcpClientResponseHandler handler = channel.getPipeline()
 				.get(NettyTcpClientResponseHandler.class);
-		ChannelBuffer content = handler.getMessageSync();
+		ChannelBuffer content = (ChannelBuffer) handler.getMessageSync();
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
 		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
-		// TODO encoder ?? large
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;

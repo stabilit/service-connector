@@ -26,12 +26,15 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.client.netty.NettyExceptionResponse;
+import com.stabilit.sc.cln.net.client.netty.NettyResponse;
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 
 @ChannelPipelineCoverage("one")
 public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
-	private final BlockingQueue<ChannelBuffer> answer = new LinkedBlockingQueue<ChannelBuffer>();
+	private final BlockingQueue<NettyResponse> answer = new LinkedBlockingQueue<NettyResponse>();
 
 	/**
 	 * @param scListener
@@ -40,13 +43,16 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 	public NettyTcpClientResponseHandler() {
 	}
 
-	public ChannelBuffer getMessageSync() {
-		ChannelBuffer response;
+	public ChannelBuffer getMessageSync() throws TransportException {
+		NettyResponse response;
 		boolean interrupted = false;
 		for (;;) {
 			try {
-				// take() wartet bis Message in Queue kommt!
+				// take() waits until message arrives in queue, locking inside queue
 				response = answer.take();
+				if (response.isFault()) {
+					throw new TransportException(((NettyExceptionResponse) response).getFault().getCause());
+				}
 				break;
 			} catch (InterruptedException e) {
 				ExceptionListenerSupport.fireException(this, e);
@@ -57,19 +63,20 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		if (interrupted) {
 			Thread.currentThread().interrupt();
 		}
-		return response;
+		return response.getBuffer();
 	}
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
-		answer.offer(chBuffer);
+		NettyResponse response = new NettyResponse(chBuffer);
+		answer.offer(response);
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		super.exceptionCaught(ctx, e);
+		Throwable th = (Throwable) e.getCause();
+		NettyResponse response = new NettyExceptionResponse(th);
+		answer.offer(response);
 	}
-	
-	
 }

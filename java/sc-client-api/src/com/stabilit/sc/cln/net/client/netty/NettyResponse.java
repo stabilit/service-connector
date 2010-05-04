@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,47 +14,35 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.net.client.netty.http;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.cln.net.client.netty;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import org.jboss.netty.buffer.ChannelBuffer;
 
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
-
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 
 /**
  * @author JTraber
- *
+ * 
  */
-public class NettyOperationListener implements ChannelFutureListener {
+public class NettyResponse {
 
-	private final BlockingQueue<ChannelFuture> answer = new LinkedBlockingQueue<ChannelFuture>();
+	private ChannelBuffer buffer;
+	private boolean isFault;
 	
-	public ChannelFuture awaitUninterruptibly() {
-		ChannelFuture response;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() wartet bis Message in Queue kommt!
-				response = answer.take();
-				break;
-			} catch (InterruptedException e) {
-				ExceptionListenerSupport.fireException(this, e);
-				interrupted = true;
-			}
-		}
+	public NettyResponse(ChannelBuffer buffer) {
+		this. buffer =  buffer;	
+		this.isFault = false;
+	}
 
-		if (interrupted) {
-			Thread.currentThread().interrupt();
-		}
-		return response;
+	public ChannelBuffer getBuffer() {
+		return  buffer;
 	}
 	
-	@Override
-	public void operationComplete(ChannelFuture future) throws Exception {
-		answer.offer(future);
+	public boolean isFault() {
+		return isFault;
 	}
 }

@@ -20,11 +20,13 @@ import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.cln.net.TransportException;
 import com.stabilit.sc.common.factory.IFactoryable;
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
+import com.stabilit.sc.common.scmp.SCMPErrorCode;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.Session;
@@ -35,6 +37,7 @@ import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.srv.net.SCMPTransportException;
 
 public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 
@@ -63,10 +66,16 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
-
-		SCMP scmpReply = serviceRegistryItem.srvData(scmp);
-		scmpReply.setMessageType(getKey().getResponseName());
-		response.setSCMP(scmpReply);
+		try {
+			SCMP scmpReply = serviceRegistryItem.srvData(scmp);
+			scmpReply.setMessageType(getKey().getResponseName());
+			response.setSCMP(scmpReply);
+		} catch (TransportException e) {
+			//clnDatat could not be sent successfully
+			//TODO what is consequence?
+			ExceptionListenerSupport.fireException(this, e);
+			throw new SCMPTransportException(SCMPErrorCode.SERVER_ERROR);
+		}
 	}
 
 	@Override
