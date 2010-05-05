@@ -1,0 +1,74 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.client.ClientFactory" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/cln/client/ClientFactory.java" binary="false">    
+    <position x="87" y="56" width="204" height="83"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.client.Client" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/cln/client/Client.java" binary="false">    
+    <position x="186" y="460" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.client.IClient" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/cln/client/IClient.java" binary="false">    
+    <position x="186" y="241" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.client.IClientConnection" 
+    project="sc-client-api" file="/sc-client-api/src/com/stabilit/sc/cln/client/IClientConnection.java" binary="false">    
+    <position x="530" y="146" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" 
+    name="com.stabilit.sc.cln.net.client.netty.http.NettyHttpClientConnection" project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/cln/net/client/netty/http/NettyHttpClientConnection.java" binary="false">    
+    <position x="790" y="387" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.cln.net.client.netty.tcp.NettyTcpClientConnection" 
+    project="sc-client-api" 
+    file="/sc-client-api/src/com/stabilit/sc/cln/net/client/netty/tcp/NettyTcpClientConnection.java" binary="false">    
+    <position x="526" y="514" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <association>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.client.Client" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/client/Client.java" binary="false" navigable="false">      
+      <attribute name="clientConnection"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="sc-client-api" name="com.stabilit.sc.cln.client.IClientConnection" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/client/IClientConnection.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization>    
+    <source project="sc-client-api" name="com.stabilit.sc.cln.client.Client" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/client/Client.java" binary="false"/>    
+    <target project="sc-client-api" name="com.stabilit.sc.cln.client.IClient" 
+      file="/sc-client-api/src/com/stabilit/sc/cln/client/IClient.java" binary="false"/>  
+  </realization>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
