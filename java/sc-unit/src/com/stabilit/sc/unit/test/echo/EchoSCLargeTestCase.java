@@ -96,6 +96,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), res.getMessageType());
 
 	}
+	
 	@Test
 	public void invokeUnknownEndLargePartsTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);

@@ -32,13 +32,11 @@ import org.junit.runners.Parameterized.Parameters;
 
 import test.stabilit.sc.common.util.ReflectionUtil;
 
-import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.common.listener.ConnectionListenerSupport;
-import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.unit.test.SetupTestCases;
 
 /**
@@ -112,8 +110,6 @@ public abstract class MTSuperTestCase {
 		}
 		ConnectionListenerSupport.getInstance().clearAll();
 		clientList = null;
-		Simulation.simulationThreads.clear();
-		ServiceConnector.SCThreads.clear();
 	}
 
 	public static class MTClientThread extends Thread {

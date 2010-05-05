@@ -34,8 +34,6 @@ import com.stabilit.sc.srv.server.IServer;
 
 public final class ServiceConnector {
 
-	public static List<Thread> SCThreads;
-
 	private ServiceConnector() {
 	}
 

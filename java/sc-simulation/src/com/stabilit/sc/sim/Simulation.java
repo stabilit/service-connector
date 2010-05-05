@@ -31,8 +31,6 @@ import com.stabilit.sc.srv.server.ServerFactory;
 
 public class Simulation {
 
-	public static List<Thread> simulationThreads;
-
 	public static void main(String[] args) throws IOException {
 		run();
 	}
