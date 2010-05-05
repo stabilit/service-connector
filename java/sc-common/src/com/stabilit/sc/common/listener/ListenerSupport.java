@@ -16,36 +16,33 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
-import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.List;
 
 public class ListenerSupport<T extends EventListener> {
 
-	protected List<T> listenerList;
-	protected List<T> unmodifiableList;
+	protected EventListener[] listenerArray;
+	protected int size;
 
 	public ListenerSupport() {
-		this.listenerList = new ArrayList<T>();
-		this.unmodifiableList = this.listenerList;
+		this.listenerArray = new EventListener[16];
+		this.size = 0;
 	}
 
 	public boolean isEmpty() {
-		return this.listenerList.isEmpty();
+		return size <= 0;
 	}
 	
 	public synchronized void clearAll() {
-		this.listenerList.clear();
+		this.size = 0;
 	}
 
 	public synchronized void addListener(T listener) {
-		listenerList.add(listener);
-		this.unmodifiableList = listenerList;
+		if (size == this.listenerArray.length) {
+			size <<= 1;  // multiply by 2
+			EventListener[] newArray = new EventListener[size];
+		    System.arraycopy(this.listenerArray, 0, newArray, 0, this.listenerArray.length);
+		    this.listenerArray = newArray;
+		}
+		listenerArray[size++] = listener;
 	}
-
-	public synchronized void removeListener(T listener) {
-		listenerList.remove(listener);
-		this.unmodifiableList = listenerList;
-	}
-
 }

@@ -16,8 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.EventListener;
 
 import com.stabilit.sc.common.log.Level;
 
@@ -82,17 +81,11 @@ public class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
 	}
 
 	public void fireLog(LoggerEvent loggerEvent) {
-		Iterator<ILoggerListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections
-						.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				ILoggerListener loggerListener = iter.next();
+				ILoggerListener loggerListener = (ILoggerListener) localArray[i];
 				loggerListener.logEvent(loggerEvent);
 			} catch (Exception e) {
 				e.printStackTrace();

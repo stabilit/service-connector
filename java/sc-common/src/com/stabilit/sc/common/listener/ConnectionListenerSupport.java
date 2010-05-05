@@ -16,8 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.EventListener;
 
 public class ConnectionListenerSupport extends ListenerSupport<IConnectionListener> {
 
@@ -73,16 +72,11 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireConnect(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				IConnectionListener connectionListener = iter.next();
+				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.connectEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -91,16 +85,11 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireDisconnect(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				IConnectionListener connectionListener = iter.next();
+				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.disconnectEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -109,16 +98,11 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireWrite(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				IConnectionListener connectionListener = iter.next();
+				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.writeEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -127,16 +111,11 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireRead(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				IConnectionListener connectionListener = iter.next();
+				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.readEvent(connectionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();

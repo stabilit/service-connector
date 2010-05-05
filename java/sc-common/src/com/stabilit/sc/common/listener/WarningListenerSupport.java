@@ -16,8 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.common.listener;
 
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.EventListener;
 
 public class WarningListenerSupport extends
 		ListenerSupport<IWarningListener> {
@@ -39,16 +38,11 @@ public class WarningListenerSupport extends
 	}
 
 	public void fireWarning(WarningEvent warningEvent) {
-		Iterator<IWarningListener> iter = null;
-		synchronized (this) {
-			if (this.listenerList == this.unmodifiableList) {
-				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
-			}
-			iter = unmodifiableList.iterator();
-		}
-		while (iter.hasNext()) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
 			try {
-				IWarningListener warningListener = iter.next();
+				IWarningListener warningListener = (IWarningListener) localArray[i];
 				warningListener.warningEvent(warningEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
