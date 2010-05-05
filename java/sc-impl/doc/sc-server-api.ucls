@@ -1,0 +1,96 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.server.factory.ServerConnectionFactory" 
+    project="sc-server-api" file="/sc-server-api/src/com/stabilit/sc/server/factory/ServerConnectionFactory.java" 
+    binary="false">    
+    <position x="361" y="63" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.server.Server" project="sc-server-api" 
+    file="/sc-server-api/src/com/stabilit/sc/server/Server.java" binary="false">    
+    <position x="127" y="396" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.server.IServerConnection" 
+    project="sc-server-api" file="/sc-server-api/src/com/stabilit/sc/server/IServerConnection.java" binary="false">    
+    <position x="190" y="183" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.server.IServer" project="sc-server-api" 
+    file="/sc-server-api/src/com/stabilit/sc/server/IServer.java" binary="false">    
+    <position x="68" y="143" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.net.server.netty.tcp.NettyTcpServerConnection" 
+    project="sc-server-api" file="/sc-server-api/src/com/stabilit/sc/net/server/netty/tcp/NettyTcpServerConnection.java" 
+    binary="false">    
+    <position x="392" y="177" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.net.server.netty.http.NettyHttpServerConnection" 
+    project="sc-server-api" 
+    file="/sc-server-api/src/com/stabilit/sc/net/server/netty/http/NettyHttpServerConnection.java" binary="false">    
+    <position x="358" y="354" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.sc.server.ServerFactory" project="sc-server-api" 
+    file="/sc-server-api/src/com/stabilit/sc/server/ServerFactory.java" binary="false">    
+    <position x="124" y="62" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <realization>    
+    <source project="sc-server-api" name="com.stabilit.sc.net.server.netty.http.NettyHttpServerConnection" 
+      file="/sc-server-api/src/com/stabilit/sc/net/server/netty/http/NettyHttpServerConnection.java" binary="false"/>    
+    <target project="sc-server-api" name="com.stabilit.sc.server.IServerConnection" 
+      file="/sc-server-api/src/com/stabilit/sc/server/IServerConnection.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <source project="sc-server-api" name="com.stabilit.sc.net.server.netty.tcp.NettyTcpServerConnection" 
+      file="/sc-server-api/src/com/stabilit/sc/net/server/netty/tcp/NettyTcpServerConnection.java" binary="false"/>    
+    <target project="sc-server-api" name="com.stabilit.sc.server.IServerConnection" 
+      file="/sc-server-api/src/com/stabilit/sc/server/IServerConnection.java" binary="false"/>  
+  </realization>  
+  <realization>    
+    <bendpoint x="39" y="242"/>    
+    <source project="sc-server-api" name="com.stabilit.sc.server.Server" 
+      file="/sc-server-api/src/com/stabilit/sc/server/Server.java" binary="false"/>    
+    <target project="sc-server-api" name="com.stabilit.sc.server.IServer" 
+      file="/sc-server-api/src/com/stabilit/sc/server/IServer.java" binary="false"/>  
+  </realization>  
+  <association>    
+    <source project="sc-server-api" name="com.stabilit.sc.server.Server" 
+      file="/sc-server-api/src/com/stabilit/sc/server/Server.java" binary="false" navigable="false">      
+      <attribute name="serverConnection"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="sc-server-api" name="com.stabilit.sc.server.IServerConnection" 
+      file="/sc-server-api/src/com/stabilit/sc/server/IServerConnection.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
