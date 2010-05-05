@@ -40,12 +40,13 @@ public class ExceptionListenerSupport extends
 	}
 
 	public void fireException(ExceptionEvent exceptionEvent) {
+		Iterator<IExceptionListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-		Iterator<IExceptionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IExceptionListener exceptionListener = iter.next();

@@ -73,12 +73,13 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireConnect(ConnectionEvent connectionEvent) {
+		Iterator<IConnectionListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();
@@ -90,12 +91,13 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireDisconnect(ConnectionEvent connectionEvent) {
+		Iterator<IConnectionListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();
@@ -107,12 +109,13 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireWrite(ConnectionEvent connectionEvent) {
+		Iterator<IConnectionListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();
@@ -124,12 +127,13 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 	}
 
 	public void fireRead(ConnectionEvent connectionEvent) {
+		Iterator<IConnectionListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();

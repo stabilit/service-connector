@@ -39,13 +39,13 @@ public class WarningListenerSupport extends
 	}
 
 	public void fireWarning(WarningEvent warningEvent) {
+		Iterator<IWarningListener> iter = null;
 		synchronized (this) {
 			if (this.listenerList == this.unmodifiableList) {
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
+			iter = unmodifiableList.iterator();
 		}
-
-		Iterator<IWarningListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IWarningListener warningListener = iter.next();

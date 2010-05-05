@@ -17,15 +17,25 @@
 package com.stabilit.sc.common.log;
 
 public enum Level {
-	ERROR("ERR"), EXCEPTION("EXC"), WARN("WRN"), INFO("INF"), DEBUG("DBG"), TRACE("TRC");
+	ERROR("ERR",1), EXCEPTION("EXC",2), WARN("WRN",3), INFO("INF",4), DEBUG("DBG",5), TRACE("TRC",6);
 
-	private String level;
+	private String name;
+	private int level;
 	
-	private Level(String level) {
+	private Level(String name, int level) {
+		this.name = name;
 		this.level = level;
 	}
 	
-	public String getLevel() {
+	public String getName() {
+		return name;
+	}
+	
+	public int getLevel() {
 		return level;
+	}
+	
+	public boolean supportsLevel(Level level) {
+		return this.level >= level.level;
 	}
 }

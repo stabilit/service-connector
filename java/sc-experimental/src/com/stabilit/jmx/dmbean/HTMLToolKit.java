@@ -1,19 +1,15 @@
 package com.stabilit.jmx.dmbean;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
-import java.lang.reflect.*;
-import java.rmi.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class HTMLToolKit {
 	private static String indent() {
 		return ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 	}
 
-	private static StringBuffer getClassString(Class[] classes) {
+	private static StringBuffer getClassString(Class<?>[] classes) {
 		StringBuffer s = new StringBuffer();
 		for (int j = 0; classes != null && j < classes.length; j++) {
 			s.append(classes[j].getName());
@@ -23,7 +19,7 @@ public class HTMLToolKit {
 		return (s);
 	}
 
-	private static StringBuffer getParametersAndExceptions(Class[] parameters, Class[] exceptions) {
+	private static StringBuffer getParametersAndExceptions(Class<?>[] parameters, Class[] exceptions) {
 		StringBuffer s = new StringBuffer();
 
 		s.append("(");

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.LoggerListenerSupport;
 import com.stabilit.sc.common.scmp.IRequest;
 import com.stabilit.sc.common.scmp.IResponse;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -63,8 +64,9 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 
 		SCMP result = null;
 		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
-		log.debug("Run command " + this.getKey() + " on Node: " + maxNodes);
-
+		if (LoggerListenerSupport.getInstance().isDebug()) {
+			LoggerListenerSupport.getInstance().fireDebug(this, "Run command " + this.getKey() + " on Node: " + maxNodes);
+		}
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
