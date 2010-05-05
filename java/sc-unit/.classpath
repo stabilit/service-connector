@@ -2,11 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-client-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-common"/>
+	<classpathentry kind="lib" path="/sc-lib/lib/junit-4.8.1.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/service-connector"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-simulation"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-server-api"/>
-	<classpathentry kind="lib" path="/sc-lib/lib/junit-4.8.1.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-impl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

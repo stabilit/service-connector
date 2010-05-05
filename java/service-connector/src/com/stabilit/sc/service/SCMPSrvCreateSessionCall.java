@@ -21,9 +21,9 @@ import java.util.Map;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallAdapter;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
  * @author JTraber

@@ -18,17 +18,19 @@ package com.stabilit.sc.unit.test.session;
 
 import junit.framework.Assert;
 
-import com.stabilit.sc.cln.io.SCMPSession;
+import org.junit.Test;
+
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
+import com.stabilit.sc.cln.scmp.SCMPSession;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
@@ -43,7 +45,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
 	private SCMPSession scmpSession = null;
 
-	// @Test
+	@Test
 	public void failClnCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
@@ -59,7 +61,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		}
 	}
 
-	// @Test
+	@Test
 	public void clnCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);

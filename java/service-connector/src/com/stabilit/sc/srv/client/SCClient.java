@@ -17,10 +17,10 @@
 package com.stabilit.sc.srv.client;
 
 import com.stabilit.sc.cln.client.Client;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.impl.EncoderDecoderFactory;
-import com.stabilit.sc.common.scmp.impl.IEncoderDecoder;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.net.EncoderDecoderFactory;
+import com.stabilit.sc.net.IEncoderDecoder;
+import com.stabilit.sc.scmp.SCMP;
 
 /**
  * @author JTraber

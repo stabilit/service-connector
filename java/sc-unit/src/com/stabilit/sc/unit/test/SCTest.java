@@ -22,12 +22,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.sc.common.test.CommonTest;
+import test.stabilit.sc.test.CommonTest;
 
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.connect.ConnectTestCase;
 import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;

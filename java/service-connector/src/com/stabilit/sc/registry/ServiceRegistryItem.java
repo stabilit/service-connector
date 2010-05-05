@@ -22,11 +22,10 @@ import java.net.SocketAddress;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.service.SCMPCallFactory;
 import com.stabilit.sc.service.SCMPSrvCreateSessionCall;
 import com.stabilit.sc.service.SCMPSrvDataCall;
@@ -35,6 +34,7 @@ import com.stabilit.sc.service.SCMPSrvEchoCall;
 import com.stabilit.sc.service.SCMPSrvSystemCall;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber

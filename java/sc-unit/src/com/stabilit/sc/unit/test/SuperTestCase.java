@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionListenerSupport;
 
 /**
  * @author JTraber

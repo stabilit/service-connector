@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.registry.ServerRegistry;
+import com.stabilit.sc.util.MapBean;
 
 public class ServiceRegistryItemPool extends MapBean<String>{
 

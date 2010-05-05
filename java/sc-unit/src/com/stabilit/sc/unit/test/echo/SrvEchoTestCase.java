@@ -24,10 +24,10 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPBodyType;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPBodyType;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoTestCase extends SuperSessionTestCase {
@@ -76,7 +76,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
 	}
 
-	@Test
+//	@Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();

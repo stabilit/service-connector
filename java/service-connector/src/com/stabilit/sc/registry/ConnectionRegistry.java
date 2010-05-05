@@ -18,8 +18,7 @@ package com.stabilit.sc.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.registry.Registry;
-import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.util.MapBean;
 
 /**
  * @author JTraber

@@ -20,21 +20,21 @@ import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.ctx.IRequestContext;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.scmp.IRequest;
-import com.stabilit.sc.common.scmp.IResponse;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.common.scmp.SCMPReply;
-import com.stabilit.sc.common.util.MapBean;
+import com.stabilit.sc.ctx.IRequestContext;
+import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.registry.ConnectionRegistry;
+import com.stabilit.sc.scmp.IRequest;
+import com.stabilit.sc.scmp.IResponse;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.util.MapBean;
 
 public class DisconnectCommand extends CommandAdapter implements IPassThrough  {
 

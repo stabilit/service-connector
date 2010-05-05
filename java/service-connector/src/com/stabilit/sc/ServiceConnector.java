@@ -23,7 +23,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -31,6 +31,7 @@ import com.stabilit.sc.server.SCServerFactory;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.srv.conf.ServerConfig;
 import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
+import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.server.IServer;
 
 public final class ServiceConnector {
@@ -63,7 +64,7 @@ public final class ServiceConnector {
 
 		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
 		SCServerFactory serverFactory = new SCServerFactory();
-		for (ServerConfigItem serverConfig : serverConfigList) {
+		for (IServerConfigItem serverConfig : serverConfigList) {
 			IServer server = serverFactory.newInstance(serverConfig);
 			try {
 				server.create();

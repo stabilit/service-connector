@@ -26,9 +26,9 @@ import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
 import com.stabilit.sc.cln.service.SCMPInspectCall;
 import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.service.SCMPServiceException;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SuperTestCase;
 

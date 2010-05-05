@@ -18,8 +18,8 @@ package com.stabilit.sc.sim.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.registry.Registry;
-import com.stabilit.sc.common.scmp.Session;
+import com.stabilit.sc.registry.Registry;
+import com.stabilit.sc.scmp.Session;
 
 /**
  * @author JTraber

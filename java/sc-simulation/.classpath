@@ -2,9 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-client-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-server-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sc-common"/>
 	<classpathentry kind="lib" path="/sc-lib/lib/log4j-1.2.15.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-impl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

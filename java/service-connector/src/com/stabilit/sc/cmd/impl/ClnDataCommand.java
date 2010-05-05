@@ -21,23 +21,23 @@ import javax.xml.bind.ValidationException;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.cln.net.TransportException;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.common.listener.ExceptionListenerSupport;
-import com.stabilit.sc.common.scmp.IRequest;
-import com.stabilit.sc.common.scmp.IResponse;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.common.scmp.Session;
-import com.stabilit.sc.common.util.ValidatorUtility;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
+import com.stabilit.sc.scmp.IRequest;
+import com.stabilit.sc.scmp.IResponse;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.srv.net.SCMPTransportException;
+import com.stabilit.sc.util.ValidatorUtility;
 
 public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 

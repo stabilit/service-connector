@@ -30,14 +30,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import test.stabilit.sc.common.util.ReflectionUtil;
-
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.common.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.util.ReflectionUtil;
 
 /**
  * @author JTraber

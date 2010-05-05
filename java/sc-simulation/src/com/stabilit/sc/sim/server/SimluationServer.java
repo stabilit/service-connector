@@ -21,8 +21,8 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
-import com.stabilit.sc.common.factory.IFactoryable;
-import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
+import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.server.Server;
 
 /**
@@ -42,7 +42,7 @@ public class SimluationServer extends Server {
 	public void create() throws Exception {
 		super.create();
 		ClientConfig clientConfig = (ClientConfig) this.getServerContext().getAttribute(ClientConfig.class.getName());
-		ServerConfigItem serverConfigItem = (ServerConfigItem) this.getServerContext().getServer().getServerConfig();
+		IServerConfigItem serverConfigItem = (IServerConfigItem) this.getServerContext().getServer().getServerConfig();
 		client = clientFactory.newInstance(clientConfig.getClientConfig());
 		client.connect(); // physical connect
 		// scmp registerService		

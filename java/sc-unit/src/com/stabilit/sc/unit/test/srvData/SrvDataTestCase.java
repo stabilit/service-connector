@@ -25,11 +25,11 @@ import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnDataCall;
 import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.service.SCMPClnSystemCall;
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPBodyType;
-import com.stabilit.sc.common.scmp.SCMPErrorCode;
-import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPBodyType;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
@@ -70,7 +70,6 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 		}
 	}
 	
-	@Test
 	public void clnDataSimulationServerDisconnectAfterCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
