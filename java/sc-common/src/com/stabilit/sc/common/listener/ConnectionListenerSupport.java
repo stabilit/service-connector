@@ -97,7 +97,12 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireDisconnect(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = listenerList.iterator();
+		synchronized (this) {
+			if (this.listenerList == this.unmodifiableList) {
+				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
+			}
+		}
+		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();
@@ -109,7 +114,12 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireWrite(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = listenerList.iterator();
+		synchronized (this) {
+			if (this.listenerList == this.unmodifiableList) {
+				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
+			}
+		}
+		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();
@@ -121,7 +131,12 @@ public class ConnectionListenerSupport extends
 	}
 
 	public void fireRead(ConnectionEvent connectionEvent) {
-		Iterator<IConnectionListener> iter = listenerList.iterator();
+		synchronized (this) {
+			if (this.listenerList == this.unmodifiableList) {
+				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
+			}
+		}
+		Iterator<IConnectionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
 				IConnectionListener connectionListener = iter.next();

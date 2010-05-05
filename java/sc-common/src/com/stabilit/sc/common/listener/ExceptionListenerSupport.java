@@ -45,7 +45,6 @@ public class ExceptionListenerSupport extends
 				this.unmodifiableList = Collections.unmodifiableList(this.listenerList);
 			}
 		}
-
 		Iterator<IExceptionListener> iter = unmodifiableList.iterator();
 		while (iter.hasNext()) {
 			try {
