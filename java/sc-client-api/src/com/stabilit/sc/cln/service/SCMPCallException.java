@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,51 +14,25 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.common.scmp.internal;
-
-import com.stabilit.sc.common.scmp.SCMP;
-import com.stabilit.sc.common.scmp.SCMPPart;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.cln.service;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPRequestPart extends SCMPPart {
+public class SCMPCallException extends Exception {
 
-	private int offset;
-	private int size;
-	private int callLength;
+	public SCMPCallException() {
 
-	public SCMPRequestPart(SCMP scmp, int offset) {
-		this.offset = offset;
-		this.callLength = scmp.getBodyLength();
-		this.size = this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
-				: SCMP.LARGE_MESSAGE_LIMIT;
-		this.setHeader(scmp);
-		this.setInternalStatus(scmp.getInternalStatus());
-		this.setBody(scmp.getBody());
 	}
 
-	@Override
-	public boolean isPart() {
-		if (this.isGroup()) {
-			return true;
-		}
-		return offset + size < callLength;
+	public SCMPCallException(String message) {
+		super(message);
 	}
 
-	@Override
-	public boolean isBodyOffset() {
-		return true;
-	}
-
-	public int getBodyOffset() {
-		return offset;
-	}
-
-	@Override
-	public int getBodyLength() {
-		return this.size;
-	}
 }

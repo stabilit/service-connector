@@ -20,6 +20,8 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPInternalStatus;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.scmp.SCMPPart;
 
 /**
@@ -70,6 +72,17 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	@Override
+	public ISCMPCall openGroup() {
+		ISCMPCall groupCall = new SCMPGroupCall(this);
+		return groupCall;
+	}
+
+	@Override
+	public SCMP closeGroup() {
+		throw new UnsupportedOperationException("not allowed");
+	}
+
+	@Override
 	public SCMP invoke() throws Exception {
 		this.call.setMessageType(getMessageType().getRequestName());
 		this.result = client.sendAndReceive(this.call);
@@ -97,4 +110,93 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	public void setCompression(boolean compression) {
 		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
+
+	// inner class
+	public class SCMPGroupCall implements ISCMPCall {
+		private ISCMPCall parentCall;
+		private SCMPGroupState groupState;
+
+		private SCMPGroupCall(ISCMPCall parentCall) {
+			this.parentCall = parentCall;
+			this.groupState = SCMPGroupState.OPEN;
+		}
+
+		@Override
+		public SCMP invoke() throws Exception {
+			if (this.groupState == SCMPGroupState.CLOSE) {
+				throw new SCMPCallException("group is closed");
+			}
+			SCMP callSCMP = this.parentCall.getCall();
+			// check if parent call is a large call
+			if (callSCMP.isLargeMessage()) {
+				SCMPCallAdapter.this.call.setInternalStatus(SCMPInternalStatus.GROUP);
+				SCMP scmp = this.parentCall.invoke();
+				return scmp;
+			}
+			// set
+			if (callSCMP.isPart() == false) {
+				SCMPPart scmpPart = new SCMPPart();
+				scmpPart.setHeader(callSCMP);
+				scmpPart.setBody(callSCMP.getBody());
+				SCMPCallAdapter.this.call = scmpPart; // SCMPCallAdapter.this points to this.parentCall
+				callSCMP = null;
+			}
+			SCMP scmp = this.parentCall.invoke();
+			return scmp;
+		}
+
+		@Override
+		public void setBody(Object body) {
+			this.parentCall.setBody(body);
+		}
+
+		@Override
+		public SCMP closeGroup() throws Exception {
+			this.groupState = SCMPGroupState.CLOSE;
+			// send empty closing REQ
+			SCMP scmp = new SCMP();
+			scmp.setHeader(SCMPCallAdapter.this.call);
+			scmp.setBody(null);
+			scmp.setInternalStatus(SCMPInternalStatus.GROUP);
+			SCMPCallAdapter.this.call = scmp;
+			SCMP result = this.parentCall.invoke();
+			return result;
+		}
+
+		@Override
+		public ISCMPCall openGroup() {
+			throw new UnsupportedOperationException("not allowed");
+		}
+
+		@Override
+		public SCMPMsgType getMessageType() {
+			return parentCall.getMessageType();
+		}
+
+		@Override
+		public SCMP getCall() {
+			return this.parentCall.getCall();
+		}
+
+		@Override
+		public SCMP getResult() {
+			return this.parentCall.getResult();
+		}
+
+		@Override
+		public ISCMPCall newInstance(IClient client) {
+			throw new UnsupportedOperationException("not allowed");
+		}
+
+		@Override
+		public ISCMPCall newInstance(IClient client, SCMP scmp) {
+			throw new UnsupportedOperationException("not allowed");
+		}
+
+	}
+
+	private static enum SCMPGroupState {
+		OPEN, CLOSE;
+	}
+
 }

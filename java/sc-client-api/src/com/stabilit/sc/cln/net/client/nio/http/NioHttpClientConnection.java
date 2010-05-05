@@ -53,13 +53,13 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionListenerSupport.fireConnect(this);
+		ConnectionListenerSupport.getInstance().fireConnect(this);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
 	}
 
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionListenerSupport.fireDisconnect(this);
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		socketChannel.close();
 	}
 

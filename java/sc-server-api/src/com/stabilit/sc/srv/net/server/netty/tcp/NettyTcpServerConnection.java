@@ -90,7 +90,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		try {
 			runSync();
 		} catch (Throwable e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 			this.destroy();
 		}
 	}

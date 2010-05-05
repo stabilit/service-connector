@@ -19,8 +19,7 @@ package com.stabilit.sc.common.listener;
 import java.util.Collections;
 import java.util.Iterator;
 
-public class ConnectionListenerSupport extends
-		ListenerSupport<IConnectionListener> {
+public class ConnectionListenerSupport extends ListenerSupport<IConnectionListener> {
 
 	private static ConnectionListenerSupport connectionListenerSupport = new ConnectionListenerSupport();
 
@@ -31,14 +30,14 @@ public class ConnectionListenerSupport extends
 		return connectionListenerSupport;
 	}
 
-	public static void fireConnect(Object source) {
+	public void fireConnect(Object source) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, null);
 			ConnectionListenerSupport.getInstance().fireConnect(connectionEvent);
 		}
 	}
 
-	public static void fireDisconnect(Object source) {
+	public void fireDisconnect(Object source) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, null);
 			ConnectionListenerSupport.getInstance().fireDisconnect(connectionEvent);
@@ -47,34 +46,28 @@ public class ConnectionListenerSupport extends
 
 	public static void fireWrite(Object source, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source,
-					buffer);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer);
 			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
 		}
 	}
 
-	public static void fireWrite(Object source, byte[] buffer, int offset,
-			int length) {
+	public static void fireWrite(Object source, byte[] buffer, int offset, int length) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source,
-					buffer, offset, length);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer, offset, length);
 			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
 		}
 	}
 
 	public static void fireRead(Object source, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source,
-					buffer);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer);
 			ConnectionListenerSupport.getInstance().fireRead(connectionEvent);
 		}
 	}
 
-	public static void fireRead(Object source, byte[] buffer, int offset,
-			int length) {
+	public static void fireRead(Object source, byte[] buffer, int offset, int length) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source,
-					buffer, offset, length);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer, offset, length);
 			ConnectionListenerSupport.getInstance().fireRead(connectionEvent);
 		}
 	}

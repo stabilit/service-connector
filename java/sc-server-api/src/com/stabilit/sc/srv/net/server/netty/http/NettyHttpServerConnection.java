@@ -89,7 +89,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		try {
 			runSync();
 		} catch (InterruptedException e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 			// TODO
 			e.printStackTrace();
 		}

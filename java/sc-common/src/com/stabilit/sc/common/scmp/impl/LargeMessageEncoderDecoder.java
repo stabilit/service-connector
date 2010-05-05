@@ -62,7 +62,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		try {
 			String line = br.readLine(); // TODO
 			readBytes += line.getBytes().length;
-			readBytes += 1; //read LF
+			readBytes += 1; // read LF
 			if (line == null || line.length() <= 0) {
 				return null;
 			}
@@ -82,15 +82,15 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			default:
 				scmp = new SCMP();
 			}
-			
+
 			while (true) {
 				line = br.readLine(); // TODO
 				readBytes += line.getBytes().length;
-				readBytes += 1; //read LF
+				readBytes += 1; // read LF
 				if (line == null || line.length() <= 0) {
 					break;
 				}
-				
+
 				Matcher match = IEncoderDecoder.DECODE_REG.matcher(line);
 				if (match.matches() && match.groupCount() == 2) {
 					/********* escaping *************/
@@ -100,7 +100,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				}
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.fireException(this, e1);
+			ExceptionListenerSupport.getInstance().fireException(this, e1);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
@@ -145,7 +145,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				return scmp;
 			}
 		} catch (Exception e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
 		return scmp;
 	}
@@ -156,7 +156,9 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
 
-		scmp.setInternalStatus(SCMPInternalStatus.NONE);
+		if (scmp.isGroup() == false) {
+			scmp.setInternalStatus(SCMPInternalStatus.NONE);
+		}
 
 		// message chunking
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
@@ -252,7 +254,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				bw.flush();
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.fireException(this, e1);
+			ExceptionListenerSupport.getInstance().fireException(this, e1);
 			scmp.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}

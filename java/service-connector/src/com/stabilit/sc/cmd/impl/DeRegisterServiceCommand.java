@@ -94,7 +94,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 					throw new ValidationException("ServiceName must be set!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

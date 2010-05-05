@@ -21,7 +21,7 @@ package com.stabilit.sc.common.scmp;
  * 
  */
 public enum SCMPInternalStatus {
-	NONE, PRQ, REQ, FAILED;
+	NONE, PRQ, REQ, FAILED, GROUP;
 
 	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
 		switch (headerKey) {

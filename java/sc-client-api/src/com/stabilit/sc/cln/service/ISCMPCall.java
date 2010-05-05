@@ -32,10 +32,16 @@ public interface ISCMPCall {
 	
 	public SCMP invoke() throws Exception;
 	
+	public void setBody(Object body);
+		
 	public SCMP getCall();
 	
 	public SCMP getResult();
 	
 	public SCMPMsgType getMessageType();
+	
+	public ISCMPCall openGroup() throws Exception;
+	
+	public SCMP closeGroup() throws Exception;
 	
 }

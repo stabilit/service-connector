@@ -39,7 +39,7 @@ public class SCMPLargeRequest extends SCMP {
 	
 	public SCMP getFirst() {
 		this.offset = 0;
-		this.current = new SCMPRequestPart(scmp, this.offset);
+		this.current = new SCMPRequestPart(this.scmp, this.offset);
 		this.offset += current.getBodyLength();		
 		return this.current;
 	}

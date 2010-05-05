@@ -113,12 +113,12 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			// TODO ExceptionListenerSupport.fireException(this, ex);
+			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
 		if (intValue <= lowerLimit)
-			// TODO ExceptionListenerSupport.fireException(this, ex);
+			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new ValidatorException("intValue to low.");
 	}
 
@@ -131,7 +131,7 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			// TODO ExceptionListenerSupport.fireException(this, ex);
+			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 

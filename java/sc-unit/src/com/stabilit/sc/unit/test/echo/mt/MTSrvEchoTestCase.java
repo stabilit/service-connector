@@ -33,7 +33,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		super(fileName);
 	}
 
-	@Test
+//	@Test
 	public void invokeMultipleSrvEchoTest() throws Exception {
 		SrvEchoTestCase srvEchoTestCase1 = new SrvEchoTestCase(fileName);
 		srvEchoTestCase1.setClient(this.newClient());

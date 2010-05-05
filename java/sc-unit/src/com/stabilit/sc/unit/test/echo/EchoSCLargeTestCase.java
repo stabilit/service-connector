@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.config.ClientConfig;
+import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPEchoSCCall;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -58,7 +59,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		}
 	}
 
-	@Test
+	// @Test
 	public void invokeTwoPartsTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 		StringBuilder sb = new StringBuilder();
@@ -75,5 +76,47 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		Assert.assertEquals("1/3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
+	}
+
+	@Test
+	public void invokeUnknownEndPartsTest() throws Exception {
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		ISCMPCall groupCall = echoCall.openGroup();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 10; i++) {
+			sb.append(i);
+			groupCall.setBody(String.valueOf(i));
+			groupCall.invoke();
+		}
+		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		Assert.assertEquals(sb.toString(), res.getBody());
+		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
+		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), res.getMessageType());
+
+	}
+	@Test
+	public void invokeUnknownEndLargePartsTest() throws Exception {
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		ISCMPCall groupCall = echoCall.openGroup();
+		StringBuilder sb = new StringBuilder();
+		StringBuilder expected = new StringBuilder();
+		for(int i = 0; i < 19000; i++) {
+			sb.append(i);
+		}
+		int max = 2;
+		for (int i = 0; i < max; i++) {
+			expected.append(sb.toString());
+			groupCall.setBody(sb.toString());
+			groupCall.invoke();
+		}
+		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		Assert.assertEquals(expected.toString(), res.getBody());
+		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		//Assert.assertEquals("1/" + (max * 4), res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
+		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), res.getMessageType());
+
 	}
 }

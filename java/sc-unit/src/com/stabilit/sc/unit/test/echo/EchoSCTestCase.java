@@ -87,7 +87,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		SCMP result = null;
 		int i = 0;
 		String echoString = null;
-		for (i = 0; i < 10000; i++) {
+		for (i = 0; i < 1000000; i++) {
 			echoString = "hello world " + i + client.toHashCodeString();
 			echoCall.setBody(echoString);
 			result = echoCall.invoke();

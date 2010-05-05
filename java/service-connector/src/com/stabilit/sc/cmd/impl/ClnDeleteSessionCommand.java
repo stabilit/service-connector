@@ -87,7 +87,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		try {
 			serviceRegistry.deallocate(serviceRegistryItem, scmp);  // calls srvDeleteSession inside
 		} catch (Exception e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 			log.debug("command error: deallocating failed for scmp: " + scmp);
 		}
 
@@ -127,7 +127,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 					throw new ValidationException("session does not exists!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

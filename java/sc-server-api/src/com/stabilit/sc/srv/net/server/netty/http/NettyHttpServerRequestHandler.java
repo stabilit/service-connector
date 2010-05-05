@@ -128,7 +128,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				commandValidator.validate(request);
 				command.run(request, response);
 			} catch (Throwable ex) {
-				ExceptionListenerSupport.fireException(this, ex);
+				ExceptionListenerSupport.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				} else {
@@ -139,7 +139,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				}
 			}
 		} catch (Throwable th) {
-			ExceptionListenerSupport.fireException(this, th);
+			ExceptionListenerSupport.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.CONNECT.getResponseName());
 			scmpFault.setLocalDateTime();

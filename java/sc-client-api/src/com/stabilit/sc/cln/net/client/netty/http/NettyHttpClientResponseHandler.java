@@ -51,7 +51,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 				responseMessage = answer.take();
 				break;
 			} catch (InterruptedException e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				interrupted = true;
 			}
 		}

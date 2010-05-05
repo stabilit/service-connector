@@ -31,7 +31,7 @@ public class WarningListenerSupport extends
 		return warningListenerSupport;
 	}
 
-	public static void fireWarning(Object source, String text) {
+	public void fireWarning(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			WarningEvent warningEvent = new WarningEvent(source, text);
 			WarningListenerSupport.getInstance().fireWarning(warningEvent);

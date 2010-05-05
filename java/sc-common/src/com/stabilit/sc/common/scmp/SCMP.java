@@ -32,7 +32,7 @@ public class SCMP implements Serializable {
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10;
 	private boolean isReply;
 	protected Map<String, String> header;
-	protected SCMPInternalStatus internalStatus; // internal usage only
+	private SCMPInternalStatus internalStatus; // internal usage only
 	protected Object body;
 
 	public SCMP() {
@@ -72,6 +72,10 @@ public class SCMP implements Serializable {
 
 	public boolean isComposite() {
 		return false;
+	}
+	
+	public boolean isGroup() {
+		return internalStatus == SCMPInternalStatus.GROUP;
 	}
 
 	public boolean isByteArray() {
@@ -167,7 +171,7 @@ public class SCMP implements Serializable {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Throwable th) {
-			ExceptionListenerSupport.fireException(this, th);
+			ExceptionListenerSupport.getInstance().fireException(this, th);
 			return null;
 		}
 		return intValue;
@@ -252,6 +256,10 @@ public class SCMP implements Serializable {
 		return builder.toString();
 	}
 
+	public SCMPInternalStatus getInternalStatus() {
+		return internalStatus;
+	}
+	
 	public void setInternalStatus(SCMPInternalStatus internalStatus) {
 		this.internalStatus = internalStatus;
 	}

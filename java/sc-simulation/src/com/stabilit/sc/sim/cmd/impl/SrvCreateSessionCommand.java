@@ -117,7 +117,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

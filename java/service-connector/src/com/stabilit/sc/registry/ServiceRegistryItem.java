@@ -65,7 +65,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		try {
 			client.connect();
 		} catch (ConnectionException e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
 		try {
 			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
@@ -74,7 +74,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 			createSessionCall.invoke();
 			this.allocated = true;
 		} catch (Exception e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
 	}
 

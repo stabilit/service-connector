@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stabilit.sc.common.listener.ExceptionListenerSupport;
+import com.stabilit.sc.common.listener.WarningListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
@@ -52,7 +53,7 @@ public class SCMPComposite extends SCMP {
 		partRequest.setSessionId(request.getSessionId());
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
-		partRequest.setHeader(scmpPart, SCMPHeaderAttributeKey.BODY_TYPE); //tries to set bodyType
+		partRequest.setHeader(scmpPart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
 		this.add(scmpPart);
 	}
 
@@ -133,12 +134,16 @@ public class SCMPComposite extends SCMP {
 					int bodyLength = scmp.getBodyLength();
 					if (bodyLength > 0) {
 						Object body = scmp.getBody();
+						if (body == null) {
+							WarningListenerSupport.getInstance().fireWarning(this,
+									"bodyLength > 0 but body == null");
+						}
 						this.os.write((byte[]) body);
 					}
 				}
 				this.os.flush();
 			} catch (Exception e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				return null;
 			}
 			this.os.toByteArray();
@@ -155,7 +160,7 @@ public class SCMPComposite extends SCMP {
 				}
 				this.w.flush();
 			} catch (Exception e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				return null;
 			}
 			return this.w.toString();

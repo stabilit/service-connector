@@ -19,6 +19,7 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.ClientConfig.ClientConfigItem;
 import com.stabilit.sc.common.factory.IFactoryable;
+import com.stabilit.sc.common.listener.WarningListenerSupport;
 import com.stabilit.sc.common.scmp.SCMP;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMessageID;
@@ -83,8 +84,9 @@ public class Client implements IClient {
 
 	@Override
 	public synchronized String toHashCodeString() {
-	    return " [" + this.hashCode() + "]";	
+		return " [" + this.hashCode() + "]";
 	}
+
 	/**
 	 * request is small, but response could be small or large
 	 */
@@ -92,8 +94,15 @@ public class Client implements IClient {
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
 				scmp);
 		clientConnection.setEncoderDecoder(encoderDecoder);
+		if (scmp.isGroup()) {
+			msgID.incrementPartSequenceNr();
+		}
 		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		SCMP ret = clientConnection.sendAndReceive(scmp);
+		// if scmp is part groupCall is made by client
+		if (scmp.isPart()) {
+			return ret;
+		}
 		if (ret.isPart()) {
 			// request is small, response is large
 			return receiveLargeResponse(scmp, (SCMP) ret);
@@ -105,7 +114,6 @@ public class Client implements IClient {
 	/**
 	 * request is large, response could be small or large
 	 */
-
 	private SCMP sendLargeSCMPAndReceive(SCMP scmp) throws Exception {
 		// following code handles large messages. (chunking)
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
@@ -113,11 +121,13 @@ public class Client implements IClient {
 		clientConnection.setEncoderDecoder(encoderDecoder);
 
 		SCMP ret = this.sendLargeSCMP(scmp); // send large request scmp
-		if (ret.isPart()) {
+		if (ret.isPart() && scmp.isGroup() == false) {
 			// request is small, response is large
 			ret = receiveLargeResponse(scmp, (SCMP) ret);
 		}
-		msgID.incrementMsgSequenceNr();
+		if (scmp.isGroup() == false) {
+			msgID.incrementMsgSequenceNr();
+		}
 		return ret;
 	}
 
@@ -139,6 +149,11 @@ public class Client implements IClient {
 				return ret;
 			}
 			if (scmpLargeRequest.hasNext() == false) {
+				if (scmp.isGroup()) {
+					return ret;
+				}
+				WarningListenerSupport.getInstance().fireWarning(this,
+						"sendLargeRequest.hasNext() == false but part request not done");
 				return null;
 			}
 			part = scmpLargeRequest.getNext();

@@ -102,7 +102,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

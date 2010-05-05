@@ -123,7 +123,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 						.get(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL.getName()));
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

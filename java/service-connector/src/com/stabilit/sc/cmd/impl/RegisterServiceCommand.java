@@ -123,7 +123,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

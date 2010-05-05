@@ -82,7 +82,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 			InetSocketAddress isa = new InetSocketAddress(this.host, this.port);
 			serverChannel.socket().bind(isa);
 		} catch (IOException e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 			e.printStackTrace();
 		}
 	}
@@ -100,7 +100,7 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 				socketChannel = serverChannel.accept();
 				pool.execute(new RequestThread(socketChannel));
 			} catch (IOException e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				e.printStackTrace();
 			}
 		}
@@ -193,14 +193,14 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 							commandValidator.validate(request);
 							command.run(request, response);
 						} catch (Exception ex) {
-							ExceptionListenerSupport.fireException(this, ex);
+							ExceptionListenerSupport.getInstance().fireException(this, ex);
 							if (ex instanceof IFaultResponse) {
 								((IFaultResponse) ex).setFaultResponse(response);
 							}
 						}
 						// TODO error handling immer antworten?
 					} catch (Exception ex) {
-						ExceptionListenerSupport.fireException(this, ex);
+						ExceptionListenerSupport.getInstance().fireException(this, ex);
 						if (NioTcpDisconnectException.class == ex.getClass()) {
 							throw ex;
 						}
@@ -227,12 +227,12 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 					response.write();
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				try {
-					ConnectionListenerSupport.fireDisconnect(this);
+					ConnectionListenerSupport.getInstance().fireDisconnect(this);
 					socketChannel.close();
 				} catch (IOException ex) {
-					ExceptionListenerSupport.fireException(this, ex);
+					ExceptionListenerSupport.getInstance().fireException(this, ex);
 				}
 			}			
 		}

@@ -183,7 +183,7 @@ public class SrvDataCommand extends CommandAdapter {
 				ValidatorUtility.validateString(0, messageInfo, 256);
 				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(), messageInfo);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

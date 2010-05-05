@@ -128,14 +128,14 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				commandValidator.validate(request);
 				command.run(request, response);
 			} catch (Exception  ex) {
-				ExceptionListenerSupport.fireException(this, ex);
+				ExceptionListenerSupport.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				}
 			}
 			// TODO error handling immer antworten?
 		} catch (Throwable th) {
-			ExceptionListenerSupport.fireException(this, th);
+			ExceptionListenerSupport.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 			scmpFault.setLocalDateTime();

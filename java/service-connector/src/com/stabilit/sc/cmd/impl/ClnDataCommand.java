@@ -73,7 +73,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 		} catch (TransportException e) {
 			//clnDatat could not be sent successfully
 			//TODO what is consequence?
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 			throw new SCMPTransportException(SCMPErrorCode.SERVER_ERROR);
 		}
 	}
@@ -123,7 +123,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				log.debug("validation error: " + e.getMessage());
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

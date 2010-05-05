@@ -63,7 +63,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			// TODO performance
 			line = br.readLine();
 			readBytes += line.getBytes().length;
-			readBytes += 1; //read LF
+			readBytes += 1; // read LF
 
 			if (line == null || line.length() <= 0) {
 				return null;
@@ -83,7 +83,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			while (true) {
 				line = br.readLine(); // TODO
 				readBytes += line.getBytes().length;
-				readBytes += 1; //read LF
+				readBytes += 1; // read LF
 				if (line == null || line.length() <= 0) {
 					break;
 				}
@@ -98,7 +98,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				}
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.fireException(this, e1);
+			ExceptionListenerSupport.getInstance().fireException(this, e1);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
@@ -143,7 +143,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				return scmp;
 			}
 		} catch (Exception e) {
-			ExceptionListenerSupport.fireException(this, e);
+			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
 		return scmp;
 	}
@@ -153,7 +153,11 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
-		scmp.setInternalStatus(SCMPInternalStatus.NONE);
+		
+		if (scmp.isGroup() == false) {
+			scmp.setInternalStatus(SCMPInternalStatus.NONE);
+		}
+		
 		Map<String, String> metaMap = scmp.getHeader();
 		// create meta part
 		StringBuilder sb = new StringBuilder();
@@ -232,7 +236,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				bw.flush();
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.fireException(this, e1);
+			ExceptionListenerSupport.getInstance().fireException(this, e1);
 			scmp.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}

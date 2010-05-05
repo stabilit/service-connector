@@ -31,7 +31,7 @@ public class ExceptionListenerSupport extends
 		return exceptionListenerSupport;
 	}
 
-	public static void fireException(Object source, Throwable th) {
+	public void fireException(Object source, Throwable th) {
 		if (getInstance().isEmpty() == false) {
 			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
 			ExceptionListenerSupport.getInstance()

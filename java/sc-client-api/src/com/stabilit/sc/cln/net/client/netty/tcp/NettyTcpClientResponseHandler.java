@@ -55,7 +55,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 				}
 				break;
 			} catch (InterruptedException e) {
-				ExceptionListenerSupport.fireException(this, e);
+				ExceptionListenerSupport.getInstance().fireException(this, e);
 				interrupted = true;
 			}
 		}
