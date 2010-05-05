@@ -26,6 +26,7 @@ import com.stabilit.sc.common.listener.WarningListenerSupport;
 import com.stabilit.sc.common.log.ConnectionLogger;
 import com.stabilit.sc.common.log.ExceptionLogger;
 import com.stabilit.sc.common.log.GeneralLogger;
+import com.stabilit.sc.common.log.Level;
 import com.stabilit.sc.common.log.WarningLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -50,6 +51,7 @@ public class SetupTestCases {
 			ExceptionListenerSupport.getInstance().addListener(new ExceptionLogger());
 			WarningListenerSupport.getInstance().addListener(new WarningLogger());
 			LoggerListenerSupport.getInstance().addListener(new GeneralLogger());
+			LoggerListenerSupport.getInstance().setLevel(Level.DEBUG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
