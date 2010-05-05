@@ -73,6 +73,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
+			
+			//TODO verify client is connected correctly
+			
 			String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			SocketAddress socketAddress = request.getSocketAddress();
 			if (socketAddress instanceof InetSocketAddress) {
