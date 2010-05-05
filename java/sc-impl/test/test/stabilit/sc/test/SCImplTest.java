@@ -47,5 +47,5 @@ import test.stabilit.sc.util.ValidatorUtilityTest;
 				 DefaultFrameDecoderTest.class,
 				 LargeMessageEncoderDecoderTest.class, 
 				 ValidatorUtilityTest.class})
-public class CommonTest {
+public class SCImplTest {
 }

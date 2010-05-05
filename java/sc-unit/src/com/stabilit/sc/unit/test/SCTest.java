@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.sc.test.CommonTest;
+import test.stabilit.sc.test.SCImplTest;
 
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
@@ -60,7 +60,7 @@ import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 	EchoSCTestCase.class,
 	SrvEchoLargeTestCase.class,
 	EchoSCLargeTestCase.class,
-	CommonTest.class})
+	SCImplTest.class})
 public class SCTest {
 	
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
