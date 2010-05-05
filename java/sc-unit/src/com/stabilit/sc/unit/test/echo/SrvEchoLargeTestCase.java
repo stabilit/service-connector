@@ -20,6 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.cln.service.ISCMPCall;
 import com.stabilit.sc.cln.service.SCMPCallFactory;
 import com.stabilit.sc.cln.service.SCMPClnEchoCall;
 import com.stabilit.sc.common.scmp.SCMP;
@@ -39,7 +40,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
-	@Test
+//	@Test
 	public void invokeTwoPartsTest() throws Exception {
 
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
@@ -61,7 +62,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertNotNull(result.getSessionId());
 	}
 
-	@Test
+//	@Test
 	public void invokeMorePartsTest() throws Exception {
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
@@ -81,5 +82,52 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
+	}
+	
+	@Test
+	public void invokeUnknownEndPartsTest() throws Exception {
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
+				scmpSession);
+		ISCMPCall groupCall = echoCall.openGroup();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 10; i++) {
+			sb.append(i);
+			groupCall.setBody(String.valueOf(i));
+			echoCall.setMaxNodes(2);
+			groupCall.invoke();
+		}
+		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		Assert.assertEquals(sb.toString(), res.getBody());
+		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+//	TODO	Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), res.getMessageType());
+		Assert.assertNotNull(res.getSessionId());
+	}
+	
+	@Test
+	public void invokeUnknownEndLargePartsTest() throws Exception {
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
+				scmpSession);
+		ISCMPCall groupCall = echoCall.openGroup();
+		StringBuilder sb = new StringBuilder();
+		StringBuilder expected = new StringBuilder();
+		for(int i = 0; i < 19000; i++) {
+			sb.append(i);
+		}
+		int max = 1;
+		for (int i = 0; i < max; i++) {
+			expected.append(sb.toString());
+			groupCall.setBody(sb.toString());
+			echoCall.setMaxNodes(2);
+			groupCall.invoke();
+		}
+		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		Assert.assertEquals(expected.toString(), res.getBody());
+		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		//TODO Assert.assertEquals("1/" + (max * 4), res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), res.getMessageType());
+		Assert.assertNotNull(res.getSessionId());
 	}
 }
