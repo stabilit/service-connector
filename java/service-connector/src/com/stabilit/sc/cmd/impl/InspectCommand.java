@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.registry.ConnectionRegistry;
@@ -33,8 +31,6 @@ import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class InspectCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(InspectCommand.class);
 
 	public InspectCommand() {
 		this.commandValidator = new InspectCommandValidator();
@@ -52,7 +48,6 @@ public class InspectCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		log.debug("Run command " + this.getKey());
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();

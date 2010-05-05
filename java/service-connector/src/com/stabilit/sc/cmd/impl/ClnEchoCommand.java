@@ -20,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistryItem;
@@ -40,8 +38,6 @@ import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
-
-	private static Logger log = Logger.getLogger(ClnEchoCommand.class);
 
 	public ClnEchoCommand() {
 		this.commandValidator = new ClnEchoCommandValidator();
@@ -91,7 +87,9 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 				.getAttribute(ServiceRegistryItem.class.getName());
 
 		if (serviceRegistryItem == null) {
-			log.debug("command error: serviceRegistryItem not found");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;

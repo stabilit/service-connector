@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.stabilit.sc.listener.WarningListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
@@ -30,7 +30,6 @@ public final class ServiceRegistry extends Registry {
 	private static ServiceRegistry instance = new ServiceRegistry();
 
 	private ServiceRegistry() {
-		log = Logger.getLogger("serviceRegistry." + ServiceRegistry.class.getName());
 	}
 
 	public static ServiceRegistry getCurrentInstance() {

@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.PerformanceListenerSupport;
 import com.stabilit.sc.net.nio.NioHttpRequest;
 import com.stabilit.sc.net.nio.NioHttpResponse;
 import com.stabilit.sc.net.nio.NioTcpDisconnectException;
@@ -191,7 +193,18 @@ public class NioHttpServer extends ServerConnectionAdapter implements Runnable {
 						ICommandValidator commandValidator = command.getCommandValidator();
 						try {
 							commandValidator.validate(request);
-							command.run(request, response);
+							if (LoggerListenerSupport.getInstance().isDebug()) {
+								LoggerListenerSupport.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
+							}
+							if (PerformanceListenerSupport.getInstance().isOn()) {
+								PerformanceListenerSupport.getInstance().fireBegin(this,
+										System.currentTimeMillis());
+								command.run(request, response);
+								PerformanceListenerSupport.getInstance().fireEnd(this,
+										System.currentTimeMillis());
+							} else {
+								command.run(request, response);					
+							}
 						} catch (Exception ex) {
 							ExceptionListenerSupport.getInstance().fireException(this, ex);
 							if (ex instanceof IFaultResponse) {

@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -29,8 +27,6 @@ import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class EchoSCCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(EchoSCCommand.class);
 
 	public EchoSCCommand() {
 		this.commandValidator = new EchoSCCommandValidator();
@@ -48,7 +44,6 @@ public class EchoSCCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 
 		SCMP scmpReply = new SCMPReply();

@@ -19,10 +19,10 @@ package com.stabilit.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
@@ -39,8 +39,6 @@ import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
-
-	private static Logger log = Logger.getLogger(ClnSystemCommand.class);
 
 	public ClnSystemCommand() {
 		this.commandValidator = new ClnSystemCommandValidator();
@@ -63,7 +61,6 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 
 		SCMP result = null;
 		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
-		log.debug("Run command " + this.getKey() + " on Node: " + maxNodes);
 
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
@@ -79,7 +76,9 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 				.getAttribute(ServiceRegistryItem.class.getName());
 
 		if (serviceRegistryItem == null) {
-			log.debug("command error: serviceRegistryItem not found");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;

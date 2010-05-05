@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -29,7 +27,6 @@ public final class ConnectionRegistry extends Registry {
 	private static ConnectionRegistry instance = new ConnectionRegistry();
 
 	private ConnectionRegistry() {
-		log = Logger.getLogger("connectionRegistry." + ConnectionRegistry.class.getName());
 	}
 
 	public static ConnectionRegistry getCurrentInstance() {

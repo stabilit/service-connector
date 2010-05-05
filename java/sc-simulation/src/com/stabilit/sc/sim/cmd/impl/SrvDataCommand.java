@@ -22,10 +22,9 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMP;
@@ -42,8 +41,6 @@ import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
 public class SrvDataCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(SrvDataCommand.class);
 
 	public SrvDataCommand() {
 		this.commandValidator = new SrvDataCommandValidator();
@@ -62,21 +59,25 @@ public class SrvDataCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
-		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();	
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
+				.getCurrentInstance();
 		SCMP scmpReply = new SCMPReply();
 		SCMP scmp = request.getSCMP();
 		String sessionId = scmp.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
-		
+
 		if (mapBean == null) {
-			log.debug("command error: session not found");
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, request.getAttribute(
-					SCMPHeaderAttributeKey.SERVICE_NAME.getName()).toString());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPErrorCode.SERVER_ERROR
-					.getErrorCode());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPErrorCode.SERVER_ERROR
-					.getErrorText());
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: session not found");  
+			}
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME,
+					request.getAttribute(
+							SCMPHeaderAttributeKey.SERVICE_NAME.getName())
+							.toString());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE,
+					SCMPErrorCode.SERVER_ERROR.getErrorCode());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
+					SCMPErrorCode.SERVER_ERROR.getErrorText());
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 			return;
@@ -84,9 +85,10 @@ public class SrvDataCommand extends CommandAdapter {
 
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp.getHeader(
-				SCMPHeaderAttributeKey.SERVICE_NAME).toString());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME).toString());
+		scmpReply
+				.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
 		// SCMPHeaderType.COMPRESSION).toString());
 
@@ -106,9 +108,11 @@ public class SrvDataCommand extends CommandAdapter {
 				scmpReply = new SCMPPart();
 				scmpReply.setMessageType(getKey().getResponseName());
 				scmpReply.setSessionId(sessionId);
-				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp.getHeader(
-						SCMPHeaderAttributeKey.SERVICE_NAME).toString());
-				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
+				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+						.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME)
+						.toString());
+				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO,
+						"Session info");
 				scmpReply.setBody(sb.toString());
 				response.setSCMP(scmpReply);
 			}
@@ -158,33 +162,39 @@ public class SrvDataCommand extends CommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessionId must be set!");
 				}
-				if (!SimulationSessionRegistry.getCurrentInstance().containsKey(sessionId)) {
+				if (!SimulationSessionRegistry.getCurrentInstance()
+						.containsKey(sessionId)) {
 					throw new ValidationException("sessoion does not exists!");
 				}
 
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader
+						.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+				request.setAttribute(SCMPHeaderAttributeKey.SERVICE_NAME
+						.getName(), serviceName);
 
 				// bodyLength
 
 				// compression
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
+				Boolean compression = scmp
+						.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION
+						.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.MSG_INFO.getName());
+				String messageInfo = (String) scmpHeader
+						.get(SCMPHeaderAttributeKey.MSG_INFO.getName());
 				ValidatorUtility.validateString(0, messageInfo, 256);
-				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(), messageInfo);
+				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(),
+						messageInfo);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

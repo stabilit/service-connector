@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import javax.xml.bind.ValidationException;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cln.net.TransportException;
 import com.stabilit.sc.factory.IFactoryable;
@@ -41,8 +41,6 @@ import com.stabilit.sc.util.ValidatorUtility;
 
 public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(ClnDataCommand.class);
-
 	public ClnDataCommand() {
 		this.commandValidator = new ClnDataCommandValidator();
 	}
@@ -59,7 +57,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
@@ -122,7 +119,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
-				log.debug("validation error: " + e.getMessage());
 				ExceptionListenerSupport.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

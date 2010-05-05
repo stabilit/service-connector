@@ -18,7 +18,6 @@ package com.stabilit.sc.srv.net.server.netty.tcp;
 
 import java.net.SocketAddress;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
@@ -27,6 +26,8 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.PerformanceListenerSupport;
 import com.stabilit.sc.net.netty.NettyTcpRequest;
 import com.stabilit.sc.net.netty.NettyTcpResponse;
 import com.stabilit.sc.scmp.IFaultResponse;
@@ -53,7 +54,6 @@ import com.stabilit.sc.util.Lockable;
 @ChannelPipelineCoverage("one")
 public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
-	private Logger log = Logger.getLogger(NettyTcpServerRequestHandler.class);
 	private NettyCommandRequest commandRequest = null;
 	private SCMPLargeResponse scmpResponseComposite = null;
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
@@ -126,7 +126,18 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
 				commandValidator.validate(request);
-				command.run(request, response);
+				if (LoggerListenerSupport.getInstance().isDebug()) {
+					LoggerListenerSupport.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
+				}
+				if (PerformanceListenerSupport.getInstance().isOn()) {
+					PerformanceListenerSupport.getInstance().fireBegin(this,
+							System.currentTimeMillis());
+					command.run(request, response);
+					PerformanceListenerSupport.getInstance().fireEnd(this,
+							System.currentTimeMillis());
+				} else {
+					command.run(request, response);					
+				}
 			} catch (Exception  ex) {
 				ExceptionListenerSupport.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
@@ -168,6 +179,6 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		log.error("Exception :" + e.getCause().getMessage());
+		ExceptionListenerSupport.getInstance().fireException(this, e.getCause());
 	}
 }

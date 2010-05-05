@@ -17,13 +17,13 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.bind.ValidationException;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -47,8 +47,6 @@ import com.stabilit.sc.util.MapBean;
  */
 public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(ClnDeleteSessionCommand.class);
-
 	public ClnDeleteSessionCommand() {
 		this.commandValidator = new ClnDeleteSessionCommandValidator();
 	}
@@ -65,7 +63,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
 
@@ -73,7 +70,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		MapBean<?> mapBean = sessionRegistry.get(sessionId);
 
 		if (mapBean == null) {
-			log.debug("command error: no session found for id :" + sessionId);
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
@@ -88,7 +87,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			serviceRegistry.deallocate(serviceRegistryItem, scmp);  // calls srvDeleteSession inside
 		} catch (Exception e) {
 			ExceptionListenerSupport.getInstance().fireException(this, e);
-			log.debug("command error: deallocating failed for scmp: " + scmp);
 		}
 
 		sessionRegistry.remove(sessionId);
@@ -128,7 +126,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				}
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

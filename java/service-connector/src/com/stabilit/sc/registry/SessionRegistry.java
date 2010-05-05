@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.scmp.Session;
 
 /**
@@ -29,7 +27,6 @@ public final class SessionRegistry extends Registry {
 	private static SessionRegistry instance = new SessionRegistry();
 
 	private SessionRegistry() {
-		log = Logger.getLogger("sessionRegistry." + SessionRegistry.class.getName());
 	}
 
 	public static SessionRegistry getCurrentInstance() {

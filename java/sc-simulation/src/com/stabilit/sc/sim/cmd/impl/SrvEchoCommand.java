@@ -20,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -34,8 +32,6 @@ import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
 public class SrvEchoCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(SrvEchoCommand.class);
 
 	public SrvEchoCommand() {
 		this.commandValidator = new SrvEchoCommandValidator();
@@ -57,7 +53,6 @@ public class SrvEchoCommand extends CommandAdapter {
 		Map<String, String> header = scmp.getHeader();
 
 		SCMP result = null;
-		log.debug("Run command " + this.getKey());
 
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();

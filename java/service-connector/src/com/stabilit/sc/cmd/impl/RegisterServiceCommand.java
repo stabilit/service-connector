@@ -17,14 +17,14 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
+import java.util.logging.Logger;
 
 import javax.xml.bind.ValidationException;
-
-import org.apache.log4j.Logger;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItemPool;
 import com.stabilit.sc.scmp.IRequest;
@@ -44,8 +44,6 @@ import com.stabilit.sc.util.ValidatorUtility;
 
 public class RegisterServiceCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(RegisterServiceCommand.class);
-
 	public RegisterServiceCommand() {
 		this.commandValidator = new RegisterServiceCommandValidator();
 	}
@@ -62,7 +60,6 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
@@ -73,7 +70,9 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean != null) {
-			log.debug("command error: service already registered");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service already registered");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -124,7 +123,6 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

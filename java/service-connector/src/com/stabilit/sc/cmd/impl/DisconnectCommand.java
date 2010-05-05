@@ -17,11 +17,11 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -38,8 +38,7 @@ import com.stabilit.sc.util.MapBean;
 
 public class DisconnectCommand extends CommandAdapter implements IPassThrough  {
 
-	private static Logger log = Logger.getLogger(DisconnectCommand.class);
-	
+
 	public DisconnectCommand() {
 		this.commandValidator = new DisconnectCommandValidator();
 	}
@@ -56,14 +55,15 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough  {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		// TODO is socketAddress the right thing to save as a unique key?
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 		if (mapBean == null) {
-			log.debug("command error: client not connected");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: client not connected");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;

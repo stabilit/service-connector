@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.srv.registry;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.registry.Registry;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.server.IServer;
@@ -33,7 +31,6 @@ public final class ServerRegistry extends Registry {
 	private ThreadLocal<Object> threadLocal;
 
 	private ServerRegistry() {
-		log = Logger.getLogger(ServerRegistry.class);
 		threadLocal = new ThreadLocal<Object>();
 	}
 	

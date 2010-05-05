@@ -16,12 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import javax.xml.bind.ValidationException;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -39,8 +40,6 @@ import com.stabilit.sc.util.MapBean;
 
 public class DeRegisterServiceCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(DeRegisterServiceCommand.class);
-
 	public DeRegisterServiceCommand() {
 		this.commandValidator = new DeRegisterServiceCommandValidator();
 	}
@@ -57,14 +56,15 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
 		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
-			log.debug("command error: service not registered");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service not registered");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
@@ -95,7 +95,6 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				}
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

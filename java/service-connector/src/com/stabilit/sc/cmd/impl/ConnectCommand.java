@@ -19,12 +19,12 @@ package com.stabilit.sc.cmd.impl;
 import java.net.SocketAddress;
 import java.util.Date;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -45,8 +45,6 @@ import com.stabilit.sc.util.ValidatorUtility;
 
 public class ConnectCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(ConnectCommand.class);
-
 	public ConnectCommand() {
 		this.commandValidator = new ConnectCommandValidator();
 	}
@@ -63,7 +61,6 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		log.debug("Run command " + this.getKey());
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
@@ -72,7 +69,9 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean != null) {
-			log.debug("command error: already connected");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: already connected");
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(
 					SCMPErrorCode.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -124,7 +123,6 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

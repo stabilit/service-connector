@@ -19,10 +19,9 @@ package com.stabilit.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.bind.ValidationException;
-
-import org.apache.log4j.Logger;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
@@ -48,8 +47,6 @@ import com.stabilit.sc.util.ValidatorUtility;
 
 public class ClnCreateSessionCommand extends CommandAdapter implements IPassThrough {
 
-	private static Logger log = Logger.getLogger(ClnCreateSessionCommand.class);
-
 	public ClnCreateSessionCommand() {
 		this.commandValidator = new ClnCreateSessionCommandValidator();
 	}
@@ -66,7 +63,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 	@Override
 	public void run(IRequest request, IResponse response) throws CommandException {
-		log.debug("Run command " + this.getKey());
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();
@@ -86,7 +82,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
 			if (mapBean == null) {
-				log.debug("command error: unknown service requested");
 				SCMPCommandException scmpCommandException = new SCMPCommandException(
 						SCMPErrorCode.UNKNOWN_SERVICE);
 				scmpCommandException.setMessageType(getKey().getResponseName());
@@ -113,7 +108,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		} catch (Throwable e) {
 			//TODO aufräumen
 			ExceptionListenerSupport.getInstance().fireException(this, e);
-			log.debug("command error: fatal error when command runs");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
@@ -147,7 +141,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
-				log.debug("validation error: " + e.getMessage());
 				ExceptionListenerSupport.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

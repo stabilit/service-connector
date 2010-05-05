@@ -15,13 +15,11 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.sim.cmd.impl;
-
 import javax.xml.bind.ValidationException;
-
-import org.apache.log4j.Logger;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMP;
@@ -37,8 +35,6 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 
 public class SrvDeleteSessionCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(SrvDeleteSessionCommand.class);
 
 	public SrvDeleteSessionCommand() {
 		this.commandValidator = new SrvDeleteSessionCommandValidator();
@@ -57,7 +53,6 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SCMP scmp = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
@@ -65,7 +60,9 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
-			log.debug("command error: session is no allocated");
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: session is no allocated");  
+			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
@@ -103,7 +100,6 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 				}
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
-				log.debug("validation error: " + e.getMessage());
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

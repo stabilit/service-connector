@@ -25,7 +25,7 @@ public class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
 	private static LoggerListenerSupport loggerListenerSupport = new LoggerListenerSupport();
 
 	private Level level = null;
-	
+
 	private LoggerListenerSupport() {
 		this.level = Level.EXCEPTION;
 	}
@@ -37,43 +37,44 @@ public class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
-	
-	public static void fireError(Object source, String text) {
+
+	public void fireError(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.ERROR);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
 		}
 	}
 
-	public static void fireException(Object source, String text) {
+	public void fireException(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
-			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.EXCEPTION);
+			LoggerEvent loggerEvent = new LoggerEvent(source, text,
+					Level.EXCEPTION);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
 		}
 	}
 
-	public static void fireWarn(Object source, String text) {
+	public void fireWarn(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.WARN);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
 		}
 	}
 
-	public static void fireInfo(Object source, String text) {
+	public void fireInfo(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.INFO);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
 		}
 	}
 
-	public static void fireDebug(Object source, String text) {
+	public void fireDebug(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.DEBUG);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
 		}
 	}
 
-	public static void fireTrace(Object source, String text) {
+	public void fireTrace(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.TRACE);
 			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
@@ -94,27 +95,27 @@ public class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
 	}
 
 	public boolean isError() {
-        return this.level.supportsLevel(Level.ERROR);
+		return this.level.supportsLevel(Level.ERROR);
 	}
 
 	public boolean isException() {
-        return this.level.supportsLevel(Level.EXCEPTION);
+		return this.level.supportsLevel(Level.EXCEPTION);
 	}
 
 	public boolean isWarn() {
-        return this.level.supportsLevel(Level.WARN);
+		return this.level.supportsLevel(Level.WARN);
 	}
 
 	public boolean isInfo() {
-        return this.level.supportsLevel(Level.INFO);
+		return this.level.supportsLevel(Level.INFO);
 	}
 
 	public boolean isDebug() {
-        return this.level.supportsLevel(Level.DEBUG);
+		return this.level.supportsLevel(Level.DEBUG);
 	}
-	
+
 	public boolean isTrace() {
-        return this.level.supportsLevel(Level.TRACE);
+		return this.level.supportsLevel(Level.TRACE);
 	}
 
 }

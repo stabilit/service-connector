@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.sim.cmd.impl;
 
-import org.apache.log4j.Logger;
-
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -28,8 +26,6 @@ import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 
 public class SrvSystemCommand extends CommandAdapter {
-
-	private static Logger log = Logger.getLogger(SrvSystemCommand.class);
 
 	public SrvSystemCommand() {
 		this.commandValidator = new SrvSystemCommandValidator();
@@ -47,7 +43,6 @@ public class SrvSystemCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		log.debug("Run command " + this.getKey());
 		SCMP scmpReq = request.getSCMP();
 		SCMP scmpReply = new SCMP();
 		scmpReply.setIsReply(true);
@@ -57,7 +52,6 @@ public class SrvSystemCommand extends CommandAdapter {
 				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		scmpReply.setHeader("kill", "true");
 		response.setSCMP(scmpReply);
-		System.out.println("SrvSystemCommand.run()");
 	}
 
 	@Override
