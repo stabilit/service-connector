@@ -19,20 +19,38 @@ package com.stabilit.sc.registry;
 import com.stabilit.sc.scmp.Session;
 
 /**
- * @author JTraber
+ * The Class SessionRegistry. Registry stores entries for properly created sessions.
  * 
+ * @author JTraber
  */
 public final class SessionRegistry extends Registry {
 
+	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
 
+	/**
+	 * Instantiates a new session registry.
+	 */
 	private SessionRegistry() {
 	}
 
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
 	public static SessionRegistry getCurrentInstance() {
 		return instance;
 	}
 
+	/**
+	 * Adds an entry.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param session
+	 *            the session
+	 */
 	public void add(Object key, Session session) {
 		this.put(key, session);
 	}

@@ -16,12 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.call;
 
+
 /**
  * The Class SCMPCallFactory. Responsible for instantiating calls.
  * 
  * @author JTraber
  */
 public class SCMPCallFactory {
+
+	/********************** Calls to SC **********************/
 
 	/** The CONNECT_CALL. */
 	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
@@ -45,4 +48,17 @@ public class SCMPCallFactory {
 	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
 	/** The CLN_SYSTEM_CALL. */
 	public static final ISCMPCall CLN_SYSTEM_CALL = new SCMPClnSystemCall();
+
+	/********************** Calls from SC **********************/
+
+	/** The Constant SRV_CREATE_SESSION_CALL. */
+	public static final ISCMPCall SRV_CREATE_SESSION_CALL = new SCMPSrvCreateSessionCall();
+	/** The Constant SRV_DELETE_SESSION_CALL. */
+	public static final ISCMPCall SRV_DELETE_SESSION_CALL = new SCMPSrvDeleteSessionCall();
+	/** The Constant SRV_ECHO_CALL. */
+	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
+	/** The Constant SRV_DATA_CALL. */
+	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
+	/** The Constant SRV_SYSTEM_CALL. */
+	public static final ISCMPCall SRV_SYSTEM_CALL = new SCMPSrvSystemCall();
 }

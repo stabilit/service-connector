@@ -14,68 +14,84 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.call;
+package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
 import com.stabilit.sc.cln.call.ISCMPCall;
 import com.stabilit.sc.cln.call.SCMPCallAdapter;
-import com.stabilit.sc.cln.call.SCMPCallException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPSrvCreateSessionCall. Call tries getting a session on a backend server.
  * 
+ * @author JTraber
  */
-public class SCMPSrvEchoCall extends SCMPCallAdapter {
+public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 
-	public SCMPSrvEchoCall() {
+	/**
+	 * Instantiates a new SCMPSrvCreateSessionCall.
+	 */
+	public SCMPSrvCreateSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPSrvEchoCall(IClient client, SCMP scmpSession) {
+	/**
+	 * Instantiates a new SCMPSrvCreateSessionCall.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 */
+	public SCMPSrvCreateSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
-	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.call.setHeader(SCMPHeaderAttributeKey.SCCLIENT_ID, client.hashCode());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPCallException((SCMPFault) result);
-		}
-		return this.result;
-	}
-
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 * @return the iSCMP call
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPSrvEchoCall(client, scmpSession);
+		return new SCMPSrvCreateSessionCall(client, scmpSession);
 	}
 
-	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	/**
+	 * Sets the session id.
+	 * 
+	 * @param sessionId
+	 *            the new session id
+	 */
+	public void setSessionId(String sessionId) {
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);
+	}
+
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_ECHO;
+		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
-	
-	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
-	}
-	
-	public void setHeader(SCMPHeaderAttributeKey attr, String value) {
-		this.call.setHeader(attr, value);		
-	}
-
-	public void setHeader(SCMPHeaderAttributeKey attr, int value) {
-		this.call.setHeader(attr, value);		
-	}
-
 }

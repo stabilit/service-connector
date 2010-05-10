@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.call;
+package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
@@ -26,36 +26,80 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPSrvDeleteSessionCall. Call deletets session on backend server.
  * 
+ * @author JTraber
  */
 public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvDeleteSessionCall.
+	 */
 	public SCMPSrvDeleteSessionCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvDeleteSessionCall.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 */
 	public SCMPSrvDeleteSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 * @return the iSCMP call
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		return new SCMPSrvDeleteSessionCall(client, scmpSession);
 	}
-	
+
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-	
+
+	/**
+	 * Sets the session id.
+	 * 
+	 * @param sessionId
+	 *            the new session id
+	 */
 	public void setSessionId(String sessionId) {
 		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
+		this.call.setHeader(header);
 	}
-	
+
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_DELETE_SESSION;

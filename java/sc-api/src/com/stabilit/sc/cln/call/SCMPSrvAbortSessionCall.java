@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.call;
+package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
@@ -26,32 +26,70 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPSrvAbortSessionCall. Call aborts a session on a backend server.
  * 
+ * @author JTraber
  */
 public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvAbortSessionCall.
+	 */
 	public SCMPSrvAbortSessionCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvAbortSessionCall.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 */
 	public SCMPSrvAbortSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 * @return the iSCMP call
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		return new SCMPSrvAbortSessionCall(client, scmpSession);
 	}
-	
+
+	/**
+	 * Sets the session id.
+	 * 
+	 * @param sessionId
+	 *            the new session id
+	 */
 	public void setSessionId(String sessionId) {
 		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);
 	}
-	
+
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_ABORT_SESSION;

@@ -16,45 +16,73 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.call;
 
+import java.util.Map;
+
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
+import com.stabilit.sc.cln.call.SCMPCallException;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPClnDataCall. Call sends data to backend server over SC.
+ * The Class SCMPSrvEchoCall. Call sends echo to backend server.
  * 
  * @author JTraber
  */
-public class SCMPClnDataCall extends SCMPCallAdapter {
+public class SCMPSrvEchoCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new SCMPClnDataCall.
+	 * Instantiates a new SCMPSrvEchoCall.
 	 */
-	public SCMPClnDataCall() {
+	public SCMPSrvEchoCall() {
 		this(null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPClnDataCall.
+	 * Instantiates a new SCMPSrvEchoCall.
 	 * 
 	 * @param client
-	 *            the client to use when invoking call
+	 *            the client
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvEchoCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
-	 * com.stabilit.sc.scmp.SCMP)
+	/**
+	 * Invoke.
+	 * 
+	 * @return the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Override
+	public SCMP invoke() throws Exception {
+		this.call.setMessageType(getMessageType().getRequestName());
+		this.call.setHeader(SCMPHeaderAttributeKey.SCCLIENT_ID, client.hashCode());
+		this.result = client.sendAndReceive(this.call);
+		if (this.result.isFault()) {
+			throw new SCMPCallException((SCMPFault) result);
+		}
+		return this.result;
+	}
+
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 * @return the iSCMP call
 	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPClnDataCall(client, scmpSession);
+		return new SCMPSrvEchoCall(client, scmpSession);
 	}
 
 	/**
@@ -68,21 +96,47 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Sets the messag info.
+	 * Gets the message type.
 	 * 
-	 * @param messageInfo
-	 *            the new messag info
-	 */
-	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 * @return the message type
 	 */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DATA;
+		return SCMPMsgType.SRV_ECHO;
 	}
+
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);
+	}
+
+	/**
+	 * Sets the header.
+	 * 
+	 * @param attr
+	 *            the attribute
+	 * @param value
+	 *            the value
+	 */
+	public void setHeader(SCMPHeaderAttributeKey attr, String value) {
+		this.call.setHeader(attr, value);
+	}
+
+	/**
+	 * Sets the header.
+	 * 
+	 * @param attr
+	 *            the attribute
+	 * @param value
+	 *            the value
+	 */
+	public void setHeader(SCMPHeaderAttributeKey attr, int value) {
+		this.call.setHeader(attr, value);
+	}
+
 }

@@ -20,24 +20,53 @@ import com.stabilit.sc.listener.WarningListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
- * @author JTraber
+ * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
  * 
+ * @author JTraber
  */
 public final class ServiceRegistry extends Registry {
 
+	/** The instance. */
 	private static ServiceRegistry instance = new ServiceRegistry();
 
+	/**
+	 * Instantiates a new service registry.
+	 */
 	private ServiceRegistry() {
 	}
 
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
 	public static ServiceRegistry getCurrentInstance() {
 		return instance;
 	}
 
+	/**
+	 * Adds an entry.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param itemPool
+	 *            the item pool
+	 */
 	public void add(Object key, ServiceRegistryItemPool itemPool) {
 		this.put(key, itemPool);
 	}
 
+	/**
+	 * Allocate a session on a backend server.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param scmp
+	 *            the scmp
+	 * @return the service registry item
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized ServiceRegistryItem allocate(Object key, SCMP scmp) throws Exception {
 		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(key); // is this a list, TODO
 		if (itemPool.isAvailable() == false) {
@@ -48,6 +77,16 @@ public final class ServiceRegistry extends Registry {
 		return item;
 	}
 
+	/**
+	 * Deallocate session from backend server.
+	 * 
+	 * @param item
+	 *            the item
+	 * @param scmp
+	 *            the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deallocate(ServiceRegistryItem item, SCMP scmp) throws Exception {
 		if (item.isAllocated()) {
 			item.srvDeleteSession(scmp);

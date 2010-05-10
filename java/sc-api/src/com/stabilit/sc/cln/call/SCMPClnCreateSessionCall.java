@@ -24,7 +24,7 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPClnCreateSessionCall. Call creates a session.
+ * The Class SCMPClnCreateSessionCall. Call tries creating a session to a backend server over a SC.
  * 
  * @author JTraber
  */

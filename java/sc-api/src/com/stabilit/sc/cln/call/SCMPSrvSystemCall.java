@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.call;
+package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
@@ -26,36 +26,81 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPSrvSystemCall. Call causes ending specific threads on backend server. Used for testing connection
+ * failures.
  * 
+ * @author JTraber
  */
 public class SCMPSrvSystemCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvSystemCall.
+	 */
 	public SCMPSrvSystemCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvSystemCall.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 */
 	public SCMPSrvSystemCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpSession
+	 *            the scmp session
+	 * @return the iSCMP call
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
 		return new SCMPSrvSystemCall(client, scmpSession);
 	}
 
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
-	public void setMessagInfo(String messageInfo) {
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param messageInfo
+	 *            the new message info
+	 */
+	public void setMessageInfo(String messageInfo) {
 		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
 	public void setHeader(Map<String, String> header) {
 		this.call.setHeader(header);
 	}
 
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_SYSTEM;
