@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
@@ -23,19 +23,33 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.util.DateTimeUtility;
 
 /**
- * @author JTraber
+ * The Class SCMPConnectCall. Call connects on SCMP level.
  * 
+ * @author JTraber
  */
 public class SCMPConnectCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPConnectCall.
+	 */
 	public SCMPConnectCall() {
 		this(null);
 	}
 
+	/**
+	 * Instantiates a new SCMPConnectCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 */
 	public SCMPConnectCall(IClient client) {
 		this.client = client;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
+	 */
 	@Override
 	public SCMP invoke() throws Exception {
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
@@ -43,31 +57,67 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 		return this.result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPConnectCall(client);
 	}
 
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            the new version
+	 */
 	public void setVersion(String version) {
 		call.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#setCompression(boolean)
+	 */
 	public void setCompression(boolean compression) {
 		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
 
+	/**
+	 * Sets the local date time.
+	 * 
+	 * @param localDateTime
+	 *            the new local date time
+	 */
 	private void setLocalDateTime(String localDateTime) {
 		call.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
-	
+
+	/**
+	 * Sets the keep alive timeout.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the new keep alive timeout
+	 */
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
 		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
 	}
 
+	/**
+	 * Sets the keep alive interval.
+	 * 
+	 * @param keepAliveInterval
+	 *            the new keep alive interval
+	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CONNECT;

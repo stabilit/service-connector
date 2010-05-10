@@ -16,46 +16,39 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.scmp;
 
-
 /**
- * @author JTraber
+ * The Class SCMPMessageID. Responsible to provide correct message id for a specific request/response. Message id
+ * is unique for every message. Format: messageSequenceNr / partSequenceNr.
  * 
+ * @author JTraber
  */
 public class SCMPMessageID {
 
+	/** The msg sequence nr. */
 	private int msgSequenceNr;
+	/** The part sequence nr. */
 	private int partSequenceNr;
+	
+	/** The string builder. */
 	private StringBuilder sb;
 
+	/**
+	 * Instantiates a new scmp message id.
+	 */
 	public SCMPMessageID() {
 		this.msgSequenceNr = 1;
 		this.partSequenceNr = 0;
 		this.sb = null;
 	}
 
-//	public String getNextMessageId(SCMP scmp) {
-//		if (scmp.isPart()) {
-//			sb = new StringBuilder();
-//			if (partSequenceNr == 0)
-//				msgSequenceNr++;
-//			sb.append(msgSequenceNr);
-//			sb.append("/");
-//			sb.append(++partSequenceNr);
-//			return sb.toString();
-//		}
-//		if (partSequenceNr != 0) {
-//			sb = new StringBuilder();
-//			sb.append(msgSequenceNr);
-//			sb.append("/");
-//			sb.append(++partSequenceNr);
-//			partSequenceNr = 0;
-//			return sb.toString();
-//		}
-//		return String.valueOf(++msgSequenceNr);
-//	}
-	
+	/**
+	 * Gets the next message id.
+	 * 
+	 * @return the next message id
+	 */
 	public String getNextMessageID() {
-		if(partSequenceNr == 0) {
+		if (partSequenceNr == 0) {
+			//no part SCMP has been sent, partSequenceNr irrelevant
 			return String.valueOf(msgSequenceNr);
 		}
 		sb = new StringBuilder();
@@ -64,20 +57,37 @@ public class SCMPMessageID {
 		sb.append(partSequenceNr);
 		return sb.toString();
 	}
-	
+
+	/**
+	 * Increment part sequence nr.
+	 */
 	public void incrementPartSequenceNr() {
 		partSequenceNr++;
 	}
-	
+
+	/**
+	 * Increment msg sequence nr.
+	 */
 	public void incrementMsgSequenceNr() {
+		//partSequenceNr reset when msgSequenceNr gets incremented
 		partSequenceNr = 0;
 		msgSequenceNr++;
 	}
 
+	/**
+	 * Gets the message sequence nr.
+	 * 
+	 * @return the message sequence nr
+	 */
 	public Integer getMessageSequenceNr() {
 		return msgSequenceNr;
 	}
 
+	/**
+	 * Gets the part sequence nr.
+	 * 
+	 * @return the part sequence nr
+	 */
 	public Integer getPartSequenceNr() {
 		return partSequenceNr;
 	}

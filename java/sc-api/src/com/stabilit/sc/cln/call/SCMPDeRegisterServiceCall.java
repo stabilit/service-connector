@@ -14,35 +14,59 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPDeRegisterServiceCall. Call deregisters server.
  * 
+ * @author JTraber
  */
 public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
-	
+
+	/**
+	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 */
 	public SCMPDeRegisterServiceCall() {
 		this(null);
 	}
 
+	/**
+	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 */
 	public SCMPDeRegisterServiceCall(IClient client) {
 		this.client = client;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPDeRegisterServiceCall(client);
 	}
-	
+
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}	
-	
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.DEREGISTER_SERVICE;

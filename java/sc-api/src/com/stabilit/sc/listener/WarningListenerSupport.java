@@ -18,18 +18,37 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
-public class WarningListenerSupport extends
-		ListenerSupport<IWarningListener> {
+/**
+ * The Class WarningListenerSupport. Allows logging warning - fire warning.
+ */
+public class WarningListenerSupport extends ListenerSupport<IWarningListener> {
 
+	/** The warning listener support. */
 	private static WarningListenerSupport warningListenerSupport = new WarningListenerSupport();
 
+	/**
+	 * Instantiates a new warning listener support.
+	 */
 	private WarningListenerSupport() {
 	}
 
+	/**
+	 * Gets the single instance of WarningListenerSupport.
+	 * 
+	 * @return single instance of WarningListenerSupport
+	 */
 	public static WarningListenerSupport getInstance() {
 		return warningListenerSupport;
 	}
 
+	/**
+	 * Fire warning.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
+	 */
 	public void fireWarning(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			WarningEvent warningEvent = new WarningEvent(source, text);
@@ -37,6 +56,12 @@ public class WarningListenerSupport extends
 		}
 	}
 
+	/**
+	 * Fire warning.
+	 * 
+	 * @param warningEvent
+	 *            the warning event
+	 */
 	public void fireWarning(WarningEvent warningEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;

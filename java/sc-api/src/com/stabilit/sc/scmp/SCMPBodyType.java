@@ -17,23 +17,50 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Enum SCMPBodyType. Defines possible body types in SCMP.
  * 
+ * @author JTraber
  */
 public enum SCMPBodyType {
 
-	binary("binary"), text("text"), message("message"), undefined("undefined");
+	/** binary. */
+	binary("binary"),
+	/** text. */
+	text("text"),
+	/** message. */
+	message("message"),
+	/** undefined. */
+	undefined("undefined");
 
+	/** The name. */
 	private String name;
 
+	/**
+	 * Instantiates a new sCMP body type.
+	 * 
+	 * @param name
+	 *            the name
+	 */
 	private SCMPBodyType(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Gets the body type by string.
+	 * 
+	 * @param bodyType
+	 *            the body type
+	 * @return the body type
+	 */
 	public static SCMPBodyType getBodyType(String bodyType) {
 		if (bodyType == null) {
 			return undefined;
@@ -41,7 +68,11 @@ public enum SCMPBodyType {
 		return SCMPBodyType.valueOf(bodyType);
 	}
 
-	// mime types http://msdn.microsoft.com/en-us/library/ms775147%28VS.85%29.aspx
+	/**
+	 * Gets the mime type. mime types http://msdn.microsoft.com/en-us/library/ms775147%28VS.85%29.aspx
+	 * 
+	 * @return the mime type
+	 */
 	public String getMimeType() {
 		switch (this) {
 		case binary:

@@ -17,51 +17,97 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Enum SCMPHeaderAttributeKey. Defines possible header attributes in SCMP.
  * 
+ * @author JTraber
  */
 public enum SCMPHeaderAttributeKey {
 
+	/** The message type. */
 	MSG_TYPE("msgType"),
+	/** The sc version. */
 	SC_VERSION("scVersion"),
+	/** The COMPRESSION. */
 	COMPRESSION("compression"),
+	/** The local date time. */
 	LOCAL_DATE_TIME("localDateTime"),
+	/** The keep alive timeout. */
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
+	/** The keep alive interval. */
 	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
+	/** The sc error code. */
 	SC_ERROR_CODE("scErrorCode"),
+	/** The sc error text. */
 	SC_ERROR_TEXT("scErrorText"),
+	/** The application error code. */
 	APP_ERROR_CODE("appErrorCode"),
+	/** The application error text. */
 	APP_ERROR_TEXT("appErrorText"),
+	/** The body length. */
 	BODY_LENGTH("bodyLength"),
+	/** The cache signature. */
 	CACHE_SIGNATURE("cacheSignature"),
+	/** The cache expiration datetime. */
 	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
+	/** The ip address list. */
 	IP_ADDRESS_LIST("ipAddressList"),
+	/** The port nummber. */
 	PORT_NR("portNr"),
+	/** The mask. */
 	MASK("mask"),
+	/** The max sessions. */
 	MAX_SESSIONS("maxSessions"),
+	/** The messaeg info. */
 	MSG_INFO("msgInfo"),
+	/** The multiThreaded. */
 	MULTI_THREADED("multiThreaded"),
+	/** The no data. */
 	NO_DATA("noData"),
+	/** The reject session. */
 	REJECT_SESSION("rejectSession"),
+	/** The service name. */
 	SERVICE_NAME("serviceName"),
+	/** The session id. */
 	SESSION_ID("sessionId"),
+	/** The session info. */
 	SESSION_INFO("sessionInfo"),
+	/** The transitive. */
 	TRANSITIVE("transitive"),
+	/** The message id. */
 	MESSAGE_ID("messageID"),
+	/** The body type. */
 	BODY_TYPE("bodyType"),
-	MAX_NODES("maxNodes"), 
-	CLIENT_ID("clientId"), 
+	/** The max nodes. */
+	MAX_NODES("maxNodes"),
+	/** The client id. */
+	CLIENT_ID("clientId"),
+	/** The sc client id. */
 	SCCLIENT_ID("scclientId"),
+	/** The sc server id. */
 	SCSERVER_ID("scserverId"),
-	SERVER_ID("serverId"), 
-	SERVICE_REGISTRY_ID("serviceRegistryId"); 
-	
+	/** The server id. */
+	SERVER_ID("serverId"),
+	/** The service registry id. */
+	SERVICE_REGISTRY_ID("serviceRegistryId");
+
+	/** The name. */
 	private String name;
-	
+
+	/**
+	 * Instantiates a new sCMP header attribute key.
+	 * 
+	 * @param name
+	 *            the name
+	 */
 	private SCMPHeaderAttributeKey(String name) {
-		this.name = name;	
+		this.name = name;
 	}
 
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}

@@ -18,8 +18,24 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
+/**
+ * The listener interface for receiving IWarning events. The class that is interested in processing a IWarning
+ * event implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIWarningListener<code> method. When
+ * the IWarning event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see IWarningEvent
+ */
 public interface IWarningListener extends EventListener {
 
+	/**
+	 * Warning event.
+	 * 
+	 * @param warning
+	 *            the warning
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void warningEvent(WarningEvent warning) throws Exception;
-
 }

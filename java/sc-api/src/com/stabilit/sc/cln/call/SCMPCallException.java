@@ -14,26 +14,46 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package test.stabilit.sc.cln.io;
+package com.stabilit.sc.cln.call;
 
-import junit.framework.Assert;
+import com.stabilit.sc.scmp.SCMPFault;
 
-import org.junit.Test;
-
-import com.stabilit.sc.cln.scmp.SCMPSessionRegistry;
-
-
-
+// TODO: Auto-generated Javadoc
 /**
- * @author JTraber
- *
+ * The Class SCMPCallException. Exception occurs when invoking a call fails.
  */
-public class SCMPSessionRegistryTest {
+public class SCMPCallException extends Exception {
 
-	@Test
-	public void singeltonTest() {
-		SCMPSessionRegistry sessReg1 = SCMPSessionRegistry.getCurrentInstance();
-		SCMPSessionRegistry sessReg2 = SCMPSessionRegistry.getCurrentInstance();
-		Assert.assertEquals(sessReg1, sessReg2);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -5469213266177973818L;
+	
+	/** The fault. */
+	private SCMPFault fault;	
+	
+	/**
+	 * Instantiates a new SCMPCallException.
+	 * 
+	 * @param fault the fault
+	 */
+	public SCMPCallException(SCMPFault fault) {
+		this.fault = fault;
+	}
+	
+	/**
+	 * Instantiates a new SCMPCallException.
+	 * 
+	 * @param string the string
+	 */
+	public SCMPCallException(String string) {
+		super(string);
+	}
+
+	/**
+	 * Gets the fault.
+	 * 
+	 * @return the fault
+	 */
+	public SCMPFault getFault() {
+		return fault;
 	}
 }

@@ -17,10 +17,16 @@
 package com.stabilit.sc.registry.jmx;
 
 /**
+ * The Interface IRegistryMXBean. Needed for JMX access to registries.
+ * 
  * @author JTraber
- *
  */
 public interface IRegistryMXBean {
 
+	/**
+	 * Gets the entries.
+	 * 
+	 * @return the entries
+	 */
 	MapBeanWrapperJMX[] getEntries();
 }

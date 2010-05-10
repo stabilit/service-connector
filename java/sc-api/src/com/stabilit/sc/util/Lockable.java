@@ -17,15 +17,69 @@
 package com.stabilit.sc.util;
 
 /**
+ * The Interface Lockable. Needs to be implemented if <code>Lock<code> construct wants to be used. Construct to get thread
+ * safety.
+ * 
  * @author JTraber
- *
  */
 public interface Lockable<T> {
 
+	/**
+	 * Run.
+	 * 
+	 * @return the t
+	 * @throws Exception
+	 *             the exception
+	 */
 	public T run() throws Exception;
-	public T run(T obj) throws Exception;
-	public T run(T obj1, T obj2) throws Exception;
-	public T run(T obj1, T obj2, T obj3) throws Exception;
-	public T run(T ...objects) throws Exception;
 
+	/**
+	 * Run.
+	 * 
+	 * @param obj
+	 *            the obj
+	 * @return the t
+	 * @throws Exception
+	 *             the exception
+	 */
+	public T run(T obj) throws Exception;
+
+	/**
+	 * Run.
+	 * 
+	 * @param obj1
+	 *            the obj1
+	 * @param obj2
+	 *            the obj2
+	 * @return the t
+	 * @throws Exception
+	 *             the exception
+	 */
+	public T run(T obj1, T obj2) throws Exception;
+
+	/**
+	 * Run.
+	 * 
+	 * @param obj1
+	 *            the obj1
+	 * @param obj2
+	 *            the obj2
+	 * @param obj3
+	 *            the obj3
+	 * @return the t
+	 * @throws Exception
+	 *             the exception
+	 */
+	public T run(T obj1, T obj2, T obj3) throws Exception;
+
+	/**
+	 * Run.
+	 * 
+	 * @param objects
+	 *            the objects
+	 * @return the t
+	 * @throws Exception
+	 *             the exception
+	 */
+	public T run(T... objects) throws Exception;
 }

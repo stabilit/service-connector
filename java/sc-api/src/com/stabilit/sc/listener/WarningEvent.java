@@ -18,14 +18,33 @@ package com.stabilit.sc.listener;
 
 import java.util.EventObject;
 
+/**
+ * The Class WarningEvent. Event for logging warning purpose.
+ */
 public class WarningEvent extends EventObject {
+	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -3539710122841864955L;
+	
+	/** The text. */
 	private String text;
 
+	/**
+	 * Instantiates a new warning event.
+	 * 
+	 * @param source the source
+	 * @param text the text
+	 */
 	public WarningEvent(Object source, String text) {
 		super(source);
 		this.text = text;
 	}
 
+	/**
+	 * Gets the text.
+	 * 
+	 * @return the text
+	 */
 	public String getText() {
 		return text;
 	}

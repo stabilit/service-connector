@@ -14,34 +14,65 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPClnSystemCall. Call causes ending specific threads. Used for testing connection failures.
+ * 
  * @author JTraber
- *
  */
-public interface ISCMPCall {
+public class SCMPClnSystemCall extends SCMPCallAdapter {
 
-	public ISCMPCall newInstance(IClient client);
-	
-	public ISCMPCall newInstance(IClient client, SCMP scmp);
-	
-	public SCMP invoke() throws Exception;
-	
-	public void setBody(Object body);
-		
-	public SCMP getCall();
-	
-	public SCMP getResult();
-	
-	public SCMPMsgType getMessageType();
-	
-	public ISCMPCall openGroup() throws Exception;
-	
-	public SCMP closeGroup() throws Exception;
-	
+	/**
+	 * Instantiates a new SCMPClnSystemCall.
+	 */
+	public SCMPClnSystemCall() {
+		this(null, null);
+	}
+
+	/**
+	 * Instantiates a new SCMPClnSystemCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 * @param scmpSession
+	 *            the scmp session
+	 */
+	public SCMPClnSystemCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
+	 * com.stabilit.sc.scmp.SCMP)
+	 */
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPClnSystemCall(client, scmpSession);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_SYSTEM;
+	}
+
+	/**
+	 * Sets the max nodes. Number defines how many nodes echo call should pass through.
+	 * 
+	 * @param maxNodes
+	 *            the new max nodes
+	 */
+	public void setMaxNodes(int maxNodes) {
+		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+	}
 }

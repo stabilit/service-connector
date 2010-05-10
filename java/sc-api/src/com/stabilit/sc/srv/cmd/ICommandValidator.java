@@ -19,10 +19,18 @@ package com.stabilit.sc.srv.cmd;
 import com.stabilit.sc.scmp.IRequest;
 
 /**
+ * The Interface ICommandValidator.
+ * 
  * @author JTraber
- *
  */
 public interface ICommandValidator {
 
+	/**
+	 * Validate.
+	 * 
+	 * @param request the request
+	 * 
+	 * @throws Exception the exception
+	 */
 	public void validate(IRequest request) throws Exception;
 }

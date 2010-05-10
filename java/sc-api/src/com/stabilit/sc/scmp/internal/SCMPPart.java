@@ -14,25 +14,40 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp;
+package com.stabilit.sc.scmp.internal;
 
 import java.util.Map;
 
+import com.stabilit.sc.scmp.SCMP;
+
 /**
- * @author JTraber
+ * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at
+ * the time all parts are sent and put together.
  * 
+ * @author JTraber
  */
 public class SCMPPart extends SCMP {
-	
-	private static final long serialVersionUID = -3379254138164380850L;
-	
+
+	/**
+	 * Instantiates a new sCMP part.
+	 */
 	public SCMPPart() {
 	}
-	
+
+	/**
+	 * Instantiates a new sCMP part.
+	 * 
+	 * @param map
+	 *            the map
+	 */
 	public SCMPPart(Map<String, String> map) {
 		this.header = map;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isPart()
+	 */
 	public boolean isPart() {
 		return true;
 	}

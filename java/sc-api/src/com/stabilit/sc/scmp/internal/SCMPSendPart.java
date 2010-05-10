@@ -17,48 +17,85 @@
 package com.stabilit.sc.scmp.internal;
 
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPPart;
 
 /**
- * @author JTraber
+ * The Class SCMPSendPart. Represents an outgoing part SCMP of a large message.
  * 
+ * @author JTraber
  */
-public class SCMPResponsePart extends SCMPPart {
+public class SCMPSendPart extends SCMPPart {
 
+	/** The offset where body starts. */
 	private int offset;
+	/** The size of this specific part SCMP. */
 	private int size;
+	/** The call length, total length of the large message. */
 	private int callLength;
 
-	public SCMPResponsePart(SCMP scmp, int offset) {
+	/**
+	 * Instantiates a new SCMPSendPart.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @param offset
+	 *            the offset
+	 */
+	public SCMPSendPart(SCMP scmp, int offset) {
 		this.offset = offset;
 		this.callLength = scmp.getBodyLength();
+		// evaluates the size of this part
 		this.size = this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
 				: SCMP.LARGE_MESSAGE_LIMIT;
 		this.setHeader(scmp);
+		this.setInternalStatus(scmp.getInternalStatus());
 		this.setBody(scmp.getBody());
+		this.setIsReply(scmp.isReply());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMPPart#isPart()
+	 */
 	@Override
 	public boolean isPart() {
+		if (this.isGroup()) {
+			return true;
+		}
 		return offset + size < callLength;
 	}
 
-	@Override
-	public boolean isReply() {
-		return true;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isBodyOffset()
+	 */
 	@Override
 	public boolean isBodyOffset() {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getBodyOffset()
+	 */
 	public int getBodyOffset() {
 		return offset;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getBodyLength()
+	 */
 	@Override
 	public int getBodyLength() {
 		return this.size;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isReply()
+	 */
+	@Override
+	public boolean isReply() {
+		return super.isReply();
 	}
 }

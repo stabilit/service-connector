@@ -18,8 +18,24 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
+/**
+ * The listener interface for receiving ILogger events. The class that is interested in processing a ILogger event
+ * implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addILoggerListener<code> method. When
+ * the ILogger event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see ILoggerEvent
+ */
 public interface ILoggerListener extends EventListener {
 
+	/**
+	 * Log event.
+	 * 
+	 * @param loggerEvent
+	 *            the logger event
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void logEvent(LoggerEvent loggerEvent) throws Exception;
-
 }

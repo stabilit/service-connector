@@ -18,15 +18,39 @@ package com.stabilit.sc.listener;
 
 import java.util.EventObject;
 
+/**
+ * The Class ConnectionEvent. Event for logging connection purpose.
+ */
 public class ConnectionEvent extends EventObject {
-	private int offset;
-	private int length;
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -8265225164155917995L;
+
+	/** The offset. */
+	private int offset;	
+	/** The length. */
+	private int length;	
+	/** The data. */
 	private Object data;
 
+	/**
+	 * Instantiates a new connection event.
+	 * 
+	 * @param source the source
+	 * @param data the data
+	 */
 	public ConnectionEvent(Object source, Object data) {
 		this(source, data, -1, -1);
 	}
 
+	/**
+	 * Instantiates a new connection event.
+	 * 
+	 * @param source the source
+	 * @param data the data
+	 * @param offset the offset
+	 * @param length the length
+	 */
 	public ConnectionEvent(Object source, Object data, int offset, int length) {
 		super(source);
 		this.offset = offset;
@@ -34,14 +58,29 @@ public class ConnectionEvent extends EventObject {
 		this.data = data;
 	}
 
+	/**
+	 * Gets the data.
+	 * 
+	 * @return the data
+	 */
 	public Object getData() {
 		return data;
 	}
 
+	/**
+	 * Gets the offset.
+	 * 
+	 * @return the offset
+	 */
 	public int getOffset() {
 		return offset;
 	}
 
+	/**
+	 * Gets the length.
+	 * 
+	 * @return the length
+	 */
 	public int getLength() {
 		return length;
 	}

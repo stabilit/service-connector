@@ -16,10 +16,27 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.ctx;
 
+/**
+ * The Interface IContext abstracts any kind of context.
+ */
 public interface IContext {
 
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the attribute
+	 */
 	public Object getAttribute(String name);
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
 	public void setAttribute(String name, Object value);
-
 }

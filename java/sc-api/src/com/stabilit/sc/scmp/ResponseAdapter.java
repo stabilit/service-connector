@@ -17,26 +17,44 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Class ResponseAdapter. Provides basic functionality for responses.
  * 
+ * @author JTraber
  */
 public abstract class ResponseAdapter implements IResponse {
+
+	/** The scmp. */
 	protected SCMP scmp;
 
+	/**
+	 * Instantiates a new response adapter.
+	 */
 	public ResponseAdapter() {
 		this.scmp = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IResponse#getSCMP()
+	 */
 	@Override
 	public SCMP getSCMP() {
 		return this.scmp;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IResponse#setSCMP(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public void setSCMP(SCMP scmp) {
 		this.scmp = scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IResponse#isLarge()
+	 */
 	@Override
 	public boolean isLarge() {
 		if (this.scmp == null) {

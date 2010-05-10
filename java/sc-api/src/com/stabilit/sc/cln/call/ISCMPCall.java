@@ -14,62 +14,92 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server;
+package com.stabilit.sc.cln.call;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Interface IServer.
+ * The Interface ISCMPCall abstracts SCMPCalls.
  * 
  * @author JTraber
  */
-public interface IServer extends IFactoryable {
+public interface ISCMPCall {
 
 	/**
-	 * Gets the server context.
+	 * New instance of a call.
 	 * 
-	 * @return the server context
+	 * @param client
+	 *            the client to use for the call *
+	 * @return the iSCMP call
 	 */
-	public IServerContext getServerContext();
+	public ISCMPCall newInstance(IClient client);
 
 	/**
-	 * Sets the server config.
+	 * New instance of a call.
 	 * 
-	 * @param serverConfig
-	 *            the new server config
+	 * @param client
+	 *            the client to use for the call
+	 * @param scmpSession
+	 *            the scmp session to use for the call
+	 * @return the iSCMP call
 	 */
-	public void setServerConfig(IServerConfigItem serverConfig);
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession);
 
 	/**
-	 * Creates the.
+	 * Invoke.
 	 * 
+	 * @return the scmps
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void create() throws Exception;
+	public SCMP invoke() throws Exception;
 
 	/**
-	 * Run async. Starts server in another thread.
+	 * Sets the body.
 	 * 
+	 * @param body
+	 *            the new body
+	 */
+	public void setBody(Object body);
+
+	/**
+	 * Gets the call.
+	 * 
+	 * @return the call
+	 */
+	public SCMP getCall();
+
+	/**
+	 * Gets the result.
+	 * 
+	 * @return the result
+	 */
+	public SCMP getResult();
+
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type
+	 */
+	public SCMPMsgType getMessageType();
+
+	/**
+	 * Open group.
+	 * 
+	 * @return the iSCMP call
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void runAsync() throws Exception;
+	public ISCMPCall openGroup() throws Exception;
 
 	/**
-	 * Run sync. Starts server in incoming thread.
+	 * Close group, sends the ending request.
 	 * 
+	 * @return the scmp result
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void runSync() throws Exception;
-
-	/**
-	 * Gets the server config.
-	 * 
-	 * @return the server config
-	 */
-	public IServerConfigItem getServerConfig();
+	public SCMP closeGroup() throws Exception;
 }

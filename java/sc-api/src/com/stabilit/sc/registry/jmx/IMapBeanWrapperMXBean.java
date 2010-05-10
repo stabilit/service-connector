@@ -17,11 +17,23 @@
 package com.stabilit.sc.registry.jmx;
 
 /**
- * @author JTraber
+ * The Interface IMapBeanWrapperMXBean. Interface provides access for JMX clients.
  * 
+ * @author JTraber
  */
 public interface IMapBeanWrapperMXBean {
 
+	/**
+	 * Gets the entry.
+	 * 
+	 * @return the entry
+	 */
 	String getEntry();
+
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	String getKey();
 }

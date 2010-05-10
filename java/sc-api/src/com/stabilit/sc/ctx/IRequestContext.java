@@ -18,8 +18,15 @@ package com.stabilit.sc.ctx;
 
 import java.net.SocketAddress;
 
+/**
+ * The Interface IRequestContext.
+ */
 public interface IRequestContext extends IContext {
 
+	/**
+	 * Gets the socket address.
+	 * 
+	 * @return the socket address
+	 */
 	public SocketAddress getSocketAddress();
-		
 }

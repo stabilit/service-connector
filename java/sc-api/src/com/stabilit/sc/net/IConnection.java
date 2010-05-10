@@ -18,15 +18,24 @@ package com.stabilit.sc.net;
 
 import com.stabilit.sc.factory.IFactoryable;
 
-public interface IConnection extends IFactoryable {	
-	
+/**
+ * The Interface IConnection abstracts any Connection.
+ */
+public interface IConnection extends IFactoryable {
+
 	/**
+	 * Sets the host.
+	 * 
 	 * @param host
+	 *            the host
 	 */
 	public void setHost(String host);
 
 	/**
+	 * Sets the port.
+	 * 
 	 * @param port
+	 *            the port
 	 */
 	public void setPort(int port);
 }

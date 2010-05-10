@@ -21,44 +21,81 @@ import java.util.Map;
 import com.stabilit.sc.util.DateTimeUtility;
 
 /**
- * @author JTraber
- * 
+ * The Class SCMPFault. Indicates an error and causes the <code>SCMPHeadlineKey.EXC</code> on the wire protocol.
  */
 public class SCMPFault extends SCMP {
 
-	private static final long serialVersionUID = -4041668035605907106L;
-
+	/**
+	 * Instantiates a new SCMP fault.
+	 */
 	public SCMPFault() {
 		super();
 	}
-	
+
+	/**
+	 * Instantiates a new SCMP fault.
+	 * 
+	 * @param map
+	 *            the map
+	 */
 	public SCMPFault(Map<String, String> map) {
 		this.header = map;
 	}
 
+	/**
+	 * Instantiates a new SCMP fault.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 */
 	public SCMPFault(SCMPErrorCode errorCode) {
 		setError(errorCode);
 	}
-	
+
+	/**
+	 * Sets the local date time.
+	 */
 	public void setLocalDateTime() {
 		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isFault()
+	 */
 	@Override
 	public boolean isFault() {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isReply()
+	 */
 	@Override
 	public boolean isReply() {
 		return true;
 	}
 
+	/**
+	 * Sets the error.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 * @param errorText
+	 *            the error text
+	 */
 	public void setError(String errorCode, String errorText) {
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode);
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorText);
 	}
 
+	/**
+	 * Sets the error.
+	 * 
+	 * @param errorCode
+	 *            the new error
+	 */
 	public void setError(SCMPErrorCode errorCode) {
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());

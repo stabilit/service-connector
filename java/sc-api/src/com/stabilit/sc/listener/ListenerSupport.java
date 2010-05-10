@@ -18,30 +18,52 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
+/**
+ * The Class ListenerSupport. Manages all the listeners. 
+ */
 public class ListenerSupport<T extends EventListener> {
 
+	/** The listener array. */
 	protected EventListener[] listenerArray;
+	/** The size. */
 	protected int size;
 
+	/**
+	 * Instantiates a new listener support.
+	 */
 	public ListenerSupport() {
 		this.listenerArray = new EventListener[16];
 		this.size = 0;
 	}
 
+	/**
+	 * Checks if is empty.
+	 * 
+	 * @return true, if is empty
+	 */
 	public boolean isEmpty() {
 		return size <= 0;
 	}
-	
+
+	/**
+	 * Clear all.
+	 */
 	public synchronized void clearAll() {
 		this.size = 0;
 	}
 
+	/**
+	 * Adds the listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
 	public synchronized void addListener(T listener) {
 		if (size == this.listenerArray.length) {
-			size <<= 1;  // multiply by 2
+			size <<= 1; // multiply by 2
 			EventListener[] newArray = new EventListener[size];
-		    System.arraycopy(this.listenerArray, 0, newArray, 0, this.listenerArray.length);
-		    this.listenerArray = newArray;
+			System.arraycopy(this.listenerArray, 0, newArray, 0, this.listenerArray.length);
+			this.listenerArray = newArray;
 		}
 		listenerArray[size++] = listener;
 	}

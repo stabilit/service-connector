@@ -21,16 +21,49 @@ import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
+/**
+ * The Interface ICommand.
+ */
 public interface ICommand extends IFactoryable {
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	public SCMPMsgType getKey();
-	
+
+	/**
+	 * Gets the request key name.
+	 * 
+	 * @return the request key name
+	 */
 	public String getRequestKeyName();
-	
+
+	/**
+	 * Gets the response key name.
+	 * 
+	 * @return the response key name
+	 */
 	public String getResponseKeyName();
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	public ICommandValidator getCommandValidator();
-	
+
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void run(IRequest request, IResponse response) throws Exception;
 
 }

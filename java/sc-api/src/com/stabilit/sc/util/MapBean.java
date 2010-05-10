@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class MapBean<T> {
 
-	/** The attr map. */
+	/** The attribute map. */
 	protected Map<String, T> attrMap;
 
 	/**

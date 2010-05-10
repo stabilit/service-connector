@@ -20,25 +20,37 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * The Class ContextAdapter. Provides basic functionality for Contexts.
+ * 
  * @author JTraber
- *
  */
 public class ContextAdapter implements IContext {
 
+	/** The attr map to store data. */
 	protected Map<String, Object> attrMap;
 
+	/**
+	 * Instantiates a new context adapter.
+	 */
 	public ContextAdapter() {
 		attrMap = new ConcurrentHashMap<String, Object>();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.ctx.IContext#getAttribute(java.lang.String)
+	 */
 	@Override
 	public Object getAttribute(String name) {
 		return this.attrMap.get(name);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.ctx.IContext#setAttribute(java.lang.String, java.lang.Object)
+	 */
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);
 	}
-
 }

@@ -17,12 +17,31 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Enum SCMPInternalStatus. Defines possible internal states in SCMP. Internal status reflects state of
+ * communication. Is used when large messages are requested/responded or group calls are made.
  * 
+ * @author JTraber
  */
 public enum SCMPInternalStatus {
-	NONE, PRQ, REQ, FAILED, GROUP;
 
+	/** The NONE. */
+	NONE,
+	/** The PRQ. */
+	PRQ,
+	/** The REQ. */
+	REQ,
+	/** The FAILED. */
+	FAILED,
+	/** The GROUP. */
+	GROUP;
+
+	/**
+	 * Gets the internal status.
+	 * 
+	 * @param headerKey
+	 *            the header key
+	 * @return the internal status
+	 */
 	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
 		switch (headerKey) {
 		case PRQ:
@@ -31,6 +50,5 @@ public enum SCMPInternalStatus {
 			return SCMPInternalStatus.REQ;
 		}
 		return SCMPInternalStatus.NONE;
-
 	}
 }

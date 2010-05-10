@@ -19,11 +19,20 @@ package com.stabilit.sc.net;
 import com.stabilit.sc.factory.IFactoryable;
 
 /**
- * @author JTraber
+ * The Interface IFrameDecoder. Abstracts FrameDecoder implementations.
  * 
+ * @author JTraber
  */
 public interface IFrameDecoder extends IFactoryable {
 
+	/**
+	 * Parses the frame size.
+	 * 
+	 * @param buffer
+	 *            the buffer to parse
+	 * @return the frame size
+	 * @throws Exception
+	 *             the exception
+	 */
 	public int parseFrameSize(byte[] buffer) throws Exception;
-
 }

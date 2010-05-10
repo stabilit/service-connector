@@ -21,17 +21,32 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
 /**
- * @author JTraber
+ * The Class Lock. Used instead of synchronized, is faster. Guarantees thread safety.
  * 
+ * @author JTraber
  */
 public class Lock<T> {
 
+	/** The reentrant lock. */
 	final ReentrantLock reentrantLock = new ReentrantLock();
 
+	/**
+	 * Lock.
+	 * 
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
 	public void lock() throws InterruptedException {
 		reentrantLock.lock(); // will wait until this thread gets the lock
 	}
 
+	/**
+	 * Run locked.
+	 * 
+	 * @param lockable
+	 *            the lockable
+	 * @return the t
+	 */
 	public T runLocked(Lockable<T> lockable) {
 		try {
 			reentrantLock.lock();
@@ -44,6 +59,15 @@ public class Lock<T> {
 		}
 	}
 
+	/**
+	 * Run locked.
+	 * 
+	 * @param lockable
+	 *            the lockable
+	 * @param object
+	 *            the object
+	 * @return the t
+	 */
 	public T runLocked(Lockable<T> lockable, T object) {
 		try {
 			reentrantLock.lock();
@@ -56,6 +80,17 @@ public class Lock<T> {
 		}
 	}
 
+	/**
+	 * Run locked.
+	 * 
+	 * @param lockable
+	 *            the lockable
+	 * @param obj1
+	 *            the obj1
+	 * @param obj2
+	 *            the obj2
+	 * @return the t
+	 */
 	public T runLocked(Lockable<T> lockable, T obj1, T obj2) {
 		try {
 			reentrantLock.lock();
@@ -68,6 +103,19 @@ public class Lock<T> {
 		}
 	}
 
+	/**
+	 * Run locked.
+	 * 
+	 * @param lockable
+	 *            the lockable
+	 * @param obj1
+	 *            the obj1
+	 * @param obj2
+	 *            the obj2
+	 * @param obj3
+	 *            the obj3
+	 * @return the t
+	 */
 	public T runLocked(Lockable<T> lockable, T obj1, T obj2, T obj3) {
 		try {
 			reentrantLock.lock();
@@ -80,6 +128,15 @@ public class Lock<T> {
 		}
 	}
 
+	/**
+	 * Run locked.
+	 * 
+	 * @param lockable
+	 *            the lockable
+	 * @param params
+	 *            the params
+	 * @return the t
+	 */
 	public T runLocked(Lockable<T> lockable, T... params) {
 		try {
 			reentrantLock.lock();
@@ -92,6 +149,9 @@ public class Lock<T> {
 		}
 	}
 
+	/**
+	 * Unlock.
+	 */
 	public void unlock() {
 		reentrantLock.unlock();
 	}

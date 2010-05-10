@@ -17,10 +17,16 @@
 package com.stabilit.sc.factory;
 
 /**
+ * The Interface IFactoryable.
+ * 
  * @author JTraber
- *
  */
 public interface IFactoryable {
 
+	/**
+	 * New instance.
+	 * 
+	 * @return an instance
+	 */
 	public IFactoryable newInstance();
 }

@@ -24,33 +24,70 @@ import com.stabilit.sc.registry.jmx.MapBeanWrapperJMX;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * @author JTraber
+ * The Class Registry. Provides functionality for general registries.
  * 
+ * @author JTraber
  */
-public abstract class Registry implements IRegistry, IRegistryMXBean {
+public abstract class Registry implements IRegistryMXBean {
 
+	/** The registry map. */
 	private Map<Object, MapBean<?>> registryMap;
-	
+
+	/**
+	 * Instantiates a new registry.
+	 */
 	public Registry() {
 		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();
 	}
 
+	/**
+	 * Put an entry into map.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
 	protected void put(Object key, MapBean<?> value) {
 		registryMap.put(key, value);
 	}
 
+	/**
+	 * Gets an entry by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the map bean<?>
+	 */
 	public MapBean<?> get(Object key) {
 		return registryMap.get(key);
 	}
-	
+
+	/**
+	 * Removes an entry by key.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public void remove(Object key) {
 		this.registryMap.remove(key);
 	}
-	
+
+	/**
+	 * Looks up a key.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return true, if successful
+	 */
 	public boolean containsKey(Object key) {
 		return registryMap.containsKey(key);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuffer dump = new StringBuffer();
@@ -61,13 +98,17 @@ public abstract class Registry implements IRegistry, IRegistryMXBean {
 		}
 		return dump.toString();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.registry.jmx.IRegistryMXBean#getEntries()
+	 */
 	@Override
 	public MapBeanWrapperJMX[] getEntries() {
 		MapBeanWrapperJMX[] mapBeanStringJMX = new MapBeanWrapperJMX[registryMap.size()];
 		int i = 0;
 		for (Object key : registryMap.keySet()) {
-			mapBeanStringJMX[i] = new MapBeanWrapperJMX(key.toString(),(MapBean<?>) registryMap.get(key) );
+			mapBeanStringJMX[i] = new MapBeanWrapperJMX(key.toString(), (MapBean<?>) registryMap.get(key));
 			i++;
 		}
 		return mapBeanStringJMX;

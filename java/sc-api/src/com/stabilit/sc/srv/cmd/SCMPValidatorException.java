@@ -25,40 +25,83 @@ import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorException;
 
 /**
- * @author JTraber
+ * The Class SCMPValidatorException. Occurs when validation of a request fails.
  * 
+ * @author JTraber
  */
 public class SCMPValidatorException extends ValidatorException implements IFaultResponse {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5190062727277529571L;
+	/** The attr bean. */
 	private MapBean<String> attrBean;
 
+	/**
+	 * Instantiates a new SCMPValidatorException.
+	 */
 	public SCMPValidatorException() {
 		this(SCMPErrorCode.VALIDATION_ERROR);
 	}
 
+	/**
+	 * Instantiates a new SCMPValidatorException.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 */
 	public SCMPValidatorException(SCMPErrorCode errorCode) {
 		this.attrBean = new MapBean<String>();
 		this.setErrorCode(errorCode);
 	}
 
+	/**
+	 * Sets the error code.
+	 * 
+	 * @param errorCode
+	 *            the new error code
+	 */
 	public void setErrorCode(SCMPErrorCode errorCode) {
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
 	}
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
 	public void setAttribute(String name, String value) {
 		this.attrBean.setAttribute(name, value);
 	}
 
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the attribute
+	 */
 	public Object getAttribute(String name) {
 		return this.attrBean.getAttribute(name);
 	}
 
+	/**
+	 * Sets the message type.
+	 * 
+	 * @param messageType
+	 *            the new message type
+	 */
 	public void setMessageType(String messageType) {
 		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IFaultResponse#setFaultResponse(com.stabilit.sc.scmp.IResponse)
+	 */
 	@Override
 	public void setFaultResponse(IResponse response) {
 		SCMPFault scmpFault = new SCMPFault(attrBean.getAttributeMap());

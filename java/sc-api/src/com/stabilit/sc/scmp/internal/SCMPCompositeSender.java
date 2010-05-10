@@ -18,43 +18,68 @@ package com.stabilit.sc.scmp.internal;
 
 import com.stabilit.sc.scmp.SCMP;
 
-
 /**
- * @author JTraber
+ * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides
+ * functionality of splitting large SCMP into pars.
  * 
+ * @author JTraber
  */
-public class SCMPLargeRequest extends SCMP {
+public class SCMPCompositeSender extends SCMP {
 
-	private SCMP scmp;
-	private int offset;
-	private int scmpCallLength;
+	/** The large scmp. */
+	private SCMP scmp;	
+	/** The offset. */
+	private int offset;	
+	/** The scmp call length. */
+	private int scmpCallLength;	
+	/** The current part. */
 	private SCMP current;
-	
-	public SCMPLargeRequest(SCMP scmp) {
+
+	/**
+	 * Instantiates a new SCMPCompositeSender.
+	 * 
+	 * @param scmp the scmp
+	 */
+	public SCMPCompositeSender(SCMP scmp) {
 		this.scmp = scmp;
 		this.scmpCallLength = this.scmp.getBodyLength();
 		this.offset = 0;
 		this.current = null;
 	}
-	
+
+	/**
+	 * Gets the first part.
+	 * 
+	 * @return the first
+	 */
 	public SCMP getFirst() {
 		this.offset = 0;
-		this.current = new SCMPRequestPart(this.scmp, this.offset);
-		this.offset += current.getBodyLength();		
+		this.current = new SCMPSendPart(this.scmp, this.offset);
+		this.offset += current.getBodyLength();
 		return this.current;
 	}
-	
+
+	/**
+	 * Checks for next part.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean hasNext() {
-        return this.offset < this.scmpCallLength;		
+		return this.offset < this.scmpCallLength;
 	}
-	
+
+	/**
+	 * Gets the next part.
+	 * 
+	 * @return the next
+	 */
 	public SCMP getNext() {
-	    if (this.hasNext()) {
-			this.current = new SCMPRequestPart(scmp, this.offset);			    
+		if (this.hasNext()) {
+			this.current = new SCMPSendPart(scmp, this.offset);
 			this.offset += current.getBodyLength();
 			return this.current;
-	    }
-	    this.current = null;
-	    return this.current;
-	}			
+		}
+		this.current = null;
+		return this.current;
+	}
 }

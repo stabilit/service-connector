@@ -27,16 +27,38 @@ import java.util.Date;
 
 import com.stabilit.sc.util.DateTimeUtility;
 
+/**
+ * The Class SimpleLogger. A simple implementation of a logger.
+ */
 public abstract class SimpleLogger implements ILogger {
+
+	/** The fos. */
 	private FileOutputStream fos;
+	/** The pw. */
 	protected PrintWriter pw;
+	/** The dir. */
 	private String dir;
+	/** The file name. */
 	private String fileName;
+	/** The log file. */
 	private File logFile;
+	/** The date. */
 	protected Date date;
+	/** The date formatter. */
 	private SimpleDateFormat dateFormatter;
+	/** The time formatter. */
 	private SimpleDateFormat timeFormatter;
 
+	/**
+	 * Instantiates a new simple logger.
+	 * 
+	 * @param dir
+	 *            the dir
+	 * @param fileName
+	 *            the file name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SimpleLogger(String dir, String fileName) throws Exception {
 		this.date = Calendar.getInstance().getTime();
 		this.dir = dir;
@@ -56,6 +78,12 @@ public abstract class SimpleLogger implements ILogger {
 		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
+	/**
+	 * Close and open.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	protected void closeAndOpen() throws IOException {
 		try {
 			pw.close();
@@ -69,13 +97,21 @@ public abstract class SimpleLogger implements ILogger {
 		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(java.lang.Object)
+	 */
 	@Override
 	public void log(Object obj) throws IOException {
 		throw new IOException("not supported");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(byte[])
+	 */
 	@Override
-	public void log(byte[] buffer) throws IOException {		
+	public void log(byte[] buffer) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
 			// day did change
 			closeAndOpen();
@@ -91,8 +127,12 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(byte[], int, int)
+	 */
 	@Override
-	public void log(byte[] buffer, int offset, int length) throws IOException {		
+	public void log(byte[] buffer, int offset, int length) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
 			// day did change
 			closeAndOpen();
@@ -108,6 +148,10 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(java.lang.String)
+	 */
 	@Override
 	public void log(String msg) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -127,6 +171,10 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(java.lang.Throwable)
+	 */
 	@Override
 	public void log(Throwable t) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -148,6 +196,10 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.ILogger#log(com.stabilit.sc.log.Level, java.lang.String)
+	 */
 	@Override
 	public void log(Level level, String msg) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -169,26 +221,73 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
+	/**
+	 * Log error.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void logError(String msg) throws IOException {
 		this.log(Level.ERROR, msg);
 	}
 
+	/**
+	 * Log warn.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void logWarn(String msg) throws IOException {
 		this.log(Level.WARN, msg);
 	}
 
+	/**
+	 * Log info.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void logInfo(String msg) throws IOException {
 		this.log(Level.INFO, msg);
 	}
 
+	/**
+	 * Log debug.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void logDebug(String msg) throws IOException {
 		this.log(Level.DEBUG, msg);
 	}
 
+	/**
+	 * Log trace.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void logTrace(String msg) throws IOException {
 		this.log(Level.TRACE, msg);
 	}
 
+	/**
+	 * Gets the log head.
+	 * 
+	 * @param level
+	 *            the level
+	 * @return the log head
+	 */
 	public String getLogHead(Level level) {
 		// 2009-12-14 20:17:13 - 127.0.0.1 - INFO -->
 		Date now = Calendar.getInstance().getTime();
@@ -199,5 +298,4 @@ public abstract class SimpleLogger implements ILogger {
 		sb.append(" --> ");
 		return sb.toString();
 	}
-
 }

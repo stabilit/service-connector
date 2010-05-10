@@ -21,22 +21,52 @@ import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
- * @author JTraber
+ * The Interface IClientConnection abstracts any connection to a server.
  * 
+ * @author JTraber
  */
 public interface IClientConnection extends IConnection {
 
 	/**
-	 * @throws ConnectionException
+	 * Connect.
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	void connect() throws Exception;
 
+	/**
+	 * Send and receive synchronous operation.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 
+	/**
+	 * Disconnect.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void disconnect() throws Exception;
 
+	/**
+	 * Destroys connection.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void destroy() throws Exception;
 
+	/**
+	 * Sets the encoder decoder.
+	 * 
+	 * @param encoderDecoder
+	 *            the new encoder decoder
+	 */
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
-
 }

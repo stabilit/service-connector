@@ -21,21 +21,59 @@ import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
- * @author JTraber
+ * The Interface IClient abstracts client functionality.
  * 
+ * @author JTraber
  */
 public interface IClient extends IFactoryable {
-	
+
+	/**
+	 * Disconnect.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void disconnect() throws Exception;
 
+	/**
+	 * Destroy.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void destroy() throws Exception;
 
+	/**
+	 * Connect.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void connect() throws Exception;
 
+	/**
+	 * Send and receive, synchronous operation.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the scmp
+	 * @throws Exception
+	 *             exception in sending/receiving process
+	 */
 	public SCMP sendAndReceive(SCMP scmp) throws Exception;
 
+	/**
+	 * Sets the client config.
+	 * 
+	 * @param clientConfig
+	 *            the new client config
+	 */
 	public void setClientConfig(IClientConfigItem clientConfig);
 
+	/**
+	 * Returns a hash code which identifies client connection.
+	 * 
+	 * @return the string
+	 */
 	public String toHashCodeString();
-	
 }

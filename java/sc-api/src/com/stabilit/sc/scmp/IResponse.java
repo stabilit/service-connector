@@ -16,19 +16,38 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.scmp;
 
-import com.stabilit.sc.net.IEncoderDecoder;
-
-
+/**
+ * The Interface IResponse abstracts response.
+ */
 public interface IResponse {
 
+	/**
+	 * Gets the scmp.
+	 * 
+	 * @return the scmp
+	 */
 	public SCMP getSCMP();
-	
-	public void setSCMP(SCMP scmp);
-	
-	public void write() throws Exception;
-	
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
-	
-	public boolean isLarge();		
 
+	/**
+	 * Sets the scmp.
+	 * 
+	 * @param scmp
+	 *            the new scmp
+	 */
+	public void setSCMP(SCMP scmp);
+
+	/**
+	 * Write the response.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void write() throws Exception;
+
+	/**
+	 * Checks if is response content is large.
+	 * 
+	 * @return true, if is large
+	 */
+	public boolean isLarge();
 }

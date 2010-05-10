@@ -20,34 +20,76 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author JTraber
+ * The Class Factory. SuperClass for factories.
  * 
+ * @author JTraber
  */
 public class Factory {
 
+	/** The Constant DEFAULT. Key for default instance. */
+	protected static final String DEFAULT = "default";
+	/** The factory map stores instances created by factory. */
 	protected Map<Object, IFactoryable> factoryMap = new ConcurrentHashMap<Object, IFactoryable>();
 
+	/**
+	 * Gets the single instance of Factory.
+	 * 
+	 * @return single instance of Factory
+	 */
 	public IFactoryable getInstance() {
 		return getInstance("default");
 	}
 
+	/**
+	 * Adds the.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param factoryInstance
+	 *            the factory instance
+	 */
 	public void add(Object key, IFactoryable factoryInstance) {
 		factoryMap.put(key, factoryInstance);
 	}
 
+	/**
+	 * Removes the.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public void remove(Object key) {
 		factoryMap.remove(key);
 	}
 
+	/**
+	 * Gets the single instance of Factory.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return single instance of Factory
+	 */
 	public IFactoryable getInstance(Object key) {
 		IFactoryable factoryInstance = factoryMap.get(key);
 		return factoryInstance;
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return an instance
+	 */
 	public IFactoryable newInstance() {
 		return newInstance("default");
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return an instance
+	 */
 	public IFactoryable newInstance(Object key) {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
@@ -55,5 +97,4 @@ public class Factory {
 		}
 		return factoryInstance.newInstance();
 	}
-
 }

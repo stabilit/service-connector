@@ -17,38 +17,73 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Enum SCMPErrorCode. Defines possible error codes in SCMP.
  * 
+ * @author JTraber
  */
 public enum SCMPErrorCode {
 
+	/** The client error. */
 	CLIENT_ERROR("400", "Client error occured."),
+	/** The request unknown. */
 	REQUEST_UNKNOWN("401", "Request unknown"),
-	VALIDATION_ERROR("402", "Validation error occured."),	
+	/** The validation error. */
+	VALIDATION_ERROR("402", "Validation error occured."),
+	/** The not found. */
 	NOT_FOUND("404", "Not found error occured."),
+	/** The not connected. */
 	NOT_CONNECTED("405", "Not connected."),
-	ALREADY_CONNECTED("406","Already connected."),
+	/** The already connected. */
+	ALREADY_CONNECTED("406", "Already connected."),
+	/** The protocol mismatch. */
 	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
-	ALREADY_REGISTERED("408","Already registered."),
-	NOT_REGISTERED("409","Not registered."),
-	ALREADY_ALLOCATED("410","Already allocated."),
-	NOT_ALLOCATED("411","Not allocated."),
-	NO_SESSION("412","No session found."),
+	/** The already registered. */
+	ALREADY_REGISTERED("408", "Already registered."),
+	/** The not registered. */
+	NOT_REGISTERED("409", "Not registered."),
+	/** The already allocated. */
+	ALREADY_ALLOCATED("410", "Already allocated."),
+	/** The not allocated. */
+	NOT_ALLOCATED("411", "Not allocated."),
+	/** The no session found. */
+	NO_SESSION("412", "No session found."),
+	/** The SERVE r_ error. */
 	SERVER_ERROR("500", "Server error occured."),
+	/** The unknown service. */
 	UNKNOWN_SERVICE("501", "Unknown service requested.");
-	
+
+	/** The error code. */
 	private String errorCode;
+	/** The error text. */
 	private String errorText;
-	
+
+	/**
+	 * Instantiates a new sCMP error code.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 * @param errorText
+	 *            the error text
+	 */
 	private SCMPErrorCode(String errorCode, String errorText) {
 		this.errorCode = errorCode;
 		this.errorText = errorText;
 	}
 
+	/**
+	 * Gets the error code.
+	 * 
+	 * @return the error code
+	 */
 	public String getErrorCode() {
 		return errorCode;
 	}
 
+	/**
+	 * Gets the error text.
+	 * 
+	 * @return the error text
+	 */
 	public String getErrorText() {
 		return errorText;
 	}

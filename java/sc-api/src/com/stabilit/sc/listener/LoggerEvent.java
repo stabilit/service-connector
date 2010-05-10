@@ -20,22 +20,49 @@ import java.util.EventObject;
 
 import com.stabilit.sc.log.Level;
 
+/**
+ * The Class LoggerEvent. Event for logging purpose.
+ */
 public class LoggerEvent extends EventObject {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 8286024613410908732L;
+	/** The text. */
 	private String text;
+	/** The level. */
 	private Level level;
 
+	/**
+	 * Instantiates a new logger event.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
+	 * @param level
+	 *            the level
+	 */
 	public LoggerEvent(Object source, String text, Level level) {
 		super(source);
 		this.text = text;
 		this.level = level;
 	}
 
+	/**
+	 * Gets the text.
+	 * 
+	 * @return the text
+	 */
 	public String getText() {
 		return text;
 	}
 
+	/**
+	 * Gets the level of logging.
+	 * 
+	 * @return the level
+	 */
 	public Level getLevel() {
 		return level;
 	}
-
 }

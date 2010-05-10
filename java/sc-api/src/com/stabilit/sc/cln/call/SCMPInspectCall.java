@@ -14,7 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.cln.call;
+
+import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
@@ -22,34 +24,55 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations.
  * 
+ * @author JTraber
  */
-public class SCMPClnDataCall extends SCMPCallAdapter {
+public class SCMPInspectCall extends SCMPCallAdapter {
 
-	public SCMPClnDataCall() {
-		this(null, null);
+	/**
+	 * Instantiates a new sCMP inspect call.
+	 */
+	public SCMPInspectCall() {
+		this(null);
 	}
 
-	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
-		super(client, scmpSession);
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
+	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPClnDataCall(client, scmpSession);
+	public SCMP invoke() throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		return super.invoke();
 	}
 
-	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	/**
+	 * Instantiates a new sCMP inspect call.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 */
+	public SCMPInspectCall(IClient client) {
+		this.client = client;
 	}
 
-	public void setMessagInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
+	 */
+	@Override
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPInspectCall(client);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DATA;
+		return SCMPMsgType.INSPECT;
 	}
 }

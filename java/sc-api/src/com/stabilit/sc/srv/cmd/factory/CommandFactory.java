@@ -22,29 +22,51 @@ import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.srv.cmd.ICommand;
 
+/**
+ * A factory for creating Command objects.
+ */
 public class CommandFactory extends Factory {
 
+	/** The command factory. */
 	protected static CommandFactory commandFactory = null;
 
+	/**
+	 * Instantiates a new command factory.
+	 */
 	public CommandFactory() {
 	}
 
+	/**
+	 * Gets the current command factory.
+	 * 
+	 * @return the current command factory
+	 */
 	public static CommandFactory getCurrentCommandFactory() {
 		return commandFactory;
 	}
 
+	/**
+	 * Sets the current command factory.
+	 * 
+	 * @param commandFactory
+	 *            the new current command factory
+	 */
 	public static void setCurrentCommandFactory(CommandFactory commandFactory) {
 		CommandFactory.commandFactory = commandFactory;
 	}
 
-	public void init(CommandFactory commandFactory) {
-
-	}
-
+	/**
+	 * New command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return the command
+	 * @throws Exception
+	 *             the exception
+	 */
 	public ICommand newCommand(IRequest request) throws Exception {
 		SCMPMsgType key = request.getKey();
 		IFactoryable factoryInstance = this.newInstance(key.getRequestName());
 		return (ICommand) factoryInstance;
 	}
-
 }

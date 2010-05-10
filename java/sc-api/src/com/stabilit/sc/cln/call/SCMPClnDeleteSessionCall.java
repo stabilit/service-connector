@@ -14,63 +14,80 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
-
-import java.net.InetAddress;
-import java.util.Map;
+package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.scmp.SCMPSession;
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPClnDeleteSessionCall. Call deletes a session.
  * 
+ * @author JTraber
  */
-public class SCMPClnEchoCall extends SCMPCallAdapter {
+public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 
-	public SCMPClnEchoCall() {
+	/**
+	 * Instantiates a new SCMPClnDeleteSessionCall.
+	 */
+	public SCMPClnDeleteSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPClnEchoCall(IClient client, SCMP scmpSession) {
+	/**
+	 * Instantiates a new SCMPClnDeleteSessionCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 * @param scmpSession
+	 *            the scmp session
+	 */
+	public SCMPClnDeleteSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
-	@Override
-	public SCMP invoke() throws Exception {
-		InetAddress localHost = InetAddress.getLocalHost();
-		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		this.call.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, client.hashCode());
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPServiceException((SCMPFault) result);
-		}
-		return this.result;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
+	 * com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPClnEchoCall(client, scmpSession);
+		return new SCMPClnDeleteSessionCall(client, scmpSession);
 	}
 
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
+	 */
+	@Override
+	public SCMP invoke() throws Exception {
+		super.invoke();
+		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession) {
+			// remove session from internal registry
+			((SCMPSession) this.scmpSession).removeSessionRegistry();
+		}
+		return this.result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_ECHO;
-	}
-	
-	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
-	}
-	
-	public void setMaxNodes(int maxNodes) {
-		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+		return SCMPMsgType.CLN_DELETE_SESSION;
 	}
 }

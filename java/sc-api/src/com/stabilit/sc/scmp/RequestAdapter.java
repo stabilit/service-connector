@@ -21,21 +21,33 @@ import java.net.SocketAddress;
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.util.MapBean;
 
-
 /**
- * @author JTraber
+ * The Class RequestAdapter. Provides basic functionality for requests.
  * 
+ * @author JTraber
  */
 public abstract class RequestAdapter implements IRequest {
+
+	/** The scmp. */
 	protected SCMP scmp;
+	/** The map bean. MapBean to store any data. */
 	protected MapBean<Object> mapBean;
+	/** The socket address. */
 	protected SocketAddress socketAddress;
+	/** The request context. */
 	protected IRequestContext requestContext;
-	
+
+	/**
+	 * Instantiates a new request adapter.
+	 */
 	public RequestAdapter() {
 		this.scmp = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getSCMP()
+	 */
 	@Override
 	public SCMP getSCMP() throws Exception {
 		if (scmp == null) {
@@ -44,49 +56,85 @@ public abstract class RequestAdapter implements IRequest {
 		return scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#setSCMP(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public void setSCMP(SCMP scmp) {
 		this.scmp = scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getContext()
+	 */
 	@Override
 	public IRequestContext getContext() {
 		return requestContext;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getAttribute(java.lang.String)
+	 */
 	@Override
 	public Object getAttribute(String key) {
 		return mapBean.getAttribute(key);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#setAttribute(java.lang.String, java.lang.Object)
+	 */
 	@Override
 	public void setAttribute(String key, Object value) {
 		mapBean.setAttribute(key, value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getAttributeMapBean()
+	 */
 	@Override
 	public MapBean<Object> getAttributeMapBean() {
 		return mapBean;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getSocketAddress()
+	 */
 	@Override
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#read()
+	 */
 	@Override
 	public void read() throws Exception {
 		if (scmp == null) {
 			load();
 		}
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#readNext()
+	 */
 	@Override
 	public void readNext() throws Exception {
 		this.scmp = null;
 		read();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#getKey()
+	 */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMP scmp = this.getSCMP();

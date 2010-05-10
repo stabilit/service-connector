@@ -16,25 +16,67 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.log;
 
+/**
+ * The Enum Level. States of logging.
+ */
 public enum Level {
-	ERROR("ERR",1), EXCEPTION("EXC",2), WARN("WRN",3), INFO("INF",4), DEBUG("DBG",5), TRACE("TRC",6);
 
+	/** The ERROR. */
+	ERROR("ERR", 1),
+	/** The EXCEPTION. */
+	EXCEPTION("EXC", 2),
+	/** The WARN. */
+	WARN("WRN", 3),
+	/** The INFO. */
+	INFO("INF", 4),
+	/** The DEBUG. */
+	DEBUG("DBG", 5),
+	/** The TRACE. */
+	TRACE("TRC", 6);
+
+	/** The name. */
 	private String name;
+	/** The level. */
 	private int level;
-	
+
+	/**
+	 * Instantiates a new level.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param level
+	 *            the level
+	 */
 	private Level(String name, int level) {
 		this.name = name;
 		this.level = level;
 	}
-	
+
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
-	
+
+	/**
+	 * Gets the level.
+	 * 
+	 * @return the level
+	 */
 	public int getLevel() {
 		return level;
 	}
-	
+
+	/**
+	 * Supports level of logging.
+	 * 
+	 * @param level
+	 *            the level
+	 * @return true, if successful
+	 */
 	public boolean supportsLevel(Level level) {
 		return this.level >= level.level;
 	}

@@ -24,25 +24,41 @@ import com.stabilit.sc.registry.Registry;
 import com.stabilit.sc.util.MapBean;
 
 /**
+ * The Class SCMPSessionRegistry.
+ * TODO commenting, unsure at this moment!
+ * 
  * @author JTraber
- *
  */
 public final class SCMPSessionRegistry extends Registry {
 
+	/** The session registry. */
 	private static SCMPSessionRegistry sessionRegistry = new SCMPSessionRegistry();
 	
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
 	public static SCMPSessionRegistry getCurrentInstance() {
 		return sessionRegistry;
 	}
 	
+	/**
+	 * Instantiates a new sCMP session registry.
+	 */
 	private SCMPSessionRegistry() {
 		MapBean<?> sessionIdMapBean = new MapBean<List<String>>();
 		this.put("sessionIdMapBean", sessionIdMapBean);
 		MapBean<?> serviceNameMapBean = new MapBean<List<String>>();
 		this.put("serviceNameMapBean", serviceNameMapBean);
-
 	}
 
+	/**
+	 * Adds an entry (sessionId, serviceName).
+	 * 
+	 * @param sessionId the session id
+	 * @param serviceName the service name
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void add(String sessionId, String serviceName) {
 		MapBean<List<String>> sessionIdMapBean = (MapBean<List<String>>) this.get("sessionIdMapBean");
@@ -62,6 +78,12 @@ public final class SCMPSessionRegistry extends Registry {
         serviceNameList.add(sessionId);
 	}
 
+	/**
+	 * Removes an entry (sessionId, serviceName).
+	 * 
+	 * @param sessionId the session id
+	 * @param serviceName the service name
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void remove(String sessionId, String serviceName) {
 		MapBean<List<String>> sessionIdMapBean = (MapBean<List<String>>) this.get("sessionIdMapBean");
@@ -71,7 +93,7 @@ public final class SCMPSessionRegistry extends Registry {
         }
         
 		MapBean<List<String>> serviceNameMapBean = (MapBean<List<String>>) this.get("serviceNameMapBean");
-        List<String> serviceNameList = sessionIdMapBean.getAttribute(serviceName);
+        List<String> serviceNameList = serviceNameMapBean.getAttribute(serviceName);
         if (serviceNameList != null) {
         	serviceNameList.remove(sessionId);
         }

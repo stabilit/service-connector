@@ -18,27 +18,41 @@ package com.stabilit.sc.srv.cmd;
 
 
 /**
+ * The Class CommandAdapter.
+ * 
  * @author JTraber
- *
  */
 public abstract class CommandAdapter implements ICommand {	
 
+	/** The command validator. */
 	protected ICommandValidator commandValidator;
 	
+	/**
+	 * Instantiates a new command adapter.
+	 */
 	public CommandAdapter() {
 		commandValidator = NullCommandValidator.newInstance();  // www.refactoring.com Introduce NULL Object
 	}
 
+	/* (non-Javadoc)
+	 * @see com.stabilit.sc.srv.cmd.ICommand#getCommandValidator()
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return commandValidator;
 	}
 		
+	/* (non-Javadoc)
+	 * @see com.stabilit.sc.srv.cmd.ICommand#getRequestKeyName()
+	 */
 	@Override
 	public String getRequestKeyName() {
 		return this.getKey().getRequestName();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.stabilit.sc.srv.cmd.ICommand#getResponseKeyName()
+	 */
 	@Override
 	public String getResponseKeyName() {
 		return this.getKey().getResponseName();

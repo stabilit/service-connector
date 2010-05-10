@@ -20,22 +20,33 @@ import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 
 /**
- * @author JTraber
+ * The Class SCMPSession. Represents a connection to a server. Can be registered in an internal registry.
  * 
+ * @author JTraber
  */
 public class SCMPSession extends SCMP {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5900008165666082494L;
 
+	/**
+	 * Instantiates a new sCMP session.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 */
 	public SCMPSession(SCMP scmp) {
 		String sessionId = scmp.getSessionId();
 		this.setSessionId(sessionId);
 		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);		
+		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		String msgType = scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
 		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType);
 	}
 
+	/**
+	 * Adds the session to registry.
+	 */
 	public void addSessionRegistry() {
 		String sessionId = getSessionId();
 		this.setSessionId(sessionId);
@@ -44,6 +55,9 @@ public class SCMPSession extends SCMP {
 		sessionRegistry.add(sessionId, serviceName);
 	}
 
+	/**
+	 * Removes the session from registry.
+	 */
 	public void removeSessionRegistry() {
 		String sessionId = getSessionId();
 		this.setSessionId(sessionId);
@@ -51,5 +65,4 @@ public class SCMPSession extends SCMP {
 		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
 		sessionRegistry.remove(sessionId, serviceName);
 	}
-
 }

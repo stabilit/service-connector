@@ -21,20 +21,76 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * The Interface IInternalMessage. Abstracts internal message. Internal Messages are used to communicate for
+ * testing / maintaining reasons.
+ */
 public interface IInternalMessage {
+
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	public SCMPMsgType getKey();
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the internal message
+	 */
 	public IInternalMessage newInstance();
 
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the attribute
+	 */
 	public Object getAttribute(String name);
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
 	public void setAttribute(String name, Object value);
 
+	/**
+	 * Gets the attribute map.
+	 * 
+	 * @return the attribute map
+	 */
 	Map<String, Object> getAttributeMap();
 
+	/**
+	 * Encode.
+	 * 
+	 * @param bw
+	 *            the bw
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void encode(BufferedWriter bw) throws IOException;
-	
+
+	/**
+	 * Decode.
+	 * 
+	 * @param br
+	 *            the br
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void decode(BufferedReader br) throws IOException;
 
+	/**
+	 * Gets the length.
+	 * 
+	 * @return the length
+	 */
 	public int getLength();
 }

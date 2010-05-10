@@ -18,26 +18,50 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
-public class ExceptionListenerSupport extends
-		ListenerSupport<IExceptionListener> {
+/**
+ * The Class ExceptionListenerSupport. Allows logging exceptions.
+ */
+public class ExceptionListenerSupport extends ListenerSupport<IExceptionListener> {
 
+	/** The exception listener support. */
 	private static ExceptionListenerSupport exceptionListenerSupport = new ExceptionListenerSupport();
 
+	/**
+	 * Instantiates a new exception listener support.
+	 */
 	private ExceptionListenerSupport() {
 	}
 
+	/**
+	 * Gets the single instance of ExceptionListenerSupport.
+	 * 
+	 * @return single instance of ExceptionListenerSupport
+	 */
 	public static ExceptionListenerSupport getInstance() {
 		return exceptionListenerSupport;
 	}
 
+	/**
+	 * Fire exception.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param th
+	 *            the th
+	 */
 	public void fireException(Object source, Throwable th) {
 		if (getInstance().isEmpty() == false) {
 			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			ExceptionListenerSupport.getInstance()
-					.fireException(exceptionEvent);
+			ExceptionListenerSupport.getInstance().fireException(exceptionEvent);
 		}
 	}
 
+	/**
+	 * Fire exception.
+	 * 
+	 * @param exceptionEvent
+	 *            the exception event
+	 */
 	public void fireException(ExceptionEvent exceptionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;

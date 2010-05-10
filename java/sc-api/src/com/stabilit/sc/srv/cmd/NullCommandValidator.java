@@ -20,24 +20,29 @@ import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.util.ValidatorException;
 
 /**
+ * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation.
+ * Throws more specific exception (ValidatorException).
+ * 
  * @author JTraber
- *
  */
 public class NullCommandValidator implements ICommandValidator {
 
 	private static ICommandValidator nullCommandValidator = new NullCommandValidator();
-		
+
+	/**
+	 * New instance.
+	 * 
+	 * @return the command validator
+	 */
 	public static ICommandValidator newInstance() {
 		return nullCommandValidator;
 	}
 
 	private NullCommandValidator() {
 	}
-	
+
 	@Override
 	public void validate(IRequest request) throws ValidatorException {
-        throw new ValidatorException("no validator implemented");
+		throw new ValidatorException("no validator implemented");
 	}
-
-
 }

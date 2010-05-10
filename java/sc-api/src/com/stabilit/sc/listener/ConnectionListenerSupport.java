@@ -18,17 +18,35 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
+/**
+ * The Class ConnectionListenerSupport. Allows logging on connection level - fire read/write, connect/disconnect.
+ */
 public class ConnectionListenerSupport extends ListenerSupport<IConnectionListener> {
 
+	/** The connection listener support. */
 	private static ConnectionListenerSupport connectionListenerSupport = new ConnectionListenerSupport();
 
+	/**
+	 * Instantiates a new connection listener support.
+	 */
 	private ConnectionListenerSupport() {
 	}
 
+	/**
+	 * Gets the single instance of ConnectionListenerSupport.
+	 * 
+	 * @return single instance of ConnectionListenerSupport
+	 */
 	public static ConnectionListenerSupport getInstance() {
 		return connectionListenerSupport;
 	}
 
+	/**
+	 * Fire connect.
+	 * 
+	 * @param source
+	 *            the source
+	 */
 	public void fireConnect(Object source) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, null);
@@ -36,6 +54,12 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 		}
 	}
 
+	/**
+	 * Fire disconnect.
+	 * 
+	 * @param source
+	 *            the source
+	 */
 	public void fireDisconnect(Object source) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, null);
@@ -43,34 +67,80 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 		}
 	}
 
-	public static void fireWrite(Object source, byte[] buffer) {
+	/**
+	 * Fire write.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param buffer
+	 *            the buffer
+	 */
+	public void fireWrite(Object source, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer);
 			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
 		}
 	}
 
-	public static void fireWrite(Object source, byte[] buffer, int offset, int length) {
+	/**
+	 * Fire write.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param buffer
+	 *            the buffer
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 */
+	public void fireWrite(Object source, byte[] buffer, int offset, int length) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer, offset, length);
 			ConnectionListenerSupport.getInstance().fireWrite(connectionEvent);
 		}
 	}
 
-	public static void fireRead(Object source, byte[] buffer) {
+	/**
+	 * Fire read.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param buffer
+	 *            the buffer
+	 */
+	public void fireRead(Object source, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer);
 			ConnectionListenerSupport.getInstance().fireRead(connectionEvent);
 		}
 	}
 
-	public static void fireRead(Object source, byte[] buffer, int offset, int length) {
+	/**
+	 * Fire read.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param buffer
+	 *            the buffer
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 */
+	public void fireRead(Object source, byte[] buffer, int offset, int length) {
 		if (getInstance().isEmpty() == false) {
 			ConnectionEvent connectionEvent = new ConnectionEvent(source, buffer, offset, length);
 			ConnectionListenerSupport.getInstance().fireRead(connectionEvent);
 		}
 	}
 
+	/**
+	 * Fire connect.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 */
 	public void fireConnect(ConnectionEvent connectionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
@@ -84,6 +154,12 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 		}
 	}
 
+	/**
+	 * Fire disconnect.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 */
 	public void fireDisconnect(ConnectionEvent connectionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
@@ -97,6 +173,12 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 		}
 	}
 
+	/**
+	 * Fire write.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 */
 	public void fireWrite(ConnectionEvent connectionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
@@ -110,6 +192,12 @@ public class ConnectionListenerSupport extends ListenerSupport<IConnectionListen
 		}
 	}
 
+	/**
+	 * Fire read.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 */
 	public void fireRead(ConnectionEvent connectionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;

@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.srv.cmd;
 
-
 /**
+ * The Interface IPassThrough. Marks commands which pass through messages. Is used to decide if a part message
+ * arrives, has to be queued and await completion before pass it over to the command or pass it over directly.
+ * 
  * @author JTraber
- *
  */
 public interface IPassThrough {
-
 }

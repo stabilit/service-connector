@@ -14,9 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
-
-import java.net.InetAddress;
+package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
@@ -24,33 +22,67 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPClnDataCall. Call sends data to server.
  * 
+ * @author JTraber
  */
-public class SCMPInspectCall extends SCMPCallAdapter {
+public class SCMPClnDataCall extends SCMPCallAdapter {
 
-	public SCMPInspectCall() {
-		this(null);
+	/**
+	 * Instantiates a new SCMPClnDataCall.
+	 */
+	public SCMPClnDataCall() {
+		this(null, null);
 	}
-	
+
+	/**
+	 * Instantiates a new SCMPClnDataCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 * @param scmpSession
+	 *            the scmp session
+	 */
+	public SCMPClnDataCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
+	 * com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
-	public SCMP invoke() throws Exception {
-		InetAddress localHost = InetAddress.getLocalHost();
-		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		return super.invoke();
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPClnDataCall(client, scmpSession);
 	}
 
-	public SCMPInspectCall(IClient client) {
-		this.client = client;
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
-	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPInspectCall(client);
+	/**
+	 * Sets the messag info.
+	 * 
+	 * @param messageInfo
+	 *            the new messag info
+	 */
+	public void setMessagInfo(String messageInfo) {
+		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.INSPECT;
+		return SCMPMsgType.CLN_DATA;
 	}
 }

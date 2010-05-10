@@ -21,25 +21,45 @@ import java.beans.ConstructorProperties;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * @author JTraber
+ * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.
  * 
+ * @author JTraber
  */
 public class MapBeanWrapperJMX implements IMapBeanWrapperMXBean {
 
+	/** The map bean. */
 	MapBean<?> mapBean;
+
+	/** The registry key. */
 	String registryKey;
 
+	/**
+	 * Instantiates a new MapBeanWrapperJMX.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param mapBean
+	 *            the map bean
+	 */
 	@ConstructorProperties( { "key", "MapBean" })
 	public MapBeanWrapperJMX(String key, MapBean<?> mapBean) {
 		this.registryKey = key;
 		this.mapBean = mapBean;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.registry.jmx.IMapBeanWrapperMXBean#getEntry()
+	 */
 	@Override
 	public String getEntry() {
 		return mapBean.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.registry.jmx.IMapBeanWrapperMXBean#getKey()
+	 */
 	@Override
 	public String getKey() {
 		return registryKey;

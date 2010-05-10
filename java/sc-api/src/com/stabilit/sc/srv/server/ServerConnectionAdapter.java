@@ -17,21 +17,35 @@
 package com.stabilit.sc.srv.server;
 
 /**
- * @author JTraber
+ * The Class ServerConnectionAdapter. Provides basic functionality for server connections.
  * 
+ * @author JTraber
  */
 public abstract class ServerConnectionAdapter implements IServerConnection {
+
+	/** The server. */
 	protected IServer server;
 
+	/**
+	 * Instantiates a new server connection adapter.
+	 */
 	public ServerConnectionAdapter() {
 		this.server = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#getServer()
+	 */
 	@Override
 	public IServer getServer() {
 		return server;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#setServer(com.stabilit.sc.srv.server.IServer)
+	 */
 	public void setServer(IServer server) {
 		this.server = server;
 	}

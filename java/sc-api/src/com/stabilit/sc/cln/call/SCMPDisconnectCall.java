@@ -14,12 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.sc.cln.call;
+
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPDisconnectCall. Call disconnects on SCMP level.
+ * 
  * @author JTraber
- *
  */
-public interface IRegistry {
+public class SCMPDisconnectCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPDisconnectCall.
+	 */
+	public SCMPDisconnectCall() {
+		this(null);
+	}
+
+	/**
+	 * Instantiates a new SCMPDisconnectCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 */
+	public SCMPDisconnectCall(IClient client) {
+		this.client = client;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
+	 */
+	@Override
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPDisconnectCall(client);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.DISCONNECT;
+	}
 }

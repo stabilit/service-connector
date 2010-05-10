@@ -22,25 +22,69 @@
 package com.stabilit.sc.srv.config;
 
 /**
+ * The Interface IServerConfigItem.
+ * 
  * @author JTraber
- *
  */
 public interface IServerConfigItem {
 
+	/**
+	 * Gets the server name.
+	 * 
+	 * @return the server name
+	 */
 	public abstract String getServerName();
 
+	/**
+	 * Sets the server name.
+	 * 
+	 * @param serverName
+	 *            the new server name
+	 */
 	public abstract void setServerName(String serverName);
 
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public abstract int getPort();
 
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the new port
+	 */
 	public abstract void setPort(int port);
 
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public abstract String getHost();
 
+	/**
+	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the new host
+	 */
 	public abstract void setHost(String host);
 
+	/**
+	 * Gets the con. Con identifies concrete implementation of a server.
+	 * 
+	 * @return the con
+	 */
 	public abstract String getCon();
 
+	/**
+	 * Sets the con.
+	 * 
+	 * @param con
+	 *            the new con
+	 */
 	public abstract void setCon(String con);
-
 }

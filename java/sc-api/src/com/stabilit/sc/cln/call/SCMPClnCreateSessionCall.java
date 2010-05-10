@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.service;
+package com.stabilit.sc.cln.call;
 
 import java.net.InetAddress;
 
@@ -24,19 +24,33 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * @author JTraber
+ * The Class SCMPClnCreateSessionCall. Call creates a session.
  * 
+ * @author JTraber
  */
 public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
-	
+
+	/**
+	 * Instantiates a new SCMPClnCreateSessionCall.
+	 */
 	public SCMPClnCreateSessionCall() {
 		this(null);
 	}
-	
+
+	/**
+	 * Instantiates a new SCMPClnCreateSessionCall.
+	 * 
+	 * @param client
+	 *            the client to use when invoking call
+	 */
 	public SCMPClnCreateSessionCall(IClient client) {
 		this.client = client;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
+	 */
 	@Override
 	public SCMPSession invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -47,19 +61,39 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		return scmpSession;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
+	 */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPClnCreateSessionCall(client);
 	}
-	
+
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-	
+
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            the new session info
+	 */
 	public void setSessionInfo(String sessionInfo) {
 		call.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_CREATE_SESSION;

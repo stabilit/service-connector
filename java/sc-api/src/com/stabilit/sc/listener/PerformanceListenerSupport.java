@@ -18,27 +18,57 @@ package com.stabilit.sc.listener;
 
 import java.util.EventListener;
 
+/**
+ * The Class PerformanceListenerSupport. Allows logging performance - fire begin/end.
+ */
 public class PerformanceListenerSupport extends
 		ListenerSupport<IPerformanceListener> {
 
+	/** The performance listener support. */
 	private static PerformanceListenerSupport performanceListenerSupport = new PerformanceListenerSupport();
+	
+	/** The on. */
 	private boolean on = false;
 
+	/**
+	 * Instantiates a new performance listener support.
+	 */
 	private PerformanceListenerSupport() {
 	}
 
+	/**
+	 * Gets the single instance of PerformanceListenerSupport.
+	 * 
+	 * @return single instance of PerformanceListenerSupport
+	 */
 	public static PerformanceListenerSupport getInstance() {
 		return performanceListenerSupport;
 	}
 
+	/**
+	 * Checks if is on.
+	 * 
+	 * @return true, if is on
+	 */
 	public boolean isOn() {
 		return on;
 	}
 	
+	/**
+	 * Sets the on.
+	 * 
+	 * @param on the new on
+	 */
 	public void setOn(boolean on) {
 		this.on = on;
 	}
 	
+	/**
+	 * Fire begin.
+	 * 
+	 * @param source the source
+	 * @param time the time
+	 */
 	public void fireBegin(Object source, long time) {
 		if (getInstance().isEmpty() == false) {
 			PerformanceEvent performanceEvent = new PerformanceEvent(source, time);
@@ -46,6 +76,12 @@ public class PerformanceListenerSupport extends
 		}
 	}
 
+	/**
+	 * Fire end.
+	 * 
+	 * @param source the source
+	 * @param time the time
+	 */
 	public void fireEnd(Object source, long time) {
 		if (getInstance().isEmpty() == false) {
 			PerformanceEvent performanceEvent = new PerformanceEvent(source, time);
@@ -53,7 +89,12 @@ public class PerformanceListenerSupport extends
 		}
 	}
 
-	public void performanceBeginEvent(PerformanceEvent performanceEvent) {
+	/**
+	 * Performance begin event.
+	 * 
+	 * @param performanceEvent the performance event
+	 */
+	private void performanceBeginEvent(PerformanceEvent performanceEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
@@ -66,7 +107,12 @@ public class PerformanceListenerSupport extends
 		}
 	}
 	
-	public void performanceEndEvent(PerformanceEvent performanceEvent) {
+	/**
+	 * Performance end event.
+	 * 
+	 * @param performanceEvent the performance event
+	 */
+	private void performanceEndEvent(PerformanceEvent performanceEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {

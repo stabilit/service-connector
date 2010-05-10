@@ -20,21 +20,37 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The Class DateTimeUtility. Provides basic date time operations.
+ */
 public class DateTimeUtility {
-	
+
+	/** The Constant SDF. */
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+	/**
+	 * Gets the current time zone millis.
+	 * 
+	 * @return the current time zone millis
+	 */
 	public static String getCurrentTimeZoneMillis() {
 		long timeInMillis = System.currentTimeMillis();
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(timeInMillis);
 		java.util.Date date = cal.getTime();
 
-		synchronized (SDF) { //SDF is not thread safe
+		synchronized (SDF) { // SDF is not thread safe
 			return SDF.format(date);
 		}
 	}
-	
+
+	/**
+	 * Checks if is same day.
+	 * 
+	 * @param date
+	 *            the date
+	 * @return true, if is same day
+	 */
 	@SuppressWarnings("deprecation")
 	public static boolean isSameDay(Date date) {
 		Date now = Calendar.getInstance().getTime();
@@ -55,5 +71,4 @@ public class DateTimeUtility {
 		}
 		return true;
 	}
-
 }

@@ -14,21 +14,35 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp;
+package com.stabilit.sc.cln.call;
 
 /**
- * The Interface IFaultResponse. Marks exception classes which save specific information for the response. Used to
- * save data about occurred errors and writing the response on a different level of software architecture.
+ * The Class SCMPCallFactory. Responsible for instantiating calls.
  * 
  * @author JTraber
  */
-public interface IFaultResponse {
+public class SCMPCallFactory {
 
-	/**
-	 * Sets the fault response.
-	 * 
-	 * @param response
-	 *            the new fault response
-	 */
-	public void setFaultResponse(IResponse response);
+	/** The CONNECT_CALL. */
+	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
+	/** The DISCONNECT_CALL. */
+	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
+	/** The REGISTER_SERVICE_CALL. */
+	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
+	/** The DEREGISTER_SERVICE_CALL. */
+	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
+	/** The CLN_CREATE_SESSION_CALL. */
+	public static final ISCMPCall CLN_CREATE_SESSION_CALL = new SCMPClnCreateSessionCall();
+	/** The CLN_DELETE_SESSION_CALL. */
+	public static final ISCMPCall CLN_DELETE_SESSION_CALL = new SCMPClnDeleteSessionCall();
+	/** The INSPECT_CALL. */
+	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
+	/** The CLN_DATA_CALL. */
+	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
+	/** The CLN_ECHO_CALL. */
+	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
+	/** The ECHO_SC_CALL. */
+	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
+	/** The CLN_SYSTEM_CALL. */
+	public static final ISCMPCall CLN_SYSTEM_CALL = new SCMPClnSystemCall();
 }

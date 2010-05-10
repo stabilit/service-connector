@@ -20,18 +20,74 @@ import java.io.IOException;
 
 import com.stabilit.sc.factory.IFactoryable;
 
+/**
+ * The Interface ILogger. Abstracts loggers.
+ */
 public interface ILogger extends IFactoryable {
 
+	/**
+	 * Logs an object.
+	 * 
+	 * @param obj
+	 *            the obj to log
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(Object obj) throws IOException;
 
+	/**
+	 * Logs a buffer.
+	 * 
+	 * @param buffer
+	 *            the buffer to log
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(byte[] buffer) throws IOException;
 
+	/**
+	 * Logs a buffer.
+	 * 
+	 * @param buffer
+	 *            the buffer to log
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	void log(byte[] buffer, int offset, int length) throws IOException;
-	
+
+	/**
+	 * Logs a string.
+	 * 
+	 * @param msg
+	 *            the msg to log
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(String msg) throws IOException;
 
+	/**
+	 * Logs a Throwable.
+	 * 
+	 * @param t
+	 *            the t to log
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(Throwable t) throws IOException;
 
+	/**
+	 * Log a string.
+	 * 
+	 * @param level
+	 *            the level of logging
+	 * @param msg
+	 *            the msg to log
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(Level level, String msg) throws IOException;
-
 }

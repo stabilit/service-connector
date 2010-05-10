@@ -19,22 +19,47 @@ package com.stabilit.sc.srv.server;
 import com.stabilit.sc.net.IConnection;
 
 /**
- * @author JTraber
+ * The Interface IServerConnection.
  * 
+ * @author JTraber
  */
 public interface IServerConnection extends IConnection {
+
+	/**
+	 * Destroy.
+	 */
 	public void destroy();
 
+	/**
+	 * Creates the.
+	 */
 	public void create();
 
+	/**
+	 * Run async. Starts server in another thread.
+	 */
 	public void runAsync();
 
+	/**
+	 * Run sync. Starts server in incoming thread.
+	 * 
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
 	public void runSync() throws InterruptedException;
-	
-	public IServer getServer();
-	
-	public void setServer (IServer server);
 
-	public Thread runAsyncForTest();
-		
+	/**
+	 * Gets the server.
+	 * 
+	 * @return the server
+	 */
+	public IServer getServer();
+
+	/**
+	 * Sets the server.
+	 * 
+	 * @param server
+	 *            the new server
+	 */
+	public void setServer(IServer server);
 }

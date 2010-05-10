@@ -17,35 +17,72 @@
 package com.stabilit.sc.scmp;
 
 /**
- * @author JTraber
+ * The Class KeepAlive. Holds a concrete keep alive configuration of a connection.
  * 
+ * @author JTraber
  */
 public class KeepAlive {
 
+	/** The keep alive timeout. */
 	int keepAliveTimeout = 0;
+	/** The keep alive interval. */
 	int keepAliveInterval = 0;
 
+	/**
+	 * Instantiates a new keep alive.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the keep alive timeout
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 */
 	public KeepAlive(int keepAliveTimeout, int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
 		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
+	/**
+	 * Gets the keep alive interval.
+	 * 
+	 * @return the keep alive interval
+	 */
 	public int getKeepAliveInterval() {
 		return keepAliveInterval;
 	}
 
+	/**
+	 * Sets the keep alive interval.
+	 * 
+	 * @param keepAliveInterval
+	 *            the new keep alive interval
+	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
 	}
 
+	/**
+	 * Gets the keep alive timeout.
+	 * 
+	 * @return the keep alive timeout
+	 */
 	public int getKeepAliveTimeout() {
 		return keepAliveTimeout;
 	}
 
+	/**
+	 * Sets the keep alive timeout.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the new keep alive timeout
+	 */
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
 		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return keepAliveTimeout + "," + keepAliveInterval;

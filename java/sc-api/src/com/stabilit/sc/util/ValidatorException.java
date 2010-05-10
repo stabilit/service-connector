@@ -17,13 +17,17 @@
 package com.stabilit.sc.util;
 
 /**
+ * The Class ValidatorException. Occurs when validation fails.
+ * 
  * @author JTraber
- *
  */
 public class ValidatorException extends Exception {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -4774178679668290926L;
+
 	/**
-	 * 
+	 * Instantiates a new validator exception.
 	 */
 	public ValidatorException() {
 		super();
@@ -50,5 +54,4 @@ public class ValidatorException extends Exception {
 	public ValidatorException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

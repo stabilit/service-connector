@@ -20,10 +20,16 @@ import com.stabilit.sc.ctx.IContext;
 import com.stabilit.sc.srv.server.IServer;
 
 /**
+ * The Interface IServerContext.
+ * 
  * @author JTraber
- *
  */
 public interface IServerContext extends IContext {
 
+	/**
+	 * Gets the server.
+	 * 
+	 * @return the server
+	 */
 	public IServer getServer();
 }

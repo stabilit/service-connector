@@ -22,15 +22,42 @@ import java.util.regex.Pattern;
 
 import com.stabilit.sc.factory.IFactoryable;
 
+/**
+ * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.
+ */
 public interface IEncoderDecoder extends IFactoryable {
 
+	/** The Constant UNESCAPED_EQUAL_SIGN_REGEX. */
 	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
+	/** The Constant ESCAPED_EQUAL_SIGN. */
 	public static final String ESCAPED_EQUAL_SIGN = "\\=";
+	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
+	/** The Constant CHARSET. */
 	public static final String CHARSET = "UTF-8"; // TODO ISO gemäss doc
+	/** The Constant DECODE_REG. */
 	public static final Pattern DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
 
+	/**
+	 * Encode object to output stream.
+	 * 
+	 * @param os
+	 *            the os to fill
+	 * @param obj
+	 *            the obj to encode
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void encode(OutputStream os, Object obj) throws Exception;
 
+	/**
+	 * Decode input stream.
+	 * 
+	 * @param is
+	 *            the is to decode
+	 * @return the object decoded
+	 * @throws Exception
+	 *             the exception
+	 */
 	public Object decode(InputStream is) throws Exception;
 }

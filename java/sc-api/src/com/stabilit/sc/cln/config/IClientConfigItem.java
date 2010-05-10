@@ -14,29 +14,58 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.config;
 
 /**
+ * The Interface IClientConfigItem.
+ * 
  * @author JTraber
- *
  */
 public interface IClientConfigItem {
 
-	public abstract int getPort();
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public int getPort();
 
-	public abstract void setPort(int port);
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the new port
+	 */
+	public void setPort(int port);
 
-	public abstract String getHost();
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
+	public String getHost();
 
-	public abstract void setHost(String host);
+	/**
+	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the new host
+	 */
+	public void setHost(String host);
 
-	public abstract String getCon();
+	/**
+	 * Gets the con. Con identifies concrete implementation of a client.
+	 * 
+	 * @return the con
+	 */
+	public String getCon();
 
-	public abstract void setCon(String con);
-
+	/**
+	 * Sets the con.
+	 * 
+	 * @param con
+	 *            the new con
+	 */
+	public void setCon(String con);
 }

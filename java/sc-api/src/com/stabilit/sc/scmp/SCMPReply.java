@@ -18,19 +18,26 @@ package com.stabilit.sc.scmp;
 
 import com.stabilit.sc.util.DateTimeUtility;
 
-
 /**
- * @author JTraber
+ * The Class SCMPReply. Indicates SCMP is a reply.
  * 
+ * @author JTraber
  */
 public class SCMPReply extends SCMP {
-	
+
+	/**
+	 * Sets the local date time.
+	 */
 	public void setLocalDateTime() {
 		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isReply()
+	 */
 	@Override
 	public boolean isReply() {
 		return true;
-	}	
+	}
 }

@@ -27,27 +27,43 @@ import com.stabilit.sc.listener.WarningListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPPart;
 
 /**
- * @author JTraber
+ * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to
+ * complete request/response.
  * 
+ * @author JTraber
  */
-public class SCMPComposite extends SCMP {
+public class SCMPCompositeReceiver extends SCMP {
 
+	/** The scmp list, list of parts. */
 	private List<SCMP> scmpList;
+	/** The part request, request to pull. */
 	private SCMP partRequest;
+	/** The scmp fault. */
 	private SCMPFault scmpFault;
+	/** The scmp offset. */
 	private int scmpOffset;
+	/** The os. */
 	private ByteArrayOutputStream os;
+	/** The w. */
 	private StringWriter w;
 
-	public SCMPComposite(SCMP request, SCMP scmpPart) {
+	/**
+	 * Instantiates a new SCMPCompositeReceiver.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param scmpPart
+	 *            the scmp part
+	 */
+	public SCMPCompositeReceiver(SCMP request, SCMP scmpPart) {
 		this.os = null;
 		this.w = null;
 		this.scmpOffset = 0;
 		this.scmpFault = null;
 		scmpList = new ArrayList<SCMP>();
+		// builds up request to pull later
 		partRequest = new SCMPPart();
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setSessionId(request.getSessionId());
@@ -57,17 +73,28 @@ public class SCMPComposite extends SCMP {
 		this.add(scmpPart);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getHeader()
+	 */
 	@Override
 	public Map<String, String> getHeader() {
 		partRequest.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		return partRequest.getHeader();
 	}
 
+	/**
+	 * Adds the part.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 */
 	public void add(SCMP scmp) {
 		if (scmp == null) {
 			return;
 		}
 		if (scmp.isFault()) {
+			// stop pulling in case of exception
 			this.scmpList.clear();
 			this.scmpFault = (SCMPFault) scmp;
 			reset();
@@ -76,11 +103,16 @@ public class SCMPComposite extends SCMP {
 		this.scmpOffset += bodyLength;
 		this.scmpList.add(scmp);
 		if (scmp.isPart() == false) {
+			// last scmp arrived, correct body length and store header
 			this.setHeader(scmp.getHeader());
 			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, getBodyLength());
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isFault()
+	 */
 	@Override
 	public boolean isFault() {
 		if (this.scmpFault != null) {
@@ -89,11 +121,19 @@ public class SCMPComposite extends SCMP {
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#isComposite()
+	 */
 	@Override
 	public boolean isComposite() {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getBodyLength()
+	 */
 	@Override
 	public int getBodyLength() {
 		if (this.scmpFault != null) {
@@ -112,6 +152,10 @@ public class SCMPComposite extends SCMP {
 		return 0;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getBody()
+	 */
 	@Override
 	public Object getBody() {
 		if (this.os != null) {
@@ -123,6 +167,7 @@ public class SCMPComposite extends SCMP {
 		if (this.scmpFault != null) {
 			return scmpFault.getBody();
 		}
+		// put all parts together to get complete body
 		SCMP firstScmp = this.scmpList.get(0);
 		if (firstScmp == null) {
 			return 0;
@@ -168,19 +213,36 @@ public class SCMPComposite extends SCMP {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.SCMP#getMessageType()
+	 */
 	@Override
 	public String getMessageType() {
 		return partRequest.getMessageType();
 	}
 
+	/**
+	 * Gets the part request.
+	 * 
+	 * @return the part request
+	 */
 	public SCMP getPartRequest() {
 		return partRequest;
 	}
 
+	/**
+	 * Gets the offset.
+	 * 
+	 * @return the offset
+	 */
 	public int getOffset() {
 		return this.scmpOffset;
 	}
 
+	/**
+	 * Reset composite.
+	 */
 	private void reset() {
 		this.partRequest = null;
 		this.scmpList.clear();
@@ -188,5 +250,4 @@ public class SCMPComposite extends SCMP {
 		this.os = null;
 		this.w = null;
 	}
-
 }

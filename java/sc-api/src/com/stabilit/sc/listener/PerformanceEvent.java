@@ -18,13 +18,24 @@ package com.stabilit.sc.listener;
 
 import java.util.EventObject;
 
+/**
+ * The Class PerformanceEvent. Event for logging performance purpose.
+ */
 public class PerformanceEvent extends EventObject {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -2561926364455371080L;	
+	/** The time. */
 	private long time;
 	
+	/**
+	 * Instantiates a new performance event.
+	 * 
+	 * @param source the source
+	 * @param time the time
+	 */
 	public PerformanceEvent(Object source, long time) {
 		super(source);
 		this.time = time;
 	}
-
 }
