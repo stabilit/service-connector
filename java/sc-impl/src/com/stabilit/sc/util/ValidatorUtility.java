@@ -21,29 +21,46 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.scmp.KeepAlive;
 
 /**
- * @author JTraber
+ * The Class ValidatorUtility.
  * 
+ * @author JTraber
  */
 public class ValidatorUtility {
 
+	/** The Constant SC_VERSION_REGEX, regex for sc version. */
 	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
+	/** The Constant IP_LIST_REGEX, regex for ip address list. */
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
-	private static final Pattern pat = Pattern.compile(IP_LIST_REGEX);
-	private static final Pattern pattern = Pattern.compile(SC_VERSION_REGEX);
+	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
+	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
+	/** The Constant PAT_SCVERSION, pattern regex for sc version. */
+	private static final Pattern PAT_SCVERSION = Pattern.compile(SC_VERSION_REGEX);
 
+	/**
+	 * Validate sc version.
+	 * 
+	 * @param currenSCVersion
+	 *            the curren sc version
+	 * @param incomingSCVersion
+	 *            the incoming sc version
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
 	public static void validateSCVersion(String currenSCVersion, String incomingSCVersion)
 			throws ValidatorException {
 
-		Matcher matchCurr = pattern.matcher(currenSCVersion);
+		Matcher matchCurr = PAT_SCVERSION.matcher(currenSCVersion);
 		matchCurr.find();
 
 		Float currReleaseAndVersionNr = Float.parseFloat(matchCurr.group(1));
 		int currRevisionNr = Integer.parseInt(matchCurr.group(2));
 
-		Matcher matchIn = pattern.matcher(incomingSCVersion);
+		Matcher matchIn = PAT_SCVERSION.matcher(incomingSCVersion);
 		matchIn.find();
 
 		Float incReleaseAndVersionNr = Float.parseFloat(matchIn.group(1));
@@ -64,6 +81,17 @@ public class ValidatorUtility {
 		}
 	}
 
+	/**
+	 * Validate local date time.
+	 * 
+	 * @param localDateTimeString
+	 *            the local date time string
+	 * 
+	 * @return the date
+	 * 
+	 * @throws ParseException
+	 *             the parse exception
+	 */
 	public static Date validateLocalDateTime(String localDateTimeString) throws ParseException {
 		if (localDateTimeString == null) {
 			return null;
@@ -77,6 +105,19 @@ public class ValidatorUtility {
 		return localDateTime;
 	}
 
+	/**
+	 * Validate keep alive.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the keep alive timeout
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 * 
+	 * @return the keep alive
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
 	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
 			throws ValidatorException {
 		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
@@ -98,13 +139,33 @@ public class ValidatorUtility {
 		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
 	}
 
+	/**
+	 * Validate ip address list.
+	 * 
+	 * @param ipAddressListString
+	 *            the ip address list string
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
 	public static void validateIpAddressList(String ipAddressListString) throws ValidatorException {
-		Matcher m = pat.matcher(ipAddressListString);
+		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
 		if (!m.matches()) {
 			throw new ValidatorException("iplist has wrong format.");
 		}
 	}
 
+	/**
+	 * Validate int.
+	 * 
+	 * @param lowerLimit
+	 *            the lower limit
+	 * @param intStringValue
+	 *            the int string value
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
 	public static void validateInt(int lowerLimit, String intStringValue) throws ValidatorException {
 		if (intStringValue == null) {
 			throw new ValidatorException("intValue must be set.");
@@ -113,15 +174,28 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionListenerSupport.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
-		if (intValue <= lowerLimit)
-			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
+		if (intValue <= lowerLimit) {
 			throw new ValidatorException("intValue to low.");
+		}
 	}
 
+	/**
+	 * Validate int.
+	 * 
+	 * @param lowerLimit
+	 *            the lower limit
+	 * @param intStringValue
+	 *            the int string value
+	 * @param upperLimit
+	 *            the upper limit
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
 	public static void validateInt(int lowerLimit, String intStringValue, int upperLimit)
 			throws ValidatorException {
 		if (intStringValue == null) {
@@ -131,7 +205,7 @@ public class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			// TODO ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionListenerSupport.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
@@ -139,8 +213,20 @@ public class ValidatorUtility {
 			throw new ValidatorException("intValue not within limits.");
 	}
 
-	public static void validateString(int minSize, String stringValue, int maxSize)
-			throws ValidatorException {
+	/**
+	 * Validate string.
+	 * 
+	 * @param minSize
+	 *            the min size
+	 * @param stringValue
+	 *            the string value
+	 * @param maxSize
+	 *            the max size
+	 * 
+	 * @throws ValidatorException
+	 *             the validator exception
+	 */
+	public static void validateString(int minSize, String stringValue, int maxSize) throws ValidatorException {
 
 		if (stringValue == null) {
 			throw new ValidatorException("stringValue must be set.");
