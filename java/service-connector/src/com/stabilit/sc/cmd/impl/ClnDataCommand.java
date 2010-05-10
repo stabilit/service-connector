@@ -16,11 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import java.util.logging.Logger;
-
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistryItem;
@@ -36,7 +34,7 @@ import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.srv.net.SCMPTransportException;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.ValidatorUtility;
 
 public class ClnDataCommand extends CommandAdapter implements IPassThrough {
@@ -67,11 +65,11 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 			SCMP scmpReply = serviceRegistryItem.srvData(scmp);
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
-		} catch (TransportException e) {
+		} catch (CommunicationException e) {
 			//clnDatat could not be sent successfully
 			//TODO what is consequence?
 			ExceptionListenerSupport.getInstance().fireException(this, e);
-			throw new SCMPTransportException(SCMPErrorCode.SERVER_ERROR);
+			throw new SCMPCommunicationException(SCMPErrorCode.SERVER_ERROR);
 		}
 	}
 

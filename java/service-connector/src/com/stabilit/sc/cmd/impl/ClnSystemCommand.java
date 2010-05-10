@@ -19,7 +19,6 @@ package com.stabilit.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.LoggerListenerSupport;

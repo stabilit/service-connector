@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
-import java.util.logging.Logger;
-
 import com.stabilit.sc.listener.WarningListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
 

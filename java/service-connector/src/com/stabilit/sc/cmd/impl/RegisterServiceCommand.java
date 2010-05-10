@@ -17,7 +17,6 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
-import java.util.logging.Logger;
 
 import javax.xml.bind.ValidationException;
 

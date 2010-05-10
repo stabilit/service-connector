@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.call;
 
 import java.util.Map;
 
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -29,35 +29,35 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
+public class SCMPSrvDataCall extends SCMPCallAdapter {
 
-	public SCMPSrvDeleteSessionCall() {
+	public SCMPSrvDataCall() {
 		this(null, null);
 	}
 
-	public SCMPSrvDeleteSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvDataCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPSrvDeleteSessionCall(client, scmpSession);
+		return new SCMPSrvDataCall(client, scmpSession);
 	}
-	
+
 	public void setServiceName(String serviceName) {
 		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-	
-	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+
+	public void setMessagInfo(String messageInfo) {
+		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
+		this.call.setHeader(header);
 	}
-	
+
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_DELETE_SESSION;
+		return SCMPMsgType.SRV_DATA;
 	}
 }

@@ -14,21 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.call;
 
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPClnEchoCall;
+import java.util.Map;
+
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
  * @author JTraber
  * 
  */
-public class SCMPCallFactory {
+public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
-	public static final ISCMPCall SRV_CREATE_SESSION_CALL = new SCMPSrvCreateSessionCall();
-	public static final ISCMPCall SRV_DELETE_SESSION_CALL = new SCMPSrvDeleteSessionCall();
-	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
-	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
-	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
-	public static final ISCMPCall SRV_SYSTEM_CALL = new SCMPSrvSystemCall();
+	public SCMPSrvDeleteSessionCall() {
+		this(null, null);
+	}
+
+	public SCMPSrvDeleteSessionCall(IClient client, SCMP scmpSession) {
+		super(client, scmpSession);
+	}
+
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+		return new SCMPSrvDeleteSessionCall(client, scmpSession);
+	}
+	
+	public void setServiceName(String serviceName) {
+		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
+	
+	public void setSessionId(String sessionId) {
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+	}
+
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);		
+	}
+	
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_DELETE_SESSION;
+	}
 }

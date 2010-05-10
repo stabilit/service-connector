@@ -19,7 +19,6 @@ package com.stabilit.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.xml.bind.ValidationException;
 
@@ -37,7 +36,6 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
@@ -62,7 +60,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		try {
 			// get free service
 			SCMP scmp = request.getSCMP();

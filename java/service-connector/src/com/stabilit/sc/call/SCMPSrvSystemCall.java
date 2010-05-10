@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.call;
 
 import java.util.Map;
 
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;

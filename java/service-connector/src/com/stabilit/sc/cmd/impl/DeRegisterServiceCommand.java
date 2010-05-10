@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import java.util.logging.Logger;
-
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.factory.IFactoryable;

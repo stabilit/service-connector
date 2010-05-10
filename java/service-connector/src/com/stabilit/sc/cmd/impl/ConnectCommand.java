@@ -19,7 +19,6 @@ package com.stabilit.sc.cmd.impl;
 import java.net.SocketAddress;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
@@ -35,7 +34,6 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
@@ -60,7 +58,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();

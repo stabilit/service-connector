@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.call;
 
 import java.util.Map;
 
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -29,19 +29,19 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
+public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 
-	public SCMPSrvAbortSessionCall() {
+	public SCMPSrvCreateSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPSrvAbortSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvCreateSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
-
+	
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPSrvAbortSessionCall(client, scmpSession);
+		return new SCMPSrvCreateSessionCall(client, scmpSession);
 	}
 	
 	public void setSessionId(String sessionId) {
@@ -54,6 +54,6 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_ABORT_SESSION;
+		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
 }

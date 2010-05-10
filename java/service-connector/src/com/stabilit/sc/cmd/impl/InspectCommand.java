@@ -26,7 +26,6 @@ import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
-import com.stabilit.sc.srv.cmd.CommandException;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -47,7 +46,7 @@ public class InspectCommand extends CommandAdapter {
 	}
 
 	@Override
-	public void run(IRequest request, IResponse response) throws CommandException {
+	public void run(IRequest request, IResponse response) throws Exception {
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();

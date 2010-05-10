@@ -14,16 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.service;
+package com.stabilit.sc.call;
 
 import java.util.Map;
 
+import com.stabilit.sc.cln.call.ISCMPCall;
+import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.service.ISCMPCall;
-import com.stabilit.sc.cln.service.SCMPCallAdapter;
-import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -31,51 +29,31 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * @author JTraber
  * 
  */
-public class SCMPSrvEchoCall extends SCMPCallAdapter {
+public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 
-	public SCMPSrvEchoCall() {
+	public SCMPSrvAbortSessionCall() {
 		this(null, null);
 	}
 
-	public SCMPSrvEchoCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvAbortSessionCall(IClient client, SCMP scmpSession) {
 		super(client, scmpSession);
 	}
 
 	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.call.setHeader(SCMPHeaderAttributeKey.SCCLIENT_ID, client.hashCode());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPServiceException((SCMPFault) result);
-		}
-		return this.result;
-	}
-
-	@Override
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
-		return new SCMPSrvEchoCall(client, scmpSession);
+		return new SCMPSrvAbortSessionCall(client, scmpSession);
+	}
+	
+	public void setSessionId(String sessionId) {
+		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
-	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);
 	}
-
+	
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_ECHO;
+		return SCMPMsgType.SRV_ABORT_SESSION;
 	}
-	
-	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);		
-	}
-	
-	public void setHeader(SCMPHeaderAttributeKey attr, String value) {
-		this.call.setHeader(attr, value);		
-	}
-
-	public void setHeader(SCMPHeaderAttributeKey attr, int value) {
-		this.call.setHeader(attr, value);		
-	}
-
 }
