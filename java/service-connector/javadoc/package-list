@@ -1,5 +1,4 @@
 com.stabilit.sc
-com.stabilit.sc.call
 com.stabilit.sc.cmd.factory.impl
 com.stabilit.sc.cmd.impl
 com.stabilit.sc.registry
