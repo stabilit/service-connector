@@ -24,8 +24,8 @@ import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPPart;
-import com.stabilit.sc.scmp.internal.SCMPComposite;
+import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.sc.scmp.internal.SCMPPart;
 
 /**
  * @author JTraber
@@ -45,7 +45,7 @@ public class SCMPCompositeTest {
 		SCMPPart firstPart = new SCMPPart();
 		String bodyString = "first part request";
 		firstPart.setBody(bodyString);
-		SCMPComposite composite = new SCMPComposite(request, firstPart);
+		SCMPCompositeReceiver composite = new SCMPCompositeReceiver(request, firstPart);
 
 		bodyLength += bodyString.length();
 		body.append(bodyString);

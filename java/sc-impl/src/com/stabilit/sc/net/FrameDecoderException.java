@@ -17,19 +17,29 @@
 package com.stabilit.sc.net;
 
 /**
- * @author JTraber
+ * The Class FrameDecoderException. Occurs when decoding frame fails.
  * 
+ * @author JTraber
  */
 public class FrameDecoderException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4215165615985380374L;
 
+	/**
+	 * Instantiates a new frame decoder exception.
+	 */
 	public FrameDecoderException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new frame decoder exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public FrameDecoderException(String message) {
 		super(message);
 	}
-
 }

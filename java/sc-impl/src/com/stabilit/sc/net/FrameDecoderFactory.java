@@ -18,33 +18,54 @@ package com.stabilit.sc.net;
 
 import com.stabilit.sc.factory.Factory;
 
-
 /**
+ * The Class FrameDecoderFactory. Provides access to concrete frame decoders.
+ * 
  * @author JTraber
- *
  */
 public class FrameDecoderFactory extends Factory {
 
+	/** The Constant HTTP, key for Http frame decoder instance. */
+	private static final String HTTP = "http";
+	/** The decoder factory. */
 	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
-	
+
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
 	public static FrameDecoderFactory getCurrentInstance() {
 		return decoderFactory;
 	}
-	
+
+	/**
+	 * Instantiates a new frame decoder factory.
+	 */
 	private FrameDecoderFactory() {
 		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add("default", frameDecoder);
+		this.add(DEFAULT, frameDecoder);
 		frameDecoder = new HttpFrameDecoder();
-		this.add("http", frameDecoder);
+		this.add(HTTP, frameDecoder);
 	}
 
-	public static IFrameDecoder getDefaultFrameDecoder()
-	{				
-		return (IFrameDecoder) decoderFactory.newInstance("default");
+	/**
+	 * Gets the default frame decoder.
+	 * 
+	 * @return the default frame decoder
+	 */
+	public static IFrameDecoder getDefaultFrameDecoder() {
+		return (IFrameDecoder) decoderFactory.newInstance(DEFAULT);
 	}
 
-	public static IFrameDecoder getFrameDecoder(String key)
-	{				
+	/**
+	 * Gets the frame decoder.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the frame decoder
+	 */
+	public static IFrameDecoder getFrameDecoder(String key) {
 		return (IFrameDecoder) decoderFactory.newInstance(key);
-	}	
+	}
 }

@@ -30,11 +30,25 @@ import com.stabilit.sc.scmp.RequestAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.util.MapBean;
 
+/**
+ * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp
+ * frame. Based on JBoss Netty.
+ */
 public class NettyTcpRequest extends RequestAdapter {
 
-	private ChannelBuffer request;	
+	/** The request. */
+	private ChannelBuffer request;
+	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
+	/**
+	 * Instantiates a new netty tcp request.
+	 * 
+	 * @param e
+	 *            the event from Netty framework
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public NettyTcpRequest(MessageEvent e, SocketAddress socketAddress) {
 		this.socketAddress = socketAddress;
 		this.mapBean = new MapBean<Object>();
@@ -43,13 +57,15 @@ public class NettyTcpRequest extends RequestAdapter {
 		this.requestContext = new RequestContext(e.getRemoteAddress());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#load()
+	 */
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
-		if (this.encoderDecoder == null) {
-			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
-		}
+		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		this.scmp = scmp;

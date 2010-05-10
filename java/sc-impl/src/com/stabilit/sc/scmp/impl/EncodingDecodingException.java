@@ -17,21 +17,44 @@
 package com.stabilit.sc.scmp.impl;
 
 /**
+ * The Class EncodingDecodingException. Occurs when encoding/decoding fails.
+ * 
  * @author JTraber
- *
  */
 public class EncodingDecodingException extends Exception {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 5212244086716544669L;
+
+	/**
+	 * Instantiates a new encoding decoding exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public EncodingDecodingException(String message) {
 		super(message);
 	}
-	
+
+	/**
+	 * Instantiates a new encoding decoding exception.
+	 * 
+	 * @param cause
+	 *            the cause
+	 */
 	public EncodingDecodingException(Throwable cause) {
 		super(cause);
 	}
 
+	/**
+	 * Instantiates a new encoding decoding exception.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 */
 	public EncodingDecodingException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

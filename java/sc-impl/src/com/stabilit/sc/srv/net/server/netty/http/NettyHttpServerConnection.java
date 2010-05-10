@@ -30,22 +30,27 @@ import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.srv.server.ServerConnectionAdapter;
 
 /**
- * An HTTP server that sends back the content of the received HTTP request in a pretty plaintext form.
+ * The Class NettyHttpServerConnection. Concrete server connection implementation with JBoss Netty for Http.
  * 
- * @author The Netty Project (netty-dev@lists.jboss.org)
- * @author Andy Taylor (andy.taylor@jboss.org)
- * @author Trustin Lee (trustin@gmail.com)
- * 
- * @version $Rev: 1783 $, $Date: 2009-10-14 07:46:40 +0200 (Mi, 14 Okt 2009) $
+ * @author JTraber
  */
 public class NettyHttpServerConnection extends ServerConnectionAdapter implements Runnable {
 
+	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
+	/** The channel. */
 	private Channel channel;
+	/** The host. */
 	private String host;
+	/** The port. */
 	private int port;
+
+	/** The channel factory. */
 	NioServerSocketChannelFactory channelFactory = null;
 
+	/**
+	 * Instantiates a new netty http server connection.
+	 */
 	public NettyHttpServerConnection() {
 		this.bootstrap = null;
 		this.channel = null;
@@ -54,6 +59,10 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 				.newFixedThreadPool(5));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#create()
+	 */
 	@Override
 	public void create() {
 		this.bootstrap = new ServerBootstrap(channelFactory);
@@ -61,22 +70,24 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#runAsync()
+	 */
 	@Override
 	public void runAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
-	
-	@Override
-	public Thread runAsyncForTest() {
-		Thread serverThread = new Thread(this);
-		serverThread.start();
-		return serverThread;
-	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#runSync()
+	 */
 	@Override
 	public void runSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.port));
+		// adds server to registry
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		serverRegistry.add(this.channel.getId(), new ServerRegistryItem(this.server));
 		synchronized (this) {
@@ -84,41 +95,70 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {
 			runSync();
 		} catch (InterruptedException e) {
 			ExceptionListenerSupport.getInstance().fireException(this, e);
-			// TODO
-			e.printStackTrace();
+			this.destroy();
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.srv.server.IServerConnection#destroy()
+	 */
 	@Override
 	public void destroy() {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyHttpServerConnection();
 	}
 
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return host;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public int getPort() {
 		return port;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setPort(int)
+	 */
 	@Override
 	public void setPort(int port) {
 		this.port = port;

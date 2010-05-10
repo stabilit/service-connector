@@ -18,34 +18,72 @@ package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ILoggerListener;
 import com.stabilit.sc.listener.LoggerEvent;
 import com.stabilit.sc.log.SimpleLogger;
 
+/**
+ * The Class GeneralLogger. Provides functionality of logging an <code>LoggerEvent</code>.
+ * 
+ * @author JTraber
+ */
 public class GeneralLogger extends SimpleLogger implements ILoggerListener {
 
+	/**
+	 * Instantiates a new general logger.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public GeneralLogger() throws Exception {
-		this("log/", "gen.log");
+		this(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
 	}
 
+	/**
+	 * Instantiates a new general logger.
+	 * 
+	 * @param dir
+	 *            the dir
+	 * @param fileName
+	 *            the file name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public GeneralLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
+	 */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
+	 */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset,length);
+		super.log(buffer, offset, length);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.listener.ILoggerListener#logEvent(com.stabilit.sc.listener.LoggerEvent)
+	 */
 	@Override
 	public synchronized void logEvent(LoggerEvent loggerEvent) {
 		try {

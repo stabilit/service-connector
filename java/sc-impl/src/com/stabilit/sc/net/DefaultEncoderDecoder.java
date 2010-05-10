@@ -40,16 +40,32 @@ import com.stabilit.sc.scmp.SCMPHeadlineKey;
 import com.stabilit.sc.scmp.SCMPInternalStatus;
 import com.stabilit.sc.scmp.impl.EncodingDecodingException;
 
+/**
+ * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
+ * 
+ * @author JTraber
+ */
 public class DefaultEncoderDecoder implements IEncoderDecoder {
 
+	/**
+	 * Instantiates a new default encoder decoder.
+	 */
 	DefaultEncoderDecoder() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IEncoderDecoder#decode(java.io.InputStream)
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -61,8 +77,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		SCMP scmp = null;
 		int readBytes = 0;
 		try {
-			// TODO performance
-			line = br.readLine();
+			line = br.readLine(); // TODO performance
 			readBytes += line.getBytes().length;
 			readBytes += 1; // read LF
 
@@ -70,6 +85,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				return null;
 			}
 
+			// evaluating headline key and creating corresponding SCMP type
 			SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(line);
 			switch (headlineKey) {
 			case EXC:
@@ -81,8 +97,9 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				scmp = new SCMP();
 			}
 
+			// storing header fields in meta map
 			while (true) {
-				line = br.readLine(); // TODO
+				line = br.readLine(); // TODO performance
 				readBytes += line.getBytes().length;
 				readBytes += 1; // read LF
 				if (line == null || line.length() <= 0) {
@@ -90,9 +107,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				}
 
 				Matcher match = IEncoderDecoder.DECODE_REG.matcher(line);
-
 				if (match.matches() && match.groupCount() == 2) {
-					/********* escaping *************/
 					String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
 					String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
 					metaMap.put(key, value);
@@ -103,6 +118,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
+		// reading body - depends on body type
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
@@ -149,20 +165,25 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		return scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IEncoderDecoder#encode(java.io.OutputStream, java.lang.Object)
+	 */
 	@Override
 	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMP scmp = (SCMP) obj;
-		
+
 		if (scmp.isGroup() == false) {
+			// no group call reset internal status, if group call internal status already set
 			scmp.setInternalStatus(SCMPInternalStatus.NONE);
 		}
-		
+
 		Map<String, String> metaMap = scmp.getHeader();
-		// create meta part
 		StringBuilder sb = new StringBuilder();
 
+		// evaluate right headline key from SCMP type
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		if (scmp.isReply()) {
 			headerKey = SCMPHeadlineKey.RES;
@@ -173,20 +194,23 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			headerKey = SCMPHeadlineKey.REQ;
 		}
 
+		// write header fields
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
-
 		for (Entry<String, String> entry : entrySet) {
 			String key = entry.getKey();
 			String value = entry.getValue();
-			/********* escaping *************/
 			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
 			value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
-
+			if (value == null) {
+				throw new EncodingDecodingException("key [" + key + "] has null value");
+			}
 			sb.append(key);
 			sb.append(EQUAL_SIGN);
 			sb.append(value);
 			sb.append("\n");
 		}
+
+		// write body depends on body type
 		Object body = scmp.getBody();
 		try {
 			if (body != null) {
@@ -245,8 +269,19 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		return;
 	}
 
-	private void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageLength)
-			throws IOException {
+	/**
+	 * Write head line.
+	 * 
+	 * @param bw
+	 *            the bw
+	 * @param headerKey
+	 *            the header key
+	 * @param messageLength
+	 *            the message length
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageLength) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(" /s=");
 		bw.write(String.valueOf(messageLength));

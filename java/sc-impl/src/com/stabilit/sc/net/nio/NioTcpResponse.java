@@ -26,32 +26,48 @@ import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.ResponseAdapter;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NioTcpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Tcp frame.
+ * Based on Nio.
+ */
 public class NioTcpResponse extends ResponseAdapter {
 
+	/** The socket channel. */
 	private SocketChannel socketChannel;
+	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
+	/**
+	 * Instantiates a new nio tcp response.
+	 * 
+	 * @param socketChannel
+	 *            the socket channel
+	 */
 	public NioTcpResponse(SocketChannel socketChannel) {
 		this.scmp = null;
 		this.socketChannel = socketChannel;
 	}
 
+	/**
+	 * Gets the buffer. Encodes the scmp.
+	 * 
+	 * @return the buffer
+	 * @throws Exception
+	 *             the exception
+	 */
 	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		if (this.encoderDecoder == null) {
-		    this.encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
-		}
+		this.encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
 		encoderDecoder.encode(baos, scmp);
 		baos.close();
 		byte[] buf = baos.toByteArray();
 		return buf;
 	}
 
-	@Override
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
-		this.encoderDecoder = encoderDecoder;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
@@ -61,11 +77,15 @@ public class NioTcpResponse extends ResponseAdapter {
 		this.scmp = scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IResponse#write()
+	 */
 	@Override
 	public void write() throws Exception {
 		byte[] byteWriteBuffer = this.getBuffer();
 		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer);  // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireWrite(this, byteWriteBuffer);
 		this.socketChannel.write(buffer);
 	}
 }

@@ -19,71 +19,94 @@ package com.stabilit.sc.srv.net.server.netty;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPPart;
-import com.stabilit.sc.scmp.internal.SCMPComposite;
+import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
- * @author JTraber
+ * The Class NettyCommandRequest. NettyCommandRequest provides functions to read the command from a incoming request and
+ * knows how to handle large requests.
  * 
+ * @author JTraber
  */
 public class NettyCommandRequest {
 
+	/** The complete. */
 	private boolean complete;
-	private SCMPComposite scmpComposite;
+	/** The scmp composite recv. */
+	private SCMPCompositeReceiver scmpCompositeRecv;
 
 	/**
-	 * @param request
-	 * @param response
+	 * The Constructor.
 	 */
 	public NettyCommandRequest() {
+		// default, request is complete
 		complete = true;
 	}
 
+	/**
+	 * Read command from incoming request.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @return the i command
+	 * @throws Exception
+	 *             the exception
+	 */
 	public ICommand readCommand(IRequest request, IResponse response) throws Exception {
 		request.read();
+		// gets the command
 		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
 		if (command == null) {
 			return null;
 		}
-
 		SCMP scmp = request.getSCMP();
 		if (scmp == null) {
 			return null;
-		}
-
-		// request not for SC, forward to server
+		}		
 		if (command instanceof IPassThrough) {
+			// request not for local server, forward to next server
 			complete = true;
 			return command;
 		}
 
-		if (scmpComposite == null) {
-			// request not chunked
+		if (scmpCompositeRecv == null) {
 			if (scmp.isPart() == false) {
+				// request not chunk
 				return command;
 			}
-			scmpComposite = new SCMPComposite(scmp, (SCMP) scmp);
+			// first part of a large request received - introduce composite receiver
+			scmpCompositeRecv = new SCMPCompositeReceiver(scmp, (SCMP) scmp);
 		} else {
-			scmpComposite.add(scmp);
+			// next part of a large request received - add to composite receiver
+			scmpCompositeRecv.add(scmp);
 		}
 
-		// request is part of a chunked message
 		if (scmp.isPart()) {
+			// received scmp of type part - request not complete
 			complete = false;
+			// set up pull request
 			SCMP scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
 			scmpReply.setMessageType(scmp.getMessageType());
 			response.setSCMP(scmpReply);
-		} else { // last request of a chunked message
+		} else {
+			// last scmp of a chunk message received - request complete
 			complete = true;
-			request.setSCMP(scmpComposite);
+			request.setSCMP(scmpCompositeRecv);
 		}
 		return command;
 	}
 
+	/**
+	 * Checks if is complete.
+	 * 
+	 * @return true, if is complete
+	 */
 	public boolean isComplete() {
 		return complete;
 	}

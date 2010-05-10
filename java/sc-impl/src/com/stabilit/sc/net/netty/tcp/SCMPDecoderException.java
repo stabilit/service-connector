@@ -17,22 +17,29 @@
 package com.stabilit.sc.net.netty.tcp;
 
 /**
+ * The Class SCMPDecoderException. Occurs when decoding SCMP frame fails.
+ * 
  * @author JTraber
- *
  */
 public class SCMPDecoderException extends Exception {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -6537338790870840933L;
 
+	/**
+	 * Instantiates a new sCMP decoder exception.
+	 */
 	public SCMPDecoderException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new sCMP decoder exception.
+	 * 
+	 * @param msg
+	 *            the msg
+	 */
 	public SCMPDecoderException(String msg) {
 		super(msg);
 	}
-
 }

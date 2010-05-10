@@ -22,19 +22,45 @@ import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.log.SimpleLogger;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class SCMPLogger. Provides functionality of logging an <code>SCMP</code>.
+ * 
+ * @author JTraber
+ */
 public class SCMPLogger extends SimpleLogger {
 
+	/**
+	 * Instantiates a new sCMP logger.
+	 * 
+	 * @param dir
+	 *            the dir
+	 * @param fileName
+	 *            the file name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMPLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
-	
+
+	/**
+	 * Log.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(SCMP scmp) throws IOException {
 		super.log(scmp.toString());
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
-
 }

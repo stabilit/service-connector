@@ -19,19 +19,27 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.net.IEncoderDecoder;
 
 /**
+ * The Class ClientConnectionAdapter.
+ * 
  * @author JTraber
- *
  */
 public abstract class ClientConnectionAdapter implements IClientConnection {
 
+	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;
 	
+	/**
+	 * Instantiates a new client connection adapter.
+	 */
 	public ClientConnectionAdapter() {
 		encoderDecoder = null;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#setEncoderDecoder(com.stabilit.sc.net.IEncoderDecoder)
+	 */
 	@Override
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
-	}
-			
+	}			
 }

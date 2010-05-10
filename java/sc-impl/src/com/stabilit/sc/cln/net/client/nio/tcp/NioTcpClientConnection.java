@@ -28,63 +28,89 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
-import com.stabilit.sc.net.nio.NioTcpException;
+import com.stabilit.sc.net.nio.NioException;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NioTcpClientConnection. Concrete client connection implementation on Nio base for Tcp.
+ */
 public class NioTcpClientConnection extends ClientConnectionAdapter {
 
+	/** The socket channel. */
 	private SocketChannel socketChannel = null;
+	/** The port. */
 	private int port;
+	/** The host. */
 	private String host;
 
+	/**
+	 * Instantiates a new nio tcp client connection.
+	 */
 	public NioTcpClientConnection() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
+	 */
 	@Override
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionListenerSupport.getInstance().fireDisconnect(this);		
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
+	 */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionListenerSupport.getInstance().fireDisconnect(this);		
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		socketChannel.close();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
+	 */
 	@Override
 	public void destroy() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireWrite(this, byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
-		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			throw new NioTcpException("no bytes read");
+			throw new NioException("no bytes read");
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
-		// warning, returns always the same instance, singleton
+		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
+
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);
+		// continues reading until http frame is complete
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
-				throw new NioTcpException("no bytes read");
+				throw new NioException("no bytes read");
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);
@@ -98,16 +124,28 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 		return ret;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new NioTcpClientConnection();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setPort(int)
+	 */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;

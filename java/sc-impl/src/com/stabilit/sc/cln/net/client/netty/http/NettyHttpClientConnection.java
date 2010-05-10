@@ -29,27 +29,44 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NettyHttpClientConnection. Concrete client connection implementation with JBoss Netty for Http.
+ * 
+ * @author JTraber
+ */
 public class NettyHttpClientConnection extends ClientConnectionAdapter {
 
+	/** The url. */
 	private URL url;
+	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
+	/** The channel. */
 	private Channel channel;
+	/** The port. */
 	private int port;
+	/** The host. */
 	private String host;
+	/** The operation listener. */
 	private NettyOperationListener operationListener;
+	/** The channel factory. */
 	private NioClientSocketChannelFactory channelFactory;
 
+	/**
+	 * Instantiates a new netty http client connection.
+	 */
 	public NettyHttpClientConnection() {
 		this.url = null;
 		this.bootstrap = null;
@@ -58,29 +75,48 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
+		/*
+		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+		 */
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
 				.newFixedThreadPool(5));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
+	 */
 	@Override
 	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
-		// Start the connection attempt.
+		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+		// waits until operation is done
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		this.channel = operationListener.awaitUninterruptibly().getChannel();
+		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
+	 */
 	@Override
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		bootstrap.releaseExternalResources();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
+	 */
 	@Override
 	public void destroy() throws Exception {
 		ChannelFuture future = this.channel.close();
@@ -89,47 +125,62 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		this.bootstrap.releaseExternalResources();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit .sc.scmp.SCMP)
+	 */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
 		encoderDecoder.encode(baos, scmp);
-		url = new URL("http", host, port, "/");
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url
-				.getPath());
+		url = new URL(IConstants.HTTP, host, port, IConstants.HTTP_FILE);
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
-		request.addHeader("Content-Length", String.valueOf(buffer.length));
+		// Http header fields
+		// TODO complete the header fields
+		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
+
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
 		ChannelFuture future = channel.write(request);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
-		ConnectionListenerSupport.fireWrite(this, buffer); // logs inside if registered
 
-		NettyHttpClientResponseHandler handler = channel.getPipeline().get(
-				NettyHttpClientResponseHandler.class);
+		ConnectionListenerSupport.getInstance().fireWrite(this, buffer); // logs inside if registered
+		// gets response message synchronous
+		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
-
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, buffer);// logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMP ret = (SCMP) encoderDecoder.decode(bais);
 		return ret;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setPort(int)
+	 */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyHttpClientConnection();

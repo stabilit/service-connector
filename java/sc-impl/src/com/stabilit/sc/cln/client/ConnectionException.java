@@ -17,20 +17,34 @@
 package com.stabilit.sc.cln.client;
 
 /**
+ * The Class ConnectionException. Occures when setting up connection fails.
+ * 
  * @author JTraber
- *
  */
 public class ConnectionException extends Exception {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -5595404740341986717L;
+
+	/**
+	 * Instantiates a new connection exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public ConnectionException(String message) {
 		super(message);
 	}
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param message
+	 *            the message
 	 * @param e
+	 *            the e
 	 */
 	public ConnectionException(String message, Exception e) {
 		super(message, e);
-	}	
+	}
 }

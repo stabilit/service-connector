@@ -18,34 +18,72 @@ package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionEvent;
 import com.stabilit.sc.listener.IExceptionListener;
 import com.stabilit.sc.log.SimpleLogger;
 
+/**
+ * The Class ExceptionLogger. Provides functionality of logging an <code>ExceptionEvent</code>.
+ * 
+ * @author JTraber
+ */
 public class ExceptionLogger extends SimpleLogger implements IExceptionListener {
 
+	/**
+	 * Instantiates a new exception logger.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public ExceptionLogger() throws Exception {
-		this("log/", "exc.log");
+		this(IConstants.LOG_DIR, IConstants.EXCEPTION_LOG_FILE_NAME);
 	}
 
+	/**
+	 * Instantiates a new exception logger.
+	 * 
+	 * @param dir
+	 *            the dir
+	 * @param fileName
+	 *            the file name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public ExceptionLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
+	 */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
+	 */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset,length);
+		super.log(buffer, offset, length);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.listener.IExceptionListener#exceptionEvent(com.stabilit.sc.listener.ExceptionEvent)
+	 */
 	@Override
 	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
 		try {

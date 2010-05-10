@@ -32,11 +32,23 @@ import com.stabilit.sc.scmp.RequestAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.util.MapBean;
 
+/**
+ * The Class NioTcpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Tcp
+ * frame. Based on Nio.
+ */
 public class NioTcpRequest extends RequestAdapter {
 
+	/** The socket channel. */
 	private SocketChannel socketChannel;
+	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
+	/**
+	 * Instantiates a new nio tcp request.
+	 * 
+	 * @param socketChannel
+	 *            the socket channel
+	 */
 	public NioTcpRequest(SocketChannel socketChannel) {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
@@ -45,9 +57,13 @@ public class NioTcpRequest extends RequestAdapter {
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#load()
+	 */
 	@Override
 	public void load() throws Exception {
-		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
 			throw new NioTcpDisconnectException("line disconnected");
@@ -56,10 +72,11 @@ public class NioTcpRequest extends RequestAdapter {
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);
+		// continues reading until tpc frame is complete
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);

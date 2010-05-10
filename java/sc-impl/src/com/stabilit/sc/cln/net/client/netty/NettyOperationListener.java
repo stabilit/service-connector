@@ -22,26 +22,37 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
-import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
 /**
- * @author JTraber
+ * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework.
+ * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
+ * operation fails.
  * 
+ * @author JTraber
  */
 public class NettyOperationListener implements ChannelFutureListener {
 
+	/** Queue to store the answer. */
 	private final BlockingQueue<ChannelFuture> answer = new LinkedBlockingQueue<ChannelFuture>();
 
-	public ChannelFuture awaitUninterruptibly() throws TransportException {
+	/**
+	 * Await uninterruptibly until operation is completed.
+	 * 
+	 * @return the channel future
+	 * @throws CommunicationException
+	 *             the communication exception
+	 */
+	public ChannelFuture awaitUninterruptibly() throws CommunicationException {
 		ChannelFuture response;
 		boolean interrupted = false;
 		for (;;) {
 			try {
-				// take() wartet bis Message in Queue kommt!
+				// take() waits until message arrives in queue, locking inside queue
 				response = answer.take();
 				if (response.isSuccess() == false) {
-					throw new TransportException("Operation could not be completed");
+					throw new CommunicationException("Operation could not be completed");
 				}
 				break;
 			} catch (InterruptedException e) {
@@ -51,11 +62,16 @@ public class NettyOperationListener implements ChannelFutureListener {
 		}
 
 		if (interrupted) {
+			// interruption happens when waiting for response - interrupt now
 			Thread.currentThread().interrupt();
 		}
 		return response;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.jboss.netty.channel.ChannelFutureListener#operationComplete(org.jboss.netty.channel.ChannelFuture)
+	 */
 	@Override
 	public void operationComplete(ChannelFuture future) throws Exception {
 		answer.offer(future);

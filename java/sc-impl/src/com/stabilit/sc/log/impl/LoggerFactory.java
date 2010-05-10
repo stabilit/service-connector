@@ -16,29 +16,51 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.log.impl;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.SimpleLogger;
 
+/**
+ * A factory for creating Logger objects. Provides access to the concrete Logger instances. TODO is not in use at
+ * this time. Needs to be done! (JOT)
+ * 
+ * @author JTraber
+ */
 public class LoggerFactory extends Factory {
+
+	/** The logger factory. */
 	private static LoggerFactory loggerFactory = new LoggerFactory();
 
+	/**
+	 * Instantiates a new logger factory.
+	 */
 	private LoggerFactory() {
 		ILogger logger;
 		try {
-			logger = new SCMPLogger("", "scmp.log");
+			logger = new SCMPLogger(IConstants.LOG_DIR, IConstants.SCMP_LOG_FILE_NAME);
 			this.add(SCMPLogger.class, logger);
-			logger = new ConnectionLogger("", "con.log");
+			logger = new ConnectionLogger(IConstants.LOG_DIR, IConstants.CONNECTION_LOG_FILE_NAME);
 			this.add(ConnectionLogger.class, logger);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Gets the simple logger.
+	 * 
+	 * @return the simple logger
+	 */
 	public ILogger getLogger() {
 		return (ILogger) this.getInstance(SimpleLogger.class);
 	}
 
+	/**
+	 * Gets the logger factory.
+	 * 
+	 * @return the logger factory
+	 */
 	public static LoggerFactory getLoggerFactory() {
 		if (loggerFactory == null) {
 			loggerFactory = new LoggerFactory();
@@ -46,12 +68,23 @@ public class LoggerFactory extends Factory {
 		return loggerFactory;
 	}
 
+	/**
+	 * Gets the logger by key.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the logger
+	 */
 	public ILogger getLogger(Object key) {
 		return (ILogger) this.factoryMap.get(key);
 	}
 
+	/**
+	 * Gets the connection logger.
+	 * 
+	 * @return the connection logger
+	 */
 	public ILogger getConnectionLogger() {
 		return (ILogger) this.factoryMap.get(ConnectionLogger.class);
 	}
-
 }

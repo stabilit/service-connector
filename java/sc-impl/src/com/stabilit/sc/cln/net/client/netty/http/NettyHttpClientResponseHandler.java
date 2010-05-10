@@ -29,25 +29,29 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
 /**
- * @author JTraber
+ * The Class NettyHttpClientResponseHandler. Used to wait until operation us successfully done by netty framework.
+ * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
+ * operation fails.
  * 
+ * @author JTraber
  */
 @ChannelPipelineCoverage("one")
 public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
+	/** Queue to store the answer. */
 	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		super.exceptionCaught(ctx, e);
-	}
-
+	/**
+	 * Gets the message synchronously.
+	 * 
+	 * @return the message
+	 */
 	HttpResponse getMessageSync() {
 		HttpResponse responseMessage;
 		boolean interrupted = false;
 		for (;;) {
 			try {
-				// take() waits until first message gets in queue!
+				// take() waits until message arrives in queue, locking inside queue
 				responseMessage = answer.take();
 				break;
 			} catch (InterruptedException e) {
@@ -57,13 +61,30 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 		}
 
 		if (interrupted) {
+			// interruption happens when waiting for response - interrupt now
 			Thread.currentThread().interrupt();
 		}
 		return responseMessage;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		answer.offer((HttpResponse) e.getMessage());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
+	 */
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		super.exceptionCaught(ctx, e);
+		// TODO like tcp
 	}
 }

@@ -31,46 +31,77 @@ import com.stabilit.sc.net.DefaultEncoderDecoder;
 import com.stabilit.sc.scmp.IInternalMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
+/**
+ * The Class InternalMessage. Internal Messages are used to communicate for testing / maintaining reasons.
+ */
 public class InternalMessage implements IInternalMessage, Serializable {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1763291531850424661L;
-
+	/** The key. */
 	private SCMPMsgType key;
-	
+	/** The attr map to store data. */
 	protected Map<String, Object> attrMap;
-	
+	/** The encoded builder. */
 	protected StringBuilder encodedBuilder;
 
+	/**
+	 * Instantiates a new internal message.
+	 */
 	public InternalMessage() {
 		this(SCMPMsgType.UNDEFINED);
 	}
-	
+
+	/**
+	 * Instantiates a new internal message.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public InternalMessage(SCMPMsgType key) {
 		this.key = key;
 		this.attrMap = new HashMap<String, Object>();
 		this.encodedBuilder = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#newInstance()
+	 */
 	@Override
 	public IInternalMessage newInstance() {
 		return new InternalMessage();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#getKey()
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return key;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#encode(java.io.BufferedWriter)
+	 */
 	@Override
 	public void encode(BufferedWriter bw) throws IOException {
 		if (this.encodedBuilder == null) {
-		   this.encodedBuilder = new StringBuilder();
-		   encode(this.encodedBuilder);
+			this.encodedBuilder = new StringBuilder();
+			encode(this.encodedBuilder);
 		}
-		bw.write(this.encodedBuilder.toString());		
+		bw.write(this.encodedBuilder.toString());
 	}
-	
-	private void encode(StringBuilder eb) {		
+
+	/**
+	 * Encode.
+	 * 
+	 * @param eb
+	 *            the eb
+	 */
+	private void encode(StringBuilder eb) {
 		Map<String, Object> attrMap = this.getAttributeMap();
 		Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
 		eb.append(IInternalMessage.class.getName());
@@ -80,7 +111,6 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		for (Entry<String, Object> entry : attrEntrySet) {
 			String key = entry.getKey();
 			String value = entry.getValue().toString();
-			/********* escaping *************/
 			key = key.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
 			value = value.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
 
@@ -91,6 +121,10 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#decode(java.io.BufferedReader)
+	 */
 	@Override
 	public void decode(BufferedReader br) throws IOException {
 		while (true) {
@@ -101,13 +135,19 @@ public class InternalMessage implements IInternalMessage, Serializable {
 			Pattern decodReg = Pattern.compile(DefaultEncoderDecoder.UNESCAPED_EQUAL_SIGN_REGEX);
 			Matcher match = decodReg.matcher(line);
 			if (match.matches() && match.groupCount() == 2) {
-				/********* escaping *************/
-				String key = match.group(1).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN, DefaultEncoderDecoder.EQUAL_SIGN);
-				String value = match.group(2).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN, DefaultEncoderDecoder.EQUAL_SIGN);
+				String key = match.group(1).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN,
+						DefaultEncoderDecoder.EQUAL_SIGN);
+				String value = match.group(2).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN,
+						DefaultEncoderDecoder.EQUAL_SIGN);
 				this.setAttribute(key, value);
 			}
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
@@ -120,23 +160,38 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		}
 		return sb.toString();
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#getAttributeMap()
+	 */
 	@Override
 	public Map<String, Object> getAttributeMap() {
 		return attrMap;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#getAttribute(java.lang.String)
+	 */
 	@Override
 	public Object getAttribute(String name) {
 		return this.attrMap.get(name);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#setAttribute(java.lang.String, java.lang.Object)
+	 */
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IInternalMessage#getLength()
+	 */
 	@Override
 	public int getLength() {
 		if (this.encodedBuilder == null) {

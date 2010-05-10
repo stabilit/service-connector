@@ -33,8 +33,8 @@ import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPHeadlineKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPPart;
 import com.stabilit.sc.scmp.SCMPReply;
+import com.stabilit.sc.scmp.internal.SCMPPart;
 
 public class LargeMessageEncoderDecoderTest {
 

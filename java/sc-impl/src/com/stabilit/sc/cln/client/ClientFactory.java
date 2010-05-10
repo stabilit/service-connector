@@ -21,13 +21,26 @@ import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 
+/**
+ * A factory for creating Client objects.
+ */
 public class ClientFactory extends Factory {
 
+	/**
+	 * Instantiates a new client factory.
+	 */
 	public ClientFactory() {
 		Client client = new Client();
 		this.factoryMap.put("default", client);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param clientConfig the client config
+	 * 
+	 * @return the i client
+	 */
 	public IClient newInstance(IClientConfigItem clientConfig) {
 		IFactoryable factoryInstance = this.newInstance();
 		IClient client = (IClient) factoryInstance;
@@ -35,6 +48,15 @@ public class ClientFactory extends Factory {
 		return client;
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param host the host
+	 * @param port the port
+	 * @param con the con
+	 * 
+	 * @return the i client
+	 */
 	public IClient newInstance(String host, int port, String con) {
 		IFactoryable factoryInstance = this.newInstance();
 		IClient client = (IClient) factoryInstance;

@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.ctx.RequestContext;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.FrameDecoderFactory;
@@ -30,11 +31,23 @@ import com.stabilit.sc.scmp.RequestAdapter;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.util.MapBean;
 
+/**
+ * The Class NioHttpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Http
+ * frame. Based on Nio.
+ */
 public class NioHttpRequest extends RequestAdapter {
 
+	/** The socket channel. */
 	private SocketChannel socketChannel;
+	/** The stream http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
 
+	/**
+	 * Instantiates a new nio http request.
+	 * 
+	 * @param socketChannel
+	 *            the socket channel
+	 */
 	public NioHttpRequest(SocketChannel socketChannel) {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
@@ -44,30 +57,35 @@ public class NioHttpRequest extends RequestAdapter {
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IRequest#load()
+	 */
 	public void load() throws Exception {
-		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			throw new NioTcpException("no bytes read");
+			throw new NioException("no bytes read");
 		}
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteReadBuffer, 0, bytesRead);
+		// continues reading until http frame is complete
 		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
-				throw new NioHttpException("read failed (<0)");
+				throw new NioException("read failed (<0)");
 			}
 			bytesRead += read;
-			baos.write(byteBuffer.array(),0, read);
+			baos.write(byteBuffer.array(), 0, read);
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		ConnectionListenerSupport.fireRead(this, buffer);
+		ConnectionListenerSupport.getInstance().fireRead(this, buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMP scmp = (SCMP) streamHttpUtil.readSCMP(bais);
 		bais.close();

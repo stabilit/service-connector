@@ -21,8 +21,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.internal.SCMPLargeResponse;
-import com.stabilit.sc.scmp.internal.SCMPResponsePart;
+import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
+import com.stabilit.sc.scmp.internal.SCMPSendPart;
 
 /**
  * @author JTraber
@@ -36,18 +36,18 @@ public class SCMPLargeResponseTest extends SCMP {
 		
 		for (int i = 0; i < 100000; i++) {
 			sb.append(i);
-		}
-		
+		}		
 		
 		SCMP largeScmp = new SCMP();
 		largeScmp.setBody(sb.toString());
+		largeScmp.setIsReply(true);
 		
-		SCMPLargeResponse largeResponse = new SCMPLargeResponse(largeScmp);
+		SCMPCompositeSender largeResponse = new SCMPCompositeSender(largeScmp);
 		
 		int offset = 0;
 		while(largeResponse.hasNext()) {
 			
-			SCMPResponsePart responsePart = new SCMPResponsePart(largeScmp, offset);
+			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset);
 			offset += responsePart.getBodyLength();
 			
 			SCMP scmp = largeResponse.getNext();
@@ -57,7 +57,7 @@ public class SCMPLargeResponseTest extends SCMP {
 			Assert.assertEquals(responsePart.getBodyType(), scmp.getBodyType());
 		}
 		
-		SCMPResponsePart firstPart = new SCMPResponsePart(largeScmp, 0);
+		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0);
 		SCMP scmp = largeResponse.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), scmp.getBody().toString());
 		Assert.assertEquals(firstPart.getBodyLength(), scmp.getBodyLength());

@@ -17,22 +17,28 @@
 package com.stabilit.sc.net.nio;
 
 /**
+ * The Class NioException. Exceptions occurs when reading fails.
+ * 
  * @author JTraber
- *
  */
-public class SCMPNioDecoderException extends Exception {
+public class NioException extends Exception {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 6751276970114819150L;
 
 	/**
-	 * 
+	 * Instantiates a new nio exception.
 	 */
-	private static final long serialVersionUID = -6537338790870840933L;
-
-	public SCMPNioDecoderException() {
+	public NioException() {
 		super();
 	}
 
-	public SCMPNioDecoderException(String msg) {
+	/**
+	 * Instantiates a new nio exception.
+	 * 
+	 * @param msg the msg
+	 */
+	public NioException(String msg) {
 		super(msg);
 	}
-
 }

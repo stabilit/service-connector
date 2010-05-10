@@ -24,33 +24,57 @@ import com.stabilit.sc.srv.net.server.nio.http.NioHttpServer;
 import com.stabilit.sc.srv.net.server.nio.tcp.NioTcpServer;
 import com.stabilit.sc.srv.server.IServerConnection;
 
+/**
+ * A factory for creating ServerConnection objects. Provides access to concrete server instances. Possible servers
+ * are shown in key string constants below.
+ */
 public class ServerConnectionFactory extends Factory {
 
+	/** The Constant NIO_HTTP. */
+	private static final String NIO_HTTP = "nio.http";
+	/** The Constant NIO_TCP. */
+	private static final String NIO_TCP = "nio.tcp";
+	/** The Constant NETTY_TCP. */
+	private static final String NETTY_TCP = "netty.tcp";
+	/** The Constant NETTY_HTTP. */
+	private static final String NETTY_HTTP = "netty.http";
+
+	/**
+	 * Instantiates a new server connection factory.
+	 */
 	public ServerConnectionFactory() {
 		// jboss netty http server
 		IServerConnection nettyHttpServer = new NettyHttpServerConnection();
-		add("default", nettyHttpServer);
-		add("netty.http", nettyHttpServer);
+		add(DEFAULT, nettyHttpServer);
+		add(NETTY_HTTP, nettyHttpServer);
 		// jboss netty tcp server
 		IServerConnection nettyTCPServer = new NettyTcpServerConnection();
-		add("netty.tcp", nettyTCPServer);
-		
-		// nioServer
+		add(NETTY_TCP, nettyTCPServer);
+		// nio tcp Server
 		IServerConnection nioTcpServer = new NioTcpServer();
-		add("nio.tcp", nioTcpServer);
-		
-		// nioServer
+		add(NIO_TCP, nioTcpServer);
+		// nio http Server
 		IServerConnection nioHttpServer = new NioHttpServer();
-		add("nio.http", nioHttpServer);
+		add(NIO_HTTP, nioHttpServer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.Factory#newInstance()
+	 */
 	public IServerConnection newInstance() {
 		return newInstance("default");
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the i server connection
+	 */
 	public IServerConnection newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);
 		return (IServerConnection) factoryInstance; // should be a clone if implemented
 	}
-
 }

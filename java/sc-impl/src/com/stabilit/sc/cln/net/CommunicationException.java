@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,22 +14,48 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net.nio;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.cln.net;
 
 /**
+ * The Class CommunicationException. Occurs when communicating process fails.
+ * 
  * @author JTraber
- *
  */
-public class NioHttpException extends Exception {
+public class CommunicationException extends Exception {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 5283763167254554457L;
 
-	public NioHttpException() {
-		super();
+	/**
+	 * Instantiates a new communication exception.
+	 * 
+	 * @param message the message
+	 * @param cause the cause
+	 */
+	public CommunicationException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public NioHttpException(String msg) {
-		super(msg);
+	/**
+	 * Instantiates a new communication exception.
+	 * 
+	 * @param cause the cause
+	 */
+	public CommunicationException(Throwable cause) {
+		super(cause);
 	}
 
+	/**
+	 * Instantiates a new communication exception.
+	 * 
+	 * @param errorMsg the error msg
+	 */
+	public CommunicationException(String errorMsg) {
+		super(errorMsg);
+	}
 }

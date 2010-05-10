@@ -26,15 +26,22 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 
 /**
- * @author JTraber
+ * The Class SCMPBasedFrameDecoder. Decodes a SCMP frame.
  * 
+ * @author JTraber
  */
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
+	/** The decode state. */
 	private DecodeState decodeState;
+	/** The scmp frame decoder. */
 	private IFrameDecoder scmpFrameDecoder;
+	/** The scmp frame size. */
 	private int scmpFrameSize;
 
+	/**
+	 * Instantiates a new SCMPBasedFrameDecoder.
+	 */
 	public SCMPBasedFrameDecoder() {
 		this.scmpFrameSize = 0;
 		this.decodeState = DecodeState.READY;
@@ -42,12 +49,15 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.jboss.netty.handler.codec.frame.FrameDecoder#decode(org.jboss.netty.channel.ChannelHandlerContext,
+	 * org.jboss.netty.channel.Channel, org.jboss.netty.buffer.ChannelBuffer)
+	 */
 	@Override
-	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer)
-			throws Exception {
+	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
 		switch (this.decodeState) {
 		case READY:
-			// read scmp headline
 			try {
 				// parse headline
 				scmpFrameSize = scmpFrameDecoder.parseFrameSize(buffer.toByteBuffer().array());
@@ -69,6 +79,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 			int readableBytes = buffer.readableBytes();
 			byte[] readableBuffer = new byte[readableBytes];
 			buffer.getBytes(0, readableBuffer);
+			// continue reading if frame is not complete
 			if (readableBytes >= scmpFrameSize) {
 				this.decodeState = DecodeState.READY;
 				return buffer.readBytes(scmpFrameSize);
@@ -77,7 +88,18 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		return null;
 	}
 
+	/**
+	 * The Enum DecodeState. Possible states of decoding process.
+	 */
 	private enum DecodeState {
-		UNDEFINED, READY, SIZE, EXC;
+
+		/** The UNDEFINED. */
+		UNDEFINED,
+		/** The READY, ready to parse frame size. */
+		READY,
+		/** The SIZE, frame size parsed - read data. */
+		SIZE,
+		/** The EXC, exception in decoding process. */
+		EXC;
 	}
 }

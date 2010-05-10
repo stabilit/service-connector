@@ -26,21 +26,25 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
- * @author The Netty Project (netty-dev@lists.jboss.org)
- * @author Andy Taylor (andy.taylor@jboss.org)
- * @author Trustin Lee (trustin@gmail.com)
+ * A factory for creating NettyHttpServerPipeline objects.
  * 
- * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
+ * @author JTraber
  */
 public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.jboss.netty.channel.ChannelPipelineFactory#getPipeline()
+	 */
 	public ChannelPipeline getPipeline() throws Exception {
-		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
+		// responsible for decoding requests - Netty
 		pipeline.addLast("decoder", new HttpRequestDecoder());
-
-		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMP.LARGE_MESSAGE_LIMIT+4<<10));
+		// responsible for encoding responses - Netty
 		pipeline.addLast("encoder", new HttpResponseEncoder());
+		// responsible for aggregate chunks - Netty
+		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMP.LARGE_MESSAGE_LIMIT + 4 << 10));
+		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyHttpServerRequestHandler());
 		return pipeline;
 	}

@@ -23,23 +23,18 @@ import org.jboss.netty.channel.Channels;
 import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
- * @author The Netty Project (netty-dev@lists.jboss.org)
- * @author Andy Taylor (andy.taylor@jboss.org)
- * @author Trustin Lee (trustin@gmail.com)
+ * A factory for creating NettyTcpServerPipeline objects.
  * 
- * @version $Rev: 1868 $, $Date: 2009-11-03 07:48:39 +0100 (Di, 03 Nov 2009) $
+ * @author JTraber
  */
 public class NettyTcpServerPipelineFactory implements ChannelPipelineFactory {
 
 	public ChannelPipeline getPipeline() throws Exception {
-		// Create a default pipeline implementation.
 		ChannelPipeline pipeline = Channels.pipeline();
-
-		NettyTcpServerRequestHandler responseHandler = new NettyTcpServerRequestHandler();
-		// pipeline.addLast("framer", new DelimiterBasedFrameDecoder(SCMP.LARGE_MESSAGE_LIMIT + 4 << 10,
-		// Delimiters.nulDelimiter()[0]));
+		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
-		pipeline.addLast("handler", responseHandler);
+		// responsible for handling request
+		pipeline.addLast("handler", new NettyTcpServerRequestHandler());
 		return pipeline;
 	}
 }

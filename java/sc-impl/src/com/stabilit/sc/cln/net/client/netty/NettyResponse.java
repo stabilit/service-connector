@@ -23,25 +23,44 @@ package com.stabilit.sc.cln.net.client.netty;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
-
 /**
- * @author JTraber
+ * The Class NettyResponse. Wraps a successful response of Netty framework. Used to unify the process of catching
+ * the response synchronously.
  * 
+ * @author JTraber
  */
 public class NettyResponse {
 
+	/** The buffer. */
 	private ChannelBuffer buffer;
+	/** The is fault. */
 	private boolean isFault;
-	
+
+	/**
+	 * Instantiates a new netty response.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 */
 	public NettyResponse(ChannelBuffer buffer) {
-		this. buffer =  buffer;	
+		this.buffer = buffer;
 		this.isFault = false;
 	}
 
+	/**
+	 * Gets the buffer.
+	 * 
+	 * @return the buffer
+	 */
 	public ChannelBuffer getBuffer() {
-		return  buffer;
+		return buffer;
 	}
-	
+
+	/**
+	 * Checks if is fault.
+	 * 
+	 * @return true, if is fault
+	 */
 	public boolean isFault() {
 		return isFault;
 	}

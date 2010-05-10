@@ -18,10 +18,19 @@ package com.stabilit.sc.cln.msg.impl;
 
 import com.stabilit.sc.scmp.SCMPMsgType;
 
+/**
+ * The Class InspectMessage. Inspect Message used for testing/maintaining. Used to inspect data on SC.
+ */
 public class InspectMessage extends InternalMessage {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 3298941284664209624L;
+	/** The ID. */
 	public static SCMPMsgType ID = SCMPMsgType.INSPECT;
 
+	/**
+	 * Instantiates a new inspect message.
+	 */
 	public InspectMessage() {
 		super(ID);
 	}

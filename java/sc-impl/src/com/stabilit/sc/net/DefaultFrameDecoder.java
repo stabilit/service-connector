@@ -20,24 +20,36 @@ import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.SCMPHeadlineKey;
 
 /**
- * @author JTraber
+ * The Class DefaultFrameDecoder.
  * 
+ * @author JTraber
  */
 public class DefaultFrameDecoder implements IFrameDecoder {
 
+	/**
+	 * Instantiates a new default frame decoder.
+	 */
 	protected DefaultFrameDecoder() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this; // singleton
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IFrameDecoder#parseFrameSize(byte[])
+	 */
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
 		if (buffer == null || buffer.length <= 0) {
-			return 0; //don't throw exception it is the case if client disconnects 
+			return 0; // don't throw exception it is the case if client disconnects
 		}
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
 		int scmpHeadlineLength = 0;
@@ -55,6 +67,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 					throw new FrameDecoderException("invalid scmp header line");
 				}
 
+				// watch out for size ( /128& )
 				int startIndex = 0;
 				int endIndex = 0;
 				label: for (startIndex = 0; startIndex < buffer.length; startIndex++) {
@@ -80,6 +93,19 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		throw new FrameDecoderException("invalid scmp header line");
 	}
 
+	/**
+	 * Read int from byte buffer.
+	 * 
+	 * @param b
+	 *            the b
+	 * @param startOffset
+	 *            the start offset
+	 * @param endOffset
+	 *            the end offset
+	 * @return the int
+	 * @throws FrameDecoderException
+	 *             the frame decoder exception
+	 */
 	public int readInt(byte[] b, int startOffset, int endOffset) throws FrameDecoderException {
 
 		if (b == null) {
@@ -106,5 +132,4 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		}
 		return scmpLength;
 	}
-
 }

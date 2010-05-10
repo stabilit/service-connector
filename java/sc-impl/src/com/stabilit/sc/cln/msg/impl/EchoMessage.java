@@ -18,13 +18,21 @@ package com.stabilit.sc.cln.msg.impl;
 
 import com.stabilit.sc.scmp.SCMPMsgType;
 
+/**
+ * The Class EchoMessage. Echo Message used for testing/maintaining.
+ */
 public class EchoMessage extends InternalMessage {
-	
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5461603317301105352L;
-	
+
+	/** The ID. */
 	public static SCMPMsgType ID = SCMPMsgType.CLN_ECHO;
 
+	/**
+	 * Instantiates a new echo message.
+	 */
 	public EchoMessage() {
-    	super(ID);
-    }
+		super(ID);
+	}
 }

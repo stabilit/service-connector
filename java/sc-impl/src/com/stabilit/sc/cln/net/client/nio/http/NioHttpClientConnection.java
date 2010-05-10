@@ -23,78 +23,110 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
-import com.stabilit.sc.net.nio.NioHttpException;
+import com.stabilit.sc.net.nio.NioException;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NioHttpClientConnection. Concrete client connection implementation on Nio base for Http.
+ */
 public class NioHttpClientConnection extends ClientConnectionAdapter {
 
+	/** The socket channel. */
 	private SocketChannel socketChannel = null;
+	/** The port. */
 	private int port;
+	/** The host. */
 	private String host;
+	/** The stream http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
 
+	/**
+	 * Instantiates a new nio http client connection.
+	 */
 	public NioHttpClientConnection() {
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.stabilit.sc.cln.client.ClientConnectionAdapter#setEncoderDecoder(com.stabilit.sc.net.IEncoderDecoder)
+	 */
 	@Override
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		super.setEncoderDecoder(encoderDecoder);
 		this.streamHttpUtil.setEncoderDecoder(encoderDecoder);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
+	 */
 	@Override
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionListenerSupport.getInstance().fireConnect(this);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
+		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
+	 */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		socketChannel.close();
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
+	 */
 	@Override
 	public void destroy() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InetSocketAddress inetSocketAddress = (InetSocketAddress) socketChannel.socket()
-				.getRemoteSocketAddress();
+		InetSocketAddress inetSocketAddress = (InetSocketAddress) socketChannel.socket().getRemoteSocketAddress();
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.fireWrite(this, byteWriteBuffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireWrite(this, byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
-		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb
+		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = socketChannel.read(byteBuffer);
 		if (bytesRead < 0) {
-			throw new NioHttpException("no bytes read");
+			throw new NioException("no bytes read");
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.fireRead(this, byteReadBuffer, 0, bytesRead); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
 		// parse headline
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder("http");
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);
+		// continues reading until http frame is complete
 		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = socketChannel.read(byteBuffer);
 			if (read < 0) {
-				throw new NioHttpException("read failed (<0)");
+				throw new NioException("read failed (<0)");
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);
@@ -107,16 +139,28 @@ public class NioHttpClientConnection extends ClientConnectionAdapter {
 		return ret;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new NioHttpClientConnection();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setPort(int)
+	 */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;

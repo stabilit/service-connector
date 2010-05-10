@@ -19,23 +19,36 @@ package com.stabilit.sc.net;
 import com.stabilit.sc.factory.IFactoryable;
 
 /**
- * @author JTraber
+ * The Class HttpFrameDecoder. Decodes a Http frame.
  * 
+ * @author JTraber
  */
 public class HttpFrameDecoder extends DefaultFrameDecoder {
 
-	static final byte CR = 13;
-	static final byte LF = 10;
-	static final byte[] CRLF = new byte[] { CR, LF };
+	/** The Constant CR. */
+	private static final byte CR = 13;
+	/** The Constant LF. */
+	private static final byte LF = 10;
 
+	/**
+	 * Instantiates a new http frame decoder.
+	 */
 	protected HttpFrameDecoder() {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.DefaultFrameDecoder#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.DefaultFrameDecoder#parseFrameSize(byte[])
+	 */
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
@@ -48,7 +61,8 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 		int headerEnd = 0;
 		int bytesRead = buffer.length;
 
-		//(bytesRead - 3) avoids IndexOutOfBoundException
+		// watch out for Content-Length attribute in http header to evaluate frame size
+		// (bytesRead - 3) avoids IndexOutOfBoundException
 		label: for (int i = 0; i < (bytesRead - 3); i++) {
 			if (buffer[i] == CR && buffer[i + 1] == LF) {
 				i += 2;

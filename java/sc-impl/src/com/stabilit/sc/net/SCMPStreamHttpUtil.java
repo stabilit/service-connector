@@ -23,22 +23,45 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
-import com.stabilit.sc.net.nio.NioHttpException;
+import com.stabilit.sc.net.nio.NioException;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPBodyType;
 
+/**
+ * The Class SCMPStreamHttpUtil. Defines SCMP encoding/decoding of object into/from stream. Only used in case of
+ * nio client/server. In case of Netty the Netty framework takes over Http encoding/decoding stuff.
+ */
 public class SCMPStreamHttpUtil {
 
+	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
+	/**
+	 * Instantiates a new sCMP SCMPStreamHttpUtil.
+	 */
 	public SCMPStreamHttpUtil() {
 		encoderDecoder = null;
 	}
 
+	/**
+	 * Sets the encoder decoder.
+	 * 
+	 * @param encoderDecoder
+	 *            the new encoder decoder
+	 */
 	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
 		this.encoderDecoder = encoderDecoder;
 	}
 
+	/**
+	 * Read scmp from inputSteam.
+	 * 
+	 * @param is
+	 *            the is
+	 * @return the sCMP
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMP readSCMP(InputStream is) throws Exception {
 		// read headers
 		String line = readLine(is);
@@ -66,7 +89,7 @@ public class SCMPStreamHttpUtil {
 		while (bytesRead < stream.length) {
 			int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
 			if (readSize < 0) {
-				throw new NioHttpException("http stream util read failure  (<0)");
+				throw new NioException("http stream util read failure  (<0)");
 			}
 			bytesRead += readSize;
 		}
@@ -78,6 +101,15 @@ public class SCMPStreamHttpUtil {
 		return scmp;
 	}
 
+	/**
+	 * Read single line from inputStream.
+	 * 
+	 * @param in
+	 *            the in
+	 * @return the string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	private String readLine(InputStream in) throws IOException {
 		char[] buf = new char[128];
 		int room = buf.length;
@@ -115,6 +147,18 @@ public class SCMPStreamHttpUtil {
 		return String.copyValueOf(buf, 0, offset);
 	}
 
+	/**
+	 * Write request scmp to outputStream.
+	 * 
+	 * @param os
+	 *            the os
+	 * @param path
+	 *            the path
+	 * @param scmp
+	 *            the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void writeRequestSCMP(OutputStream os, String path, SCMP scmp) throws Exception {
 		// POST / HTTP/1.1
 		// User-Agent: Java/1.6.0_06
@@ -154,11 +198,28 @@ public class SCMPStreamHttpUtil {
 		os.flush();
 	}
 
+	/**
+	 * Gets the mime type.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the mime type
+	 */
 	private String getMimeType(SCMP scmp) {
 		SCMPBodyType bodyType = scmp.getBodyType();
 		return bodyType.getMimeType();
 	}
 
+	/**
+	 * Write response scmp.
+	 * 
+	 * @param os
+	 *            the os
+	 * @param scmp
+	 *            the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void writeResponseSCMP(OutputStream os, SCMP scmp) throws Exception {
 		StringBuilder http = new StringBuilder();
 		http.append("HTTP/1.1 200 OK\r\n");
@@ -179,5 +240,4 @@ public class SCMPStreamHttpUtil {
 		os.flush();
 		os.close();
 	}
-
 }

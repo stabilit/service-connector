@@ -26,24 +26,36 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyExceptionResponse;
 import com.stabilit.sc.cln.net.client.netty.NettyResponse;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
+/**
+ * The Class NettyTcpClientResponseHandler. Used to wait until operation us successfully done by netty framework.
+ * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
+ * operation fails.
+ */
 @ChannelPipelineCoverage("one")
 public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
+	/** Queue to store the answer. */
 	private final BlockingQueue<NettyResponse> answer = new LinkedBlockingQueue<NettyResponse>();
 
 	/**
-	 * @param scListener
-	 * @param conn
+	 * The Constructor.
 	 */
 	public NettyTcpClientResponseHandler() {
 	}
 
-	public ChannelBuffer getMessageSync() throws TransportException {
+	/**
+	 * Gets the message synchronously.
+	 * 
+	 * @return the message
+	 * @throws CommunicationException
+	 *             the communication exception
+	 */
+	ChannelBuffer getMessageSync() throws CommunicationException {
 		NettyResponse response;
 		boolean interrupted = false;
 		for (;;) {
@@ -51,7 +63,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 				// take() waits until message arrives in queue, locking inside queue
 				response = answer.take();
 				if (response.isFault()) {
-					throw new TransportException(((NettyExceptionResponse) response).getFault().getCause());
+					throw new CommunicationException(((NettyExceptionResponse) response).getFault().getCause());
 				}
 				break;
 			} catch (InterruptedException e) {
@@ -61,11 +73,17 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		}
 
 		if (interrupted) {
+			// interruption happens when waiting for response - interrupt now
 			Thread.currentThread().interrupt();
 		}
 		return response.getBuffer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
@@ -73,6 +91,11 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		answer.offer(response);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();

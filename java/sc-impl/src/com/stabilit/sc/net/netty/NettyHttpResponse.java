@@ -20,12 +20,9 @@ import java.io.ByteArrayOutputStream;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
@@ -36,37 +33,57 @@ import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.ResponseAdapter;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http
+ * frame. Based on JBoss Netty.
+ */
 public class NettyHttpResponse extends ResponseAdapter {
 
+	/** The event from Netty framework. */
 	private MessageEvent event;
+	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
+	/**
+	 * Instantiates a new netty http response.
+	 * 
+	 * @param event
+	 *            the event from Netty Framework
+	 */
 	public NettyHttpResponse(MessageEvent event) {
 		this.scmp = null;
 		this.event = event;
 	}
 
+	/**
+	 * Gets the event.
+	 * 
+	 * @return the event
+	 */
 	public MessageEvent getEvent() {
 		return event;
 	}
 
+	/**
+	 * Gets the buffer. Encodes the scmp.
+	 * 
+	 * @return the buffer
+	 * @throws Exception
+	 *             the exception
+	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		EncoderDecoderFactory encoderDecoderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
-		if (this.encoderDecoder == null) {
-			encoderDecoder = encoderDecoderFactory.newInstance(this.scmp);
-		}
-
+		encoderDecoder = encoderDecoderFactory.newInstance(this.scmp);
 		encoderDecoder.encode(baos, this.scmp);
 		byte[] buf = baos.toByteArray();
 		return ChannelBuffers.copiedBuffer(buf);
 	}
 
-	@Override
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
-		this.encoderDecoder = encoderDecoder;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public void setSCMP(SCMP scmp) {
 		if (scmp == null) {
@@ -76,30 +93,19 @@ public class NettyHttpResponse extends ResponseAdapter {
 		this.scmp = scmp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.scmp.IResponse#write()
+	 */
 	@Override
 	public void write() throws Exception {
-		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-
-		// Decide whether to close the connection or not.
-		boolean close = !httpRequest.isKeepAlive();
-		// TODO ?? keepAlive close?
-
 		// Build the response object.
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		ChannelBuffer buffer = getBuffer();
 		httpResponse.setContent(buffer);
-
-		if (!close) {
-			// There's no need to add 'Content-Length' header
-			// if this is the last response.
-			httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		}
+		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
-		ChannelFuture future = event.getChannel().write(httpResponse);
-		ConnectionListenerSupport.fireWrite(this, buffer.toByteBuffer().array()); // logs inside if registered
-		// Close the connection after the write operation is done if necessary.
-		if (close) {
-			future.addListener(ChannelFutureListener.CLOSE);
-		}
+		event.getChannel().write(httpResponse);
+		ConnectionListenerSupport.getInstance().fireWrite(this, buffer.toByteBuffer().array());
 	}
 }

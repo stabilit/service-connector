@@ -24,28 +24,55 @@ import com.stabilit.sc.cln.net.client.nio.tcp.NioTcpClientConnection;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 
+/**
+ * A factory for creating ClientConnection objects. Provides access to concrete client instances. Possible clients
+ * are shown in key string constants below.
+ */
 public class ClientConnectionFactory extends Factory {
 
+	/** The Constant NIO_HTTP. */
+	private static final String NIO_HTTP = "nio.http";
+	/** The Constant NIO_TCP. */
+	private static final String NIO_TCP = "nio.tcp";
+	/** The Constant NETTY_TCP. */
+	private static final String NETTY_TCP = "netty.tcp";
+	/** The Constant NETTY_HTTP. */
+	private static final String NETTY_HTTP = "netty.http";
+
+	/**
+	 * Instantiates a new client connection factory.
+	 */
 	public ClientConnectionFactory() {
-		// jboss netty http server
+		// jboss netty http client
 		IClientConnection nettyHttpClient = new NettyHttpClientConnection();
-		add("default", nettyHttpClient);
-		add("netty.http", nettyHttpClient);
-		// jboss netty tcp server
+		add(DEFAULT, nettyHttpClient);
+		add(NETTY_HTTP, nettyHttpClient);
+		// jboss netty tcp client
 		IClientConnection nettyTCPClient = new NettyTcpClientConnection();
-		add("netty.tcp", nettyTCPClient);
-		
+		add(NETTY_TCP, nettyTCPClient);
+		// nio tcp client
 		IClientConnection nioTCPClient = new NioTcpClientConnection();
-		add("nio.tcp", nioTCPClient); 
-		
+		add(NIO_TCP, nioTCPClient);
+		// nio http client
 		IClientConnection nioHttpClient = new NioHttpClientConnection();
-		add("nio.http", nioHttpClient); 
+		add(NIO_HTTP, nioHttpClient);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.Factory#newInstance()
+	 */
 	public IClientConnection newInstance() {
-		return newInstance("default");
+		return newInstance(DEFAULT);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the i client connection
+	 */
 	public IClientConnection newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);
 		return (IClientConnection) factoryInstance; // should be a clone if implemented

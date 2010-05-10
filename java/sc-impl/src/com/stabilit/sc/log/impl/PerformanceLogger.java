@@ -18,46 +18,89 @@ package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.IPerformanceListener;
 import com.stabilit.sc.listener.PerformanceEvent;
 import com.stabilit.sc.log.SimpleLogger;
 
+/**
+ * The Class PerformanceLogger. Provides functionality of logging an <code>PerformanceEvent</code>.
+ * 
+ * @author JTraber
+ */
 public class PerformanceLogger extends SimpleLogger implements IPerformanceListener {
 
+	/**
+	 * Instantiates a new performance logger.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public PerformanceLogger() throws Exception {
-		this("log/", "prf.log");
+		this(IConstants.LOG_DIR, IConstants.PERFORMANCE_LOG_FILE_NAME);
 	}
 
+	/**
+	 * Instantiates a new performance logger.
+	 * 
+	 * @param dir
+	 *            the dir
+	 * @param fileName
+	 *            the file name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public PerformanceLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
+	 */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
+	 */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset,length);
+		super.log(buffer, offset, length);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.listener.IPerformanceListener#begin(com.stabilit.sc.listener.PerformanceEvent)
+	 */
 	@Override
 	public synchronized void begin(PerformanceEvent performanceEvent) {
 		try {
-			// TODO
+			// TODO (JOT)
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.listener.IPerformanceListener#end(com.stabilit.sc.listener.PerformanceEvent)
+	 */
 	public synchronized void end(PerformanceEvent performanceEvent) {
 		try {
-			// TODO
+			// TODO (JOT)
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();

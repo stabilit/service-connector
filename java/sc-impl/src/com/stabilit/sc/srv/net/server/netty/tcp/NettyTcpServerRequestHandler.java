@@ -38,7 +38,7 @@ import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.SCMPLargeResponse;
+import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.net.server.netty.NettyCommandRequest;
@@ -48,17 +48,24 @@ import com.stabilit.sc.util.LockAdapter;
 import com.stabilit.sc.util.Lockable;
 
 /**
- * @author JTraber
+ * The Class NettyTcpServerRequestHandler. This class is responsible for handling Tcp requests. Is called from the
+ * Netty framework by catching events (message received, exception caught). Functionality to handle large messages
+ * is also inside.
  * 
+ * @author JTraber
  */
 @ChannelPipelineCoverage("one")
 public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 
+	/** The command request. */
 	private NettyCommandRequest commandRequest = null;
-	private SCMPLargeResponse scmpResponseComposite = null;
+	/** The scmp response composite sender. */
+	private SCMPCompositeSender scmpResponseComposite = null;
+	/** The lock. */
 	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
+	/** The msg id. */
 	private SCMPMessageID msgID;
-
+	/** The command request lock. */
 	private Lockable<Object> commandRequestLock = new LockAdapter<Object>() {
 
 		@Override
@@ -72,10 +79,18 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 	};
 
+	/**
+	 * Instantiates a new netty tcp server request handler.
+	 */
 	public NettyTcpServerRequestHandler() {
 		msgID = new SCMPMessageID();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
@@ -84,7 +99,9 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		SCMP scmpReq = request.getSCMP();
 
 		if (this.scmpResponseComposite != null && scmpReq.isPart()) {
+			// sending of a large response has already been started and incoming scmp is a pull request
 			if (this.scmpResponseComposite.hasNext()) {
+				// there are still parts to send to complete request
 				SCMP nextSCMP = this.scmpResponseComposite.getNext();
 				response.setSCMP(nextSCMP);
 				msgID.incrementPartSequenceNr();
@@ -99,12 +116,14 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 		try {
 			Channel channel = ctx.getChannel();
+			// needs to set a key in thread local to identify thread later and get access to the server
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
 
 			lock.runLocked(commandRequestLock); // init commandRequest if not set
 			ICommand command = this.commandRequest.readCommand(request, response);
 			if (commandRequest.isComplete() == false) {
+				// request is not complete yet
 				SCMP scmp = response.getSCMP();
 				msgID.incrementPartSequenceNr();
 				scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
@@ -123,6 +142,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				return;
 			}
 
+			// validate request and run command
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
 				commandValidator.validate(request);
@@ -130,21 +150,18 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 					LoggerListenerSupport.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
 				if (PerformanceListenerSupport.getInstance().isOn()) {
-					PerformanceListenerSupport.getInstance().fireBegin(this,
-							System.currentTimeMillis());
+					PerformanceListenerSupport.getInstance().fireBegin(this, System.currentTimeMillis());
 					command.run(request, response);
-					PerformanceListenerSupport.getInstance().fireEnd(this,
-							System.currentTimeMillis());
+					PerformanceListenerSupport.getInstance().fireEnd(this, System.currentTimeMillis());
 				} else {
-					command.run(request, response);					
+					command.run(request, response);
 				}
-			} catch (Exception  ex) {
+			} catch (Exception ex) {
 				ExceptionListenerSupport.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				}
 			}
-			// TODO error handling immer antworten?
 		} catch (Throwable th) {
 			ExceptionListenerSupport.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
@@ -152,16 +169,17 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
-		// check if response is large, if so create a composite for this reply
+
 		if (response.isLarge()) {
-			this.scmpResponseComposite = new SCMPLargeResponse(response);
+			// response is large, create a large response for reply
+			this.scmpResponseComposite = new SCMPCompositeSender(response.getSCMP());
 			SCMP firstSCMP = this.scmpResponseComposite.getFirst();
 			response.setSCMP(firstSCMP);
 			msgID.incrementPartSequenceNr();
 			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		} else {
 			SCMP scmp = response.getSCMP();
-			if (scmp.isPart() || scmpReq.isPart()) {			
+			if (scmp.isPart() || scmpReq.isPart()) {
 				msgID.incrementPartSequenceNr();
 				scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 			} else {
@@ -171,12 +189,18 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 		response.write();
 		commandRequest = null;
+		// needed for testing
 		if ("true".equals(response.getSCMP().getHeader("kill"))) {
 			ctx.getChannel().disconnect();
 			return;
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
+	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		ExceptionListenerSupport.getInstance().fireException(this, e.getCause());

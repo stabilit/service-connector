@@ -29,22 +29,34 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.stabilit.sc.cln.client.ClientConnectionAdapter;
-import com.stabilit.sc.cln.net.TransportException;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.scmp.SCMP;
 
+/**
+ * The Class NettyTcpClientConnection. Concrete client connection implementation with JBoss Netty for Tcp.
+ */
 public class NettyTcpClientConnection extends ClientConnectionAdapter {
 
+	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
+	/** The channel. */
 	private Channel channel;
+	/** The port. */
 	private int port;
+	/** The host. */
 	private String host;
+	/** The operation listener. */
 	private NettyOperationListener operationListener;
+	/** The channel factory. */
 	private NioClientSocketChannelFactory channelFactory;
 
+	/**
+	 * Instantiates a new netty Tcp client connection.
+	 */
 	public NettyTcpClientConnection() {
 		this.bootstrap = null;
 		this.channel = null;
@@ -52,38 +64,59 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
+		/*
+		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+		 */
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
 				.newFixedThreadPool(5));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
+	 */
 	@Override
 	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory());
-
 		// Start the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		this.channel = operationListener.awaitUninterruptibly().getChannel();
+		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
+	 */
 	@Override
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
+		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		this.bootstrap.releaseExternalResources();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
+	 */
 	@Override
-	public void destroy() throws TransportException {
+	public void destroy() throws CommunicationException {
 		ChannelFuture future = this.channel.close();
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
 		this.bootstrap.releaseExternalResources();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
+	 */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -94,14 +127,13 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
-		ConnectionListenerSupport.fireWrite(this, chBuffer.toByteBuffer().array());
+		ConnectionListenerSupport.getInstance().fireWrite(this, chBuffer.toByteBuffer().array());
 
-		NettyTcpClientResponseHandler handler = channel.getPipeline()
-				.get(NettyTcpClientResponseHandler.class);
+		NettyTcpClientResponseHandler handler = channel.getPipeline().get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = (ChannelBuffer) handler.getMessageSync();
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionListenerSupport.fireRead(this, buffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
@@ -109,16 +141,28 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		return ret;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyTcpClientConnection();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setPort(int)
+	 */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;

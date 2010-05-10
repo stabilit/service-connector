@@ -17,14 +17,40 @@
 package com.stabilit.sc.config;
 
 /**
+ * The Interface IConstants. SC constants.
+ * 
  * @author JTraber
- *
  */
 public interface IConstants {
-	
-	final String CLIENT_PROT = "prot";
-	final String HTTP = "http";
-	final String CLIENT_CON = "con";
-	final String CLIENT_URL = "url";
-	final String VERSION = "1.0";
+
+	/** Protocol literal. */
+	public final String HTTP = "http";
+	/** File qualifier for Http requests. */
+	public static final String HTTP_FILE = "/";
+
+	/** The REGEX. */
+	public final String COMMA_OR_SEMICOLON = ",|;";
+	/** The CON. */
+	public final String CON_QUALIFIER = ".con";
+	/** The HOST. */
+	public final String HOST_QUALIFIER = ".host";
+	/** The PORT. */
+	public final String PORT_QUALIFIER = ".port";
+	/** The connection names. */
+	public final String CONNECTION_NAMES = "connectionNames";
+
+	/** The logging directory. */
+	public final String LOG_DIR = "log/";
+	/** The file name of connection log file. */
+	public final String CONNECTION_LOG_FILE_NAME = "con.log";
+	/** The file name of exception log file. */
+	public final String EXCEPTION_LOG_FILE_NAME = "exc.log";
+	/** The file name of general log file. */
+	public final String GENERAL_LOG_FILE_NAME = "gen.log";
+	/** The file name of scmp log file. */
+	public final String SCMP_LOG_FILE_NAME = "scmp.log";
+	/** The file name of performance log file. */
+	public final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
+	/** The file name of warning log file. */
+	public final String WARNING_LOG_FILE_NAME = "wrn.log";
 }

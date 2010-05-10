@@ -17,18 +17,29 @@
 package com.stabilit.sc.net.nio;
 
 /**
+ * The Class NioTcpDisconnectException. Exception occurs when server is i reading on a socket and client
+ * disconnects.
+ * 
  * @author JTraber
- *
  */
 public class NioTcpDisconnectException extends Exception {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2863411772880184904L;
 
+	/**
+	 * Instantiates a new nio tcp disconnect exception.
+	 */
 	public NioTcpDisconnectException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new nio tcp disconnect exception.
+	 * 
+	 * @param msg the msg
+	 */
 	public NioTcpDisconnectException(String msg) {
 		super(msg);
 	}
-
 }
