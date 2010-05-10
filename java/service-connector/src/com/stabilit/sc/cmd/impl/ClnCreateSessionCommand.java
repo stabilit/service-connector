@@ -43,22 +43,50 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
+/**
+ * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command
+ * runs successfully if backend server accepts clients request and allows creating a session. Session is saved in a
+ * session registry of SC.
+ */
 public class ClnCreateSessionCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ClnCreateSessionCommand.
+	 */
 	public ClnCreateSessionCommand() {
 		this.commandValidator = new ClnCreateSessionCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		try {
@@ -67,44 +95,43 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
-			
-			//TODO verify client is connected correctly
-			
+			// TODO verify client is connected correctly - look up in connection registry
+
+			// adding ip of current unit to header field ip address list
 			String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			SocketAddress socketAddress = request.getSocketAddress();
 			if (socketAddress instanceof InetSocketAddress) {
 				InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 				ipList += inetSocketAddress.getAddress();
 				scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-			}		
-			
+			}
+
 			MapBean<?> mapBean = serviceRegistry.get(serviceName);
 			if (mapBean == null) {
-				SCMPCommandException scmpCommandException = new SCMPCommandException(
-						SCMPErrorCode.UNKNOWN_SERVICE);
+				// no service known with incoming serviceName
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.UNKNOWN_SERVICE);
 				scmpCommandException.setMessageType(getKey().getResponseName());
 				throw scmpCommandException;
 			}
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 
+			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 			// create session
 			Session session = new Session();
 			scmp.setSessionId(session.getId());
-			// try to allocate session
+			// try to allocate session on a backend server
 			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
-
 			// finally save session
 			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
 			sessionRegistry.add(session.getId(), session);
 
-			// reply
+			// creating reply
 			SCMPReply scmpReply = new SCMPReply();
 			scmpReply.setMessageType(getKey().getResponseName());
 			scmpReply.setSessionId(session.getId());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 			response.setSCMP(scmpReply);
 		} catch (Throwable e) {
-			//TODO aufräumen
+			// TODO aufräumen
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -112,13 +139,29 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ClnCreateSessionCommandValidator.
+	 */
 	public class ClnCreateSessionCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getSCMP().getHeader();
@@ -129,12 +172,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
-
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST
-						.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
-
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);

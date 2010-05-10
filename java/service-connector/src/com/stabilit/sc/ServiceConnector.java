@@ -34,15 +34,38 @@ import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.server.IServer;
 
+/**
+ * The Class ServiceConnector. Starts the core (servers) of the Service Connector.
+ * 
+ * @author JTraber
+ */
 public final class ServiceConnector {
 
+	/**
+	 * Instantiates a new service connector.
+	 */
 	private ServiceConnector() {
 	}
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public static void main(String[] args) throws Exception {
 		ServiceConnector.run();
 	}
 
+	/**
+	 * Run SC servers.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	private static void run() throws Exception {
 		ServerConfig config = new ServerConfig();
 		config.load("sc.properties");
@@ -52,6 +75,7 @@ public final class ServiceConnector {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
 
+		// Necessary to make access for JMX client available
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
 		ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");

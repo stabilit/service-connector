@@ -18,7 +18,6 @@ package com.stabilit.sc.cmd.impl;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.Map;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.LoggerListenerSupport;
@@ -37,33 +36,62 @@ import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
+/**
+ * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Simply sends back incoming
+ * content. Depending on header fields on which node echo executes or forwards to next server.
+ * 
+ * @author JTraber
+ */
 public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ClnEchoCommand.
+	 */
 	public ClnEchoCommand() {
 		this.commandValidator = new ClnEchoCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_ECHO;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMP scmp = request.getSCMP();
-		Map<String, String> header = scmp.getHeader();
-
 		SCMP result = null;
 		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 		if (LoggerListenerSupport.getInstance().isDebug()) {
-			LoggerListenerSupport.getInstance().fireDebug(this, "Run command " + this.getKey() + " on Node: " + maxNodes);
+			LoggerListenerSupport.getInstance().fireDebug(this,
+					"Run command " + this.getKey() + " on Node: " + maxNodes);
 		}
-		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+		// adding ip of current unit to ip address list
+		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
@@ -94,13 +122,15 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		header.remove(SCMPHeaderAttributeKey.MAX_NODES.getName());
+		scmp.removeHeader(SCMPHeaderAttributeKey.MAX_NODES);
 
 		if (maxNodes == 2) {
+			// forward to next node
 			result = serviceRegistryItem.srvEcho(scmp);
 		} else {
+			// forward to next node where echo will be executed
 			--maxNodes;
-			header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
+			scmp.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
 			result = serviceRegistryItem.clnEcho(scmp);
 		}
 		result.setMessageType(getKey().getResponseName());
@@ -108,13 +138,29 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 		response.setSCMP(result);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ClnEchoCommandValidator.
+	 */
 	public class ClnEchoCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request, nothing to validate in case of echo.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws SCMPValidatorException
+		 *             the SCMP validator exception
+		 */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

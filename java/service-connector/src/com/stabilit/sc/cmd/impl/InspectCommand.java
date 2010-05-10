@@ -29,22 +29,51 @@ import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
+/**
+ * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used
+ * for testing/maintaining reasons. Returns dumps of internal stuff to requester.
+ * 
+ * @author JTraber
+ */
 public class InspectCommand extends CommandAdapter {
 
+	/**
+	 * Instantiates a new InspectCommand.
+	 */
 	public InspectCommand() {
 		this.commandValidator = new InspectCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.INSPECT;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
@@ -56,6 +85,7 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setLocalDateTime();
 		InspectMessage inspectMsg = new InspectMessage();
 
+		// dump internal registries
 		inspectMsg.setAttribute("connectionRegistry", connectionRegistry);
 		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
 		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);
@@ -63,13 +93,29 @@ public class InspectCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class InspectCommandValidator.
+	 */
 	public class InspectCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request, nothing to validate in case of inspect.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws SCMPValidatorException
+		 *             the SCMP validator exception
+		 */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

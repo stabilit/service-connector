@@ -37,22 +37,52 @@ import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
+/**
+ * The Class ClnSystemCommand. Responsible for validation and execution of system command. System command is used
+ * for testing/maintaining reasons. Depending on header fields on which node system call executes or forwards to
+ * next server.
+ * 
+ * @author JTraber
+ */
 public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ClnSystemCommand.
+	 */
 	public ClnSystemCommand() {
 		this.commandValidator = new ClnSystemCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_SYSTEM;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMP scmp = request.getSCMP();
@@ -61,6 +91,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		SCMP result = null;
 		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 
+		// adding ip of current node to header field ip address list
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
@@ -85,8 +116,10 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		header.remove(SCMPHeaderAttributeKey.MAX_NODES.getName());
 
 		if (maxNodes == 2) {
+			// forward to next node
 			result = serviceRegistryItem.srvSystem(scmp);
 		} else {
+			// forward to next node where system call will be executed
 			--maxNodes;
 			header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
 			result = serviceRegistryItem.clnSystem(scmp);
@@ -97,13 +130,29 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		response.setSCMP(result);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ClnSystemCommandValidator.
+	 */
 	public class ClnSystemCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request, nothing to validate in case of system.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws SCMPValidatorException
+		 *             the SCMP validator exception
+		 */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

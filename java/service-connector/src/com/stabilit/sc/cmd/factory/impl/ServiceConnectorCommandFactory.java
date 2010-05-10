@@ -30,16 +30,37 @@ import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
+/**
+ * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service
+ * Connector commands.
+ * 
+ * @author JTraber
+ */
 public class ServiceConnectorCommandFactory extends CommandFactory {
 
+	/**
+	 * Instantiates a new service connector command factory.
+	 */
 	public ServiceConnectorCommandFactory() {
 		init(this);
 	}
 
+	/**
+	 * Instantiates a new service connector command factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public ServiceConnectorCommandFactory(CommandFactory commandFactory) {
 		init(commandFactory);
 	}
 
+	/**
+	 * Initialize the command factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand connectCommand = new ConnectCommand();
 		commandFactory.add(connectCommand.getRequestKeyName(), connectCommand);

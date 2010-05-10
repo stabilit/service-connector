@@ -41,22 +41,51 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
+/**
+ * The Class RegisterServiceCommand. Responsible for validation and execution of register command. Used to register
+ * backend server in SC. Backend server will be registered in server registry of SC.
+ * 
+ * @author JTraber
+ */
 public class RegisterServiceCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new RegisterServiceCommand.
+	 */
 	public RegisterServiceCommand() {
 		this.commandValidator = new RegisterServiceCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.REGISTER_SERVICE;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		IRequestContext requestContext = request.getContext();
@@ -69,11 +98,11 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean != null) {
+			// server already registered
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service already registered");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.ALREADY_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -87,13 +116,29 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class RegisterServiceCommandValidator.
+	 */
 	public class RegisterServiceCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
@@ -103,19 +148,16 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
-
 				// maxSessions
 				String maxSessions = (String) scmp.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				ValidatorUtility.validateInt(0, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
-
 				// multiThreaded default = false
 				Boolean multiThreaded = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED);
 				if (multiThreaded == null) {
 					multiThreaded = false;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.MULTI_THREADED.getName(), multiThreaded);
-
 				// portNr
 				String portNr = (String) scmp.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				ValidatorUtility.validateInt(1, portNr, 99999);

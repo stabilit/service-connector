@@ -41,36 +41,62 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * @author JTraber
+ * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting
+ * a session means: Free up backend server from session and delete session entry in SC session registry.
  * 
+ * @author JTraber
  */
 public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ClnDeleteSessionCommand.
+	 */
 	public ClnDeleteSessionCommand() {
 		this.commandValidator = new ClnDeleteSessionCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_DELETE_SESSION;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		SCMP scmp = request.getSCMP();
-
 		String sessionId = scmp.getSessionId();
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		MapBean<?> mapBean = sessionRegistry.get(sessionId);
 
 		if (mapBean == null) {
+			// incoming session not found
 			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
+				LoggerListenerSupport.getInstance().fireWarn(this,
+						"command error: no session found for id :" + sessionId);
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -79,15 +105,15 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) mapBean
 				.getAttribute(ServiceRegistryItem.class.getName());
-
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		try {
-			serviceRegistry.deallocate(serviceRegistryItem, scmp);  // calls srvDeleteSession inside
+			serviceRegistry.deallocate(serviceRegistryItem, scmp); // calls srvDeleteSession inside
 		} catch (Exception e) {
+			// TODO what happens if exception occurs
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
-
+		// delete session entry from session registry
 		sessionRegistry.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
@@ -97,13 +123,29 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ClnDeleteSessionCommandValidator.
+	 */
 	public class ClnDeleteSessionCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();

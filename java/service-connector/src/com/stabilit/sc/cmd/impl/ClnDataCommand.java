@@ -37,49 +37,95 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.ValidatorUtility;
 
+/**
+ * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data
+ * to a server.
+ * 
+ * @author JTraber
+ */
 public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ClnDataCommand.
+	 */
 	public ClnDataCommand() {
 		this.commandValidator = new ClnDataCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_DATA;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMP scmp = request.getSCMP();
-
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = (Session) sessionRegistry.get(scmp.getSessionId());
+		// TODO verify session != null
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
 		try {
+			// try sending to backend server
 			SCMP scmpReply = serviceRegistryItem.srvData(scmp);
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 		} catch (CommunicationException e) {
-			//clnDatat could not be sent successfully
-			//TODO what is consequence?
+			// clnDatat could not be sent successfully
+			// TODO what is consequence? clean up
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			throw new SCMPCommunicationException(SCMPErrorCode.SERVER_ERROR);
 		}
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ClnDataCommandValidator.
+	 */
 	public class ClnDataCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
@@ -92,13 +138,11 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
 					throw new ValidationException("session does not exists!");
 				}
-
 				// serviceName
 				String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
-
 				// bodyLength
 				String bodyLength = scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
 				ValidatorUtility.validateInt(1, bodyLength);
@@ -112,7 +156,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
-
 				// messageInfo
 				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);

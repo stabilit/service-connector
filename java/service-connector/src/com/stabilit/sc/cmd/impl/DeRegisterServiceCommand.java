@@ -36,22 +36,51 @@ import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 
+/**
+ * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
+ * deregister backend server from SC. Backend server will be removed from server registry of SC.
+ * 
+ * @author JTraber
+ */
 public class DeRegisterServiceCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new DeRegisterServiceCommand.
+	 */
 	public DeRegisterServiceCommand() {
 		this.commandValidator = new DeRegisterServiceCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.DEREGISTER_SERVICE;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
@@ -60,6 +89,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
+			// server not registered - deregister not possible
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service not registered");
 			}
@@ -74,13 +104,29 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class DeRegisterServiceCommandValidator.
+	 */
 	public class DeRegisterServiceCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();

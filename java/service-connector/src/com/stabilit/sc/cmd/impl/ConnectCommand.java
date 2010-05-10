@@ -18,7 +18,6 @@ package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Date;
-import java.util.Map;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
@@ -41,22 +40,51 @@ import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
+/**
+ * The Class ConnectCommand. Responsible for validation and execution of connect command. Allows client to connect
+ * (virtual connect) to SC. Client is registered in Connection Registry of SC.
+ * 
+ * @author JTraber
+ */
 public class ConnectCommand extends CommandAdapter implements IPassThrough {
 
+	/**
+	 * Instantiates a new ConnectCommand.
+	 */
 	public ConnectCommand() {
 		this.commandValidator = new ConnectCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CONNECT;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		IRequestContext requestContext = request.getContext();
@@ -70,11 +98,11 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: already connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(
-					SCMPErrorCode.ALREADY_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
+		// add entry in connection registry for current client
 		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
 
 		SCMPReply scmpReply = new SCMPReply();
@@ -83,41 +111,51 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class ConnectCommandValidator.
+	 */
 	public class ConnectCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
 
 			try {
-
-				Map<String, String> scmpHeader = scmp.getHeader();
-				// scVersion TODO correct validation
-				String scVersion = (String) scmpHeader.get(SCMPHeaderAttributeKey.SC_VERSION.getName());
+				String scVersion = scmp.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
-
-				//compression default = true
+				// compression default = true
 				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
-
 				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime((String) scmpHeader
-						.get(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName()));
+				Date localDateTime = ValidatorUtility.validateLocalDateTime(scmp
+						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
-
 				// KeepAliveTimeout && KeepAliveInterval
-				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive((String) scmpHeader
-						.get(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName()), (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL.getName()));
+				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(scmp
+						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), scmp
+						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);

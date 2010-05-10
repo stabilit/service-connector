@@ -26,11 +26,12 @@ import com.stabilit.sc.scmp.IRequest;
 public interface ICommandValidator {
 
 	/**
-	 * Validate.
+	 * Validate request.
 	 * 
-	 * @param request the request
-	 * 
-	 * @throws Exception the exception
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void validate(IRequest request) throws Exception;
 }

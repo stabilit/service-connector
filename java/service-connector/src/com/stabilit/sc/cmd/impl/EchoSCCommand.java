@@ -26,22 +26,49 @@ import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
+/**
+ * The Class EchoSCCommand. Responsible for validation and execution of echoSC command. Simply sends back incoming
+ * content.
+ */
 public class EchoSCCommand extends CommandAdapter {
 
+	/**
+	 * Instantiates a new EchoSCCommand.
+	 */
 	public EchoSCCommand() {
 		this.commandValidator = new EchoSCCommandValidator();
 	}
 
+	/**
+	 * Gets the key.
+	 * 
+	 * @return the key
+	 */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.ECHO_SC;
 	}
 
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return super.getCommandValidator();
 	}
 
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMP scmp = request.getSCMP();
@@ -60,13 +87,29 @@ public class EchoSCCommand extends CommandAdapter {
 		return;
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
+	/**
+	 * The Class EchoSCCommandValidator.
+	 */
 	public class EchoSCCommandValidator implements ICommandValidator {
 
+		/**
+		 * Validate request, nothing to validate in case of echoSC.
+		 * 
+		 * @param request
+		 *            the request
+		 * @throws SCMPValidatorException
+		 *             the SCMP validator exception
+		 */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}
