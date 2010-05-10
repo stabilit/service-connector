@@ -4,8 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/sc-lib/lib/junit-4.8.1.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/service-connector"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-simulation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-impl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/service-connector"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

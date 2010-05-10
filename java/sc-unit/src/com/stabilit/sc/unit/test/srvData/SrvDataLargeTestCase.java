@@ -20,8 +20,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnDataCall;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPClnDataCall;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -30,7 +30,6 @@ import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
 /**
  * @author JTraber
- * 
  */
 public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
@@ -41,8 +40,8 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		super(fileName);
 	}
 
-	@Test
-	public void srvDataLargeTest() throws Exception {
+	// @Test
+	public void srvDataSmallRequestLargeResponseTest() throws Exception {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
 				scmpSession);
 		clnDataCall.setMessagInfo("message info");
@@ -56,8 +55,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		}
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
 		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply
-				.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
 		String serviceName = clnDataCall.getCall().getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
@@ -65,4 +63,24 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(serviceName, scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(sessionId, scmpReply.getSessionId());
 	}
+
+	@Test
+	public void srvDataLargeRequestSmallResponseTest() throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
+				scmpSession);
+		clnDataCall.setMessagInfo("message info");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 19000; i++) {
+			sb.append(i);
+		}
+		clnDataCall.setBody(sb.toString());
+		SCMP scmpReply = clnDataCall.invoke();
+		System.out.println(scmpReply);
+		// TODO assertion
+	}
+
+	public void srvDataLargeRequestLargeResponseTest() throws Exception {
+		// TODO
+	}
+
 }

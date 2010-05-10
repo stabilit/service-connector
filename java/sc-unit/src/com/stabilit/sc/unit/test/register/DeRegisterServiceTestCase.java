@@ -20,11 +20,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.cln.call.SCMPCallException;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.service.SCMPInspectCall;
-import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -71,7 +71,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		try {
 			deRegisterServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException e) {
+		} catch (SCMPCallException e) {
 			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_REGISTERED,
 					SCMPMsgType.DEREGISTER_SERVICE);
 		}

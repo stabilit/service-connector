@@ -19,10 +19,10 @@ package com.stabilit.sc.unit.test.register;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
 /**

@@ -19,10 +19,10 @@ package com.stabilit.sc.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 /**

@@ -19,9 +19,9 @@ package com.stabilit.sc.unit.test.connect;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPConnectCall;
-import com.stabilit.sc.cln.service.SCMPDisconnectCall;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPConnectCall;
+import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.unit.test.SuperTestCase;
 
 /**

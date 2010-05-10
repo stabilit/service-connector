@@ -20,12 +20,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.cln.call.SCMPCallException;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.sc.cln.call.SCMPInspectCall;
+import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.service.SCMPInspectCall;
-import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
-import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -54,7 +54,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		try {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException ex) {
+		} catch (SCMPCallException ex) {
 			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** maxSessions 0 value *******************/
@@ -64,7 +64,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		try {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException ex) {
+		} catch (SCMPCallException ex) {
 			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** port too high 10000 *******************/
@@ -74,7 +74,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		try {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException ex) {
+		} catch (SCMPCallException ex) {
 			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 	}
@@ -114,7 +114,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		try {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException e) {
+		} catch (SCMPCallException e) {
 			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
 		}
 

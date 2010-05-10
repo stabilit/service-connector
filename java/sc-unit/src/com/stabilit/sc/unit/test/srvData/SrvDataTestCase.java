@@ -20,11 +20,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnDataCall;
-import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnSystemCall;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnDataCall;
+import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnSystemCall;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPErrorCode;

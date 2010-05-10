@@ -2,12 +2,12 @@ package com.stabilit.sc.unit.test;
 
 import org.junit.Test;
 
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.call.SCMPConnectCall;
+import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.service.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.service.SCMPConnectCall;
-import com.stabilit.sc.cln.service.SCMPDisconnectCall;
 import com.stabilit.sc.scmp.SCMP;
 
 public class StressTest extends SuperTestCase {

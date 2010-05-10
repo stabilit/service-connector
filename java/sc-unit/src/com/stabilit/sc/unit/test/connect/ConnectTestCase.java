@@ -20,12 +20,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.cln.call.SCMPCallException;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPConnectCall;
+import com.stabilit.sc.cln.call.SCMPDisconnectCall;
+import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPConnectCall;
-import com.stabilit.sc.cln.service.SCMPDisconnectCall;
-import com.stabilit.sc.cln.service.SCMPInspectCall;
-import com.stabilit.sc.cln.service.SCMPServiceException;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -51,7 +51,7 @@ public class ConnectTestCase extends SuperTestCase {
 		try {
 			connectCall.invoke();
 			Assert.fail("Should throw Exception!");
-		} catch (SCMPServiceException ex) {
+		} catch (SCMPCallException ex) {
 			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CONNECT);
 //			Assert.assertEquals("1", connectCall.getCall().getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
