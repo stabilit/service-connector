@@ -25,7 +25,7 @@ import java.util.EventListener;
  * the ILogger event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see ILoggerEvent
+ * @see LoggerEvent
  */
 public interface ILoggerListener extends EventListener {
 

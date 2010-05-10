@@ -25,7 +25,7 @@ import java.util.EventListener;
  * the IException event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see IExceptionEvent
+ * @see ExceptionEvent
  */
 public interface IExceptionListener extends EventListener {
 

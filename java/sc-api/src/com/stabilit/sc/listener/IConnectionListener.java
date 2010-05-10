@@ -25,7 +25,7 @@ import java.util.EventListener;
  * the IConnection event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see IConnectionEvent
+ * @see ConnectionEvent
  */
 public interface IConnectionListener extends EventListener {
 

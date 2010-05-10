@@ -20,7 +20,7 @@ import com.stabilit.sc.scmp.SCMP;
 
 /**
  * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides
- * functionality of splitting large SCMP into pars.
+ * functionality of splitting large SCMP into parts.
  * 
  * @author JTraber
  */

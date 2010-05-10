@@ -14,6 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
+
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
@@ -30,8 +31,8 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param client
-	 *            the client to use for the call *
+	 * @param client the client to use for the call *
+	 * 
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IClient client);
@@ -39,10 +40,9 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param client
-	 *            the client to use for the call
-	 * @param scmpSession
-	 *            the scmp session to use for the call
+	 * @param client the client to use for the call
+	 * @param scmpSession the scmp session to use for the call
+	 * 
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IClient client, SCMP scmpSession);
@@ -51,16 +51,15 @@ public interface ISCMPCall {
 	 * Invoke.
 	 * 
 	 * @return the scmps
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public SCMP invoke() throws Exception;
 
 	/**
 	 * Sets the body.
 	 * 
-	 * @param body
-	 *            the new body
+	 * @param body the new body
 	 */
 	public void setBody(Object body);
 
@@ -89,8 +88,8 @@ public interface ISCMPCall {
 	 * Open group.
 	 * 
 	 * @return the iSCMP call
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public ISCMPCall openGroup() throws Exception;
 
@@ -98,8 +97,8 @@ public interface ISCMPCall {
 	 * Close group, sends the ending request.
 	 * 
 	 * @return the scmp result
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public SCMP closeGroup() throws Exception;
 }

@@ -25,7 +25,7 @@ import java.util.EventListener;
  * the IPerformance event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see IPerformanceEvent
+ * @see PerformanceEvent
  */
 public interface IPerformanceListener extends EventListener {
 
