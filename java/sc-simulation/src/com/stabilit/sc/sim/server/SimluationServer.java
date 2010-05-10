@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.sim.server;
 
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.cln.service.SCMPCallFactory;
-import com.stabilit.sc.cln.service.SCMPRegisterServiceCall;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.server.Server;

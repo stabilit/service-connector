@@ -31,8 +31,8 @@ import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPPart;
 import com.stabilit.sc.scmp.SCMPReply;
+import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -155,8 +155,6 @@ public class SrvDataCommand extends CommandAdapter {
 				return;
 			}
 			try {
-				Map<String, String> scmpHeader = scmp.getHeader();
-
 				// sessionId
 				String sessionId = scmp.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
@@ -168,8 +166,7 @@ public class SrvDataCommand extends CommandAdapter {
 				}
 
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -188,8 +185,7 @@ public class SrvDataCommand extends CommandAdapter {
 						.getName(), compression);
 
 				// messageInfo
-				String messageInfo = (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.MSG_INFO.getName());
+				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(),
 						messageInfo);
