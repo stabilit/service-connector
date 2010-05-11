@@ -37,7 +37,7 @@ public class GeneralLogger extends SimpleLogger implements ILoggerListener {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public GeneralLogger() throws Exception {
+	GeneralLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
 	}
 
@@ -45,13 +45,13 @@ public class GeneralLogger extends SimpleLogger implements ILoggerListener {
 	 * Instantiates a new general logger.
 	 * 
 	 * @param dir
-	 *            the dir
+	 *            the directory
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public GeneralLogger(String dir, String fileName) throws Exception {
+	GeneralLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 

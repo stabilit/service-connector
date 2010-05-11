@@ -37,7 +37,7 @@ public class ExceptionLogger extends SimpleLogger implements IExceptionListener 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public ExceptionLogger() throws Exception {
+	ExceptionLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.EXCEPTION_LOG_FILE_NAME);
 	}
 
@@ -51,7 +51,7 @@ public class ExceptionLogger extends SimpleLogger implements IExceptionListener 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public ExceptionLogger(String dir, String fileName) throws Exception {
+	ExceptionLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 

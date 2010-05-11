@@ -36,6 +36,8 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
+	private SCMPSession scmpSession = null;
+
 	/**
 	 * @param fileName
 	 */
@@ -43,10 +45,25 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		super(fileName);
 	}
 
-	private SCMPSession scmpSession = null;
+	@Test
+	public void failClnCreateSessionNotConnected() throws Exception {
+		this.clnDisconnectAfter();
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(client);
+
+		createSessionCall.setServiceName("simulation");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		try {
+			createSessionCall.invoke();
+			Assert.fail("Should throw Exception!");
+		} catch (SCMPCallException ex) {
+			SCTest.verifyError(ex.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.CLN_CREATE_SESSION);
+		}
+		this.clnConnectBefore();
+	}
 
 	@Test
-	public void failClnCreateSession() throws Exception {
+	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
 

@@ -22,8 +22,11 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -89,54 +92,59 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		try {
-			// get free service
-			SCMP scmp = request.getSCMP();
-			String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		// first verify that client has correctly connected
+		IRequestContext requestContext = request.getContext();
+		SocketAddress socketAddress = requestContext.getSocketAddress();
+		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
+		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
-			// TODO verify client is connected correctly - look up in connection registry
-
-			// adding ip of current unit to header field ip address list
-			String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-			SocketAddress socketAddress = request.getSocketAddress();
-			if (socketAddress instanceof InetSocketAddress) {
-				InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-				ipList += inetSocketAddress.getAddress();
-				scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+		if (mapBean == null) {
+			if (LoggerListenerSupport.getInstance().isWarn()) {
+				LoggerListenerSupport.getInstance().fireWarn(this, "command error: not connected");
 			}
-
-			MapBean<?> mapBean = serviceRegistry.get(serviceName);
-			if (mapBean == null) {
-				// no service known with incoming serviceName
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.UNKNOWN_SERVICE);
-				scmpCommandException.setMessageType(getKey().getResponseName());
-				throw scmpCommandException;
-			}
-
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-			// create session
-			Session session = new Session();
-			scmp.setSessionId(session.getId());
-			// try to allocate session on a backend server
-			ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
-			// finally save session
-			session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
-			sessionRegistry.add(session.getId(), session);
-
-			// creating reply
-			SCMPReply scmpReply = new SCMPReply();
-			scmpReply.setMessageType(getKey().getResponseName());
-			scmpReply.setSessionId(session.getId());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-			response.setSCMP(scmpReply);
-		} catch (Throwable e) {
-			// TODO aufräumen
-			ExceptionListenerSupport.getInstance().fireException(this, e);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
+
+		// get free service
+		SCMP scmp = request.getSCMP();
+		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		// adding ip of current unit to header field ip address list
+		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		if (socketAddress instanceof InetSocketAddress) {
+			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+			ipList += inetSocketAddress.getAddress();
+			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+		}
+
+		mapBean = serviceRegistry.get(serviceName);
+		if (mapBean == null) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.UNKNOWN_SERVICE);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
+		}
+
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		// create session
+		Session session = new Session();
+		scmp.setSessionId(session.getId());
+		// try to allocate session on a backend server
+		ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
+		// finally save session
+		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
+		sessionRegistry.add(session.getId(), session);
+
+		// creating reply
+		SCMPReply scmpReply = new SCMPReply();
+		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setSessionId(session.getId());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		response.setSCMP(scmpReply);
+
+		// TODO communicationexception catchen
 	}
 
 	/**

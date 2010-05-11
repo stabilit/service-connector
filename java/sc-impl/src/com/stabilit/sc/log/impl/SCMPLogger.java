@@ -33,13 +33,13 @@ public class SCMPLogger extends SimpleLogger {
 	 * Instantiates a new sCMP logger.
 	 * 
 	 * @param dir
-	 *            the dir
+	 *            the directory
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMPLogger(String dir, String fileName) throws Exception {
+	SCMPLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
@@ -51,7 +51,7 @@ public class SCMPLogger extends SimpleLogger {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void log(SCMP scmp) throws IOException {
+	void log(SCMP scmp) throws IOException {
 		super.log(scmp.toString());
 	}
 

@@ -19,11 +19,9 @@ package com.stabilit.sc.log.impl;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.SimpleLogger;
 
 /**
- * A factory for creating Logger objects. Provides access to the concrete Logger instances. TODO is not in use at
- * this time. Needs to be done! (JOT)
+ * A factory for creating Logger objects. Provides access to the concrete Logger instances.
  * 
  * @author JTraber
  */
@@ -33,58 +31,52 @@ public class LoggerFactory extends Factory {
 	private static LoggerFactory loggerFactory = new LoggerFactory();
 
 	/**
+	 * Gets the current logger factory.
+	 * 
+	 * @return the current logger factory
+	 */
+	public static LoggerFactory getCurrentLoggerFactory() {
+		return loggerFactory;
+	}
+
+	/**
 	 * Instantiates a new logger factory.
 	 */
 	private LoggerFactory() {
 		ILogger logger;
 		try {
-			logger = new SCMPLogger(IConstants.LOG_DIR, IConstants.SCMP_LOG_FILE_NAME);
-			this.add(SCMPLogger.class, logger);
+			// Connection logger
 			logger = new ConnectionLogger(IConstants.LOG_DIR, IConstants.CONNECTION_LOG_FILE_NAME);
 			this.add(ConnectionLogger.class, logger);
+			// Exception logger
+			logger = new ExceptionLogger(IConstants.LOG_DIR, IConstants.EXCEPTION_LOG_FILE_NAME);
+			this.add(ExceptionLogger.class, logger);
+			// Performance logger
+			logger = new PerformanceLogger(IConstants.LOG_DIR, IConstants.PERFORMANCE_LOG_FILE_NAME);
+			this.add(PerformanceLogger.class, logger);
+			// Runtime logger
+			logger = new RuntimeLogger(IConstants.LOG_DIR, IConstants.RUNTIME_LOG_FILE_NAME);
+			this.add(RuntimeLogger.class, logger);
+			// General logger
+			logger = new GeneralLogger(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
+			this.add(GeneralLogger.class, logger);
+			this.add(DEFAULT, logger);
+			// SCMP logger
+			logger = new SCMPLogger(IConstants.LOG_DIR, IConstants.SCMP_LOG_FILE_NAME);
+			this.add(SCMPLogger.class, logger);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Gets the simple logger.
-	 * 
-	 * @return the simple logger
-	 */
-	public ILogger getLogger() {
-		return (ILogger) this.getInstance(SimpleLogger.class);
+	@Override
+	public ILogger newInstance() {
+		return newInstance(DEFAULT);
 	}
 
-	/**
-	 * Gets the logger factory.
-	 * 
-	 * @return the logger factory
-	 */
-	public static LoggerFactory getLoggerFactory() {
-		if (loggerFactory == null) {
-			loggerFactory = new LoggerFactory();
-		}
-		return loggerFactory;
-	}
-
-	/**
-	 * Gets the logger by key.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the logger
-	 */
-	public ILogger getLogger(Object key) {
-		return (ILogger) this.factoryMap.get(key);
-	}
-
-	/**
-	 * Gets the connection logger.
-	 * 
-	 * @return the connection logger
-	 */
-	public ILogger getConnectionLogger() {
-		return (ILogger) this.factoryMap.get(ConnectionLogger.class);
+	@Override
+	public ILogger newInstance(Object key) {
+		ILogger logger = (ILogger) super.newInstance(key);
+		return logger;
 	}
 }

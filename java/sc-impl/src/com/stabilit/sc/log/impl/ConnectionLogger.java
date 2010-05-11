@@ -37,7 +37,7 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	 * @throws Exception
 	 *             the exception
 	 */
-	public ConnectionLogger() throws Exception {
+	ConnectionLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.CONNECTION_LOG_FILE_NAME);
 	}
 
@@ -45,13 +45,13 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	 * Instantiates a new connection logger.
 	 * 
 	 * @param dir
-	 *            the dir
+	 *            the directory
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public ConnectionLogger(String dir, String fileName) throws Exception {
+	ConnectionLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 

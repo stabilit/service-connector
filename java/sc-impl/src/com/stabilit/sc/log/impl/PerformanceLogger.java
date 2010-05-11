@@ -37,7 +37,7 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 	 * @throws Exception
 	 *             the exception
 	 */
-	public PerformanceLogger() throws Exception {
+	PerformanceLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.PERFORMANCE_LOG_FILE_NAME);
 	}
 
@@ -45,13 +45,13 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 	 * Instantiates a new performance logger.
 	 * 
 	 * @param dir
-	 *            the dir
+	 *            the directory
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public PerformanceLogger(String dir, String fileName) throws Exception {
+	PerformanceLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 

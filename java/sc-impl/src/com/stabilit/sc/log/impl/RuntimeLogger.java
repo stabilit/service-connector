@@ -37,7 +37,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public RuntimeLogger() throws Exception {
+	RuntimeLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.RUNTIME_LOG_FILE_NAME);
 	}
 
@@ -51,7 +51,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public RuntimeLogger(String dir, String fileName) throws Exception {
+	RuntimeLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
