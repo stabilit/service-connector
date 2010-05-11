@@ -52,5 +52,5 @@ public interface IConstants {
 	/** The file name of performance log file. */
 	public final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
 	/** The file name of warning log file. */
-	public final String WARNING_LOG_FILE_NAME = "wrn.log";
+	public final String RUNTIME_LOG_FILE_NAME = "wrn.log";
 }

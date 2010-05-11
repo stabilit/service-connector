@@ -29,7 +29,7 @@ import com.stabilit.sc.log.impl.ConnectionLogger;
 import com.stabilit.sc.log.impl.ExceptionLogger;
 import com.stabilit.sc.log.impl.GeneralLogger;
 import com.stabilit.sc.log.impl.PerformanceLogger;
-import com.stabilit.sc.log.impl.WarningLogger;
+import com.stabilit.sc.log.impl.RuntimeLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.unit.UnitCommandFactory;
@@ -51,7 +51,7 @@ public class SetupTestCases {
 		try {
 			ConnectionListenerSupport.getInstance().addListener(new ConnectionLogger());
 			ExceptionListenerSupport.getInstance().addListener(new ExceptionLogger());
-			WarningListenerSupport.getInstance().addListener(new WarningLogger());
+			WarningListenerSupport.getInstance().addListener(new RuntimeLogger());
 			LoggerListenerSupport.getInstance().addListener(new GeneralLogger());
 			LoggerListenerSupport.getInstance().setLevel(Level.DEBUG);
 			PerformanceListenerSupport.getInstance().addListener(new PerformanceLogger());

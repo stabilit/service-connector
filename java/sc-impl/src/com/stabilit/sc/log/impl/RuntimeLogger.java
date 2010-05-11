@@ -20,44 +20,52 @@ import java.io.IOException;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.IWarningListener;
-import com.stabilit.sc.listener.WarningEvent;
+import com.stabilit.sc.listener.IRuntimeListener;
+import com.stabilit.sc.listener.RuntimeEvent;
 import com.stabilit.sc.log.SimpleLogger;
 
 /**
- * The Class WarningLogger. Provides functionality of logging an <code>WarningEvent</code>.
+ * The Class RuntimeLogger. Provides functionality of logging an <code>RuntimeEvent</code>.
  * 
  * @author JTraber
  */
-public class WarningLogger extends SimpleLogger implements IWarningListener {
+public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 
 	/**
-	 * Instantiates a new warning logger.
+	 * Instantiates a new runtime logger.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public WarningLogger() throws Exception {
-		this(IConstants.LOG_DIR, IConstants.WARNING_LOG_FILE_NAME);
+	public RuntimeLogger() throws Exception {
+		this(IConstants.LOG_DIR, IConstants.RUNTIME_LOG_FILE_NAME);
 	}
 
 	/**
-	 * Instantiates a new warning logger.
+	 * Instantiates a new runtime logger.
 	 * 
 	 * @param dir
-	 *            the dir
+	 *            the directory
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public WarningLogger(String dir, String fileName) throws Exception {
+	public RuntimeLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
+	 */
+	/**
+	 * Log.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
@@ -67,6 +75,18 @@ public class WarningLogger extends SimpleLogger implements IWarningListener {
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
 	 */
+	/**
+	 * Log.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
 		super.log(buffer, offset, length);
 	}
@@ -74,6 +94,11 @@ public class WarningLogger extends SimpleLogger implements IWarningListener {
 	/*
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
+	 */
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
 	 */
 	@Override
 	public IFactoryable newInstance() {
@@ -84,10 +109,16 @@ public class WarningLogger extends SimpleLogger implements IWarningListener {
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.listener.IWarningListener#warningEvent(com.stabilit.sc.listener.WarningEvent)
 	 */
+	/**
+	 * Runtime event.
+	 * 
+	 * @param runtimeEvent
+	 *            the runtime event
+	 */
 	@Override
-	public synchronized void warningEvent(WarningEvent warningEvent) {
+	public synchronized void runtimeEvent(RuntimeEvent runtimeEvent) {
 		try {
-			this.log(warningEvent.getText());
+			this.log(runtimeEvent.getText());
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();

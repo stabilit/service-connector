@@ -21,7 +21,7 @@ import java.util.EventListener;
 /**
  * The Class WarningListenerSupport. Allows logging warning - fire warning.
  */
-public class WarningListenerSupport extends ListenerSupport<IWarningListener> {
+public class WarningListenerSupport extends ListenerSupport<IRuntimeListener> {
 
 	/** The warning listener support. */
 	private static WarningListenerSupport warningListenerSupport = new WarningListenerSupport();
@@ -51,7 +51,7 @@ public class WarningListenerSupport extends ListenerSupport<IWarningListener> {
 	 */
 	public void fireWarning(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
-			WarningEvent warningEvent = new WarningEvent(source, text);
+			RuntimeEvent warningEvent = new RuntimeEvent(source, text);
 			WarningListenerSupport.getInstance().fireWarning(warningEvent);
 		}
 	}
@@ -62,13 +62,13 @@ public class WarningListenerSupport extends ListenerSupport<IWarningListener> {
 	 * @param warningEvent
 	 *            the warning event
 	 */
-	public void fireWarning(WarningEvent warningEvent) {
+	public void fireWarning(RuntimeEvent warningEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
 			try {
-				IWarningListener warningListener = (IWarningListener) localArray[i];
-				warningListener.warningEvent(warningEvent);
+				IRuntimeListener warningListener = (IRuntimeListener) localArray[i];
+				warningListener.runtimeEvent(warningEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

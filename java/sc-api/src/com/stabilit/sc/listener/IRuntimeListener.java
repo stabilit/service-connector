@@ -25,9 +25,9 @@ import java.util.EventListener;
  * the IWarning event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see WarningEvent
+ * @see RuntimeEvent
  */
-public interface IWarningListener extends EventListener {
+public interface IRuntimeListener extends EventListener {
 
 	/**
 	 * Warning event.
@@ -37,5 +37,5 @@ public interface IWarningListener extends EventListener {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void warningEvent(WarningEvent warning) throws Exception;
+	public void runtimeEvent(RuntimeEvent warning) throws Exception;
 }
