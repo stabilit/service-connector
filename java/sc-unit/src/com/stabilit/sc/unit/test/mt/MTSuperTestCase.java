@@ -40,7 +40,6 @@ import com.stabilit.sc.util.ReflectionUtil;
 
 /**
  * @author JTraber
- * 
  */
 @RunWith(Parameterized.class)
 public abstract class MTSuperTestCase {
@@ -55,23 +54,18 @@ public abstract class MTSuperTestCase {
 		this.clientList = new ArrayList<IClient>();
 	}
 
-	// @Parameters
-	// public static Collection<String[]> getParameters() {
-	// return Arrays
-	// .asList(new String[] { "sc-unit-nio-tcp.properties" },
-	// new String[] { "sc-unit-netty-http.properties" });
-	// // return Arrays
-	// // .asList(new String[] { "sc-unit-netty-http.properties" },
-	// // new String[] { "sc-unit-netty-tcp.properties" },
-	// // new String[] { "sc-unit-nio-http.properties" },
-	// // new String[] { "sc-unit-nio-tcp.properties" });
-	// }
-
 	@Parameters
 	public static Collection<String[]> getParameters() {
-		String[][] sa = {{"sc-unit-netty-tcp.properties"}};
-		return Arrays.asList(sa);
+		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
+				new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
+				new String[] { "sc-unit-nio-tcp.properties" });
 	}
+
+	// @Parameters
+	// public static Collection<String[]> getParameters() {
+	// String[][] sa = {{"sc-unit-netty-tcp.properties"}};
+	// return Arrays.asList(sa);
+	// }
 
 	@Before
 	public void setup() throws Exception {

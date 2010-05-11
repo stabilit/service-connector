@@ -80,14 +80,14 @@ public class EchoSCTestCase extends SuperTestCase {
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 	}
 
-//	@Test
+	@Test
 	public void invokeMultipleEchoSCTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 
 		SCMP result = null;
 		int i = 0;
 		String echoString = null;
-		for (i = 0; i < 1000000; i++) {
+		for (i = 0; i < 10000; i++) {
 			echoString = "hello world " + i + client.toHashCodeString();
 			echoCall.setBody(echoString);
 			result = echoCall.invoke();

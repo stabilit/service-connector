@@ -30,15 +30,27 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
+/**
+ * The Class SrvEchoTestCase.
+ */
 public class SrvEchoTestCase extends SuperSessionTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public SrvEchoTestCase(String fileName) {
 		super(fileName);
 	}
 
+	/**
+	 * Invoke single srv echo test.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMP result = null;
@@ -48,7 +60,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		clnEchoCall.setServiceName("simulation");
 		clnEchoCall.setBody("hello world");
 		result = clnEchoCall.invoke();
-		
+
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals("hello world", result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
@@ -56,6 +68,12 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
 	}
 
+	/**
+	 * Invoke multiple srv echo test.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Test
 	public void invokeMultipleSrvEchoTest() throws Exception {
 
@@ -76,12 +94,41 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
 	}
 
-//	@Test
+	/**
+	 * Invoke multiple session srv echo test. Out of memory test. If threads are not stopped and destroyed properly
+	 * an out of memory exception on SC will occur. If number of sockets on the operating system is delimited test
+	 * will end before regular end is reached.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	// @Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
-		int anzMsg = 100000;
-		SCMP result = null;	
+		int anzMsg = 1000;
+		SCMP result = null;
+
+		for (int i = 0; i < anzMsg; i++) {
+			super.clnCreateSessionBefore();
+			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
+					scmpSession);
+			clnEchoCall.setMaxNodes(2);
+			clnEchoCall.setServiceName("simulation");
+			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
+			result = clnEchoCall.invoke();
+			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
+			super.clnDeleteSessionAfter();
+		}
+		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
+		super.clnCreateSessionBefore();
+	}
+
+	public void invokeMultipleSessionSrvEchoTestForMultipleClients() throws Exception {
+		super.clnDeleteSessionAfter();
+		long startTime = System.currentTimeMillis();
+		int anzMsg = 100;
+		SCMP result = null;
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();

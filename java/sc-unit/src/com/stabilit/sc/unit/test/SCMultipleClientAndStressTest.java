@@ -22,24 +22,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.sc.test.SCImplTest;
-
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.connect.ConnectTestCase;
-import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
-import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
-import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
-import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
-import com.stabilit.sc.unit.test.register.DeRegisterServiceTestCase;
-import com.stabilit.sc.unit.test.register.RegisterServiceTestCase;
-import com.stabilit.sc.unit.test.session.ClnCreateSessionTestCase;
-import com.stabilit.sc.unit.test.session.ClnDeleteSessionTestCase;
-import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
-import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
+import com.stabilit.sc.unit.test.echo.mt.MTEchoSCTestCase;
+import com.stabilit.sc.unit.test.echo.mt.MTSrvEchoTestCase;
 
 /**
  * @author JTraber
@@ -48,20 +36,11 @@ import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 
 @RunWith(Suite.class)
 @SuiteClasses( { 
-	ConnectTestCase.class,
-	DisconnectTestCase.class, 
-	ClnCreateSessionTestCase.class,
-	ClnDeleteSessionTestCase.class, 
-	RegisterServiceTestCase.class, 
-	DeRegisterServiceTestCase.class,
-	SrvDataTestCase.class,
-	SrvDataLargeTestCase.class,
-	SrvEchoTestCase.class,
-	SrvEchoLargeTestCase.class,
-	EchoSCTestCase.class,
-	EchoSCLargeTestCase.class,
-	SCImplTest.class})
-public class SCTest {
+	// multiple clients test
+	//StressTest.class,
+	MTEchoSCTestCase.class,
+	MTSrvEchoTestCase.class})
+public class SCMultipleClientAndStressTest {
 	
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());

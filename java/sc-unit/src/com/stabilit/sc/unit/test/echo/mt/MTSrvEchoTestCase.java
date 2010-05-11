@@ -33,47 +33,37 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		super(fileName);
 	}
 
-//	@Test
-	public void invokeMultipleSrvEchoTest() throws Exception {
-		SrvEchoTestCase srvEchoTestCase1 = new SrvEchoTestCase(fileName);
-		srvEchoTestCase1.setClient(this.newClient());
-		srvEchoTestCase1.clnConnectBefore();
-		srvEchoTestCase1.clnCreateSessionBefore();
-		Thread th1 = new MTClientThread(srvEchoTestCase1, "invokeMultipleSrvEchoTest");
-		th1.start();
-		SrvEchoTestCase srvEchoTestCase2 = new SrvEchoTestCase(fileName);
-		srvEchoTestCase2.setClient(this.newClient());
-		srvEchoTestCase2.clnConnectBefore();
-		srvEchoTestCase2.clnCreateSessionBefore();
-		Thread th2 = new MTClientThread(srvEchoTestCase2, "invokeMultipleSrvEchoTest");
-		th2.start();
-		SrvEchoTestCase srvEchoTestCase3 = new SrvEchoTestCase(fileName);
-		srvEchoTestCase3.setClient(this.newClient());
-		srvEchoTestCase3.clnConnectBefore();
-		srvEchoTestCase3.clnCreateSessionBefore();
-		Thread th3 = new MTClientThread(srvEchoTestCase3, "invokeMultipleSrvEchoTest");
-		th3.start();
-		th1.join();
-		srvEchoTestCase1.clnDeleteSessionAfter();
-		srvEchoTestCase1.clnDisconnectAfter();
-		th2.join();
-		srvEchoTestCase2.clnDeleteSessionAfter();
-		srvEchoTestCase2.clnDisconnectAfter();
-		th3.join();
-		srvEchoTestCase3.clnDeleteSessionAfter();
-		srvEchoTestCase3.clnDisconnectAfter();
+	@Test
+	public void invokeMultipleSrvEchoTest() throws Exception {	
+		Map<SrvEchoTestCase, Thread> map = new HashMap<SrvEchoTestCase, Thread>();
+
+		for (int i = 0; i < 3; i++) {
+			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
+			srvEchoTestCase.setClient(this.newClient());
+			srvEchoTestCase.clnConnectBefore();
+			srvEchoTestCase.clnCreateSessionBefore();
+			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
+			th.start();
+			map.put(srvEchoTestCase, th);
+		}
+
+		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {
+			map.get(srvEchoTestCase).join();
+			srvEchoTestCase.clnDeleteSessionAfter();
+			srvEchoTestCase.clnDisconnectAfter();
+		}
 	}
 
 	@Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		Map<SrvEchoTestCase, Thread> map = new HashMap<SrvEchoTestCase, Thread>();
 
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 10; i++) {
 			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
 			srvEchoTestCase.setClient(this.newClient());
 			srvEchoTestCase.clnConnectBefore();
 			srvEchoTestCase.clnCreateSessionBefore();
-			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSessionSrvEchoTest");
+			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSessionSrvEchoTestForMultipleClients");
 			th.start();
 			map.put(srvEchoTestCase, th);
 		}

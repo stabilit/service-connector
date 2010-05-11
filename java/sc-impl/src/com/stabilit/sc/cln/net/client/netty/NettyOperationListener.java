@@ -52,7 +52,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 				// take() waits until message arrives in queue, locking inside queue
 				response = answer.take();
 				if (response.isSuccess() == false) {
-					throw new CommunicationException("Operation could not be completed");
+					throw new CommunicationException("Operation could not be completed", response.getCause());
 				}
 				break;
 			} catch (InterruptedException e) {

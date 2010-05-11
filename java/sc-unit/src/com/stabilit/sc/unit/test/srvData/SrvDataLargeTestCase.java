@@ -40,7 +40,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		super(fileName);
 	}
 
-	// @Test
+	@Test
 	public void srvDataSmallRequestLargeResponseTest() throws Exception {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
 				scmpSession);

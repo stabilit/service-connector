@@ -59,7 +59,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		}
 	}
 
-//	@Test
+	@Test
 	public void invokeTwoPartsTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 		StringBuilder sb = new StringBuilder();

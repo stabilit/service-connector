@@ -114,7 +114,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		future.addListener(operationListener);
 		operationListener.awaitUninterruptibly();
 		ConnectionListenerSupport.getInstance().fireDisconnect(this);
-		bootstrap.releaseExternalResources();
+		this.bootstrap.releaseExternalResources();
 	}
 
 	/*

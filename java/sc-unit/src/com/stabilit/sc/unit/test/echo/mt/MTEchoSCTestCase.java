@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test.echo.mt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,20 +43,18 @@ public class MTEchoSCTestCase extends MTSuperTestCase {
 
 	@Test
 	public void invokeMultipleEchoSCTest() throws Exception {
-		EchoSCTestCase echoSCTestCase = new EchoSCTestCase(fileName);
-		echoSCTestCase.setClient(this.newClient());
-		Thread th1 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
-		th1.start();
-		echoSCTestCase = new EchoSCTestCase(fileName);
-		echoSCTestCase.setClient(this.newClient());
-		Thread th2 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
-		th2.start();
-		echoSCTestCase = new EchoSCTestCase(fileName);
-		echoSCTestCase.setClient(this.newClient());
-		Thread th3 = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
-		th3.start();
-		th1.join();
-		th2.join();
-		th3.join();
+		Map<EchoSCTestCase, Thread> map = new HashMap<EchoSCTestCase, Thread>();
+
+		for (int i = 0; i < 20; i++) {
+			EchoSCTestCase echoSCTestCase = new EchoSCTestCase(fileName);
+			echoSCTestCase.setClient(this.newClient());
+			Thread th = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
+			th.start();
+			map.put(echoSCTestCase, th);
+		}
+
+		for (EchoSCTestCase echoSCTestCase : map.keySet()) {
+			map.get(echoSCTestCase).join();
+		}
 	}
 }
