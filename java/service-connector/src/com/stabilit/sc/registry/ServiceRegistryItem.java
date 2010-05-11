@@ -33,6 +33,7 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.srv.client.SCClientFactory;
+import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.util.MapBean;
 
@@ -73,8 +74,10 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		SCClientFactory clientFactory = new SCClientFactory();
 		int serverPort = Integer.parseInt(registerScmp.getHeader(SCMPHeaderAttributeKey.PORT_NR));
 		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
-		String serverCon = serverContext.getServer().getServerConfig().getCon();
-		client = clientFactory.newInstance(serverHost, serverPort, serverCon);
+		IServerConfigItem serverConfig = serverContext.getServer().getServerConfig();
+		String serverCon = serverConfig.getCon();
+		int numberOfThreads = serverConfig.getNumberOfThreads();
+		client = clientFactory.newInstance(serverHost, serverPort, serverCon, numberOfThreads);
 	}
 
 	/**

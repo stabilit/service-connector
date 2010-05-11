@@ -51,6 +51,7 @@ public abstract class Server implements IServer {
 		this.serverConnection.setServer(this);
 		this.serverConnection.setHost(this.serverConfig.getHost());
 		this.serverConnection.setPort(this.serverConfig.getPort());
+		this.serverConnection.setNumberOfThreads(this.serverConfig.getNumberOfThreads());
 	}
 
 	/**

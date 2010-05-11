@@ -36,36 +36,26 @@ import com.stabilit.sc.srv.server.ServerConnectionAdapter;
  */
 public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 
-	/** The Constant THREAD_COUNT. */
-	private static final int THREAD_COUNT = 10;
 	/** The host. */
 	private String host;
 	/** The port. */
 	private int port;
+	/** The numberOfThreads. */
+	private int numberOfThreads;
 	/** The server channel. */
 	private ServerSocketChannel serverChannel;
 	/** The pool. */
-	private final ThreadPoolExecutor pool = new ThreadPoolExecutor(THREAD_COUNT, THREAD_COUNT, 10,
-			TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>());
+	private ThreadPoolExecutor pool;
 
 	/**
 	 * Instantiates a new NioTcpServer.
 	 */
 	public NioTcpServer() {
-		this(null, 0);
-	}
-
-	/**
-	 * Instantiates a new NioTcpServer.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 */
-	public NioTcpServer(String host, int port) {
-		this.host = host;
-		this.port = port;
+		this.host = null;
+		this.port = 0;
+		this.numberOfThreads = 10;
+		this.serverChannel = null;
+		this.pool = null;
 	}
 
 	/*
@@ -75,6 +65,8 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	@Override
 	public void create() {
 		try {
+			pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, 10, TimeUnit.MICROSECONDS,
+					new LinkedBlockingQueue<Runnable>());
 			// Create a new blocking server socket channel
 			this.serverChannel = ServerSocketChannel.open();
 			serverChannel.configureBlocking(true);
@@ -147,6 +139,14 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	@Override
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
+	 */
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
 	}
 
 	/*

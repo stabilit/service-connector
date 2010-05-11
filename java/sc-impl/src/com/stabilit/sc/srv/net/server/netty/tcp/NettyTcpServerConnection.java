@@ -44,6 +44,8 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	private String host;
 	/** The port. */
 	private int port;
+	/** The numberOfThreads. */
+	private int numberOfThreads;
 	/** The channel factory. */
 	NioServerSocketChannelFactory channelFactory = null;
 
@@ -53,9 +55,10 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	public NettyTcpServerConnection() {
 		this.bootstrap = null;
 		this.channel = null;
-		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(50), Executors
-				.newFixedThreadPool(5));
+		this.port = 0;
+		this.host = null;
+		this.numberOfThreads = 10;
+		this.channelFactory = null;
 	}
 
 	/*
@@ -64,6 +67,9 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	 */
 	@Override
 	public void create() {
+		// Configure the server.
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
+				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory());
@@ -85,7 +91,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	 */
 	@Override
 	public void runSync() throws InterruptedException {
-		this.channel = this.bootstrap.bind(new InetSocketAddress(this.port));
+		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		serverRegistry.add(this.channel.getId(), new ServerRegistryItem(this.server));
@@ -127,15 +133,6 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		return new NettyTcpServerConnection();
 	}
 
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
@@ -145,13 +142,12 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		this.host = host;
 	}
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
 	 */
-	public int getPort() {
-		return port;
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
 	}
 
 	/*

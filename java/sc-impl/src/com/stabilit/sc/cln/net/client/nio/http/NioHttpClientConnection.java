@@ -43,6 +43,8 @@ public class NioHttpClientConnection implements IClientConnection {
 	private int port;
 	/** The host. */
 	private String host;
+	/** The numberOfThreads. */
+	private int numberOfThreads;
 	/** The stream Http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
 
@@ -53,6 +55,7 @@ public class NioHttpClientConnection implements IClientConnection {
 		this.socketChannel = null;
 		this.port = 0;
 		this.host = null;
+		this.numberOfThreads = 10;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
@@ -146,6 +149,14 @@ public class NioHttpClientConnection implements IClientConnection {
 	@Override
 	public void setPort(int port) {
 		this.port = port;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
+	 */
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
 	}
 
 	/*

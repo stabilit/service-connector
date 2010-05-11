@@ -48,10 +48,11 @@ public class SCClientFactory extends Factory {
 	 *            the connection defines concrete client implementation
 	 * @return the i client
 	 */
-	public IClient newInstance(String host, int port, String con) {
+	public IClient newInstance(String host, int port, String con, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
 		IClient client = (IClient) factoryInstance;
-		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con);
+		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con,
+				numberOfThreads);
 		client.setClientConfig(clientConfigItem);
 		return client;
 	}

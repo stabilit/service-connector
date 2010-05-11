@@ -87,4 +87,19 @@ public interface IServerConfigItem {
 	 *            the new con
 	 */
 	public abstract void setCon(String con);
+
+	/**
+	 * Sets the number of threads.
+	 * 
+	 * @param numberOfThreads
+	 *            the new number of threads
+	 */
+	public void setNumberOfThreads(int numberOfThreads);
+
+	/**
+	 * Gets the number of threads.
+	 * 
+	 * @return the number of threads
+	 */
+	public int getNumberOfThreads();
 }

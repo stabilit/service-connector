@@ -36,6 +36,8 @@ public interface IConstants {
 	public final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
 	public final String PORT_QUALIFIER = ".port";
+	/** The THREAD. */
+	public final String THREAD_QUALIFIER = ".thread";
 	/** The connection names. */
 	public final String CONNECTION_NAMES = "connectionNames";
 

@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -68,4 +67,19 @@ public interface IClientConfigItem {
 	 *            the new con
 	 */
 	public void setCon(String con);
+
+	/**
+	 * Sets the number of threads.
+	 * 
+	 * @param numberOfThreads
+	 *            the new number of threads
+	 */
+	public void setNumberOfThreads(int numberOfThreads);
+
+	/**
+	 * Gets the number of threads.
+	 * 
+	 * @return the number of threads
+	 */
+	public int getNumberOfThreads();
 }

@@ -68,6 +68,7 @@ public class Client implements IClient {
 		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getCon());
 		clientConnection.setHost(clientConfig.getHost());
 		clientConnection.setPort(clientConfig.getPort());
+		clientConnection.setNumberOfThreads(clientConfig.getNumberOfThreads());
 	}
 
 	/*

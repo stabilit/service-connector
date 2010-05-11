@@ -41,8 +41,8 @@ public final class ServerRegistry extends Registry {
 	}
 
 	/**
-	 * Sets an object in thread local for incoming thread. This object can be used later from the same thread.
-	 * Other threads can not access set object.
+	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same
+	 * thread. Other threads can not access earlier set object.
 	 * 
 	 * @param obj
 	 *            the new thread local

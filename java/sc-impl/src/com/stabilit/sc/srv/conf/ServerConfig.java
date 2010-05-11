@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 
 /**
@@ -34,11 +35,11 @@ public class ServerConfig {
 
 	/** The props. */
 	private Properties props;
-	/** The server config list. */
+	/** The server configuration list. */
 	private List<ServerConfigItem> serverConfigList;
 
 	/**
-	 * Instantiates a new server config.
+	 * Instantiates a new server configuration.
 	 */
 	public ServerConfig() {
 		serverConfigList = null;
@@ -68,18 +69,20 @@ public class ServerConfig {
 
 			serverConfigList.add(serverConfig);
 
-			int port = Integer.parseInt((String) props.get(serverName + ".port"));
+			int port = Integer.parseInt((String) props.get(serverName + IConstants.PORT_QUALIFIER));
 
 			serverConfig.setPort(port);
-			serverConfig.setHost((String) props.get(serverName + ".host"));
-			serverConfig.setCon((String) props.get(serverName + ".con"));
+			serverConfig.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
+			serverConfig.setCon((String) props.get(serverName + IConstants.CON_QUALIFIER));
+			serverConfig.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
+					+ IConstants.THREAD_QUALIFIER)));
 		}
 	}
 
 	/**
-	 * Gets the server config list.
+	 * Gets the server configuration list.
 	 * 
-	 * @return the server config list
+	 * @return the server configuration list
 	 */
 	public List<ServerConfigItem> getServerConfigList() {
 		return serverConfigList;
@@ -92,15 +95,14 @@ public class ServerConfig {
 
 		/** The server name. */
 		private String serverName;
-
 		/** The port. */
 		private int port;
-
 		/** The host. */
 		private String host;
-
 		/** The con. */
 		private String con;
+		/** The number of threads. */
+		private int numberOfThreads;
 
 		/**
 		 * The Constructor.
@@ -174,6 +176,22 @@ public class ServerConfig {
 		 */
 		public void setCon(String con) {
 			this.con = con;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getNumberOfThreads()
+		 */
+		public int getNumberOfThreads() {
+			return numberOfThreads;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setNumberOfThreads(int)
+		 */
+		public void setNumberOfThreads(int numberOfThreads) {
+			this.numberOfThreads = numberOfThreads;
 		}
 	}
 }

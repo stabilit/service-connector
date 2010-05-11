@@ -34,11 +34,11 @@ public class ClientConfig {
 
 	/** The props. */
 	private Properties props;
-	/** The client config item list. */
+	/** The client configuration item list. */
 	private List<ClientConfigItem> clientConfigItemList;
 
 	/**
-	 * Instantiates a new client config.
+	 * Instantiates a new client configuration.
 	 */
 	public ClientConfig() {
 		clientConfigItemList = null;
@@ -73,22 +73,24 @@ public class ClientConfig {
 			clientConfigItem.setPort(port);
 			clientConfigItem.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
 			clientConfigItem.setCon((String) props.get(serverName + IConstants.CON_QUALIFIER));
+			clientConfigItem.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
+					+ IConstants.THREAD_QUALIFIER)));
 		}
 	}
 
 	/**
-	 * Gets the client config list.
+	 * Gets the client configuration list.
 	 * 
-	 * @return the client config list
+	 * @return the client configuration list
 	 */
 	public List<ClientConfigItem> getClientConfigList() {
 		return clientConfigItemList;
 	}
 
 	/**
-	 * Gets the client config.
+	 * Gets the client configuration.
 	 * 
-	 * @return the client config
+	 * @return the client configuration
 	 */
 	public IClientConfigItem getClientConfig() {
 		return clientConfigItemList.get(0);
@@ -105,15 +107,17 @@ public class ClientConfig {
 		private String host;
 		/** The con, identifies concrete client implementation. */
 		private String con;
+		/** The number of threads to use in thread pool of this client. */
+		private int numberOfThreads;
 
 		/**
-		 * Instantiates a new client config item.
+		 * Instantiates a new client configuration item.
 		 */
 		public ClientConfigItem() {
 		}
 
 		/**
-		 * Instantiates a new client config item.
+		 * Instantiates a new client configuration item.
 		 * 
 		 * @param host
 		 *            the host
@@ -122,11 +126,12 @@ public class ClientConfig {
 		 * @param con
 		 *            the con
 		 */
-		public ClientConfigItem(String host, int port, String con) {
+		public ClientConfigItem(String host, int port, String con, int numberOfThreads) {
 			super();
 			this.port = port;
 			this.host = host;
 			this.con = con;
+			this.numberOfThreads = numberOfThreads;
 		}
 
 		/*
@@ -175,6 +180,22 @@ public class ClientConfig {
 		 */
 		public void setCon(String con) {
 			this.con = con;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getNumberOfThreads()
+		 */
+		public int getNumberOfThreads() {
+			return numberOfThreads;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setNumberOfThreads(int)
+		 */
+		public void setNumberOfThreads(int numberOfThreads) {
+			this.numberOfThreads = numberOfThreads;
 		}
 	}
 }

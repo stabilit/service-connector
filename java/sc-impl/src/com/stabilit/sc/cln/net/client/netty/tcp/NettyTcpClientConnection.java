@@ -50,6 +50,8 @@ public class NettyTcpClientConnection implements IClientConnection {
 	private int port;
 	/** The host. */
 	private String host;
+	/** The numberOfThreads. */
+	private int numberOfThreads;
 	/** The operation listener. */
 	private NettyOperationListener operationListener;
 	/** The channel factory. */
@@ -65,15 +67,10 @@ public class NettyTcpClientConnection implements IClientConnection {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
+		this.numberOfThreads = 10;
 		this.operationListener = null;
 		this.channelFactory = null;
 		this.encoderDecoder = null;
-		/*
-		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-		 */
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
-				.newFixedThreadPool(5));
 	}
 
 	/*
@@ -82,6 +79,12 @@ public class NettyTcpClientConnection implements IClientConnection {
 	 */
 	@Override
 	public void connect() throws Exception {
+		/*
+		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+		 */
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
+				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setPipelineFactory(new NettyTcpClientPipelineFactory());
 		// Start the connection attempt.
@@ -162,6 +165,14 @@ public class NettyTcpClientConnection implements IClientConnection {
 	@Override
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
+	 */
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
 	}
 
 	/*

@@ -38,4 +38,11 @@ public interface IConnection extends IFactoryable {
 	 *            the port
 	 */
 	public void setPort(int port);
+	
+	/**
+	 * Sets the number of threads.
+	 * 
+	 * @param numberOfThreads the new number of threads
+	 */
+	public void setNumberOfThreads(int numberOfThreads);
 }

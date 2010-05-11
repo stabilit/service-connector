@@ -60,6 +60,8 @@ public class NettyHttpClientConnection implements IClientConnection {
 	private int port;
 	/** The host. */
 	private String host;
+	/** The numberOfThreads. */
+	private int numberOfThreads;
 	/** The operation listener. */
 	private NettyOperationListener operationListener;
 	/** The channel factory. */
@@ -75,16 +77,11 @@ public class NettyHttpClientConnection implements IClientConnection {
 		this.bootstrap = null;
 		this.channel = null;
 		this.port = 0;
+		this.numberOfThreads = 10;
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
 		this.encoderDecoder = null;
-		/*
-		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-		 */
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(20), Executors
-				.newFixedThreadPool(5));
 	}
 
 	/*
@@ -93,6 +90,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 	 */
 	@Override
 	public void connect() throws Exception {
+		/*
+		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+		 */
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
+				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
 		// Starts the connection attempt.
@@ -180,6 +183,14 @@ public class NettyHttpClientConnection implements IClientConnection {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
+	 */
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
 	}
 
 	/*

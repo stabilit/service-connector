@@ -37,8 +37,8 @@ public class ClientFactory extends Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @param clientConfig the client config
-	 * 
+	 * @param clientConfig
+	 *            the client config
 	 * @return the i client
 	 */
 	public IClient newInstance(IClientConfigItem clientConfig) {
@@ -51,16 +51,19 @@ public class ClientFactory extends Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @param host the host
-	 * @param port the port
-	 * @param con the con
-	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param con
+	 *            the con
 	 * @return the i client
 	 */
-	public IClient newInstance(String host, int port, String con) {
+	public IClient newInstance(String host, int port, String con, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
 		IClient client = (IClient) factoryInstance;
-		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con);
+		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con,
+				numberOfThreads);
 		client.setClientConfig(clientConfigItem);
 		return client;
 	}
