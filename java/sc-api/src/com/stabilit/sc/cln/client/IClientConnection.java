@@ -17,7 +17,6 @@
 package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.net.IConnection;
-import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
@@ -61,12 +60,4 @@ public interface IClientConnection extends IConnection {
 	 *             the exception
 	 */
 	public void destroy() throws Exception;
-
-	/**
-	 * Sets the encoder decoder.
-	 * 
-	 * @param encoderDecoder
-	 *            the new encoder decoder
-	 */
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder);
 }

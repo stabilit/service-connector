@@ -44,16 +44,6 @@ public class SCMPStreamHttpUtil {
 	}
 
 	/**
-	 * Sets the encoder decoder.
-	 * 
-	 * @param encoderDecoder
-	 *            the new encoder decoder
-	 */
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
-		this.encoderDecoder = encoderDecoder;
-	}
-
-	/**
 	 * Read scmp from inputSteam.
 	 * 
 	 * @param is
@@ -93,9 +83,7 @@ public class SCMPStreamHttpUtil {
 			}
 			bytesRead += readSize;
 		}
-		if (this.encoderDecoder == null) {
-			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(stream);
-		}
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(stream);
 		ByteArrayInputStream bais = new ByteArrayInputStream(stream);
 		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
 		return scmp;
@@ -182,9 +170,7 @@ public class SCMPStreamHttpUtil {
 		http.append("\r\n");
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		if (this.encoderDecoder == null) {
-			encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		}
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 		baos.close();
 		byte[] objStream = baos.toByteArray();
@@ -225,9 +211,7 @@ public class SCMPStreamHttpUtil {
 		http.append("HTTP/1.1 200 OK\r\n");
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		EncoderDecoderFactory encoderDecoderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
-		if (this.encoderDecoder == null) {
-			encoderDecoder = encoderDecoderFactory.newInstance(scmp);
-		}
+		encoderDecoder = encoderDecoderFactory.newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 		baos.close();
 		byte[] objStream = baos.toByteArray();

@@ -130,7 +130,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Cln echo.
+	 * Cln echo. Executes an echo call on a service.
 	 * 
 	 * @param scmp
 	 *            the scmp
@@ -146,7 +146,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Srv echo.
+	 * Srv echo. Forwards echo call to next server node.
 	 * 
 	 * @param scmp
 	 *            the scmp
@@ -163,7 +163,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Srv data.
+	 * Srv data. Sends any data to a service.
 	 * 
 	 * @param scmp
 	 *            the scmp
@@ -179,7 +179,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Srv system.
+	 * Srv system. Executes system call on a service.
 	 * 
 	 * @param scmp
 	 *            the scmp
@@ -196,7 +196,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Cln system.
+	 * Cln system. Forwards system call to next server node.
 	 * 
 	 * @param scmp
 	 *            the scmp
@@ -209,7 +209,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/**
 	 * New instance.
 	 * 
-	 * @return the i factoryable
+	 * @return the factoryable
 	 */
 	@Override
 	public IFactoryable newInstance() {

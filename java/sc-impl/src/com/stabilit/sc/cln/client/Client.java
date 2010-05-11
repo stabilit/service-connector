@@ -20,8 +20,6 @@ import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
@@ -134,8 +132,6 @@ public class Client implements IClient {
 	 *             the exception
 	 */
 	private SCMP sendSmallSCMPAndReceive(SCMP scmp) throws Exception {
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		clientConnection.setEncoderDecoder(encoderDecoder);
 		if (scmp.isGroup()) {
 			msgID.incrementPartSequenceNr();
 		}
@@ -166,9 +162,6 @@ public class Client implements IClient {
 	 *             the exception
 	 */
 	private SCMP sendLargeSCMPAndReceive(SCMP scmp) throws Exception {
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		clientConnection.setEncoderDecoder(encoderDecoder);
-
 		SCMP ret = this.sendLargeSCMP(scmp); // send large request scmp
 
 		if (ret.isPart() && scmp.isGroup() == false) {

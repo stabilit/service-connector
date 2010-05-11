@@ -22,13 +22,32 @@ import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 
+/**
+ * A factory for creating SCClient objects. Provides access to concrete instances of SC clients.
+ * 
+ * @author JTraber
+ */
 public class SCClientFactory extends Factory {
 
+	/**
+	 * Instantiates a new SCClientFactory.
+	 */
 	public SCClientFactory() {
 		IClient client = new SCClient();
-		this.factoryMap.put("default", client);
+		this.factoryMap.put(DEFAULT, client);
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param con
+	 *            the connection defines concrete client implementation
+	 * @return the i client
+	 */
 	public IClient newInstance(String host, int port, String con) {
 		IFactoryable factoryInstance = this.newInstance();
 		IClient client = (IClient) factoryInstance;

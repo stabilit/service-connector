@@ -28,18 +28,19 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
-import com.stabilit.sc.cln.client.ClientConnectionAdapter;
+import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
+import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
  * The Class NettyTcpClientConnection. Concrete client connection implementation with JBoss Netty for Tcp.
  */
-public class NettyTcpClientConnection extends ClientConnectionAdapter {
+public class NettyTcpClientConnection implements IClientConnection {
 
 	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
@@ -53,6 +54,8 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 	private NettyOperationListener operationListener;
 	/** The channel factory. */
 	private NioClientSocketChannelFactory channelFactory;
+	/** The encoder decoder. */
+	private IEncoderDecoder encoderDecoder;
 
 	/**
 	 * Instantiates a new netty Tcp client connection.
@@ -64,6 +67,7 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
+		this.encoderDecoder = null;
 		/*
 		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
 		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
@@ -120,6 +124,7 @@ public class NettyTcpClientConnection extends ClientConnectionAdapter {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());

@@ -40,7 +40,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
 	protected Integer index = null;
 
-//	@Test
+	@Test
 	public void invokeTwoPartsTest() throws Exception {
 
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
@@ -62,7 +62,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertNotNull(result.getSessionId());
 	}
 
-//	@Test
+	@Test
 	public void invokeMorePartsTest() throws Exception {
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
@@ -84,7 +84,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertNotNull(result.getSessionId());
 	}
 	
-//	@Test
+	@Test
 	public void invokeUnknownEndPartsTest() throws Exception {
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);

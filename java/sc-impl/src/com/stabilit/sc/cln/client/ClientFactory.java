@@ -31,7 +31,7 @@ public class ClientFactory extends Factory {
 	 */
 	public ClientFactory() {
 		Client client = new Client();
-		this.factoryMap.put("default", client);
+		this.factoryMap.put(DEFAULT, client);
 	}
 
 	/**

@@ -18,28 +18,42 @@ package com.stabilit.sc.srv.client;
 
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
- * @author JTraber
+ * The Class SCClient. Defines behavior of client in the context of Service Connector.
  * 
+ * @author JTraber
  */
 public class SCClient extends Client {
 
+	/**
+	 * Instantiates a new SCClient.
+	 */
 	public SCClient() {
 	}
-	
+
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new SCClient();
 	}
 
+	/**
+	 * Send and receive.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the sCMP
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		clientConnection.setEncoderDecoder(encoderDecoder);
 		return clientConnection.sendAndReceive(scmp);
 	}
 }

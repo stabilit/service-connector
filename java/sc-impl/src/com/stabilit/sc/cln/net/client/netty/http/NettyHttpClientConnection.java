@@ -34,12 +34,13 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.stabilit.sc.cln.client.ClientConnectionAdapter;
+import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
+import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
 
 /**
@@ -47,7 +48,7 @@ import com.stabilit.sc.scmp.SCMP;
  * 
  * @author JTraber
  */
-public class NettyHttpClientConnection extends ClientConnectionAdapter {
+public class NettyHttpClientConnection implements IClientConnection {
 
 	/** The url. */
 	private URL url;
@@ -63,6 +64,8 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 	private NettyOperationListener operationListener;
 	/** The channel factory. */
 	private NioClientSocketChannelFactory channelFactory;
+	/** The encoder decoder. */
+	private IEncoderDecoder encoderDecoder;
 
 	/**
 	 * Instantiates a new netty http client connection.
@@ -75,6 +78,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
+		this.encoderDecoder = null;
 		/*
 		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
 		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
@@ -132,6 +136,7 @@ public class NettyHttpClientConnection extends ClientConnectionAdapter {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 		url = new URL(IConstants.HTTP, host, port, IConstants.HTTP_FILE);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());

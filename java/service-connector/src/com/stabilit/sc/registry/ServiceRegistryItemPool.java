@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
 import java.net.SocketAddress;
@@ -10,36 +26,76 @@ import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.util.MapBean;
 
-public class ServiceRegistryItemPool extends MapBean<String>{
+/**
+ * The Class ServiceRegistryItemPool. Pools incoming request for one service. It depends on service resource and
+ * type how pooling is managed.
+ * 
+ * @author JTraber
+ */
+public class ServiceRegistryItemPool extends MapBean<String> {
 
+	/** The max items. */
 	private int maxItems = -1;
+	/** The scmp. */
 	private SCMP scmp;
+	/** The socket address. */
 	private SocketAddress socketAddress;
+	/** The server context. */
 	private IServerContext serverContext;
+	/** The free item list. */
 	private List<ServiceRegistryItem> freeItemList;
+	/** The allocated item list. */
 	private List<ServiceRegistryItem> allocatedItemList;
-	
+
+	/**
+	 * Instantiates a new service registry item pool.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public ServiceRegistryItemPool(SCMP scmp, SocketAddress socketAddress) {
 		this.scmp = scmp;
 		this.socketAddress = socketAddress;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		this.allocatedItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-        this.serverContext = serverRegistry.getCurrentContext();
+		this.serverContext = serverRegistry.getCurrentContext();
 	}
-	
+
+	/**
+	 * Gets the server context.
+	 * 
+	 * @return the server context
+	 */
 	public IServerContext getServerContext() {
 		return this.serverContext;
 	}
-	
+
+	/**
+	 * Gets the scmp.
+	 * 
+	 * @return the scmp
+	 */
 	public SCMP getScmp() {
 		return scmp;
 	}
-	
+
+	/**
+	 * Gets the socket address.
+	 * 
+	 * @return the socket address
+	 */
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
 	}
 
+	/**
+	 * Checks if is available.
+	 * 
+	 * @return true, if is available
+	 */
 	public synchronized boolean isAvailable() {
 		if (isNoLimit()) {
 			// there is no limit
@@ -48,10 +104,20 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 		return this.freeItemList.isEmpty() == false;
 	}
 
+	/**
+	 * Checks if is no limit.
+	 * 
+	 * @return true, if is no limit
+	 */
 	public synchronized boolean isNoLimit() {
 		return this.maxItems < 0;
 	}
 
+	/**
+	 * Gets the available item.
+	 * 
+	 * @return the available item
+	 */
 	public synchronized ServiceRegistryItem getAvailableItem() {
 		if (this.isAvailable() == false) {
 			return null;
@@ -67,14 +133,25 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 		freeItemList.remove(item);
 		return item;
 	}
-	
+
+	/**
+	 * Free item.
+	 * 
+	 * @param item
+	 *            the item
+	 */
 	public synchronized void freeItem(ServiceRegistryItem item) {
 		this.allocatedItemList.remove(item);
 		if (this.isNoLimit() == false) {
-		    this.freeItemList.add(item);
+			this.freeItemList.add(item);
 		}
 	}
-	
+
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -84,5 +161,4 @@ public class ServiceRegistryItemPool extends MapBean<String>{
 		}
 		return sb.toString();
 	}
-
 }

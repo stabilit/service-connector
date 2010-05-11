@@ -20,19 +20,34 @@ import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.srv.server.Server;
 
 /**
- * @author JTraber
+ * The Class SCServer. Defines behavior of server in context of Service Connector.
  * 
+ * @author JTraber
  */
 public class SCServer extends Server {
-	
+
+	/**
+	 * Instantiates a new sC server.
+	 */
 	public SCServer() {
 	}
 
+	/**
+	 * Creates an SC server.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void create() throws Exception {
 		super.create();
 	}
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the factoryable
+	 */
 	@Override
 	public IFactoryable newInstance() {
 		return new SCServer();

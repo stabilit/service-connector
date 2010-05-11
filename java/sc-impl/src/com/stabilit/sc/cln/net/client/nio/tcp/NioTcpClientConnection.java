@@ -22,11 +22,12 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.cln.client.ClientConnectionAdapter;
+import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.FrameDecoderFactory;
+import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.nio.NioException;
 import com.stabilit.sc.scmp.SCMP;
@@ -34,19 +35,25 @@ import com.stabilit.sc.scmp.SCMP;
 /**
  * The Class NioTcpClientConnection. Concrete client connection implementation on Nio base for Tcp.
  */
-public class NioTcpClientConnection extends ClientConnectionAdapter {
+public class NioTcpClientConnection implements IClientConnection {
 
 	/** The socket channel. */
-	private SocketChannel socketChannel = null;
+	private SocketChannel socketChannel;
 	/** The port. */
 	private int port;
 	/** The host. */
 	private String host;
+	/** The encoder decoder. */
+	private IEncoderDecoder encoderDecoder;
 
 	/**
 	 * Instantiates a new nio tcp client connection.
 	 */
 	public NioTcpClientConnection() {
+		this.socketChannel = null;
+		this.port = 0;
+		this.host = null;
+		this.encoderDecoder = null;
 	}
 
 	/*
@@ -86,6 +93,7 @@ public class NioTcpClientConnection extends ClientConnectionAdapter {
 	@Override
 	public SCMP sendAndReceive(SCMP scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);

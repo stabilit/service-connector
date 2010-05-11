@@ -18,7 +18,6 @@ package com.stabilit.sc.sim.cmd.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 

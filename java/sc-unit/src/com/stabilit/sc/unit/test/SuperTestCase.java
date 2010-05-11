@@ -32,7 +32,6 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 
 /**
  * @author JTraber
- * 
  */
 @RunWith(Parameterized.class)
 public abstract class SuperTestCase {
@@ -40,18 +39,17 @@ public abstract class SuperTestCase {
 	protected String fileName;
 	protected ClientConfig config = null;
 	protected IClient client = null;
-	
+
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;
 	}
 
 	@Parameters
 	public static Collection<String[]> getParameters() {
-		return Arrays
-				.asList(new String[] { "sc-unit-netty-http.properties" },
-						new String[] { "sc-unit-netty-tcp.properties" },
-						new String[] { "sc-unit-nio-http.properties" },
-						new String[] { "sc-unit-nio-tcp.properties" });
+		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
+				new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
+				new String[] { "sc-unit-nio-tcp.properties" });
+		// return Arrays.asList(new String[][] { { "sc-unit-nio-http.properties" } });
 	}
 
 	public void setClient(IClient client) {

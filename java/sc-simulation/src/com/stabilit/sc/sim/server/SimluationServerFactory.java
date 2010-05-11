@@ -29,7 +29,7 @@ import com.stabilit.sc.srv.server.ServerFactory;
 public class SimluationServerFactory extends ServerFactory {
 	public SimluationServerFactory() {
 	    Server server = new SimluationServer();
-	    this.factoryMap.put("default", server);
+	    this.factoryMap.put(DEFAULT, server);
 	}
 	
 	public IServer newInstance(IServerConfigItem serverConfig) {

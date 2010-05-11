@@ -37,7 +37,7 @@ public class Factory {
 	 * @return single instance of Factory
 	 */
 	public IFactoryable getInstance() {
-		return getInstance("default");
+		return getInstance(DEFAULT);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Factory {
 	 * @return an instance
 	 */
 	public IFactoryable newInstance() {
-		return newInstance("default");
+		return newInstance(DEFAULT);
 	}
 
 	/**

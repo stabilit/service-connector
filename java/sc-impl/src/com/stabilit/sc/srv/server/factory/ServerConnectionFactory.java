@@ -63,7 +63,7 @@ public class ServerConnectionFactory extends Factory {
 	 * @see com.stabilit.sc.factory.Factory#newInstance()
 	 */
 	public IServerConnection newInstance() {
-		return newInstance("default");
+		return newInstance(DEFAULT);
 	}
 
 	/**

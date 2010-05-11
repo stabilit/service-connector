@@ -22,12 +22,11 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.cln.client.ClientConnectionAdapter;
+import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.FrameDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.net.nio.NioException;
@@ -36,33 +35,25 @@ import com.stabilit.sc.scmp.SCMP;
 /**
  * The Class NioHttpClientConnection. Concrete client connection implementation on Nio base for Http.
  */
-public class NioHttpClientConnection extends ClientConnectionAdapter {
+public class NioHttpClientConnection implements IClientConnection {
 
 	/** The socket channel. */
-	private SocketChannel socketChannel = null;
+	private SocketChannel socketChannel;
 	/** The port. */
 	private int port;
 	/** The host. */
 	private String host;
-	/** The stream http util. */
+	/** The stream Http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
 
 	/**
 	 * Instantiates a new nio http client connection.
 	 */
 	public NioHttpClientConnection() {
+		this.socketChannel = null;
+		this.port = 0;
+		this.host = null;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.stabilit.sc.cln.client.ClientConnectionAdapter#setEncoderDecoder(com.stabilit.sc.net.IEncoderDecoder)
-	 */
-	@Override
-	public void setEncoderDecoder(IEncoderDecoder encoderDecoder) {
-		super.setEncoderDecoder(encoderDecoder);
-		this.streamHttpUtil.setEncoderDecoder(encoderDecoder);
 	}
 
 	/*
