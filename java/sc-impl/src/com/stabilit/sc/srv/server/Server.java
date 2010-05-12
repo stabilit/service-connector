@@ -86,6 +86,16 @@ public abstract class Server implements IServer {
 	public void runSync() throws Exception {
 		serverConnection.runSync();
 	}
+	
+	/**
+	 * Destroys server.
+	 * 
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void destroy() throws Exception {
+		serverConnection.destroy();
+	}
 
 	/**
 	 * Gets the server context.

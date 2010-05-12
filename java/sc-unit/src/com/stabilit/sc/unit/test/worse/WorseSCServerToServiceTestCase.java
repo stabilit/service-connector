@@ -14,47 +14,49 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.sc.unit.test.worse;
 
+import org.junit.Test;
+
+import com.stabilit.sc.unit.test.session.SuperSessionRegisterTestCase;
 
 /**
- * The Class CommandAdapter.
- * 
  * @author JTraber
  */
-public abstract class CommandAdapter implements ICommand {	
+public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase {
 
-	/** The command validator. */
-	protected ICommandValidator commandValidator;
-	
 	/**
-	 * Instantiates a new command adapter.
+	 * @param fileName
 	 */
-	public CommandAdapter() {
-		commandValidator = NullCommandValidator.newInstance();  // www.refactoring.com Introduce NULL Object
+	public WorseSCServerToServiceTestCase(String fileName) {
+		super(fileName);
+	}
+//	
+//	@Before
+//	@Override
+//	public void setup() {
+//		try {
+//			SetupTestCases.init();
+//			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+//			ServiceConnector.main(null);
+//			Simulation.main(null);
+//			config = new ClientConfig();
+//			config.load(fileName);
+//			ClientFactory clientFactory = new ClientFactory();
+//			client = clientFactory.newInstance(config.getClientConfig());
+//			client.connect(); // physical connect
+//			clnConnectBefore();
+//			registerServiceBefore();
+//			clnCreateSessionBefore();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+
+	@Test
+	public void clnDataSCServerToServiceDisconnect() throws Exception {
 	}
 
-	/* (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getCommandValidator()
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
-	}
-		
-	/* (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getRequestKeyName()
-	 */
-	@Override
-	public String getRequestKeyName() {
-		return this.getKey().getRequestName();
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getResponseKeyName()
-	 */
-	@Override
-	public String getResponseKeyName() {
-		return this.getKey().getResponseName();
+	private void tearDownSCServerToClient() throws Exception {
 	}
 }

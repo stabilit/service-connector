@@ -168,7 +168,9 @@ public class RequestThread implements Runnable {
 				response.write();
 				// needed for testing
 				if ("true".equals(response.getSCMP().getHeader("kill"))) {
+					this.server.destroy();
 					return;
+
 				}
 			}
 		} catch (Throwable e) {

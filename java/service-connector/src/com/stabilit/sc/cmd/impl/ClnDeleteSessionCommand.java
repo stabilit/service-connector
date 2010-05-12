@@ -16,29 +16,24 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cmd.impl;
 
-import java.util.Map;
-
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMP;
-import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
+import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
-import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.util.MapBean;
 
 /**
  * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting
@@ -89,33 +84,21 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMP scmp = request.getSCMP();
 		String sessionId = scmp.getSessionId();
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		MapBean<?> mapBean = sessionRegistry.get(sessionId);
+		Session session = getSessionById(sessionId);
 
-		if (mapBean == null) {
-			// incoming session not found
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this,
-						"command error: no session found for id :" + sessionId);
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
-
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) mapBean
+		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		try {
 			serviceRegistry.deallocate(serviceRegistryItem, scmp); // calls srvDeleteSession inside
-		} catch (Exception e) {
-			// TODO what happens if exception occurs
+		} catch (CommunicationException e) {
+			// deallocate failed, connection to backend server disturbed - clean up
+			serviceRegistryItem.markObsolete();			
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
 		// delete session entry from session registry
-		sessionRegistry.remove(sessionId);
-
+		SessionRegistry.getCurrentInstance().remove(sessionId);
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
@@ -149,11 +132,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMP scmp = request.getSCMP();
-			Map<String, String> scmpHeader = scmp.getHeader();
-
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -161,9 +142,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				String sessionId = scmp.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
-				}
-				if (!SessionRegistry.getCurrentInstance().containsKey(sessionId)) {
-					throw new ValidationException("session does not exists!");
 				}
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);

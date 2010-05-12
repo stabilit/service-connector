@@ -52,7 +52,6 @@ public final class ServiceConnector {
 	 * 
 	 * @param args
 	 *            the arguments
-	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -75,16 +74,7 @@ public final class ServiceConnector {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
 
-		// Necessary to make access for JMX client available
-		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
-		ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
-		ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
-
-		// Register the Queue Sampler MXBean
-		mbs.registerMBean(ConnectionRegistry.getCurrentInstance(), mxbeanNameConnReg);
-		mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
-		mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
+		ServiceConnector.initializeJMXStuff();
 
 		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
 		SCServerFactory serverFactory = new SCServerFactory();
@@ -96,6 +86,23 @@ public final class ServiceConnector {
 			} catch (Exception e) {
 				ExceptionListenerSupport.getInstance().fireException(ServiceConnector.class, e);
 			}
+		}
+	}
+
+	private static void initializeJMXStuff() {
+		try {
+			// Necessary to make access for JMX client available
+			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+			ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
+			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
+			ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
+
+			// Register the Queue Sampler MXBean
+			mbs.registerMBean(ConnectionRegistry.getCurrentInstance(), mxbeanNameConnReg);
+			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
+			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
+		} catch (Throwable th) {
+			ExceptionListenerSupport.getInstance().fireException(ServiceConnector.class, th);
 		}
 	}
 }

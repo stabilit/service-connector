@@ -21,6 +21,7 @@ import java.net.SocketAddress;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnEchoCall;
+import com.stabilit.sc.cln.call.SCMPClnSystemCall;
 import com.stabilit.sc.cln.call.SCMPSrvCreateSessionCall;
 import com.stabilit.sc.cln.call.SCMPSrvDataCall;
 import com.stabilit.sc.cln.call.SCMPSrvDeleteSessionCall;
@@ -28,6 +29,7 @@ import com.stabilit.sc.cln.call.SCMPSrvEchoCall;
 import com.stabilit.sc.cln.call.SCMPSrvSystemCall;
 import com.stabilit.sc.cln.client.ConnectionException;
 import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
@@ -35,6 +37,7 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -53,6 +56,8 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	protected ServiceRegistryItemPool myItemPool;
 	/** The allocated. */
 	private boolean allocated;
+	/** The obsolete. */
+	private boolean obsolete;
 
 	/**
 	 * Instantiates a new service registry item.
@@ -68,6 +73,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		this.registerScmp = scmp;
 		this.allocated = false;
 		this.myItemPool = null;
+		this.obsolete = false;
 		this.attrMap = scmp.getHeader();
 
 		// setting up client to connect backend server
@@ -89,7 +95,6 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public void srvCreateSession(SCMP scmp) throws Exception {
-		// TODO client.disconnect and error log
 		try {
 			client.connect();
 		} catch (ConnectionException e) {
@@ -115,10 +120,15 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public void srvDeleteSession(SCMP scmp) throws Exception {
+		checkServiceAlive();
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(client, scmp);
 		deleteSessionCall.setHeader(scmp.getHeader());
-		deleteSessionCall.invoke();
+		try {
+			deleteSessionCall.invoke();
+		} catch (SCMPCommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+		}
 		client.disconnect();
 		this.allocated = false;
 	}
@@ -142,6 +152,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public SCMP clnEcho(SCMP scmp) throws Exception {
+		checkServiceAlive();
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setBody(scmp.getBody());
@@ -158,6 +169,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public SCMP srvEcho(SCMP scmp) throws Exception {
+		checkServiceAlive();
 		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setHeader(SCMPHeaderAttributeKey.SERVICE_REGISTRY_ID, this.hashCode());
@@ -175,10 +187,16 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public SCMP srvData(SCMP scmp) throws Exception {
+		checkServiceAlive();
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client, scmp);
 		srvDataCall.setHeader(scmp.getHeader());
 		srvDataCall.setBody(scmp.getBody());
-		return srvDataCall.invoke();
+		try {
+			return srvDataCall.invoke();
+		} catch (SCMPCommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new CommunicationException("Connection lost");
+		}
 	}
 
 	/**
@@ -191,6 +209,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 *             the exception
 	 */
 	public SCMP srvSystem(SCMP scmp) throws Exception {
+		checkServiceAlive();
 		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
 				scmp);
 		srvSystemCall.setHeader(scmp.getHeader());
@@ -204,9 +223,16 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 * @param scmp
 	 *            the scmp
 	 * @return the sCMP
+	 * @throws Exception
+	 *             the exception
 	 */
-	public SCMP clnSystem(SCMP scmp) {
-		return null;
+	public SCMP clnSystem(SCMP scmp) throws Exception {
+		checkServiceAlive();
+		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
+				scmp);
+		clnSystemCall.setHeader(scmp.getHeader());
+		clnSystemCall.setBody(scmp.getBody());
+		return clnSystemCall.invoke();
 	}
 
 	/**
@@ -217,5 +243,24 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	@Override
 	public IFactoryable newInstance() {
 		return this;
+	}
+
+	/**
+	 * Mark service obsolete.
+	 */
+	public void markObsolete() {
+		this.obsolete = true;
+	}
+
+	/**
+	 * Check service alive. If service is obsolete exception is thrown.
+	 * 
+	 * @throws CommunicationException
+	 *             the communication exception
+	 */
+	private void checkServiceAlive() throws CommunicationException {
+		if (obsolete) {
+			throw new CommunicationException("Connection lost");
+		}
 	}
 }

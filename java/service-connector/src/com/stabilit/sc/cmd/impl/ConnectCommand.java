@@ -32,7 +32,6 @@ import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
@@ -90,7 +89,6 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		// TODO is socketAddress the right thing to save as a unique key?
 
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 

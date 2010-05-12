@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
-import com.stabilit.sc.net.nio.NioException;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPBodyType;
 
@@ -79,7 +79,7 @@ public class SCMPStreamHttpUtil {
 		while (bytesRead < stream.length) {
 			int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
 			if (readSize < 0) {
-				throw new NioException("http stream util read failure  (<0)");
+				throw new CommunicationException("Connection lost");
 			}
 			bytesRead += readSize;
 		}

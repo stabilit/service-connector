@@ -27,8 +27,9 @@ public interface IServerConnection extends IConnection {
 
 	/**
 	 * Destroy.
+	 * @throws Exception 
 	 */
-	public void destroy();
+	public void destroy() throws Exception;
 
 	/**
 	 * Creates the.

@@ -30,6 +30,8 @@ import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -64,7 +66,12 @@ public class NioTcpRequest extends RequestAdapter {
 	@Override
 	public void load() throws Exception {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
-		int bytesRead = socketChannel.read(byteBuffer);
+		int bytesRead = 0;
+		try {
+			bytesRead = socketChannel.read(byteBuffer);
+		} catch (Throwable ex) {
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		if (bytesRead < 0) {
 			throw new NioTcpDisconnectException("line disconnected");
 		}
@@ -79,7 +86,12 @@ public class NioTcpRequest extends RequestAdapter {
 		// continues reading until tpc frame is complete
 		while (scmpLengthHeadlineInc > bytesRead) {
 			byteBuffer.clear();
-			int read = socketChannel.read(byteBuffer);
+			int read = 0;
+			try {
+				read = socketChannel.read(byteBuffer);
+			} catch (Throwable ex) {
+				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			}
 			if (read < 0) {
 				throw new IOException("read failed (<0)");
 			}

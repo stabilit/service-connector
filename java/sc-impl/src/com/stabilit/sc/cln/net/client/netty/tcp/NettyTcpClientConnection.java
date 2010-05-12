@@ -33,9 +33,12 @@ import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
  * The Class NettyTcpClientConnection. Concrete client connection implementation with JBoss Netty for Tcp.
@@ -91,7 +94,12 @@ public class NettyTcpClientConnection implements IClientConnection {
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
-		this.channel = operationListener.awaitUninterruptibly().getChannel();
+		try {
+			this.channel = operationListener.awaitUninterruptibly().getChannel();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
 
@@ -103,7 +111,12 @@ public class NettyTcpClientConnection implements IClientConnection {
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		this.bootstrap.releaseExternalResources();
 	}
@@ -113,10 +126,15 @@ public class NettyTcpClientConnection implements IClientConnection {
 	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
 	 */
 	@Override
-	public void destroy() throws CommunicationException {
+	public void destroy() throws Exception {
 		ChannelFuture future = this.channel.close();
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		this.bootstrap.releaseExternalResources();
 	}
 
@@ -134,7 +152,12 @@ public class NettyTcpClientConnection implements IClientConnection {
 		chBuffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireWrite(this, chBuffer.toByteBuffer().array());
 
 		NettyTcpClientResponseHandler handler = channel.getPipeline().get(NettyTcpClientResponseHandler.class);

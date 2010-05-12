@@ -16,19 +16,24 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test.connect;
 
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.Before;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.sc.util.ValidatorUtility;
 
 /**
  * @author JTraber
- * 
  */
 public abstract class SuperConnectTestCase extends SuperTestCase {
+
+	protected Date localDateTimeOfConnect;
 
 	/**
 	 * @param fileName
@@ -57,6 +62,8 @@ public abstract class SuperConnectTestCase extends SuperTestCase {
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
 		connectCall.invoke();
+		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
+				SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 	}
 
 	public void clnDisconnectAfter() throws Exception {

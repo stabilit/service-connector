@@ -40,6 +40,9 @@ import com.stabilit.sc.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.sc.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
+import com.stabilit.sc.unit.test.worse.WorseSCServerToClientTestCase;
+import com.stabilit.sc.unit.test.worse.WorseSCServerToServiceTestCase;
+import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 /**
  * @author JTraber
@@ -60,7 +63,10 @@ import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 	SrvEchoLargeTestCase.class,
 	EchoSCTestCase.class,
 	EchoSCLargeTestCase.class,
-	SCImplTest.class})
+	SCImplTest.class,
+	WorseScenarioSimulationServerTestCase.class,
+	WorseSCServerToServiceTestCase.class,
+	WorseSCServerToClientTestCase.class})
 public class SCTest {
 	
 	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
@@ -68,5 +74,10 @@ public class SCTest {
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
+	}
+	
+	public static void verifyError(String errorText, String errorCode, SCMPErrorCode expectedError) {
+		Assert.assertEquals(errorText, expectedError.getErrorText());
+		Assert.assertEquals(errorCode, expectedError.getErrorCode());
 	}
 }

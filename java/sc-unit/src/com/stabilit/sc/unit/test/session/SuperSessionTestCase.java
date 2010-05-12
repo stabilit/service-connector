@@ -27,9 +27,10 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 /**
  * @author JTraber
- * 
  */
 public abstract class SuperSessionTestCase extends SuperConnectTestCase {
+
+	protected SCMPSession scmpSession = null;
 
 	/**
 	 * @param fileName
@@ -38,8 +39,6 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 		super(fileName);
 	}
 
-	protected SCMPSession scmpSession = null;
-	
 	@Before
 	public void setup() throws Exception {
 		super.setup();

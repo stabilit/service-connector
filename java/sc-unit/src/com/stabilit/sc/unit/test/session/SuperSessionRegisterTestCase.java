@@ -14,59 +14,55 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.register;
+package com.stabilit.sc.unit.test.session;
 
 import org.junit.After;
 import org.junit.Before;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
+import com.stabilit.sc.unit.test.register.SuperRegisterTestCase;
 
 /**
  * @author JTraber
- * 
  */
-public abstract class SuperRegisterTestCase extends SuperConnectTestCase {
+public abstract class SuperSessionRegisterTestCase extends SuperRegisterTestCase {
+
+	protected SCMPSession scmpSession = null;
 
 	/**
 	 * @param fileName
 	 */
-	public SuperRegisterTestCase(String fileName) {
+	public SuperSessionRegisterTestCase(String fileName) {
 		super(fileName);
 	}
-
-	protected SCMPSession scmpSession = null;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		registerServiceBefore();
+		clnCreateSessionBefore();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		deRegisterServiceAfter();
+		clnDeleteSessionAfter();
 		super.tearDown();
 	}
 
-	public void registerServiceBefore() throws Exception {
-		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+	public void clnCreateSessionBefore() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
 
-		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
-		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setMultithreaded(true);
-		registerServiceCall.setPortNumber(9100);
-		registerServiceCall.invoke();
+		createSessionCall.setServiceName("simulation");
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		scmpSession = createSessionCall.invoke();
 	}
 
-	public void deRegisterServiceAfter() throws Exception {
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
-		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
-		deRegisterServiceCall.invoke();
+	public void clnDeleteSessionAfter() throws Exception {
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(client, scmpSession);
+		deleteSessionCall.invoke();
 	}
 }

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.call;
 
+import java.util.Map;
+
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -74,5 +76,15 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 */
 	public void setMaxNodes(int maxNodes) {
 		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+	}
+	
+	/**
+	 * Sets the header.
+	 * 
+	 * @param header
+	 *            the header
+	 */
+	public void setHeader(Map<String, String> header) {
+		this.call.setHeader(header);
 	}
 }

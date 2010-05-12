@@ -44,7 +44,7 @@ public final class SessionRegistry extends Registry {
 	}
 
 	/**
-	 * Adds an entry.
+	 * Adds a session entry.
 	 * 
 	 * @param key
 	 *            the key
@@ -53,5 +53,17 @@ public final class SessionRegistry extends Registry {
 	 */
 	public void add(Object key, Session session) {
 		this.put(key, session);
+	}
+
+	/**
+	 * Gets a session entry.
+	 * 
+	 * @param key the key
+	 * 
+	 * @return the session
+	 */
+	@Override
+	public Session get(Object key) {
+		return (Session) super.get(key);
 	}
 }

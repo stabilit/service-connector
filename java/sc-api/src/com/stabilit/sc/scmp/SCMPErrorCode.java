@@ -50,7 +50,9 @@ public enum SCMPErrorCode {
 	/** The SERVE r_ error. */
 	SERVER_ERROR("500", "Server error occured."),
 	/** The unknown service. */
-	UNKNOWN_SERVICE("501", "Unknown service requested.");
+	UNKNOWN_SERVICE("501", "Unknown service requested."),
+	/** The connection lost. */
+	CONNECTION_LOST("502", "Connection lost."),;
 
 	/** The error code. */
 	private String errorCode;

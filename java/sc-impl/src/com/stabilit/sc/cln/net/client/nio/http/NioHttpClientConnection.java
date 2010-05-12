@@ -29,8 +29,9 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
-import com.stabilit.sc.net.nio.NioException;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
  * The Class NioHttpClientConnection. Concrete client connection implementation on Nio base for Http.
@@ -104,9 +105,14 @@ public class NioHttpClientConnection implements IClientConnection {
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
-		int bytesRead = socketChannel.read(byteBuffer);
+		int bytesRead = 0;
+		try {
+			bytesRead = socketChannel.read(byteBuffer);
+		} catch (Throwable ex) {
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		if (bytesRead < 0) {
-			throw new NioException("no bytes read");
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
 		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
@@ -118,9 +124,14 @@ public class NioHttpClientConnection implements IClientConnection {
 		// continues reading until http frame is complete
 		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
-			int read = socketChannel.read(byteBuffer);
+			int read = 0;
+			try {
+				read = socketChannel.read(byteBuffer);
+			} catch (Throwable ex) {
+				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			}
 			if (read < 0) {
-				throw new NioException("read failed (<0)");
+				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);
@@ -150,7 +161,7 @@ public class NioHttpClientConnection implements IClientConnection {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)

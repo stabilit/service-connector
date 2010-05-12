@@ -57,12 +57,12 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		String expectedEnty = "simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
 		Assert.assertEquals(expectedEnty, scEntry);
-		super.registerService();
+		super.registerServiceBefore();
 	}
 
 	@Test
 	public void secondDeRegisterServiceCall() throws Exception {
-		super.deRegisterService();
+		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(client);
 
@@ -75,6 +75,6 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 			SCTest.verifyError(e.getFault(), SCMPErrorCode.NOT_REGISTERED,
 					SCMPMsgType.DEREGISTER_SERVICE);
 		}
-		super.registerService();
+		super.registerServiceBefore();
 	}
 }

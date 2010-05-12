@@ -80,7 +80,7 @@ public enum SCMPMsgType {
 	private String responseName;
 	
 	/**
-	 * Instantiates a new sCMP msg type.
+	 * Instantiates a SCMPMsgType.
 	 * 
 	 * @param name
 	 *            the name

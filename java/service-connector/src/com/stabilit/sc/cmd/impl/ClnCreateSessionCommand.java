@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
@@ -38,11 +39,11 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.Session;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
@@ -131,8 +132,18 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// create session
 		Session session = new Session();
 		scmp.setSessionId(session.getId());
-		// try to allocate session on a backend server
-		ServiceRegistryItem serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
+		ServiceRegistryItem serviceRegistryItem = null;
+		try {
+			// try to allocate session on a backend server
+			serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
+		} catch (CommunicationException ex) {
+			// allocate session failed, connection to backend server disturbed - clean up
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+					SCMPErrorCode.SERVER_ERROR);
+			communicationException.setMessageType(getResponseKeyName());
+			throw communicationException;
+		}
 		// finally save session
 		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
 		sessionRegistry.add(session.getId(), session);
@@ -143,8 +154,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
-
-		// TODO communicationexception catchen
 	}
 
 	/**

@@ -108,9 +108,14 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	public void run() {
 		try {
 			runSync();
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			ExceptionListenerSupport.getInstance().fireException(this, e);
-			this.destroy();
+			try {
+				this.destroy();
+			} catch (Throwable e1) {
+				ExceptionListenerSupport.getInstance().fireException(this, e1);
+				return;
+			}
 		}
 	}
 
@@ -119,7 +124,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	 * @see com.stabilit.sc.srv.server.IServerConnection#destroy()
 	 */
 	@Override
-	public void destroy() {
+	public void destroy() throws Exception {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}

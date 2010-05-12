@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
+import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -27,7 +28,6 @@ import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 

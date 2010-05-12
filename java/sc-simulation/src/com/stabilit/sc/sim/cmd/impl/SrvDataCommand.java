@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.LoggerListenerSupport;
@@ -33,7 +34,6 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 import com.stabilit.sc.util.MapBean;

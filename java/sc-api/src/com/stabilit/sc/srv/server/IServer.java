@@ -35,10 +35,10 @@ public interface IServer extends IFactoryable {
 	public IServerContext getServerContext();
 
 	/**
-	 * Sets the server config.
+	 * Sets the server configuration.
 	 * 
 	 * @param serverConfig
-	 *            the new server config
+	 *            the new server configuration
 	 */
 	public void setServerConfig(IServerConfigItem serverConfig);
 
@@ -67,9 +67,17 @@ public interface IServer extends IFactoryable {
 	public void runSync() throws Exception;
 
 	/**
-	 * Gets the server config.
+	 * Gets the server configuration.
 	 * 
-	 * @return the server config
+	 * @return the server configuration
 	 */
 	public IServerConfigItem getServerConfig();
+
+	/**
+	 * Destroys server.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void destroy() throws Exception;
 }

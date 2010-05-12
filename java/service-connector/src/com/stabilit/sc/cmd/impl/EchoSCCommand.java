@@ -22,7 +22,6 @@ import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMP;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
-import com.stabilit.sc.srv.cmd.CommandAdapter;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 

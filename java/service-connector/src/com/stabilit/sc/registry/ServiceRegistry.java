@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
+import com.stabilit.sc.cln.net.CommunicationException;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.WarningListenerSupport;
 import com.stabilit.sc.scmp.SCMP;
 
@@ -89,7 +91,12 @@ public final class ServiceRegistry extends Registry {
 	 */
 	public synchronized void deallocate(ServiceRegistryItem item, SCMP scmp) throws Exception {
 		if (item.isAllocated()) {
-			item.srvDeleteSession(scmp);
+			// try catch necessary because method gets invoked in error scenario
+			try {
+				item.srvDeleteSession(scmp);
+			} catch (CommunicationException ex) {
+				ExceptionListenerSupport.getInstance().fireException(this, ex);
+			}
 		}
 		ServiceRegistryItemPool itemPool = item.myItemPool;
 		if (itemPool == null) {
@@ -99,5 +106,4 @@ public final class ServiceRegistry extends Registry {
 		itemPool.freeItem(item);
 		return;
 	}
-
 }

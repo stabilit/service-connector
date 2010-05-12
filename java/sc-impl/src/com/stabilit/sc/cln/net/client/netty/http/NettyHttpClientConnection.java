@@ -35,13 +35,17 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.sc.cln.client.IClientConnection;
+import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
  * The Class NettyHttpClientConnection. Concrete client connection implementation with JBoss Netty for Http.
@@ -103,7 +107,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 		// waits until operation is done
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
-		this.channel = operationListener.awaitUninterruptibly().getChannel();
+		try {
+			this.channel = operationListener.awaitUninterruptibly().getChannel();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
 
@@ -115,7 +124,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		this.bootstrap.releaseExternalResources();
 	}
@@ -128,7 +142,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 	public void destroy() throws Exception {
 		ChannelFuture future = this.channel.close();
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		this.bootstrap.releaseExternalResources();
 	}
 
@@ -156,8 +175,12 @@ public class NettyHttpClientConnection implements IClientConnection {
 		request.setContent(channelBuffer);
 		ChannelFuture future = channel.write(request);
 		future.addListener(operationListener);
-		operationListener.awaitUninterruptibly();
-
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+		}
 		ConnectionListenerSupport.getInstance().fireWrite(this, buffer); // logs inside if registered
 		// gets response message synchronous
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
