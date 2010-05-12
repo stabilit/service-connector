@@ -37,7 +37,7 @@ public class SCMPStreamHttpUtil {
 	private IEncoderDecoder encoderDecoder;
 
 	/**
-	 * Instantiates a new sCMP SCMPStreamHttpUtil.
+	 * Instantiates a new SCMPStreamHttpUtil.
 	 */
 	public SCMPStreamHttpUtil() {
 		encoderDecoder = null;

@@ -55,4 +55,7 @@ public interface IConstants {
 	public final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
 	/** The file name of warning log file. */
 	public final String RUNTIME_LOG_FILE_NAME = "wrn.log";
+
+	/** The ACCEPT_PARAMS. */
+	public final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 }

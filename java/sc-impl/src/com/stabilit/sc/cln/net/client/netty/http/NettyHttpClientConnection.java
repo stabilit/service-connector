@@ -145,7 +145,11 @@ public class NettyHttpClientConnection implements IClientConnection {
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		// Http header fields
-		// TODO complete the header fields
+		request.addHeader(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
+		request.addHeader(HttpHeaders.Names.HOST, host);
+		request.addHeader(HttpHeaders.Names.ACCEPT, IConstants.ACCEPT_PARAMS);
+		request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
 
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
