@@ -85,7 +85,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 	}
 	
 	@Test
-	public void invokeUnknownEndPartsTest() throws Exception {
+	public void groupCallTest() throws Exception {
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
 		ISCMPCall groupCall = echoCall.openGroup();
@@ -106,7 +106,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 	}
 	
 	@Test
-	public void invokeUnknownEndLargePartsTest() throws Exception {
+	public void groupCallLargePartsTest() throws Exception {
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
 		ISCMPCall groupCall = echoCall.openGroup();

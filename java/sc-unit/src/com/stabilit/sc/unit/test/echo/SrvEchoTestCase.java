@@ -124,6 +124,12 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		super.clnCreateSessionBefore();
 	}
 
+	/**
+	 * Invoke multiple session srv echo test for multiple clients. Gets invoked from MT tests.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void invokeMultipleSessionSrvEchoTestForMultipleClients() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();

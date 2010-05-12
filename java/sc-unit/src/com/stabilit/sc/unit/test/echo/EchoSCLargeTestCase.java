@@ -79,7 +79,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 	}
 
 	@Test
-	public void invokeUnknownEndPartsTest() throws Exception {
+	public void groupCallTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
@@ -98,7 +98,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 	}
 	
 	@Test
-	public void invokeUnknownEndLargePartsTest() throws Exception {
+	public void groupCallLargePartsTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
