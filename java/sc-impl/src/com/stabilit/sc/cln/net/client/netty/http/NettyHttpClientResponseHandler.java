@@ -26,6 +26,10 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.sc.cln.net.CommunicationException;
+import com.stabilit.sc.cln.net.client.netty.NettyEvent;
+import com.stabilit.sc.cln.net.client.netty.NettyExceptionEvent;
+import com.stabilit.sc.cln.net.client.netty.NettyHttpEvent;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
 /**
@@ -39,20 +43,24 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler {
 
 	/** Queue to store the answer. */
-	private final BlockingQueue<HttpResponse> answer = new LinkedBlockingQueue<HttpResponse>();
+	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
 
 	/**
 	 * Gets the message synchronously.
 	 * 
 	 * @return the message
+	 * @throws CommunicationException
 	 */
-	HttpResponse getMessageSync() {
-		HttpResponse responseMessage;
+	HttpResponse getMessageSync() throws CommunicationException {
+		NettyEvent eventMessage;
 		boolean interrupted = false;
 		for (;;) {
 			try {
 				// take() waits until message arrives in queue, locking inside queue
-				responseMessage = answer.take();
+				eventMessage = answer.take();
+				if (eventMessage.isFault()) {
+					throw new CommunicationException(((NettyExceptionEvent) eventMessage).getResponse().getCause());
+				}
 				break;
 			} catch (InterruptedException e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
@@ -64,7 +72,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 			// interruption happens when waiting for response - interrupt now
 			Thread.currentThread().interrupt();
 		}
-		return responseMessage;
+		return (HttpResponse) eventMessage.getResponse();
 	}
 
 	/*
@@ -74,7 +82,8 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		answer.offer((HttpResponse) e.getMessage());
+		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
+		answer.offer(nettyEvent);
 	}
 
 	/*
@@ -84,7 +93,8 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		super.exceptionCaught(ctx, e);
-		// TODO like tcp
+		Throwable th = (Throwable) e.getCause();
+		NettyEvent nettyEvent = new NettyExceptionEvent(th);
+		answer.offer(nettyEvent);
 	}
 }

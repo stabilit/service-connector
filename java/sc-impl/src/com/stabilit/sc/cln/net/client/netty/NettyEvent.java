@@ -22,42 +22,26 @@
 package com.stabilit.sc.cln.net.client.netty;
 
 /**
- * The Class NettyExceptionResponse. Wraps an exception response from Netty framework. Used to unify the process of
- * catching the response synchronously.
+ * The Class NettyEvent. Wraps a successful response of Netty framework. Used to unify the process of catching the
+ * response synchronously.
  * 
  * @author JTraber
  */
-public class NettyExceptionResponse extends NettyResponse {
-
-	/** The th. */
-	private Throwable th;
+public abstract class NettyEvent {
 
 	/**
-	 * Instantiates a new netty exception response.
+	 * Gets the buffer.
 	 * 
-	 * @param th
-	 *            the th
+	 * @return the buffer
 	 */
-	public NettyExceptionResponse(Throwable th) {
-		super(null);
-		this.th = th;
-	}
+	public abstract Object getResponse();
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.net.client.netty.NettyResponse#isFault()
+	/**
+	 * Checks if is fault.
+	 * 
+	 * @return true, if is fault
 	 */
-	@Override
 	public boolean isFault() {
-		return true;
-	}
-
-	/**
-	 * Gets the fault.
-	 * 
-	 * @return the fault
-	 */
-	public Throwable getFault() {
-		return th;
+		return false;
 	}
 }
