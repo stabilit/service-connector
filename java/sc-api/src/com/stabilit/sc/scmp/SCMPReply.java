@@ -23,7 +23,7 @@ import com.stabilit.sc.util.DateTimeUtility;
  * 
  * @author JTraber
  */
-public class SCMPReply extends SCMPMessage {
+public class SCMPReply extends SCMPMessage { //TODO (TRN) what is this class good for?
 
 	/**
 	 * Sets the local date time.

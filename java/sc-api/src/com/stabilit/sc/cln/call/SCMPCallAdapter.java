@@ -31,7 +31,7 @@ import com.stabilit.sc.scmp.internal.SCMPPart;
  */
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
-	/** The client to use for the call. */
+	/** The client to used to invoke the call. */
 	protected IClient client;
 	/** The scmp session to use for the call. */
 	protected SCMPMessage scmpSession;
@@ -170,7 +170,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * The Class SCMPGroupCall. Inner class - allows to open a group for messages. Sends parts as long as group is
 	 * not closed. Very useful if you don't know how big your complete message is going to be.
 	 */
-	public class SCMPGroupCall implements ISCMPCall {
+	public class SCMPGroupCall implements ISCMPCall {	//TODO (TRN) is this not better a SCMPCallPart?
 
 		/** The parent call. */
 		private ISCMPCall parentCall;

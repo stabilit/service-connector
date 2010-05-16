@@ -39,7 +39,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
-	private SCMPMessage partRequest;
+	private SCMPMessage currentPart;			// TODO currentPart should be SCMPPart
 	/** The scmp fault. */
 	private SCMPFault scmpFault;
 	/** The scmp offset. */
@@ -57,19 +57,19 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * @param messagePart
 	 *            the message part
 	 */
-	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
+	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) { // TODO messagePart should be SCMPPart
 		this.outputStream = null;
 		this.writer = null;
 		this.scmpOffset = 0;
 		this.scmpFault = null;
 		scmpList = new ArrayList<SCMPMessage>();
 		// builds up request to pull later
-		partRequest = new SCMPPart();
-		partRequest.setMessageType(request.getMessageType());
-		partRequest.setSessionId(request.getSessionId());
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
-		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
-		partRequest.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
+		currentPart = new SCMPPart();
+		currentPart.setMessageType(request.getMessageType());
+		currentPart.setSessionId(request.getSessionId());
+		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
+		currentPart.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
+		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
 		this.add(messagePart);
 	}
 
@@ -79,8 +79,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 */
 	@Override
 	public Map<String, String> getHeader() {
-		partRequest.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
-		return partRequest.getHeader();
+		currentPart.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
+		return currentPart.getHeader();
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 */
 	@Override
 	public String getMessageType() {
-		return partRequest.getMessageType();
+		return currentPart.getMessageType();
 	}
 
 	/**
@@ -227,8 +227,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * 
 	 * @return the part request
 	 */
-	public SCMPMessage getPartRequest() {
-		return partRequest;
+	public SCMPMessage getPart() {
+		return currentPart;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * Reset composite.
 	 */
 	private void reset() {
-		this.partRequest = null;
+		this.currentPart = null;
 		this.scmpList.clear();
 		this.scmpOffset = 0;
 		this.outputStream = null;

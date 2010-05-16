@@ -68,10 +68,10 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Sets the messag info.
+	 * Sets the message info.
 	 * 
 	 * @param messageInfo
-	 *            the new messag info
+	 *            the new message info
 	 */
 	public void setMessagInfo(String messageInfo) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);

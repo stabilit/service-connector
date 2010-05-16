@@ -235,7 +235,7 @@ public class Client implements IClient {
 		SCMPMessage ret = null;
 		msgID.incrementPartSequenceNr();
 		while (true) {
-			SCMPMessage message = scmpComposite.getPartRequest();
+			SCMPMessage message = scmpComposite.getPart();
 			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 			ret = clientConnection.sendAndReceive(message); // pull
 

@@ -33,7 +33,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 	/** The large messege length. */
 	private int largeMessageLength;	
 	/** The current part. */
-	private SCMPMessage currentPart;
+	private SCMPMessage currentPart;		// TODO currentPart should be SCMPSendPart
 
 	/**
 	 * Instantiates a new SCMPCompositeSender.

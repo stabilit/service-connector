@@ -24,7 +24,7 @@ package com.stabilit.sc.cln.call;
  */
 public class SCMPCallFactory {
 
-	/********************** Calls to SC **********************/
+	/********************** Calls from Client **********************/
 
 	/** The CONNECT_CALL. */
 	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();

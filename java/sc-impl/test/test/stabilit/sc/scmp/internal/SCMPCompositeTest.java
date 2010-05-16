@@ -68,6 +68,6 @@ public class SCMPCompositeTest {
 		
 		Assert.assertEquals(bodyLength, composite.getBodyLength());
 		Assert.assertEquals(body.toString(), composite.getBody()+"");
-		Assert.assertEquals(request.toString(), composite.getPartRequest().toString());
+		Assert.assertEquals(request.toString(), composite.getPart().toString());
 	}
 }
