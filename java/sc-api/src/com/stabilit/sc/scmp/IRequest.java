@@ -43,21 +43,21 @@ public interface IRequest {
 	public IRequestContext getContext();
 
 	/**
-	 * Gets the scmp in the request.
+	 * Gets the scmp message in the request.
 	 * 
-	 * @return the scmp
+	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP getSCMP() throws Exception;
+	public SCMPMessage getMessage() throws Exception;
 
 	/**
-	 * Sets the scmp.
+	 * Sets the scmp message in the request.
 	 * 
-	 * @param scmp
-	 *            the new scmp
+	 * @param message
+	 *            the new scmp message
 	 */
-	public void setSCMP(SCMP scmp);
+	public void setMessage(SCMPMessage message);
 
 	/**
 	 * Sets an attribute in attribute map.

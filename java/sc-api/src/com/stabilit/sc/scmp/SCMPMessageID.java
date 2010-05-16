@@ -30,7 +30,7 @@ public class SCMPMessageID {
 	private int partSequenceNr;
 	
 	/** The string builder. */
-	private StringBuilder sb;
+	private StringBuilder stringBuilder;
 
 	/**
 	 * Instantiates a new scmp message id.
@@ -38,7 +38,7 @@ public class SCMPMessageID {
 	public SCMPMessageID() {
 		this.msgSequenceNr = 1;
 		this.partSequenceNr = 0;
-		this.sb = null;
+		this.stringBuilder = null;
 	}
 
 	/**
@@ -51,11 +51,11 @@ public class SCMPMessageID {
 			//no part SCMP has been sent, partSequenceNr irrelevant
 			return String.valueOf(msgSequenceNr);
 		}
-		sb = new StringBuilder();
-		sb.append(msgSequenceNr);
-		sb.append("/");
-		sb.append(partSequenceNr);
-		return sb.toString();
+		stringBuilder = new StringBuilder();
+		stringBuilder.append(msgSequenceNr);
+		stringBuilder.append("/");
+		stringBuilder.append(partSequenceNr);
+		return stringBuilder.toString();
 	}
 
 	/**

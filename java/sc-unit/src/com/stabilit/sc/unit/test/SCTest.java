@@ -24,7 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.stabilit.sc.test.SCImplTest;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -69,7 +69,7 @@ import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
 	WorseSCServerToClientTestCase.class})
 public class SCTest {
 	
-	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
+	public static void verifyError(SCMPMessage result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());

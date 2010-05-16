@@ -27,7 +27,7 @@ import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.KeepAlive;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -134,25 +134,25 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			try {
-				String scVersion = scmp.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-				ValidatorUtility.validateSCVersion(SCMP.SC_VERSION, scVersion);
+				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+				ValidatorUtility.validateSCVersion(SCMPMessage.SC_VERSION, scVersion);
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 				// compression default = true
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
+				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime(scmp
+				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
 						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
 				// KeepAliveTimeout && KeepAliveInterval
-				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(scmp
-						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), scmp
+				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
+						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {

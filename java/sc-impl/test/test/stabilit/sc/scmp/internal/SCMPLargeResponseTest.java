@@ -20,7 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
 import com.stabilit.sc.scmp.internal.SCMPSendPart;
 
@@ -28,7 +28,7 @@ import com.stabilit.sc.scmp.internal.SCMPSendPart;
  * @author JTraber
  * 
  */
-public class SCMPLargeResponseTest extends SCMP {
+public class SCMPLargeResponseTest extends SCMPMessage {
 
 	@Test
 	public void scmpLargeResponseTest() {
@@ -38,7 +38,7 @@ public class SCMPLargeResponseTest extends SCMP {
 			sb.append(i);
 		}		
 		
-		SCMP largeScmp = new SCMP();
+		SCMPMessage largeScmp = new SCMPMessage();
 		largeScmp.setBody(sb.toString());
 		largeScmp.setIsReply(true);
 		
@@ -50,18 +50,18 @@ public class SCMPLargeResponseTest extends SCMP {
 			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset);
 			offset += responsePart.getBodyLength();
 			
-			SCMP scmp = largeResponse.getNext();
-			Assert.assertEquals(responsePart.getBody().toString(), scmp.getBody().toString());
-			Assert.assertEquals(responsePart.getBodyLength(), scmp.getBodyLength());
-			Assert.assertEquals(responsePart.getBodyOffset(), scmp.getBodyOffset());
-			Assert.assertEquals(responsePart.getBodyType(), scmp.getBodyType());
+			SCMPMessage message = largeResponse.getNext();
+			Assert.assertEquals(responsePart.getBody().toString(), message.getBody().toString());
+			Assert.assertEquals(responsePart.getBodyLength(), message.getBodyLength());
+			Assert.assertEquals(responsePart.getBodyOffset(), message.getBodyOffset());
+			Assert.assertEquals(responsePart.getBodyType(), message.getBodyType());
 		}
 		
 		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0);
-		SCMP scmp = largeResponse.getFirst();
-		Assert.assertEquals(firstPart.getBody().toString(), scmp.getBody().toString());
-		Assert.assertEquals(firstPart.getBodyLength(), scmp.getBodyLength());
-		Assert.assertEquals(firstPart.getBodyOffset(), scmp.getBodyOffset());
-		Assert.assertEquals(firstPart.getBodyType(), scmp.getBodyType());
+		SCMPMessage message = largeResponse.getFirst();
+		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());
+		Assert.assertEquals(firstPart.getBodyLength(), message.getBodyLength());
+		Assert.assertEquals(firstPart.getBodyOffset(), message.getBodyOffset());
+		Assert.assertEquals(firstPart.getBodyType(), message.getBodyType());
 	}
 }

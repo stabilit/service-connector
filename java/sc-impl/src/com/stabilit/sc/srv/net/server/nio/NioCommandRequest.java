@@ -18,7 +18,7 @@ package com.stabilit.sc.srv.net.server.nio;
 
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -78,12 +78,12 @@ public class NioCommandRequest {
 		if (this.command == null) {
 			return null;
 		}
-		SCMP scmp = this.request.getSCMP();
-		if (scmp == null) {
+		SCMPMessage message = this.request.getMessage();
+		if (message == null) {
 			return null;
 		}
-		if (scmp.isPart() == false) {
-			// scmp is complete request
+		if (message.isPart() == false) {
+			// message is complete request
 			return this.command;
 		}
 		if (this.command instanceof IPassThrough) {
@@ -92,24 +92,24 @@ public class NioCommandRequest {
 		}
 		SCMPCompositeReceiver scmpCompositeRecv = null;
 		// pulling data until request is complete
-		while (scmp.isPart()) {
+		while (message.isPart()) {
 			if (scmpCompositeRecv == null) {
-				scmpCompositeRecv = new SCMPCompositeReceiver(scmp, (SCMP) scmp);
+				scmpCompositeRecv = new SCMPCompositeReceiver(message, (SCMPMessage) message);
 			}
 			// set up pull request
-			SCMP scmpReply = new SCMPPart();
+			SCMPMessage scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
-			scmpReply.setMessageType(scmp.getMessageType());
+			scmpReply.setMessageType(message.getMessageType());
 			response.setSCMP(scmpReply);
 			response.write();
 			request.readNext();
-			scmp = request.getSCMP();
-			if (scmp != null) {
-				// add the scmp to composite receiver
-				scmpCompositeRecv.add(scmp);
+			message = request.getMessage();
+			if (message != null) {
+				// add the message to composite receiver
+				scmpCompositeRecv.add(message);
 			}
 		}
-		this.request.setSCMP(scmpCompositeRecv);
+		this.request.setMessage(scmpCompositeRecv);
 		return this.command;
 	}
 }

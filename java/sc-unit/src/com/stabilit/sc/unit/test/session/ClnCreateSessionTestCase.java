@@ -27,7 +27,7 @@ import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -95,7 +95,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = ":com.stabilit.sc.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";

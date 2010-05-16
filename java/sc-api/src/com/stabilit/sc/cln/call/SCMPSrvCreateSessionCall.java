@@ -21,7 +21,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.call.ISCMPCall;
 import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -47,7 +47,7 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPSrvCreateSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvCreateSessionCall(IClient client, SCMPMessage scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -61,7 +61,7 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 	 * @return the iSCMP call
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPSrvCreateSessionCall(client, scmpSession);
 	}
 
@@ -72,7 +72,7 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 	 *            the new session id
 	 */
 	public void setSessionId(String sessionId) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.requestMessage.setHeader(header);
 	}
 
 	/**

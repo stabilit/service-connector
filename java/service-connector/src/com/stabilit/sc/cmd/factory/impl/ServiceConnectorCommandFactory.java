@@ -31,7 +31,8 @@ import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 
 /**
- * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service
+ * A factory for creating ServiceConnectorCommand objects. 
+ * Provides access to concrete instances of Service
  * Connector commands.
  * 
  * @author JTraber
@@ -60,6 +61,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 * 
 	 * @param commandFactory
 	 *            the command factory
+	 *            TODO (TRN) list is not complete
 	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand connectCommand = new ConnectCommand();

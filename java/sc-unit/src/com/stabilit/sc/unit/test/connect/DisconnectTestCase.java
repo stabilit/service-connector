@@ -26,7 +26,7 @@ import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -63,7 +63,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
 				.newInstance(client);
 
-		SCMP result = null;
+		SCMPMessage result = null;
 		try {
 			result = disconnectCall.invoke();
 		} catch (SCMPCallException e) {
@@ -77,7 +77,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");

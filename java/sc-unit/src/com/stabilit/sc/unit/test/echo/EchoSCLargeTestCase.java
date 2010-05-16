@@ -28,7 +28,7 @@ import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPEchoSCCall;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -67,7 +67,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 			sb.append(i);
 		}
 		echoCall.setBody(sb.toString());
-		SCMP result = echoCall.invoke();
+		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(sb.toString(), result.getBody());
@@ -88,7 +88,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 			groupCall.setBody(String.valueOf(i));
 			groupCall.invoke();
 		}
-		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(sb.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 //		Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
@@ -112,7 +112,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 			groupCall.setBody(sb.toString());
 			groupCall.invoke();
 		}
-		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(expected.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		//Assert.assertEquals("1/" + (max * 4), res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));

@@ -28,7 +28,7 @@ import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -87,11 +87,11 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
-		Map<String, String> header = scmp.getHeader();
+		SCMPMessage message = request.getMessage();
+		Map<String, String> header = message.getHeader();
 
-		SCMP result = null;
-		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
+		SCMPMessage result = null;
+		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 
 		// adding ip of current node to header field ip address list
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
@@ -99,10 +99,10 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		Session session = getSessionById(scmp.getSessionId());
+		Session session = getSessionById(message.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
 
@@ -118,16 +118,16 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		try {
 			if (maxNodes == 2) {
 				// forward to next node
-				result = serviceRegistryItem.srvSystem(scmp);
+				result = serviceRegistryItem.srvSystem(message);
 			} else {
 				// forward to next node where system call will be executed
 				--maxNodes;
 				header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
-				result = serviceRegistryItem.clnSystem(scmp);
+				result = serviceRegistryItem.clnSystem(message);
 			}
 		} catch (CommunicationException e) {
 			// srvSystem or clnSystem failed, connection disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(scmp.getSessionId());
+			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
 			serviceRegistryItem.markObsolete();
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.util.MapBean;
@@ -37,7 +37,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	/** The max items. */
 	private int maxItems = -1;
 	/** The scmp. */
-	private SCMP scmp;
+	private SCMPMessage scmp;
 	/** The socket address. */
 	private SocketAddress socketAddress;
 	/** The server context. */
@@ -55,7 +55,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public ServiceRegistryItemPool(SCMP scmp, SocketAddress socketAddress) {
+	public ServiceRegistryItemPool(SCMPMessage scmp, SocketAddress socketAddress) {
 		this.scmp = scmp;
 		this.socketAddress = socketAddress;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
@@ -78,7 +78,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	 * 
 	 * @return the scmp
 	 */
-	public SCMP getScmp() {
+	public SCMPMessage getScmp() {
 		return scmp;
 	}
 

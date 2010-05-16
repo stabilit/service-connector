@@ -18,7 +18,7 @@ package com.stabilit.sc.srv.net.server.netty;
 
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.srv.cmd.ICommand;
@@ -35,8 +35,8 @@ public class NettyCommandRequest {
 
 	/** The complete. */
 	private boolean complete;
-	/** The scmp composite recv. */
-	private SCMPCompositeReceiver scmpCompositeRecv;
+	/** The scmp composite receiver. */
+	private SCMPCompositeReceiver compositeReceiver;
 
 	/**
 	 * The Constructor.
@@ -64,8 +64,8 @@ public class NettyCommandRequest {
 		if (command == null) {
 			return null;
 		}
-		SCMP scmp = request.getSCMP();
-		if (scmp == null) {
+		SCMPMessage message = request.getMessage();
+		if (message == null) {
 			return null;
 		}		
 		if (command instanceof IPassThrough) {
@@ -74,30 +74,30 @@ public class NettyCommandRequest {
 			return command;
 		}
 
-		if (scmpCompositeRecv == null) {
-			if (scmp.isPart() == false) {
+		if (compositeReceiver == null) {
+			if (message.isPart() == false) {
 				// request not chunk
 				return command;
 			}
 			// first part of a large request received - introduce composite receiver
-			scmpCompositeRecv = new SCMPCompositeReceiver(scmp, (SCMP) scmp);
+			compositeReceiver = new SCMPCompositeReceiver(message, (SCMPMessage) message);
 		} else {
 			// next part of a large request received - add to composite receiver
-			scmpCompositeRecv.add(scmp);
+			compositeReceiver.add(message);
 		}
 
-		if (scmp.isPart()) {
-			// received scmp of type part - request not complete
+		if (message.isPart()) {
+			// received message part - request not complete
 			complete = false;
 			// set up pull request
-			SCMP scmpReply = new SCMPPart();
+			SCMPMessage scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
-			scmpReply.setMessageType(scmp.getMessageType());
+			scmpReply.setMessageType(message.getMessageType());
 			response.setSCMP(scmpReply);
 		} else {
-			// last scmp of a chunk message received - request complete
+			// last message of a chunk message received - request complete
 			complete = true;
-			request.setSCMP(scmpCompositeRecv);
+			request.setMessage(compositeReceiver);
 		}
 		return command;
 	}

@@ -62,7 +62,7 @@ public abstract class SuperConnectTestCase extends SuperTestCase {
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
 		connectCall.invoke();
-		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
+		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(connectCall.getRequest().getHeader(
 				SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 	}
 

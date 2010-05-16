@@ -20,7 +20,7 @@ import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
 import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
@@ -65,7 +65,7 @@ public class Client implements IClient {
 	public void setClientConfig(IClientConfigItem clientConfig) {
 		this.clientConfig = clientConfig;
 		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
-		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getCon());
+		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getConnection());
 		clientConnection.setHost(clientConfig.getHost());
 		clientConnection.setPort(clientConfig.getPort());
 		clientConnection.setNumberOfThreads(clientConfig.getNumberOfThreads());
@@ -103,13 +103,13 @@ public class Client implements IClient {
 	 * @see com.stabilit.sc.cln.client.IClient#sendAndReceive(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public SCMP sendAndReceive(SCMP scmp) throws Exception {
-		SCMP ret = null;
-		// differ if scmp is large or not, sending procedure is different
-		if (scmp.isLargeMessage()) {
-			ret = sendLargeSCMPAndReceive(scmp);
+	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
+		SCMPMessage ret = null;
+		// differ if message is large or not, sending procedure is different
+		if (message.isLargeMessage()) {
+			ret = sendLargeSCMPAndReceive(message);
 		} else {
-			ret = sendSmallSCMPAndReceive(scmp);
+			ret = sendSmallSCMPAndReceive(message);
 		}
 		return ret;
 	}
@@ -126,28 +126,28 @@ public class Client implements IClient {
 	/**
 	 * request is small but response could be small or large.
 	 * 
-	 * @param scmp
+	 * @param message
 	 *            the scmp
 	 * @return the SCMP
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMP sendSmallSCMPAndReceive(SCMP scmp) throws Exception {
-		if (scmp.isGroup()) {
+	private SCMPMessage sendSmallSCMPAndReceive(SCMPMessage message) throws Exception {
+		if (message.isGroup()) {
 			msgID.incrementPartSequenceNr();
 		}
-		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		// process send and receive
-		SCMP ret = clientConnection.sendAndReceive(scmp);
+		SCMPMessage ret = clientConnection.sendAndReceive(message);
 
-		if (scmp.isPart()) {
-			// incoming scmp is a part groupCall is made by client - part response can be ignored
+		if (message.isPart()) {
+			// incoming message is a part groupCall is made by client - part response can be ignored
 			return ret;
 		}
 
 		if (ret.isPart()) {
 			// response is a part - response is large, continue pulling
-			return receiveLargeResponse(scmp, (SCMP) ret);
+			return receiveLargeResponse(message, (SCMPMessage) ret);
 		}
 		msgID.incrementMsgSequenceNr();
 		return ret;
@@ -157,17 +157,17 @@ public class Client implements IClient {
 	 * request is large, response could be small or large.
 	 * 
 	 * @param scmp
-	 *            the scmp
-	 * @return the SCMP
+	 *            the scmp message
+	 * @return the SCMPMessage
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMP sendLargeSCMPAndReceive(SCMP scmp) throws Exception {
-		SCMP ret = this.sendLargeSCMP(scmp); // send large request scmp
+	private SCMPMessage sendLargeSCMPAndReceive(SCMPMessage scmp) throws Exception {
+		SCMPMessage ret = this.sendLargeSCMP(scmp); // send large request scmp
 
 		if (ret.isPart() && scmp.isGroup() == false) {
 			// response is a part - response is large, continue pulling
-			ret = receiveLargeResponse(scmp, (SCMP) ret);
+			ret = receiveLargeResponse(scmp, (SCMPMessage) ret);
 		}
 		if (scmp.isGroup() == false) {
 			msgID.incrementMsgSequenceNr();
@@ -184,14 +184,14 @@ public class Client implements IClient {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMP sendLargeSCMP(SCMP scmp) throws Exception {
+	private SCMPMessage sendLargeSCMP(SCMPMessage scmp) throws Exception {
 		// SCMPLargeRequest handles splitting, works like an iterator
 		SCMPCompositeSender scmpLargeRequest = new SCMPCompositeSender(scmp);
-		SCMP part = scmpLargeRequest.getFirst();
+		SCMPMessage part = scmpLargeRequest.getFirst();
 		msgID.incrementPartSequenceNr();
 		while (part != null) {
 			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
-			SCMP ret = clientConnection.sendAndReceive(part);
+			SCMPMessage ret = clientConnection.sendAndReceive(part);
 
 			if (part.isRequest()) {
 				/*
@@ -229,15 +229,15 @@ public class Client implements IClient {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMP receiveLargeResponse(SCMP request, SCMP response) throws Exception {
+	private SCMPMessage receiveLargeResponse(SCMPMessage request, SCMPMessage response) throws Exception {
 		// SCMPComposite handles parts of large requests, putting all together
 		SCMPCompositeReceiver scmpComposite = new SCMPCompositeReceiver(request, response);
-		SCMP ret = null;
+		SCMPMessage ret = null;
 		msgID.incrementPartSequenceNr();
 		while (true) {
-			SCMP scmp = scmpComposite.getPartRequest();
-			scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
-			ret = clientConnection.sendAndReceive(scmp); // pull
+			SCMPMessage message = scmpComposite.getPartRequest();
+			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			ret = clientConnection.sendAndReceive(message); // pull
 
 			if (ret == null) {
 				return ret;

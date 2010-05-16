@@ -21,7 +21,7 @@ package com.stabilit.sc.scmp;
  * 
  * @author JTraber
  */
-public enum SCMPErrorCode {
+public enum SCMPErrorCode {		//TODO (TRN) should be called SCMPError because it is not only a code! => refactor
 
 	/** The client error. */
 	CLIENT_ERROR("400", "Client error occured."),

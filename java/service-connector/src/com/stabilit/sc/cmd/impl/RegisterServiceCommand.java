@@ -28,7 +28,7 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItemPool;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -92,8 +92,8 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
-		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage message = request.getMessage();
+		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean != null) {
@@ -106,7 +106,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			throw scmpCommandException;
 		}
 
-		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(scmp, socketAddress);
+		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(message, socketAddress);
 		serviceRegistry.add(serviceName, serviceRegistryItemPool);
 
 		SCMPReply scmpReply = new SCMPReply();
@@ -140,25 +140,25 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			try {
 				// serviceName
-				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
 				// maxSessions
-				String maxSessions = (String) scmp.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
+				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				ValidatorUtility.validateInt(0, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
 				// multiThreaded default = false
-				Boolean multiThreaded = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED);
+				Boolean multiThreaded = message.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED);
 				if (multiThreaded == null) {
 					multiThreaded = false;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.MULTI_THREADED.getName(), multiThreaded);
 				// portNr
-				String portNr = (String) scmp.getHeader(SCMPHeaderAttributeKey.PORT_NR);
+				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {

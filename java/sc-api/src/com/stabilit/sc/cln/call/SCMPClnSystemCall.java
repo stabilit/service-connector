@@ -19,7 +19,7 @@ package com.stabilit.sc.cln.call;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -45,7 +45,7 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnSystemCall(IClient client, SCMP scmpSession) {
+	public SCMPClnSystemCall(IClient client, SCMPMessage scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -55,7 +55,7 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 * com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPClnSystemCall(client, scmpSession);
 	}
 
@@ -75,7 +75,7 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 *            the new max nodes
 	 */
 	public void setMaxNodes(int maxNodes) {
-		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
 	}
 	
 	/**
@@ -85,6 +85,6 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.requestMessage.setHeader(header);
 	}
 }

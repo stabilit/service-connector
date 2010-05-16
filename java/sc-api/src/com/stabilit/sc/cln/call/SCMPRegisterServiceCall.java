@@ -60,7 +60,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new max sessions
 	 */
 	public void setMaxSessions(int maxSessions) {
-		call.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new multithreaded
 	 */
 	public void setMultithreaded(boolean multiThreaded) {
-		call.setHeader(SCMPHeaderAttributeKey.MULTI_THREADED, multiThreaded);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.MULTI_THREADED, multiThreaded);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new port number
 	 */
 	public void setPortNumber(int portNumber) {
-		call.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
 	}
 
 	/*

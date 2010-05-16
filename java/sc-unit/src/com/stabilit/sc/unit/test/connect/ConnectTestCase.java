@@ -26,7 +26,7 @@ import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -66,7 +66,7 @@ public class ConnectTestCase extends SuperTestCase {
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
 
-		SCMP result = connectCall.invoke();
+		SCMPMessage result = connectCall.invoke();
 
 		/*********************************** Verify connect response msg **********************************/
 		Assert.assertNull(result.getBody());
@@ -77,12 +77,12 @@ public class ConnectTestCase extends SuperTestCase {
 //		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String expectedScEntry = ":compression=false;localDateTime="
-				+ ValidatorUtility.validateLocalDateTime(connectCall.getCall().getHeader(
+				+ ValidatorUtility.validateLocalDateTime(connectCall.getRequest().getHeader(
 						SCMPHeaderAttributeKey.LOCAL_DATE_TIME))
 				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");

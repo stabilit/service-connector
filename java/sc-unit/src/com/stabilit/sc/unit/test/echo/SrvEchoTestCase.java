@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnEchoCall;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -53,7 +53,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	 */
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
-		SCMP result = null;
+		SCMPMessage result = null;
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
 		clnEchoCall.setMaxNodes(2);
@@ -79,7 +79,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;
-		SCMP result = null;
+		SCMPMessage result = null;
 
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
 				scmpSession);
@@ -107,7 +107,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;
-		SCMP result = null;
+		SCMPMessage result = null;
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
@@ -134,7 +134,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 100;
-		SCMP result = null;
+		SCMPMessage result = null;
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();

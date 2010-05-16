@@ -25,8 +25,8 @@ import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
 
 /**
- * A factory for creating ClientConnection objects. Provides access to concrete client instances. Possible clients
- * are shown in key string constants below.
+ * A factory for creating ClientConnection objects. Provides access to concrete client instances. 
+ * Possible client connection types are shown as constants below.
  */
 public class ClientConnectionFactory extends Factory {
 
@@ -70,7 +70,7 @@ public class ClientConnectionFactory extends Factory {
 	 * New instance.
 	 * 
 	 * @param key
-	 *            the key
+	 *            the key designating the connection type 
 	 * @return the i client connection
 	 */
 	public IClientConnection newInstance(String key) {

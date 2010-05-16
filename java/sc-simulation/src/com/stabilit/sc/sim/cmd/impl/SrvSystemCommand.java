@@ -21,7 +21,7 @@ import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -44,14 +44,14 @@ public class SrvSystemCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmpReq = request.getSCMP();
+		SCMPMessage scmpReq = request.getMessage();
 		if(scmpReq.getBodyLength() > 0) {
 			String[] serviceNames = ((String) scmpReq.getBody()).split(":");
 			for (String name : serviceNames) {
 				ServiceRegistry.getCurrentInstance().remove(name);
 			}
 		}
-		SCMP scmpReply = new SCMP();
+		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmpReq.getSessionId());

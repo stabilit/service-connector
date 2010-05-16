@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.scmp.internal;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPSendPart. Represents an outgoing part SCMP of a large message.
@@ -35,21 +35,21 @@ public class SCMPSendPart extends SCMPPart {
 	/**
 	 * Instantiates a new SCMPSendPart.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @param offset
 	 *            the offset
 	 */
-	public SCMPSendPart(SCMP scmp, int offset) {
+	public SCMPSendPart(SCMPMessage message, int offset) {
 		this.offset = offset;
-		this.callLength = scmp.getBodyLength();
+		this.callLength = message.getBodyLength();
 		// evaluates the size of this part
-		this.size = this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
-				: SCMP.LARGE_MESSAGE_LIMIT;
-		this.setHeader(scmp);
-		this.setInternalStatus(scmp.getInternalStatus());
-		this.setBody(scmp.getBody());
-		this.setIsReply(scmp.isReply());
+		this.size = this.callLength - this.offset < SCMPMessage.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
+				: SCMPMessage.LARGE_MESSAGE_LIMIT;
+		this.setHeader(message);
+		this.setInternalStatus(message.getInternalStatus());
+		this.setBody(message.getBody());
+		this.setIsReply(message.isReply());
 	}
 
 	/*

@@ -43,7 +43,7 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
@@ -156,7 +156,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit .sc.scmp.SCMP)
 	 */
 	@Override
-	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
@@ -190,7 +190,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		ConnectionListenerSupport.getInstance().fireRead(this, buffer);// logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
-		SCMP ret = (SCMP) encoderDecoder.decode(bais);
+		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
 		return ret;
 	}
 

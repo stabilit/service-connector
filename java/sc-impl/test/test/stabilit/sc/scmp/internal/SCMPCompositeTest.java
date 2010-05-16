@@ -20,7 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -38,7 +38,7 @@ public class SCMPCompositeTest {
 		int bodyLength = 0;
 		StringBuilder body = new StringBuilder();
 
-		SCMP request = new SCMP();
+		SCMPMessage request = new SCMPMessage();
 		request.setBody("request");
 		request.setMessageType(SCMPMsgType.CLN_DATA.getRequestName());
 

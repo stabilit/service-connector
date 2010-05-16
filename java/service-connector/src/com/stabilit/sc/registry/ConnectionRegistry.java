@@ -50,6 +50,7 @@ public final class ConnectionRegistry extends Registry {
 	 *            the key
 	 * @param mapBean
 	 *            the map bean
+	 *            TODO (TRN) what is this good for?
 	 */
 	public void add(Object key, MapBean<Object> mapBean) {
 		this.put(key, mapBean);

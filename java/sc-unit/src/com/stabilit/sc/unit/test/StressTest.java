@@ -24,7 +24,7 @@ import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class StressTest.
@@ -54,7 +54,7 @@ public class StressTest extends SuperTestCase {
 				connectCall.setCompression(false);
 				connectCall.setKeepAliveTimeout(30);
 				connectCall.setKeepAliveInterval(360);
-				SCMP result = connectCall.invoke();
+				SCMPMessage result = connectCall.invoke();
 				SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
 						.newInstance(client);
 				disconnectCall.invoke();
@@ -77,7 +77,7 @@ public class StressTest extends SuperTestCase {
 			connectCall.setCompression(false);
 			connectCall.setKeepAliveTimeout(30);
 			connectCall.setKeepAliveInterval(360);
-			SCMP result = connectCall.invoke();
+			SCMPMessage result = connectCall.invoke();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

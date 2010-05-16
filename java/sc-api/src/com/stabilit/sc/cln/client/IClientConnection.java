@@ -17,7 +17,7 @@
 package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.net.IConnection;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Interface IClientConnection abstracts any connection to a server.
@@ -43,7 +43,7 @@ public interface IClientConnection extends IConnection {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
 
 	/**
 	 * Disconnect.

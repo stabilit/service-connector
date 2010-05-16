@@ -29,7 +29,7 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
@@ -95,7 +95,7 @@ public class NioHttpClientConnection implements IClientConnection {
 	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InetSocketAddress inetSocketAddress = (InetSocketAddress) socketChannel.socket().getRemoteSocketAddress();
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
@@ -139,7 +139,7 @@ public class NioHttpClientConnection implements IClientConnection {
 		baos.close();
 		byte[] buffer = baos.toByteArray();
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP ret = (SCMP) streamHttpUtil.readSCMP(bais);
+		SCMPMessage ret = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();
 		return ret;
 	}

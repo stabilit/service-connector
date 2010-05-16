@@ -27,7 +27,7 @@ import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -85,33 +85,33 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
-		SCMP result = null;
-		int maxNodes = scmp.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
+		SCMPMessage message = request.getMessage();
+		SCMPMessage result = null;
+		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 		if (LoggerListenerSupport.getInstance().isDebug()) {
 			LoggerListenerSupport.getInstance().fireDebug(this,
 					"Run command " + this.getKey() + " on Node: " + maxNodes);
 		}
 		// adding ip of current unit to ip address list
-		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		if (scmp.getBodyLength() > 0) {
-			if (scmp.getBody().toString().length() > 100) {
-				System.out.println("ClnEchoCommand body = " + scmp.getBody().toString().substring(0, 100));
+		if (message.getBodyLength() > 0) {
+			if (message.getBody().toString().length() > 100) {
+				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
 			} else {
-				System.out.println("ClnEchoCommand body = " + scmp.getBody().toString());
+				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
 			}
 		} else {
 			System.out.println("ClnEchoCommand empty body");
 		}
 
-		Session session = getSessionById(scmp.getSessionId());
+		Session session = getSessionById(message.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
 
@@ -123,21 +123,21 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		scmp.removeHeader(SCMPHeaderAttributeKey.MAX_NODES);
+		message.removeHeader(SCMPHeaderAttributeKey.MAX_NODES);
 
 		try {
 			if (maxNodes == 2) {
 				// forward to next node
-				result = serviceRegistryItem.srvEcho(scmp);
+				result = serviceRegistryItem.srvEcho(message);
 			} else {
 				// forward to next node where echo will be executed
 				--maxNodes;
-				scmp.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
-				result = serviceRegistryItem.clnEcho(scmp);
+				message.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
+				result = serviceRegistryItem.clnEcho(message);
 			}
 		} catch (CommunicationException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(scmp.getSessionId());
+			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
 			serviceRegistryItem.markObsolete();
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(

@@ -24,7 +24,7 @@ package com.stabilit.sc.scmp;
 public abstract class ResponseAdapter implements IResponse {
 
 	/** The scmp. */
-	protected SCMP scmp;
+	protected SCMPMessage scmp;
 
 	/**
 	 * Instantiates a new response adapter.
@@ -38,7 +38,7 @@ public abstract class ResponseAdapter implements IResponse {
 	 * @see com.stabilit.sc.scmp.IResponse#getSCMP()
 	 */
 	@Override
-	public SCMP getSCMP() {
+	public SCMPMessage getSCMP() {
 		return this.scmp;
 	}
 
@@ -47,7 +47,7 @@ public abstract class ResponseAdapter implements IResponse {
 	 * @see com.stabilit.sc.scmp.IResponse#setSCMP(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public void setSCMP(SCMP scmp) {
+	public void setSCMP(SCMPMessage scmp) {
 		this.scmp = scmp;
 	}
 

@@ -47,7 +47,7 @@ public abstract class Server implements IServer {
 		this.serverConfig = serverConfig;
 		this.serverContext = new ServerContext(this);
 		ServerConnectionFactory serverConnectionFactory = new ServerConnectionFactory();
-		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getCon());
+		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getConnection());
 		this.serverConnection.setServer(this);
 		this.serverConnection.setHost(this.serverConfig.getHost());
 		this.serverConnection.setPort(this.serverConfig.getPort());

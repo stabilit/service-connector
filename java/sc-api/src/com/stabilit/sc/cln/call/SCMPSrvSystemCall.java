@@ -21,7 +21,7 @@ import java.util.Map;
 import com.stabilit.sc.cln.call.ISCMPCall;
 import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -48,7 +48,7 @@ public class SCMPSrvSystemCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPSrvSystemCall(IClient client, SCMP scmpSession) {
+	public SCMPSrvSystemCall(IClient client, SCMPMessage scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -62,7 +62,7 @@ public class SCMPSrvSystemCall extends SCMPCallAdapter {
 	 * @return the iSCMP call
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPSrvSystemCall(client, scmpSession);
 	}
 
@@ -73,7 +73,7 @@ public class SCMPSrvSystemCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class SCMPSrvSystemCall extends SCMPCallAdapter {
 	 *            the new message info
 	 */
 	public void setMessageInfo(String messageInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class SCMPSrvSystemCall extends SCMPCallAdapter {
 	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.requestMessage.setHeader(header);
 	}
 
 	/**

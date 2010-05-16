@@ -19,7 +19,7 @@ package com.stabilit.sc.cmd.impl;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -70,12 +70,12 @@ public class EchoSCCommand extends CommandAdapter {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 
-		SCMP scmpReply = new SCMPReply();
-		Object obj = scmp.getBody();
+		SCMPMessage scmpReply = new SCMPReply();
+		Object obj = message.getBody();
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setSessionId(scmp.getSessionId());
+		scmpReply.setSessionId(message.getSessionId());
 		scmpReply.setBody(obj);
 		if (obj.toString().length() > 100) {
 			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));

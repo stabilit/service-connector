@@ -23,7 +23,7 @@ import org.junit.Test;
 import com.stabilit.sc.cln.call.ISCMPCall;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnEchoCall;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -52,7 +52,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		}
 		echoCall.setBody(sb.toString());
 		echoCall.setMaxNodes(2);
-		SCMP result = echoCall.invoke();
+		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -73,7 +73,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		}
 		echoCall.setBody(sb.toString());
 		echoCall.setMaxNodes(2);
-		SCMP result = echoCall.invoke();
+		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), result
@@ -96,7 +96,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}
-		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(sb.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 //	TODO	Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
@@ -122,7 +122,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}
-		SCMP res = groupCall.closeGroup(); // send REQ (no body content)
+		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(expected.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		//TODO Assert.assertEquals("1/" + (max * 4), res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));

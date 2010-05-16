@@ -26,7 +26,7 @@ import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -84,22 +84,22 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
-		String sessionId = scmp.getSessionId();
+		SCMPMessage message = request.getMessage();
+		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
 
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
 				.getAttribute(ServiceRegistryItem.class.getName());
 		try {
 			// try sending to backend server
-			SCMP scmpReply = serviceRegistryItem.srvData(scmp);
+			SCMPMessage scmpReply = serviceRegistryItem.srvData(message);
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 		} catch (CommunicationException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(scmp.getSessionId());
+			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
 			serviceRegistryItem.markObsolete();
-			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, scmp);
+			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, message);
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPErrorCode.SERVER_ERROR);
@@ -133,33 +133,33 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			try {
 				// sessionId
-				String sessionId = scmp.getSessionId();
+				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessionId must be set!");
 				}
 				// serviceName
-				String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
 				// bodyLength
-				String bodyLength = scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
+				String bodyLength = message.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
 				ValidatorUtility.validateInt(1, bodyLength);
 				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), bodyLength);
 
 				// TODO messageId
 
 				// compression default = true
-				Boolean compression = scmp.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
+				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
 				if (compression == null) {
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
 				// messageInfo
-				String messageInfo = (String) scmp.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);

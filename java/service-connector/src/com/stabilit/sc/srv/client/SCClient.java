@@ -18,7 +18,7 @@ package com.stabilit.sc.srv.client;
 
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCClient. Defines behavior of client in the context of Service Connector.
@@ -53,7 +53,7 @@ public class SCClient extends Client {
 	 *             the exception
 	 */
 	@Override
-	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		return clientConnection.sendAndReceive(scmp);
 	}
 }

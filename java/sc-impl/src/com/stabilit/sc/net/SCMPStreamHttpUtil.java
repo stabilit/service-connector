@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 
 /**
@@ -44,17 +44,17 @@ public class SCMPStreamHttpUtil {
 	}
 
 	/**
-	 * Read scmp from inputSteam.
+	 * Read scmp message from inputSteam.
 	 * 
-	 * @param is
+	 * @param inputStream
 	 *            the is
 	 * @return the sCMP
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP readSCMP(InputStream is) throws Exception {
+	public SCMPMessage readSCMP(InputStream inputStream) throws Exception {
 		// read headers
-		String line = readLine(is);
+		String line = readLine(inputStream);
 		int contentLength = -1;
 		while (line != null) {
 			if (line.length() <= 0) {
@@ -69,7 +69,7 @@ public class SCMPStreamHttpUtil {
 					contentLength = Integer.parseInt(value.trim());
 				}
 			}
-			line = readLine(is);
+			line = readLine(inputStream);
 		}
 		if (contentLength <= 0) {
 			return null;
@@ -77,7 +77,7 @@ public class SCMPStreamHttpUtil {
 		byte[] stream = new byte[contentLength];
 		int bytesRead = 0;
 		while (bytesRead < stream.length) {
-			int readSize = is.read(stream, bytesRead, contentLength - bytesRead);
+			int readSize = inputStream.read(stream, bytesRead, contentLength - bytesRead);
 			if (readSize < 0) {
 				throw new CommunicationException("Connection lost");
 			}
@@ -85,8 +85,8 @@ public class SCMPStreamHttpUtil {
 		}
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(stream);
 		ByteArrayInputStream bais = new ByteArrayInputStream(stream);
-		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
-		return scmp;
+		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
+		return message;
 	}
 
 	/**
@@ -136,18 +136,18 @@ public class SCMPStreamHttpUtil {
 	}
 
 	/**
-	 * Write request scmp to outputStream.
+	 * Write request message to outputStream.
 	 * 
-	 * @param os
+	 * @param outputStream
 	 *            the os
 	 * @param path
 	 *            the path
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void writeRequestSCMP(OutputStream os, String path, SCMP scmp) throws Exception {
+	public void writeRequestSCMP(OutputStream outputStream, String path, SCMPMessage message) throws Exception {
 		// POST / HTTP/1.1
 		// User-Agent: Java/1.6.0_06
 		// Host: 127.0.0.1:88
@@ -166,22 +166,22 @@ public class SCMPStreamHttpUtil {
 		http.append("Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2\r\n");
 		http.append("Connection: keep-alive\r\n");
 		http.append("Content-type: ");
-		http.append(this.getMimeType(scmp));
+		http.append(this.getMimeType(message));
 		http.append("\r\n");
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		encoderDecoder.encode(baos, scmp);
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(message);
+		encoderDecoder.encode(baos, message);
 		baos.close();
 		byte[] objStream = baos.toByteArray();
 		http.append("Content-Length: ");
 		http.append(objStream.length);
 		http.append("\r\n");
 		http.append("\r\n");
-		os.write(http.toString().getBytes());
-		os.flush();
-		os.write(objStream);
-		os.flush();
+		outputStream.write(http.toString().getBytes());
+		outputStream.flush();
+		outputStream.write(objStream);
+		outputStream.flush();
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class SCMPStreamHttpUtil {
 	 *            the scmp
 	 * @return the mime type
 	 */
-	private String getMimeType(SCMP scmp) {
+	private String getMimeType(SCMPMessage scmp) {
 		SCMPBodyType bodyType = scmp.getBodyType();
 		return bodyType.getMimeType();
 	}
@@ -206,7 +206,7 @@ public class SCMPStreamHttpUtil {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void writeResponseSCMP(OutputStream os, SCMP scmp) throws Exception {
+	public void writeResponseSCMP(OutputStream os, SCMPMessage scmp) throws Exception {
 		StringBuilder http = new StringBuilder();
 		http.append("HTTP/1.1 200 OK\r\n");
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

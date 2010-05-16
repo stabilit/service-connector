@@ -31,7 +31,7 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.ResponseAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http
@@ -85,7 +85,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public void setSCMP(SCMP scmp) {
+	public void setSCMP(SCMPMessage scmp) {
 		if (scmp == null) {
 			return;
 		}

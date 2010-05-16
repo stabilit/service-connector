@@ -26,7 +26,7 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -55,11 +55,11 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
 				.getCurrentInstance();
 
-		String sessionId = scmp.getSessionId();
+		String sessionId = message.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 		SCMPReply scmpReply = new SCMPReply();
 
@@ -69,10 +69,10 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 			simSessReg.add(sessionId, (Session) session);
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		} else {
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
@@ -93,8 +93,8 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
-			Map<String, String> scmpHeader = scmp.getHeader();
+			SCMPMessage message = request.getMessage();
+			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// serviceName
 				String serviceName = (String) scmpHeader
@@ -103,7 +103,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 					throw new ValidationException("serviceName must be set!");
 				}
 				// sessionId
-				String sessionId = scmp.getSessionId();
+				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
 				}

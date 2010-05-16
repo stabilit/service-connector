@@ -54,19 +54,19 @@ public interface IClientConfigItem {
 	public void setHost(String host);
 
 	/**
-	 * Gets the con. Con identifies concrete implementation of a client.
+	 * Gets the connection. Connection identifies concrete implementation of a client.
 	 * 
-	 * @return the con
+	 * @return the connection
 	 */
-	public String getCon();
+	public String getConnection();
 
 	/**
-	 * Sets the con.
+	 * Sets the connection.
 	 * 
-	 * @param con
-	 *            the new con
+	 * @param connection
+	 *            the new connection
 	 */
-	public void setCon(String con);
+	public void setConnection(String connection);
 
 	/**
 	 * Sets the number of threads.

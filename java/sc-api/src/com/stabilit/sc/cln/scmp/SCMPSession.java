@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.scmp;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 
 /**
@@ -24,7 +24,7 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
  * 
  * @author JTraber
  */
-public class SCMPSession extends SCMP {
+public class SCMPSession extends SCMPMessage {		// TODO (TRN) Session is NOT a message! This is completely wrong.
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5900008165666082494L;
@@ -32,15 +32,15 @@ public class SCMPSession extends SCMP {
 	/**
 	 * Instantiates a new sCMP session.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 */
-	public SCMPSession(SCMP scmp) {
-		String sessionId = scmp.getSessionId();
+	public SCMPSession(SCMPMessage message) {
+		String sessionId = message.getSessionId();
 		this.setSessionId(sessionId);
-		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		String msgType = scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
+		String msgType = message.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
 		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType);
 	}
 

@@ -28,7 +28,7 @@ import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPClnSystemCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
@@ -63,7 +63,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		deleteSessionCall.invoke();
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
@@ -103,7 +103,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		}
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
-		SCMP inspect = inspectCall.invoke();
+		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));

@@ -28,7 +28,7 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
@@ -54,7 +54,7 @@ public class NioHttpRequest extends RequestAdapter {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
 		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
-		this.scmp = null;
+		this.message = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
@@ -99,8 +99,8 @@ public class NioHttpRequest extends RequestAdapter {
 		byte[] buffer = baos.toByteArray();
 		ConnectionListenerSupport.getInstance().fireRead(this, buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) streamHttpUtil.readSCMP(bais);
+		SCMPMessage message = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();
-		this.scmp = scmp;
+		this.message = message;
 	}
 }

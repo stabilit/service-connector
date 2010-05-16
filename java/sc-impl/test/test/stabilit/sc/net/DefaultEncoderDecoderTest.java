@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -44,7 +44,7 @@ public class DefaultEncoderDecoderTest {
 	private String msgID;
 	private String bodyLength;
 	private String body;
-	private SCMP encodeScmp;
+	private SCMPMessage encodeScmp;
 
 	@Before
 	public void setUp() {
@@ -55,7 +55,7 @@ public class DefaultEncoderDecoderTest {
 		this.bodyLength = "12";
 		this.body = "hello world!";
 
-		encodeScmp = new SCMP();
+		encodeScmp = new SCMPMessage();
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getRequestName());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
@@ -72,13 +72,13 @@ public class DefaultEncoderDecoderTest {
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
-		SCMP scmp = null;
+		SCMPMessage message = null;
 		try {
-			scmp = (SCMP) coder.decode(is);
+			message = (SCMPMessage) coder.decode(is);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		verifySCMP(scmp);
+		verifySCMP(message);
 	}
 
 	@Test
@@ -92,13 +92,13 @@ public class DefaultEncoderDecoderTest {
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
-		SCMP scmp = null;
+		SCMPMessage message = null;
 		try {
-			scmp = (SCMP) coder.decode(is);
+			message = (SCMPMessage) coder.decode(is);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		verifySCMP(scmp);
+		verifySCMP(message);
 	}
 
 	@Test
@@ -112,15 +112,15 @@ public class DefaultEncoderDecoderTest {
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
-		SCMP scmp = null;
+		SCMPMessage message = null;
 		try {
-			scmp = (SCMP) coder.decode(is);
+			message = (SCMPMessage) coder.decode(is);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		if (scmp.isFault() == false)
+		if (message.isFault() == false)
 			Assert.fail("scmp should be of type fault");
-		verifySCMP(scmp);
+		verifySCMP(message);
 	}
 
 	@Test
@@ -150,13 +150,13 @@ public class DefaultEncoderDecoderTest {
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.newInstance(buffer);
 
-		SCMP scmp = null;
+		SCMPMessage message = null;
 		try {
-			scmp = (SCMP) coder.decode(is);
+			message = (SCMPMessage) coder.decode(is);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		verifySCMP(scmp);
+		verifySCMP(message);
 
 		bodyType = SCMPBodyType.text;
 		requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
@@ -167,13 +167,13 @@ public class DefaultEncoderDecoderTest {
 		is = new ByteArrayInputStream(buffer);
 		coder = coderFactory.newInstance(buffer);
 
-		scmp = null;
+		message = null;
 		try {
-			scmp = (SCMP) coder.decode(is);
+			message = (SCMPMessage) coder.decode(is);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		verifySCMPStringBody(scmp);
+		verifySCMPStringBody(message);
 	}
 
 	@Test
@@ -202,7 +202,7 @@ public class DefaultEncoderDecoderTest {
 				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
-		SCMP encodeRes = new SCMPReply();
+		SCMPMessage encodeRes = new SCMPReply();
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
 
@@ -224,7 +224,7 @@ public class DefaultEncoderDecoderTest {
 				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
-		SCMP encodeExc = new SCMPFault();
+		SCMPMessage encodeExc = new SCMPFault();
 		encodeExc.setHeader(encodeScmp);
 		encodeExc.setBody(body.getBytes());
 
@@ -270,7 +270,7 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 	}
 
-	private void verifySCMPStringBody(SCMP scmp) {
+	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 //		Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
@@ -278,7 +278,7 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(body, scmp.getBody());
 	}
 
-	private void verifySCMP(SCMP scmp) {
+	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 //		Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));

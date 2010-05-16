@@ -18,7 +18,7 @@ package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -44,7 +44,7 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDeleteSessionCall(IClient client, SCMP scmpSession) {
+	public SCMPClnDeleteSessionCall(IClient client, SCMPMessage scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -54,7 +54,7 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	 * com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPClnDeleteSessionCall(client, scmpSession);
 	}
 
@@ -65,7 +65,7 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/*
@@ -73,13 +73,13 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
 	 */
 	@Override
-	public SCMP invoke() throws Exception {
+	public SCMPMessage invoke() throws Exception {
 		super.invoke();
 		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession) {
 			// remove session from internal registry
 			((SCMPSession) this.scmpSession).removeSessionRegistry();
 		}
-		return this.result;
+		return this.responseMessage;
 	}
 
 	/*

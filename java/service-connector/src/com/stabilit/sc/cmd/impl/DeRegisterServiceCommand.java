@@ -24,7 +24,7 @@ import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -83,8 +83,8 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage message = request.getMessage();
+		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
@@ -128,11 +128,11 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}

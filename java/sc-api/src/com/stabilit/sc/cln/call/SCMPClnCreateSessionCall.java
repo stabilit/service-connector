@@ -54,9 +54,9 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMPSession invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
-		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke();
-		SCMPSession scmpSession = new SCMPSession(this.result); // register session in internal registry
+		SCMPSession scmpSession = new SCMPSession(this.responseMessage); // register session in internal registry
 		scmpSession.addSessionRegistry();
 		return scmpSession;
 	}
@@ -77,7 +77,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		call.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/*

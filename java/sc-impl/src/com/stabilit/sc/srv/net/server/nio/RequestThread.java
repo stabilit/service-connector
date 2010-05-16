@@ -27,7 +27,7 @@ import com.stabilit.sc.net.nio.NioHttpRequest;
 import com.stabilit.sc.net.nio.NioHttpResponse;
 import com.stabilit.sc.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.scmp.IFaultResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -91,7 +91,7 @@ public class RequestThread implements Runnable {
 					if (scmpLargeResponse.hasNext()) {
 						// there are still parts to send to complete request
 						commandRequest.readRequest();
-						SCMP nextSCMP = scmpLargeResponse.getNext();
+						SCMPMessage nextSCMP = scmpLargeResponse.getNext();
 						response.setSCMP(nextSCMP);
 						nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 						msgID.incrementPartSequenceNr();
@@ -107,7 +107,7 @@ public class RequestThread implements Runnable {
 				ICommand command = commandRequest.readCommand();
 				try {
 					if (command == null) {
-						SCMP scmpReq = request.getSCMP();
+						SCMPMessage scmpReq = request.getMessage();
 						SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
 						scmpFault.setMessageType(scmpReq.getMessageType());
 						scmpFault.setLocalDateTime();
@@ -153,15 +153,15 @@ public class RequestThread implements Runnable {
 				if (response.isLarge()) {
 					// response is large, create a large response for reply
 					scmpLargeResponse = new SCMPCompositeSender(response.getSCMP());
-					SCMP firstSCMP = scmpLargeResponse.getFirst();
+					SCMPMessage firstSCMP = scmpLargeResponse.getFirst();
 					response.setSCMP(firstSCMP);
 				} else {
-					SCMP scmp = response.getSCMP();
-					if (scmp.isPart() || request.getSCMP().isPart()) {
+					SCMPMessage message = response.getSCMP();
+					if (message.isPart() || request.getMessage().isPart()) {
 						msgID.incrementPartSequenceNr();
-						scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 					} else {
-						scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 						msgID.incrementMsgSequenceNr();
 					}
 				}

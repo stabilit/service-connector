@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.scmp.IInternalMessage;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
@@ -72,7 +72,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		BufferedReader br = new BufferedReader(isr);
 		Map<String, String> metaMap = new HashMap<String, String>();
 		// read heading line
-		SCMP scmp = null;
+		SCMPMessage scmpMsg = null;
 		int readBytes = 0;
 		try {
 			String line = br.readLine(); // TODO performance
@@ -86,15 +86,15 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			switch (headlineKey) {
 			case PRQ:
 			case PRS:
-				scmp = new SCMPPart();
+				scmpMsg = new SCMPPart();
 				break;
 			case EXC:
-				scmp = new SCMPFault();
+				scmpMsg = new SCMPFault();
 				break;
 			case UNDEF:
 				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
 			default:
-				scmp = new SCMP();
+				scmpMsg = new SCMPMessage();
 			}
 			// storing header fields in meta map
 			while (true) {
@@ -120,17 +120,17 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		String scmpBodyType = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		SCMPBodyType scmpBodyTypEnum = SCMPBodyType.getBodyType(scmpBodyType);
-		scmp.setHeader(metaMap);
+		scmpMsg.setHeader(metaMap);
 		try {
 			if (scmpBodyTypEnum == SCMPBodyType.text) {
 				int caLength = Integer.parseInt(scmpBodyLength);
 				char[] caBuffer = new char[caLength];
 				br.read(caBuffer);
 				String bodyString = new String(caBuffer, 0, caLength);
-				scmp.setBody(bodyString);
-				return scmp;
+				scmpMsg.setBody(bodyString);
+				return scmpMsg;
 			}
-			if (scmpBodyTypEnum == SCMPBodyType.message) {
+			if (scmpBodyTypEnum == SCMPBodyType.internalMessage) {
 				String classLine = br.readLine();
 				if (classLine == null) {
 					return null;
@@ -145,8 +145,8 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				Class messageClass = Class.forName(t[1]);
 				IInternalMessage message = (IInternalMessage) messageClass.newInstance();
 				message.decode(br);
-				scmp.setBody(message);
-				return scmp;
+				scmpMsg.setBody(message);
+				return scmpMsg;
 			}
 			if (scmpBodyTypEnum == SCMPBodyType.binary) {
 				int baLength = Integer.parseInt(scmpBodyLength);
@@ -154,13 +154,13 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 				is.reset();
 				is.skip(readBytes);
 				is.read(baBuffer);
-				scmp.setBody(baBuffer);
-				return scmp;
+				scmpMsg.setBody(baBuffer);
+				return scmpMsg;
 			}
 		} catch (Exception e) {
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 		}
-		return scmp;
+		return scmpMsg;
 	}
 
 	/*
@@ -171,33 +171,33 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		BufferedWriter bw = new BufferedWriter(osw);
-		SCMP scmp = (SCMP) obj;
+		SCMPMessage scmpMsg = (SCMPMessage) obj;
 
-		if (scmp.isGroup() == false) {
+		if (scmpMsg.isGroup() == false) {
 			// no group call reset internal status, if group call internal status already set
-			scmp.setInternalStatus(SCMPInternalStatus.NONE);
+			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
 		}
 
 		// evaluate right headline key from SCMP type
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
-		if (scmp.isReply()) {
-			if (scmp.isFault()) {
+		if (scmpMsg.isReply()) {
+			if (scmpMsg.isFault()) {
 				headerKey = SCMPHeadlineKey.EXC;
 			} else {
-				if (scmp.isPart()) {
+				if (scmpMsg.isPart()) {
 					headerKey = SCMPHeadlineKey.PRS;
 				} else {
 					headerKey = SCMPHeadlineKey.RES;
 				}
 			}
 		} else {
-			if (scmp.isPart() || scmp.isComposite()) {
+			if (scmpMsg.isPart() || scmpMsg.isComposite()) {
 				headerKey = SCMPHeadlineKey.PRQ;
 			} else {
 				headerKey = SCMPHeadlineKey.REQ;
 			}
 		}
-		Map<String, String> metaMap = scmp.getHeader();
+		Map<String, String> metaMap = scmpMsg.getHeader();
 		StringBuilder sb = new StringBuilder();
 		// write header fields
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
@@ -222,12 +222,12 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
 		// write body depends on body type
 		try {
-			Object body = scmp.getBody();
+			Object body = scmpMsg.getBody();
 			if (body != null) {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-					int bodyLength = scmp.getBodyLength(); // returns body length of part only
-					// this is a scmp part, we need to redefine the body length (message part length)
+					int bodyLength = scmpMsg.getBodyLength(); // returns body length of part only
+					// this is a message part, we need to redefine the body length (message part length)
 					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(bodyLength));
@@ -236,12 +236,12 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
 					bw.flush();
-					// gets the offset of body - body of part scmp is written
-					int bodyOffset = scmp.getBodyOffset();
+					// gets the offset of body - body of part message is written
+					int bodyOffset = scmpMsg.getBodyOffset();
 					bw.write(t, bodyOffset, bodyLength);
 					bw.flush();
 					// set internal status to save communication state
-					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
 
@@ -249,22 +249,22 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					byte[] ba = (byte[]) body;
 					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 					sb.append(EQUAL_SIGN);
-					int bodyLength = scmp.getBodyLength(); // returns body length of part only
+					int bodyLength = scmpMsg.getBodyLength(); // returns body length of part only
 					sb.append(String.valueOf(bodyLength));
 					sb.append("\n\n");
 					int messageLength = sb.length() + bodyLength;
 					writeHeadLine(bw, headerKey, messageLength);
 					bw.write(sb.toString());
 					bw.flush();
-					int bodyOffset = scmp.getBodyOffset();
+					int bodyOffset = scmpMsg.getBodyOffset();
 					os.write((byte[]) ba, bodyOffset, bodyLength);
 					os.flush();
 					// set internal status to save communication state
-					scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				} else {
 					// set internal status to save communication state
-					scmp.setInternalStatus(SCMPInternalStatus.FAILED);
+					scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 					throw new EncodingDecodingException("unsupported large message body type");
 				}
 			} else {
@@ -276,11 +276,11 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 			}
 		} catch (IOException e1) {
 			ExceptionListenerSupport.getInstance().fireException(this, e1);
-			scmp.setInternalStatus(SCMPInternalStatus.FAILED);
+			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 		// set internal status to save communication state
-		scmp.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		return;
 	}
 
@@ -301,7 +301,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		bw.write(" /s=");
 		bw.write(String.valueOf(messageLength));
 		bw.write("& SCMP/");
-		bw.append(SCMP.SCMP_VERSION);
+		bw.append(SCMPMessage.SCMP_VERSION);
 		bw.append("\n");
 		bw.flush();
 	}

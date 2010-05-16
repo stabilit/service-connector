@@ -72,7 +72,7 @@ public class ClientConfig {
 
 			clientConfigItem.setPort(port);
 			clientConfigItem.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
-			clientConfigItem.setCon((String) props.get(serverName + IConstants.CON_QUALIFIER));
+			clientConfigItem.setConnection((String) props.get(serverName + IConstants.CON_QUALIFIER));
 			clientConfigItem.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
@@ -105,8 +105,8 @@ public class ClientConfig {
 		private int port;
 		/** The host. */
 		private String host;
-		/** The con, identifies concrete client implementation. */
-		private String con;
+		/** The connection identifies concrete client implementation. */
+		private String connection;
 		/** The number of threads to use in thread pool of this client. */
 		private int numberOfThreads;
 
@@ -123,14 +123,14 @@ public class ClientConfig {
 		 *            the host
 		 * @param port
 		 *            the port
-		 * @param con
-		 *            the con
+		 * @param connection
+		 *            the connection
 		 */
-		public ClientConfigItem(String host, int port, String con, int numberOfThreads) {
+		public ClientConfigItem(String host, int port, String connection, int numberOfThreads) {
 			super();
 			this.port = port;
 			this.host = host;
-			this.con = con;
+			this.connection = connection;
 			this.numberOfThreads = numberOfThreads;
 		}
 
@@ -170,16 +170,16 @@ public class ClientConfig {
 		 * (non-Javadoc)
 		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getCon()
 		 */
-		public String getCon() {
-			return con;
+		public String getConnection() {
+			return connection;
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setCon(java.lang.String)
 		 */
-		public void setCon(String con) {
-			this.con = con;
+		public void setConnection(String connection) {
+			this.connection = connection;
 		}
 
 		/*

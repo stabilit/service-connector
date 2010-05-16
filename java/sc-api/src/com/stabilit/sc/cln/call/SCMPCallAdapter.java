@@ -17,7 +17,7 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPInternalStatus;
@@ -34,11 +34,11 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** The client to use for the call. */
 	protected IClient client;
 	/** The scmp session to use for the call. */
-	protected SCMP scmpSession;
-	/** The call. */
-	protected SCMP call;
-	/** The result. */
-	protected SCMP result;
+	protected SCMPMessage scmpSession;
+	/** The request message. */
+	protected SCMPMessage requestMessage;
+	/** The response message. */
+	protected SCMPMessage responseMessage;
 
 	/**
 	 * Instantiates a new scmp call adapter.
@@ -55,25 +55,25 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPCallAdapter(IClient client, SCMP scmpSession) {
+	public SCMPCallAdapter(IClient client, SCMPMessage scmpSession) {
 		this.client = client;
 		this.scmpSession = scmpSession;
 
 		if (this.scmpSession != null) {
 			if (this.scmpSession.isPart()) {
 				// on SC scmpSession might be a part - call to server must be a part too
-				this.call = new SCMPPart();
-				this.call.setHeader(this.scmpSession.getHeader());
+				this.requestMessage = new SCMPPart();
+				this.requestMessage.setHeader(this.scmpSession.getHeader());
 			} else {
-				this.call = new SCMP();
+				this.requestMessage = new SCMPMessage();
 			}
-			this.call.setSessionId(scmpSession.getSessionId());
-			this.call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession
+			this.requestMessage.setSessionId(scmpSession.getSessionId());
+			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession
 					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		}
 
-		if (this.call == null) {
-			this.call = new SCMP();
+		if (this.requestMessage == null) {
+			this.requestMessage = new SCMPMessage();
 		}
 	}
 
@@ -92,7 +92,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -111,7 +111,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#closeGroup()
 	 */
 	@Override
-	public SCMP closeGroup() {
+	public SCMPMessage closeGroup() {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
@@ -120,14 +120,14 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#invoke()
 	 */
 	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.result = client.sendAndReceive(this.call);
+	public SCMPMessage invoke() throws Exception {
+		this.requestMessage.setMessageType(getMessageType().getRequestName());
+		this.responseMessage = client.sendAndReceive(this.requestMessage);
 
-		if (this.result.isFault()) {
-			throw new SCMPCallException((SCMPFault) result);
+		if (this.responseMessage.isFault()) {
+			throw new SCMPCallException((SCMPFault) responseMessage);
 		}
-		return this.result;
+		return this.responseMessage;
 	}
 
 	/*
@@ -135,8 +135,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#getCall()
 	 */
 	@Override
-	public SCMP getCall() {
-		return call;
+	public SCMPMessage getRequest() {
+		return requestMessage;
 	}
 
 	/*
@@ -144,8 +144,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#getResult()
 	 */
 	@Override
-	public SCMP getResult() {
-		return result;
+	public SCMPMessage getResponse() {
+		return responseMessage;
 	}
 
 	/*
@@ -153,7 +153,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#setBody(java.lang.Object)
 	 */
 	public void setBody(Object obj) {
-		call.setBody(obj);
+		requestMessage.setBody(obj);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 *            the new compression
 	 */
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
 
 	/**
@@ -193,28 +193,28 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * @see com.stabilit.sc.cln.service.ISCMPCall#invoke()
 		 */
 		@Override
-		public SCMP invoke() throws Exception {
+		public SCMPMessage invoke() throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				throw new SCMPCallException("group is closed");
 			}
-			SCMP callSCMP = this.parentCall.getCall();
-			SCMPCallAdapter.this.call.setInternalStatus(SCMPInternalStatus.GROUP);
+			SCMPMessage callSCMP = this.parentCall.getRequest();
+			SCMPCallAdapter.this.requestMessage.setInternalStatus(SCMPInternalStatus.GROUP);
 
 			if (callSCMP.isLargeMessage()) {
 				// parent call is large no need to change anything
-				SCMP scmp = this.parentCall.invoke();
-				return scmp;
+				SCMPMessage message = this.parentCall.invoke();
+				return message;
 			}
 			if (callSCMP.isPart() == false) {
 				// callSCMP is small and not part but inside a group only parts are allowed
 				SCMPPart scmpPart = new SCMPPart();
 				scmpPart.setHeader(callSCMP);
 				scmpPart.setBody(callSCMP.getBody());
-				SCMPCallAdapter.this.call = scmpPart; // SCMPCallAdapter.this points to this.parentCall
+				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}
-			SCMP scmp = this.parentCall.invoke();
-			return scmp;
+			SCMPMessage message = this.parentCall.invoke();
+			return message;
 		}
 
 		/*
@@ -231,15 +231,15 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * @see com.stabilit.sc.cln.service.ISCMPCall#closeGroup()
 		 */
 		@Override
-		public SCMP closeGroup() throws Exception {
+		public SCMPMessage closeGroup() throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
 			// send empty closing REQ
-			SCMP scmp = new SCMP();
-			scmp.setHeader(SCMPCallAdapter.this.call);
-			scmp.setBody(null);
-			scmp.setInternalStatus(SCMPInternalStatus.GROUP);
-			SCMPCallAdapter.this.call = scmp;
-			SCMP result = this.parentCall.invoke();
+			SCMPMessage message = new SCMPMessage();
+			message.setHeader(SCMPCallAdapter.this.requestMessage);
+			message.setBody(null);
+			message.setInternalStatus(SCMPInternalStatus.GROUP);
+			SCMPCallAdapter.this.requestMessage = message;
+			SCMPMessage result = this.parentCall.invoke();
 			return result;
 		}
 
@@ -266,8 +266,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * @see com.stabilit.sc.cln.service.ISCMPCall#getCall()
 		 */
 		@Override
-		public SCMP getCall() {
-			return this.parentCall.getCall();
+		public SCMPMessage getRequest() {
+			return this.parentCall.getRequest();
 		}
 
 		/*
@@ -275,8 +275,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * @see com.stabilit.sc.cln.service.ISCMPCall#getResult()
 		 */
 		@Override
-		public SCMP getResult() {
-			return this.parentCall.getResult();
+		public SCMPMessage getResponse() {
+			return this.parentCall.getResponse();
 		}
 
 		/*
@@ -294,7 +294,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * com.stabilit.sc.scmp.SCMP)
 		 */
 		@Override
-		public ISCMPCall newInstance(IClient client, SCMP scmp) {
+		public ISCMPCall newInstance(IClient client, SCMPMessage scmp) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 	}

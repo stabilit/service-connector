@@ -23,7 +23,7 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -53,10 +53,10 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
-		String sessionId = scmp.getSessionId();
+		String sessionId = message.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
@@ -70,7 +70,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		simSessReg.remove(sessionId);
 
 		SCMPReply scmpReply = new SCMPReply();
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmp
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
@@ -85,16 +85,16 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMP scmp = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			try {
 				// serviceName
-				String serviceName = (String) scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
 				// sessionId
-				String sessionId = scmp.getSessionId();
+				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
 				}

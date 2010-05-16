@@ -22,44 +22,45 @@ import java.util.Map;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 
 /**
- * The Class SCMP. Service Connector Message Protocol. Data Container for one Message.
+ * Service Connector Message Protocol. 
+ * Data container for one message.
  */
-public class SCMP {
+public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to ensure that mandatory methods are really implemented. ??
 
 	/** The Constant SCMP_VERSION. */
 	public static final String SCMP_VERSION = "1.0";
 	// TODO implementation version where?
-	/** The Constant SC_VERSION. */
+	/** The actual SC_VERSION. */	//TODO (TRN) sc_version should be a class providing method to compare compatibility
 	public static final String SC_VERSION = "1.0-00";
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
 	/** The is reply. */
 	private boolean isReply;
-	/** The header. */
+	/** The message header. */
 	protected Map<String, String> header;
 	/** The internal status. */
 	private SCMPInternalStatus internalStatus; // internal usage only
-	/** The body. */
+	/** The message body. */
 	protected Object body;
 
 	/**
 	 * Instantiates a new SCMP.
 	 */
-	public SCMP() {
+	public SCMPMessage() {
 		this.internalStatus = SCMPInternalStatus.NONE;
 		header = new HashMap<String, String>();
 		isReply = false;
 	}
 
 	/**
-	 * Instantiates a new sCMP.
+	 * Instantiates a new SCMP message.
 	 * 
-	 * @param body
-	 *            the body
+	 * @param messageBody
+	 *            the message body
 	 */
-	public SCMP(Object body) {
+	public SCMPMessage(Object messageBody) {
 		header = new HashMap<String, String>();
-		this.setBody(body);
+		this.setBody(messageBody);
 	}
 
 	/**
@@ -82,21 +83,21 @@ public class SCMP {
 	}
 
 	/**
-	 * Checks if is fault.
+	 * Checks if the message is a fault.
 	 * 
 	 * @return true, if is fault
 	 */
 	public boolean isFault() {
-		return false;
+		return false;	// implemented in sub classes
 	}
 
 	/**
-	 * Checks if is part.
+	 * Checks if the message is a part.
 	 * 
 	 * @return true, if is part
 	 */
 	public boolean isPart() {
-		return false;
+		return false;	// implemented in sub classes
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class SCMP {
 	 * @return true, if there is body offset
 	 */
 	public boolean isBodyOffset() {
-		return false;
+		return false;	// implemented in sub classes
 	}
 
 	/**
@@ -114,16 +115,16 @@ public class SCMP {
 	 * @return the body offset
 	 */
 	public int getBodyOffset() {
-		return 0;
+		return 0;		// implemented in sub classes
 	}
 
 	/**
-	 * Checks if is composite.
+	 * Checks if the message is a composite.
 	 * 
 	 * @return true, if is composite
 	 */
 	public boolean isComposite() {
-		return false;
+		return false;	// implemented in sub classes
 	}
 
 	/**
@@ -136,7 +137,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Checks if body is of type byte array.
+	 * Checks if the body is of type byte array.
 	 * 
 	 * @return true, if body is of type byte array
 	 */
@@ -148,7 +149,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Checks if body is of type string.
+	 * Checks if the body is of type string.
 	 * 
 	 * @return true, if body is of type string
 	 */
@@ -160,7 +161,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Checks if is a large message.
+	 * Checks if this is a large message.
 	 * 
 	 * @return true, if is a large message
 	 */
@@ -176,7 +177,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Removes the header.
+	 * Removes the attribute with the specified name from the header.
 	 * 
 	 * @param name
 	 *            the name
@@ -186,7 +187,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Removes the header.
+	 * Removes the attribute with the specified type from the header
 	 * 
 	 * @param headerType
 	 *            the header type
@@ -196,114 +197,114 @@ public class SCMP {
 	}
 
 	/**
-	 * Sets the header.
+	 * Sets the header attribute by name and value
 	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
+	 * @param attributeName
+	 *            the name of the attribute
+	 * @param attributeValue
+	 *            the value of the attribute
 	 */
-	public void setHeader(String name, String value) {
-		header.put(name, value);
+	public void setHeader(String attributeName, String attributeValue) {
+		header.put(attributeName, attributeValue);
 	}
 
 	/**
-	 * Sets the header.
+	 * Sets the header attribute by type and value
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @param value
+	 * @param headerType
+	 *            the header type
+	 * @param attributeValue
 	 *            the value
 	 */
-	public void setHeader(SCMPHeaderAttributeKey headerAttr, String value) {
-		header.put(headerAttr.getName(), value);
+	public void setHeader(SCMPHeaderAttributeKey headerType, String attributeValue) {
+		header.put(headerType.getName(), attributeValue);
 	}
 
 	/**
-	 * Sets the header.
+	 * Sets the header attribute by type and value
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @param value
+	 * @param headerType
+	 *            the header attribute
+	 * @param attributeValue
 	 *            the value
 	 */
-	public void setHeader(SCMPHeaderAttributeKey headerAttr, boolean value) {
-		if (value) {
-			header.put(headerAttr.getName(), "1");
+	public void setHeader(SCMPHeaderAttributeKey headerType, boolean attributeValue) {
+		if (attributeValue) {
+			header.put(headerType.getName(), "1");
 		} else {
-			header.put(headerAttr.getName(), "0");
+			header.put(headerType.getName(), "0");
 		}
 	}
 
 	/**
-	 * Sets the header.
+	 * Sets the header by type and value
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @param value
+	 * @param headerType
+	 *            the header attribute
+	 * @param attributeValue
 	 *            the value
 	 */
-	public void setHeader(SCMPHeaderAttributeKey headerAttr, int value) {
-		header.put(headerAttr.getName(), String.valueOf(value));
+	public void setHeader(SCMPHeaderAttributeKey headerType, int attributeValue) {
+		header.put(headerType.getName(), String.valueOf(attributeValue));
 	}
 
 	/**
-	 * Sets the header.
+	 * Copies the header from another message 
 	 * 
-	 * @param scmp
-	 *            the new header
+	 * @param sourceMessage
+	 *            the message with header header to be copied
 	 */
-	public void setHeader(SCMP scmp) {
-		this.setHeader(scmp.getHeader());
+	public void setHeader(SCMPMessage sourceMessage) {
+		this.setHeader(sourceMessage.getHeader());
 	}
 
 	/**
-	 * Sets the header.
+	 * Copies a header attribute from another message.
 	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @param key
-	 *            the key
+	 * @param sourceMessage
+	 *            the source message from which header header should be copied
+	 * @param headerType
+	 *            the key to be copied. If the key does not exist in the source message, attribute is not set.
 	 */
-	public void setHeader(SCMP scmp, SCMPHeaderAttributeKey key) {
-		String value = scmp.getHeader(key);
+	public void setHeader(SCMPMessage sourceMessage, SCMPHeaderAttributeKey headerType) {
+		String value = sourceMessage.getHeader(headerType);
 		if (value == null) {
 			return;
 		}
-		this.setHeader(key, value);
+		this.setHeader(headerType, value);
 	}
 
 	/**
-	 * Gets the header.
+	 * Returns the value of the header attribute.
 	 * 
-	 * @param name
-	 *            the name
-	 * @return the header
+	 * @param attributeName
+	 *            the name of the attribute
+	 * @return the attribute value
 	 */
-	public String getHeader(String name) {
-		return header.get(name);
+	public String getHeader(String attributeName) {
+		return header.get(attributeName);
 	}
 
 	/**
-	 * Gets the header.
+	 * Returns the value of the header attribute.
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @return the header
+	 * @param headerType
+	 *            the header type
+	 * @return the attribute value
 	 */
-	public String getHeader(SCMPHeaderAttributeKey headerAttr) {
-		return header.get(headerAttr.getName());
+	public String getHeader(SCMPHeaderAttributeKey headerType) {
+		return header.get(headerType.getName());
 	}
 
 	/**
-	 * Gets the header boolean.
+	 * Returns the boolean value of the header attribute
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @return the header boolean
+	 * @param headerType
+	 *            the header attribute
+	 * @return the boolean attribute value
 	 */
-	public Boolean getHeaderBoolean(SCMPHeaderAttributeKey headerAttr) {
-		String value = header.get(headerAttr.getName());
+	public Boolean getHeaderBoolean(SCMPHeaderAttributeKey headerType) {
+		String value = header.get(headerType.getName());
 
 		if ("0".equals(value)) {
 			return false;
@@ -315,14 +316,14 @@ public class SCMP {
 	}
 
 	/**
-	 * Gets the header int.
+	 * Returns the integer value of the header attribute
 	 * 
-	 * @param headerAttr
-	 *            the header attr
-	 * @return the header int
+	 * @param headerType
+	 *            the header attribute
+	 * @return the int attribute value
 	 */
-	public Integer getHeaderInt(SCMPHeaderAttributeKey headerAttr) {
-		String value = header.get(headerAttr.getName());
+	public Integer getHeaderInt(SCMPHeaderAttributeKey headerType) {
+		String value = header.get(headerType.getName());
 		if (value == null)
 			return null;
 		Integer intValue = null;
@@ -341,7 +342,7 @@ public class SCMP {
 	 * @return the session id
 	 */
 	public String getSessionId() {
-		return header.get(SCMPHeaderAttributeKey.SESSION_ID.getName());
+		return header.get(SCMPHeaderAttributeKey.SESSION_ID.getName()); 
 	}
 
 	/**
@@ -418,7 +419,7 @@ public class SCMP {
 			return SCMPBodyType.binary;
 		}
 		if (body instanceof IInternalMessage) {
-			return SCMPBodyType.message;
+			return SCMPBodyType.internalMessage;
 		}
 		return SCMPBodyType.undefined;
 	}
@@ -496,7 +497,7 @@ public class SCMP {
 	}
 
 	/**
-	 * Checks if is reply.
+	 * Checks if this message is a reply.
 	 * 
 	 * @return true, if is reply
 	 */
@@ -505,10 +506,10 @@ public class SCMP {
 	}
 
 	/**
-	 * Sets the checks if is reply.
+	 * Sets the the reply flag in the message.
 	 * 
 	 * @param isReply
-	 *            the new checks if is reply
+	 *            the reply flag value
 	 */
 	public void setIsReply(boolean isReply) {
 		this.isReply = isReply;

@@ -33,7 +33,7 @@ import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -109,15 +109,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 
 		// get free service
-		SCMP scmp = request.getSCMP();
-		String serviceName = scmp.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage message = request.getMessage();
+		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		// adding ip of current unit to header field ip address list
-		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
 		mapBean = serviceRegistry.get(serviceName);
@@ -131,11 +131,11 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		// create session
 		Session session = new Session();
-		scmp.setSessionId(session.getId());
+		message.setSessionId(session.getId());
 		ServiceRegistryItem serviceRegistryItem = null;
 		try {
 			// try to allocate session on a backend server
-			serviceRegistryItem = serviceRegistry.allocate(serviceName, scmp);
+			serviceRegistryItem = serviceRegistry.allocate(serviceName, message);
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
@@ -181,7 +181,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getSCMP().getHeader();
+			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
 			try {
 				// serviceName

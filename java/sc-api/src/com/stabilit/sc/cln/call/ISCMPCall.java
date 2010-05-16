@@ -18,7 +18,7 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
@@ -41,20 +41,20 @@ public interface ISCMPCall {
 	 * New instance of a call.
 	 * 
 	 * @param client the client to use for the call
-	 * @param scmpSession the scmp session to use for the call
+	 * @param scmpSession the session to use for the call
 	 * 
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession);
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession);
 
 	/**
 	 * Invoke.
 	 * 
-	 * @return the scmps
+	 * @return the scmp
 	 * 
 	 * @throws Exception the exception
 	 */
-	public SCMP invoke() throws Exception;
+	public SCMPMessage invoke() throws Exception;
 
 	/**
 	 * Sets the body.
@@ -68,14 +68,14 @@ public interface ISCMPCall {
 	 * 
 	 * @return the call
 	 */
-	public SCMP getCall();
+	public SCMPMessage getRequest();
 
 	/**
 	 * Gets the result.
 	 * 
 	 * @return the result
 	 */
-	public SCMP getResult();
+	public SCMPMessage getResponse();
 
 	/**
 	 * Gets the message type.
@@ -96,9 +96,9 @@ public interface ISCMPCall {
 	/**
 	 * Close group, sends the ending request.
 	 * 
-	 * @return the scmp result
+	 * @return the result
 	 * 
 	 * @throws Exception the exception
 	 */
-	public SCMP closeGroup() throws Exception;
+	public SCMPMessage closeGroup() throws Exception;
 }

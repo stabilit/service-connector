@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.log.SimpleLogger;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPLogger. Provides functionality of logging an <code>SCMP</code>.
@@ -51,7 +51,7 @@ public class SCMPLogger extends SimpleLogger {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	void log(SCMP scmp) throws IOException {
+	void log(SCMPMessage scmp) throws IOException {
 		super.log(scmp.toString());
 	}
 

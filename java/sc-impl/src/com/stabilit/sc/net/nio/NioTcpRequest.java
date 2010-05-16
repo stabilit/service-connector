@@ -29,7 +29,7 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
@@ -55,7 +55,7 @@ public class NioTcpRequest extends RequestAdapter {
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
 		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
-		this.scmp = null;
+		this.message = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
@@ -102,8 +102,8 @@ public class NioTcpRequest extends RequestAdapter {
 		byte[] buffer = baos.toByteArray();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
+		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
 		bais.close();
-		this.scmp = scmp;
+		this.message = message;
 	}
 }

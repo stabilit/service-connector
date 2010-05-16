@@ -74,19 +74,19 @@ public interface IServerConfigItem {
 	public abstract void setHost(String host);
 
 	/**
-	 * Gets the con. Con identifies concrete implementation of a server.
+	 * Gets the connection. Connection identifies concrete implementation of a server.
 	 * 
-	 * @return the con
+	 * @return the connection
 	 */
-	public abstract String getCon();
+	public abstract String getConnection();
 
 	/**
-	 * Sets the con.
+	 * Sets the connection.
 	 * 
-	 * @param con
-	 *            the new con
+	 * @param connection
+	 *            the new connection
 	 */
-	public abstract void setCon(String con);
+	public abstract void setConnection(String connection);
 
 	/**
 	 * Sets the number of threads.

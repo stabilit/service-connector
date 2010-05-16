@@ -27,7 +27,7 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -44,17 +44,17 @@ public class NettyTcpRequest extends RequestAdapter {
 	/**
 	 * Instantiates a new netty tcp request.
 	 * 
-	 * @param e
+	 * @param event
 	 *            the event from Netty framework
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public NettyTcpRequest(MessageEvent e, SocketAddress socketAddress) {
+	public NettyTcpRequest(MessageEvent event, SocketAddress socketAddress) {
 		this.socketAddress = socketAddress;
 		this.mapBean = new MapBean<Object>();
-		this.request = (ChannelBuffer) e.getMessage();
-		this.scmp = null;
-		this.requestContext = new RequestContext(e.getRemoteAddress());
+		this.request = (ChannelBuffer) event.getMessage();
+		this.message = null;
+		this.requestContext = new RequestContext(event.getRemoteAddress());
 	}
 
 	/*
@@ -67,7 +67,7 @@ public class NettyTcpRequest extends RequestAdapter {
 		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
-		this.scmp = scmp;
+		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
+		this.message = message;
 	}
 }

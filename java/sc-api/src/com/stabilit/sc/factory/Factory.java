@@ -22,6 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The Class Factory. SuperClass for factories.
  * 
+ * *** ATTENTION ***
+ * Subclasses must not have any properties other then private static.
+ * Otherwise these properties will not be thread-safe!
+ * 
  * @author JTraber
  */
 public class Factory {

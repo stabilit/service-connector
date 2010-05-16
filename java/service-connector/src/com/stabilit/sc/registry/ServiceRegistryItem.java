@@ -32,7 +32,7 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.srv.client.SCClientFactory;
 import com.stabilit.sc.srv.config.IServerConfigItem;
@@ -51,7 +51,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/** The client. */
 	private IClient client;
 	/** The register scmp. */
-	private SCMP registerScmp;
+	private SCMPMessage registerScmp;		//TODO (TRN) how does the scmp message relate to the service or to service registry?? 
 	/** The my item pool. */
 	protected ServiceRegistryItemPool myItemPool;
 	/** The allocated. */
@@ -62,68 +62,68 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/**
 	 * Instantiates a new service registry item.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @param socketAddress
 	 *            the socket address
 	 * @param serverContext
 	 *            the server context
 	 */
-	public ServiceRegistryItem(SCMP scmp, SocketAddress socketAddress, IServerContext serverContext) {
-		this.registerScmp = scmp;
+	public ServiceRegistryItem(SCMPMessage message, SocketAddress socketAddress, IServerContext serverContext) {
+		this.registerScmp = message;	//TODO (TRN) the parameters are crazy
 		this.allocated = false;
 		this.myItemPool = null;
 		this.obsolete = false;
-		this.attrMap = scmp.getHeader();
+		this.attrMap = message.getHeader();
 
 		// setting up client to connect backend server
 		SCClientFactory clientFactory = new SCClientFactory();
 		int serverPort = Integer.parseInt(registerScmp.getHeader(SCMPHeaderAttributeKey.PORT_NR));
 		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
 		IServerConfigItem serverConfig = serverContext.getServer().getServerConfig();
-		String serverCon = serverConfig.getCon();
+		String serverConnection = serverConfig.getConnection();
 		int numberOfThreads = serverConfig.getNumberOfThreads();
-		client = clientFactory.newInstance(serverHost, serverPort, serverCon, numberOfThreads);
+		client = clientFactory.newInstance(serverHost, serverPort, serverConnection, numberOfThreads);
 	}
 
 	/**
 	 * Srv create session. Creates a session on a backend server.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void srvCreateSession(SCMP scmp) throws Exception {
+	public void srvCreateSession(SCMPMessage message) throws Exception {	//TODO (TRN) This is weird!
 		try {
 			client.connect();
-		} catch (ConnectionException e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+		} catch (ConnectionException ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
 		}
 		try {
 			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
-					.newInstance(client, scmp);
-			createSessionCall.setHeader(scmp.getHeader());
+					.newInstance(client, message);
+			createSessionCall.setHeader(message.getHeader());
 			createSessionCall.invoke();
 			this.allocated = true;
-		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+		} catch (Exception ex) {
+			ExceptionListenerSupport.getInstance().fireException(this, ex);
 		}
 	}
 
 	/**
 	 * Srv delete session. Deletes a session on a server.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void srvDeleteSession(SCMP scmp) throws Exception {
+	public void srvDeleteSession(SCMPMessage message) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
-				.newInstance(client, scmp);
-		deleteSessionCall.setHeader(scmp.getHeader());
+				.newInstance(client, message);
+		deleteSessionCall.setHeader(message.getHeader());
 		try {
 			deleteSessionCall.invoke();
 		} catch (SCMPCommunicationException ex) {
@@ -145,17 +145,17 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/**
 	 * Cln echo. Executes an echo call on a service.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @return the sCMP
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP clnEcho(SCMP scmp) throws Exception {
+	public SCMPMessage clnEcho(SCMPMessage message) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, scmp);
-		echoCall.setHeader(scmp.getHeader());
-		echoCall.setBody(scmp.getBody());
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, message);
+		echoCall.setHeader(message.getHeader());
+		echoCall.setBody(message.getBody());
 		return echoCall.invoke();
 	}
 
@@ -168,7 +168,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP srvEcho(SCMP scmp) throws Exception {
+	public SCMPMessage srvEcho(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
@@ -186,7 +186,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP srvData(SCMP scmp) throws Exception {
+	public SCMPMessage srvData(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client, scmp);
 		srvDataCall.setHeader(scmp.getHeader());
@@ -208,7 +208,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP srvSystem(SCMP scmp) throws Exception {
+	public SCMPMessage srvSystem(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
 				scmp);
@@ -226,7 +226,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMP clnSystem(SCMP scmp) throws Exception {
+	public SCMPMessage clnSystem(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
 				scmp);
@@ -248,7 +248,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/**
 	 * Mark service obsolete.
 	 */
-	public void markObsolete() {
+	public void markObsolete() {		//TODO (TRN) What is this ?
 		this.obsolete = true;
 	}
 

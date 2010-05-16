@@ -23,7 +23,7 @@ import java.nio.channels.SocketChannel;
 import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.scmp.ResponseAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class NioHttpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Http
@@ -67,7 +67,7 @@ public class NioHttpResponse extends ResponseAdapter {
 	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public void setSCMP(SCMP scmp) {
+	public void setSCMP(SCMPMessage scmp) {
 		if (scmp == null) {
 			return;
 		}

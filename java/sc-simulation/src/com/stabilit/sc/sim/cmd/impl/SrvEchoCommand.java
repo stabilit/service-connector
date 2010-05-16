@@ -24,7 +24,7 @@ import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -49,32 +49,32 @@ public class SrvEchoCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMP scmp = request.getSCMP();
-		Map<String, String> header = scmp.getHeader();
+		SCMPMessage message = request.getMessage();
+		Map<String, String> header = message.getHeader();
 
-		SCMP result = null;
+		SCMPMessage result = null;
 
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 		SocketAddress socketAddress = request.getSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		if (scmp.getBodyLength() > 0) {
-			if (scmp.getBody().toString().length() > 100) {
-				System.out.println("SrvEchoCommand body = " + scmp.getBody().toString().substring(0, 100));
+		if (message.getBodyLength() > 0) {
+			if (message.getBody().toString().length() > 100) {
+				System.out.println("SrvEchoCommand body = " + message.getBody().toString().substring(0, 100));
 			} else {
-				System.out.println("SrvEchoCommand body = " + scmp.getBody().toString());
+				System.out.println("SrvEchoCommand body = " + message.getBody().toString());
 			}
 		} else {
 			System.out.println("SrvEchoCommand empty body");
 		}
 
 		result = new SCMPReply();
-		result.setBody(scmp.getBody());
-		result.setSessionId(scmp.getSessionId());
+		result.setBody(message.getBody());
+		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		result.setHeader(SCMPHeaderAttributeKey.SERVER_ID, request.getContext().getSocketAddress().hashCode());
 		result.setMessageType(getKey().getResponseName());

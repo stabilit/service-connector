@@ -19,7 +19,7 @@ package com.stabilit.sc.registry;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
@@ -69,7 +69,7 @@ public final class ServiceRegistry extends Registry {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized ServiceRegistryItem allocate(Object key, SCMP scmp) throws Exception {
+	public synchronized ServiceRegistryItem allocate(Object key, SCMPMessage scmp) throws Exception {
 		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(key); // is this a list, TODO
 		if (itemPool.isAvailable() == false) {
 			return null;
@@ -89,7 +89,7 @@ public final class ServiceRegistry extends Registry {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void deallocate(ServiceRegistryItem item, SCMP scmp) throws Exception {
+	public synchronized void deallocate(ServiceRegistryItem item, SCMPMessage scmp) throws Exception {
 		if (item.isAllocated()) {
 			// try catch necessary because method gets invoked in error scenario
 			try {

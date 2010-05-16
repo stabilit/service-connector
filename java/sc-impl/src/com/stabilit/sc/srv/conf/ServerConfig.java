@@ -73,7 +73,7 @@ public class ServerConfig {
 
 			serverConfig.setPort(port);
 			serverConfig.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
-			serverConfig.setCon((String) props.get(serverName + IConstants.CON_QUALIFIER));
+			serverConfig.setConnection((String) props.get(serverName + IConstants.CON_QUALIFIER));
 			serverConfig.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
@@ -166,7 +166,7 @@ public class ServerConfig {
 		 * (non-Javadoc)
 		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getCon()
 		 */
-		public String getCon() {
+		public String getConnection() {
 			return con;
 		}
 
@@ -174,7 +174,7 @@ public class ServerConfig {
 		 * (non-Javadoc)
 		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setCon(java.lang.String)
 		 */
-		public void setCon(String con) {
+		public void setConnection(String con) {
 			this.con = con;
 		}
 

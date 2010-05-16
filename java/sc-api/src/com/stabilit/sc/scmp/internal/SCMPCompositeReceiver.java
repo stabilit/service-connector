@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 
@@ -34,43 +34,43 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
  * 
  * @author JTraber
  */
-public class SCMPCompositeReceiver extends SCMP {
+public class SCMPCompositeReceiver extends SCMPMessage {
 
-	/** The scmp list, list of parts. */
-	private List<SCMP> scmpList;
+	/** The list of message parts. */
+	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
-	private SCMP partRequest;
+	private SCMPMessage partRequest;
 	/** The scmp fault. */
 	private SCMPFault scmpFault;
 	/** The scmp offset. */
 	private int scmpOffset;
-	/** The os. */
-	private ByteArrayOutputStream os;
-	/** The w. */
-	private StringWriter w;
+	/** The output stream. */
+	private ByteArrayOutputStream outputStream;
+	/** The string writer */
+	private StringWriter writer;
 
 	/**
 	 * Instantiates a new SCMPCompositeReceiver.
 	 * 
 	 * @param request
-	 *            the request
-	 * @param scmpPart
-	 *            the scmp part
+	 *            the request message
+	 * @param messagePart
+	 *            the message part
 	 */
-	public SCMPCompositeReceiver(SCMP request, SCMP scmpPart) {
-		this.os = null;
-		this.w = null;
+	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
+		this.outputStream = null;
+		this.writer = null;
 		this.scmpOffset = 0;
 		this.scmpFault = null;
-		scmpList = new ArrayList<SCMP>();
+		scmpList = new ArrayList<SCMPMessage>();
 		// builds up request to pull later
 		partRequest = new SCMPPart();
 		partRequest.setMessageType(request.getMessageType());
 		partRequest.setSessionId(request.getSessionId());
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		partRequest.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
-		partRequest.setHeader(scmpPart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
-		this.add(scmpPart);
+		partRequest.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
+		this.add(messagePart);
 	}
 
 	/*
@@ -86,25 +86,25 @@ public class SCMPCompositeReceiver extends SCMP {
 	/**
 	 * Adds the part.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 */
-	public void add(SCMP scmp) {
-		if (scmp == null) {
+	public void add(SCMPMessage message) {
+		if (message == null) {
 			return;
 		}
-		if (scmp.isFault()) {
+		if (message.isFault()) {
 			// stop pulling in case of exception
 			this.scmpList.clear();
-			this.scmpFault = (SCMPFault) scmp;
+			this.scmpFault = (SCMPFault) message;
 			reset();
 		}
-		int bodyLength = scmp.getBodyLength();
+		int bodyLength = message.getBodyLength();
 		this.scmpOffset += bodyLength;
-		this.scmpList.add(scmp);
-		if (scmp.isPart() == false) {
-			// last scmp arrived, correct body length and store header
-			this.setHeader(scmp.getHeader());
+		this.scmpList.add(message);
+		if (message.isPart() == false) {
+			// last message arrived, correct body length and store header
+			this.setHeader(message.getHeader());
 			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, getBodyLength());
 		}
 	}
@@ -143,11 +143,11 @@ public class SCMPCompositeReceiver extends SCMP {
 		if (body == null) {
 			return 0;
 		}
-		if (this.os != null) {
-			return this.os.toByteArray().length;
+		if (this.outputStream != null) {
+			return this.outputStream.toByteArray().length;
 		}
-		if (this.w != null) {
-			return this.w.toString().length();
+		if (this.writer != null) {
+			return this.writer.toString().length();
 		}
 		return 0;
 	}
@@ -158,57 +158,57 @@ public class SCMPCompositeReceiver extends SCMP {
 	 */
 	@Override
 	public Object getBody() {
-		if (this.os != null) {
-			return this.os.toByteArray();
+		if (this.outputStream != null) {
+			return this.outputStream.toByteArray();
 		}
-		if (this.w != null) {
-			return this.w.toString();
+		if (this.writer != null) {
+			return this.writer.toString();
 		}
 		if (this.scmpFault != null) {
 			return scmpFault.getBody();
 		}
 		// put all parts together to get complete body
-		SCMP firstScmp = this.scmpList.get(0);
+		SCMPMessage firstScmp = this.scmpList.get(0);
 		if (firstScmp == null) {
 			return 0;
 		}
 		if (firstScmp.isByteArray()) {
-			this.os = new ByteArrayOutputStream();
+			this.outputStream = new ByteArrayOutputStream();
 			try {
-				for (SCMP scmp : this.scmpList) {
-					int bodyLength = scmp.getBodyLength();
+				for (SCMPMessage message : this.scmpList) {
+					int bodyLength = message.getBodyLength();
 					if (bodyLength > 0) {
-						Object body = scmp.getBody();
+						Object body = message.getBody();
 						if (body == null) {
 							WarningListenerSupport.getInstance().fireWarning(this,
 									"bodyLength > 0 but body == null");
 						}
-						this.os.write((byte[]) body);
+						this.outputStream.write((byte[]) body);
 					}
 				}
-				this.os.flush();
+				this.outputStream.flush();
 			} catch (Exception e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
 				return null;
 			}
-			this.os.toByteArray();
+			this.outputStream.toByteArray();
 		}
 		if (firstScmp.isString()) {
-			this.w = new StringWriter();
+			this.writer = new StringWriter();
 			try {
-				for (SCMP scmp : this.scmpList) {
-					int bodyLength = scmp.getBodyLength();
+				for (SCMPMessage message : this.scmpList) {
+					int bodyLength = message.getBodyLength();
 					if (bodyLength > 0) {
-						Object body = scmp.getBody();
-						this.w.write((String) body);
+						Object body = message.getBody();
+						this.writer.write((String) body);
 					}
 				}
-				this.w.flush();
+				this.writer.flush();
 			} catch (Exception e) {
 				ExceptionListenerSupport.getInstance().fireException(this, e);
 				return null;
 			}
-			return this.w.toString();
+			return this.writer.toString();
 		}
 		return null;
 	}
@@ -227,7 +227,7 @@ public class SCMPCompositeReceiver extends SCMP {
 	 * 
 	 * @return the part request
 	 */
-	public SCMP getPartRequest() {
+	public SCMPMessage getPartRequest() {
 		return partRequest;
 	}
 
@@ -247,7 +247,7 @@ public class SCMPCompositeReceiver extends SCMP {
 		this.partRequest = null;
 		this.scmpList.clear();
 		this.scmpOffset = 0;
-		this.os = null;
-		this.w = null;
+		this.outputStream = null;
+		this.writer = null;
 	}
 }

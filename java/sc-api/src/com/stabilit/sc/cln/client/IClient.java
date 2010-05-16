@@ -18,7 +18,7 @@ package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Interface IClient abstracts client functionality.
@@ -60,7 +60,7 @@ public interface IClient extends IFactoryable {
 	 * @throws Exception
 	 *             exception in sending/receiving process
 	 */
-	public SCMP sendAndReceive(SCMP scmp) throws Exception;
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
 
 	/**
 	 * Sets the client config.

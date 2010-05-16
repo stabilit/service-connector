@@ -27,7 +27,7 @@ import com.stabilit.sc.listener.ConnectionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -44,15 +44,15 @@ public class NettyHttpRequest extends RequestAdapter {
 	/**
 	 * Instantiates a new netty http request.
 	 * 
-	 * @param request
+	 * @param httpRequest
 	 *            the request
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public NettyHttpRequest(HttpRequest request, SocketAddress socketAddress) {
+	public NettyHttpRequest(HttpRequest httpRequest, SocketAddress socketAddress) {
 		this.mapBean = new MapBean<Object>();
-		this.request = request;
-		this.scmp = null;
+		this.request = httpRequest;
+		this.message = null;
 		this.socketAddress = socketAddress;
 		this.requestContext = new RequestContext(this.socketAddress);
 	}
@@ -69,7 +69,7 @@ public class NettyHttpRequest extends RequestAdapter {
 		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP scmp = (SCMP) encoderDecoder.decode(bais);
-		this.scmp = scmp;
+		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
+		this.message = message;
 	}
 }

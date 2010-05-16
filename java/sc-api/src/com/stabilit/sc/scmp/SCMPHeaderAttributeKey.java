@@ -25,7 +25,7 @@ public enum SCMPHeaderAttributeKey {
 
 	/** The message type. */
 	MSG_TYPE("msgType"),
-	/** The sc version. */
+	/** The SC version. */
 	SC_VERSION("scVersion"),
 	/** The COMPRESSION. */
 	COMPRESSION("compression"),
@@ -35,9 +35,9 @@ public enum SCMPHeaderAttributeKey {
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
 	/** The keep alive interval. */
 	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
-	/** The sc error code. */
+	/** The SC error code. */
 	SC_ERROR_CODE("scErrorCode"),
-	/** The sc error text. */
+	/** The SC error text. */
 	SC_ERROR_TEXT("scErrorText"),
 	/** The application error code. */
 	APP_ERROR_CODE("appErrorCode"),
@@ -47,17 +47,17 @@ public enum SCMPHeaderAttributeKey {
 	BODY_LENGTH("bodyLength"),
 	/** The cache signature. */
 	CACHE_SIGNATURE("cacheSignature"),
-	/** The cache expiration datetime. */
+	/** The cache expiration date time. */
 	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
-	/** The ip address list. */
+	/** The IP address list. */
 	IP_ADDRESS_LIST("ipAddressList"),
-	/** The port nummber. */
+	/** The port number. */
 	PORT_NR("portNr"),
 	/** The mask. */
 	MASK("mask"),
 	/** The max sessions. */
 	MAX_SESSIONS("maxSessions"),
-	/** The messaeg info. */
+	/** The message info. */
 	MSG_INFO("msgInfo"),
 	/** The multiThreaded. */
 	MULTI_THREADED("multiThreaded"),
@@ -81,9 +81,9 @@ public enum SCMPHeaderAttributeKey {
 	MAX_NODES("maxNodes"),
 	/** The client id. */
 	CLIENT_ID("clientId"),
-	/** The sc client id. */
+	/** The SC client id. */
 	SCCLIENT_ID("scclientId"),
-	/** The sc server id. */
+	/** The SC server id. */
 	SCSERVER_ID("scserverId"),
 	/** The server id. */
 	SERVER_ID("serverId"),

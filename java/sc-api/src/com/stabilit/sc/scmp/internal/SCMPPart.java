@@ -18,7 +18,7 @@ package com.stabilit.sc.scmp.internal;
 
 import java.util.Map;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at
@@ -26,7 +26,7 @@ import com.stabilit.sc.scmp.SCMP;
  * 
  * @author JTraber
  */
-public class SCMPPart extends SCMP {
+public class SCMPPart extends SCMPMessage {
 
 	/**
 	 * Instantiates a new sCMP part.

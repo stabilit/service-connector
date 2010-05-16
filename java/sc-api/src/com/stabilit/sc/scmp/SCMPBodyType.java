@@ -27,8 +27,8 @@ public enum SCMPBodyType {
 	binary("binary"),
 	/** text. */
 	text("text"),
-	/** message. */
-	message("message"),
+	/** internal message. */
+	internalMessage("internalMessage"),
 	/** undefined. */
 	undefined("undefined");
 
@@ -36,7 +36,7 @@ public enum SCMPBodyType {
 	private String name;
 
 	/**
-	 * Instantiates a new sCMP body type.
+	 * Instantiates a new SCMP body type.
 	 * 
 	 * @param name
 	 *            the name
@@ -79,7 +79,7 @@ public enum SCMPBodyType {
 			return "application/octet-stream";
 		case text:
 			return "text/plain";
-		case message:
+		case internalMessage:
 			return "text/plain";
 		default:
 			return "application/octet-stream";

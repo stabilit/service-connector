@@ -29,7 +29,7 @@ import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPErrorCode;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
@@ -95,7 +95,7 @@ public class NioTcpClientConnection implements IClientConnection {
 	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public SCMP sendAndReceive(SCMP scmp) throws Exception {
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
@@ -141,7 +141,7 @@ public class NioTcpClientConnection implements IClientConnection {
 		byte[] buffer = baos.toByteArray();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMP ret = (SCMP) encoderDecoder.decode(bais);
+		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
 		bais.close();
 		return ret;
 	}

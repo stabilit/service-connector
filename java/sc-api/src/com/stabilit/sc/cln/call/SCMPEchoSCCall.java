@@ -19,7 +19,7 @@ package com.stabilit.sc.cln.call;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -53,13 +53,13 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
 	 */
 	@Override
-	public SCMP invoke() throws Exception {
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPCallException((SCMPFault) result);
+	public SCMPMessage invoke() throws Exception {
+		this.requestMessage.setMessageType(getMessageType().getRequestName());
+		this.responseMessage = client.sendAndReceive(this.requestMessage);
+		if (this.responseMessage.isFault()) {
+			throw new SCMPCallException((SCMPFault) responseMessage);
 		}
-		return this.result;
+		return this.responseMessage;
 	}
 
 	/*
@@ -87,7 +87,7 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/**
@@ -97,6 +97,6 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.requestMessage.setHeader(header);
 	}
 }

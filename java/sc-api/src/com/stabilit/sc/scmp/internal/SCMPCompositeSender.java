@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.scmp.internal;
 
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides
@@ -24,27 +24,27 @@ import com.stabilit.sc.scmp.SCMP;
  * 
  * @author JTraber
  */
-public class SCMPCompositeSender extends SCMP {
+public class SCMPCompositeSender extends SCMPMessage {
 
-	/** The large scmp. */
-	private SCMP scmp;	
+	/** The large scmp message. */
+	private SCMPMessage message;	
 	/** The offset. */
 	private int offset;	
-	/** The scmp call length. */
-	private int scmpCallLength;	
+	/** The large messege length. */
+	private int largeMessageLength;	
 	/** The current part. */
-	private SCMP current;
+	private SCMPMessage currentPart;
 
 	/**
 	 * Instantiates a new SCMPCompositeSender.
 	 * 
-	 * @param scmp the scmp
+	 * @param message the scmp message
 	 */
-	public SCMPCompositeSender(SCMP scmp) {
-		this.scmp = scmp;
-		this.scmpCallLength = this.scmp.getBodyLength();
+	public SCMPCompositeSender(SCMPMessage message) {
+		this.message = message;
+		this.largeMessageLength = this.message.getBodyLength();
 		this.offset = 0;
-		this.current = null;
+		this.currentPart = null;
 	}
 
 	/**
@@ -52,11 +52,11 @@ public class SCMPCompositeSender extends SCMP {
 	 * 
 	 * @return the first
 	 */
-	public SCMP getFirst() {
+	public SCMPMessage getFirst() {
 		this.offset = 0;
-		this.current = new SCMPSendPart(this.scmp, this.offset);
-		this.offset += current.getBodyLength();
-		return this.current;
+		this.currentPart = new SCMPSendPart(this.message, this.offset);
+		this.offset += currentPart.getBodyLength();
+		return this.currentPart;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class SCMPCompositeSender extends SCMP {
 	 * @return true, if successful
 	 */
 	public boolean hasNext() {
-		return this.offset < this.scmpCallLength;
+		return this.offset < this.largeMessageLength;
 	}
 
 	/**
@@ -73,13 +73,13 @@ public class SCMPCompositeSender extends SCMP {
 	 * 
 	 * @return the next
 	 */
-	public SCMP getNext() {
+	public SCMPMessage getNext() {
 		if (this.hasNext()) {
-			this.current = new SCMPSendPart(scmp, this.offset);
-			this.offset += current.getBodyLength();
-			return this.current;
+			this.currentPart = new SCMPSendPart(message, this.offset);
+			this.offset += currentPart.getBodyLength();
+			return this.currentPart;
 		}
-		this.current = null;
-		return this.current;
+		this.currentPart = null;
+		return this.currentPart;
 	}
 }

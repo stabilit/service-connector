@@ -28,8 +28,8 @@ import com.stabilit.sc.util.MapBean;
  */
 public abstract class RequestAdapter implements IRequest {
 
-	/** The scmp. */
-	protected SCMP scmp;
+	/** The scmp message. */
+	protected SCMPMessage message;
 	/** The map bean. MapBean to store any data. */
 	protected MapBean<Object> mapBean;
 	/** The socket address. */
@@ -41,7 +41,7 @@ public abstract class RequestAdapter implements IRequest {
 	 * Instantiates a new request adapter.
 	 */
 	public RequestAdapter() {
-		this.scmp = null;
+		this.message = null;
 	}
 
 	/*
@@ -49,11 +49,11 @@ public abstract class RequestAdapter implements IRequest {
 	 * @see com.stabilit.sc.scmp.IRequest#getSCMP()
 	 */
 	@Override
-	public SCMP getSCMP() throws Exception {
-		if (scmp == null) {
+	public SCMPMessage getMessage() throws Exception {
+		if (message == null) {
 			load();
 		}
-		return scmp;
+		return message;
 	}
 
 	/*
@@ -61,8 +61,8 @@ public abstract class RequestAdapter implements IRequest {
 	 * @see com.stabilit.sc.scmp.IRequest#setSCMP(com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public void setSCMP(SCMP scmp) {
-		this.scmp = scmp;
+	public void setMessage(SCMPMessage message) {
+		this.message = message;
 	}
 
 	/*
@@ -116,7 +116,7 @@ public abstract class RequestAdapter implements IRequest {
 	 */
 	@Override
 	public void read() throws Exception {
-		if (scmp == null) {
+		if (message == null) {
 			load();
 		}
 	}
@@ -127,7 +127,7 @@ public abstract class RequestAdapter implements IRequest {
 	 */
 	@Override
 	public void readNext() throws Exception {
-		this.scmp = null;
+		this.message = null;
 		read();
 	}
 
@@ -137,11 +137,11 @@ public abstract class RequestAdapter implements IRequest {
 	 */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
-		SCMP scmp = this.getSCMP();
-		if (scmp == null) {
+		SCMPMessage message = this.getMessage();
+		if (message == null) {
 			return null;
 		}
-		String messageType = scmp.getMessageType();
+		String messageType = message.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
 	}
 }

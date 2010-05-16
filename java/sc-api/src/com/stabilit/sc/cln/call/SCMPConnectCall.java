@@ -17,7 +17,7 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.util.DateTimeUtility;
@@ -51,10 +51,10 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
 	 */
 	@Override
-	public SCMP invoke() throws Exception {
+	public SCMPMessage invoke() throws Exception {
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		super.invoke();
-		return this.result;
+		return this.responseMessage;
 	}
 
 	/*
@@ -73,7 +73,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 *            the new version
 	 */
 	public void setVersion(String version) {
-		call.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
 	/*
@@ -81,7 +81,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#setCompression(boolean)
 	 */
 	public void setCompression(boolean compression) {
-		call.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 *            the new local date time
 	 */
 	private void setLocalDateTime(String localDateTime) {
-		call.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 *            the new keep alive timeout
 	 */
 	public void setKeepAliveTimeout(int keepAliveTimeout) {
-		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	 *            the new keep alive interval
 	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
-		call.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
 
 	/*

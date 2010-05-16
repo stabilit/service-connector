@@ -20,7 +20,7 @@ import java.net.InetAddress;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -47,7 +47,7 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnEchoCall(IClient client, SCMP scmpSession) {
+	public SCMPClnEchoCall(IClient client, SCMPMessage scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -56,16 +56,16 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
 	 */
 	@Override
-	public SCMP invoke() throws Exception {
+	public SCMPMessage invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
-		this.call.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		this.call.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, client.hashCode());
-		this.call.setMessageType(getMessageType().getRequestName());
-		this.result = client.sendAndReceive(this.call);
-		if (this.result.isFault()) {
-			throw new SCMPCallException((SCMPFault) result);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, client.hashCode());
+		this.requestMessage.setMessageType(getMessageType().getRequestName());
+		this.responseMessage = client.sendAndReceive(this.requestMessage);
+		if (this.responseMessage.isFault()) {
+			throw new SCMPCallException((SCMPFault) responseMessage);
 		}
-		return this.result;
+		return this.responseMessage;
 	}
 
 	/*
@@ -74,7 +74,7 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 * com.stabilit.sc.scmp.SCMP)
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMP scmpSession) {
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPClnEchoCall(client, scmpSession);
 	}
 
@@ -85,7 +85,7 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		call.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/*
@@ -104,7 +104,7 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
-		this.call.setHeader(header);
+		this.requestMessage.setHeader(header);
 	}
 
 	/**
@@ -114,6 +114,6 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 *            the new max nodes
 	 */
 	public void setMaxNodes(int maxNodes) {
-		this.call.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
 	}
 }

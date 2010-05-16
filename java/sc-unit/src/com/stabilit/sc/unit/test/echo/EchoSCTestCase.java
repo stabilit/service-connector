@@ -27,7 +27,7 @@ import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPEchoSCCall;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -63,7 +63,7 @@ public class EchoSCTestCase extends SuperTestCase {
 	public void invokeSingleEchoSCTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 
-		SCMP result = null;
+		SCMPMessage result = null;
 		Map<String, String> header = null;
 
 		echoCall.setBody("hello world!" + client.toHashCodeString());
@@ -84,7 +84,7 @@ public class EchoSCTestCase extends SuperTestCase {
 	public void invokeMultipleEchoSCTest() throws Exception {
 		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
 
-		SCMP result = null;
+		SCMPMessage result = null;
 		int i = 0;
 		String echoString = null;
 		for (i = 0; i < 10000; i++) {

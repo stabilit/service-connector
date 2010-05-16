@@ -18,7 +18,7 @@ package com.stabilit.sc.net;
 
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.SCMP;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * A factory for creating EncoderDecoder objects.
@@ -64,18 +64,18 @@ public class EncoderDecoderFactory extends Factory {
 	/**
 	 * Checks if is large.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @return true, if is large
 	 */
-	public boolean isLarge(SCMP scmp) {
+	public boolean isLarge(SCMPMessage message) {
 
-		if (scmp.isPart() || scmp.isBodyOffset()) {
-			// scmp is a part or has offset for reading body - scmp is part of large message
+		if (message.isPart() || message.isBodyOffset()) {
+			// message is a part or has offset for reading body - message is part of large message
 			return true;
 		}
-		if (scmp.isLargeMessage()) {
-			// scmp size is large
+		if (message.isLargeMessage()) {
+			// message size is large
 			return true;
 		}
 		return false;
@@ -84,17 +84,17 @@ public class EncoderDecoderFactory extends Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param message
+	 *            the scmp message
 	 * @return the i encoder decoder
 	 */
-	public IEncoderDecoder newInstance(SCMP scmp) {
-		if (scmp.isPart() || scmp.isBodyOffset()) {
-			// scmp is a part or has offset for reading body - scmp is part of large message take large instance
+	public IEncoderDecoder newInstance(SCMPMessage message) {
+		if (message.isPart() || message.isBodyOffset()) {
+			// message is a part or has offset for reading body - message is part of large message take large instance
 			return newInstance(LARGE);
 		}
-		if (scmp.isLargeMessage()) {
-			// scmp size is large - take large instance
+		if (message.isLargeMessage()) {
+			// message size is large - take large instance
 			return newInstance(LARGE);
 		}
 		return newInstance(DEFAULT);
@@ -104,12 +104,12 @@ public class EncoderDecoderFactory extends Factory {
 	 * New instance.
 	 * 
 	 * @param scmpBuffer
-	 *            the scmp buffer
+	 *            the scmp message buffer
 	 * @return the i encoder decoder
 	 */
 	public IEncoderDecoder newInstance(byte[] scmpBuffer) {
 		if (scmpBuffer[0] == 'P') {
-			// headline key start with 'P' means scmp must be of type part - take large instance
+			// headline key start with 'P' means message must be of type part - take large instance
 			return newInstance(LARGE);
 		}
 		return newInstance(DEFAULT);

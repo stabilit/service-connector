@@ -23,7 +23,7 @@ import com.stabilit.sc.util.DateTimeUtility;
 /**
  * The Class SCMPFault. Indicates an error and causes the <code>SCMPHeadlineKey.EXC</code> on the wire protocol.
  */
-public class SCMPFault extends SCMP {
+public class SCMPFault extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP fault.
@@ -33,7 +33,7 @@ public class SCMPFault extends SCMP {
 	}
 
 	/**
-	 * Instantiates a new SCMP fault.
+	 * Instantiates a new SCMP fault message.
 	 * 
 	 * @param map
 	 *            the map
@@ -43,7 +43,7 @@ public class SCMPFault extends SCMP {
 	}
 
 	/**
-	 * Instantiates a new SCMP fault.
+	 * Instantiates a new SCMP fault message.
 	 * 
 	 * @param errorCode
 	 *            the error code
@@ -78,7 +78,7 @@ public class SCMPFault extends SCMP {
 	}
 
 	/**
-	 * Sets the error.
+	 * Sets the error code and text.
 	 * 
 	 * @param errorCode
 	 *            the error code
@@ -91,13 +91,13 @@ public class SCMPFault extends SCMP {
 	}
 
 	/**
-	 * Sets the error.
+	 * Sets the error code and text based on scmp error  
 	 * 
-	 * @param errorCode
-	 *            the new error
+	 * @param scmpError
+	 *            the new error code
 	 */
-	public void setError(SCMPErrorCode errorCode) {
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
+	public void setError(SCMPErrorCode scmpError) {
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), scmpError.getErrorCode());
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), scmpError.getErrorText());
 	}
 }

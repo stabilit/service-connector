@@ -26,7 +26,7 @@ public interface IResponse {
 	 * 
 	 * @return the scmp
 	 */
-	public SCMP getSCMP();
+	public SCMPMessage getSCMP();
 
 	/**
 	 * Sets the scmp.
@@ -34,7 +34,7 @@ public interface IResponse {
 	 * @param scmp
 	 *            the new scmp
 	 */
-	public void setSCMP(SCMP scmp);
+	public void setSCMP(SCMPMessage scmp);
 
 	/**
 	 * Write the response.
