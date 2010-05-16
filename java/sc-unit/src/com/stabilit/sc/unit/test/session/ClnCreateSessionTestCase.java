@@ -28,7 +28,7 @@ import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.scmp.SCMPSession;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
@@ -57,7 +57,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.NOT_CONNECTED, SCMPMsgType.CLN_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPError.NOT_CONNECTED, SCMPMsgType.CLN_CREATE_SESSION);
 		}
 		this.clnConnectBefore();
 	}
@@ -74,7 +74,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 		}
 	}
 

@@ -27,7 +27,7 @@ import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SuperTestCase;
@@ -55,7 +55,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
@@ -65,7 +65,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
@@ -75,7 +75,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
-			SCTest.verifyError(e.getFault(), SCMPErrorCode.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
+			SCTest.verifyError(e.getFault(), SCMPError.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
 		}
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL

@@ -29,7 +29,7 @@ import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.Session;
@@ -110,7 +110,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.SERVER_ERROR);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -131,7 +131,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 			serviceRegistryItem.markObsolete();
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPErrorCode.SERVER_ERROR);
+					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}

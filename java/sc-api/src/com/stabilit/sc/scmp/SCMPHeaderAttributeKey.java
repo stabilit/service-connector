@@ -23,72 +23,39 @@ package com.stabilit.sc.scmp;
  */
 public enum SCMPHeaderAttributeKey {
 
-	/** The message type. */
-	MSG_TYPE("msgType"),
-	/** The SC version. */
-	SC_VERSION("scVersion"),
-	/** The COMPRESSION. */
-	COMPRESSION("compression"),
-	/** The local date time. */
-	LOCAL_DATE_TIME("localDateTime"),
-	/** The keep alive timeout. */
-	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
-	/** The keep alive interval. */
-	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
-	/** The SC error code. */
-	SC_ERROR_CODE("scErrorCode"),
-	/** The SC error text. */
-	SC_ERROR_TEXT("scErrorText"),
-	/** The application error code. */
 	APP_ERROR_CODE("appErrorCode"),
-	/** The application error text. */
 	APP_ERROR_TEXT("appErrorText"),
-	/** The body length. */
 	BODY_LENGTH("bodyLength"),
-	/** The cache signature. */
-	CACHE_SIGNATURE("cacheSignature"),
-	/** The cache expiration date time. */
-	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
-	/** The IP address list. */
-	IP_ADDRESS_LIST("ipAddressList"),
-	/** The port number. */
-	PORT_NR("portNr"),
-	/** The mask. */
-	MASK("mask"),
-	/** The max sessions. */
-	MAX_SESSIONS("maxSessions"),
-	/** The message info. */
-	MSG_INFO("msgInfo"),
-	/** The multiThreaded. */
-	MULTI_THREADED("multiThreaded"),
-	/** The no data. */
-	NO_DATA("noData"),
-	/** The reject session. */
-	REJECT_SESSION("rejectSession"),
-	/** The service name. */
-	SERVICE_NAME("serviceName"),
-	/** The session id. */
-	SESSION_ID("sessionId"),
-	/** The session info. */
-	SESSION_INFO("sessionInfo"),
-	/** The transitive. */
-	TRANSITIVE("transitive"),
-	/** The message id. */
-	MESSAGE_ID("messageID"),
-	/** The body type. */
 	BODY_TYPE("bodyType"),
-	/** The max nodes. */
-	MAX_NODES("maxNodes"),
-	/** The client id. */
+	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
+	CACHE_ID("cacheId"),
 	CLIENT_ID("clientId"),
-	/** The SC client id. */
-	SCCLIENT_ID("scclientId"),
-	/** The SC server id. */
-	SCSERVER_ID("scserverId"),
-	/** The server id. */
-	SERVER_ID("serverId"),
-	/** The service registry id. */
-	SERVICE_REGISTRY_ID("serviceRegistryId");
+	COMPRESSION("compression"),
+	IP_ADDRESS_LIST("ipAddressList"),
+	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
+	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
+	LOCAL_DATE_TIME("localDateTime"),
+	MASK("mask"),
+	MAX_NODES("maxNodes"),
+	MAX_SESSIONS("maxSessions"),
+	MESSAGE_ID("messageID"),
+	MSG_INFO("msgInfo"),
+	MSG_TYPE("msgType"),
+	MULTI_THREADED("multiThreaded"),
+	NO_DATA("noData"),
+	PORT_NR("portNr"),
+	REJECT_SESSION("rejectSession"),
+	SCCLIENT_ID("scclientId"),					//TODO (TRN) unknown to me
+	SCSERVER_ID("scserverId"),					//TODO (TRN) unknown to me
+	SC_ERROR_CODE("scErrorCode"),
+	SC_ERROR_TEXT("scErrorText"),
+	SC_VERSION("scVersion"),
+	SERVER_ID("serverId"),						//TODO (TRN) unknown to me
+	SERVICE_NAME("serviceName"),
+	SERVICE_REGISTRY_ID("serviceRegistryId"),	//TODO (TRN) unknown to me
+	SESSION_ID("sessionId"),
+	SESSION_INFO("sessionInfo"),
+	TRANSITIVE("transitive");					//TODO (TRN) unknown to me
 
 	/** The name. */
 	private String name;

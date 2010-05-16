@@ -58,7 +58,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 				scmpSession);
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
-		clnEchoCall.setBody("hello world");
+		clnEchoCall.setRequestBody("hello world");
 		result = clnEchoCall.invoke();
 
 		Map<String, String> header = result.getHeader();
@@ -87,7 +87,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		clnEchoCall.setServiceName("simulation");
 
 		for (int i = 0; i < anzMsg; i++) {
-			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 		}
@@ -115,7 +115,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 					scmpSession);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
-			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 			super.clnDeleteSessionAfter();
@@ -142,7 +142,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 					scmpSession);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
-			clnEchoCall.setBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
 			super.clnDeleteSessionAfter();

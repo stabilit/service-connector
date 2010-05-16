@@ -29,7 +29,7 @@ import com.stabilit.sc.registry.ServiceRegistryItemPool;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -101,7 +101,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service already registered");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

@@ -29,7 +29,7 @@ import com.stabilit.sc.cln.call.SCMPClnSystemCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.session.SuperSessionRegisterTestCase;
@@ -95,11 +95,11 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 				scmpSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
-		clnDataCall.setBody("hello");
+		clnDataCall.setRequestBody("hello");
 		try {
 			clnDataCall.invoke();
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.SERVER_ERROR, SCMPMsgType.CLN_DATA);
+			SCTest.verifyError(ex.getFault(), SCMPError.SERVER_ERROR, SCMPMsgType.CLN_DATA);
 		}
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);

@@ -24,7 +24,7 @@ import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -63,7 +63,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: session is no allocated");  
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_ALLOCATED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

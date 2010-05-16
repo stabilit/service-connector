@@ -44,7 +44,7 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
@@ -111,7 +111,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 			this.channel = operationListener.awaitUninterruptibly().getChannel();
 		} catch (CommunicationException ex) {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionListenerSupport.getInstance().fireConnect(this);
 	}
@@ -128,7 +128,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionListenerSupport.getInstance().fireDisconnect(this);
 		this.bootstrap.releaseExternalResources();
@@ -146,7 +146,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		this.bootstrap.releaseExternalResources();
 	}
@@ -179,7 +179,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionListenerSupport.getInstance().fireWrite(this, buffer); // logs inside if registered
 		// gets response message synchronous

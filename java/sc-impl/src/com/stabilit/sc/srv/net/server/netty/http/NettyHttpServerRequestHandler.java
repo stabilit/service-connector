@@ -34,7 +34,7 @@ import com.stabilit.sc.net.netty.NettyHttpResponse;
 import com.stabilit.sc.scmp.IFaultResponse;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
@@ -137,7 +137,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				if (LoggerListenerSupport.getInstance().isDebug()) {
 					LoggerListenerSupport.getInstance().fireDebug(this, "Request unkown, " + request);
 				}
-				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+				SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
@@ -166,7 +166,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				} else {
-					SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 					scmpFault.setMessageType(scmpReq.getMessageType());
 					scmpFault.setLocalDateTime();
 					response.setSCMP(scmpFault);
@@ -174,7 +174,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			}
 		} catch (Throwable th) {
 			ExceptionListenerSupport.getInstance().fireException(this, th);
-			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.CONNECT.getResponseName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);

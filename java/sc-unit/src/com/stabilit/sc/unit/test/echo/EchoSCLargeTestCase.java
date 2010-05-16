@@ -66,7 +66,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
 		}
-		echoCall.setBody(sb.toString());
+		echoCall.setRequestBody(sb.toString());
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Map<String, String> header = result.getHeader();
@@ -85,7 +85,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
 			sb.append(i);
-			groupCall.setBody(String.valueOf(i));
+			groupCall.setRequestBody(String.valueOf(i));
 			groupCall.invoke();
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
@@ -109,7 +109,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		int max = 2;
 		for (int i = 0; i < max; i++) {
 			expected.append(sb.toString());
-			groupCall.setBody(sb.toString());
+			groupCall.setRequestBody(sb.toString());
 			groupCall.invoke();
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)

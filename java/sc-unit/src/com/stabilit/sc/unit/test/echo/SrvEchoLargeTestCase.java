@@ -50,7 +50,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
 		}
-		echoCall.setBody(sb.toString());
+		echoCall.setRequestBody(sb.toString());
 		echoCall.setMaxNodes(2);
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
@@ -71,7 +71,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 89840; i++) {
 			sb.append(i);
 		}
-		echoCall.setBody(sb.toString());
+		echoCall.setRequestBody(sb.toString());
 		echoCall.setMaxNodes(2);
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
@@ -92,7 +92,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
 			sb.append(i);
-			groupCall.setBody(String.valueOf(i));
+			groupCall.setRequestBody(String.valueOf(i));
 			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}
@@ -118,7 +118,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		int max = 1;
 		for (int i = 0; i < max; i++) {
 			expected.append(sb.toString());
-			groupCall.setBody(sb.toString());
+			groupCall.setRequestBody(sb.toString());
 			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}

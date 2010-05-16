@@ -17,11 +17,11 @@
 package com.stabilit.sc.scmp;
 
 /**
- * The Enum SCMPErrorCode. Defines possible error codes in SCMP.
+ * The Enum SCMPError. Defines possible errors in SCMP.
  * 
  * @author JTraber
  */
-public enum SCMPErrorCode {		//TODO (TRN) should be called SCMPError because it is not only a code! => refactor
+public enum SCMPError {
 
 	/** The client error. */
 	CLIENT_ERROR("400", "Client error occured."),
@@ -55,7 +55,7 @@ public enum SCMPErrorCode {		//TODO (TRN) should be called SCMPError because it 
 	CONNECTION_LOST("502", "Connection lost."),;
 
 	/** The error code. */
-	private String errorCode;
+	private String errorCode;		//TODO this should be int!
 	/** The error text. */
 	private String errorText;
 
@@ -67,7 +67,7 @@ public enum SCMPErrorCode {		//TODO (TRN) should be called SCMPError because it 
 	 * @param errorText
 	 *            the error text
 	 */
-	private SCMPErrorCode(String errorCode, String errorText) {
+	private SCMPError(String errorCode, String errorText) {
 		this.errorCode = errorCode;
 		this.errorText = errorText;
 	}

@@ -34,7 +34,7 @@ import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -103,7 +103,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: not connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -123,7 +123,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		mapBean = serviceRegistry.get(serviceName);
 		if (mapBean == null) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.UNKNOWN_SERVICE);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
@@ -140,7 +140,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPErrorCode.SERVER_ERROR);
+					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}

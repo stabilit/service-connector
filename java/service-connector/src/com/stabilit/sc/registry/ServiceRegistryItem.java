@@ -155,7 +155,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		checkServiceAlive();
 		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, message);
 		echoCall.setHeader(message.getHeader());
-		echoCall.setBody(message.getBody());
+		echoCall.setRequestBody(message.getBody());
 		return echoCall.invoke();
 	}
 
@@ -173,7 +173,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(client, scmp);
 		echoCall.setHeader(scmp.getHeader());
 		echoCall.setHeader(SCMPHeaderAttributeKey.SERVICE_REGISTRY_ID, this.hashCode());
-		echoCall.setBody(scmp.getBody());
+		echoCall.setRequestBody(scmp.getBody());
 		return echoCall.invoke();
 	}
 
@@ -190,7 +190,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		checkServiceAlive();
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client, scmp);
 		srvDataCall.setHeader(scmp.getHeader());
-		srvDataCall.setBody(scmp.getBody());
+		srvDataCall.setRequestBody(scmp.getBody());
 		try {
 			return srvDataCall.invoke();
 		} catch (SCMPCommunicationException ex) {
@@ -213,7 +213,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
 				scmp);
 		srvSystemCall.setHeader(scmp.getHeader());
-		srvSystemCall.setBody(scmp.getBody());
+		srvSystemCall.setRequestBody(scmp.getBody());
 		return srvSystemCall.invoke();
 	}
 
@@ -231,7 +231,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
 				scmp);
 		clnSystemCall.setHeader(scmp.getHeader());
-		clnSystemCall.setBody(scmp.getBody());
+		clnSystemCall.setRequestBody(scmp.getBody());
 		return clnSystemCall.invoke();
 	}
 

@@ -28,7 +28,7 @@ import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -74,9 +74,9 @@ public class SrvDataCommand extends CommandAdapter {
 							SCMPHeaderAttributeKey.SERVICE_NAME.getName())
 							.toString());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE,
-					SCMPErrorCode.SERVER_ERROR.getErrorCode());
+					SCMPError.SERVER_ERROR.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
-					SCMPErrorCode.SERVER_ERROR.getErrorText());
+					SCMPError.SERVER_ERROR.getErrorText());
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
 			return;

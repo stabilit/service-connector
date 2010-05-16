@@ -30,7 +30,7 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
@@ -109,10 +109,10 @@ public class NioTcpClientConnection implements IClientConnection {
 		try {
 			bytesRead = socketChannel.read(byteBuffer);
 		} catch (Throwable ex) {
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		if (bytesRead < 0) {
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
@@ -129,10 +129,10 @@ public class NioTcpClientConnection implements IClientConnection {
 			try {
 				read = socketChannel.read(byteBuffer);
 			} catch (Throwable ex) {
-				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			if (read < 0) {
-				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);

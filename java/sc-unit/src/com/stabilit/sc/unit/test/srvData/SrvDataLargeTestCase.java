@@ -45,7 +45,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
 				scmpSession);
 		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setBody("large");
+		clnDataCall.setRequestBody("large");
 		SCMPMessage scmpReply = clnDataCall.invoke();
 
 		/*********************************** Verify connect response msg **********************************/
@@ -73,7 +73,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
 		}
-		clnDataCall.setBody(sb.toString());
+		clnDataCall.setRequestBody(sb.toString());
 		SCMPMessage scmpReply = clnDataCall.invoke();
 		System.out.println(scmpReply);
 		// TODO assertion

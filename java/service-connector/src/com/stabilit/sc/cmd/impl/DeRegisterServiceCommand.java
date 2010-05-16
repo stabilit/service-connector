@@ -25,7 +25,7 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -92,7 +92,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service not registered");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

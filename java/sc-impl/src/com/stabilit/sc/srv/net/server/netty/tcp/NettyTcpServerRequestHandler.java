@@ -33,7 +33,7 @@ import com.stabilit.sc.net.netty.NettyTcpResponse;
 import com.stabilit.sc.scmp.IFaultResponse;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
@@ -132,7 +132,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			}
 			if (command == null) {
 				scmpReq = request.getMessage();
-				SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+				SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
 				response.setSCMP(scmpFault);
@@ -164,7 +164,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			}
 		} catch (Throwable th) {
 			ExceptionListenerSupport.getInstance().fireException(this, th);
-			SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);

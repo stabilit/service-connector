@@ -18,7 +18,7 @@ package com.stabilit.sc.cmd.impl;
 
 import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.SessionRegistry;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.srv.cmd.ICommand;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -52,7 +52,7 @@ public abstract class CommandAdapter implements ICommand {
 				LoggerListenerSupport.getInstance().fireWarn(this,
 						"command error: no session found for id :" + sessionId);
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NO_SESSION);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

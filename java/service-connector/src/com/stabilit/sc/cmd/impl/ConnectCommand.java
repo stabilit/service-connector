@@ -28,7 +28,7 @@ import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.KeepAlive;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
@@ -96,7 +96,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: already connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.ALREADY_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

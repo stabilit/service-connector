@@ -43,7 +43,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The scmp fault. */
 	private SCMPFault scmpFault;
 	/** The scmp offset. */
-	private int scmpOffset;
+	private int offest;
 	/** The output stream. */
 	private ByteArrayOutputStream outputStream;
 	/** The string writer */
@@ -60,7 +60,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) { // TODO messagePart should be SCMPPart
 		this.outputStream = null;
 		this.writer = null;
-		this.scmpOffset = 0;
+		this.offest = 0;
 		this.scmpFault = null;
 		scmpList = new ArrayList<SCMPMessage>();
 		// builds up request to pull later
@@ -100,7 +100,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 			reset();
 		}
 		int bodyLength = message.getBodyLength();
-		this.scmpOffset += bodyLength;
+		this.offest += bodyLength;
 		this.scmpList.add(message);
 		if (message.isPart() == false) {
 			// last message arrived, correct body length and store header
@@ -237,7 +237,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * @return the offset
 	 */
 	public int getOffset() {
-		return this.scmpOffset;
+		return this.offest;
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	private void reset() {
 		this.currentPart = null;
 		this.scmpList.clear();
-		this.scmpOffset = 0;
+		this.offest = 0;
 		this.outputStream = null;
 		this.writer = null;
 	}

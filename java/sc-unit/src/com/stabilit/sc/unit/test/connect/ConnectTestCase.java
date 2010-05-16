@@ -27,7 +27,7 @@ import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
@@ -52,7 +52,7 @@ public class ConnectTestCase extends SuperTestCase {
 			connectCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPErrorCode.VALIDATION_ERROR, SCMPMsgType.CONNECT);
+			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.CONNECT);
 //			Assert.assertEquals("1", connectCall.getCall().getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 	}

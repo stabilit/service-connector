@@ -29,7 +29,7 @@ import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.scmp.RequestAdapter;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 
@@ -69,10 +69,10 @@ public class NioHttpRequest extends RequestAdapter {
 		try {
 			bytesRead = socketChannel.read(byteBuffer);
 		} catch (Throwable ex) {
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		if (bytesRead < 0) {
-			throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		// warning, returns always the same instance, singleton
@@ -87,10 +87,10 @@ public class NioHttpRequest extends RequestAdapter {
 			try {
 				read = socketChannel.read(byteBuffer);
 			} catch (Throwable ex) {
-				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			if (read < 0) {
-				throw new SCMPCommunicationException(SCMPErrorCode.CONNECTION_LOST);
+				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);

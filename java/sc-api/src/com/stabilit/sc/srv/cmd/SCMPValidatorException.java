@@ -18,7 +18,7 @@ package com.stabilit.sc.srv.cmd;
 
 import com.stabilit.sc.scmp.IFaultResponse;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.util.MapBean;
@@ -40,7 +40,7 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 	 * Instantiates a new SCMPValidatorException.
 	 */
 	public SCMPValidatorException() {
-		this(SCMPErrorCode.VALIDATION_ERROR);
+		this(SCMPError.VALIDATION_ERROR);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 	 * @param errorCode
 	 *            the error code
 	 */
-	public SCMPValidatorException(SCMPErrorCode errorCode) {
+	public SCMPValidatorException(SCMPError errorCode) {
 		this.attrBean = new MapBean<String>();
 		this.setErrorCode(errorCode);
 	}
@@ -60,7 +60,7 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 	 * @param errorCode
 	 *            the new error code
 	 */
-	public void setErrorCode(SCMPErrorCode errorCode) {
+	public void setErrorCode(SCMPError errorCode) {
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
 	}

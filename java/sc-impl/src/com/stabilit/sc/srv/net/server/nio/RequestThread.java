@@ -28,7 +28,7 @@ import com.stabilit.sc.net.nio.NioHttpResponse;
 import com.stabilit.sc.net.nio.NioTcpDisconnectException;
 import com.stabilit.sc.scmp.IFaultResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessageID;
@@ -108,7 +108,7 @@ public class RequestThread implements Runnable {
 				try {
 					if (command == null) {
 						SCMPMessage scmpReq = request.getMessage();
-						SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.REQUEST_UNKNOWN);
+						SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 						scmpFault.setMessageType(scmpReq.getMessageType());
 						scmpFault.setLocalDateTime();
 						response.setSCMP(scmpFault);
@@ -144,7 +144,7 @@ public class RequestThread implements Runnable {
 						// no answer need to be sent when client is disconnected
 						throw ex;
 					}
-					SCMPFault scmpFault = new SCMPFault(SCMPErrorCode.SERVER_ERROR);
+					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 					scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 					scmpFault.setLocalDateTime();
 					response.setSCMP(scmpFault);

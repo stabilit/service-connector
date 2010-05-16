@@ -24,7 +24,7 @@ import com.stabilit.sc.listener.LoggerListenerSupport;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -89,7 +89,7 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerListenerSupport.getInstance().isWarn()) {
 				LoggerListenerSupport.getInstance().fireWarn(this, "command error: client not connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPErrorCode.NOT_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

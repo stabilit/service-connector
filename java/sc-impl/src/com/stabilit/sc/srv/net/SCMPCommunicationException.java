@@ -18,7 +18,7 @@ package com.stabilit.sc.srv.net;
 
 import com.stabilit.sc.scmp.IFaultResponse;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.util.MapBean;
@@ -41,7 +41,7 @@ public class SCMPCommunicationException extends Exception implements IFaultRespo
 	 * @param errorCode
 	 *            the error code
 	 */
-	public SCMPCommunicationException(SCMPErrorCode errorCode) {
+	public SCMPCommunicationException(SCMPError errorCode) {
 		this.attrBean = new MapBean<String>();
 		this.setErrorCode(errorCode);
 	}
@@ -52,7 +52,7 @@ public class SCMPCommunicationException extends Exception implements IFaultRespo
 	 * @param errorCode
 	 *            the new error code
 	 */
-	public void setErrorCode(SCMPErrorCode errorCode) {
+	public void setErrorCode(SCMPError errorCode) {
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
 		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
 	}

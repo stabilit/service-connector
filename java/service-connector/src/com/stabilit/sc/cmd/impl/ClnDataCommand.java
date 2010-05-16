@@ -27,7 +27,7 @@ import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.Session;
@@ -102,7 +102,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, message);
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPErrorCode.SERVER_ERROR);
+					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}

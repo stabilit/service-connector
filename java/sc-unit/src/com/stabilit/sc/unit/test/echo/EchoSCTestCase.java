@@ -66,7 +66,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		SCMPMessage result = null;
 		Map<String, String> header = null;
 
-		echoCall.setBody("hello world!" + client.toHashCodeString());
+		echoCall.setRequestBody("hello world!" + client.toHashCodeString());
 		result = echoCall.invoke();
 		System.out.println("result = " + result.getBody());
 		header = result.getHeader();
@@ -89,7 +89,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		String echoString = null;
 		for (i = 0; i < 10000; i++) {
 			echoString = "hello world " + i + client.toHashCodeString();
-			echoCall.setBody(echoString);
+			echoCall.setRequestBody(echoString);
 			result = echoCall.invoke();
 			Assert.assertEquals("hello world " + i + client.toHashCodeString(), result.getBody());
 			Assert.assertEquals(echoString.length() + "", result

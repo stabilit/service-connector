@@ -48,7 +48,7 @@ public class SCMPFault extends SCMPMessage {
 	 * @param errorCode
 	 *            the error code
 	 */
-	public SCMPFault(SCMPErrorCode errorCode) {
+	public SCMPFault(SCMPError errorCode) {
 		setError(errorCode);
 	}
 
@@ -96,7 +96,7 @@ public class SCMPFault extends SCMPMessage {
 	 * @param scmpError
 	 *            the new error code
 	 */
-	public void setError(SCMPErrorCode scmpError) {
+	public void setError(SCMPError scmpError) {
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), scmpError.getErrorCode());
 		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), scmpError.getErrorText());
 	}
