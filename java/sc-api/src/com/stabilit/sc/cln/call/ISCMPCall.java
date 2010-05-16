@@ -50,7 +50,7 @@ public interface ISCMPCall {
 	/**
 	 * Invoke.
 	 * 
-	 * @return the scmp
+	 * @return the scmp message
 	 * 
 	 * @throws Exception the exception
 	 */
@@ -61,7 +61,7 @@ public interface ISCMPCall {
 	 * 
 	 * @param body the new body
 	 */
-	public void setBody(Object body);
+	public void setRequestBody(Object body);
 
 	/**
 	 * Gets the call.

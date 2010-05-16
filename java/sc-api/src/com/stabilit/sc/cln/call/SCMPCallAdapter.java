@@ -152,7 +152,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * (non-Javadoc)
 	 * @see com.stabilit.sc.cln.service.ISCMPCall#setBody(java.lang.Object)
 	 */
-	public void setBody(Object obj) {
+	public void setRequestBody(Object obj) {
 		requestMessage.setBody(obj);
 	}
 
@@ -222,8 +222,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		 * @see com.stabilit.sc.cln.service.ISCMPCall#setBody(java.lang.Object)
 		 */
 		@Override
-		public void setBody(Object body) {
-			this.parentCall.setBody(body);
+		public void setRequestBody(Object body) {
+			this.parentCall.setRequestBody(body);
 		}
 
 		/*
