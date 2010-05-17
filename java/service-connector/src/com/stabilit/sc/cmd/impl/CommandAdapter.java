@@ -59,28 +59,19 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getCommandValidator()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return commandValidator;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getRequestKeyName()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getRequestKeyName() {
 		return this.getKey().getRequestName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.cmd.ICommand#getResponseKeyName()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getResponseKeyName() {
 		return this.getKey().getResponseName();
