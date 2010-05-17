@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,50 +14,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.session;
-
-import org.junit.After;
-import org.junit.Before;
-
-import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.sc.cln.client;
 
 /**
  * @author JTraber
+ *
  */
-public abstract class SuperSessionTestCase extends SuperConnectTestCase {
-
-	private SCMPSession scmpSession = null;
+public interface IClientSession {
 
 	/**
-	 * The Constructor.
-	 * 
-	 * @param fileName
-	 *            the file name
+	 * @return the sessionId
 	 */
-	public SuperSessionTestCase(String fileName) {
-		super(fileName);
-	}
+	public abstract String getSessionId();
 
-	@Before
-	public void setup() throws Exception {
-		super.setup();
-		clnCreateSessionBefore();
-	}
+	/**
+	 * @return the serviceName
+	 */
+	public abstract String getServiceName();
 
-	@After
-	public void tearDown() throws Exception {
-		clnDeleteSessionAfter();
-		super.tearDown();
-	}
+	/**
+	 * @return the sessionInfo
+	 */
+	public abstract String getSessionInfo();
+	
 
-	public void clnCreateSessionBefore() throws Exception {
-		this.scmpSession = new SCMPSession(client, "simulation", "Session Info");
-		this.scmpSession.createSession();			
-	}
-
-	public void clnDeleteSessionAfter() throws Exception {
-		this.scmpSession.deleteSession();
-	}
 }

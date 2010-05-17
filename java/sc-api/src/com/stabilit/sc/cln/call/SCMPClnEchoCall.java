@@ -20,9 +20,10 @@ import java.net.InetAddress;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
@@ -30,13 +31,17 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnEchoCall extends SCMPCallAdapter {
+public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 
 	/**
 	 * Instantiates a SCMPClnEchoCall.
 	 */
 	public SCMPClnEchoCall() {
 		this(null, null);
+	}
+
+	public SCMPClnEchoCall(IClient client) {
+		super(client);
 	}
 
 	/**
@@ -47,7 +52,7 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnEchoCall(IClient client, SCMPMessage scmpSession) {
+	public SCMPClnEchoCall(IClient client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -67,7 +72,13 @@ public class SCMPClnEchoCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPClnEchoCall(client);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IClient client, IClientSession scmpSession) {
 		return new SCMPClnEchoCall(client, scmpSession);
 	}
 

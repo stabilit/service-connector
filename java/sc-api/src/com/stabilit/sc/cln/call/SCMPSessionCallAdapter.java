@@ -16,80 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.call;
 
-import java.util.Map;
-
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.client.IClientSession;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPSrvAbortSessionCall. Call aborts a session on a backend server.
+ * The Class SCMPCallAdapter. Provides basic functionality for calls.
  * 
  * @author JTraber
  */
-public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
+public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
 
-	/**
-	 * Instantiates a new SCMPSrvAbortSessionCall.
-	 */
-	public SCMPSrvAbortSessionCall() {
+	public SCMPSessionCallAdapter() {
 		this(null, null);
 	}
 
-	/**
-	 * Instantiates a new SCMPSrvAbortSessionCall.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
-	 */
-	public SCMPSrvAbortSessionCall(IClient client, IClientSession scmpSession) {
-		super(client, scmpSession);
+	public SCMPSessionCallAdapter(IClient client) {
+		super(client);
 	}
 
-	/**
-	 * New instance.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
-	 * @return the iSCMP call
-	 */
-	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPSrvAbortSessionCall(client, null);
+	public SCMPSessionCallAdapter(IClient client, IClientSession clientSession) {
+		super(client, clientSession);
 	}
-
-	/**
-	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
-	 */
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_ABORT_SESSION;
-	}
+	
+	public abstract ISCMPCall newInstance(IClient client, IClientSession clientSession);
+	
 }

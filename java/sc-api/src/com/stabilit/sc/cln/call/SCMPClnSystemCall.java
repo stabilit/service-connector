@@ -19,7 +19,7 @@ package com.stabilit.sc.cln.call;
 import java.util.Map;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -28,13 +28,17 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnSystemCall extends SCMPCallAdapter {
+public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnSystemCall.
 	 */
 	public SCMPClnSystemCall() {
 		this(null, null);
+	}
+
+	public SCMPClnSystemCall(IClient client) {
+		super(client);
 	}
 
 	/**
@@ -45,13 +49,18 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnSystemCall(IClient client, SCMPMessage scmpSession) {
+	public SCMPClnSystemCall(IClient client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPClnSystemCall(client);
+	}
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IClient client, IClientSession scmpSession) {
 		return new SCMPClnSystemCall(client, scmpSession);
 	}
 

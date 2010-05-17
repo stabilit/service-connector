@@ -18,10 +18,8 @@ package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.sc.cln.call.ISCMPCall;
-import com.stabilit.sc.cln.call.SCMPCallAdapter;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -47,7 +45,7 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPSrvDataCall(IClient client, SCMPMessage scmpSession) {
+	public SCMPSrvDataCall(IClient client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -56,13 +54,11 @@ public class SCMPSrvDataCall extends SCMPCallAdapter {
 	 * 
 	 * @param client
 	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
 	 * @return the iSCMP call
 	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
-		return new SCMPSrvDataCall(client, scmpSession);
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPSrvDataCall(client, null);
 	}
 
 	/**

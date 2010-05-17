@@ -76,13 +76,11 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	@Test
 	public void clnDataSCServerToClientDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
-				scmpSession);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
@@ -104,8 +102,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 		client.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
-				scmpSession);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
 		systemCall.setRequestBody("simulation:P01_RTXS_RPRWS1");
 		systemCall.invoke();
 	}

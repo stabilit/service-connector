@@ -17,6 +17,7 @@
 package com.stabilit.sc.cln.client;
 
 import com.stabilit.sc.cln.config.IClientConfigItem;
+import com.stabilit.sc.cln.scmp.SCMPSession;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.SCMPMessage;
 
@@ -30,50 +31,62 @@ public interface IClient extends IFactoryable {
 	/**
 	 * Disconnect.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void disconnect() throws Exception;
 
 	/**
 	 * Destroy.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void destroy() throws Exception;
 
 	/**
 	 * Connect.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void connect() throws Exception;
 
 	/**
 	 * Send and receive, synchronous operation.
 	 * 
-	 * @param scmp
-	 *            the scmp
+	 * @param scmp the scmp
+	 * 
 	 * @return the scmp
-	 * @throws Exception
-	 *             exception in sending/receiving process
+	 * 
+	 * @throws Exception exception in sending/receiving process
 	 */
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+
 
 	/**
 	 * Sets the client config.
 	 * 
-	 * @param clientConfig
-	 *            the new client config
+	 * @param clientConfig the new client config
 	 */
 	public void setClientConfig(IClientConfigItem clientConfig);
 
+	/**
+	 * Gets the client session.
+	 * 
+	 * @return the client session
+	 */
+	public IClientSession getClientSession();
+	
+	/**
+	 * Sets the client session.
+	 * 
+	 * @param clientSession the new client session
+	 */
+	public void setClientSession(IClientSession clientSession);
+	
 	/**
 	 * Returns a hash code which identifies client connection.
 	 * 
 	 * @return the string
 	 */
 	public String toHashCodeString();
+
 }

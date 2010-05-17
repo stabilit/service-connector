@@ -83,15 +83,11 @@ public class StressTest extends SuperTestCase {
 		}
 		try {
 			for (int i = 0; i < 10000; i++) {
-				SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-						.newInstance(client);
-				createSessionCall.setServiceName("simulation");
-				createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-				SCMPSession scmpSession = createSessionCall.invoke();
-
-				SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-						.newInstance(client, scmpSession);
-				deleteSessionCall.invoke();
+				SCMPSession localSession = new SCMPSession(client);
+				localSession.setServiceName("simulation");
+				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+				localSession.createSession();
+				localSession.deleteSession();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

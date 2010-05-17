@@ -17,9 +17,10 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
+import com.stabilit.sc.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
@@ -27,13 +28,17 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
+public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.
 	 */
 	public SCMPClnDeleteSessionCall() {
 		this(null, null);
+	}
+
+	public SCMPClnDeleteSessionCall(IClient client) {
+		super(client);
 	}
 
 	/**
@@ -44,13 +49,19 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDeleteSessionCall(IClient client, SCMPMessage scmpSession) {
+	public SCMPClnDeleteSessionCall(IClient client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPClnDeleteSessionCall(client);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IClient client, IClientSession scmpSession) {
 		return new SCMPClnDeleteSessionCall(client, scmpSession);
 	}
 
@@ -68,10 +79,10 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		super.invoke();
-		if (this.scmpSession != null && this.scmpSession instanceof SCMPSession) {
-			// remove session from internal registry
-			((SCMPSession) this.scmpSession).removeSessionRegistry();
-		}
+		String sessionId = this.responseMessage.getSessionId();
+		String serviceName = this.responseMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
+		sessionRegistry.remove(sessionId, serviceName);
 		return this.responseMessage;
 	}
 

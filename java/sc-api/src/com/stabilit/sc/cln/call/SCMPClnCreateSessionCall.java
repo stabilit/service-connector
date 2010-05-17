@@ -19,8 +19,9 @@ package com.stabilit.sc.cln.call;
 import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.scmp.SCMPSession;
+import com.stabilit.sc.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
@@ -49,13 +50,15 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPSession invoke() throws Exception {
+	public SCMPMessage invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke();
-		SCMPSession scmpSession = new SCMPSession(this.responseMessage); // register session in internal registry
-		scmpSession.addSessionRegistry();
-		return scmpSession;
+		String serviceName = this.responseMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String sessionId = this.responseMessage.getSessionId();
+		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
+		sessionRegistry.add(sessionId, serviceName);
+		return this.responseMessage;
 	}
 
 	/** {@inheritDoc} */

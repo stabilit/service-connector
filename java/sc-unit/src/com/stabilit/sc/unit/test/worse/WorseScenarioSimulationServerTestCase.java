@@ -52,8 +52,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	@Test
 	public void clnDeleteSessionSimulationServerDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
@@ -62,7 +61,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		 * failure
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, scmpSession);
+				.newInstance(client);
 		deleteSessionCall.invoke();
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
@@ -88,14 +87,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	public void clnDataSimulationServerDisconnect() throws Exception {
 
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");

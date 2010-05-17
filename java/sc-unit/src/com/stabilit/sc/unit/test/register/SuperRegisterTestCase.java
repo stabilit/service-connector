@@ -22,7 +22,6 @@ import org.junit.Before;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.sc.cln.scmp.SCMPSession;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 /**
@@ -39,8 +38,6 @@ public abstract class SuperRegisterTestCase extends SuperConnectTestCase {
 	public SuperRegisterTestCase(String fileName) {
 		super(fileName);
 	}
-
-	protected SCMPSession scmpSession = null;
 
 	@Before
 	public void setup() throws Exception {

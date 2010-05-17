@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,56 +14,102 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.sc.cln.scmp;
 
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.cln.client.IClient;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 
 /**
- * The Class SCMPSession. Represents a connection to a server. Can be registered in an internal registry.
- * 
  * @author JTraber
  */
-public class SCMPSession extends SCMPMessage {		// TODO (TRN) Session is NOT a message! This is completely wrong.
+public class SCMPSession implements IClientSession  {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 5900008165666082494L;
+	private IClient client;
+	private String sessionId;
+	private String serviceName;
+	private String sessionInfo;
+	private SCMPMessage responseMessage;
 
-	/**
-	 * Instantiates a new sCMP session.
-	 * 
-	 * @param message
-	 *            the scmp message
-	 */
-	public SCMPSession(SCMPMessage message) {
-		String sessionId = message.getSessionId();
-		this.setSessionId(sessionId);
-		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		String msgType = message.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
-		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType);
+	public SCMPSession(IClient client) {
+		this(client, null, null);
 	}
 
 	/**
-	 * Adds the session to registry.
+	 * @param client
 	 */
-	public void addSessionRegistry() {
-		String sessionId = getSessionId();
-		this.setSessionId(sessionId);
-		String serviceName = getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
-		sessionRegistry.add(sessionId, serviceName);
+	public SCMPSession(IClient client, String serviceName, String sessionInfo) {
+		this.client = client;
+		this.serviceName = serviceName;
+		this.sessionInfo = sessionInfo;
+		this.responseMessage = null;
+		this.sessionId = null;
+	}
+
+	public void createSession() throws Exception {
+		if (this.responseMessage != null) {
+			// TODO Runtime Log (DS & JT)
+			return;
+		}
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(client);
+		createSessionCall.setServiceName(this.serviceName);
+		createSessionCall.setSessionInfo(this.sessionInfo);
+		this.responseMessage = createSessionCall.invoke();
+		if (this.responseMessage != null) {
+			this.sessionId = this.responseMessage.getSessionId();
+			this.client.setClientSession(this);
+		}
+	}
+
+	public void deleteSession() throws Exception {
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(this.client);
+		deleteSessionCall.invoke();
 	}
 
 	/**
-	 * Removes the session from registry.
+	 * @return the sessionId
 	 */
-	public void removeSessionRegistry() {
-		String sessionId = getSessionId();
-		this.setSessionId(sessionId);
-		String serviceName = getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
-		sessionRegistry.remove(sessionId, serviceName);
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	/**
+	 * @return the serviceName
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	/**
+	 * @param serviceName
+	 *            the serviceName to set
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	/**
+	 * @return the sessionInfo
+	 */
+	public String getSessionInfo() {
+		return sessionInfo;
+	}
+
+	/**
+	 * @param sessionInfo
+	 *            the sessionInfo to set
+	 */
+	public void setSessionInfo(String sessionInfo) {
+		this.sessionInfo = sessionInfo;
 	}
 }

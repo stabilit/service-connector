@@ -102,7 +102,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		}
 		try {
 			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
-					.newInstance(client, message);
+					.newInstance(client);
 			createSessionCall.setHeader(message.getHeader());
 			createSessionCall.invoke();
 			this.allocated = true;
@@ -122,7 +122,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	public void srvDeleteSession(SCMPMessage message) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
-				.newInstance(client, message);
+				.newInstance(client);
 		deleteSessionCall.setHeader(message.getHeader());
 		try {
 			deleteSessionCall.invoke();
@@ -153,7 +153,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public SCMPMessage clnEcho(SCMPMessage message) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, message);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
 		echoCall.setHeader(message.getHeader());
 		echoCall.setRequestBody(message.getBody());
 		return echoCall.invoke();
@@ -188,7 +188,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public SCMPMessage srvData(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
-		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client, scmp);
+		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(client);
 		srvDataCall.setHeader(scmp.getHeader());
 		srvDataCall.setRequestBody(scmp.getBody());
 		try {
@@ -210,8 +210,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public SCMPMessage srvSystem(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
-		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
-				scmp);
+		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
 		srvSystemCall.setHeader(scmp.getHeader());
 		srvSystemCall.setRequestBody(scmp.getBody());
 		return srvSystemCall.invoke();
@@ -228,8 +227,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public SCMPMessage clnSystem(SCMPMessage scmp) throws Exception {		//TODO (TRN) This is weird!
 		checkServiceAlive();
-		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client,
-				scmp);
+		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client);
 		clnSystemCall.setHeader(scmp.getHeader());
 		clnSystemCall.setRequestBody(scmp.getBody());
 		return clnSystemCall.invoke();

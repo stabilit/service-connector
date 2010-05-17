@@ -23,13 +23,11 @@ import org.junit.Test;
 import com.stabilit.sc.cln.call.SCMPCallException;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.cln.scmp.SCMPSession;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
@@ -38,9 +36,6 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
  * The Class ClnCreateSessionTestCase.
  */
 public class ClnCreateSessionTestCase extends SuperConnectTestCase {
-
-	/** The scmp session. */
-	private SCMPSession scmpSession = null;
 
 	/**
 	 * The Constructor.
@@ -105,18 +100,12 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 	 */
 	@Test
 	public void clnCreateSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(client);
-
-		createSessionCall.setServiceName("simulation");
-		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-
-		scmpSession = createSessionCall.invoke();
+		SCMPSession localSession = new SCMPSession(client);
+		localSession.setServiceName("simulation");
+		localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		localSession.createSession();
 		/*************************** verify create session **********************************/
-		Assert.assertNull(scmpSession.getBody());
-		Assert.assertEquals(SCMPMsgType.CLN_CREATE_SESSION.getResponseName(), scmpSession.getMessageType());
-		Assert.assertNotNull(scmpSession.getSessionId());
-		Assert.assertNotNull(scmpSession.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertNotNull(localSession.getSessionId());
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
@@ -128,8 +117,6 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, scmpSession);
-		deleteSessionCall.invoke();
+		localSession.deleteSession();
 	}
 }

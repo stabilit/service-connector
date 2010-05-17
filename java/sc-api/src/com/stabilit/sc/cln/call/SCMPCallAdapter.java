@@ -17,10 +17,11 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPInternalStatus;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 
@@ -34,7 +35,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** The client to used to invoke the call. */
 	protected IClient client;
 	/** The scmp session to use for the call. */
-	protected SCMPMessage scmpSession;
+	protected IClientSession scmpSession;
 	/** The request message. */
 	protected SCMPMessage requestMessage;
 	/** The response message. */
@@ -47,6 +48,10 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this(null, null);
 	}
 
+	public SCMPCallAdapter(IClient client) {
+		this(client, client.getClientSession());
+	}
+
 	/**
 	 * Instantiates a new scmp call adapter.
 	 * 
@@ -55,21 +60,14 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPCallAdapter(IClient client, SCMPMessage scmpSession) {
+	public SCMPCallAdapter(IClient client, IClientSession scmpSession) {
 		this.client = client;
 		this.scmpSession = scmpSession;
 
 		if (this.scmpSession != null) {
-			if (this.scmpSession.isPart()) {
-				// on SC scmpSession might be a part - call to server must be a part too
-				this.requestMessage = new SCMPPart();
-				this.requestMessage.setHeader(this.scmpSession.getHeader());
-			} else {
-				this.requestMessage = new SCMPMessage();
-			}
+			this.requestMessage = new SCMPMessage();
 			this.requestMessage.setSessionId(scmpSession.getSessionId());
-			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession.getServiceName());
 		}
 
 		if (this.requestMessage == null) {
@@ -80,13 +78,17 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("not allowed");
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
-		throw new UnsupportedOperationException();
+	public ISCMPCall newInstance(IClient client, IClientSession clientSession) {
+		throw new UnsupportedOperationException("not allowed");
+	}
+
+	@Override
+	public ISCMPCall newInstance(IClient client, SCMPMessage scmpMessage) {
+		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
@@ -239,9 +241,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
-		/** {@inheritDoc} */
 		@Override
-		public ISCMPCall newInstance(IClient client, SCMPMessage scmp) {
+		public ISCMPCall newInstance(IClient client, IClientSession clientSession) {
+			throw new UnsupportedOperationException("not allowed");
+		}
+
+		@Override
+		public ISCMPCall newInstance(IClient client, SCMPMessage scmpMessage) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 	}

@@ -54,8 +54,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMPMessage result = null;
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 		clnEchoCall.setRequestBody("hello world");
@@ -81,8 +80,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		int anzMsg = 1000;
 		SCMPMessage result = null;
 
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 
@@ -111,8 +109,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
-			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
-					scmpSession);
+			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
 			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
@@ -138,8 +135,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
-			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client,
-					scmpSession);
+			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
 			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());

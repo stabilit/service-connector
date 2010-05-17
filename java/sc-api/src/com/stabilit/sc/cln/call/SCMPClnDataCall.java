@@ -17,7 +17,7 @@
 package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
@@ -26,13 +26,17 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnDataCall extends SCMPCallAdapter {
+public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnDataCall.
 	 */
 	public SCMPClnDataCall() {
 		this(null, null);
+	}
+
+	public SCMPClnDataCall(IClient client) {
+		super(client);
 	}
 
 	/**
@@ -43,14 +47,20 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDataCall(IClient client, SCMPMessage scmpSession) {
+	public SCMPClnDataCall(IClient client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
-		return new SCMPClnDataCall(client, scmpSession);
+	public ISCMPCall newInstance(IClient client) {
+		return new SCMPClnDataCall(client);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IClient client, IClientSession clientSession) {
+		return new SCMPClnDataCall(client, clientSession);
 	}
 
 	/**

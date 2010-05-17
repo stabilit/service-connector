@@ -47,8 +47,7 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 	public void multipleSrvDataTest() throws Exception {
 
 		for (int i = 0; i < 100; i++) {
-			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-					scmpSession);
+			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
 			SCMPMessage scmpReply = clnDataCall.invoke();

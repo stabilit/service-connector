@@ -18,13 +18,10 @@ package com.stabilit.sc.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.sc.cln.call.ISCMPCall;
-import com.stabilit.sc.cln.call.SCMPCallAdapter;
-import com.stabilit.sc.cln.call.SCMPCallException;
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
@@ -32,7 +29,7 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvEchoCall extends SCMPCallAdapter {
+public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPSrvEchoCall.
@@ -49,8 +46,8 @@ public class SCMPSrvEchoCall extends SCMPCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPSrvEchoCall(IClient client, SCMPMessage scmpSession) {
-		super(client, scmpSession);
+	public SCMPSrvEchoCall(IClient client, SCMPMessage clientMessage) {
+		super(client, clientMessage);		
 	}
 
 	/**
@@ -71,18 +68,9 @@ public class SCMPSrvEchoCall extends SCMPCallAdapter {
 		return this.responseMessage;
 	}
 
-	/**
-	 * New instance.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
-	 * @return the iSCMP call
-	 */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
-		return new SCMPSrvEchoCall(client, scmpSession);
+	public ISCMPCall newInstance(IClient client, SCMPMessage clientMessage) {
+		return new SCMPSrvEchoCall(client, clientMessage);
 	}
 
 	/**

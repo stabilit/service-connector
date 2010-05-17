@@ -45,8 +45,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvDataSmallRequestLargeResponseTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody("large");
 		SCMPMessage scmpReply = clnDataCall.invoke();
@@ -69,8 +68,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvDataLargeRequestSmallResponseTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client,
-				scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
 		clnDataCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {

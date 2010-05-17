@@ -159,10 +159,6 @@ public class SrvDataCommand extends CommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessionId must be set!");
 				}
-				if (!SimulationSessionRegistry.getCurrentInstance()
-						.containsKey(sessionId)) {
-					throw new ValidationException("sessoion does not exists!");
-				}
 
 				// serviceName
 				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);

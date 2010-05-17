@@ -20,8 +20,8 @@ import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMessageID;
 import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
@@ -36,8 +36,13 @@ public class Client implements IClient {
 
 	/** The client config. */
 	private IClientConfigItem clientConfig;
+
 	/** The client connection. */
 	protected IClientConnection clientConnection;
+
+	/** The client session. */
+	protected IClientSession clientSession;
+
 	/** The msg id for the next request. */
 	private SCMPMessageID msgID;
 
@@ -234,5 +239,26 @@ public class Client implements IClient {
 			msgID.incrementPartSequenceNr();
 		}
 		return scmpComposite;
+	}
+
+	/**
+	 * Gets the client session.
+	 * 
+	 * @return the client session
+	 */
+	@Override
+	public IClientSession getClientSession() {
+		return this.clientSession;
+	}
+
+	/**
+	 * Sets the client session.
+	 * 
+	 * @param clientSession
+	 *            the new client session
+	 */
+	@Override
+	public void setClientSession(IClientSession clientSession) {
+		this.clientSession = clientSession;
 	}
 }
