@@ -48,8 +48,6 @@ public final class ConnectionListenerSupport extends ListenerSupport<IConnection
 	 *            the source
 	 * @param port
 	 *            the port
-	 * @param data
-	 *            the data
 	 */
 	public void fireConnect(Object source, int port) {
 		if (getInstance().isEmpty() == false) {
