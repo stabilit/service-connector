@@ -32,10 +32,7 @@ public class SCMPReply extends SCMPMessage { //TODO (TRN) what is this class goo
 		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isReply()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isReply() {
 		return true;

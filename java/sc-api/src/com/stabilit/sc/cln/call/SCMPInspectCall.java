@@ -37,10 +37,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		this(null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -58,19 +55,13 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		this.client = client;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPInspectCall(client);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.INSPECT;

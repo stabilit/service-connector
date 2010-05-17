@@ -59,19 +59,13 @@ public class SCMPFault extends SCMPMessage {
 		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isFault()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isFault() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isReply()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isReply() {
 		return true;

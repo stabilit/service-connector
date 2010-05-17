@@ -48,10 +48,7 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 		this.client = client;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
@@ -62,19 +59,13 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 		return this.responseMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPEchoSCCall(client);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.ECHO_SC;

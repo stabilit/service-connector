@@ -324,8 +324,9 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 */
 	public Integer getHeaderInt(SCMPHeaderAttributeKey headerType) {
 		String value = header.get(headerType.getName());
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		Integer intValue = null;
 		try {
 			intValue = Integer.parseInt(value);
@@ -454,10 +455,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

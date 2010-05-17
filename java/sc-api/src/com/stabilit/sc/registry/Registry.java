@@ -84,10 +84,7 @@ public abstract class Registry implements IRegistryMXBean {
 		return registryMap.containsKey(key);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer dump = new StringBuffer();
@@ -99,10 +96,7 @@ public abstract class Registry implements IRegistryMXBean {
 		return dump.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.registry.jmx.IRegistryMXBean#getEntries()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public MapBeanWrapperJMX[] getEntries() {
 		MapBeanWrapperJMX[] mapBeanStringJMX = new MapBeanWrapperJMX[registryMap.size()];

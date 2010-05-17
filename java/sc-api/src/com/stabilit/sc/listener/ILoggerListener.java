@@ -21,7 +21,7 @@ import java.util.EventListener;
 /**
  * The listener interface for receiving ILogger events. The class that is interested in processing a ILogger event
  * implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addILoggerListener<code> method. When
+ * component's <code>addILoggerListener</code> method. When
  * the ILogger event occurs, that object's appropriate
  * method is invoked.
  * 

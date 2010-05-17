@@ -73,10 +73,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		this.add(messagePart);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getHeader()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, String> getHeader() {
 		currentPart.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
@@ -109,10 +106,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isFault()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isFault() {
 		if (this.scmpFault != null) {
@@ -121,19 +115,13 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isComposite()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isComposite() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getBodyLength()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getBodyLength() {
 		if (this.scmpFault != null) {
@@ -152,10 +140,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getBody()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Object getBody() {
 		if (this.outputStream != null) {
@@ -213,10 +198,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageType() {
 		return currentPart.getMessageType();

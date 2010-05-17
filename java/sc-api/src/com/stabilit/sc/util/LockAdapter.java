@@ -18,49 +18,37 @@ package com.stabilit.sc.util;
 
 /**
  * The Class LockAdapter. Adapter for Locks.
+ * 
+ *  @param <T> Type of LockAdapter
+ *  @author JTraber
  */
 public abstract class LockAdapter<T> implements Lockable<T> {
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.util.Lockable#run()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public T run() throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.util.Lockable#run(java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public T run(T obj) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.util.Lockable#run(java.lang.Object, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public T run(T obj1, T obj2) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.util.Lockable#run(java.lang.Object, java.lang.Object, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public T run(T obj1, T obj2, T obj3) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.util.Lockable#run(T[])
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public T run(T... objects) throws Exception {
 		return null;

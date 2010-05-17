@@ -33,28 +33,19 @@ public abstract class ResponseAdapter implements IResponse {
 		this.scmp = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IResponse#getSCMP()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getSCMP() {
 		return this.scmp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IResponse#setSCMP(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setSCMP(SCMPMessage scmp) {
 		this.scmp = scmp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IResponse#isLarge()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isLarge() {
 		if (this.scmp == null) {

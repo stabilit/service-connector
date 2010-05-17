@@ -87,10 +87,7 @@ public enum SCMPMsgType {
 		return responseName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
+	/** {@inheritDoc} */
 	public String toString() {
 		return name;
 	}

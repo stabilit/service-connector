@@ -19,7 +19,11 @@ package com.stabilit.sc.listener;
 import java.util.EventListener;
 
 /**
- * The Class ListenerSupport. Manages all the listeners. 
+ * The Class ListenerSupport. Manages all the listeners.
+ * 
+ * @param <T>
+ *            type of ListenerSupport
+ * @author JTraber
  */
 public class ListenerSupport<T extends EventListener> {
 

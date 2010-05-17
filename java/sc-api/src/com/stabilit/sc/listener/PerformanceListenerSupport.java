@@ -21,7 +21,7 @@ import java.util.EventListener;
 /**
  * The Class PerformanceListenerSupport. Allows logging performance - fire begin/end.
  */
-public class PerformanceListenerSupport extends
+public final class PerformanceListenerSupport extends
 		ListenerSupport<IPerformanceListener> {
 
 	/** The performance listener support. */

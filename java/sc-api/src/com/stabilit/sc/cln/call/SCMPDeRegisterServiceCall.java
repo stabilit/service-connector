@@ -44,10 +44,7 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 		this.client = client;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPDeRegisterServiceCall(client);
@@ -63,10 +60,7 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.DEREGISTER_SERVICE;

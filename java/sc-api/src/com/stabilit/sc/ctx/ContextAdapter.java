@@ -36,19 +36,13 @@ public class ContextAdapter implements IContext {
 		attrMap = new ConcurrentHashMap<String, Object>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.ctx.IContext#getAttribute(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(String name) {
 		return this.attrMap.get(name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.ctx.IContext#setAttribute(java.lang.String, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);

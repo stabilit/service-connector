@@ -23,7 +23,7 @@ import com.stabilit.sc.log.Level;
 /**
  * The Class LoggerListenerSupport. Allows logging - fire debug/info/warn/exception/error/log/trace.
  */
-public class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
+public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
 
 	/** The logger listener support. */
 	private static LoggerListenerSupport loggerListenerSupport = new LoggerListenerSupport();

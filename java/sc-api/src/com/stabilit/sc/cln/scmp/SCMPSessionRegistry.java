@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.scmp;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +23,7 @@ import com.stabilit.sc.registry.Registry;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * The Class SCMPSessionRegistry.
- * TODO commenting, unsure at this moment!
+ * The Class SCMPSessionRegistry. TODO commenting, unsure at this moment!
  * 
  * @author JTraber
  */
@@ -33,7 +31,7 @@ public final class SCMPSessionRegistry extends Registry {
 
 	/** The session registry. */
 	private static SCMPSessionRegistry sessionRegistry = new SCMPSessionRegistry();
-	
+
 	/**
 	 * Gets the current instance.
 	 * 
@@ -42,7 +40,7 @@ public final class SCMPSessionRegistry extends Registry {
 	public static SCMPSessionRegistry getCurrentInstance() {
 		return sessionRegistry;
 	}
-	
+
 	/**
 	 * Instantiates a new sCMP session registry.
 	 */
@@ -56,46 +54,50 @@ public final class SCMPSessionRegistry extends Registry {
 	/**
 	 * Adds an entry (sessionId, serviceName).
 	 * 
-	 * @param sessionId the session id
-	 * @param serviceName the service name
+	 * @param sessionId
+	 *            the session id
+	 * @param serviceName
+	 *            the service name
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void add(String sessionId, String serviceName) {
 		MapBean<List<String>> sessionIdMapBean = (MapBean<List<String>>) this.get("sessionIdMapBean");
-        List<String> sessionIdList = sessionIdMapBean.getAttribute(sessionId);
-        if (sessionIdList == null) {
-        	sessionIdList = new ArrayList<String>();
-        	sessionIdMapBean.setAttribute(sessionId, sessionIdList);
-        }
-        sessionIdList.add(serviceName);
-        
+		List<String> sessionIdList = sessionIdMapBean.getAttribute(sessionId);
+		if (sessionIdList == null) {
+			sessionIdList = new ArrayList<String>();
+			sessionIdMapBean.setAttribute(sessionId, sessionIdList);
+		}
+		sessionIdList.add(serviceName);
+
 		MapBean<List<String>> serviceNameMapBean = (MapBean<List<String>>) this.get("serviceNameMapBean");
-        List<String> serviceNameList = sessionIdMapBean.getAttribute(serviceName);
-        if (serviceNameList == null) {
-        	serviceNameList = new ArrayList<String>();
-        	serviceNameMapBean.setAttribute(serviceName, serviceNameList);
-        }
-        serviceNameList.add(sessionId);
+		List<String> serviceNameList = sessionIdMapBean.getAttribute(serviceName);
+		if (serviceNameList == null) {
+			serviceNameList = new ArrayList<String>();
+			serviceNameMapBean.setAttribute(serviceName, serviceNameList);
+		}
+		serviceNameList.add(sessionId);
 	}
 
 	/**
 	 * Removes an entry (sessionId, serviceName).
 	 * 
-	 * @param sessionId the session id
-	 * @param serviceName the service name
+	 * @param sessionId
+	 *            the session id
+	 * @param serviceName
+	 *            the service name
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void remove(String sessionId, String serviceName) {
 		MapBean<List<String>> sessionIdMapBean = (MapBean<List<String>>) this.get("sessionIdMapBean");
-        List<String> sessionIdList = sessionIdMapBean.getAttribute(sessionId);
-        if (sessionIdList != null) {
-        	sessionIdList.remove(serviceName);
-        }
-        
+		List<String> sessionIdList = sessionIdMapBean.getAttribute(sessionId);
+		if (sessionIdList != null) {
+			sessionIdList.remove(serviceName);
+		}
+
 		MapBean<List<String>> serviceNameMapBean = (MapBean<List<String>>) this.get("serviceNameMapBean");
-        List<String> serviceNameList = serviceNameMapBean.getAttribute(serviceName);
-        if (serviceNameList != null) {
-        	serviceNameList.remove(sessionId);
-        }
-	}	
+		List<String> serviceNameList = serviceNameMapBean.getAttribute(serviceName);
+		if (serviceNameList != null) {
+			serviceNameList.remove(sessionId);
+		}
+	}
 }

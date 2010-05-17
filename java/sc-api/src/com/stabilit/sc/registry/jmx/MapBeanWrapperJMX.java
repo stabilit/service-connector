@@ -41,25 +41,19 @@ public class MapBeanWrapperJMX implements IMapBeanWrapperMXBean {
 	 * @param mapBean
 	 *            the map bean
 	 */
-	@ConstructorProperties( { "key", "MapBean" })
+	@ConstructorProperties({ "key", "MapBean" })
 	public MapBeanWrapperJMX(String key, MapBean<?> mapBean) {
 		this.registryKey = key;
 		this.mapBean = mapBean;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.registry.jmx.IMapBeanWrapperMXBean#getEntry()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getEntry() {
 		return mapBean.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.registry.jmx.IMapBeanWrapperMXBean#getKey()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getKey() {
 		return registryKey;

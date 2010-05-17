@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * The Class MapBean, abstracts the java map construct.
  * 
+ * @param <T> Type of MapBean
  * @author JTraber
  */
 public class MapBean<T> {
@@ -39,7 +40,8 @@ public class MapBean<T> {
 	/**
 	 * Instantiates a new map bean of a given map.
 	 * 
-	 * @param map the map
+	 * @param map
+	 *            the map
 	 */
 	public MapBean(Map<String, T> map) {
 		attrMap = map;
@@ -57,7 +59,8 @@ public class MapBean<T> {
 	/**
 	 * Sets the attribute map.
 	 * 
-	 * @param attrMap the attr map
+	 * @param attrMap
+	 *            the attr map
 	 */
 	protected void setAttributeMap(Map<String, T> attrMap) {
 		this.attrMap = attrMap;
@@ -66,8 +69,8 @@ public class MapBean<T> {
 	/**
 	 * Gets the attribute.
 	 * 
-	 * @param name the name
-	 * 
+	 * @param name
+	 *            the name
 	 * @return the attribute
 	 */
 	public T getAttribute(String name) {
@@ -77,8 +80,10 @@ public class MapBean<T> {
 	/**
 	 * Sets the attribute.
 	 * 
-	 * @param name the name
-	 * @param value the value
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	public void setAttribute(String name, T value) {
 		this.attrMap.put(name, value);
@@ -87,8 +92,8 @@ public class MapBean<T> {
 	/**
 	 * Removes the attribute.
 	 * 
-	 * @param name the name
-	 * 
+	 * @param name
+	 *            the name
 	 * @return the t
 	 */
 	public T removeAttribute(String name) {

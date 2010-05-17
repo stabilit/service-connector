@@ -30,6 +30,9 @@ import com.stabilit.sc.cln.scmp.SCMPSessionRegistry;
  */
 public class SCMPSessionRegistryTest {
 
+	/**
+	 * Singelton test.
+	 */
 	@Test
 	public void singeltonTest() {
 		SCMPSessionRegistry sessReg1 = SCMPSessionRegistry.getCurrentInstance();

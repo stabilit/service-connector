@@ -79,10 +79,7 @@ public class KeepAlive {
 		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return keepAliveTimeout + "," + keepAliveInterval;

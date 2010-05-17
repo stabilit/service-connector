@@ -48,7 +48,8 @@ public enum SCMPInternalStatus {
 			return SCMPInternalStatus.PRQ;
 		case REQ:
 			return SCMPInternalStatus.REQ;
+		default:
+			return SCMPInternalStatus.NONE;
 		}
-		return SCMPInternalStatus.NONE;
 	}
 }

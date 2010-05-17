@@ -21,7 +21,7 @@ import java.util.EventListener;
 /**
  * The Class ExceptionListenerSupport. Allows logging exceptions.
  */
-public class ExceptionListenerSupport extends ListenerSupport<IExceptionListener> {
+public final class ExceptionListenerSupport extends ListenerSupport<IExceptionListener> {
 
 	/** The exception listener support. */
 	private static ExceptionListenerSupport exceptionListenerSupport = new ExceptionListenerSupport();

@@ -47,10 +47,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		this.client = client;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPSession invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -61,10 +58,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		return scmpSession;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPClnCreateSessionCall(client);
@@ -90,10 +84,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_CREATE_SESSION;

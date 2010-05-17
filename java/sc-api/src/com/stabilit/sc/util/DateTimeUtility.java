@@ -23,11 +23,17 @@ import java.util.Date;
 /**
  * The Class DateTimeUtility. Provides basic date time operations.
  */
-public class DateTimeUtility {
+public final class DateTimeUtility {
 
 	/** The Constant SDF. */
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+	/**
+	 * Instantiates a new date time utility.
+	 */
+	private DateTimeUtility() {
+	}
+	
 	/**
 	 * Gets the current time zone millis.
 	 * 

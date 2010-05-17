@@ -46,10 +46,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 		this.client = client;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#invoke()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
@@ -57,10 +54,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 		return this.responseMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPConnectCall(client);
@@ -76,10 +70,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#setCompression(boolean)
-	 */
+	/** {@inheritDoc} */
 	public void setCompression(boolean compression) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
@@ -114,10 +105,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CONNECT;

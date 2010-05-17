@@ -17,9 +17,10 @@
 package com.stabilit.sc.util;
 
 /**
- * The Interface Lockable. Needs to be implemented if <code>Lock<code> construct wants to be used. Construct to get thread
+ * The Interface Lockable. Needs to be implemented if <code>Lock</code> construct wants to be used. Construct to get thread
  * safety.
  * 
+ * @param <T> Type of Lockable
  * @author JTraber
  */
 public interface Lockable<T> {

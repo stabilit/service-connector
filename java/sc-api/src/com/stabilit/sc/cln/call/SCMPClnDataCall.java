@@ -47,11 +47,7 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 		super(client, scmpSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
-	 * com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPClnDataCall(client, scmpSession);
@@ -77,10 +73,7 @@ public class SCMPClnDataCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_DATA;

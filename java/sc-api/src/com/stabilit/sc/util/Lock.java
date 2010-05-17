@@ -23,6 +23,8 @@ import com.stabilit.sc.listener.ExceptionListenerSupport;
 /**
  * The Class Lock. Used instead of synchronized, is faster. Guarantees thread safety.
  * 
+ * @param <T>
+ *            Type of Lock
  * @author JTraber
  */
 public class Lock<T> {

@@ -24,8 +24,14 @@ import java.lang.reflect.Method;
  * 
  * @author JTraber
  */
-public class ReflectionUtil {
+public final class ReflectionUtil {
 
+	/**
+	 * Instantiates a new reflection util.
+	 */
+	private ReflectionUtil() {
+	}
+	
 	/**
 	 * Gets the current method.
 	 * 

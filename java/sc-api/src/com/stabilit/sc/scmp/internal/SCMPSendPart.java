@@ -44,18 +44,18 @@ public class SCMPSendPart extends SCMPPart {
 		this.offset = offset;
 		this.callLength = message.getBodyLength();
 		// evaluates the size of this part
-		this.size = this.callLength - this.offset < SCMPMessage.LARGE_MESSAGE_LIMIT ? this.callLength - this.offset
-				: SCMPMessage.LARGE_MESSAGE_LIMIT;
-		this.setHeader(message);
-		this.setInternalStatus(message.getInternalStatus());
-		this.setBody(message.getBody());
-		this.setIsReply(message.isReply());
+		if (this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT) {
+			this.size = this.callLength - this.offset;
+		} else {
+			this.size = SCMP.LARGE_MESSAGE_LIMIT;
+		}
+		this.setHeader(scmp);
+		this.setInternalStatus(scmp.getInternalStatus());
+		this.setBody(scmp.getBody());
+		this.setIsReply(scmp.isReply());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMPPart#isPart()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isPart() {
 		if (this.isGroup()) {
@@ -64,36 +64,24 @@ public class SCMPSendPart extends SCMPPart {
 		return offset + size < callLength;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isBodyOffset()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isBodyOffset() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getBodyOffset()
-	 */
+	/** {@inheritDoc} */
 	public int getBodyOffset() {
 		return offset;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#getBodyLength()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getBodyLength() {
 		return this.size;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isReply()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isReply() {
 		return super.isReply();

@@ -33,19 +33,13 @@ public abstract class ServerConnectionAdapter implements IServerConnection {
 		this.server = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#getServer()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IServer getServer() {
 		return server;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#setServer(com.stabilit.sc.srv.server.IServer)
-	 */
+	/** {@inheritDoc} */
 	public void setServer(IServer server) {
 		this.server = server;
 	}

@@ -18,9 +18,10 @@ package com.stabilit.sc.cln.call;
 
 import com.stabilit.sc.scmp.SCMPFault;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SCMPCallException. Exception occurs when invoking a call fails.
+ * 
+ * @author JTraber
  */
 public class SCMPCallException extends Exception {
 

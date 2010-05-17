@@ -27,35 +27,46 @@ public class ConnectionEvent extends EventObject {
 	private static final long serialVersionUID = -8265225164155917995L;
 
 	/** The offset. */
-	private int offset;	
+	private int offset;
 	/** The length. */
-	private int length;	
+	private int length;
 	/** The data. */
 	private Object data;
+	/** The port. */
+	private int port;
 
 	/**
 	 * Instantiates a new connection event.
 	 * 
-	 * @param source the source
-	 * @param data the data
+	 * @param source
+	 *            the source
+	 * @param data
+	 *            the data
 	 */
-	public ConnectionEvent(Object source, Object data) {
-		this(source, data, -1, -1);
+	public ConnectionEvent(Object source, int port, Object data) {
+		this(source, port, data, -1, -1);
 	}
 
 	/**
 	 * Instantiates a new connection event.
 	 * 
-	 * @param source the source
-	 * @param data the data
-	 * @param offset the offset
-	 * @param length the length
+	 * @param source
+	 *            the source
+	 * @param data
+	 *            the data
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 * @param port
+	 *            the port
 	 */
-	public ConnectionEvent(Object source, Object data, int offset, int length) {
+	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
 		super(source);
 		this.offset = offset;
 		this.length = length;
 		this.data = data;
+		this.port = port;
 	}
 
 	/**
@@ -83,5 +94,14 @@ public class ConnectionEvent extends EventObject {
 	 */
 	public int getLength() {
 		return length;
+	}
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
 	}
 }

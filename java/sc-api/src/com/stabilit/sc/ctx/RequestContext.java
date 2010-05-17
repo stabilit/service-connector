@@ -42,10 +42,7 @@ public class RequestContext extends ContextAdapter implements IRequestContext {
 		this.setSocketAddress(remoteAddress);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.ctx.IRequestContext#getSocketAddress()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SocketAddress getSocketAddress() {
 		return (SocketAddress) this.getAttribute(SocketAddress.class.getName());

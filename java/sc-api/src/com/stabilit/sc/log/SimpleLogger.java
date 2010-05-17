@@ -89,6 +89,7 @@ public abstract class SimpleLogger implements ILogger {
 			pw.close();
 			fos.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		this.date = Calendar.getInstance().getTime();
 		String dateFormat = this.dateFormatter.format(date);
@@ -97,19 +98,13 @@ public abstract class SimpleLogger implements ILogger {
 		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(Object obj) throws IOException {
 		throw new IOException("not supported");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(byte[])
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(byte[] buffer) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -127,10 +122,7 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(byte[], int, int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(byte[] buffer, int offset, int length) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -148,10 +140,7 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(String msg) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -171,10 +160,7 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(java.lang.Throwable)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(Throwable t) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {
@@ -196,10 +182,7 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.ILogger#log(com.stabilit.sc.log.Level, java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void log(Level level, String msg) throws IOException {
 		if (DateTimeUtility.isSameDay(date) == false) {

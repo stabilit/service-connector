@@ -98,10 +98,7 @@ public class SCMPValidatorException extends ValidatorException implements IFault
 		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IFaultResponse#setFaultResponse(com.stabilit.sc.scmp.IResponse)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setFaultResponse(IResponse response) {
 		SCMPFault scmpFault = new SCMPFault(attrBean.getAttributeMap());

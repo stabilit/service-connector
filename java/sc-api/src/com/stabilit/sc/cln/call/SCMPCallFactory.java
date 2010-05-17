@@ -16,15 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.call;
 
-
 /**
  * The Class SCMPCallFactory. Responsible for instantiating calls.
  * 
  * @author JTraber
  */
-public class SCMPCallFactory {
+public final class SCMPCallFactory {
 
-	/********************** Calls from Client **********************/
+	/**
+	 * Instantiates a new sCMP call factory.
+	 */
+	private SCMPCallFactory() {
+	}
+
+	/********************** Calls to SC **********************/
 
 	/** The CONNECT_CALL. */
 	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();

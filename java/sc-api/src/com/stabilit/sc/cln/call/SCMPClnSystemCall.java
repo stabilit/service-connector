@@ -49,20 +49,13 @@ public class SCMPClnSystemCall extends SCMPCallAdapter {
 		super(client, scmpSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.SCMPCallAdapter#newInstance(com.stabilit.sc.cln.client.IClient,
-	 * com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		return new SCMPClnSystemCall(client, scmpSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_SYSTEM;

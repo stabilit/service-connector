@@ -44,10 +44,7 @@ public class SCMPPart extends SCMPMessage {
 		this.header = map;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.SCMP#isPart()
-	 */
+	/** {@inheritDoc} */
 	public boolean isPart() {
 		return true;
 	}

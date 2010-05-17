@@ -25,8 +25,9 @@ import com.stabilit.sc.util.ValidatorException;
  * 
  * @author JTraber
  */
-public class NullCommandValidator implements ICommandValidator {
+public final class NullCommandValidator implements ICommandValidator {
 
+	/** The null command validator. */
 	private static ICommandValidator nullCommandValidator = new NullCommandValidator();
 
 	/**
@@ -38,9 +39,13 @@ public class NullCommandValidator implements ICommandValidator {
 		return nullCommandValidator;
 	}
 
+	/**
+	 * Instantiates a new null command validator.
+	 */
 	private NullCommandValidator() {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws ValidatorException {
 		throw new ValidatorException("no validator implemented");

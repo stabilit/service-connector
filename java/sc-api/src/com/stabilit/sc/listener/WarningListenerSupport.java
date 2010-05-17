@@ -21,7 +21,7 @@ import java.util.EventListener;
 /**
  * The Class WarningListenerSupport. Allows logging warning - fire warning.
  */
-public class WarningListenerSupport extends ListenerSupport<IRuntimeListener> {
+public final class WarningListenerSupport extends ListenerSupport<IRuntimeListener> {
 
 	/** The warning listener support. */
 	private static WarningListenerSupport warningListenerSupport = new WarningListenerSupport();

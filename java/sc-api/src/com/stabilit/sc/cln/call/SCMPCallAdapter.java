@@ -77,48 +77,32 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#newInstance(com.stabilit.sc.cln.client.IClient)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#newInstance(com.stabilit.sc.cln.client.IClient,
-	 * com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMPMessage scmpSession) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#openGroup()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall openGroup() {
 		ISCMPCall groupCall = new SCMPGroupCall(this);
 		return groupCall;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#closeGroup()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage closeGroup() {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#invoke()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
@@ -130,28 +114,19 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		return this.responseMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getCall()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getRequest() {
 		return requestMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#getResult()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getResponse() {
 		return responseMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.service.ISCMPCall#setBody(java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	public void setRequestBody(Object obj) {
 		requestMessage.setBody(obj);
 	}
@@ -188,10 +163,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			this.groupState = SCMPGroupState.OPEN;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#invoke()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public SCMPMessage invoke() throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
@@ -217,19 +189,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			return message;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#setBody(java.lang.Object)
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void setRequestBody(Object body) {
 			this.parentCall.setRequestBody(body);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#closeGroup()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public SCMPMessage closeGroup() throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
@@ -243,56 +209,37 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			return result;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#openGroup()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall openGroup() {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#getMessageType()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public SCMPMsgType getMessageType() {
 			return parentCall.getMessageType();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#getCall()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public SCMPMessage getRequest() {
 			return this.parentCall.getRequest();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#getResult()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public SCMPMessage getResponse() {
 			return this.parentCall.getResponse();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#newInstance(com.stabilit.sc.cln.client.IClient)
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall newInstance(IClient client) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.service.ISCMPCall#newInstance(com.stabilit.sc.cln.client.IClient,
-		 * com.stabilit.sc.scmp.SCMP)
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall newInstance(IClient client, SCMPMessage scmp) {
 			throw new UnsupportedOperationException("not allowed");
