@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,43 +14,57 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.sc.scmp;
 
 /**
- * The Enum SCMPInternalStatus. Defines possible internal states in SCMP. Internal status reflects state of
- * communication. Is used when large messages are requested/responded or group calls are made.
- * 
  * @author JTraber
  */
-public enum SCMPInternalStatus {
+public enum SCMPVersion {
 
-	/** The NONE. */
-	NONE,
-	/** The PRQ. */
-	PRQ,
-	/** The REQ. */
-	REQ,
-	/** The FAILED. */
-	FAILED,
-	/** The GROUP. */
-	GROUP;
+	UNDEFINED("0.0", 0, 0, 0), ONE("1.0", 1, 1, 1), TWO("2.0", 2,1,2);
+
+	private String text;
+	private int value;
+	private int minor;
+	private int major;
 
 	/**
-	 * Gets the internal status.
 	 * 
-	 * @param headerKey
-	 *            the header key
-	 * @return the internal status
 	 */
-	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
-		switch (headerKey) {
-		case PRQ:
-			return SCMPInternalStatus.PRQ;
-		case REQ:
-			return SCMPInternalStatus.REQ;
-		default:
-			return SCMPInternalStatus.NONE;
+	private SCMPVersion(String text, int value, int minor, int major) {
+		this.text = text;
+		this.value = value;
+		this.minor = minor;
+		this.major = major;
+	}
+
+	public static SCMPVersion getVersion(String text) {
+		if (ONE.text.equals(text)) {
+			return ONE;
 		}
+		return UNDEFINED;
+	}
+	
+	public boolean isSupported(SCMPVersion scmpVersion) {
+		if (this == scmpVersion) {
+			return true;
+		}
+		if (this.minor > scmpVersion.value) {
+			return false;
+		}
+		if (this.major < scmpVersion.value) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return text;
 	}
 }

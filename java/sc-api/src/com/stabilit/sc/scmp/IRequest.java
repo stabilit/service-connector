@@ -30,8 +30,8 @@ public interface IRequest {
 	 * Gets the message type.
 	 * 
 	 * @return the key message type in request.
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public SCMPMsgType getKey() throws Exception;
 
@@ -43,37 +43,32 @@ public interface IRequest {
 	public IRequestContext getContext();
 
 	/**
-	 * Gets the scmp message in the request.
+	 * Gets the message.
 	 * 
-	 * @return the scmp message
-	 * @throws Exception
-	 *             the exception
+	 * @return the message
 	 */
-	public SCMPMessage getMessage() throws Exception;
+	public SCMPMessage getMessage();
 
 	/**
 	 * Sets the scmp message in the request.
 	 * 
-	 * @param message
-	 *            the new scmp message
+	 * @param message the new scmp message
 	 */
 	public void setMessage(SCMPMessage message);
 
 	/**
 	 * Sets an attribute in attribute map.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 * @param key the key
+	 * @param value the value
 	 */
 	public void setAttribute(String key, Object value);
 
 	/**
 	 * Gets an attribute of the attribute map.
 	 * 
-	 * @param key
-	 *            the key
+	 * @param key the key
+	 * 
 	 * @return the attribute
 	 */
 	public Object getAttribute(String key);
@@ -95,24 +90,21 @@ public interface IRequest {
 	/**
 	 * Reads the content of the request.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void read() throws Exception;
 
 	/**
 	 * Reads next part.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void readNext() throws Exception;
 
 	/**
 	 * Load content on socket to the request. Decodes network frame into an scmp.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void load() throws Exception;
 }

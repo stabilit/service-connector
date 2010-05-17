@@ -19,6 +19,7 @@ package com.stabilit.sc.scmp;
 import java.net.SocketAddress;
 
 import com.stabilit.sc.ctx.IRequestContext;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.util.MapBean;
 
 /**
@@ -49,9 +50,14 @@ public abstract class RequestAdapter implements IRequest {
 	 * @see com.stabilit.sc.scmp.IRequest#getSCMP()
 	 */
 	@Override
-	public SCMPMessage getMessage() throws Exception {
+	public SCMPMessage getMessage() {
 		if (message == null) {
-			load();
+			try {
+				load();
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+				return null;
+			}
 		}
 		return message;
 	}

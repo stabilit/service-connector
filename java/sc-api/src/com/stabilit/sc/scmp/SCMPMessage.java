@@ -19,19 +19,21 @@ package com.stabilit.sc.scmp;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.SCVersion;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
 
 /**
- * Service Connector Message Protocol. 
- * Data container for one message.
+ * Service Connector Message Protocol. Data container for one message.
  */
-public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to ensure that mandatory methods are really implemented. ??
+public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, maybe interface, but not necessary)
+	// should have an abstract superclass to ensure that mandatory methods are really
+	// implemented. ??
 
 	/** The Constant SCMP_VERSION. */
-	public static final String SCMP_VERSION = "1.0";
-	// TODO implementation version where?
-	/** The actual SC_VERSION. */	//TODO (TRN) sc_version should be a class providing method to compare compatibility
-	public static final String SC_VERSION = "1.0-00";
+	public static final SCMPVersion SCMP_VERSION = SCMPVersion.ONE;
+	/** The actual SC_VERSION. */
+	public static final SCVersion SC_VERSION = SCVersion.ONE;
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
 	/** The is reply. */
@@ -88,7 +90,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return true, if is fault
 	 */
 	public boolean isFault() {
-		return false;	// implemented in sub classes
+		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return true, if is part
 	 */
 	public boolean isPart() {
-		return false;	// implemented in sub classes
+		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
 	}
 
 	/**
@@ -106,7 +108,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return true, if there is body offset
 	 */
 	public boolean isBodyOffset() {
-		return false;	// implemented in sub classes
+		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
 	}
 
 	/**
@@ -115,7 +117,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return the body offset
 	 */
 	public int getBodyOffset() {
-		return 0;		// implemented in sub classes
+		return 0; // implemented in sub classes TODO (Done JOT) this is the default value!
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return true, if is composite
 	 */
 	public boolean isComposite() {
-		return false;	// implemented in sub classes
+		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
 	}
 
 	/**
@@ -249,7 +251,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	}
 
 	/**
-	 * Copies the header from another message 
+	 * Copies the header from another message
 	 * 
 	 * @param sourceMessage
 	 *            the message with header header to be copied
@@ -331,7 +333,7 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Throwable th) {
-			ExceptionListenerSupport.getInstance().fireException(this, th);
+			ExceptionPoint.getInstance().fireException(this, th);
 			return null;
 		}
 		return intValue;
@@ -343,7 +345,11 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	 * @return the session id
 	 */
 	public String getSessionId() {
-		return header.get(SCMPHeaderAttributeKey.SESSION_ID.getName()); 
+		return this.getHeader(SCMPHeaderAttributeKey.SESSION_ID);
+	}
+
+	public String getServiceName() {
+		return this.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 	}
 
 	/**
@@ -512,4 +518,5 @@ public class SCMPMessage {	//TODO (TRN) should have an abstract superclass to en
 	public void setIsReply(boolean isReply) {
 		this.isReply = isReply;
 	}
+
 }

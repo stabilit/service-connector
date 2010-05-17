@@ -45,17 +45,16 @@ public enum SCMPHeaderAttributeKey {
 	NO_DATA("noData"),
 	PORT_NR("portNr"),
 	REJECT_SESSION("rejectSession"),
-	SCCLIENT_ID("scclientId"),					//TODO (TRN) unknown to me
-	SCSERVER_ID("scserverId"),					//TODO (TRN) unknown to me
+	SCCLIENT_ID("scclientId"),					//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	SCSERVER_ID("scserverId"),					//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	SC_ERROR_CODE("scErrorCode"),
 	SC_ERROR_TEXT("scErrorText"),
 	SC_VERSION("scVersion"),
-	SERVER_ID("serverId"),						//TODO (TRN) unknown to me
+	SERVER_ID("serverId"),						//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	SERVICE_NAME("serviceName"),
-	SERVICE_REGISTRY_ID("serviceRegistryId"),	//TODO (TRN) unknown to me
+	SERVICE_REGISTRY_ID("serviceRegistryId"),	//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	SESSION_ID("sessionId"),
-	SESSION_INFO("sessionInfo"),
-	TRANSITIVE("transitive");					//TODO (TRN) unknown to me
+	SESSION_INFO("sessionInfo");
 
 	/** The name. */
 	private String name;
