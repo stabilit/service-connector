@@ -25,8 +25,8 @@ import javax.xml.bind.ValidationException;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
@@ -100,8 +100,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean == null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: not connected");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: not connected");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -110,7 +110,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		// get free service
 		SCMPMessage message = request.getMessage();
-		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String serviceName = message.getServiceName();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		// adding ip of current unit to header field ip address list
 		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
@@ -135,10 +135,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		ServiceRegistryItem serviceRegistryItem = null;
 		try {
 			// try to allocate session on a backend server
-			serviceRegistryItem = serviceRegistry.allocate(serviceName, message);
+			serviceRegistryItem = serviceRegistry.allocate(request);
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
-			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
@@ -196,7 +196,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

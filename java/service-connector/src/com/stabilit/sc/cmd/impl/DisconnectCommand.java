@@ -20,7 +20,7 @@ import java.net.SocketAddress;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -86,8 +86,8 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough {
 
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 		if (mapBean == null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: client not connected");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());

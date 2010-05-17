@@ -19,8 +19,8 @@ package com.stabilit.sc.cmd.impl;
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
@@ -84,13 +84,13 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMPMessage message = request.getMessage();
-		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String serviceName = message.getServiceName();
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean == null) {
 			// server not registered - deregister not possible
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service not registered");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: service not registered");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -132,12 +132,12 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 
 			try {
 				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

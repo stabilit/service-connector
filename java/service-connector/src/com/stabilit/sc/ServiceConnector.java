@@ -23,7 +23,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -84,7 +84,7 @@ public final class ServiceConnector {
 				server.create();
 				server.runAsync();
 			} catch (Exception e) {
-				ExceptionListenerSupport.getInstance().fireException(ServiceConnector.class, e);
+				ExceptionPoint.getInstance().fireException(ServiceConnector.class, e);
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public final class ServiceConnector {
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
 		} catch (Throwable th) {
-			ExceptionListenerSupport.getInstance().fireException(ServiceConnector.class, th);
+			ExceptionPoint.getInstance().fireException(ServiceConnector.class, th);
 		}
 	}
 }

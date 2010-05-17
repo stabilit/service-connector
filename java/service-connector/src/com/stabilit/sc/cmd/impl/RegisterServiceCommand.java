@@ -22,8 +22,8 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItemPool;
 import com.stabilit.sc.scmp.IRequest;
@@ -93,20 +93,20 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		SCMPMessage message = request.getMessage();
-		String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		String serviceName = message.getServiceName();
 		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 
 		if (mapBean != null) {
 			// server already registered
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: service already registered");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: service already registered");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_REGISTERED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
 
-		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(message, socketAddress);
+		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(request);
 		serviceRegistry.add(serviceName, serviceRegistryItemPool);
 
 		SCMPReply scmpReply = new SCMPReply();
@@ -143,7 +143,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			SCMPMessage message = request.getMessage();
 			try {
 				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
@@ -162,7 +162,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

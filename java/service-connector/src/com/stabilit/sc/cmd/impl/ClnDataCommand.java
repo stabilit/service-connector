@@ -20,7 +20,7 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -99,8 +99,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 			// clnDatat failed, connection to backend server disturbed - clean up
 			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
 			serviceRegistryItem.markObsolete();
-			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, message);
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, request);
+			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
@@ -141,7 +141,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 					throw new ValidationException("sessionId must be set!");
 				}
 				// serviceName
-				String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -162,7 +162,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThrough {
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

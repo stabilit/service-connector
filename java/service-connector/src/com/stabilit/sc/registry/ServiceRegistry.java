@@ -17,8 +17,9 @@
 package com.stabilit.sc.registry;
 
 import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.WarningListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.RuntimePoint;
+import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
@@ -69,13 +70,15 @@ public final class ServiceRegistry extends Registry {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized ServiceRegistryItem allocate(Object key, SCMPMessage scmp) throws Exception {
-		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(key); // is this a list, TODO
+	public synchronized ServiceRegistryItem allocate(IRequest request) throws Exception {
+		SCMPMessage scmpMessage = request.getMessage();
+		String serviceName = scmpMessage.getServiceName();
+		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(serviceName); 
 		if (itemPool.isAvailable() == false) {
 			return null;
 		}
 		ServiceRegistryItem item = itemPool.getAvailableItem();
-		item.srvCreateSession(scmp);
+		item.srvCreateSession(scmpMessage);
 		return item;
 	}
 
@@ -89,18 +92,19 @@ public final class ServiceRegistry extends Registry {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void deallocate(ServiceRegistryItem item, SCMPMessage scmp) throws Exception {
+	public synchronized void deallocate(ServiceRegistryItem item, IRequest request) throws Exception {
+		SCMPMessage scmpMessage = request.getMessage();
 		if (item.isAllocated()) {
 			// try catch necessary because method gets invoked in error scenario
 			try {
-				item.srvDeleteSession(scmp);
+				item.srvDeleteSession(scmpMessage);
 			} catch (CommunicationException ex) {
-				ExceptionListenerSupport.getInstance().fireException(this, ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
 		ServiceRegistryItemPool itemPool = item.myItemPool;
 		if (itemPool == null) {
-			WarningListenerSupport.getInstance().fireWarning(this, "ServiceRegistryItem has not item pool.");
+			RuntimePoint.getInstance().fireRuntime(this, "ServiceRegistryItem has not item pool.");
 			return;
 		}
 		itemPool.freeItem(item);

@@ -20,7 +20,7 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
@@ -91,18 +91,18 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		try {
-			serviceRegistry.deallocate(serviceRegistryItem, message); // calls srvDeleteSession inside
+			serviceRegistry.deallocate(serviceRegistryItem, request); // calls srvDeleteSession inside
 		} catch (CommunicationException e) {
 			// deallocate failed, connection to backend server disturbed - clean up
 			serviceRegistryItem.markObsolete();			
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		// delete session entry from session registry
 		SessionRegistry.getCurrentInstance().remove(sessionId);
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+				.getServiceName());
 		response.setSCMP(scmpReply);
 	}
 
@@ -134,7 +134,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			SCMPMessage message = request.getMessage();
 			try {
 				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -144,7 +144,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 					throw new ValidationException("sessonId must be set!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

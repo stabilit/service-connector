@@ -18,6 +18,7 @@ package com.stabilit.sc.srv.client;
 
 import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.sc.listener.PerformancePoint;
 import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
@@ -54,6 +55,14 @@ public class SCClient extends Client {
 	 */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
+		if (PerformancePoint.getInstance().isOn()) {
+			try {
+				PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+				return clientConnection.sendAndReceive(scmp);
+			} finally {
+				PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
+			}
+		}
 		return clientConnection.sendAndReceive(scmp);
 	}
 }

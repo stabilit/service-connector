@@ -21,17 +21,17 @@ import java.util.Date;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.KeepAlive;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
+import com.stabilit.sc.scmp.internal.KeepAlive;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
@@ -93,8 +93,8 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
 
 		if (mapBean != null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: already connected");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: already connected");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_CONNECTED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -138,7 +138,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 
 			try {
 				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-				ValidatorUtility.validateSCVersion(SCMPMessage.SC_VERSION, scVersion);
+				SCMPMessage.SC_VERSION.isSupported(scVersion);
 				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
 				// compression default = true
 				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
@@ -156,7 +156,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

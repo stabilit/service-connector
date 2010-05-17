@@ -22,8 +22,8 @@ import java.util.Map;
 
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ServiceRegistryItem;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
@@ -107,8 +107,8 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 				.getAttribute(ServiceRegistryItem.class.getName());
 
 		if (serviceRegistryItem == null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVER_ERROR);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -129,7 +129,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 			// srvSystem or clnSystem failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
 			serviceRegistryItem.markObsolete();
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());

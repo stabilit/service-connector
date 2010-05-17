@@ -16,12 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.util.MapBean;
@@ -36,10 +35,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 
 	/** The max items. */
 	private int maxItems = -1;
-	/** The scmp. */
-	private SCMPMessage scmp;
-	/** The socket address. */
-	private SocketAddress socketAddress;
+	private IRequest request;
 	/** The server context. */
 	private IServerContext serverContext;
 	/** The free item list. */
@@ -55,40 +51,12 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public ServiceRegistryItemPool(SCMPMessage scmp, SocketAddress socketAddress) {
-		this.scmp = scmp;
-		this.socketAddress = socketAddress;
+	public ServiceRegistryItemPool(IRequest request) {
+		this.request = request;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		this.allocatedItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		this.serverContext = serverRegistry.getCurrentContext();
-	}
-
-	/**
-	 * Gets the server context.
-	 * 
-	 * @return the server context
-	 */
-	public IServerContext getServerContext() {
-		return this.serverContext;
-	}
-
-	/**
-	 * Gets the scmp.
-	 * 
-	 * @return the scmp
-	 */
-	public SCMPMessage getScmp() {
-		return scmp;
-	}
-
-	/**
-	 * Gets the socket address.
-	 * 
-	 * @return the socket address
-	 */
-	public SocketAddress getSocketAddress() {
-		return socketAddress;
 	}
 
 	/**
@@ -123,7 +91,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 			return null;
 		}
 		if (this.isNoLimit()) {
-			ServiceRegistryItem item = new ServiceRegistryItem(this.scmp, this.socketAddress, this.serverContext);
+			ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.serverContext);
 			item.myItemPool = this;
 			this.allocatedItemList.add(item);
 			return item;
@@ -155,7 +123,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(scmp.toString());
+		sb.append(request.getMessage().toString());
 		for (ServiceRegistryItem serviceRegistryItem : allocatedItemList) {
 			sb.append(serviceRegistryItem.toString());
 		}
