@@ -141,11 +141,11 @@ public class LargeMessageEncoderDecoderTest {
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		if (message.isFault() == false)
+		if (message.isFault() == false) {
 			Assert.fail("scmp should be of type fault");
+		}
 		verifySCMP(message);
-<<<<<<< .mine		verifySCMP(scmp);
-=======>>>>>>> .theirs	}
+	}
 
 	/**
 	 * Decode undef test.
@@ -189,7 +189,7 @@ public class LargeMessageEncoderDecoderTest {
 			Assert.fail("Should not throw exception");
 		}
 		verifySCMP(message);
-		if (message.isPart() == false)
+		if (message.isPart() == false) {
 			Assert.fail("scmp should be of type part");
 		}
 	}
@@ -215,7 +215,7 @@ public class LargeMessageEncoderDecoderTest {
 			Assert.fail("Should not throw exception");
 		}
 		verifySCMP(message);
-		if (message.isPart() == false)
+		if (message.isPart() == false) {
 			Assert.fail("scmp should be of type part");
 		}
 	}
@@ -423,7 +423,7 @@ public class LargeMessageEncoderDecoderTest {
 	 * @param scmp
 	 *            the scmp
 	 */
-	private void verifySCMPStringBody(SCMP scmp) {
+	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
@@ -437,7 +437,7 @@ public class LargeMessageEncoderDecoderTest {
 	 * @param scmp
 	 *            the scmp
 	 */
-	private void verifySCMP(SCMP scmp) {
+	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));

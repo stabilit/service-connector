@@ -142,11 +142,9 @@ public class DefaultEncoderDecoderTest {
 		}
 		if (message.isFault() == false) {
 			Assert.fail("scmp should be of type fault");
-			verifySCMP(scmp);
 		}
 		verifySCMP(message);
-<<<<<<< .mine		verifySCMP(scmp);
-=======>>>>>>> .theirs	}
+	}
 
 	/**
 	 * Decode undef test.
@@ -320,7 +318,7 @@ public class DefaultEncoderDecoderTest {
 	 * @param scmp
 	 *            the scmp
 	 */
-	private void verifySCMPStringBody(SCMP scmp) {
+	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
@@ -334,7 +332,7 @@ public class DefaultEncoderDecoderTest {
 	 * @param scmp
 	 *            the scmp
 	 */
-	private void verifySCMP(SCMP scmp) {
+	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
