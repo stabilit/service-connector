@@ -44,15 +44,15 @@ public class SCMPSendPart extends SCMPPart {
 		this.offset = offset;
 		this.callLength = message.getBodyLength();
 		// evaluates the size of this part
-		if (this.callLength - this.offset < SCMP.LARGE_MESSAGE_LIMIT) {
+		if (this.callLength - this.offset < SCMPMessage.LARGE_MESSAGE_LIMIT) {
 			this.size = this.callLength - this.offset;
 		} else {
-			this.size = SCMP.LARGE_MESSAGE_LIMIT;
+			this.size = SCMPMessage.LARGE_MESSAGE_LIMIT;
 		}
-		this.setHeader(scmp);
-		this.setInternalStatus(scmp.getInternalStatus());
-		this.setBody(scmp.getBody());
-		this.setIsReply(scmp.isReply());
+		this.setHeader(message);
+		this.setInternalStatus(message.getInternalStatus());
+		this.setBody(message.getBody());
+		this.setIsReply(message.isReply());
 	}
 
 	/** {@inheritDoc} */
