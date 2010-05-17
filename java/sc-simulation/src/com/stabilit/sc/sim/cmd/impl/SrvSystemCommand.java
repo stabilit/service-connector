@@ -22,7 +22,6 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 
@@ -55,8 +54,6 @@ public class SrvSystemCommand extends CommandAdapter {
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(scmpReq.getSessionId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpReq
-				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		scmpReply.setHeader("kill", "true");
 		response.setSCMP(scmpReply);
 	}
