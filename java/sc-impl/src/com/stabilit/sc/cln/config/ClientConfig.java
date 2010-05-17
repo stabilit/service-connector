@@ -123,10 +123,10 @@ public class ClientConfig {
 		 *            the host
 		 * @param port
 		 *            the port
-		 * @param con
-		 *            the configuration
 		 * @param numberOfThreads
 		 *            the number of threads
+		 * @param connection
+		 *            the connection
 		 */
 		public ClientConfigItem(String host, int port, String connection, int numberOfThreads) {
 			super();
