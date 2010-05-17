@@ -14,55 +14,64 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.call;
+package com.stabilit.sc.listener;
 
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMsgType;
+import java.util.EventListener;
 
 /**
- * The Class SCMPDeRegisterServiceCall. Call deregisters server.
- * 
- * @author JTraber
+ * The Class RuntimePoint.
  */
-public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
+public final class RuntimePoint extends ListenerSupport<IRuntimeListener> {
+
+	/** The runtime point. */
+	private static RuntimePoint runtimePoint = new RuntimePoint();
 
 	/**
-	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 * Instantiates a new RuntimePoint.
 	 */
-	public SCMPDeRegisterServiceCall() {
-		this(null);
+	private RuntimePoint() {
 	}
 
 	/**
-	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 * Gets the single instance of RuntimePoint.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
+	 * @return single instance of RuntimePoint
 	 */
-	public SCMPDeRegisterServiceCall(IClient client) {
-		this.client = client;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IClient client) {
-		return new SCMPDeRegisterServiceCall(client);
+	public static RuntimePoint getInstance() {
+		return runtimePoint;
 	}
 
 	/**
-	 * Sets the service name.
+	 * Fire runtime.
 	 * 
-	 * @param serviceName
-	 *            the new service name
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
 	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	public void fireRuntime(Object source, String text) {
+		if (getInstance().isEmpty() == false) {
+			RuntimeEvent runtimeEvent = new RuntimeEvent(source, text);
+			RuntimePoint.getInstance().fireRuntime(runtimeEvent);
+		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.DEREGISTER_SERVICE;
+	/**
+	 * Fire runtime.
+	 * 
+	 * @param runtimeEvent
+	 *            the runtime event
+	 */
+	public void fireRuntime(RuntimeEvent runtimeEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				IRuntimeListener runtimeListener = (IRuntimeListener) localArray[i];
+				runtimeListener.runtimeEvent(runtimeEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

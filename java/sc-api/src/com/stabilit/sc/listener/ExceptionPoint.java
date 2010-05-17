@@ -21,15 +21,15 @@ import java.util.EventListener;
 /**
  * The Class ExceptionListenerSupport. Allows logging exceptions.
  */
-public final class ExceptionListenerSupport extends ListenerSupport<IExceptionListener> {
+public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
 
 	/** The exception listener support. */
-	private static ExceptionListenerSupport exceptionListenerSupport = new ExceptionListenerSupport();
+	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
 
 	/**
 	 * Instantiates a new exception listener support.
 	 */
-	private ExceptionListenerSupport() {
+	private ExceptionPoint() {
 	}
 
 	/**
@@ -37,8 +37,8 @@ public final class ExceptionListenerSupport extends ListenerSupport<IExceptionLi
 	 * 
 	 * @return single instance of ExceptionListenerSupport
 	 */
-	public static ExceptionListenerSupport getInstance() {
-		return exceptionListenerSupport;
+	public static ExceptionPoint getInstance() {
+		return exceptionPoint;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public final class ExceptionListenerSupport extends ListenerSupport<IExceptionLi
 	public void fireException(Object source, Throwable th) {
 		if (getInstance().isEmpty() == false) {
 			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			ExceptionListenerSupport.getInstance().fireException(exceptionEvent);
+			ExceptionPoint.getInstance().fireException(exceptionEvent);
 		}
 	}
 

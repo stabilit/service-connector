@@ -23,17 +23,17 @@ import com.stabilit.sc.log.Level;
 /**
  * The Class LoggerListenerSupport. Allows logging - fire debug/info/warn/exception/error/log/trace.
  */
-public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener> {
+public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 
 	/** The logger listener support. */
-	private static LoggerListenerSupport loggerListenerSupport = new LoggerListenerSupport();
+	private static LoggerPoint loggerPoint = new LoggerPoint();
 	/** The level of logging. */
 	private Level level = null;
 
 	/**
 	 * Instantiates a new logger listener support.
 	 */
-	private LoggerListenerSupport() {
+	private LoggerPoint() {
 		this.level = Level.EXCEPTION;
 	}
 
@@ -42,8 +42,8 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	 * 
 	 * @return single instance of LoggerListenerSupport
 	 */
-	public static LoggerListenerSupport getInstance() {
-		return loggerListenerSupport;
+	public static LoggerPoint getInstance() {
+		return loggerPoint;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireError(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.ERROR);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 
@@ -82,7 +82,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireException(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.EXCEPTION);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 
@@ -97,7 +97,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireWarn(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.WARN);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 
@@ -112,7 +112,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireInfo(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.INFO);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 
@@ -127,7 +127,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireDebug(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.DEBUG);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 
@@ -142,7 +142,7 @@ public final class LoggerListenerSupport extends ListenerSupport<ILoggerListener
 	public void fireTrace(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
 			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.TRACE);
-			LoggerListenerSupport.getInstance().fireLog(loggerEvent);
+			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
 

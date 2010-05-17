@@ -18,7 +18,7 @@ package com.stabilit.sc.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 
 /**
  * The Class Lock. Used instead of synchronized, is faster. Guarantees thread safety.
@@ -54,7 +54,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run();
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -75,7 +75,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(object);
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -98,7 +98,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(obj1, obj2);
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -123,7 +123,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(obj1, obj2, obj3);
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();
@@ -144,7 +144,7 @@ public class Lock<T> {
 			reentrantLock.lock();
 			return lockable.run(params);
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			return null;
 		} finally {
 			this.unlock();

@@ -25,6 +25,9 @@ public class PerformanceEvent extends EventObject {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2561926364455371080L;	
+	
+	private String methodName;
+	
 	/** The time. */
 	private long time;
 	
@@ -32,10 +35,26 @@ public class PerformanceEvent extends EventObject {
 	 * Instantiates a new performance event.
 	 * 
 	 * @param source the source
-	 * @param time the time
 	 */
-	public PerformanceEvent(Object source, long time) {
-		super(source);
-		this.time = time;
+	public PerformanceEvent(Object source, String methodName) {
+		super(source);		
+		this.time = System.nanoTime();
+		this.methodName = methodName;
+	}
+	
+	/**
+	 * Gets the time.
+	 * 
+	 * @return the time
+	 */
+	public long getTime() {
+		return time;
+	}
+	
+	/**
+	 * @return the methodName
+	 */
+	public String getMethodName() {
+		return methodName;
 	}
 }

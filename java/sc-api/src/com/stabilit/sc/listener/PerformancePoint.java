@@ -21,11 +21,11 @@ import java.util.EventListener;
 /**
  * The Class PerformanceListenerSupport. Allows logging performance - fire begin/end.
  */
-public final class PerformanceListenerSupport extends
+public final class PerformancePoint extends
 		ListenerSupport<IPerformanceListener> {
 
 	/** The performance listener support. */
-	private static PerformanceListenerSupport performanceListenerSupport = new PerformanceListenerSupport();
+	private static PerformancePoint performancePoint = new PerformancePoint();
 	
 	/** The on. */
 	private boolean on = false;
@@ -33,7 +33,7 @@ public final class PerformanceListenerSupport extends
 	/**
 	 * Instantiates a new performance listener support.
 	 */
-	private PerformanceListenerSupport() {
+	private PerformancePoint() {
 	}
 
 	/**
@@ -41,8 +41,8 @@ public final class PerformanceListenerSupport extends
 	 * 
 	 * @return single instance of PerformanceListenerSupport
 	 */
-	public static PerformanceListenerSupport getInstance() {
-		return performanceListenerSupport;
+	public static PerformancePoint getInstance() {
+		return performancePoint;
 	}
 
 	/**
@@ -69,10 +69,10 @@ public final class PerformanceListenerSupport extends
 	 * @param source the source
 	 * @param time the time
 	 */
-	public void fireBegin(Object source, long time) {
+	public void fireBegin(Object source, String method) {
 		if (getInstance().isEmpty() == false) {
-			PerformanceEvent performanceEvent = new PerformanceEvent(source, time);
-			PerformanceListenerSupport.getInstance().performanceBeginEvent(performanceEvent);
+			PerformanceEvent performanceEvent = new PerformanceEvent(source, method);
+			PerformancePoint.getInstance().performanceBeginEvent(performanceEvent);
 		}
 	}
 
@@ -82,10 +82,10 @@ public final class PerformanceListenerSupport extends
 	 * @param source the source
 	 * @param time the time
 	 */
-	public void fireEnd(Object source, long time) {
+	public void fireEnd(Object source, String method) {
 		if (getInstance().isEmpty() == false) {
-			PerformanceEvent performanceEvent = new PerformanceEvent(source, time);
-			PerformanceListenerSupport.getInstance().performanceEndEvent(performanceEvent);
+			PerformanceEvent performanceEvent = new PerformanceEvent(source, method);
+			PerformancePoint.getInstance().performanceEndEvent(performanceEvent);
 		}
 	}
 

@@ -20,9 +20,9 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.client.IClientSession;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPInternalStatus;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 
 /**
@@ -144,10 +144,28 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/**
-	 * The Class SCMPGroupCall. Inner class - allows to open a group for messages. Sends parts as long as group is
-	 * not closed. Very useful if you don't know how big your complete message is going to be.
+	 * The Class SCMPGroupCall. 
+	 * 
+	 * A group call is a summary of individual single calls. Each single call can be a large or small message request and response.
+	 * But all of them are handled as partial messages, large calls will be split into partial calls (PRQ).
+	 * The client uses group calls if the active communication is open end.
+	 * Closing the group will send the completing request (REQ).
+	 * 
+	 * Communication sample:
+	 * 
+	 * openGroup... (no transport)
+	 * PRQ ->       
+	 * <-PRS
+	 * PRQ ->
+	 * <-PRS
+	 * ....
+	 * PRQ->
+	 * <-PRS
+	 * closeGroup (terminates group)
+	 * REQ->
+	 * <-RES
 	 */
-	public class SCMPGroupCall implements ISCMPCall {	//TODO (TRN) is this not better a SCMPCallPart?
+	public class SCMPGroupCall implements ISCMPCall {	//TODO (TRN) (Done JOT) is this not better a SCMPCallPart?
 
 		/** The parent call. */
 		private ISCMPCall parentCall;
