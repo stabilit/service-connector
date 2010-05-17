@@ -23,7 +23,7 @@ import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
-import com.stabilit.sc.cln.scmp.SCMPSession;
+import com.stabilit.sc.cln.scmp.SCMPClientSession;
 import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
@@ -50,7 +50,6 @@ public class StressTest extends SuperTestCase {
 		for (int i = 0; i < 10000; i++) {
 			try {
 				SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
-				connectCall.setVersion("1.0-00");
 				connectCall.setCompression(false);
 				connectCall.setKeepAliveTimeout(30);
 				connectCall.setKeepAliveInterval(360);
@@ -73,7 +72,6 @@ public class StressTest extends SuperTestCase {
 	public void createDeleteSession() {
 		try {
 			SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
-			connectCall.setVersion("1.0-00");
 			connectCall.setCompression(false);
 			connectCall.setKeepAliveTimeout(30);
 			connectCall.setKeepAliveInterval(360);
@@ -83,7 +81,7 @@ public class StressTest extends SuperTestCase {
 		}
 		try {
 			for (int i = 0; i < 10000; i++) {
-				SCMPSession localSession = new SCMPSession(client);
+				SCMPClientSession localSession = new SCMPClientSession(client);
 				localSession.setServiceName("simulation");
 				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 				localSession.createSession();

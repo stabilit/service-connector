@@ -19,7 +19,7 @@ package com.stabilit.sc.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.scmp.SCMPSession;
+import com.stabilit.sc.cln.scmp.SCMPClientSession;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 /**
@@ -27,7 +27,7 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
  */
 public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 
-	private SCMPSession scmpSession = null;
+	private SCMPClientSession scmpSession = null;
 
 	/**
 	 * The Constructor.
@@ -52,7 +52,7 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 	}
 
 	public void clnCreateSessionBefore() throws Exception {
-		this.scmpSession = new SCMPSession(client, "simulation", "Session Info");
+		this.scmpSession = new SCMPClientSession(client, "simulation", "Session Info");
 		this.scmpSession.createSession();			
 	}
 

@@ -20,6 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.SCVersion;
 import com.stabilit.sc.cln.call.SCMPCallException;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
@@ -48,7 +49,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 	public void secondConnect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
-		connectCall.setVersion("1.0-00");
+		connectCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		connectCall.setCompression(false);
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);

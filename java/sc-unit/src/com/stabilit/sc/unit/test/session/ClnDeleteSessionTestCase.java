@@ -49,7 +49,7 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		/*************************** verify delete session **********************************/
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getResponseName(), result.getMessageType());
-		Assert.assertNotNull(result.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertNotNull(result.getServiceName());
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);

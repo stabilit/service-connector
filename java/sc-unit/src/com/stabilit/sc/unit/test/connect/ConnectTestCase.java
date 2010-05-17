@@ -63,7 +63,6 @@ public class ConnectTestCase extends SuperTestCase {
 	public void connect() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
-		connectCall.setVersion("1.0-00");
 		connectCall.setCompression(false);
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
@@ -86,7 +85,7 @@ public class ConnectTestCase extends SuperTestCase {
 		String expectedScEntry = ":compression=false;localDateTime="
 				+ ValidatorUtility.validateLocalDateTime(connectCall.getRequest().getHeader(
 						SCMPHeaderAttributeKey.LOCAL_DATE_TIME))
-				+ ";scVersion=1.0-00;keepAliveTimeout=30,360;";
+				+ ";scVersion=1.0-000;keepAliveTimeout=30,360;";
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);

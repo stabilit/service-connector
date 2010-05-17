@@ -34,7 +34,7 @@ import com.stabilit.sc.cln.client.Client;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.util.ReflectionUtil;
 
@@ -101,7 +101,7 @@ public abstract class MTSuperTestCase {
 			client.disconnect();
 			client.destroy();
 		}
-		ConnectionListenerSupport.getInstance().clearAll();
+		ConnectionPoint.getInstance().clearAll();
 		clientList = null;
 	}
 

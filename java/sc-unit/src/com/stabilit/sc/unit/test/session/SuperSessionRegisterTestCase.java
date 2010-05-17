@@ -19,7 +19,7 @@ package com.stabilit.sc.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.scmp.SCMPSession;
+import com.stabilit.sc.cln.scmp.SCMPClientSession;
 import com.stabilit.sc.unit.test.register.SuperRegisterTestCase;
 
 /**
@@ -27,7 +27,7 @@ import com.stabilit.sc.unit.test.register.SuperRegisterTestCase;
  */
 public abstract class SuperSessionRegisterTestCase extends SuperRegisterTestCase {
 
-	protected SCMPSession scmpSession = null;
+	protected SCMPClientSession scmpSession = null;
 
 	/**
 	 * The Constructor.
@@ -52,7 +52,7 @@ public abstract class SuperSessionRegisterTestCase extends SuperRegisterTestCase
 	}
 
 	public void clnCreateSessionBefore() throws Exception {
-		this.scmpSession = new SCMPSession(this.client);
+		this.scmpSession = new SCMPClientSession(this.client);
 		this.scmpSession.setServiceName("simulation");
 		this.scmpSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		this.scmpSession.createSession();

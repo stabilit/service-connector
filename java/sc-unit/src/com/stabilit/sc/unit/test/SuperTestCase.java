@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 
 /**
  * @author JTraber
@@ -79,7 +79,7 @@ public abstract class SuperTestCase {
 	protected void finalize() throws Throwable {
 		client.disconnect(); // physical disconnect
 		client.destroy();
-		ConnectionListenerSupport.getInstance().clearAll();
+		ConnectionPoint.getInstance().clearAll();
 		client = null;
 	}
 }

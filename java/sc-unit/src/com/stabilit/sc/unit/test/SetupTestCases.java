@@ -19,16 +19,16 @@ package com.stabilit.sc.unit.test;
 import java.io.File;
 
 import com.stabilit.sc.ServiceConnector;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.listener.IConnectionListener;
 import com.stabilit.sc.listener.IExceptionListener;
 import com.stabilit.sc.listener.ILoggerListener;
 import com.stabilit.sc.listener.IPerformanceListener;
 import com.stabilit.sc.listener.IRuntimeListener;
-import com.stabilit.sc.listener.LoggerListenerSupport;
-import com.stabilit.sc.listener.PerformanceListenerSupport;
-import com.stabilit.sc.listener.WarningListenerSupport;
+import com.stabilit.sc.listener.LoggerPoint;
+import com.stabilit.sc.listener.PerformancePoint;
+import com.stabilit.sc.listener.RuntimePoint;
 import com.stabilit.sc.log.Level;
 import com.stabilit.sc.log.impl.ConnectionLogger;
 import com.stabilit.sc.log.impl.ExceptionLogger;
@@ -55,18 +55,18 @@ public class SetupTestCases {
 		// setup loggers
 		try {
 			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory();
-			ConnectionListenerSupport.getInstance().addListener(
+			ConnectionPoint.getInstance().addListener(
 					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-			ExceptionListenerSupport.getInstance().addListener(
+			ExceptionPoint.getInstance().addListener(
 					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-			WarningListenerSupport.getInstance().addListener(
+			RuntimePoint.getInstance().addListener(
 					(IRuntimeListener) loggerFactory.newInstance(RuntimeLogger.class));
-			LoggerListenerSupport.getInstance().addListener(
+			LoggerPoint.getInstance().addListener(
 					(ILoggerListener) loggerFactory.newInstance(GeneralLogger.class));
-			LoggerListenerSupport.getInstance().setLevel(Level.DEBUG);
-			PerformanceListenerSupport.getInstance().addListener(
+			LoggerPoint.getInstance().setLevel(Level.DEBUG);
+			PerformancePoint.getInstance().addListener(
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-			PerformanceListenerSupport.getInstance().setOn(true);
+			PerformancePoint.getInstance().setOn(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

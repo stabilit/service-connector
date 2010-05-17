@@ -25,6 +25,7 @@ import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.unit.test.SuperTestCase;
 import com.stabilit.sc.util.ValidatorUtility;
 
@@ -60,7 +61,7 @@ public abstract class SuperConnectTestCase extends SuperTestCase {
 	public void clnConnectBefore() throws Exception {
 		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
 
-		connectCall.setVersion("1.0-00");
+		connectCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		connectCall.setCompression(false);
 		connectCall.setKeepAliveTimeout(30);
 		connectCall.setKeepAliveInterval(360);
