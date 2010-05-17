@@ -35,17 +35,30 @@ import com.stabilit.sc.scmp.SCMPHeadlineKey;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.SCMPReply;
 
+/**
+ * The Class DefaultEncoderDecoderTest.
+ */
 public class DefaultEncoderDecoderTest {
 
+	/** The coder factory. */
 	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
+	/** The head key. */
 	private SCMPHeadlineKey headKey;
+	/** The msg type. */
 	private SCMPMsgType msgType;
+	/** The body type. */
 	private SCMPBodyType bodyType;
+	/** The msg id. */
 	private String msgID;
+	/** The body length. */
 	private String bodyLength;
+	/** The body. */
 	private String body;
 	private SCMPMessage encodeScmp;
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		this.headKey = SCMPHeadlineKey.REQ;
@@ -62,10 +75,13 @@ public class DefaultEncoderDecoderTest {
 		encodeScmp.setBody(body.getBytes());
 	}
 
+	/**
+	 * Decode req test.
+	 */
 	@Test
 	public void decodeREQTest() {
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
@@ -81,11 +97,14 @@ public class DefaultEncoderDecoderTest {
 		verifySCMP(message);
 	}
 
+	/**
+	 * Decode res test.
+	 */
 	@Test
 	public void decodeRESTest() {
 		headKey = SCMPHeadlineKey.RES;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
@@ -101,11 +120,14 @@ public class DefaultEncoderDecoderTest {
 		verifySCMP(message);
 	}
 
+	/**
+	 * Decode exc test.
+	 */
 	@Test
 	public void decodeEXCTest() {
 		headKey = SCMPHeadlineKey.EXC;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
@@ -118,11 +140,17 @@ public class DefaultEncoderDecoderTest {
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
-		if (message.isFault() == false)
+		if (message.isFault() == false) {
 			Assert.fail("scmp should be of type fault");
+			verifySCMP(scmp);
+		}
 		verifySCMP(message);
-	}
+<<<<<<< .mine		verifySCMP(scmp);
+=======>>>>>>> .theirs	}
 
+	/**
+	 * Decode undef test.
+	 */
 	@Test
 	public void decodeUNDEFTest() {
 		String requestString = "garbage /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
@@ -137,13 +165,17 @@ public class DefaultEncoderDecoderTest {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
+			Assert.assertEquals("wrong protocol in message not possible to decode", e.getMessage());
 		}
 	}
 
+	/**
+	 * Decode body types test.
+	 */
 	@Test
 	public void decodeBodyTypesTest() {
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
@@ -176,12 +208,15 @@ public class DefaultEncoderDecoderTest {
 		verifySCMPStringBody(message);
 	}
 
+	/**
+	 * Encode req test.
+	 */
 	@Test
 	public void encodeREQTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
@@ -193,13 +228,16 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 	}
 
+	/**
+	 * Encode res test.
+	 */
 	@Test
 	public void encodeRESTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.RES;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
 		SCMPMessage encodeRes = new SCMPReply();
@@ -215,13 +253,16 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 	}
 
+	/**
+	 * Encode exc test.
+	 */
 	@Test
 	public void encodeEXCTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.EXC;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
 		SCMPMessage encodeExc = new SCMPFault();
@@ -237,12 +278,15 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 	}
 
+	/**
+	 * Encode body types test.
+	 */
 	@Test
 	public void encodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName()
-				+ "\n" + "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
+		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
 				+ msgType.getRequestName() + "\n\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
@@ -270,17 +314,29 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 	}
 
-	private void verifySCMPStringBody(SCMPMessage scmp) {
+	/**
+	 * Verify scmp string body.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 */
+	private void verifySCMPStringBody(SCMP scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-//		Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(msgType.getRequestName(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, scmp.getBody());
 	}
 
-	private void verifySCMP(SCMPMessage scmp) {
+	/**
+	 * Verify scmp.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 */
+	private void verifySCMP(SCMP scmp) {
 		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-//		Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(msgType.getRequestName(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, new String((byte[]) scmp.getBody()));
