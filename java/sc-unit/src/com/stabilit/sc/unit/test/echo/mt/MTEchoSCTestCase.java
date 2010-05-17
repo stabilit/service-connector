@@ -29,7 +29,10 @@ import com.stabilit.sc.unit.test.mt.MTSuperTestCase;
 public class MTEchoSCTestCase extends MTSuperTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public MTEchoSCTestCase(String fileName) {
 		super(fileName);

@@ -35,7 +35,10 @@ import com.stabilit.sc.unit.test.SuperTestCase;
 public class RegisterServiceTestCase extends SuperTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public RegisterServiceTestCase(String fileName) {
 		super(fileName);

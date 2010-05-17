@@ -33,7 +33,10 @@ import com.stabilit.sc.unit.test.SCTest;
 public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public DeRegisterServiceTestCase(String fileName) {
 		super(fileName);
@@ -48,8 +51,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		deRegisterServiceCall.invoke();
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
-				.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/

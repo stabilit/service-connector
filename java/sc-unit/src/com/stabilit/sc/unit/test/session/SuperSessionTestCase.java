@@ -33,7 +33,10 @@ public abstract class SuperSessionTestCase extends SuperConnectTestCase {
 	protected SCMPSession scmpSession = null;
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public SuperSessionTestCase(String fileName) {
 		super(fileName);

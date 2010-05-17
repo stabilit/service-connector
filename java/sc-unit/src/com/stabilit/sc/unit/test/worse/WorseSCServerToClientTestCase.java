@@ -43,7 +43,10 @@ import com.stabilit.sc.unit.test.session.SuperSessionRegisterTestCase;
 public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public WorseSCServerToClientTestCase(String fileName) {
 		super(fileName);

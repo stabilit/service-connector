@@ -35,7 +35,10 @@ import com.stabilit.sc.unit.test.SCTest;
 public class DisconnectTestCase extends SuperConnectTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public DisconnectTestCase(String fileName) {
 		super(fileName);

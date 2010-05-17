@@ -27,12 +27,14 @@ import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
 /**
  * @author JTraber
- * 
  */
 public abstract class SuperRegisterTestCase extends SuperConnectTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public SuperRegisterTestCase(String fileName) {
 		super(fileName);

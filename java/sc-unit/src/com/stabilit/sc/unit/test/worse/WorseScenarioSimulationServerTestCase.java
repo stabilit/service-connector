@@ -40,7 +40,10 @@ import com.stabilit.sc.unit.test.session.SuperSessionRegisterTestCase;
 public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public WorseScenarioSimulationServerTestCase(String fileName) {
 		super(fileName);

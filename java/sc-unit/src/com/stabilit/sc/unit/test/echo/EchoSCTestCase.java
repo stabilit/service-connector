@@ -37,7 +37,9 @@ import com.stabilit.sc.unit.test.SuperTestCase;
 public class EchoSCTestCase extends SuperTestCase {
 
 	/**
-	 * @param fileName
+	 * The Constructor.
+	 * 
+	 * @param fileName the file name
 	 */
 	
 	public EchoSCTestCase(String fileName) {

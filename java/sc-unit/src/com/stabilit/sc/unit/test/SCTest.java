@@ -65,11 +65,14 @@ import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
 	EchoSCLargeTestCase.class,
 	SCImplTest.class,
 	WorseScenarioSimulationServerTestCase.class,
-	WorseSCServerToServiceTestCase.class,
+//	WorseSCServerToServiceTestCase.class,
 	WorseSCServerToClientTestCase.class})
 public class SCTest {
 	
-	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
+	private SCTest() {
+	}
+	
+	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());

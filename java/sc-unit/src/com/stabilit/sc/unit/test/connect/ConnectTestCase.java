@@ -37,7 +37,9 @@ import com.stabilit.sc.util.ValidatorUtility;
 public class ConnectTestCase extends SuperTestCase {
 
 	/**
-	 * @param parameter
+	 * The Constructor.
+	 * 
+	 * @param parameter the parameter
 	 */
 	public ConnectTestCase(String parameter) {
 		super(parameter);

@@ -34,17 +34,30 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
 
+/**
+ * The Class ClnCreateSessionTestCase.
+ */
 public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 
+	/** The scmp session. */
 	private SCMPSession scmpSession = null;
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public ClnCreateSessionTestCase(String fileName) {
 		super(fileName);
 	}
 
+	/**
+	 * Fail cln create session not connected.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Test
 	public void failClnCreateSessionNotConnected() throws Exception {
 		this.clnDisconnectAfter();
@@ -62,6 +75,12 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		this.clnConnectBefore();
 	}
 
+	/**
+	 * Fail cln create session wrong header.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
@@ -78,6 +97,12 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		}
 	}
 
+	/**
+	 * Cln create session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Test
 	public void clnCreateSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL

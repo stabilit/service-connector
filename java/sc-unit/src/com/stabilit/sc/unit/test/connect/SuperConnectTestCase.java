@@ -36,7 +36,10 @@ public abstract class SuperConnectTestCase extends SuperTestCase {
 	protected Date localDateTimeOfConnect;
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public SuperConnectTestCase(String fileName) {
 		super(fileName);

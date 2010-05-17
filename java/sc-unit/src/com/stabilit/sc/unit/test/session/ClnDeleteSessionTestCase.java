@@ -31,7 +31,10 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 
 	/**
+	 * The Constructor.
+	 * 
 	 * @param fileName
+	 *            the file name
 	 */
 	public ClnDeleteSessionTestCase(String fileName) {
 		super(fileName);
