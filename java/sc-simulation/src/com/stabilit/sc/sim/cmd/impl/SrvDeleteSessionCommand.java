@@ -19,8 +19,8 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -60,8 +60,8 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: session is no allocated");  
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: session is no allocated");  
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ALLOCATED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
@@ -71,7 +71,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 
 		SCMPReply scmpReply = new SCMPReply();
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+				.getServiceName());
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
 	}
@@ -89,7 +89,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 
 			try {
 				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -99,7 +99,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 					throw new ValidationException("sessonId must be set!");
 				}
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;

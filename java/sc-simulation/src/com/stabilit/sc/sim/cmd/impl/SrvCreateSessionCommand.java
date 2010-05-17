@@ -22,8 +22,8 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -70,10 +70,10 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 		} else if ((Boolean) mapBean.getAttribute("available")) {
 			mapBean.setAttribute("available", false);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+					.getServiceName());
 		} else {
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-					.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+					.getServiceName());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
 			scmpReply
@@ -117,9 +117,9 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 						.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
-				if (LoggerListenerSupport.getInstance().isException()) {
-					LoggerListenerSupport.getInstance().fireException(this,"validation error: " + e.getMessage());
+				ExceptionPoint.getInstance().fireException(this, e);
+				if (LoggerPoint.getInstance().isException()) {
+					LoggerPoint.getInstance().fireException(this,"validation error: " + e.getMessage());
 				}
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());

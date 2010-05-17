@@ -23,8 +23,8 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -66,8 +66,8 @@ public class SrvDataCommand extends CommandAdapter {
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
 
 		if (mapBean == null) {
-			if (LoggerListenerSupport.getInstance().isWarn()) {
-				LoggerListenerSupport.getInstance().fireWarn(this, "command error: session not found");  
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: session not found");  
 			}
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME,
 					request.getAttribute(
@@ -85,7 +85,7 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(sessionId);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME).toString());
+				.getServiceName().toString());
 		scmpReply
 				.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
@@ -108,7 +108,7 @@ public class SrvDataCommand extends CommandAdapter {
 				scmpReply.setMessageType(getKey().getResponseName());
 				scmpReply.setSessionId(sessionId);
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-						.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME)
+						.getServiceName()
 						.toString());
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO,
 						"Session info");
@@ -161,7 +161,7 @@ public class SrvDataCommand extends CommandAdapter {
 				}
 
 				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("serviceName must be set!");
 				}
@@ -185,7 +185,7 @@ public class SrvDataCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(),
 						messageInfo);
 			} catch (Throwable e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey().getResponseName());
 				throw validatorException;
