@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.WarningListenerSupport;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.RuntimePoint;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to
@@ -165,7 +165,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					if (bodyLength > 0) {
 						Object body = message.getBody();
 						if (body == null) {
-							WarningListenerSupport.getInstance().fireWarning(this,
+							RuntimePoint.getInstance().fireRuntime(this,
 									"bodyLength > 0 but body == null");
 						}
 						this.outputStream.write((byte[]) body);
@@ -173,7 +173,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.outputStream.flush();
 			} catch (Exception e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				return null;
 			}
 			this.outputStream.toByteArray();
@@ -190,7 +190,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				return null;
 			}
 			return this.writer.toString();
