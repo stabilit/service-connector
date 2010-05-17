@@ -24,7 +24,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.sc.ctx.RequestContext;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
@@ -64,7 +64,7 @@ public class NettyHttpRequest extends RequestAdapter {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
-		ConnectionListenerSupport.getInstance().fireRead(this, ((InetSocketAddress) this.socketAddress).getPort(),
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.socketAddress).getPort(),
 				buffer); // logs inside if registered
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

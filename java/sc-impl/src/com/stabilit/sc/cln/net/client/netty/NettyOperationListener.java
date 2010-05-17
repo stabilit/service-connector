@@ -23,7 +23,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
 import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 
 /**
  * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework.
@@ -56,7 +56,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 				}
 				break;
 			} catch (InterruptedException e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				interrupted = true;
 			}
 		}

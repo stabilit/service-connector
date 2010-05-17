@@ -30,7 +30,7 @@ import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyEvent;
 import com.stabilit.sc.cln.net.client.netty.NettyExceptionEvent;
 import com.stabilit.sc.cln.net.client.netty.NettyHttpEvent;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 
 /**
  * The Class NettyHttpClientResponseHandler. Used to wait until operation us successfully done by netty framework.
@@ -64,7 +64,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 				}
 				break;
 			} catch (InterruptedException e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 				interrupted = true;
 			}
 		}

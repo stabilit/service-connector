@@ -19,10 +19,10 @@ package com.stabilit.sc.srv.net.server.nio;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.listener.ConnectionListenerSupport;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
-import com.stabilit.sc.listener.PerformanceListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
+import com.stabilit.sc.listener.PerformancePoint;
 import com.stabilit.sc.net.nio.NioHttpRequest;
 import com.stabilit.sc.net.nio.NioHttpResponse;
 import com.stabilit.sc.net.nio.NioTcpDisconnectException;
@@ -120,25 +120,25 @@ public class RequestThread implements Runnable {
 					ICommandValidator commandValidator = command.getCommandValidator();
 					try {
 						commandValidator.validate(request);
-						if (LoggerListenerSupport.getInstance().isDebug()) {
-							LoggerListenerSupport.getInstance().fireDebug(this,
+						if (LoggerPoint.getInstance().isDebug()) {
+							LoggerPoint.getInstance().fireDebug(this,
 									"Run command [" + command.getKey() + "]");
 						}
-						if (PerformanceListenerSupport.getInstance().isOn()) {
-							PerformanceListenerSupport.getInstance().fireBegin(this, System.currentTimeMillis());
+						if (PerformancePoint.getInstance().isOn()) {
+							PerformancePoint.getInstance().fireBegin(command, "run");
 							command.run(request, response);
-							PerformanceListenerSupport.getInstance().fireEnd(this, System.currentTimeMillis());
+							PerformancePoint.getInstance().fireEnd(command, "run");
 						} else {
 							command.run(request, response);
 						}
 					} catch (Exception ex) {
-						ExceptionListenerSupport.getInstance().fireException(this, ex);
+						ExceptionPoint.getInstance().fireException(this, ex);
 						if (ex instanceof IFaultResponse) {
 							((IFaultResponse) ex).setFaultResponse(response);
 						}
 					}
 				} catch (Exception ex) {
-					ExceptionListenerSupport.getInstance().fireException(this, ex);
+					ExceptionPoint.getInstance().fireException(this, ex);
 					if (NioTcpDisconnectException.class == ex.getClass()) {
 						// no answer need to be sent when client is disconnected
 						throw ex;
@@ -173,13 +173,13 @@ public class RequestThread implements Runnable {
 				}
 			}
 		} catch (Throwable e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 			try {
-				ConnectionListenerSupport.getInstance().fireDisconnect(this,
+				ConnectionPoint.getInstance().fireDisconnect(this,
 						this.socketChannel.socket().getLocalPort());
 				socketChannel.close();
 			} catch (IOException ex) {
-				ExceptionListenerSupport.getInstance().fireException(this, ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
 	}

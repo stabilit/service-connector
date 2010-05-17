@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.ResponseAdapter;
@@ -79,7 +79,7 @@ public class NioTcpResponse extends ResponseAdapter {
 	public void write() throws Exception {
 		byte[] byteWriteBuffer = this.getBuffer();
 		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
 				byteWriteBuffer);
 		this.socketChannel.write(buffer);
 	}

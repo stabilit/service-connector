@@ -19,7 +19,8 @@ package com.stabilit.sc.cln.client;
 import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.WarningListenerSupport;
+import com.stabilit.sc.listener.PerformancePoint;
+import com.stabilit.sc.listener.RuntimePoint;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMessageID;
@@ -91,6 +92,21 @@ public class Client implements IClient {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
+		if (PerformancePoint.getInstance().isOn()) {
+			try {
+				PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+				SCMPMessage ret = null;
+				// differ if message is large or not, sending procedure is different
+				if (message.isLargeMessage()) {
+					ret = sendLargeSCMPAndReceive(message);
+				} else {
+					ret = sendSmallSCMPAndReceive(message);
+				}
+				return ret;
+			} finally {
+				PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
+			}
+		}		
 		SCMPMessage ret = null;
 		// differ if message is large or not, sending procedure is different
 		if (message.isLargeMessage()) {
@@ -192,7 +208,7 @@ public class Client implements IClient {
 					 */
 					return ret;
 				}
-				WarningListenerSupport.getInstance().fireWarning(this,
+				RuntimePoint.getInstance().fireRuntime(this,
 						"sendLargeRequest.hasNext() == false but part request not done");
 				return null;
 			}

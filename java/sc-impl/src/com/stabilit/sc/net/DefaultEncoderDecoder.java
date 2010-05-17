@@ -30,15 +30,15 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.scmp.IInternalMessage;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPHeadlineKey;
-import com.stabilit.sc.scmp.SCMPInternalStatus;
 import com.stabilit.sc.scmp.impl.EncodingDecodingException;
+import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
@@ -108,7 +108,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				}
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.getInstance().fireException(this, e1);
+			ExceptionPoint.getInstance().fireException(this, e1);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 
@@ -154,7 +154,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				return scmpMsg;
 			}
 		} catch (Exception e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		return scmpMsg;
 	}
@@ -252,7 +252,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 				bw.flush();
 			}
 		} catch (IOException e1) {
-			ExceptionListenerSupport.getInstance().fireException(this, e1);
+			ExceptionPoint.getInstance().fireException(this, e1);
 			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
@@ -277,7 +277,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		bw.write(" /s=");
 		bw.write(String.valueOf(messageLength));
 		bw.write("& SCMP/");
-		bw.append(SCMPMessage.SCMP_VERSION);
+		bw.append(SCMPMessage.SCMP_VERSION.toString());
 		bw.append("\n");
 		bw.flush();
 	}

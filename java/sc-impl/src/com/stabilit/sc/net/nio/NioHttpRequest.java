@@ -23,7 +23,7 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.ctx.RequestContext;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
@@ -94,7 +94,7 @@ public class NioHttpRequest extends RequestAdapter {
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), buffer);
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();

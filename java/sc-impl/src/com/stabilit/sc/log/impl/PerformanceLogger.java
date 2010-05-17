@@ -31,6 +31,8 @@ import com.stabilit.sc.log.SimpleLogger;
  */
 public class PerformanceLogger extends SimpleLogger implements IPerformanceListener {
 
+	private ThreadLocal<PerformanceEvent> threadLocal;
+
 	/**
 	 * Instantiates a new performance logger.
 	 * 
@@ -53,6 +55,7 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 	 */
 	PerformanceLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);
+		this.threadLocal = new ThreadLocal<PerformanceEvent>();
 	}
 
 	/** {@inheritDoc} */
@@ -74,18 +77,25 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void begin(PerformanceEvent performanceEvent) {
-		try {
-			// TODO (JOT)
-			this.log("\r\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.threadLocal.set(performanceEvent);
 	}
 
 	/** {@inheritDoc} */
 	public synchronized void end(PerformanceEvent performanceEvent) {
 		try {
-			// TODO (JOT)
+			PerformanceEvent beginEvent = this.threadLocal.get();
+			String beginMethodName = beginEvent.getMethodName();
+			long beginTime = beginEvent.getTime();
+			long endTime = performanceEvent.getTime();
+			Object source = performanceEvent.getSource();
+			this.log("PRF ");
+			this.log(source.getClass().getSimpleName());
+			this.log(".");
+			this.log(beginMethodName);
+			this.log(" time(ms) ");
+			this.log(String.valueOf((endTime - beginTime) / 1000000));
+			this.log(".");
+			this.log(String.valueOf((endTime - beginTime) % 1000000));
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();

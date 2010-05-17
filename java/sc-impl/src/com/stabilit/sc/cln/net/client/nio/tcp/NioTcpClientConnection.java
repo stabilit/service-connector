@@ -24,7 +24,7 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
@@ -65,14 +65,14 @@ public class NioTcpClientConnection implements IClientConnection {
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionListenerSupport.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.port);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionListenerSupport.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
 		socketChannel.close();
 	}
 
@@ -89,7 +89,7 @@ public class NioTcpClientConnection implements IClientConnection {
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, this.port, byteWriteBuffer); // logs inside if
+		ConnectionPoint.getInstance().fireWrite(this, this.port, byteWriteBuffer); // logs inside if
 		// registered
 		socketChannel.write(writeBuffer);
 		// read response
@@ -106,7 +106,7 @@ public class NioTcpClientConnection implements IClientConnection {
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.getInstance().fireRead(this, this.port, byteReadBuffer, 0, bytesRead);
+		ConnectionPoint.getInstance().fireRead(this, this.port, byteReadBuffer, 0, bytesRead);
 
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();

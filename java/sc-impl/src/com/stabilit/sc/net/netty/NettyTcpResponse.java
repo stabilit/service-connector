@@ -23,7 +23,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.ResponseAdapter;
@@ -91,7 +91,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this,
+		ConnectionPoint.getInstance().fireWrite(this,
 				((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 				buffer.toByteBuffer().array());
 	}

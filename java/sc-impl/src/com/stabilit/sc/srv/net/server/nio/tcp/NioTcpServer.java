@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.srv.net.server.nio.RequestThread;
 import com.stabilit.sc.srv.server.ServerConnectionAdapter;
 
@@ -74,7 +74,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 			InetSocketAddress isa = new InetSocketAddress(this.host, this.port);
 			serverChannel.socket().bind(isa);
 		} catch (IOException e) {
-			ExceptionListenerSupport.getInstance().fireException(this, e);
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 
@@ -93,7 +93,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 				socketChannel = serverChannel.accept();
 				pool.execute(new RequestThread(socketChannel, this.server));
 			} catch (IOException e) {
-				ExceptionListenerSupport.getInstance().fireException(this, e);
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
 import com.stabilit.sc.scmp.ResponseAdapter;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -77,7 +77,7 @@ public class NioHttpResponse extends ResponseAdapter {
 	public void write() throws Exception {
 		byte[] byteWriteBuffer = this.getBuffer();
 		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
 				byteWriteBuffer); // logs inside if registered
 		this.socketChannel.write(buffer);
 	}

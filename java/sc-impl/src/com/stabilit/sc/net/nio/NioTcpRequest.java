@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.sc.ctx.RequestContext;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
@@ -76,7 +76,7 @@ public class NioTcpRequest extends RequestAdapter {
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
 				byteReadBuffer, 0, bytesRead);
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

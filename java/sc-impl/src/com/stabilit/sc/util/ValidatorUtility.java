@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.scmp.KeepAlive;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.scmp.internal.KeepAlive;
 
 /**
  * The Class ValidatorUtility.
@@ -48,46 +48,6 @@ public final class ValidatorUtility {
 	 * Instantiates a new validator utility.
 	 */
 	private ValidatorUtility() {
-	}
-
-	/**
-	 * Validate sc version.
-	 * 
-	 * @param currenSCVersion
-	 *            the curren sc version
-	 * @param incomingSCVersion
-	 *            the incoming sc version
-	 * @throws ValidatorException
-	 *             the validator exception
-	 */
-	public static void validateSCVersion(String currenSCVersion, String incomingSCVersion)
-			throws ValidatorException {
-
-		Matcher matchCurr = PAT_SCVERSION.matcher(currenSCVersion);
-		matchCurr.find();
-
-		Float currReleaseAndVersionNr = Float.parseFloat(matchCurr.group(1));
-		int currRevisionNr = Integer.parseInt(matchCurr.group(2));
-
-		Matcher matchIn = PAT_SCVERSION.matcher(incomingSCVersion);
-		matchIn.find();
-
-		Float incReleaseAndVersionNr = Float.parseFloat(matchIn.group(1));
-		int incRevisionNr = Integer.parseInt(matchIn.group(2));
-
-		if (incReleaseAndVersionNr <= currReleaseAndVersionNr) {
-			int incReleaseNr = incReleaseAndVersionNr.intValue();
-			int currReleaseNr = currReleaseAndVersionNr.intValue();
-
-			if (incReleaseNr != currReleaseNr) {
-				throw new ValidatorException("SCVersion not compatible.");
-			}
-			if (incReleaseAndVersionNr.equals(currReleaseAndVersionNr) && incRevisionNr > currRevisionNr) {
-				throw new ValidatorException("SCVersion not compatible.");
-			}
-		} else {
-			throw new ValidatorException("SCVersion not compatible.");
-		}
 	}
 
 	/**
@@ -177,7 +137,7 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			ExceptionListenerSupport.getInstance().fireException(ValidatorUtility.class, ex);
+			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
@@ -207,7 +167,7 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			ExceptionListenerSupport.getInstance().fireException(ValidatorUtility.class, ex);
+			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new ValidatorException("intValue must be numeric.");
 		}
 

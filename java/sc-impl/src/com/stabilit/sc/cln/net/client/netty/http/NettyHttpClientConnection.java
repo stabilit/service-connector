@@ -39,8 +39,8 @@ import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyOperationListener;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
-import com.stabilit.sc.listener.ExceptionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
+import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -107,10 +107,10 @@ public class NettyHttpClientConnection implements IClientConnection {
 		try {
 			this.channel = operationListener.awaitUninterruptibly().getChannel();
 		} catch (CommunicationException ex) {
-			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.port);
 	}
 
 	/** {@inheritDoc} */
@@ -121,10 +121,10 @@ public class NettyHttpClientConnection implements IClientConnection {
 		try {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
-			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
 		this.bootstrap.releaseExternalResources();
 	}
 
@@ -136,7 +136,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 		try {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
-			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		this.bootstrap.releaseExternalResources();
@@ -166,16 +166,16 @@ public class NettyHttpClientConnection implements IClientConnection {
 		try {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
-			ExceptionListenerSupport.getInstance().fireException(this, ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireWrite(this, this.port, buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireWrite(this, this.port, buffer); // logs inside if registered
 		// gets response message synchronous
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionListenerSupport.getInstance().fireRead(this, this.port, buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireRead(this, this.port, buffer); // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);

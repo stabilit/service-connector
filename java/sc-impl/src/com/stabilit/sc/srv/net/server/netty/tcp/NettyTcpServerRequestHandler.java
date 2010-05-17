@@ -25,9 +25,9 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.sc.listener.ExceptionListenerSupport;
-import com.stabilit.sc.listener.LoggerListenerSupport;
-import com.stabilit.sc.listener.PerformanceListenerSupport;
+import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.LoggerPoint;
+import com.stabilit.sc.listener.PerformancePoint;
 import com.stabilit.sc.net.netty.NettyTcpRequest;
 import com.stabilit.sc.net.netty.NettyTcpResponse;
 import com.stabilit.sc.scmp.IFaultResponse;
@@ -142,24 +142,24 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
 				commandValidator.validate(request);
-				if (LoggerListenerSupport.getInstance().isDebug()) {
-					LoggerListenerSupport.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
+				if (LoggerPoint.getInstance().isDebug()) {
+					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
-				if (PerformanceListenerSupport.getInstance().isOn()) {
-					PerformanceListenerSupport.getInstance().fireBegin(this, System.currentTimeMillis());
+				if (PerformancePoint.getInstance().isOn()) {
+					PerformancePoint.getInstance().fireBegin(command, "run");
 					command.run(request, response);
-					PerformanceListenerSupport.getInstance().fireEnd(this, System.currentTimeMillis());
+					PerformancePoint.getInstance().fireEnd(command, "run");
 				} else {
 					command.run(request, response);
 				}
 			} catch (Exception ex) {
-				ExceptionListenerSupport.getInstance().fireException(this, ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {
 					((IFaultResponse) ex).setFaultResponse(response);
 				}
 			}
 		} catch (Throwable th) {
-			ExceptionListenerSupport.getInstance().fireException(this, th);
+			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
 			scmpFault.setLocalDateTime();
@@ -195,6 +195,6 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		ExceptionListenerSupport.getInstance().fireException(this, e.getCause());
+		ExceptionPoint.getInstance().fireException(this, e.getCause());
 	}
 }

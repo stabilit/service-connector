@@ -25,7 +25,7 @@ import java.nio.channels.SocketChannel;
 import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ConnectionListenerSupport;
+import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
@@ -66,14 +66,14 @@ public class NioHttpClientConnection implements IClientConnection {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
-		ConnectionListenerSupport.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.port);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
 		socketChannel.close();
-		ConnectionListenerSupport.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
 	}
 
 	/** {@inheritDoc} */
@@ -89,7 +89,7 @@ public class NioHttpClientConnection implements IClientConnection {
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
 				byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
@@ -104,7 +104,7 @@ public class NioHttpClientConnection implements IClientConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
 				byteReadBuffer, 0, bytesRead);
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
