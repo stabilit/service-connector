@@ -26,7 +26,12 @@ public interface IConstants {
 	/** Protocol literal. */
 	public final String HTTP = "http";
 	/** File qualifier for Http requests. */
-	public static final String HTTP_FILE = "/";
+	public final String HTTP_FILE = "/";
+
+	/** The DEFAULT_NR_OF_THREADS. */
+	public final int DEFAULT_NR_OF_THREADS = 10;
+	/** The MAX KEEP ALIVE TIME OF THREADS. */
+	public final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 
 	/** The REGEX. */
 	public final String COMMA_OR_SEMICOLON = ",|;";

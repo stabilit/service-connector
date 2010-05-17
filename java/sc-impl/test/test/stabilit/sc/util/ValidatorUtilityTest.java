@@ -29,13 +29,22 @@ import com.stabilit.sc.util.ValidatorException;
 import com.stabilit.sc.util.ValidatorUtility;
 
 /**
- * @author JTraber
+ * The Class ValidatorUtilityTest. Tests the validator utility.
  * 
+ * @author JTraber
  */
 public class ValidatorUtilityTest {
 
+	/** The FOUR. */
+	private static final int FOUR = 4;
+	/** The SDF. */
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+	/**
+	 * Validate sc version test.
+	 */
 	@Test
-	public void validateSCVersionTest() {
+	public final void validateSCVersionTest() {
 		String currenSCVersion = "2.1-007";
 
 		try {
@@ -54,6 +63,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateSCVersion(currenSCVersion, "2.1-008");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
 		}
 
 		try {
@@ -61,6 +71,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateSCVersion(currenSCVersion, "2.3-001");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
 		}
 
 		try {
@@ -68,6 +79,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateSCVersion(currenSCVersion, "2.2-001");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
 		}
 
 		try {
@@ -75,13 +87,16 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateSCVersion(currenSCVersion, "1.9-999");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
 		}
 	}
 
+	/**
+	 * Validate local date time test.
+	 */
 	@Test
 	@SuppressWarnings("deprecation")
-	public void validateLocalDateTimeTest() {
-		final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	public final void validateLocalDateTimeTest() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		java.util.Date date = cal.getTime();
@@ -95,11 +110,17 @@ public class ValidatorUtilityTest {
 		}
 	}
 
+	/**
+	 * Validate keep alive test.
+	 */
 	@Test
 	public void validateKeepAliveTest() {
 		// TODO test keep alive Validation if necessary
 	}
 
+	/**
+	 * Validate ip address list.
+	 */
 	@Test
 	public void validateIpAddressList() {
 		try {
@@ -108,8 +129,7 @@ public class ValidatorUtilityTest {
 			// two ip adresses
 			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.13");
 			// five ip adresses, serveral correct formats
-			ValidatorUtility
-					.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
+			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
 		} catch (ValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
@@ -119,6 +139,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0.1545");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 
 		try {
@@ -126,6 +147,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 
 		try {
@@ -133,9 +155,13 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0.1/");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 	}
 
+	/**
+	 * Validate int test.
+	 */
 	@Test
 	public void validateIntTest() {
 		// validate int value with lower limit
@@ -151,6 +177,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "-1");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("intValue to low.", e.getMessage());
 		}
 
 		try {
@@ -158,6 +185,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "");
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("intValue must be numeric.", e.getMessage());
 		}
 
 		// validate int value with lower & upper limit
@@ -173,6 +201,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "-1", 2);
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("intValue not within limits.", e.getMessage());
 		}
 
 		try {
@@ -180,6 +209,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "3", 2);
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("intValue not within limits.", e.getMessage());
 		}
 
 		try {
@@ -187,26 +217,31 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "", 1);
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("intValue must be numeric.", e.getMessage());
 		}
 	}
 
+	/**
+	 * Validate string test.
+	 */
 	@Test
 	public void validateStringTest() {
 
 		try {
 			// length is between 1 and 4
-			ValidatorUtility.validateString(1, "abc", 4);
+			ValidatorUtility.validateString(1, "abc", FOUR);
 			// length is between 1 and 4
-			ValidatorUtility.validateString(1, "a", 4);
+			ValidatorUtility.validateString(1, "a", FOUR);
 		} catch (ValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
 		try {
 			// length is shorter than 2
-			ValidatorUtility.validateString(2, "a", 4);
+			ValidatorUtility.validateString(2, "a", FOUR);
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
 		}
 
 		try {
@@ -214,6 +249,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateString(1, "abc", 2);
 			Assert.fail("Should throw exception");
 		} catch (ValidatorException e) {
+			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
 		}
 	}
 }

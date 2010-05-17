@@ -25,7 +25,7 @@ import com.stabilit.sc.log.ILogger;
  * 
  * @author JTraber
  */
-public class LoggerFactory extends Factory {
+public final class LoggerFactory extends Factory {
 
 	/** The logger factory. */
 	private static LoggerFactory loggerFactory = new LoggerFactory();
@@ -69,11 +69,13 @@ public class LoggerFactory extends Factory {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILogger newInstance() {
 		return newInstance(DEFAULT);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILogger newInstance(Object key) {
 		ILogger logger = (ILogger) super.newInstance(key);

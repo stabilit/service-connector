@@ -59,10 +59,7 @@ public class NioHttpRequest extends RequestAdapter {
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#load()
-	 */
+	/** {@inheritDoc} */
 	public void load() throws Exception {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = 0;
@@ -97,7 +94,7 @@ public class NioHttpRequest extends RequestAdapter {
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		ConnectionListenerSupport.getInstance().fireRead(this, buffer);
+		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();

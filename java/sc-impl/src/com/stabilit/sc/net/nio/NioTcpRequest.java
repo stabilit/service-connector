@@ -59,10 +59,7 @@ public class NioTcpRequest extends RequestAdapter {
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#load()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void load() throws Exception {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
@@ -79,7 +76,8 @@ public class NioTcpRequest extends RequestAdapter {
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
+		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
+				byteReadBuffer, 0, bytesRead);
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);

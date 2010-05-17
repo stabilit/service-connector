@@ -60,40 +60,28 @@ public class NioHttpClientConnection implements IClientConnection {
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
-		ConnectionListenerSupport.getInstance().fireConnect(this);
+		ConnectionListenerSupport.getInstance().fireConnect(this, this.port);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
 		socketChannel.close();
-		ConnectionListenerSupport.getInstance().fireDisconnect(this);
+		ConnectionListenerSupport.getInstance().fireDisconnect(this, this.port);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -101,7 +89,8 @@ public class NioHttpClientConnection implements IClientConnection {
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, byteWriteBuffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
+				byteWriteBuffer); // logs inside if registered
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
@@ -115,7 +104,8 @@ public class NioHttpClientConnection implements IClientConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionListenerSupport.getInstance().fireRead(this, byteReadBuffer, 0, bytesRead);
+		ConnectionListenerSupport.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
+				byteReadBuffer, 0, bytesRead);
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
@@ -144,36 +134,24 @@ public class NioHttpClientConnection implements IClientConnection {
 		return ret;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new NioHttpClientConnection();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setPort(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
-	 */
+	/** {@inheritDoc} */
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;

@@ -55,10 +55,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 		super(dir, fileName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
-	 */
+	/** {@inheritDoc} */
 	/**
 	 * Log.
 	 * 
@@ -71,10 +68,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 		super.log(buffer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
-	 */
+	/** {@inheritDoc} */
 	/**
 	 * Log.
 	 * 
@@ -91,10 +85,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 		super.log(buffer, offset, length);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	/**
 	 * New instance.
 	 * 
@@ -105,10 +96,7 @@ public class RuntimeLogger extends SimpleLogger implements IRuntimeListener {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IWarningListener#warningEvent(com.stabilit.sc.listener.WarningEvent)
-	 */
+	/** {@inheritDoc} */
 	/**
 	 * Runtime event.
 	 * 

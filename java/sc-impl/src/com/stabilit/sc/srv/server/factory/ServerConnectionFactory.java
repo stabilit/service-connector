@@ -58,10 +58,7 @@ public class ServerConnectionFactory extends Factory {
 		add(NIO_HTTP, nioHttpServer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.Factory#newInstance()
-	 */
+	/** {@inheritDoc} */
 	public IServerConnection newInstance() {
 		return newInstance(DEFAULT);
 	}

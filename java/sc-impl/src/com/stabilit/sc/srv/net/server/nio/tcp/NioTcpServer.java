@@ -24,6 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.srv.net.server.nio.RequestThread;
@@ -53,15 +54,14 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	public NioTcpServer() {
 		this.host = null;
 		this.port = 0;
-		this.numberOfThreads = 10;
+		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
 		this.serverChannel = null;
 		this.pool = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#create()
-	 */
+	/** {@inheritDoc} */
+
+	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		try {
@@ -78,19 +78,13 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 		pool.shutdown();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		while (true) {
@@ -104,55 +98,38 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runAsync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runSync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws InterruptedException {
 		this.run();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setPort(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new NioTcpServer();

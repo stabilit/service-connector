@@ -35,17 +35,24 @@ import test.stabilit.sc.util.ValidatorUtilityTest;
 
 
 /**
- * @author JTraber
+ * The Class SCImplTest.
  * 
+ * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { DefaultFrameDecoderTest.class,
-				 HttpFrameDecoderTest.class,
-				 SCMPCompositeTest.class,
-				 SCMPLargeRequestTest.class,
-				 SCMPLargeResponseTest.class,
-				 DefaultFrameDecoderTest.class,
-				 LargeMessageEncoderDecoderTest.class, 
-				 ValidatorUtilityTest.class})
-public class SCImplTest {
+@SuiteClasses({ DefaultFrameDecoderTest.class,
+				HttpFrameDecoderTest.class,
+				SCMPCompositeTest.class,
+				SCMPLargeRequestTest.class,
+				SCMPLargeResponseTest.class,
+				DefaultFrameDecoderTest.class,
+				LargeMessageEncoderDecoderTest.class,
+				ValidatorUtilityTest.class })
+public final class SCImplTest {
+	
+	/**
+	 * Instantiates a new sC impl test.
+	 */
+	private SCImplTest() {
+	}
 }

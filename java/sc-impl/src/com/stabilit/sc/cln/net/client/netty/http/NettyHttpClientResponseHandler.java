@@ -50,6 +50,7 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	 * 
 	 * @return the message
 	 * @throws CommunicationException
+	 *             the communication exception
 	 */
 	HttpResponse getMessageSync() throws CommunicationException {
 		NettyEvent eventMessage;
@@ -75,22 +76,14 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 		return (HttpResponse) eventMessage.getResponse();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
 		answer.offer(nettyEvent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();

@@ -32,19 +32,13 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	protected DefaultFrameDecoder() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this; // singleton
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IFrameDecoder#parseFrameSize(byte[])
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
@@ -78,8 +72,9 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 
 							startIndex += 3;
 							for (endIndex = startIndex; endIndex < buffer.length; endIndex++) {
-								if (buffer[endIndex] == '&' || buffer[endIndex] == ' ')
+								if (buffer[endIndex] == '&' || buffer[endIndex] == ' ') {
 									break label;
+								}
 							}
 						}
 					}

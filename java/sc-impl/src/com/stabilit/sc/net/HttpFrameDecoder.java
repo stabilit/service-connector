@@ -36,19 +36,13 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 	protected HttpFrameDecoder() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.DefaultFrameDecoder#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.DefaultFrameDecoder#parseFrameSize(byte[])
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 

@@ -17,6 +17,7 @@
 package com.stabilit.sc.net.netty;
 
 import java.io.ByteArrayInputStream;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -57,14 +58,12 @@ public class NettyTcpRequest extends RequestAdapter {
 		this.requestContext = new RequestContext(event.getRemoteAddress());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#load()
-	 */
+	/** {@inheritDoc} */
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, ((InetSocketAddress) this.socketAddress).getPort(),
+				buffer); // logs inside if registered
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);

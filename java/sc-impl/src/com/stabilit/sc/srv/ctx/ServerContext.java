@@ -38,9 +38,8 @@ public class ServerContext extends ContextAdapter implements IServerContext {
 		this.server = server;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.stabilit.sc.srv.ctx.IServerContext#getServer()
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public IServer getServer() {
 		return server;
 	}

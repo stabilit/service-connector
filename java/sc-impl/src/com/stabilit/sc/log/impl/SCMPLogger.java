@@ -55,10 +55,7 @@ public class SCMPLogger extends SimpleLogger {
 		super.log(scmp.toString());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;

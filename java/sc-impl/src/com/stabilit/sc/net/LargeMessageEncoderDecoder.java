@@ -52,19 +52,13 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 	LargeMessageEncoderDecoder() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IEncoderDecoder#decode(java.io.InputStream)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -163,10 +157,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		return scmpMsg;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IEncoderDecoder#encode(java.io.OutputStream, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
 		OutputStreamWriter osw = new OutputStreamWriter(os);

@@ -23,6 +23,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionListenerSupport;
 import com.stabilit.sc.srv.registry.ServerRegistry;
@@ -47,7 +48,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	/** The numberOfThreads. */
 	private int numberOfThreads;
 	/** The channel factory. */
-	NioServerSocketChannelFactory channelFactory = null;
+	private NioServerSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a new netty tcp server connection.
@@ -57,14 +58,11 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
-		this.numberOfThreads = 10;
+		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
 		this.channelFactory = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#create()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		// Configure the server.
@@ -75,20 +73,14 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runAsync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runSync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
@@ -100,10 +92,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		try {
@@ -118,46 +107,32 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyTcpServerConnection();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setPort(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
 		this.port = port;

@@ -114,82 +114,52 @@ public class ServerConfig {
 			this.serverName = serverName;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getServerName()
-		 */
+		/** {@inheritDoc} */
 		public String getServerName() {
 			return serverName;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setServerName(java.lang.String)
-		 */
+		/** {@inheritDoc} */
 		public void setServerName(String serverName) {
 			this.serverName = serverName;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getPort()
-		 */
+		/** {@inheritDoc} */
 		public int getPort() {
 			return port;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setPort(int)
-		 */
+		/** {@inheritDoc} */
 		public void setPort(int port) {
 			this.port = port;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getHost()
-		 */
+		/** {@inheritDoc} */
 		public String getHost() {
 			return host;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setHost(java.lang.String)
-		 */
+		/** {@inheritDoc} */
 		public void setHost(String host) {
 			this.host = host;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getCon()
-		 */
+		/** {@inheritDoc} */
 		public String getConnection() {
 			return con;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setCon(java.lang.String)
-		 */
+		/** {@inheritDoc} */
 		public void setConnection(String con) {
 			this.con = con;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#getNumberOfThreads()
-		 */
+		/** {@inheritDoc} */
 		public int getNumberOfThreads() {
 			return numberOfThreads;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.srv.config.IServerConfigItem#setNumberOfThreads(int)
-		 */
+		/** {@inheritDoc} */
 		public void setNumberOfThreads(int numberOfThreads) {
 			this.numberOfThreads = numberOfThreads;
 		}

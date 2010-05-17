@@ -49,11 +49,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.jboss.netty.handler.codec.frame.FrameDecoder#decode(org.jboss.netty.channel.ChannelHandlerContext,
-	 * org.jboss.netty.channel.Channel, org.jboss.netty.buffer.ChannelBuffer)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
 		switch (this.decodeState) {

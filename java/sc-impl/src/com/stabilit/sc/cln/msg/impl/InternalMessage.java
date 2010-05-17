@@ -38,8 +38,8 @@ public class InternalMessage implements IInternalMessage, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1763291531850424661L;
-	/** The key. */
-	private SCMPMsgType key;
+	/** The msgType. */
+	private SCMPMsgType msgType;
 	/** The attr map to store data. */
 	protected Map<String, Object> attrMap;
 	/** The encoded builder. */
@@ -59,33 +59,24 @@ public class InternalMessage implements IInternalMessage, Serializable {
 	 *            the key
 	 */
 	public InternalMessage(SCMPMsgType key) {
-		this.key = key;
+		this.msgType = key;
 		this.attrMap = new HashMap<String, Object>();
 		this.encodedBuilder = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IInternalMessage newInstance() {
 		return new InternalMessage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#getKey()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return key;
+		return msgType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#encode(java.io.BufferedWriter)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void encode(BufferedWriter bw) throws IOException {
 		if (this.encodedBuilder == null) {
@@ -102,7 +93,6 @@ public class InternalMessage implements IInternalMessage, Serializable {
 	 *            the eb
 	 */
 	private void encode(StringBuilder eb) {
-		Map<String, Object> attrMap = this.getAttributeMap();
 		Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
 		eb.append(IInternalMessage.class.getName());
 		eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
@@ -121,10 +111,7 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#decode(java.io.BufferedReader)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void decode(BufferedReader br) throws IOException {
 		while (true) {
@@ -144,14 +131,11 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Msg [key=" + key + "]");
+		sb.append("Msg [key=" + msgType + "]");
 		for (String name : attrMap.keySet()) {
 			sb.append(" ");
 			sb.append(name);
@@ -161,37 +145,25 @@ public class InternalMessage implements IInternalMessage, Serializable {
 		return sb.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#getAttributeMap()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, Object> getAttributeMap() {
 		return attrMap;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#getAttribute(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(String name) {
 		return this.attrMap.get(name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#setAttribute(java.lang.String, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attrMap.put(name, value);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IInternalMessage#getLength()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getLength() {
 		if (this.encodedBuilder == null) {

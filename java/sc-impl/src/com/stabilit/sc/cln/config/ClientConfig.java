@@ -123,8 +123,10 @@ public class ClientConfig {
 		 *            the host
 		 * @param port
 		 *            the port
-		 * @param connection
-		 *            the connection
+		 * @param con
+		 *            the configuration
+		 * @param numberOfThreads
+		 *            the number of threads
 		 */
 		public ClientConfigItem(String host, int port, String connection, int numberOfThreads) {
 			super();
@@ -134,66 +136,42 @@ public class ClientConfig {
 			this.numberOfThreads = numberOfThreads;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getPort()
-		 */
+		/** {@inheritDoc} */
 		public int getPort() {
 			return port;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setPort(int)
-		 */
+		/** {@inheritDoc} */
 		public void setPort(int port) {
 			this.port = port;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getHost()
-		 */
+		/** {@inheritDoc} */
 		public String getHost() {
 			return host;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setHost(java.lang.String)
-		 */
+		/** {@inheritDoc} */
 		public void setHost(String host) {
 			this.host = host;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getCon()
-		 */
+		/** {@inheritDoc} */
 		public String getConnection() {
 			return connection;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setCon(java.lang.String)
-		 */
+		/** {@inheritDoc} */
 		public void setConnection(String connection) {
 			this.connection = connection;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#getNumberOfThreads()
-		 */
+		/** {@inheritDoc} */
 		public int getNumberOfThreads() {
 			return numberOfThreads;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.stabilit.sc.cln.config.IClientConfigItem#setNumberOfThreads(int)
-		 */
+		/** {@inheritDoc} */
 		public void setNumberOfThreads(int numberOfThreads) {
 			this.numberOfThreads = numberOfThreads;
 		}

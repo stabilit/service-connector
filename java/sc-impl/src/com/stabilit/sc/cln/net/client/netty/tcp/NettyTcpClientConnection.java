@@ -76,10 +76,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 		this.encoderDecoder = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#connect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
 		/*
@@ -100,13 +97,10 @@ public class NettyTcpClientConnection implements IClientConnection {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireConnect(this);
+		ConnectionListenerSupport.getInstance().fireConnect(this, this.port);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#disconnect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
@@ -117,14 +111,11 @@ public class NettyTcpClientConnection implements IClientConnection {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireDisconnect(this);
+		ConnectionListenerSupport.getInstance().fireDisconnect(this, this.port);
 		this.bootstrap.releaseExternalResources();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
 		ChannelFuture future = this.channel.close();
@@ -138,10 +129,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 		this.bootstrap.releaseExternalResources();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClientConnection#sendAndReceive(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -158,13 +146,13 @@ public class NettyTcpClientConnection implements IClientConnection {
 			ExceptionListenerSupport.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionListenerSupport.getInstance().fireWrite(this, chBuffer.toByteBuffer().array());
+		ConnectionListenerSupport.getInstance().fireWrite(this, this.port, chBuffer.toByteBuffer().array());
 
 		NettyTcpClientResponseHandler handler = channel.getPipeline().get(NettyTcpClientResponseHandler.class);
 		ChannelBuffer content = (ChannelBuffer) handler.getMessageSync();
 		byte[] buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionListenerSupport.getInstance().fireRead(this, buffer); // logs inside if registered
+		ConnectionListenerSupport.getInstance().fireRead(this, this.port, buffer); // logs inside if registered
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
@@ -172,36 +160,24 @@ public class NettyTcpClientConnection implements IClientConnection {
 		return ret;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyTcpClientConnection();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setPort(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
-	 */
+	/** {@inheritDoc} */
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;

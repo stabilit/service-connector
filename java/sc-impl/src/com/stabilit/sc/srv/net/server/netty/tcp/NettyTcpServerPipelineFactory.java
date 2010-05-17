@@ -29,6 +29,8 @@ import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
  */
 public class NettyTcpServerPipelineFactory implements ChannelPipelineFactory {
 
+	/** {@inheritDoc} */
+	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for reading until SCMP frame is complete

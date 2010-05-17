@@ -55,35 +55,23 @@ public class ExceptionLogger extends SimpleLogger implements IExceptionListener 
 		super(dir, fileName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
 		super.log(buffer, offset, length);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IExceptionListener#exceptionEvent(com.stabilit.sc.listener.ExceptionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
 		try {

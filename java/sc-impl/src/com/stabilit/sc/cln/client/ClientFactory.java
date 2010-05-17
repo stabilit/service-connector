@@ -56,8 +56,10 @@ public class ClientFactory extends Factory {
 	 * @param port
 	 *            the port
 	 * @param con
-	 *            the connection
-	 * @return the i client
+	 *            the configuration
+	 * @param numberOfThreads
+	 *            the number of threads
+	 * @return the client
 	 */
 	public IClient newInstance(String host, int port, String con, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();

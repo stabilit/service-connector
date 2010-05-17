@@ -32,10 +32,7 @@ import com.stabilit.sc.scmp.SCMPMessage;
  */
 public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.jboss.netty.channel.ChannelPipelineFactory#getPipeline()
-	 */
+	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for decoding requests - Netty

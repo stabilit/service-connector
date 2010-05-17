@@ -105,7 +105,9 @@ public class SCMPStreamHttpUtil {
 		int c;
 
 		loop: while (true) {
-			switch (c = in.read()) {
+			c = in.read();
+			
+			switch (c) {
 			case -1:
 			case '\n':
 				break loop;

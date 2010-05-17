@@ -48,19 +48,13 @@ public class Client implements IClient {
 		msgID = new SCMPMessageID();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new Client();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#setClientConfig(com.stabilit.sc.cln.config.IClientConfigItem)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setClientConfig(IClientConfigItem clientConfig) {
 		this.clientConfig = clientConfig;
@@ -71,37 +65,25 @@ public class Client implements IClient {
 		clientConnection.setNumberOfThreads(clientConfig.getNumberOfThreads());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#connect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
 		clientConnection.connect();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
 		clientConnection.destroy();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#disconnect()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
 		clientConnection.disconnect();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#sendAndReceive(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 		SCMPMessage ret = null;
@@ -114,10 +96,7 @@ public class Client implements IClient {
 		return ret;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.client.IClient#toHashCodeString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";

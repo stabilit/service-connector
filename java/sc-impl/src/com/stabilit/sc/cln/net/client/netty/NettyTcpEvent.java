@@ -44,6 +44,7 @@ public class NettyTcpEvent extends NettyEvent {
 		this.response = buffer;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Object getResponse() {
 		return response;

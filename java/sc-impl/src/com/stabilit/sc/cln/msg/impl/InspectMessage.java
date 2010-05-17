@@ -26,7 +26,7 @@ public class InspectMessage extends InternalMessage {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3298941284664209624L;
 	/** The ID. */
-	public static SCMPMsgType ID = SCMPMsgType.INSPECT;
+	private static final SCMPMsgType ID = SCMPMsgType.INSPECT;
 
 	/**
 	 * Instantiates a new inspect message.

@@ -18,7 +18,7 @@ package com.stabilit.sc.util;
 
 /**
  * The Class ValidatorException. Occurs when validation fails.
- * 
+ *
  * @author JTraber
  */
 public class ValidatorException extends Exception {

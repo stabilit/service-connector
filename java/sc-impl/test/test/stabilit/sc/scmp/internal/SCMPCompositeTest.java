@@ -28,11 +28,15 @@ import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 
 /**
- * @author JTraber
+ * The Class SCMPCompositeTest.
  * 
+ * @author JTraber
  */
 public class SCMPCompositeTest {
 
+	/**
+	 * Scmp composite test.
+	 */
 	@Test
 	public void scmpCompositeTest() {
 		int bodyLength = 0;
@@ -50,7 +54,7 @@ public class SCMPCompositeTest {
 		bodyLength += bodyString.length();
 		body.append(bodyString);
 		Assert.assertEquals(bodyLength, composite.getOffset());
-		
+
 		for (int i = 0; i < 10; i++) {
 			SCMPPart part = new SCMPPart();
 			bodyString = "part nr: " + i;
@@ -60,14 +64,14 @@ public class SCMPCompositeTest {
 			body.append(bodyString);
 			Assert.assertEquals(bodyLength, composite.getOffset());
 		}
-		//needed to compare to requestPart of the composite
-		//body of the requestPart is null because body is split into several parts
-		//bodyType is text because split parts hold text bodies 
+		// needed to compare to requestPart of the composite
+		// body of the requestPart is null because body is split into several parts
+		// bodyType is text because split parts hold text bodies
 		request.setBody(null);
 		request.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.text.getName());
-		
+
 		Assert.assertEquals(bodyLength, composite.getBodyLength());
-		Assert.assertEquals(body.toString(), composite.getBody()+"");
+		Assert.assertEquals(body.toString(), composite.getBody() + "");
 		Assert.assertEquals(request.toString(), composite.getPart().toString());
 	}
 }

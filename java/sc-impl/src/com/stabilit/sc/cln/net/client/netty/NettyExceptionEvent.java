@@ -42,15 +42,13 @@ public class NettyExceptionEvent extends NettyEvent {
 		this.th = th;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.cln.net.client.netty.NettyResponse#isFault()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isFault() {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Throwable getResponse() {
 		return th;

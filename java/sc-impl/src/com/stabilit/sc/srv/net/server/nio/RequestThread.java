@@ -62,6 +62,8 @@ public class RequestThread implements Runnable {
 	 * 
 	 * @param requestSocket
 	 *            the request socket
+	 * @param server
+	 *            the server
 	 */
 	public RequestThread(SocketChannel requestSocket, IServer server) {
 		this.socketChannel = requestSocket;
@@ -69,10 +71,7 @@ public class RequestThread implements Runnable {
 		this.msgID = new SCMPMessageID();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
+	/** {@inheritDoc} */
 	public void run() {
 
 		SCMPCompositeSender scmpLargeResponse = null;
@@ -176,7 +175,8 @@ public class RequestThread implements Runnable {
 		} catch (Throwable e) {
 			ExceptionListenerSupport.getInstance().fireException(this, e);
 			try {
-				ConnectionListenerSupport.getInstance().fireDisconnect(this);
+				ConnectionListenerSupport.getInstance().fireDisconnect(this,
+						this.socketChannel.socket().getLocalPort());
 				socketChannel.close();
 			} catch (IOException ex) {
 				ExceptionListenerSupport.getInstance().fireException(this, ex);

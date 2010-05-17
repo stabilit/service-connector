@@ -80,11 +80,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		return (ChannelBuffer) response.getResponse();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
@@ -92,11 +88,7 @@ public class NettyTcpClientResponseHandler extends SimpleChannelUpstreamHandler 
 		answer.offer(response);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();

@@ -87,17 +87,13 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		msgID = new SCMPMessageID();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#messageReceived(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
-		SocketAddress socketAddress = channel.getRemoteAddress();
+		SocketAddress socketAddress = channel.getLocalAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 
@@ -206,11 +202,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @seeorg.jboss.netty.channel.SimpleChannelUpstreamHandler#exceptionCaught(org.jboss.netty.channel.
-	 * ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		ExceptionListenerSupport.getInstance().fireException(this, e.getCause());

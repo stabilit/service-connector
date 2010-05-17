@@ -23,7 +23,7 @@ import com.stabilit.sc.factory.Factory;
  * 
  * @author JTraber
  */
-public class FrameDecoderFactory extends Factory {
+public final class FrameDecoderFactory extends Factory {
 
 	/** The Constant HTTP, key for HTTP frame decoder instance. */
 	private static final String HTTP = "http";

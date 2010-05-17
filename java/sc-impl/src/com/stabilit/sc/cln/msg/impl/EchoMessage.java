@@ -25,9 +25,8 @@ public class EchoMessage extends InternalMessage {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5461603317301105352L;
-
 	/** The ID. */
-	public static SCMPMsgType ID = SCMPMsgType.CLN_ECHO;
+	private static final SCMPMsgType ID = SCMPMsgType.CLN_ECHO;
 
 	/**
 	 * Instantiates a new echo message.

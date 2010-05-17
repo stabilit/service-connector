@@ -64,10 +64,7 @@ public class NioTcpResponse extends ResponseAdapter {
 		return buf;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setSCMP(SCMPMessage scmp) {
 		if (scmp == null) {
@@ -77,15 +74,13 @@ public class NioTcpResponse extends ResponseAdapter {
 		this.scmp = scmp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IResponse#write()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void write() throws Exception {
 		byte[] byteWriteBuffer = this.getBuffer();
 		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, byteWriteBuffer);
+		ConnectionListenerSupport.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
+				byteWriteBuffer);
 		this.socketChannel.write(buffer);
 	}
 }

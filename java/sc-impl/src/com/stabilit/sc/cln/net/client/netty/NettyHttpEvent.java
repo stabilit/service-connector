@@ -32,8 +32,8 @@ public class NettyHttpEvent extends NettyEvent {
 	/**
 	 * Instantiates a NettyHttpEvent.
 	 * 
-	 * @param buffer
-	 *            the buffer
+	 * @param response
+	 *            the response
 	 */
 	public NettyHttpEvent(HttpResponse response) {
 		this.response = response;

@@ -25,7 +25,7 @@ import com.stabilit.sc.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public class EncoderDecoderFactory extends Factory {
+public final class EncoderDecoderFactory extends Factory {
 
 	/** The Constant LARGE, key for large encoder decoder. */
 	private static final String LARGE = "large";
@@ -53,10 +53,7 @@ public class EncoderDecoderFactory extends Factory {
 		this.add(LARGE, encoderDecoder);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.Factory#newInstance()
-	 */
+	/** {@inheritDoc} */
 	public IFactoryable newInstance() {
 		return newInstance(DEFAULT);
 	}

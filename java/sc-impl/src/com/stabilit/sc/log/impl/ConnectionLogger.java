@@ -17,6 +17,7 @@
 package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
@@ -55,70 +56,64 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 		super(dir, fileName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
 		super.log(buffer, offset, length);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IConnectionListener#connectEvent(com.stabilit.sc.listener.ConnectionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void connectEvent(ConnectionEvent connectionEvent) {
 		try {
 			this.log("------- connect -------\r\n");
 			this.log("connect by class " + connectionEvent.getSource().getClass().getName());
+			this.log(" - ");
+			this.log(InetAddress.getLocalHost().toString());
+			this.log(":");
+			this.log(String.valueOf(connectionEvent.getPort()));
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IConnectionListener#disconnectEvent(com.stabilit.sc.listener.ConnectionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void disconnectEvent(ConnectionEvent connectionEvent) {
 		try {
 			this.log("------- disconnect -------\r\n");
 			this.log("disconnect by class " + connectionEvent.getSource().getClass().getName());
+			this.log(" - ");
+			this.log(InetAddress.getLocalHost().toString());
+			this.log(":");
+			this.log(String.valueOf(connectionEvent.getPort()));
 			this.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IConnectionListener#readEvent(com.stabilit.sc.listener.ConnectionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void readEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.log(">>>>>>>> read >>>>>>>\r\n");
+			this.log(">>>>>>>> ");
+			this.log(InetAddress.getLocalHost().toString());
+			this.log(":");
+			this.log(String.valueOf(connectionEvent.getPort()));
+			this.log(" - read >>>>>>>\r\n");
 			if (length > 0) {
 				this.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
 			} else {
@@ -130,15 +125,16 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IConnectionListener#writeEvent(com.stabilit.sc.listener.ConnectionEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void writeEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.log("<<<<<<<< write <<<<<<<<\r\n");
+			this.log("<<<<<<<< ");
+			this.log(InetAddress.getLocalHost().toString());
+			this.log(":");
+			this.log(String.valueOf(connectionEvent.getPort()));
+			this.log(" - write <<<<<<<<\r\n");
 			if (length > 0) {
 				this.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
 			} else {

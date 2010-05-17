@@ -55,35 +55,23 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 		super(dir, fileName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[])
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer) throws IOException {
 		super.log(buffer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.log.SimpleLogger#log(byte[], int, int)
-	 */
+	/** {@inheritDoc} */
 	public void log(byte[] buffer, int offset, int length) throws IOException {
 		super.log(buffer, offset, length);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IPerformanceListener#begin(com.stabilit.sc.listener.PerformanceEvent)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void begin(PerformanceEvent performanceEvent) {
 		try {
@@ -94,10 +82,7 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.listener.IPerformanceListener#end(com.stabilit.sc.listener.PerformanceEvent)
-	 */
+	/** {@inheritDoc} */
 	public synchronized void end(PerformanceEvent performanceEvent) {
 		try {
 			// TODO (JOT)

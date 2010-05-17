@@ -61,10 +61,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		this.channelFactory = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#create()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		// Configure the server.
@@ -75,20 +72,14 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runAsync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#runSync()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(host, this.port));
@@ -100,10 +91,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		try {
@@ -119,46 +107,31 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.srv.server.IServerConnection#destroy()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
 		this.channel.close();
 		this.bootstrap.releaseExternalResources();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new NettyHttpServerConnection();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setHost(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setNumberOfThreads(int)
-	 */
+	/** {@inheritDoc} */
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IConnection#setPort(int)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
 		this.port = port;

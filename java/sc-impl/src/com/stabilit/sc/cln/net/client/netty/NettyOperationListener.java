@@ -68,10 +68,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 		return response;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.jboss.netty.channel.ChannelFutureListener#operationComplete(org.jboss.netty.channel.ChannelFuture)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void operationComplete(ChannelFuture future) throws Exception {
 		answer.offer(future);

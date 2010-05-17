@@ -58,10 +58,7 @@ public class ClientConnectionFactory extends Factory {
 		add(NIO_HTTP, nioHttpClient);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.Factory#newInstance()
-	 */
+	/** {@inheritDoc} */
 	public IClientConnection newInstance() {
 		return newInstance(DEFAULT);
 	}

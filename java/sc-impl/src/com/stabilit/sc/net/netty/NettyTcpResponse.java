@@ -17,6 +17,7 @@
 package com.stabilit.sc.net.netty;
 
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -74,10 +75,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 		return ChannelBuffers.copiedBuffer(buf);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.ResponseAdapter#setSCMP(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setSCMP(SCMPMessage scmp) {
 		if (scmp == null) {
@@ -87,15 +85,14 @@ public class NettyTcpResponse extends ResponseAdapter {
 		this.scmp = scmp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IResponse#write()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void write() throws Exception {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
-		ConnectionListenerSupport.getInstance().fireWrite(this, buffer.toByteBuffer().array());
+		ConnectionListenerSupport.getInstance().fireWrite(this,
+				((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
+				buffer.toByteBuffer().array());
 	}
 }

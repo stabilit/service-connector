@@ -25,37 +25,44 @@ import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
 import com.stabilit.sc.scmp.internal.SCMPSendPart;
 
 /**
- * @author JTraber
+ * The Class SCMPLargeRequestTest.
  * 
+ * @author JTraber
  */
 public class SCMPLargeRequestTest extends SCMPMessage {
 
+	/** The MAX_ANZ. */
+	private static final int MAX_ANZ = 100000;
+
+	/**
+	 * Scmp large request test.
+	 */
 	@Test
 	public void scmpLargeRequestTest() {
 		StringBuilder sb = new StringBuilder();
-		
-		for (int i = 0; i < 100000; i++) {
+
+		for (int i = 0; i < MAX_ANZ; i++) {
 			sb.append(i);
-		}		
-		
+		}
+
 		SCMPMessage largeScmp = new SCMPMessage();
 		largeScmp.setBody(sb.toString());
-		
+
 		SCMPCompositeSender largeRequest = new SCMPCompositeSender(largeScmp);
-		
+
 		int offset = 0;
-		while(largeRequest.hasNext()) {
-			
+		while (largeRequest.hasNext()) {
+
 			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset);
 			offset += responsePart.getBodyLength();
-			
+
 			SCMPMessage message = largeRequest.getNext();
 			Assert.assertEquals(responsePart.getBody().toString(), message.getBody().toString());
 			Assert.assertEquals(responsePart.getBodyLength(), message.getBodyLength());
 			Assert.assertEquals(responsePart.getBodyOffset(), message.getBodyOffset());
 			Assert.assertEquals(responsePart.getBodyType(), message.getBodyType());
 		}
-		
+
 		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0);
 		SCMPMessage message = largeRequest.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());

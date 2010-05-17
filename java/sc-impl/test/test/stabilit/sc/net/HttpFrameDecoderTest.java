@@ -25,19 +25,29 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 
 /**
- * @author JTraber
+ * The Class HttpFrameDecoderTest.
  * 
+ * @author JTraber
  */
 public class HttpFrameDecoderTest {
 
+	/** The decoder. */
 	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder("http");
 
+	/**
+	 * Singelton test.
+	 */
 	@Test
 	public void singeltonTest() {
 		IFactoryable decoder2 = decoder.newInstance();
 		Assert.assertEquals(decoder, decoder2);
 	}
 
+	/**
+	 * Parses the frame size test.
+	 * 
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void parseFrameSizeTest() throws Exception {
 		String httpHeader = "POST / HTTP/1.1\r\n" + "Host: www.google.com\r\n" + "Connection: close\r\n"

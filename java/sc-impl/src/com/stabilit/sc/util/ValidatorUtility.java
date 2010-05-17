@@ -29,8 +29,12 @@ import com.stabilit.sc.scmp.KeepAlive;
  * 
  * @author JTraber
  */
-public class ValidatorUtility {
+public final class ValidatorUtility {
 
+	/** The KEEP ALIVE INTERVAL MAX. */
+	private static final int KA_INTERVAL_MAX = 3600;
+	/** The KEEP ALIVE TIMEOUT MAX. */
+	private static final int KA_TIMEOUT_MAX = 3600;
 	/** The Constant SC_VERSION_REGEX, regex for sc version. */
 	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */
@@ -41,13 +45,18 @@ public class ValidatorUtility {
 	private static final Pattern PAT_SCVERSION = Pattern.compile(SC_VERSION_REGEX);
 
 	/**
+	 * Instantiates a new validator utility.
+	 */
+	private ValidatorUtility() {
+	}
+
+	/**
 	 * Validate sc version.
 	 * 
 	 * @param currenSCVersion
 	 *            the curren sc version
 	 * @param incomingSCVersion
 	 *            the incoming sc version
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
@@ -86,9 +95,7 @@ public class ValidatorUtility {
 	 * 
 	 * @param localDateTimeString
 	 *            the local date time string
-	 * 
 	 * @return the date
-	 * 
 	 * @throws ParseException
 	 *             the parse exception
 	 */
@@ -112,9 +119,7 @@ public class ValidatorUtility {
 	 *            the keep alive timeout
 	 * @param keepAliveInterval
 	 *            the keep alive interval
-	 * 
 	 * @return the keep alive
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
@@ -127,7 +132,7 @@ public class ValidatorUtility {
 			throw new ValidatorException("keepAliveTimeout/keepAliveInterval need to be set");
 		}
 
-		if (keepAliveTimeoutInt > 3600 || keepAliveIntervalInt > 3600) {
+		if (keepAliveTimeoutInt > KA_TIMEOUT_MAX || keepAliveIntervalInt > KA_INTERVAL_MAX) {
 			throw new ValidatorException("keepAliveTimeout or keepAliveInterval is to high.");
 		}
 
@@ -144,7 +149,6 @@ public class ValidatorUtility {
 	 * 
 	 * @param ipAddressListString
 	 *            the ip address list string
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
@@ -162,7 +166,6 @@ public class ValidatorUtility {
 	 *            the lower limit
 	 * @param intStringValue
 	 *            the int string value
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
@@ -192,7 +195,6 @@ public class ValidatorUtility {
 	 *            the int string value
 	 * @param upperLimit
 	 *            the upper limit
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
@@ -209,8 +211,9 @@ public class ValidatorUtility {
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
-		if (intValue <= lowerLimit || intValue >= upperLimit)
+		if (intValue <= lowerLimit || intValue >= upperLimit) {
 			throw new ValidatorException("intValue not within limits.");
+		}
 	}
 
 	/**
@@ -222,7 +225,6 @@ public class ValidatorUtility {
 	 *            the string value
 	 * @param maxSize
 	 *            the max size
-	 * 
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */

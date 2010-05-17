@@ -53,19 +53,13 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 	DefaultEncoderDecoder() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.factory.IFactoryable#newInstance()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IEncoderDecoder#decode(java.io.InputStream)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
@@ -165,10 +159,7 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		return scmpMsg;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.net.IEncoderDecoder#encode(java.io.OutputStream, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -200,10 +191,10 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
-			value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
 			if (value == null) {
 				throw new EncodingDecodingException("key [" + key + "] has null value");
 			}
+			value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
 			sb.append(key);
 			sb.append(EQUAL_SIGN);
 			sb.append(value);

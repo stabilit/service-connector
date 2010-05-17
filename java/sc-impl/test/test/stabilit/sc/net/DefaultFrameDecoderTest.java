@@ -25,19 +25,29 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 
 /**
- * @author JTraber
+ * The Class DefaultFrameDecoderTest.
  * 
+ * @author JTraber
  */
 public class DefaultFrameDecoderTest {
 
+	/** The decoder. */
 	private IFrameDecoder decoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
+	/**
+	 * Singelton test.
+	 */
 	@Test
 	public void singeltonTest() {
 		IFactoryable decoder2 = decoder.newInstance();
 		Assert.assertEquals(decoder, decoder2);
 	}
 
+	/**
+	 * Parses the frame size fail test.
+	 * 
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void parseFrameSizeFailTest() throws Exception {
 		try {
@@ -55,9 +65,13 @@ public class DefaultFrameDecoderTest {
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (FrameDecoderException e) {
+			Assert.assertEquals("invalid scmp header line", e.getMessage());
 		}
 	}
 
+	/**
+	 * Parses the frame size test.
+	 */
 	@Test
 	public void parseFrameSizeTest() {
 		byte[] b = new byte[0];
@@ -81,6 +95,9 @@ public class DefaultFrameDecoderTest {
 		}
 	}
 
+	/**
+	 * Read int fail test.
+	 */
 	@Test
 	public void readIntFailTest() {
 		byte[] b = new byte[0];
@@ -90,6 +107,7 @@ public class DefaultFrameDecoderTest {
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (Exception e) {
+			Assert.assertEquals("invalid scmp message length", e.getMessage());
 		}
 
 		headline = "REQ /s=& SCMP/1.0\n";
@@ -98,6 +116,7 @@ public class DefaultFrameDecoderTest {
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (Exception e) {
+			Assert.assertEquals("invalid scmp message length", e.getMessage());
 		}
 
 		headline = "REQ /s=0& SCMP/1.0\n";
@@ -106,6 +125,7 @@ public class DefaultFrameDecoderTest {
 			decoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (Exception e) {
+			Assert.assertEquals("invalid scmp message length", e.getMessage());
 		}
 	}
 }
