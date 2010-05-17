@@ -25,7 +25,7 @@ import com.stabilit.sc.cln.call.SCMPSrvSystemCall;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.scmp.SCMPErrorCode;
+import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
@@ -83,13 +83,13 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 				scmpSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
-		clnDataCall.setBody("hello");
+		clnDataCall.setRequestBody("hello");
 		try {
 			clnDataCall.invoke();
 		} catch (SCMPCommunicationException ex) {
 			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()),
 					(String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()),
-					SCMPErrorCode.CONNECTION_LOST);
+					SCMPError.CONNECTION_LOST);
 		}
 		tearDownSCServerToClient();
 	}
@@ -104,7 +104,7 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		// disconnects server on SC to SimulatonServer
 		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client,
 				scmpSession);
-		systemCall.setBody("simulation:P01_RTXS_RPRWS1");
+		systemCall.setRequestBody("simulation:P01_RTXS_RPRWS1");
 		systemCall.invoke();
 	}
 

@@ -24,9 +24,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.stabilit.sc.test.SCImplTest;
 
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.connect.ConnectTestCase;
 import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
@@ -41,7 +41,6 @@ import com.stabilit.sc.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
 import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
 import com.stabilit.sc.unit.test.worse.WorseSCServerToClientTestCase;
-import com.stabilit.sc.unit.test.worse.WorseSCServerToServiceTestCase;
 import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 /**
@@ -72,7 +71,7 @@ public class SCTest {
 	private SCTest() {
 	}
 	
-	public static void verifyError(SCMP result, SCMPErrorCode error, SCMPMsgType msgType) {
+	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
