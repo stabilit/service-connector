@@ -89,6 +89,9 @@ public final class ServiceConnector {
 		}
 	}
 
+	/**
+	 * Initialize jmx stuff.
+	 */
 	private static void initializeJMXStuff() {
 		try {
 			// Necessary to make access for JMX client available

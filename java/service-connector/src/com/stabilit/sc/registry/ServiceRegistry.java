@@ -62,10 +62,8 @@ public final class ServiceRegistry extends Registry {
 	/**
 	 * Allocate a session on a backend server.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param scmp
-	 *            the scmp
+	 * @param request
+	 *            the request
 	 * @return the service registry item
 	 * @throws Exception
 	 *             the exception
@@ -73,7 +71,7 @@ public final class ServiceRegistry extends Registry {
 	public synchronized ServiceRegistryItem allocate(IRequest request) throws Exception {
 		SCMPMessage scmpMessage = request.getMessage();
 		String serviceName = scmpMessage.getServiceName();
-		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(serviceName); 
+		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(serviceName);
 		if (itemPool.isAvailable() == false) {
 			return null;
 		}
@@ -87,8 +85,8 @@ public final class ServiceRegistry extends Registry {
 	 * 
 	 * @param item
 	 *            the item
-	 * @param scmp
-	 *            the scmp
+	 * @param request
+	 *            the request
 	 * @throws Exception
 	 *             the exception
 	 */

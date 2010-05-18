@@ -40,6 +40,12 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnEchoCall.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPClnEchoCall(IClient client) {
 		super(client);
 	}

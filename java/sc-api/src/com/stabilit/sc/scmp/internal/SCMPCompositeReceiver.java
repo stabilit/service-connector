@@ -46,7 +46,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	private int offest;
 	/** The output stream. */
 	private ByteArrayOutputStream outputStream;
-	/** The string writer */
+	/** The string writer. */
 	private StringWriter writer;
 
 	/**

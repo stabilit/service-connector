@@ -24,24 +24,28 @@ import java.util.EventObject;
 public class PerformanceEvent extends EventObject {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -2561926364455371080L;	
-	
+	private static final long serialVersionUID = -2561926364455371080L;
+
+	/** The method name where performance event fired. */
 	private String methodName;
-	
+
 	/** The time. */
 	private long time;
-	
+
 	/**
 	 * Instantiates a new performance event.
 	 * 
-	 * @param source the source
+	 * @param source
+	 *            the source
+	 * @param methodName
+	 *            the method name
 	 */
 	public PerformanceEvent(Object source, String methodName) {
-		super(source);		
+		super(source);
 		this.time = System.nanoTime();
 		this.methodName = methodName;
 	}
-	
+
 	/**
 	 * Gets the time.
 	 * 
@@ -50,8 +54,10 @@ public class PerformanceEvent extends EventObject {
 	public long getTime() {
 		return time;
 	}
-	
+
 	/**
+	 * Gets the method name.
+	 * 
 	 * @return the methodName
 	 */
 	public String getMethodName() {

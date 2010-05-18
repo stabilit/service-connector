@@ -53,7 +53,8 @@ public class DefaultEncoderDecoderTest {
 	/** The body length. */
 	private String bodyLength;
 	/** The body. */
-	private String body;
+	private String body;	
+	/** The encode scmp. */
 	private SCMPMessage encodeScmp;
 
 	/**

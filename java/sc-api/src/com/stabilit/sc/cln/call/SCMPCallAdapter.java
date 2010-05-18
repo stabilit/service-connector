@@ -165,7 +165,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * closeGroup...(terminates group) 
 	 * REQ-> <-RES
 	 */
-	public class SCMPGroupCall implements ISCMPCall { // TODO (TRN) (Done JOT) is this not better a SCMPCallPart?
+	public final class SCMPGroupCall implements ISCMPCall { // TODO (TRN) (Done JOT) is this not better a SCMPCallPart?
 
 		/** The parent call. */
 		private ISCMPCall parentCall;

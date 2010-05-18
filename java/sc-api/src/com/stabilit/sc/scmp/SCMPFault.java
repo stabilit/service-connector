@@ -85,7 +85,7 @@ public class SCMPFault extends SCMPMessage {
 	}
 
 	/**
-	 * Sets the error code and text based on scmp error  
+	 * Sets the error code and text based on scmp error.  
 	 * 
 	 * @param scmpError
 	 *            the new error code

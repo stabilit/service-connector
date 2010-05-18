@@ -51,9 +51,10 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 
 	/** The client. */
 	private IClient client;
-	/** The register scmp. */
-	private IRequest request; // TODO (TRN) (Done JOT) how does the scmp message relate to the service or to
-								// service registry??
+	/** The register request, initial request from service. */
+	private IRequest registerRequest; // TODO (TRN) (Done JOT) how does the scmp message relate to the service or
+										// to
+	// service registry??
 	/** The my item pool. */
 	protected ServiceRegistryItemPool myItemPool;
 	/** The allocated. */
@@ -64,15 +65,13 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/**
 	 * Instantiates a new service registry item.
 	 * 
-	 * @param message
-	 *            the scmp message
-	 * @param socketAddress
-	 *            the socket address
 	 * @param serverContext
 	 *            the server context
+	 * @param request
+	 *            the request
 	 */
 	public ServiceRegistryItem(IRequest request, IServerContext serverContext) {
-		this.request = request; // TODO (TRN) (Done JOT) the parameters are crazy
+		this.registerRequest = request; // TODO (TRN) (Done JOT) the parameters are crazy
 		this.allocated = false;
 		this.myItemPool = null;
 		this.obsolete = false;
@@ -248,7 +247,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	}
 
 	/**
-	 * Mark service obsolete. Marks if server has connection to service.
+	 * Mark service obsolete. Marks if server has connection to service. Obsolete means connection lost earlier.
 	 */
 	public void markObsolete() { // TODO (TRN) What is this ?
 		this.obsolete = true;

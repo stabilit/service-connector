@@ -42,6 +42,8 @@ public class ConnectionEvent extends EventObject {
 	 *            the source
 	 * @param data
 	 *            the data
+	 * @param port
+	 *            the port of connection
 	 */
 	public ConnectionEvent(Object source, int port, Object data) {
 		this(source, port, data, -1, -1);

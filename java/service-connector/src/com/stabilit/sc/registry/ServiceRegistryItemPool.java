@@ -35,6 +35,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 
 	/** The max items. */
 	private int maxItems = -1;
+	/** The request. */
 	private IRequest request;
 	/** The server context. */
 	private IServerContext serverContext;
@@ -46,10 +47,8 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	/**
 	 * Instantiates a new service registry item pool.
 	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @param socketAddress
-	 *            the socket address
+	 * @param request
+	 *            the request
 	 */
 	public ServiceRegistryItemPool(IRequest request) {
 		this.request = request;

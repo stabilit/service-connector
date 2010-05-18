@@ -52,7 +52,7 @@ public enum SCMPError {
 	/** The unknown service. */
 	UNKNOWN_SERVICE("501", "Unknown service requested."),
 	/** The connection lost. */
-	CONNECTION_LOST("502", "Connection lost."),;
+	CONNECTION_LOST("502", "Connection lost.");
 
 	/** The error code. */
 	private String errorCode;		//TODO this should be int!

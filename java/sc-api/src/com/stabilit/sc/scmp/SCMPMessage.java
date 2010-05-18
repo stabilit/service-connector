@@ -43,7 +43,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	/** The internal status. */
 	private SCMPInternalStatus internalStatus; // internal usage only
 	/** The message body. */
-	protected Object body;
+	private Object body;
 
 	/**
 	 * Instantiates a new SCMP.
@@ -189,7 +189,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Removes the attribute with the specified type from the header
+	 * Removes the attribute with the specified type from the header.
 	 * 
 	 * @param headerType
 	 *            the header type
@@ -199,7 +199,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Sets the header attribute by name and value
+	 * Sets the header attribute by name and value.
 	 * 
 	 * @param attributeName
 	 *            the name of the attribute
@@ -211,7 +211,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Sets the header attribute by type and value
+	 * Sets the header attribute by type and value.
 	 * 
 	 * @param headerType
 	 *            the header type
@@ -223,7 +223,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Sets the header attribute by type and value
+	 * Sets the header attribute by type and value.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -239,7 +239,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Sets the header by type and value
+	 * Sets the header by type and value.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -251,7 +251,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Copies the header from another message
+	 * Copies the header from another message.
 	 * 
 	 * @param sourceMessage
 	 *            the message with header header to be copied
@@ -299,7 +299,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute
+	 * Returns the boolean value of the header attribute.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -318,7 +318,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	}
 
 	/**
-	 * Returns the integer value of the header attribute
+	 * Returns the integer value of the header attribute.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -348,6 +348,11 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 		return this.getHeader(SCMPHeaderAttributeKey.SESSION_ID);
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
 	public String getServiceName() {
 		return this.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 	}

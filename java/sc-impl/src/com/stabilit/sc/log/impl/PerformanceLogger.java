@@ -31,13 +31,13 @@ import com.stabilit.sc.log.SimpleLogger;
  */
 public class PerformanceLogger extends SimpleLogger implements IPerformanceListener {
 
+	/** The thread local is needed to save timestamps in running thread. */
 	private ThreadLocal<PerformanceEvent> threadLocal;
 
 	/**
 	 * Instantiates a new performance logger.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	PerformanceLogger() throws Exception {
 		this(IConstants.LOG_DIR, IConstants.PERFORMANCE_LOG_FILE_NAME);
@@ -46,12 +46,10 @@ public class PerformanceLogger extends SimpleLogger implements IPerformanceListe
 	/**
 	 * Instantiates a new performance logger.
 	 * 
-	 * @param dir
-	 *            the directory
-	 * @param fileName
-	 *            the file name
-	 * @throws Exception
-	 *             the exception
+	 * @param dir the directory
+	 * @param fileName the file name
+	 * 
+	 * @throws Exception the exception
 	 */
 	PerformanceLogger(String dir, String fileName) throws Exception {
 		super(dir, fileName);

@@ -42,6 +42,15 @@ public abstract class CommandAdapter implements ICommand {
 		commandValidator = NullCommandValidator.newInstance(); // www.refactoring.com Introduce NULL Object
 	}
 
+	/**
+	 * Gets the session by id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @return the session by id
+	 * @throws SCMPCommandException
+	 *             occurs when session is not in registry, invalid session id
+	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = sessionRegistry.get(sessionId);
@@ -49,8 +58,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (session == null) {
 			// incoming session not found
 			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this,
-						"command error: no session found for id :" + sessionId);
+				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION);
 			scmpCommandException.setMessageType(getKey().getResponseName());

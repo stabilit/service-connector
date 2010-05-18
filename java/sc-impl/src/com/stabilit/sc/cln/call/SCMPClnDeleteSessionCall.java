@@ -37,6 +37,12 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnDeleteSessionCall.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPClnDeleteSessionCall(IClient client) {
 		super(client);
 	}

@@ -43,11 +43,11 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	 * 
 	 * @param client
 	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
+	 * @param clientMessage
+	 *            the client message
 	 */
 	public SCMPSrvEchoCall(IClient client, SCMPMessage clientMessage) {
-		super(client, clientMessage);		
+		super(client, clientMessage);
 	}
 
 	/**
@@ -68,6 +68,7 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 		return this.responseMessage;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMPMessage clientMessage) {
 		return new SCMPSrvEchoCall(client, clientMessage);

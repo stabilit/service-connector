@@ -46,7 +46,9 @@ public class SCClientFactory extends Factory {
 	 *            the port
 	 * @param connection
 	 *            the connection defines concrete client implementation
-	 * @return the i client
+	 * @param numberOfThreads
+	 *            the number of threads
+	 * @return the client
 	 */
 	public IClient newInstance(String host, int port, String connection, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();

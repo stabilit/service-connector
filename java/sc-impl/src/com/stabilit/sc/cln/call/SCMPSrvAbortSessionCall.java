@@ -49,15 +49,7 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 		super(client, scmpSession);
 	}
 
-	/**
-	 * New instance.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param scmpSession
-	 *            the scmp session
-	 * @return the iSCMP call
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPSrvAbortSessionCall(client, null);

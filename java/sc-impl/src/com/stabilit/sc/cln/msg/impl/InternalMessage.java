@@ -41,9 +41,9 @@ public class InternalMessage implements IInternalMessage, Serializable {
 	/** The msgType. */
 	private SCMPMsgType msgType;
 	/** The attr map to store data. */
-	protected Map<String, Object> attrMap;
+	private Map<String, Object> attrMap;
 	/** The encoded builder. */
-	protected StringBuilder encodedBuilder;
+	private StringBuilder encodedBuilder;
 
 	/**
 	 * Instantiates a new internal message.

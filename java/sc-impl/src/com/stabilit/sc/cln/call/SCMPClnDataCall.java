@@ -35,6 +35,12 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnDataCall.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPClnDataCall(IClient client) {
 		super(client);
 	}

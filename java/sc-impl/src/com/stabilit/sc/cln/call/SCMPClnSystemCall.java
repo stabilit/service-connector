@@ -37,6 +37,12 @@ public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnSystemCall.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPClnSystemCall(IClient client) {
 		super(client);
 	}
@@ -58,6 +64,7 @@ public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 	public ISCMPCall newInstance(IClient client) {
 		return new SCMPClnSystemCall(client);
 	}
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, IClientSession scmpSession) {
@@ -79,7 +86,7 @@ public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 	public void setMaxNodes(int maxNodes) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
 	}
-	
+
 	/**
 	 * Sets the header.
 	 * 

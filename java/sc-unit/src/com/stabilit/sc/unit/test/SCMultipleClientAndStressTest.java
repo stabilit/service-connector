@@ -22,26 +22,39 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.echo.mt.MTEchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.mt.MTSrvEchoTestCase;
 
 /**
- * @author JTraber
+ * The Class SCMultipleClientAndStressTest.
  * 
+ * @author JTraber
  */
-
 @RunWith(Suite.class)
-@SuiteClasses( { 
+@SuiteClasses({ 
 	// multiple clients test
 	//StressTest.class,
 	MTEchoSCTestCase.class,
-	MTSrvEchoTestCase.class})
-public class SCMultipleClientAndStressTest {
+	MTSrvEchoTestCase.class })
+public final class SCMultipleClientAndStressTest {
 	
+	/**
+	 * Instantiates a new sC multiple client and stress test.
+	 */
+	private SCMultipleClientAndStressTest() {
+	}
+	
+	/**
+	 * Verify error.
+	 * 
+	 * @param result the result
+	 * @param error the error
+	 * @param msgType the msg type
+	 */
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
