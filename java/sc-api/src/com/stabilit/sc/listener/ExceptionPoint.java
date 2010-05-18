@@ -19,23 +19,23 @@ package com.stabilit.sc.listener;
 import java.util.EventListener;
 
 /**
- * The Class ExceptionListenerSupport. Allows logging exceptions.
+ * The Class ExceptionPoint. Allows logging on exception level - fire exception.
  */
 public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
 
-	/** The exception listener support. */
+	/** The exception point. */
 	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
 
 	/**
-	 * Instantiates a new exception listener support.
+	 * Instantiates a new ExceptionPoint.
 	 */
 	private ExceptionPoint() {
 	}
 
 	/**
-	 * Gets the single instance of ExceptionListenerSupport.
+	 * Gets the single instance of ExceptionPoint.
 	 * 
-	 * @return single instance of ExceptionListenerSupport
+	 * @return single instance of ExceptionPoint
 	 */
 	public static ExceptionPoint getInstance() {
 		return exceptionPoint;

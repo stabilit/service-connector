@@ -19,23 +19,23 @@ package com.stabilit.sc.listener;
 import java.util.EventListener;
 
 /**
- * The Class ConnectionListenerSupport. Allows logging on connection level - fire read/write, connect/disconnect.
+ * The Class ConnectionPoint. Allows logging on connection level - fire read/write, connect/disconnect.
  */
 public final class ConnectionPoint extends ListenerSupport<IConnectionListener> {
 
-	/** The connection listener support. */
+	/** The connection point. */
 	private static ConnectionPoint connectionPoint = new ConnectionPoint();
 
 	/**
-	 * Instantiates a new connection listener support.
+	 * Instantiates a new connection point.
 	 */
 	private ConnectionPoint() {
 	}
 
 	/**
-	 * Gets the single instance of ConnectionListenerSupport.
+	 * Gets the single instance of ConnectionPoint.
 	 * 
-	 * @return single instance of ConnectionListenerSupport
+	 * @return single instance of ConnectionPoint
 	 */
 	public static ConnectionPoint getInstance() {
 		return connectionPoint;
@@ -76,10 +76,10 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 	 * 
 	 * @param source
 	 *            the source
-	 * @param buffer
-	 *            the buffer
 	 * @param port
 	 *            the port
+	 * @param buffer
+	 *            the buffer
 	 */
 	public void fireWrite(Object source, int port, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {

@@ -21,26 +21,27 @@ import java.util.EventListener;
 import com.stabilit.sc.log.Level;
 
 /**
- * The Class LoggerListenerSupport. Allows logging - fire debug/info/warn/exception/error/log/trace.
+ * The Class LoggerPoint. Allows logging - fire debug/info/warn/exception/error/log/trace.
  */
 public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 
-	/** The logger listener support. */
+	/** The logger point. */
 	private static LoggerPoint loggerPoint = new LoggerPoint();
+	
 	/** The level of logging. */
 	private Level level = null;
 
 	/**
-	 * Instantiates a new logger listener support.
+	 * Instantiates a new logger point.
 	 */
 	private LoggerPoint() {
 		this.level = Level.EXCEPTION;
 	}
-
+	
 	/**
-	 * Gets the single instance of LoggerListenerSupport.
+	 * Gets the single instance of LoggerPoint.
 	 * 
-	 * @return single instance of LoggerListenerSupport
+	 * @return single instance of LoggerPoint
 	 */
 	public static LoggerPoint getInstance() {
 		return loggerPoint;
@@ -49,8 +50,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Sets the level.
 	 * 
-	 * @param level
-	 *            the new level
+	 * @param level the new level
 	 */
 	public void setLevel(Level level) {
 		this.level = level;
@@ -59,10 +59,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire error.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireError(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -74,10 +72,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire exception.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireException(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -89,10 +85,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire warn.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireWarn(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -104,10 +98,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire info.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireInfo(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -119,10 +111,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire debug.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireDebug(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -134,10 +124,8 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire trace.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
+	 * @param source the source
+	 * @param text the text
 	 */
 	public void fireTrace(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
@@ -149,8 +137,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	/**
 	 * Fire log.
 	 * 
-	 * @param loggerEvent
-	 *            the logger event
+	 * @param loggerEvent the logger event
 	 */
 	public void fireLog(LoggerEvent loggerEvent) {
 		int localSize = this.size;

@@ -19,7 +19,7 @@ package com.stabilit.sc.listener;
 import java.util.EventListener;
 
 /**
- * The Class RuntimePoint.
+ * The Class RuntimePoint. Allows logging general runtime information.
  */
 public final class RuntimePoint extends ListenerSupport<IRuntimeListener> {
 

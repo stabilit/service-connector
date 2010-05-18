@@ -19,27 +19,26 @@ package com.stabilit.sc.listener;
 import java.util.EventListener;
 
 /**
- * The Class PerformanceListenerSupport. Allows logging performance - fire begin/end.
+ * The Class PerformancePoint. Allows logging performance - fire begin/end.
  */
-public final class PerformancePoint extends
-		ListenerSupport<IPerformanceListener> {
+public final class PerformancePoint extends ListenerSupport<IPerformanceListener> {
 
-	/** The performance listener support. */
+	/** The performance point. */
 	private static PerformancePoint performancePoint = new PerformancePoint();
-	
-	/** The on. */
+
+	/** The on, indicates that performance logging is active. */
 	private boolean on = false;
 
 	/**
-	 * Instantiates a new performance listener support.
+	 * Instantiates a new performance point.
 	 */
 	private PerformancePoint() {
 	}
 
 	/**
-	 * Gets the single instance of PerformanceListenerSupport.
+	 * Gets the single instance of PerformancePoint.
 	 * 
-	 * @return single instance of PerformanceListenerSupport
+	 * @return single instance of PerformancePoint
 	 */
 	public static PerformancePoint getInstance() {
 		return performancePoint;
@@ -53,21 +52,24 @@ public final class PerformancePoint extends
 	public boolean isOn() {
 		return on;
 	}
-	
+
 	/**
 	 * Sets the on.
 	 * 
-	 * @param on the new on
+	 * @param on
+	 *            the new on
 	 */
 	public void setOn(boolean on) {
 		this.on = on;
 	}
-	
+
 	/**
 	 * Fire begin.
 	 * 
-	 * @param source the source
-	 * @param time the time
+	 * @param source
+	 *            the source
+	 * @param method
+	 *            the method
 	 */
 	public void fireBegin(Object source, String method) {
 		if (getInstance().isEmpty() == false) {
@@ -79,8 +81,10 @@ public final class PerformancePoint extends
 	/**
 	 * Fire end.
 	 * 
-	 * @param source the source
-	 * @param time the time
+	 * @param source
+	 *            the source
+	 * @param method
+	 *            the method
 	 */
 	public void fireEnd(Object source, String method) {
 		if (getInstance().isEmpty() == false) {
@@ -92,7 +96,8 @@ public final class PerformancePoint extends
 	/**
 	 * Performance begin event.
 	 * 
-	 * @param performanceEvent the performance event
+	 * @param performanceEvent
+	 *            the performance event
 	 */
 	private void performanceBeginEvent(PerformanceEvent performanceEvent) {
 		int localSize = this.size;
@@ -106,11 +111,12 @@ public final class PerformancePoint extends
 			}
 		}
 	}
-	
+
 	/**
 	 * Performance end event.
 	 * 
-	 * @param performanceEvent the performance event
+	 * @param performanceEvent
+	 *            the performance event
 	 */
 	private void performanceEndEvent(PerformanceEvent performanceEvent) {
 		int localSize = this.size;
