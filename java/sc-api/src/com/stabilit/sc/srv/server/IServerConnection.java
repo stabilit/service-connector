@@ -26,20 +26,17 @@ import com.stabilit.sc.net.IConnection;
 public interface IServerConnection extends IConnection {
 
 	/**
-	 * Destroy.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 * Destroys server connection.
 	 */
-	public void destroy() throws Exception;
+	public void destroy();
 
 	/**
-	 * Creates the.
+	 * Creates a server connection.
 	 */
 	public void create();
 
 	/**
-	 * Run async. Starts server in another thread.
+	 * Runs asynchronously. Starts server in another thread.
 	 */
 	public void runAsync();
 
