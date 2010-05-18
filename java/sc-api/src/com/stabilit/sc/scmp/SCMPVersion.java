@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,27 +13,43 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.scmp;
 
 /**
+ * The Enum SCMPVersion. Responsible to provide SCMPVersion and compatibility checks.
+ * 
  * @author JTraber
  */
 public enum SCMPVersion {
 
-	UNDEFINED("0.0", 0, 0, 0), ONE("1.0", 1, 1, 1), TWO("2.0", 2,1,2);
+	/** The UNDEFINED. */
+	UNDEFINED("0.0", 0, 0, 0),
+	/** The ONE. */
+	ONE("1.0", 1, 1, 1),
+	/** The TWO. */
+	TWO("2.0", 2, 1, 2);
 
+	/** The text. */
 	private String text;
+	/** The value. */
 	private int value;
+	/** The minor. */
 	private int minor;
+	/** The major. */
 	private int major;
 
 	/**
+	 * Instantiates a new sCMP version.
 	 * 
+	 * @param text
+	 *            the text
+	 * @param value
+	 *            the value
+	 * @param minor
+	 *            the minor
+	 * @param major
+	 *            the major
 	 */
 	private SCMPVersion(String text, int value, int minor, int major) {
 		this.text = text;
@@ -43,13 +58,27 @@ public enum SCMPVersion {
 		this.major = major;
 	}
 
+	/**
+	 * Gets the version.
+	 * 
+	 * @param text
+	 *            the text
+	 * @return the version
+	 */
 	public static SCMPVersion getVersion(String text) {
 		if (ONE.text.equals(text)) {
 			return ONE;
 		}
 		return UNDEFINED;
 	}
-	
+
+	/**
+	 * Checks if is supported.
+	 * 
+	 * @param scmpVersion
+	 *            the scmp version
+	 * @return true, if is supported
+	 */
 	public boolean isSupported(SCMPVersion scmpVersion) {
 		if (this == scmpVersion) {
 			return true;
@@ -62,7 +91,12 @@ public enum SCMPVersion {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return text;

@@ -23,7 +23,7 @@ import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Interface ISCMPCall abstracts SCMPCalls.
+ * The Interface ISCMPCall. Basic functionality of a SCMPCall.
  * 
  * @author JTraber
  */
@@ -32,29 +32,48 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param client the client to use for the call *
-	 * 
+	 * @param client
+	 *            the client to use for the call
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IClient client);
 
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client to use for the call
+	 * @param clientSession
+	 *            the client session
+	 * @return the iSCMP call
+	 */
 	public ISCMPCall newInstance(IClient client, IClientSession clientSession);
 
+	/**
+	 * New instance.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param scmpMessage
+	 *            the scmp message
+	 * @return the iSCMP call
+	 */
 	public ISCMPCall newInstance(IClient client, SCMPMessage scmpMessage);
 
 	/**
 	 * Invoke.
 	 * 
 	 * @return the scmp message
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public SCMPMessage invoke() throws Exception;
 
 	/**
 	 * Sets the body.
 	 * 
-	 * @param body the new body
+	 * @param body
+	 *            the new body
 	 */
 	public void setRequestBody(Object body);
 
@@ -83,8 +102,8 @@ public interface ISCMPCall {
 	 * Open group.
 	 * 
 	 * @return the iSCMP call
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public ISCMPCall openGroup() throws Exception;
 
@@ -92,8 +111,8 @@ public interface ISCMPCall {
 	 * Close group, sends the ending request.
 	 * 
 	 * @return the result
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public SCMPMessage closeGroup() throws Exception;
 }

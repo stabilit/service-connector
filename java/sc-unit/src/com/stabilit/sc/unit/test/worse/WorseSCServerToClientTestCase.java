@@ -68,6 +68,8 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			clnConnectBefore();
 			registerServiceBefore();
 			clnCreateSessionBefore();
+			// needs to get disconnected (remove entry in connection registry before killing connection)
+			clnDisconnectAfter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,13 +100,15 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 		ClientConfig config = new ClientConfig();
 		config.load("sc-sim.properties");
 		ClientFactory clientFactory = new ClientFactory();
-		IClient client = clientFactory.newInstance(config.getClientConfig());
-		client.connect(); // physical connect
+		IClient tearDownClient = clientFactory.newInstance(config.getClientConfig());
+		tearDownClient.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL
+				.newInstance(tearDownClient);
 		systemCall.setRequestBody("simulation:P01_RTXS_RPRWS1");
 		systemCall.invoke();
+		tearDownClient.disconnect();
 	}
 
 	/**

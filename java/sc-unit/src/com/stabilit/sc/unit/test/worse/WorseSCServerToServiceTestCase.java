@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test.worse;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
@@ -70,11 +72,14 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 			clnConnectBefore();
 			registerServiceBefore();
 			clnCreateSessionBefore();
+			// needs to get disconnected (remove entry in connection registry before killing connection)
+			clnDisconnectAfter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Test
 	public void clnDataSCServerToServiceDisconnect() throws Exception {
 		tearDownSCServerToService();
 
@@ -97,18 +102,25 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		ClientConfig config = new ClientConfig();
 		config.load("sc-sim.properties");
 		ClientFactory clientFactory = new ClientFactory();
-		IClient client = clientFactory.newInstance(config.getClientConfig());
-		client.connect(); // physical connect
+		IClient tearDownClient = clientFactory.newInstance(config.getClientConfig());
+		tearDownClient.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(tearDownClient);
 		systemCall.setRequestBody("simulation:P01_RTXS_RPRWS1");
 		systemCall.invoke();
+		tearDownClient.disconnect();
 	}
 
 	private void tearDownSCServerToClient() throws Exception {
 		// disconnects SC Server to Client after sending response
 		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
 		systemCall.invoke();
+	}
+	
+	@After
+	@Override
+	public void tearDown() throws Exception {
+		client.disconnect();
 	}
 }

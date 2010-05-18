@@ -42,18 +42,24 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	protected SCMPMessage responseMessage;
 
 	/**
-	 * Instantiates a new scmp call adapter.
+	 * Instantiates a new SCMPCallAdapter.
 	 */
 	public SCMPCallAdapter() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPCallAdapter.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPCallAdapter(IClient client) {
 		this(client, client.getClientSession());
 	}
 
 	/**
-	 * Instantiates a new scmp call adapter.
+	 * Instantiates a new SCMPCallAdapter.
 	 * 
 	 * @param client
 	 *            the client
@@ -81,11 +87,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, IClientSession clientSession) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client, SCMPMessage scmpMessage) {
 		throw new UnsupportedOperationException("not allowed");
@@ -144,28 +152,20 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/**
-	 * The Class SCMPGroupCall. 
+	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a
+	 * large or small message request and response. But all of them are handled as partial messages, large calls
+	 * will be split into partial calls (PRQ). The client uses group calls if the active communication is open end.
+	 * Closing the group will send the completing request (REQ). 
 	 * 
-	 * A group call is a summary of individual single calls. Each single call can be a large or small message request and response.
-	 * But all of them are handled as partial messages, large calls will be split into partial calls (PRQ).
-	 * The client uses group calls if the active communication is open end.
-	 * Closing the group will send the completing request (REQ).
-	 * 
-	 * Communication sample:
-	 * 
+	 * Communication sample: 
 	 * openGroup... (no transport)
-	 * PRQ ->       
-	 * <-PRS
-	 * PRQ ->
-	 * <-PRS
-	 * ....
-	 * PRQ->
-	 * <-PRS
-	 * closeGroup (terminates group)
-	 * REQ->
-	 * <-RES
+	 * PRQ -> <-PRS 
+	 * .... 
+	 * PRQ-> <-PRS 
+	 * closeGroup...(terminates group) 
+	 * REQ-> <-RES
 	 */
-	public class SCMPGroupCall implements ISCMPCall {	//TODO (TRN) (Done JOT) is this not better a SCMPCallPart?
+	public class SCMPGroupCall implements ISCMPCall { // TODO (TRN) (Done JOT) is this not better a SCMPCallPart?
 
 		/** The parent call. */
 		private ISCMPCall parentCall;
@@ -173,7 +173,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		private SCMPGroupState groupState;
 
 		/**
-		 * Instantiates a new sCMP group call.
+		 * Instantiates a new SCMPGroupCall.
 		 * 
 		 * @param parentCall
 		 *            the parent call
@@ -259,11 +259,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall newInstance(IClient client, IClientSession clientSession) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall newInstance(IClient client, SCMPMessage scmpMessage) {
 			throw new UnsupportedOperationException("not allowed");
@@ -271,12 +273,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/**
-	 * The Enum SCMPGroupState.
+	 * The Enum SCMPGroupState. States which a group call can be.
 	 */
 	private static enum SCMPGroupState {
-		/** The OPEN of a group. */
+
+		/** The OPEN state. */
 		OPEN,
-		/** The CLOSE of a group. */
+		/** The CLOSE state. */
 		CLOSE;
 	}
 }

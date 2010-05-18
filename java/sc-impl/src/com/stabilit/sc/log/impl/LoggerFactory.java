@@ -61,9 +61,6 @@ public final class LoggerFactory extends Factory {
 			logger = new GeneralLogger(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
 			this.add(GeneralLogger.class, logger);
 			this.add(DEFAULT, logger);
-			// SCMP logger
-			logger = new SCMPLogger(IConstants.LOG_DIR, IConstants.SCMP_LOG_FILE_NAME);
-			this.add(SCMPLogger.class, logger);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

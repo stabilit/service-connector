@@ -22,16 +22,27 @@ import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 
 /**
- * The Class SCMPCallAdapter. Provides basic functionality for calls.
+ * The Class SCMPCallAdapter. Provides basic functionality for calls to a backend server.
  * 
  * @author JTraber
  */
 public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPServerCallAdapter.
+	 */
 	public SCMPServerCallAdapter() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPServerCallAdapter.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param clientMessage
+	 *            the client message
+	 */
 	public SCMPServerCallAdapter(IClient client, SCMPMessage clientMessage) {
 		this.client = client;
 		this.scmpSession = null;
@@ -44,16 +55,16 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 				this.requestMessage = new SCMPMessage();
 			}
 			this.requestMessage.setSessionId(clientMessage.getSessionId());
-			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, clientMessage
-					.getServiceName());
+			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, clientMessage.getServiceName());
 		}
 
 		if (this.requestMessage == null) {
 			this.requestMessage = new SCMPMessage();
-		}		
+		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public abstract ISCMPCall newInstance(IClient client, SCMPMessage clientMessage);
-	
+
 }

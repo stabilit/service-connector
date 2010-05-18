@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,16 +13,14 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.client;
 
 /**
+ * The Interface IClientSession. Represents a virtual connection between client and server. API programmer needs to
+ * manage several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
+ * 
  * @author JTraber
- *
  */
 public interface IClientSession {
 
@@ -41,6 +38,5 @@ public interface IClientSession {
 	 * @return the sessionInfo
 	 */
 	public abstract String getSessionInfo();
-	
 
 }

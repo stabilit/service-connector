@@ -20,24 +20,42 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.client.IClientSession;
 
 /**
- * The Class SCMPCallAdapter. Provides basic functionality for calls.
+ * The Class SCMPCallAdapter. Provides basic functionality for calls which needs a session.
  * 
  * @author JTraber
  */
 public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSessionCallAdapter.
+	 */
 	public SCMPSessionCallAdapter() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSessionCallAdapter.
+	 * 
+	 * @param client
+	 *            the client
+	 */
 	public SCMPSessionCallAdapter(IClient client) {
 		super(client);
 	}
 
+	/**
+	 * Instantiates a new SCMPSessionCallAdapter.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param clientSession
+	 *            the client session
+	 */
 	public SCMPSessionCallAdapter(IClient client, IClientSession clientSession) {
 		super(client, clientSession);
 	}
-	
+
+	/** {@inheritDoc} */
+	@Override
 	public abstract ISCMPCall newInstance(IClient client, IClientSession clientSession);
-	
 }

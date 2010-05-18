@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,28 +13,45 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.sc;
 
 import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.util.ValidatorException;
 
 /**
+ * The Enum SCVersion. Responsible to provide SCVersion and compatibility checks.
+ * 
  * @author JTraber
  */
 public enum SCVersion {
 
-	UNDEFINED("0.0-000", 0, 0, 0), ONE("1.0-000", 1, 0, 0);
+	/** The UNDEFINED. */
+	UNDEFINED("0.0-000", 0, 0, 0),
+	/** The ONE. */
+	ONE("1.0-000", 1, 0, 0);
 
+	/** The text. */
 	private String text;
+	/** The release. */
 	private int release; // e.g : 1
+	/** The version. */
 	private int version; // e.g : 0
+	/** The revision. */
 	private int revision; // e.g : 023 -> all together 1.0-023
 
+	/**
+	 * Instantiates a new SCVersion.
+	 * 
+	 * @param text
+	 *            the text
+	 * @param release
+	 *            the release
+	 * @param version
+	 *            the version
+	 * @param revision
+	 *            the revision
+	 */
 	private SCVersion(String text, int release, int version, int revision) {
 		this.text = text;
 		this.release = release;
@@ -43,6 +59,13 @@ public enum SCVersion {
 		this.revision = revision;
 	}
 
+	/**
+	 * Checks if is supported.
+	 * 
+	 * @param text
+	 *            the text
+	 * @return true, if is supported
+	 */
 	public boolean isSupported(String text) {
 		try {
 			String[] splitted = text.split("\\.|-");
@@ -69,6 +92,11 @@ public enum SCVersion {
 		return false;
 	}
 
+	/**
+	 * To string.
+	 * 
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return text;

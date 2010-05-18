@@ -29,13 +29,13 @@ import com.stabilit.sc.scmp.SCMPMessage;
 public class SCMPPart extends SCMPMessage {
 
 	/**
-	 * Instantiates a new sCMP part.
+	 * Instantiates a new SCMPPart.
 	 */
 	public SCMPPart() {
 	}
 
 	/**
-	 * Instantiates a new sCMP part.
+	 * Instantiates a new SCMPPart.
 	 * 
 	 * @param map
 	 *            the map

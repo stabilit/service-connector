@@ -35,14 +35,10 @@ public final class ValidatorUtility {
 	private static final int KA_INTERVAL_MAX = 3600;
 	/** The KEEP ALIVE TIMEOUT MAX. */
 	private static final int KA_TIMEOUT_MAX = 3600;
-	/** The Constant SC_VERSION_REGEX, regex for sc version. */
-	private static final String SC_VERSION_REGEX = "(\\d\\.\\d)-(\\d*)";
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
 	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
-	/** The Constant PAT_SCVERSION, pattern regex for sc version. */
-	private static final Pattern PAT_SCVERSION = Pattern.compile(SC_VERSION_REGEX);
 
 	/**
 	 * Instantiates a new validator utility.
@@ -63,11 +59,6 @@ public final class ValidatorUtility {
 		if (localDateTimeString == null) {
 			return null;
 		}
-		// localDateTime validation with regex
-		// Pattern pat = Pattern
-		// .compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}\\+[0-9]{4}");
-		// Matcher m = pat.matcher(localDateTimeString);
-		// m.matches();
 		Date localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
 		return localDateTime;
 	}

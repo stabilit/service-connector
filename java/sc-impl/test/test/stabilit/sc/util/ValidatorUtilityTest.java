@@ -41,57 +41,6 @@ public class ValidatorUtilityTest {
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	/**
-	 * Validate sc version test.
-	 */
-	@Test
-	public final void validateSCVersionTest() {
-		String currenSCVersion = "2.1-007";
-
-//		try {
-//			// same SCVersion
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.1-007");
-//			// lower revisionNr
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.1-001");
-//			// lower versionNr
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.0-001");
-//		} catch (ValidatorException e) {
-//			Assert.fail("Should not throw exception");
-//		}
-//
-//		try {
-//			// revisionNr too high
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.1-008");
-//			Assert.fail("Should throw exception");
-//		} catch (ValidatorException e) {
-//			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
-//		}
-//
-//		try {
-//			// versionNr too high
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.3-001");
-//			Assert.fail("Should throw exception");
-//		} catch (ValidatorException e) {
-//			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
-//		}
-//
-//		try {
-//			// releaseNr too high
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "2.2-001");
-//			Assert.fail("Should throw exception");
-//		} catch (ValidatorException e) {
-//			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
-//		}
-//
-//		try {
-//			// releaseNr different
-//			ValidatorUtility.validateSCVersion(currenSCVersion, "1.9-999");
-//			Assert.fail("Should throw exception");
-//		} catch (ValidatorException e) {
-//			Assert.assertEquals("SCVersion not compatible.", e.getMessage());
-//		}
-	}
-
-	/**
 	 * Validate local date time test.
 	 */
 	@Test

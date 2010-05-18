@@ -23,7 +23,7 @@ import com.stabilit.sc.registry.Registry;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * The Class SCMPSessionRegistry. TODO commenting, unsure at this moment!
+ * The Class SCMPSessionRegistry. Registry manages SCMPClientSessions.
  * 
  * @author JTraber
  */
@@ -42,7 +42,7 @@ public final class SCMPSessionRegistry extends Registry {
 	}
 
 	/**
-	 * Instantiates a new sCMP session registry.
+	 * Instantiates a new SCMPSessionRegistry.
 	 */
 	private SCMPSessionRegistry() {
 		MapBean<?> sessionIdMapBean = new MapBean<List<String>>();
@@ -54,10 +54,8 @@ public final class SCMPSessionRegistry extends Registry {
 	/**
 	 * Adds an entry (sessionId, serviceName).
 	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param serviceName
-	 *            the service name
+	 * @param sessionId the session id
+	 * @param serviceName the service name
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void add(String sessionId, String serviceName) {
