@@ -94,6 +94,11 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		IRequest request = new NettyTcpRequest(event, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 
+		if (scmpReq == null) {
+			//no scmp protocol used - nothing to return
+			return;
+		}
+		
 		if (this.compositeSender != null && scmpReq.isPart()) {
 			// sending of a large response has already been started and incoming scmp is a pull request
 			if (this.compositeSender.hasNext()) {
