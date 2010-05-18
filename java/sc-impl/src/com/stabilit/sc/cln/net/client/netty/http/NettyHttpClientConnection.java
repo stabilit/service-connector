@@ -41,6 +41,7 @@ import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.sc.listener.RuntimePoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.scmp.SCMPMessage;
@@ -98,9 +99,14 @@ public class NettyHttpClientConnection implements IClientConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
 				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
+		this.bootstrap.setOption("connectTimeoutMillis", 0);
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+		if (future.isSuccess() == false) {
+			RuntimePoint.getInstance().fireRuntime(this, "Connect failed, remote address: " + host + ":" + port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+		}
 		// waits until operation is done
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
