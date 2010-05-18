@@ -99,19 +99,19 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 			runSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
-			try {
-				this.destroy();
-			} catch (Throwable e1) {
-				ExceptionPoint.getInstance().fireException(this, e1);
-			}
+			this.destroy();
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void destroy() throws Exception {
-		this.channel.close();
-		this.bootstrap.releaseExternalResources();
+	public void destroy() {
+		try {
+			this.channel.close();
+			this.bootstrap.releaseExternalResources();
+		} catch (Throwable th) {
+			ExceptionPoint.getInstance().fireException(this, th);
+		}
 	}
 
 	/** {@inheritDoc} */

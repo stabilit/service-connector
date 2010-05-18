@@ -60,8 +60,6 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	}
 
 	/** {@inheritDoc} */
-
-	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		try {

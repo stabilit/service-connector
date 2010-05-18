@@ -22,8 +22,8 @@ import com.stabilit.sc.srv.ctx.ServerContext;
 import com.stabilit.sc.srv.server.factory.ServerConnectionFactory;
 
 /**
- * The Class Server. Abstracts server functionality from a application view. It is not the technical
- * representation of a server connection.
+ * The Class Server. Abstracts server functionality from a application view. It is not the technical representation
+ * of a server connection.
  * 
  * @author JTraber
  */
@@ -36,12 +36,7 @@ public abstract class Server implements IServer {
 	/** The server context. */
 	protected IServerContext serverContext;
 
-	/**
-	 * Sets the server configuration.
-	 * 
-	 * @param serverConfig
-	 *            the new server configuration
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setServerConfig(IServerConfigItem serverConfig) {
 		this.serverConfig = serverConfig;
@@ -54,64 +49,37 @@ public abstract class Server implements IServer {
 		this.serverConnection.setNumberOfThreads(this.serverConfig.getNumberOfThreads());
 	}
 
-	/**
-	 * Creates the server.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
 		serverConnection.create();
 	}
 
-	/**
-	 * Run asynchronously. Starts server in a separate thread.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runAsync() throws Exception {
 		serverConnection.runAsync();
 	}
 
-	/**
-	 * Run synchronously. Starts server with incoming thread. Thread never returns.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws Exception {
 		serverConnection.runSync();
 	}
-	
-	/**
-	 * Destroys server.
-	 * 
-	 * @throws Exception the exception
-	 */
+
+	/** {@inheritDoc} */
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		serverConnection.destroy();
 	}
 
-	/**
-	 * Gets the server context.
-	 * 
-	 * @return the server context
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IServerContext getServerContext() {
 		return serverContext;
 	}
 
-	/**
-	 * Gets the server config.
-	 * 
-	 * @return the server config
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IServerConfigItem getServerConfig() {
 		return serverConfig;
