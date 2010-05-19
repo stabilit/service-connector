@@ -23,37 +23,69 @@ package com.stabilit.sc.scmp;
  */
 public enum SCMPHeaderAttributeKey {
 
+	/** The APP_ERROR_CODE. */
 	APP_ERROR_CODE("appErrorCode"),
+	/** The APP_ERROR_TEXT. */
 	APP_ERROR_TEXT("appErrorText"),
+	/** The BODY_LENGTH. */
 	BODY_LENGTH("bodyLength"),
+	/** The BODY_TYPE. */
 	BODY_TYPE("bodyType"),
+	/** The CACHE_EXPIRATION_DATETIME. */
 	CACHE_EXPIRATION_DATETIME("cacheExpirationDateTime"),
+	/** The CACHE_ID. */
 	CACHE_ID("cacheId"),
+	/** The CLIENT_ID. */
 	CLIENT_ID("clientId"),
+	/** The COMPRESSION. */
 	COMPRESSION("compression"),
+	/** The IP_ADDRESS_LIST. */
 	IP_ADDRESS_LIST("ipAddressList"),
+	/** The KEEP_ALIVE_INTERVAL. */
 	KEEP_ALIVE_INTERVAL("keepAliveInterval"),
+	/** The KEEP_ALIVE_TIMEOUT. */
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
+	/** The LOCAL_DATE_TIME. */
 	LOCAL_DATE_TIME("localDateTime"),
+	/** The MASK. */
 	MASK("mask"),
+	/** The MAX_NODES. */
 	MAX_NODES("maxNodes"),
+	/** The MAX_SESSIONS. */
 	MAX_SESSIONS("maxSessions"),
+	/** The MESSAGE_ID. */
 	MESSAGE_ID("messageID"),
+	/** The MSG_INFO. */
 	MSG_INFO("msgInfo"),
+	/** The MSG_TYPE. */
 	MSG_TYPE("msgType"),
+	/** The MULTI_THREADED. */
 	MULTI_THREADED("multiThreaded"),
+	/** The NO_DATA. */
 	NO_DATA("noData"),
+	/** The PORT_NR. */
 	PORT_NR("portNr"),
+	/** The REJECT_SESSION. */
 	REJECT_SESSION("rejectSession"),
-	SCCLIENT_ID("scclientId"),					//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
-	SCSERVER_ID("scserverId"),					//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SCCLIENT_ID. */
+	SCCLIENT_ID("scclientId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SCSERVER_ID. */
+	SCSERVER_ID("scserverId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SC_ERROR_CODE. */
 	SC_ERROR_CODE("scErrorCode"),
+	/** The SC_ERROR_TEXT. */
 	SC_ERROR_TEXT("scErrorText"),
+	/** The SC_VERSION. */
 	SC_VERSION("scVersion"),
-	SERVER_ID("serverId"),						//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SERVER_ID. */
+	SERVER_ID("serverId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SERVICE_NAME. */
 	SERVICE_NAME("serviceName"),
-	SERVICE_REGISTRY_ID("serviceRegistryId"),	//TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SERVICE_REGISTRY_IDd. */
+	SERVICE_REGISTRY_ID("serviceRegistryId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SESSION_ID. */
 	SESSION_ID("sessionId"),
+	/** The SESSION_INFO. */
 	SESSION_INFO("sessionInfo");
 
 	/** The name. */
