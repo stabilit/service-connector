@@ -45,10 +45,7 @@ public abstract class RequestAdapter implements IRequest {
 		this.message = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getSCMP()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessage() {
 		if (message == null) {
@@ -62,64 +59,43 @@ public abstract class RequestAdapter implements IRequest {
 		return message;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#setSCMP(com.stabilit.sc.scmp.SCMP)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setMessage(SCMPMessage message) {
 		this.message = message;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getContext()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IRequestContext getContext() {
 		return requestContext;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getAttribute(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(String key) {
 		return mapBean.getAttribute(key);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#setAttribute(java.lang.String, java.lang.Object)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(String key, Object value) {
 		mapBean.setAttribute(key, value);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getAttributeMapBean()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public MapBean<Object> getAttributeMapBean() {
 		return mapBean;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getSocketAddress()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#read()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void read() throws Exception {
 		if (message == null) {
@@ -127,20 +103,14 @@ public abstract class RequestAdapter implements IRequest {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#readNext()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void readNext() throws Exception {
 		this.message = null;
 		read();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.stabilit.sc.scmp.IRequest#getKey()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMPMessage message = this.getMessage();
