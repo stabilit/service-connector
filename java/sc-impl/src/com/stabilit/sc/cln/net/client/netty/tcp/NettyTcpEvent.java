@@ -19,9 +19,11 @@
 /**
  * 
  */
-package com.stabilit.sc.cln.net.client.netty;
+package com.stabilit.sc.cln.net.client.netty.tcp;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+
+import com.stabilit.sc.cln.net.client.netty.NettyEvent;
 
 /**
  * The Class NettyTcpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching

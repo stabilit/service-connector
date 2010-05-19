@@ -91,9 +91,10 @@ public class SrvDataCommand extends CommandAdapter {
 		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
 		// SCMPHeaderType.COMPRESSION).toString());
 
-		if ("large".equals(message.getBody()) || message.isPart()) {
+		if (message.getBody().toString().startsWith("large") || message.isPart()) {
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
+			sb.append("large:");
 			for (i = 0; i < 10000; i++) {
 				if (sb.length() > 60000) {
 					break;

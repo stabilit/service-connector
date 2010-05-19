@@ -19,7 +19,12 @@ package com.stabilit.sc.cln.net.client.netty.tcp;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timer;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
@@ -29,11 +34,21 @@ import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
  */
 public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 
+	private Timer timer;
+
+	public NettyTcpClientPipelineFactory() {
+		this.timer = new HashedWheelTimer();
+	}
+
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
+		// responsible for observing read timeout - Netty
+//		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
+		// responsible for observing write timeout - Netty
+		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handling response
 		pipeline.addLast("handler", new NettyTcpClientResponseHandler());
 		return pipeline;

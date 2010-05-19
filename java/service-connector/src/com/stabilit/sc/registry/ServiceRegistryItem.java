@@ -133,6 +133,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 		client.disconnect();
+		client.destroy();
 		this.allocated = false;
 	}
 

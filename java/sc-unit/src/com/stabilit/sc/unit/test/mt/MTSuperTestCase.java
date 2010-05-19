@@ -61,12 +61,6 @@ public abstract class MTSuperTestCase {
 				new String[] { "sc-unit-nio-tcp.properties" });
 	}
 
-	// @Parameters
-	// public static Collection<String[]> getParameters() {
-	// String[][] sa = {{"sc-unit-netty-tcp.properties"}};
-	// return Arrays.asList(sa);
-	// }
-
 	@Before
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
@@ -92,6 +86,7 @@ public abstract class MTSuperTestCase {
 	public void tearDown() throws Exception {
 		for (IClient client : this.clientList) {
 			client.disconnect();
+			client.destroy();
 		}
 	}
 

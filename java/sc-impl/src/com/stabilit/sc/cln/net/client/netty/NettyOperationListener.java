@@ -72,5 +72,5 @@ public class NettyOperationListener implements ChannelFutureListener {
 	@Override
 	public void operationComplete(ChannelFuture future) throws Exception {
 		answer.offer(future);
-	}
+	}	
 }

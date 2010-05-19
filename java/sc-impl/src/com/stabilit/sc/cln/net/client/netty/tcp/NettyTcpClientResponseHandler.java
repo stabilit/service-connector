@@ -29,7 +29,6 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyEvent;
 import com.stabilit.sc.cln.net.client.netty.NettyExceptionEvent;
-import com.stabilit.sc.cln.net.client.netty.NettyTcpEvent;
 import com.stabilit.sc.listener.ExceptionPoint;
 
 /**

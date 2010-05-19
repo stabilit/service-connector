@@ -22,7 +22,12 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
+import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timer;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
@@ -31,6 +36,12 @@ import com.stabilit.sc.scmp.SCMPMessage;
  * @author JTraber
  */
 public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
+
+	private Timer timer;
+
+	public NettyHttpClientPipelineFactory() {
+		this.timer = new HashedWheelTimer();
+	}
 
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
@@ -41,6 +52,10 @@ public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("encoder", new HttpRequestEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMPMessage.LARGE_MESSAGE_LIMIT + 4 << 10));
+		// responsible for observing read timeout - Netty
+		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
+		// responsible for observing write timeout - Netty
+		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handle responses - Stabilit
 		pipeline.addLast("handler", new NettyHttpClientResponseHandler());
 		return pipeline;

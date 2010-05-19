@@ -100,7 +100,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	 * @throws Exception
 	 *             the exception
 	 */
-	// @Test
+	@Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();

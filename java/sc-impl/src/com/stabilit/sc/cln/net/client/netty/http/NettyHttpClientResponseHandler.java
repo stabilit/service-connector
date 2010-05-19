@@ -29,7 +29,6 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import com.stabilit.sc.cln.net.CommunicationException;
 import com.stabilit.sc.cln.net.client.netty.NettyEvent;
 import com.stabilit.sc.cln.net.client.netty.NettyExceptionEvent;
-import com.stabilit.sc.cln.net.client.netty.NettyHttpEvent;
 import com.stabilit.sc.listener.ExceptionPoint;
 
 /**

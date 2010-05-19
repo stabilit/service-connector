@@ -40,8 +40,7 @@ public class EchoSCTestCase extends SuperTestCase {
 	 * The Constructor.
 	 * 
 	 * @param fileName the file name
-	 */
-	
+	 */	
 	public EchoSCTestCase(String fileName) {
 		super(fileName);
 	}

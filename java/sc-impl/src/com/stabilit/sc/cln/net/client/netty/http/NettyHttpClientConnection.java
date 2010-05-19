@@ -27,6 +27,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
@@ -41,11 +42,10 @@ import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.RuntimePoint;
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**
@@ -73,6 +73,10 @@ public class NettyHttpClientConnection implements IClientConnection {
 	private NioClientSocketChannelFactory channelFactory;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
+	/** The local socket address */
+	private InetSocketAddress localSocketAddress;
+	/** The channel pipeline factory */
+	private ChannelPipelineFactory pipelineFactory;
 
 	/**
 	 * Instantiates a new netty http client connection.
@@ -87,6 +91,8 @@ public class NettyHttpClientConnection implements IClientConnection {
 		this.operationListener = null;
 		this.channelFactory = null;
 		this.encoderDecoder = null;
+		this.localSocketAddress = null;
+		this.pipelineFactory = new NettyHttpClientPipelineFactory();
 	}
 
 	/** {@inheritDoc} */
@@ -96,27 +102,24 @@ public class NettyHttpClientConnection implements IClientConnection {
 		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
 		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
 		 */
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
-				Executors.newFixedThreadPool(numberOfThreads / 4));
+		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
+				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-//		this.bootstrap.setOption("connectTimeoutMillis", 0);
-		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
+		// this.bootstrap.setOption("connectTimeoutMillis", 1000000);
+		this.bootstrap.setPipelineFactory(pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-		if (future.isSuccess() == false) {
-			RuntimePoint.getInstance().fireRuntime(this, "Connect failed, remote address: " + host + ":" + port);
-//			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
-		}
-		// waits until operation is done
-		operationListener = new NettyOperationListener();
+		this.operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		try {
+			// waits until operation is done
 			this.channel = operationListener.awaitUninterruptibly().getChannel();
+			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionPoint.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 	}
 
 	/** {@inheritDoc} */
@@ -130,7 +133,7 @@ public class NettyHttpClientConnection implements IClientConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
 		this.bootstrap.releaseExternalResources();
 	}
 
@@ -175,13 +178,13 @@ public class NettyHttpClientConnection implements IClientConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionPoint.getInstance().fireWrite(this, this.port, buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer); // logs inside
 		// gets response message synchronous
 		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, this.port, buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireRead(this, this.localSocketAddress.getPort(), buffer); // logs inside
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);

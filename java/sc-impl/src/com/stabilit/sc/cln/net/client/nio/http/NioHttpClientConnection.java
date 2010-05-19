@@ -66,14 +66,14 @@ public class NioHttpClientConnection implements IClientConnection {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
-		ConnectionPoint.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.socketChannel.socket().getLocalPort());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
 		socketChannel.close();
-		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.socketChannel.socket().getLocalPort());
 	}
 
 	/** {@inheritDoc} */
@@ -89,8 +89,7 @@ public class NioHttpClientConnection implements IClientConnection {
 		streamHttpUtil.writeRequestSCMP(baos, inetSocketAddress.getHostName(), scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
-				byteWriteBuffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(), byteWriteBuffer);
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
@@ -104,8 +103,8 @@ public class NioHttpClientConnection implements IClientConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
-				byteReadBuffer, 0, bytesRead);
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), byteReadBuffer,
+				0, bytesRead);
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);

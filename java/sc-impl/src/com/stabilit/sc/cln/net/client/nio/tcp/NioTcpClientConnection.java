@@ -65,14 +65,14 @@ public class NioTcpClientConnection implements IClientConnection {
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionPoint.getInstance().fireConnect(this, this.port);
+		ConnectionPoint.getInstance().fireConnect(this, this.socketChannel.socket().getLocalPort());
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionPoint.getInstance().fireDisconnect(this, this.port);
+		ConnectionPoint.getInstance().fireDisconnect(this, this.socketChannel.socket().getLocalPort());
 		socketChannel.close();
 	}
 
@@ -89,8 +89,7 @@ public class NioTcpClientConnection implements IClientConnection {
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionPoint.getInstance().fireWrite(this, this.port, byteWriteBuffer); // logs inside if
-		// registered
+		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(), byteWriteBuffer);
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
@@ -106,7 +105,8 @@ public class NioTcpClientConnection implements IClientConnection {
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, this.port, byteReadBuffer, 0, bytesRead);
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), byteReadBuffer,
+				0, bytesRead);
 
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
