@@ -27,11 +27,10 @@ import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -60,7 +59,8 @@ public class SrvDataCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
 				.getCurrentInstance();
-		SCMPMessage scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);

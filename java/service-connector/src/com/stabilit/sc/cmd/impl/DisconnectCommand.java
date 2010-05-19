@@ -25,8 +25,8 @@ import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPError;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
@@ -95,7 +95,8 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough {
 		}
 		// remove client entry from connection registry
 		connectionRegistry.remove(socketAddress);
-		SCMPReply scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
 		response.setSCMP(scmpReply);
 	}

@@ -99,13 +99,13 @@ public class NettyHttpClientConnection implements IClientConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
 				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.bootstrap.setOption("connectTimeoutMillis", 0);
+//		this.bootstrap.setOption("connectTimeoutMillis", 0);
 		this.bootstrap.setPipelineFactory(new NettyHttpClientPipelineFactory());
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 		if (future.isSuccess() == false) {
 			RuntimePoint.getInstance().fireRuntime(this, "Connect failed, remote address: " + host + ":" + port);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+//			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		// waits until operation is done
 		operationListener = new NettyOperationListener();

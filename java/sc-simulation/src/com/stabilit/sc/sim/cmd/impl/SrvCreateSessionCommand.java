@@ -26,10 +26,9 @@ import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.sim.registry.SimulationSessionRegistry;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
@@ -61,7 +60,8 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 		String sessionId = message.getSessionId();
 		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
-		SCMPReply scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 
 		if (mapBean == null) {
 			Session session = new Session();

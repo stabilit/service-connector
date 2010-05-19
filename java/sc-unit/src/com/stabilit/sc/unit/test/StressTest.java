@@ -19,8 +19,6 @@ package com.stabilit.sc.unit.test;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.cln.call.SCMPConnectCall;
 import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.scmp.SCMPClientSession;

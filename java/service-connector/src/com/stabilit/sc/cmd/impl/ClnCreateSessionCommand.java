@@ -37,7 +37,6 @@ import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.Session;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
@@ -149,7 +148,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		sessionRegistry.add(session.getId(), session);
 
 		// creating reply
-		SCMPReply scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);

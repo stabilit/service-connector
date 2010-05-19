@@ -24,10 +24,9 @@ import com.stabilit.sc.cmd.impl.CommandAdapter;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -72,7 +71,8 @@ public class SrvEchoCommand extends CommandAdapter {
 			System.out.println("SrvEchoCommand empty body");
 		}
 
-		result = new SCMPReply();
+		result = new SCMPMessage();
+		result.setIsReply(true);
 		result.setBody(message.getBody());
 		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);

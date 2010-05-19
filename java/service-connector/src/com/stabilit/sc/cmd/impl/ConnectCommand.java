@@ -30,12 +30,12 @@ import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.internal.KeepAlive;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.util.DateTimeUtility;
 import com.stabilit.sc.util.MapBean;
 import com.stabilit.sc.util.ValidatorUtility;
 
@@ -103,9 +103,10 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		// add entry in connection registry for current client
 		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
 
-		SCMPReply scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setLocalDateTime();
+		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
 	}
 

@@ -23,10 +23,12 @@ import com.stabilit.sc.registry.ServiceRegistry;
 import com.stabilit.sc.registry.SessionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.sc.util.DateTimeUtility;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used
@@ -79,9 +81,10 @@ public class InspectCommand extends CommandAdapter {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 
-		SCMPReply scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setLocalDateTime();
+		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		InspectMessage inspectMsg = new InspectMessage();
 
 		// dump internal registries

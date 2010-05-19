@@ -21,7 +21,6 @@ import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
 
@@ -72,7 +71,8 @@ public class EchoSCCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 
-		SCMPMessage scmpReply = new SCMPReply();
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
 		Object obj = message.getBody();
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(message.getSessionId());

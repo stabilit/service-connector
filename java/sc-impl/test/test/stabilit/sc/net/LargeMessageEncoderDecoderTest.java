@@ -27,13 +27,12 @@ import org.junit.Test;
 
 import com.stabilit.sc.net.EncoderDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPHeadlineKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.SCMPReply;
 import com.stabilit.sc.scmp.internal.SCMPPart;
 
 /**
@@ -54,7 +53,7 @@ public class LargeMessageEncoderDecoderTest {
 	/** The body length. */
 	private String bodyLength;
 	/** The body. */
-	private String body;	
+	private String body;
 	/** The encode scmp. */
 	private SCMPMessage encodeScmp;
 
@@ -293,7 +292,8 @@ public class LargeMessageEncoderDecoderTest {
 				+ "messageID=" + msgID + "\n" + "msgType=" + msgType.getRequestName() + "\n" + "bodyLength="
 				+ bodyLength + "\n\n" + body;
 
-		SCMPMessage encodeRes = new SCMPReply();
+		SCMPMessage encodeRes = new SCMPMessage();
+		encodeRes.setIsReply(true);
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
 

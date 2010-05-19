@@ -25,16 +25,22 @@ package com.stabilit.sc.cln.client;
 public interface IClientSession {
 
 	/**
+	 * Gets the session id.
+	 * 
 	 * @return the sessionId
 	 */
 	public abstract String getSessionId();
 
 	/**
+	 * Gets the service name.
+	 * 
 	 * @return the serviceName
 	 */
 	public abstract String getServiceName();
 
 	/**
+	 * Gets the session info.
+	 * 
 	 * @return the sessionInfo
 	 */
 	public abstract String getSessionInfo();
