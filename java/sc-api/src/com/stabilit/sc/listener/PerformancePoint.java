@@ -72,6 +72,9 @@ public final class PerformancePoint extends ListenerSupport<IPerformanceListener
 	 *            the method
 	 */
 	public void fireBegin(Object source, String method) {
+		if (this.isOn() == false) {
+			return;
+		}
 		if (getInstance().isEmpty() == false) {
 			PerformanceEvent performanceEvent = new PerformanceEvent(source, method);
 			PerformancePoint.getInstance().performanceBeginEvent(performanceEvent);
@@ -87,6 +90,9 @@ public final class PerformancePoint extends ListenerSupport<IPerformanceListener
 	 *            the method
 	 */
 	public void fireEnd(Object source, String method) {
+		if (this.isOn() == false) {
+			return;
+		}
 		if (getInstance().isEmpty() == false) {
 			PerformanceEvent performanceEvent = new PerformanceEvent(source, method);
 			PerformancePoint.getInstance().performanceEndEvent(performanceEvent);

@@ -49,9 +49,9 @@ import com.stabilit.sc.util.LockAdapter;
 import com.stabilit.sc.util.Lockable;
 
 /**
- * The Class NettyHttpServerRequestHandler. This class is responsible for handling Http requests. Is called from
- * the Netty framework by catching events (message received, exception caught). Functionality to handle large
- * messages is also inside.
+ * The Class NettyHttpServerRequestHandler. This class is responsible for handling Http requests. Is called from the
+ * Netty framework by catching events (message received, exception caught). Functionality to handle large messages is
+ * also inside.
  * 
  * @author JTraber
  */
@@ -98,7 +98,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		SCMPMessage scmpReq = request.getMessage();
 
 		if (scmpReq == null) {
-			//no scmp protocol used - nothing to return
+			// no scmp protocol used - nothing to return
 			return;
 		}
 
@@ -155,13 +155,9 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				if (LoggerPoint.getInstance().isDebug()) {
 					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
-				if (PerformancePoint.getInstance().isOn()) {
-					PerformancePoint.getInstance().fireBegin(command, "run");
-					command.run(request, response);
-					PerformancePoint.getInstance().fireEnd(command, "run");
-				} else {
-					command.run(request, response);
-				}
+				PerformancePoint.getInstance().fireBegin(command, "run");
+				command.run(request, response);
+				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (Throwable ex) {
 				ExceptionPoint.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {

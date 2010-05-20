@@ -48,9 +48,9 @@ import com.stabilit.sc.util.LockAdapter;
 import com.stabilit.sc.util.Lockable;
 
 /**
- * The Class NettyTcpServerRequestHandler. This class is responsible for handling Tcp requests. Is called from the
- * Netty framework by catching events (message received, exception caught). Functionality to handle large messages
- * is also inside.
+ * The Class NettyTcpServerRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
+ * framework by catching events (message received, exception caught). Functionality to handle large messages is also
+ * inside.
  * 
  * @author JTraber
  */
@@ -95,10 +95,10 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 		SCMPMessage scmpReq = request.getMessage();
 
 		if (scmpReq == null) {
-			//no scmp protocol used - nothing to return
+			// no scmp protocol used - nothing to return
 			return;
 		}
-		
+
 		if (this.compositeSender != null && scmpReq.isPart()) {
 			// sending of a large response has already been started and incoming scmp is a pull request
 			if (this.compositeSender.hasNext()) {
@@ -150,13 +150,9 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 				if (LoggerPoint.getInstance().isDebug()) {
 					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
-				if (PerformancePoint.getInstance().isOn()) {
-					PerformancePoint.getInstance().fireBegin(command, "run");
-					command.run(request, response);
-					PerformancePoint.getInstance().fireEnd(command, "run");
-				} else {
-					command.run(request, response);
-				}
+				PerformancePoint.getInstance().fireBegin(command, "run");
+				command.run(request, response);
+				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (Exception ex) {
 				ExceptionPoint.getInstance().fireException(this, ex);
 				if (ex instanceof IFaultResponse) {

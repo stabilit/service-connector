@@ -28,8 +28,8 @@ import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Client. Implements a general behavior of a client. Defines how to connect/disconnect, send/receive has
- * to process. Handling of large request/response is defined on this level.
+ * The Class Client. Implements a general behavior of a client. Defines how to connect/disconnect, send/receive has to
+ * process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -92,29 +92,20 @@ public class Client implements IClient {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
-		if (PerformancePoint.getInstance().isOn()) {
-			try {
-				PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
-				SCMPMessage ret = null;
-				// differ if message is large or not, sending procedure is different
-				if (message.isLargeMessage()) {
-					ret = sendLargeSCMPAndReceive(message);
-				} else {
-					ret = sendSmallSCMPAndReceive(message);
-				}
-				return ret;
-			} finally {
-				PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
+
+		try {
+			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+			SCMPMessage ret = null;
+			// differ if message is large or not, sending procedure is different
+			if (message.isLargeMessage()) {
+				ret = sendLargeSCMPAndReceive(message);
+			} else {
+				ret = sendSmallSCMPAndReceive(message);
 			}
-		}		
-		SCMPMessage ret = null;
-		// differ if message is large or not, sending procedure is different
-		if (message.isLargeMessage()) {
-			ret = sendLargeSCMPAndReceive(message);
-		} else {
-			ret = sendSmallSCMPAndReceive(message);
+			return ret;
+		} finally {
+			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
 		}
-		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -203,8 +194,8 @@ public class Client implements IClient {
 			if (scmpLargeRequest.hasNext() == false) {
 				if (scmp.isGroup()) {
 					/*
-					 * client processes group call, he needs to get the response - happens in special case: client
-					 * sends a single part of a group but content is to large and we need to split
+					 * client processes group call, he needs to get the response - happens in special case: client sends
+					 * a single part of a group but content is to large and we need to split
 					 */
 					return ret;
 				}

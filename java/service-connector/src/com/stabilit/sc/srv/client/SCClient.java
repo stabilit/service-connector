@@ -55,14 +55,11 @@ public class SCClient extends Client {
 	 */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		if (PerformancePoint.getInstance().isOn()) {
-			try {
-				PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
-				return clientConnection.sendAndReceive(scmp);
-			} finally {
-				PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			}
+		try {
+			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+			return clientConnection.sendAndReceive(scmp);
+		} finally {
+			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
 		}
-		return clientConnection.sendAndReceive(scmp);
 	}
 }

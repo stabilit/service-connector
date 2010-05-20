@@ -42,8 +42,8 @@ import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.srv.server.IServer;
 
 /**
- * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a
- * command and deals with large messages.
+ * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a command
+ * and deals with large messages.
  */
 public class RequestThread implements Runnable {
 
@@ -120,16 +120,11 @@ public class RequestThread implements Runnable {
 					try {
 						commandValidator.validate(request);
 						if (LoggerPoint.getInstance().isDebug()) {
-							LoggerPoint.getInstance().fireDebug(this,
-									"Run command [" + command.getKey() + "]");
+							LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 						}
-						if (PerformancePoint.getInstance().isOn()) {
-							PerformancePoint.getInstance().fireBegin(command, "run");
-							command.run(request, response);
-							PerformancePoint.getInstance().fireEnd(command, "run");
-						} else {
-							command.run(request, response);
-						}
+						PerformancePoint.getInstance().fireBegin(command, "run");
+						command.run(request, response);
+						PerformancePoint.getInstance().fireEnd(command, "run");
 					} catch (Exception ex) {
 						ExceptionPoint.getInstance().fireException(this, ex);
 						if (ex instanceof IFaultResponse) {
@@ -174,8 +169,7 @@ public class RequestThread implements Runnable {
 		} catch (Throwable e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			try {
-				ConnectionPoint.getInstance().fireDisconnect(this,
-						this.socketChannel.socket().getLocalPort());
+				ConnectionPoint.getInstance().fireDisconnect(this, this.socketChannel.socket().getLocalPort());
 				socketChannel.close();
 			} catch (IOException ex) {
 				ExceptionPoint.getInstance().fireException(this, ex);
