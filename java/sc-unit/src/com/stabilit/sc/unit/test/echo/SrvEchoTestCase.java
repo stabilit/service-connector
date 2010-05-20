@@ -93,9 +93,9 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	}
 
 	/**
-	 * Invoke multiple session srv echo test. Out of memory test. If threads are not stopped and destroyed properly
-	 * an out of memory exception on SC will occur. If number of sockets on the operating system is delimited test
-	 * will end before regular end is reached.
+	 * Invoke multiple session srv echo test. Out of memory test. If threads are not stopped and destroyed properly an
+	 * out of memory exception on SC will occur. If number of sockets on the operating system is delimited test will end
+	 * before regular end is reached.
 	 * 
 	 * @throws Exception
 	 *             the exception
