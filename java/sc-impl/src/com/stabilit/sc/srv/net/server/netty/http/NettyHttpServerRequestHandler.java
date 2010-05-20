@@ -93,7 +93,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
-		SocketAddress socketAddress = channel.getLocalAddress();
+		SocketAddress socketAddress = channel.getRemoteAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 

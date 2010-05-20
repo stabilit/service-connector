@@ -26,8 +26,12 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
+import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.sc.cln.client.IClientConnection;
 import com.stabilit.sc.cln.net.CommunicationException;
@@ -134,7 +138,7 @@ public class NettyTcpClientConnection implements IClientConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		this.bootstrap.releaseExternalResources();
+		this.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
@@ -191,5 +195,20 @@ public class NettyTcpClientConnection implements IClientConnection {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
+	}
+	
+	/**
+	 * Release external resources.
+	 */
+	private void releaseExternalResources() {
+		ChannelPipeline pipeline = this.channel.getPipeline();
+		// release resources in write timeout handler
+		ExternalResourceReleasable externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
+		externalResourceReleasable.releaseExternalResources();
+		// release resources in read timeout handler
+		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);
+		externalResourceReleasable.releaseExternalResources();
+		// release resources in client connection
+		this.bootstrap.releaseExternalResources();
 	}
 }

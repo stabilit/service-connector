@@ -46,7 +46,7 @@ public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// responsible for observing read timeout - Netty
-//		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
+		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
 		// responsible for observing write timeout - Netty
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handling response

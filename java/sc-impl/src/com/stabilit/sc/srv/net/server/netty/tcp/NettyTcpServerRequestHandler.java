@@ -90,7 +90,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
+		SocketAddress socketAddress = ctx.getChannel().getRemoteAddress();
 		IRequest request = new NettyTcpRequest(event, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 
