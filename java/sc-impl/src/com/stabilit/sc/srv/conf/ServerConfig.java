@@ -37,6 +37,8 @@ public class ServerConfig {
 	private Properties props;
 	/** The server configuration list. */
 	private List<ServerConfigItem> serverConfigList;
+	
+	private String loggerKey;
 
 	/**
 	 * Instantiates a new server configuration.
@@ -44,6 +46,7 @@ public class ServerConfig {
 	public ServerConfig() {
 		serverConfigList = null;
 		props = null;
+		loggerKey = null;
 	}
 
 	/**
@@ -77,6 +80,15 @@ public class ServerConfig {
 			serverConfig.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
+		
+		this.loggerKey = props.getProperty("root.logger");
+	}
+	
+	/**
+	 * @return the loggerKey
+	 */
+	public String getLoggerKey() {
+		return loggerKey;
 	}
 
 	/**

@@ -24,7 +24,6 @@ import com.stabilit.sc.factory.IFactoryable;
  * The Interface ILogger. Abstracts loggers.
  */
 public interface ILogger extends IFactoryable {
-
 	/**
 	 * Logs an object.
 	 * 
@@ -90,4 +89,59 @@ public interface ILogger extends IFactoryable {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void log(Level level, String msg) throws IOException;
+
+	/**
+	 * Log error.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void logError(String msg) throws IOException;
+
+	/**
+	 * Log warn.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void logWarn(String msg) throws IOException;
+
+	/**
+	 * Log info.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void logInfo(String msg) throws IOException;
+
+	/**
+	 * Log debug.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void logDebug(String msg) throws IOException;
+
+	/**
+	 * Log trace.
+	 * 
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void logTrace(String msg) throws IOException;
+
+	public ILogger newInstance(ILoggerDecorator loggerDecorator);
+
+	@Override
+	public ILogger newInstance();
 }

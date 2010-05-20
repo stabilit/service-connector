@@ -19,66 +19,42 @@ package com.stabilit.sc.log.impl;
 import java.io.IOException;
 
 import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionEvent;
 import com.stabilit.sc.listener.IExceptionListener;
-import com.stabilit.sc.log.SimpleLogger;
+import com.stabilit.sc.log.ILogger;
+import com.stabilit.sc.log.ILoggerDecorator;
 
-/**
- * The Class ExceptionLogger. Provides functionality of logging an <code>ExceptionEvent</code>.
- * 
- * @author JTraber
- */
-public class ExceptionLogger extends SimpleLogger implements IExceptionListener {
+public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 
-	/**
-	 * Instantiates a new exception logger.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	ExceptionLogger() throws Exception {
-		this(IConstants.LOG_DIR, IConstants.EXCEPTION_LOG_FILE_NAME);
+	private ILogger logger;
+
+	ExceptionLogger(ILogger logger) {
+		this.logger = logger.newInstance(this);
 	}
-
-	/**
-	 * Instantiates a new exception logger.
-	 * 
-	 * @param dir
-	 *            the dir
-	 * @param fileName
-	 *            the file name
-	 * @throws Exception
-	 *             the exception
-	 */
-	ExceptionLogger(String dir, String fileName) throws Exception {
-		super(dir, fileName);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer) throws IOException {
-		super.log(buffer);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset, length);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
 		try {
-			this.log(exceptionEvent.getThrowable() + ": " + exceptionEvent.getThrowable().getCause());
-			this.log("\r\n");
+			this.logger.log(exceptionEvent.getThrowable() + ": " + exceptionEvent.getThrowable().getCause());
+			this.logger.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public ILoggerDecorator newInstance() {
+		return new ExceptionLogger(this.logger);
+	}
+
+	@Override
+	public String getLogDir() {
+		return IConstants.LOG_DIR;
+	}
+
+	@Override
+	public String getLogFileName() {
+		return IConstants.EXCEPTION_LOG_FILE_NAME;
 	}
 }

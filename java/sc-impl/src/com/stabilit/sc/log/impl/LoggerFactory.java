@@ -16,9 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.log.impl;
 
-import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.Factory;
+import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.log.ILogger;
+import com.stabilit.sc.log.ILoggerDecorator;
 
 /**
  * A factory for creating Logger objects. Provides access to the concrete Logger instances.
@@ -29,38 +30,62 @@ public final class LoggerFactory extends Factory {
 
 	/** The logger factory. */
 	private static LoggerFactory loggerFactory = new LoggerFactory();
+	private static boolean init = false;
+
+	private static final String LOG4J_KEY = "log4j";
+	private static final String SIMPLE_KEY = "simple";
+	private static final String DEF_LOGGER = LoggerFactory.SIMPLE_KEY;
+
+	/**
+	 * Instantiates a new logger factory.
+	 */
+	private LoggerFactory() {
+	}
 
 	/**
 	 * Gets the current logger factory.
 	 * 
 	 * @return the current logger factory
 	 */
-	public static LoggerFactory getCurrentLoggerFactory() {
+	public static LoggerFactory getCurrentLoggerFactory(String key) {
+		if (LoggerFactory.init) {
+			return loggerFactory;
+		}
+		loggerFactory.init(key);
 		return loggerFactory;
 	}
 
-	/**
-	 * Instantiates a new logger factory.
-	 */
-	private LoggerFactory() {
+	private void init(String key) {
+		if (key == null) {
+			key = DEF_LOGGER;
+		}
+		LoggerFactory.init = true;
+		ILoggerDecorator loggerDecorator;
 		ILogger logger;
 		try {
+			// simple logger
+			logger = new SimpleLogger();
+			this.add(SIMPLE_KEY, logger);
+			// log4j logger
+			logger = new Log4jLogger();
+			this.add(LOG4J_KEY, logger);
+
 			// Connection logger
-			logger = new ConnectionLogger(IConstants.LOG_DIR, IConstants.CONNECTION_LOG_FILE_NAME);
-			this.add(ConnectionLogger.class, logger);
+			loggerDecorator = new ConnectionLogger((ILogger) this.getInstance(key));
+			this.add(ConnectionLogger.class, loggerDecorator);
 			// Exception logger
-			logger = new ExceptionLogger(IConstants.LOG_DIR, IConstants.EXCEPTION_LOG_FILE_NAME);
-			this.add(ExceptionLogger.class, logger);
+			loggerDecorator = new ExceptionLogger((ILogger) this.getInstance(key));
+			this.add(ExceptionLogger.class, loggerDecorator);
 			// Performance logger
-			logger = new PerformanceLogger(IConstants.LOG_DIR, IConstants.PERFORMANCE_LOG_FILE_NAME);
-			this.add(PerformanceLogger.class, logger);
+			loggerDecorator = new PerformanceLogger((ILogger) this.getInstance(key));
+			this.add(PerformanceLogger.class, loggerDecorator);
 			// Runtime logger
-			logger = new RuntimeLogger(IConstants.LOG_DIR, IConstants.RUNTIME_LOG_FILE_NAME);
-			this.add(RuntimeLogger.class, logger);
+			loggerDecorator = new RuntimeLogger((ILogger) this.getInstance(key));
+			this.add(RuntimeLogger.class, loggerDecorator);
 			// General logger
-			logger = new GeneralLogger(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
-			this.add(GeneralLogger.class, logger);
-			this.add(DEFAULT, logger);
+			loggerDecorator = new GeneralLogger((ILogger) this.getInstance(key));
+			this.add(GeneralLogger.class, loggerDecorator);
+			this.add(DEFAULT, loggerDecorator);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,14 +93,14 @@ public final class LoggerFactory extends Factory {
 
 	/** {@inheritDoc} */
 	@Override
-	public ILogger newInstance() {
-		return newInstance(DEFAULT);
+	public IFactoryable newInstance() {
+		return newInstance(DEF_LOGGER);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ILogger newInstance(Object key) {
-		ILogger logger = (ILogger) super.newInstance(key);
+	public IFactoryable newInstance(Object key) {
+		IFactoryable logger = super.newInstance(key);
 		return logger;
 	}
 }

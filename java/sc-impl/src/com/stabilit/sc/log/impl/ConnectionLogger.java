@@ -20,69 +20,30 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ConnectionEvent;
 import com.stabilit.sc.listener.IConnectionListener;
-import com.stabilit.sc.log.SimpleLogger;
+import com.stabilit.sc.log.ILogger;
+import com.stabilit.sc.log.ILoggerDecorator;
 
-/**
- * The Class ConnectionLogger. Provides functionality of logging a <code>ConnectionEvent</code>.
- * 
- * @author JTraber
- */
-public class ConnectionLogger extends SimpleLogger implements IConnectionListener {
+public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 
-	/**
-	 * Instantiates a new connection logger.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	ConnectionLogger() throws Exception {
-		this(IConstants.LOG_DIR, IConstants.CONNECTION_LOG_FILE_NAME);
-	}
+	private ILogger logger;
 
-	/**
-	 * Instantiates a new connection logger.
-	 * 
-	 * @param dir
-	 *            the directory
-	 * @param fileName
-	 *            the file name
-	 * @throws Exception
-	 *             the exception
-	 */
-	ConnectionLogger(String dir, String fileName) throws Exception {
-		super(dir, fileName);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer) throws IOException {
-		super.log(buffer);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset, length);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
+	ConnectionLogger(ILogger logger) {
+		this.logger = logger.newInstance(this);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void connectEvent(ConnectionEvent connectionEvent) {
 		try {
-			this.log("------- connect -------\r\n");
-			this.log("connect by class " + connectionEvent.getSource().getClass().getName());
-			this.log(" - ");
-			this.log(InetAddress.getLocalHost().toString());
-			this.log(":");
-			this.log(String.valueOf(connectionEvent.getPort()));
-			this.log("\r\n");
+			this.logger.log("------- connect -------\r\n");
+			this.logger.log("connect by class " + connectionEvent.getSource().getClass().getName());
+			this.logger.log(" - ");
+			this.logger.log(InetAddress.getLocalHost().toString());
+			this.logger.log(":");
+			this.logger.log(String.valueOf(connectionEvent.getPort()));
+			this.logger.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -92,13 +53,13 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	@Override
 	public synchronized void disconnectEvent(ConnectionEvent connectionEvent) {
 		try {
-			this.log("------- disconnect -------\r\n");
-			this.log("disconnect by class " + connectionEvent.getSource().getClass().getName());
-			this.log(" - ");
-			this.log(InetAddress.getLocalHost().toString());
-			this.log(":");
-			this.log(String.valueOf(connectionEvent.getPort()));
-			this.log("\r\n");
+			this.logger.log("------- disconnect -------\r\n");
+			this.logger.log("disconnect by class " + connectionEvent.getSource().getClass().getName());
+			this.logger.log(" - ");
+			this.logger.log(InetAddress.getLocalHost().toString());
+			this.logger.log(":");
+			this.logger.log(String.valueOf(connectionEvent.getPort()));
+			this.logger.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -109,17 +70,17 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	public synchronized void readEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.log(">>>>>>>> ");
-			this.log(InetAddress.getLocalHost().toString());
-			this.log(":");
-			this.log(String.valueOf(connectionEvent.getPort()));
-			this.log(" - read >>>>>>>\r\n");
+			this.logger.log(">>>>>>>> ");
+			this.logger.log(InetAddress.getLocalHost().toString());
+			this.logger.log(":");
+			this.logger.log(String.valueOf(connectionEvent.getPort()));
+			this.logger.log(" - read >>>>>>>\r\n");
 			if (length > 0) {
-				this.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
+				this.logger.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
 			} else {
-				this.log((byte[]) connectionEvent.getData());
+				this.logger.log((byte[]) connectionEvent.getData());
 			}
-			this.log("\r\n");
+			this.logger.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -130,19 +91,34 @@ public class ConnectionLogger extends SimpleLogger implements IConnectionListene
 	public synchronized void writeEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.log("<<<<<<<< ");
-			this.log(InetAddress.getLocalHost().toString());
-			this.log(":");
-			this.log(String.valueOf(connectionEvent.getPort()));
-			this.log(" - write <<<<<<<<\r\n");
+			this.logger.log("<<<<<<<< ");
+			this.logger.log(InetAddress.getLocalHost().toString());
+			this.logger.log(":");
+			this.logger.log(String.valueOf(connectionEvent.getPort()));
+			this.logger.log(" - write <<<<<<<<\r\n");
 			if (length > 0) {
-				this.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
+				this.logger.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
 			} else {
-				this.log((byte[]) connectionEvent.getData());
+				this.logger.log((byte[]) connectionEvent.getData());
 			}
-			this.log("\r\n");
+			this.logger.log("\r\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public ILoggerDecorator newInstance() {
+		return new ConnectionLogger(this.logger);
+	}
+
+	@Override
+	public String getLogDir() {
+		return IConstants.LOG_DIR;
+	}
+
+	@Override
+	public String getLogFileName() {
+		return IConstants.CONNECTION_LOG_FILE_NAME;
 	}
 }

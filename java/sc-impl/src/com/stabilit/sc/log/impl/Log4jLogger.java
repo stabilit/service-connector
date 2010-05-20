@@ -18,65 +18,88 @@ package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.listener.IPerformanceListener;
-import com.stabilit.sc.listener.PerformanceEvent;
+import org.apache.log4j.Logger;
+
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.sc.log.Level;
 
-public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator {
+public class Log4jLogger implements ILogger {
 
-	/** The thread local is needed to save timestamps in running thread. */
-	private ThreadLocal<PerformanceEvent> threadLocal;
+	private Logger log;
 
-	private ILogger logger;
+	Log4jLogger() {
+	}
 
-	PerformanceLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
-		this.threadLocal = new ThreadLocal<PerformanceEvent>();
+	private Log4jLogger(Logger log) {
+		this.log = log;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void begin(PerformanceEvent performanceEvent) {
-		this.threadLocal.set(performanceEvent);
-	}
-
-	/** {@inheritDoc} */
-	public synchronized void end(PerformanceEvent performanceEvent) {
-		try {
-			PerformanceEvent beginEvent = this.threadLocal.get();
-			String beginMethodName = beginEvent.getMethodName();
-			long beginTime = beginEvent.getTime();
-			long endTime = performanceEvent.getTime();
-			Object source = performanceEvent.getSource();
-			this.logger.log("PRF ");
-			this.logger.log(source.getClass().getSimpleName());
-			this.logger.log(".");
-			this.logger.log(beginMethodName);
-			this.logger.log(" time(ms) ");
-			this.logger.log(String.valueOf((endTime - beginTime) / 1000000));
-			this.logger.log(".");
-			this.logger.log(String.valueOf((endTime - beginTime) % 1000000));
-			this.logger.log("\r\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void log(Object obj) throws IOException {
+		throw new IOException("not supported");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ILoggerDecorator newInstance() {
+	public void log(byte[] buffer) throws IOException {
+		this.log.info(buffer);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void log(byte[] buffer, int offset, int length) throws IOException {
+		this.log.info(buffer);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void log(String msg) throws IOException {
+		this.log.info(msg);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void log(Throwable t) throws IOException {
+		this.log.info(t);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void log(Level level, String msg) throws IOException {
+		this.log.info(msg);
+	}
+
+	public void logError(String msg) throws IOException {
+		this.log.error(msg);
+	}
+
+	public void logWarn(String msg) throws IOException {
+		this.log.warn(msg);
+	}
+
+	public void logInfo(String msg) throws IOException {
+		this.log.info(msg);
+	}
+
+	public void logDebug(String msg) throws IOException {
+		this.log.debug(msg);
+	}
+
+	public void logTrace(String msg) throws IOException {
+		this.log.trace(msg);
+	}
+
+	@Override
+	public ILogger newInstance() {
 		return this;
 	}
 
 	@Override
-	public String getLogDir() {
-		return IConstants.LOG_DIR;
-	}
-
-	@Override
-	public String getLogFileName() {
-		return IConstants.PERFORMANCE_LOG_FILE_NAME;
+	public ILogger newInstance(ILoggerDecorator loggerDecorator) {
+		Logger log = Logger.getLogger(loggerDecorator.getClass());
+		Log4jLogger log4jLogger = new Log4jLogger(log);
+		return log4jLogger;
 	}
 }

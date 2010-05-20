@@ -19,66 +19,27 @@ package com.stabilit.sc.log.impl;
 import java.io.IOException;
 
 import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ILoggerListener;
 import com.stabilit.sc.listener.LoggerEvent;
-import com.stabilit.sc.log.SimpleLogger;
+import com.stabilit.sc.log.ILogger;
+import com.stabilit.sc.log.ILoggerDecorator;
 
-/**
- * The Class GeneralLogger. Provides functionality of logging an <code>LoggerEvent</code>.
- * 
- * @author JTraber
- */
-public class GeneralLogger extends SimpleLogger implements ILoggerListener {
+public class GeneralLogger implements ILoggerListener, ILoggerDecorator {
 
-	/**
-	 * Instantiates a new general logger.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	GeneralLogger() throws Exception {
-		this(IConstants.LOG_DIR, IConstants.GENERAL_LOG_FILE_NAME);
-	}
+	private ILogger logger;
 
-	/**
-	 * Instantiates a new general logger.
-	 * 
-	 * @param dir
-	 *            the directory
-	 * @param fileName
-	 *            the file name
-	 * @throws Exception
-	 *             the exception
-	 */
-	GeneralLogger(String dir, String fileName) throws Exception {
-		super(dir, fileName);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer) throws IOException {
-		super.log(buffer);
-	}
-
-	/** {@inheritDoc} */
-	public void log(byte[] buffer, int offset, int length) throws IOException {
-		super.log(buffer, offset, length);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
+	GeneralLogger(ILogger logger) {
+		this.logger = logger.newInstance(this);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logEvent(LoggerEvent loggerEvent) {
 		try {
-			this.log(loggerEvent.getLevel().getName());
-			this.log("-");
-			this.log(loggerEvent.getText());
-			this.log("\r\n");
+			this.logger.log(loggerEvent.getLevel().getName());
+			this.logger.log("-");
+			this.logger.log(loggerEvent.getText());
+			this.logger.log("\r\n");
 			System.out.print(loggerEvent.getLevel().getName());
 			System.out.print("-");
 			System.out.print(loggerEvent.getText());
@@ -86,5 +47,21 @@ public class GeneralLogger extends SimpleLogger implements ILoggerListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public ILoggerDecorator newInstance() {
+		return this;
+	}
+	
+	@Override
+	public String getLogDir() {
+		return IConstants.LOG_DIR;
+	}
+
+	@Override
+	public String getLogFileName() {
+		return IConstants.GENERAL_LOG_FILE_NAME;
 	}
 }

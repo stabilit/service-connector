@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/sc-lib/lib/junit-4.8.1.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/junit/junit/4.8.1/junit-4.8.1-sources.jar"/>
 	<classpathentry kind="lib" path="/sc-lib/lib/netty-3.1.5.GA.jar" sourcepath="/sc-lib/lib/netty-3.1.5.GA-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-api"/>
+	<classpathentry kind="lib" path="/sc-lib/lib/log4j-1.2.15.jar" sourcepath="C:/Documents and Settings/JTraber/.m2/repository/log4j/log4j/1.2.15/log4j-1.2.15-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

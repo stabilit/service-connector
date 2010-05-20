@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log;
+package com.stabilit.sc.log.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -25,15 +26,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.stabilit.sc.log.ILogger;
+import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.sc.log.Level;
 import com.stabilit.sc.util.DateTimeUtility;
 
 /**
  * The Class SimpleLogger. A simple implementation of a logger.
  */
-public abstract class SimpleLogger implements ILogger {
+public class SimpleLogger implements ILogger {
 
 	/** The fos. */
-	private FileOutputStream fos;
+	FileOutputStream fos;
 	/** The pw. */
 	protected PrintWriter pw;
 	/** The dir. */
@@ -41,7 +45,7 @@ public abstract class SimpleLogger implements ILogger {
 	/** The file name. */
 	private String fileName;
 	/** The log file. */
-	private File logFile;
+	File logFile;
 	/** The date. */
 	protected Date date;
 	/** The date formatter. */
@@ -49,17 +53,10 @@ public abstract class SimpleLogger implements ILogger {
 	/** The time formatter. */
 	private SimpleDateFormat timeFormatter;
 
-	/**
-	 * Instantiates a new simple logger.
-	 * 
-	 * @param dir
-	 *            the dir
-	 * @param fileName
-	 *            the file name
-	 * @throws Exception
-	 *             the exception
-	 */
-	public SimpleLogger(String dir, String fileName) throws Exception {
+	SimpleLogger() {
+	}
+	
+	private SimpleLogger(String dir, String fileName) {
 		this.date = Calendar.getInstance().getTime();
 		this.dir = dir;
 		this.fileName = fileName;
@@ -74,7 +71,11 @@ public abstract class SimpleLogger implements ILogger {
 		}
 		String fullPath = this.dir + dateFormat + "-" + fileName;
 		logFile = new File(fullPath);
-		fos = new FileOutputStream(fullPath, true);
+		try {
+			fos = new FileOutputStream(fullPath, true);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
 
@@ -204,62 +205,32 @@ public abstract class SimpleLogger implements ILogger {
 		}
 	}
 
-	/**
-	 * Log error.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void logError(String msg) throws IOException {
 		this.log(Level.ERROR, msg);
 	}
 
-	/**
-	 * Log warn.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void logWarn(String msg) throws IOException {
 		this.log(Level.WARN, msg);
 	}
 
-	/**
-	 * Log info.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void logInfo(String msg) throws IOException {
 		this.log(Level.INFO, msg);
 	}
 
-	/**
-	 * Log debug.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void logDebug(String msg) throws IOException {
 		this.log(Level.DEBUG, msg);
 	}
 
-	/**
-	 * Log trace.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void logTrace(String msg) throws IOException {
 		this.log(Level.TRACE, msg);
 	}
@@ -280,5 +251,15 @@ public abstract class SimpleLogger implements ILogger {
 		sb.append(level.getLevel());
 		sb.append(" --> ");
 		return sb.toString();
+	}
+
+	@Override
+	public ILogger newInstance(ILoggerDecorator loggerDecorator) {
+		return new SimpleLogger(loggerDecorator.getLogDir(), loggerDecorator.getLogFileName());
+	}
+
+	@Override
+	public ILogger newInstance() {	
+		return this;
 	}
 }

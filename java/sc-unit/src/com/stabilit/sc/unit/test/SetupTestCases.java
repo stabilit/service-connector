@@ -17,6 +17,7 @@
 package com.stabilit.sc.unit.test;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.stabilit.sc.ServiceConnector;
 import com.stabilit.sc.listener.ConnectionPoint;
@@ -38,6 +39,7 @@ import com.stabilit.sc.log.impl.PerformanceLogger;
 import com.stabilit.sc.log.impl.RuntimeLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.sc.srv.conf.ServerConfig;
 import com.stabilit.sc.unit.UnitCommandFactory;
 
 /**
@@ -50,19 +52,20 @@ public class SetupTestCases {
 	private SetupTestCases() {
 	}
 
-	public static void init() {
+	public static void init() throws IOException {
+		ServerConfig config = new ServerConfig();
+		config.load("sc.properties");
+
 		deleteLog();
 		// setup loggers
 		try {
-			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory();
+			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
 			ConnectionPoint.getInstance().addListener(
 					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
 			ExceptionPoint.getInstance().addListener(
 					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-			RuntimePoint.getInstance().addListener(
-					(IRuntimeListener) loggerFactory.newInstance(RuntimeLogger.class));
-			LoggerPoint.getInstance().addListener(
-					(ILoggerListener) loggerFactory.newInstance(GeneralLogger.class));
+			RuntimePoint.getInstance().addListener((IRuntimeListener) loggerFactory.newInstance(RuntimeLogger.class));
+			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(GeneralLogger.class));
 			LoggerPoint.getInstance().setLevel(Level.DEBUG);
 			PerformancePoint.getInstance().addListener(
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
@@ -86,9 +89,9 @@ public class SetupTestCases {
 
 	public static void setupAll() {
 		if (setupTestCases == null) {
-			init();
-			setupTestCases = new SetupTestCases();
 			try {
+				init();
+				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				ServiceConnector.main(null);
 				Simulation.main(null);
@@ -100,9 +103,9 @@ public class SetupTestCases {
 
 	public static void setupSC() {
 		if (setupTestCases == null) {
-			init();
-			setupTestCases = new SetupTestCases();
 			try {
+				init();
+				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				ServiceConnector.main(null);
 			} catch (Exception e) {
