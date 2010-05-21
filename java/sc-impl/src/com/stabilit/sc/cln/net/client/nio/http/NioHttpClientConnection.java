@@ -29,8 +29,8 @@ import com.stabilit.sc.listener.ConnectionPoint;
 import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.net.SCMPStreamHttpUtil;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 
 /**

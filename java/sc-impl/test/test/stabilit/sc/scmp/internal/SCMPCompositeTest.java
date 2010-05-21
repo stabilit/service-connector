@@ -20,9 +20,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.sc.scmp.internal.SCMPPart;

@@ -36,13 +36,16 @@ public class ClientConfig {
 	private Properties props;
 	/** The client configuration item list. */
 	private List<ClientConfigItem> clientConfigItemList;
+	/** The logger key. */
+	private String loggerKey;
 
 	/**
 	 * Instantiates a new client configuration.
 	 */
 	public ClientConfig() {
-		clientConfigItemList = null;
-		props = null;
+		this.clientConfigItemList = null;
+		this.props = null;
+		this.loggerKey = null;
 	}
 
 	/**
@@ -76,6 +79,17 @@ public class ClientConfig {
 			clientConfigItem.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
+		
+		this.loggerKey = props.getProperty("root.logger");
+	}
+	
+	/**
+	 * Gets the logger key.
+	 * 
+	 * @return the loggerKey
+	 */
+	public String getLoggerKey() {
+		return loggerKey;
 	}
 
 	/**

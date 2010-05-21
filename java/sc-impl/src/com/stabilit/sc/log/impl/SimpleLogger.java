@@ -32,7 +32,7 @@ import com.stabilit.sc.log.Level;
 import com.stabilit.sc.util.DateTimeUtility;
 
 /**
- * The Class SimpleLogger. A simple implementation of a logger.
+ * The Class SimpleLogger. A simple implementation of a logger. Writes files using native java library.
  */
 public class SimpleLogger implements ILogger {
 
@@ -53,9 +53,20 @@ public class SimpleLogger implements ILogger {
 	/** The time formatter. */
 	private SimpleDateFormat timeFormatter;
 
+	/**
+	 * Instantiates a new simple logger. Only visible in package for Factory.
+	 */
 	SimpleLogger() {
 	}
-	
+
+	/**
+	 * Instantiates a new simple logger. Not visible outside. Instantiation should be done over new instance methods.
+	 * 
+	 * @param dir
+	 *            the directory
+	 * @param fileName
+	 *            the file name
+	 */
 	private SimpleLogger(String dir, String fileName) {
 		this.date = Calendar.getInstance().getTime();
 		this.dir = dir;
@@ -85,7 +96,7 @@ public class SimpleLogger implements ILogger {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	protected void closeAndOpen() throws IOException {
+	private void closeAndOpen() throws IOException {
 		try {
 			pw.close();
 			fos.close();
@@ -253,13 +264,17 @@ public class SimpleLogger implements ILogger {
 		return sb.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public ILogger newInstance(ILoggerDecorator loggerDecorator) {
-		return new SimpleLogger(loggerDecorator.getLogDir(), loggerDecorator.getLogFileName());
+	public ILogger newInstance() {
+		// careful in use - is always the same instance
+		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public ILogger newInstance() {	
-		return this;
+	public ILogger newInstance(ILoggerDecorator loggerDecorator) {
+		// we need a new instance in this case
+		return new SimpleLogger(loggerDecorator.getLogDir(), loggerDecorator.getLogFileName());
 	}
 }

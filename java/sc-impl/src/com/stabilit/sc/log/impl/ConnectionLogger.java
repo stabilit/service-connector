@@ -25,10 +25,19 @@ import com.stabilit.sc.listener.IConnectionListener;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
+/**
+ * The Class ConnectionLogger. Provides functionality of logging a <code>ConnectionEvent</code>.
+ */
 public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 
+	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	/**
+	 * Instantiates a new connection logger. Only visible in package for Factory.
+	 * 
+	 * @param logger the logger
+	 */
 	ConnectionLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 	}
@@ -107,16 +116,19 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILoggerDecorator newInstance() {
-		return new ConnectionLogger(this.logger);
+		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
 		return IConstants.LOG_DIR;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
 		return IConstants.CONNECTION_LOG_FILE_NAME;

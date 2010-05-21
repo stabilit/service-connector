@@ -19,8 +19,8 @@ package com.stabilit.sc.cln.call;
 import java.net.InetAddress;
 
 import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**

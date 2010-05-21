@@ -24,13 +24,23 @@ import com.stabilit.sc.listener.PerformanceEvent;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
+/**
+ * The Class PerformanceLogger. Provides functionality of logging an <code>PerformanceEvent</code>.
+ */
 public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator {
 
 	/** The thread local is needed to save timestamps in running thread. */
 	private ThreadLocal<PerformanceEvent> threadLocal;
 
+	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	/**
+	 * Instantiates a new performance logger. Only visible in package for Factory.
+	 * 
+	 * @param logger
+	 *            the logger
+	 */
 	PerformanceLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 		this.threadLocal = new ThreadLocal<PerformanceEvent>();
@@ -70,11 +80,13 @@ public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
 		return IConstants.LOG_DIR;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
 		return IConstants.PERFORMANCE_LOG_FILE_NAME;

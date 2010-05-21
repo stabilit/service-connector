@@ -24,14 +24,24 @@ import com.stabilit.sc.listener.IExceptionListener;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
+/**
+ * The Class ExceptionLogger. Provides functionality of logging an <code>ExceptionEvent</code>.
+ */
 public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 
+	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	/**
+	 * Instantiates a new exception logger. Only visible in package for Factory.
+	 * 
+	 * @param logger
+	 *            the logger
+	 */
 	ExceptionLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
@@ -43,16 +53,19 @@ public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILoggerDecorator newInstance() {
-		return new ExceptionLogger(this.logger);
+		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
 		return IConstants.LOG_DIR;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
 		return IConstants.EXCEPTION_LOG_FILE_NAME;

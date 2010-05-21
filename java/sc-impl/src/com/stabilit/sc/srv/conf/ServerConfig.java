@@ -26,8 +26,8 @@ import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 
 /**
- * The Class ServerConfig. Server configuration may hold more than one configuration for a server, is represented
- * by <code>ServerConfigItem</code>.
+ * The Class ServerConfig. Server configuration may hold more than one configuration for a server, is represented by
+ * <code>ServerConfigItem</code>.
  * 
  * @author JTraber
  */
@@ -37,16 +37,16 @@ public class ServerConfig {
 	private Properties props;
 	/** The server configuration list. */
 	private List<ServerConfigItem> serverConfigList;
-	
+	/** The logger key. */
 	private String loggerKey;
 
 	/**
 	 * Instantiates a new server configuration.
 	 */
 	public ServerConfig() {
-		serverConfigList = null;
-		props = null;
-		loggerKey = null;
+		this.serverConfigList = null;
+		this.props = null;
+		this.loggerKey = null;
 	}
 
 	/**
@@ -80,11 +80,13 @@ public class ServerConfig {
 			serverConfig.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
-		
+
 		this.loggerKey = props.getProperty("root.logger");
 	}
-	
+
 	/**
+	 * Gets the logger key.
+	 * 
 	 * @return the loggerKey
 	 */
 	public String getLoggerKey() {

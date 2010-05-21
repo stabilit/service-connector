@@ -24,13 +24,27 @@ import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 import com.stabilit.sc.log.Level;
 
+/**
+ * The Class Log4jLogger. Provides Access to log4j framework. Logging works over log4j. Configurations are in log4j
+ * property files.
+ */
 public class Log4jLogger implements ILogger {
 
+	/** The logger. */
 	private Logger log;
 
+	/**
+	 * Instantiates a new log4j logger. Only visible in package for Factory.
+	 */
 	Log4jLogger() {
 	}
 
+	/**
+	 * Instantiates a new log4j logger. Not visible outside. Instantiation should be done over new instance methods.
+	 * 
+	 * @param log
+	 *            the log
+	 */
 	private Log4jLogger(Logger log) {
 		this.log = log;
 	}
@@ -44,13 +58,13 @@ public class Log4jLogger implements ILogger {
 	/** {@inheritDoc} */
 	@Override
 	public void log(byte[] buffer) throws IOException {
-		this.log.info(buffer);
+		this.log.info(new String(buffer));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void log(byte[] buffer, int offset, int length) throws IOException {
-		this.log.info(buffer);
+		this.log.info(new String(buffer, offset, length));
 	}
 
 	/** {@inheritDoc} */
@@ -71,34 +85,49 @@ public class Log4jLogger implements ILogger {
 		this.log.info(msg);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void logError(String msg) throws IOException {
 		this.log.error(msg);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void logWarn(String msg) throws IOException {
 		this.log.warn(msg);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void logInfo(String msg) throws IOException {
 		this.log.info(msg);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void logDebug(String msg) throws IOException {
 		this.log.debug(msg);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void logTrace(String msg) throws IOException {
 		this.log.trace(msg);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILogger newInstance() {
+		// careful in use - is always the same instance
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ILogger newInstance(ILoggerDecorator loggerDecorator) {
+		// class necessary to get correct logger from log4j framework
 		Logger log = Logger.getLogger(loggerDecorator.getClass());
+		// we need a new instance in this case
 		Log4jLogger log4jLogger = new Log4jLogger(log);
 		return log4jLogger;
 	}

@@ -29,8 +29,8 @@ import com.stabilit.sc.net.FrameDecoderFactory;
 import com.stabilit.sc.net.IEncoderDecoder;
 import com.stabilit.sc.net.IFrameDecoder;
 import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 

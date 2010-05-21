@@ -24,10 +24,20 @@ import com.stabilit.sc.listener.LoggerEvent;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
+/**
+ * The Class GeneralLogger. Provides functionality of logging an <code>LoggerEvent</code>.
+ */
 public class GeneralLogger implements ILoggerListener, ILoggerDecorator {
 
+	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	/**
+	 * Instantiates a new general logger. Only visible in package for Factory.
+	 * 
+	 * @param logger
+	 *            the logger
+	 */
 	GeneralLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 	}
@@ -48,18 +58,20 @@ public class GeneralLogger implements ILoggerListener, ILoggerDecorator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ILoggerDecorator newInstance() {
 		return this;
 	}
-	
+
+	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
 		return IConstants.LOG_DIR;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
 		return IConstants.GENERAL_LOG_FILE_NAME;

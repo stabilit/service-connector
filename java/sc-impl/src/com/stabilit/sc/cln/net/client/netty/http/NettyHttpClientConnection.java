@@ -77,9 +77,9 @@ public class NettyHttpClientConnection implements IClientConnection {
 	private NioClientSocketChannelFactory channelFactory;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
-	/** The local socket address */
+	/** The local socket address. */
 	private InetSocketAddress localSocketAddress;
-	/** The channel pipeline factory */
+	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
 
 	/**

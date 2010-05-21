@@ -37,8 +37,12 @@ import com.stabilit.sc.scmp.SCMPMessage;
  */
 public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
 
+	/** The timer to observe timeouts. */
 	private Timer timer;
 
+	/**
+	 * Instantiates a new NettyHttpClientPipelineFactory.
+	 */
 	public NettyHttpClientPipelineFactory() {
 		this.timer = new HashedWheelTimer();
 	}

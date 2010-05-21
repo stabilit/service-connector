@@ -34,8 +34,12 @@ import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
  */
 public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 
+	/** The timer to observe timeouts. */
 	private Timer timer;
 
+	/**
+	 * Instantiates a new NettyTcpClientPipelineFactory.
+	 */
 	public NettyTcpClientPipelineFactory() {
 		this.timer = new HashedWheelTimer();
 	}

@@ -24,14 +24,26 @@ import com.stabilit.sc.listener.RuntimeEvent;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
+/**
+ * The Class RuntimeLogger. Provides functionality of logging an <code>WarningEvent</code>.
+ */
 public class RuntimeLogger implements IRuntimeListener, ILoggerDecorator {
 
+	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	/**
+	 * Instantiates a new runtime logger. Only visible in package for Factory.
+	 * 
+	 * @param logger
+	 *            the logger
+	 */
 	RuntimeLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public synchronized void runtimeEvent(RuntimeEvent runtimeEvent) {
 		try {
 			this.logger.log(runtimeEvent.getText());
@@ -41,15 +53,19 @@ public class RuntimeLogger implements IRuntimeListener, ILoggerDecorator {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public ILoggerDecorator newInstance() {
 		return this;
 	}
-	
+
+	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
 		return IConstants.LOG_DIR;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
 		return IConstants.RUNTIME_LOG_FILE_NAME;

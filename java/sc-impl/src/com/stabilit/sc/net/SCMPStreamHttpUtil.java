@@ -24,8 +24,8 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
  * The Class SCMPStreamHttpUtil. Defines SCMP encoding/decoding of object into/from stream. Only used in case of

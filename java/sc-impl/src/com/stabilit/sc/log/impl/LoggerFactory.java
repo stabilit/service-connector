@@ -22,22 +22,25 @@ import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
 /**
- * A factory for creating Logger objects. Provides access to the concrete Logger instances.
+ * A factory for creating logger objects. Provides access to the concrete logger instances and logger decorator's.
  * 
  * @author JTraber
  */
 public final class LoggerFactory extends Factory {
 
+	/** The Constant LOG4J_KEY. */
+	private static final String LOG4J_KEY = "log4j";
+	/** The Constant SIMPLE_KEY. */
+	private static final String SIMPLE_KEY = "simple";
+	/** The Constant DEF_LOGGER, default to use if nothing set. */
+	private static final String DEF_LOGGER = LoggerFactory.SIMPLE_KEY;
 	/** The logger factory. */
 	private static LoggerFactory loggerFactory = new LoggerFactory();
+	/** The init, indicates if factory already got initialized. */
 	private static boolean init = false;
 
-	private static final String LOG4J_KEY = "log4j";
-	private static final String SIMPLE_KEY = "simple";
-	private static final String DEF_LOGGER = LoggerFactory.SIMPLE_KEY;
-
 	/**
-	 * Instantiates a new logger factory.
+	 * Instantiates a new logger factory. Not visible outside.
 	 */
 	private LoggerFactory() {
 	}
@@ -45,6 +48,8 @@ public final class LoggerFactory extends Factory {
 	/**
 	 * Gets the current logger factory.
 	 * 
+	 * @param key
+	 *            the key identifies concrete logger implementation
 	 * @return the current logger factory
 	 */
 	public static LoggerFactory getCurrentLoggerFactory(String key) {
@@ -55,6 +60,11 @@ public final class LoggerFactory extends Factory {
 		return loggerFactory;
 	}
 
+	/**
+	 * Initialize the factory.
+	 * 
+	 * @param key the key
+	 */
 	private void init(String key) {
 		if (key == null) {
 			key = DEF_LOGGER;

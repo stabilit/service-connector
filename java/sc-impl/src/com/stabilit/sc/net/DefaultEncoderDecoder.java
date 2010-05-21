@@ -32,11 +32,11 @@ import java.util.regex.Matcher;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.scmp.IInternalMessage;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPHeadlineKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.impl.EncodingDecodingException;
 import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
 
