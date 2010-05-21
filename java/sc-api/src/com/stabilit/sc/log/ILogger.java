@@ -140,8 +140,20 @@ public interface ILogger extends IFactoryable {
 	 */
 	public void logTrace(String msg) throws IOException;
 
+	/**
+	 * New instance.
+	 * 
+	 * @param loggerDecorator
+	 *            the logger decorator
+	 * @return the logger
+	 */
 	public ILogger newInstance(ILoggerDecorator loggerDecorator);
 
+	/**
+	 * New instance.
+	 * 
+	 * @return the logger
+	 */
 	@Override
 	public ILogger newInstance();
 }

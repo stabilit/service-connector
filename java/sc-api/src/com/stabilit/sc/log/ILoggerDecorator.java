@@ -19,14 +19,25 @@ package com.stabilit.sc.log;
 import com.stabilit.sc.factory.IFactoryable;
 
 /**
- * The Interface ILogger. Abstracts loggers.
+ * The Interface ILoggerDecorator. For decorating a concrete logger.
  */
 public interface ILoggerDecorator extends IFactoryable {
 
+	/** {@inheritDoc} */
 	@Override
 	public ILoggerDecorator newInstance();
 
+	/**
+	 * Gets the log directory.
+	 * 
+	 * @return the log directory
+	 */
 	public String getLogDir();
 
+	/**
+	 * Gets the log file name.
+	 * 
+	 * @return the log file name
+	 */
 	public String getLogFileName();
 }
