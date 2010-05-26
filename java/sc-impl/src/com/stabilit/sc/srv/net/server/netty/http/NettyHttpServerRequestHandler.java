@@ -93,7 +93,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
-		SocketAddress socketAddress = channel.getRemoteAddress();
+		SocketAddress socketAddress = channel.getLocalAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 
@@ -117,6 +117,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 				return;
 			}
 			this.compositeSender = null;
+			msgID.incrementMsgSequenceNr();
 		}
 
 		try {
@@ -182,6 +183,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 			this.compositeSender = new SCMPCompositeSender(response.getSCMP());
 			SCMPMessage firstSCMP = this.compositeSender.getFirst();
 			response.setSCMP(firstSCMP);
+			msgID.incrementMsgSequenceNr();
 			msgID.incrementPartSequenceNr();
 			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		} else {

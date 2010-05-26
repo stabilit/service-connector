@@ -90,7 +90,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		SocketAddress socketAddress = ctx.getChannel().getRemoteAddress();
+		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
 		IRequest request = new NettyTcpRequest(event, socketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 
@@ -172,6 +172,7 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			this.compositeSender = new SCMPCompositeSender(response.getSCMP());
 			SCMPMessage firstSCMP = this.compositeSender.getFirst();
 			response.setSCMP(firstSCMP);
+			msgID.incrementMsgSequenceNr();
 			msgID.incrementPartSequenceNr();
 			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		} else {

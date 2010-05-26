@@ -224,6 +224,7 @@ public class Client implements IClient {
 		// SCMPComposite handles parts of large requests, putting all together
 		SCMPCompositeReceiver scmpComposite = new SCMPCompositeReceiver(request, response);
 		SCMPMessage ret = null;
+		msgID.incrementMsgSequenceNr();
 		msgID.incrementPartSequenceNr();
 		while (true) {
 			SCMPMessage message = scmpComposite.getPart();
