@@ -66,6 +66,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		String sessionId = clnDataCall.getRequest().getSessionId();
 		Assert.assertEquals(serviceName, scmpReply.getServiceName());
 		Assert.assertEquals(sessionId, scmpReply.getSessionId());
+		Assert.assertEquals("3", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}
 
 	@Test

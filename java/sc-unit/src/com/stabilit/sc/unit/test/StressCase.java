@@ -27,7 +27,7 @@ import com.stabilit.sc.scmp.SCMPMessage;
 /**
  * The Class StressTest.
  */
-public class StressTest extends SuperTestCase {
+public class StressCase extends SuperTestCase {
 
 	/**
 	 * Instantiates a new stress test.
@@ -35,7 +35,7 @@ public class StressTest extends SuperTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public StressTest(String fileName) {
+	public StressCase(String fileName) {
 		super(fileName);
 	}
 

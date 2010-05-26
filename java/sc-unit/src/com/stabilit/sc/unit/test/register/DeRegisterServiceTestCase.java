@@ -25,6 +25,8 @@ import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
+import com.stabilit.sc.scmp.SCMPFault;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -59,6 +61,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		String expectedEnty = "simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
 		Assert.assertEquals(expectedEnty, scEntry);
+		Assert.assertEquals("4", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.registerServiceBefore();
 	}
 
@@ -74,6 +77,8 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 			deRegisterServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
+			SCMPFault scmpFault = e.getFault();
+			Assert.assertEquals("4", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(e.getFault(), SCMPError.NOT_REGISTERED,
 					SCMPMsgType.DEREGISTER_SERVICE);
 		}

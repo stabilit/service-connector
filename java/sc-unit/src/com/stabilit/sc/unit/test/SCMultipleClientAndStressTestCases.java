@@ -40,12 +40,12 @@ import com.stabilit.sc.unit.test.echo.mt.MTSrvEchoTestCase;
 	//StressTest.class,
 	MTEchoSCTestCase.class,
 	MTSrvEchoTestCase.class })
-public final class SCMultipleClientAndStressTest {
+public final class SCMultipleClientAndStressTestCases {
 	
 	/**
 	 * Instantiates a new sC multiple client and stress test.
 	 */
-	private SCMultipleClientAndStressTest() {
+	private SCMultipleClientAndStressTestCases() {
 	}
 	
 	/**

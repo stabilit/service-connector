@@ -60,11 +60,11 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		clnEchoCall.setRequestBody("hello world");
 		result = clnEchoCall.invoke();
 
-		Map<String, String> header = result.getHeader();
 		Assert.assertEquals("hello world", result.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(result.getSessionId());
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
+		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}
 
 	/**
@@ -88,6 +88,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
+			Assert.assertEquals((i + 3) + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
 	}
@@ -115,6 +116,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
+			Assert.assertEquals((i*3)+5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
@@ -141,6 +143,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
+			Assert.assertEquals((i*3)+5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");

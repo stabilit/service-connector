@@ -102,7 +102,7 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
-			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(scmpFault, SCMPError.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
 		}
 		super.clnConnectBefore();
