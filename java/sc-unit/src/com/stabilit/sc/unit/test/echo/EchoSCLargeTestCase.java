@@ -75,7 +75,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
-		// Assert.assertEquals("1/3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("2/2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), result.getMessageType());
 	}
@@ -96,7 +96,6 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		// Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getResponseName(), res.getMessageType());
-
 	}
 
 	@Test

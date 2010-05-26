@@ -55,7 +55,7 @@ public class ConnectTestCase extends SuperTestCase {
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.CONNECT);
-//			Assert.assertEquals("1", connectCall.getCall().getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("1", connectCall.getRequest().getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 	}
 
@@ -75,7 +75,7 @@ public class ConnectTestCase extends SuperTestCase {
 				.getResponseName());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
-//		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
 		SCMPMessage inspect = inspectCall.invoke();

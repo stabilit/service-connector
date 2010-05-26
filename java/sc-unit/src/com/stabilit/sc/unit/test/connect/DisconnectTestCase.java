@@ -27,6 +27,7 @@ import com.stabilit.sc.cln.call.SCMPDisconnectCall;
 import com.stabilit.sc.cln.call.SCMPInspectCall;
 import com.stabilit.sc.cln.msg.impl.InspectMessage;
 import com.stabilit.sc.scmp.SCMPError;
+import com.stabilit.sc.scmp.SCMPFault;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
@@ -57,14 +58,15 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 			connectCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
-			SCTest.verifyError(e.getFault(), SCMPError.ALREADY_CONNECTED, SCMPMsgType.CONNECT);
+			SCMPFault scmpFault = e.getFault();
+			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			SCTest.verifyError(scmpFault, SCMPError.ALREADY_CONNECTED, SCMPMsgType.CONNECT);
 		}
 	}
 
 	@Test
 	public void disconnect() throws Exception {
-		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
-				.newInstance(client);
+		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL.newInstance(client);
 
 		SCMPMessage result = null;
 		try {
@@ -75,8 +77,10 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 
 		/*********************************** Verify disconnect response msg **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.DISCONNECT
-				.getResponseName());
+		Assert
+				.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.DISCONNECT
+						.getResponseName());
+		Assert.assertEquals("2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
@@ -85,18 +89,21 @@ public class DisconnectTestCase extends SuperConnectTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
 		Assert.assertEquals("", scEntry);
+		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.clnConnectBefore();
 	}
 
 	@Test
 	public void secondDisconnect() throws Exception {
 		super.clnDisconnectAfter();
-		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
-				.newInstance(client);
+		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL.newInstance(client);
 		try {
 			disconnectCall.invoke();
+			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
-			SCTest.verifyError(e.getFault(), SCMPError.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
+			SCMPFault scmpFault = e.getFault();
+			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			SCTest.verifyError(scmpFault, SCMPError.NOT_CONNECTED, SCMPMsgType.DISCONNECT);
 		}
 		super.clnConnectBefore();
 	}
