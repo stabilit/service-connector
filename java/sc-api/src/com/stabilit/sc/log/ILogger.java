@@ -35,30 +35,6 @@ public interface ILogger extends IFactoryable {
 	public void log(Object obj) throws IOException;
 
 	/**
-	 * Logs a buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to log
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void log(byte[] buffer) throws IOException;
-
-	/**
-	 * Logs a buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to log
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	void log(byte[] buffer, int offset, int length) throws IOException;
-
-	/**
 	 * Logs a string.
 	 * 
 	 * @param msg

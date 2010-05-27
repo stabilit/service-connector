@@ -36,8 +36,10 @@ import com.stabilit.sc.util.DateTimeUtility;
  */
 public class SimpleLogger implements ILogger {
 
+	/** The Constant LINE_BREAK. */
+	private static final String LINE_BREAK = "\r\n";
 	/** The fos. */
-	FileOutputStream fos;
+	private FileOutputStream fos;
 	/** The pw. */
 	protected PrintWriter pw;
 	/** The dir. */
@@ -45,7 +47,7 @@ public class SimpleLogger implements ILogger {
 	/** The file name. */
 	private String fileName;
 	/** The log file. */
-	File logFile;
+	private File logFile;
 	/** The date. */
 	protected Date date;
 	/** The date formatter. */
@@ -71,7 +73,7 @@ public class SimpleLogger implements ILogger {
 		this.date = Calendar.getInstance().getTime();
 		this.dir = dir;
 		this.fileName = fileName;
-		this.timeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.timeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		this.dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		String dateFormat = this.dateFormatter.format(date);
 		// Create a directory; all non-existent ancestor directories are
@@ -113,43 +115,7 @@ public class SimpleLogger implements ILogger {
 	/** {@inheritDoc} */
 	@Override
 	public void log(Object obj) throws IOException {
-		throw new IOException("not supported");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void log(byte[] buffer) throws IOException {
-		if (DateTimeUtility.isSameDay(date) == false) {
-			// day did change
-			closeAndOpen();
-		}
-		try {
-			if (logFile.exists() == false) {
-				closeAndOpen();
-			}
-			fos.write(buffer);
-			fos.flush();
-		} catch (Exception e) {
-			closeAndOpen();
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void log(byte[] buffer, int offset, int length) throws IOException {
-		if (DateTimeUtility.isSameDay(date) == false) {
-			// day did change
-			closeAndOpen();
-		}
-		try {
-			if (logFile.exists() == false) {
-				closeAndOpen();
-			}
-			fos.write(buffer, offset, length);
-			fos.flush();
-		} catch (Exception e) {
-			closeAndOpen();
-		}
+		throw new UnsupportedOperationException("not supported");
 	}
 
 	/** {@inheritDoc} */
@@ -163,7 +129,9 @@ public class SimpleLogger implements ILogger {
 			if (logFile.exists() == false) {
 				closeAndOpen();
 			}
+			pw.print(this.getLogHead());
 			pw.print(msg);
+			pw.print(LINE_BREAK);
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
@@ -185,6 +153,7 @@ public class SimpleLogger implements ILogger {
 			}
 			pw.print(this.getLogHead(Level.EXCEPTION));
 			pw.print(t.toString());
+			pw.print(LINE_BREAK);
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
@@ -207,6 +176,7 @@ public class SimpleLogger implements ILogger {
 			}
 			pw.print(this.getLogHead(level));
 			pw.println(msg);
+			pw.print(LINE_BREAK);
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
@@ -258,8 +228,16 @@ public class SimpleLogger implements ILogger {
 		Date now = Calendar.getInstance().getTime();
 		StringBuilder sb = new StringBuilder();
 		sb.append(this.timeFormatter.format(now));
-		sb.append(" - 0.0.0.0 ");
 		sb.append(level.getLevel());
+		sb.append(" --> ");
+		return sb.toString();
+	}
+
+	public String getLogHead() {
+		// 2009-12-14 20:17:13 - 127.0.0.1 - INFO -->
+		Date now = Calendar.getInstance().getTime();
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.timeFormatter.format(now));
 		sb.append(" --> ");
 		return sb.toString();
 	}

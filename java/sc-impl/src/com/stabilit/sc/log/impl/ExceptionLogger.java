@@ -17,6 +17,7 @@
 package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
+import java.util.Formatter;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.listener.ExceptionEvent;
@@ -32,6 +33,9 @@ public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	private Formatter format;
+	private String EXC_STR = "exception by class %s - %s:%s";
+
 	/**
 	 * Instantiates a new exception logger. Only visible in package for Factory.
 	 * 
@@ -40,14 +44,18 @@ public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 	 */
 	ExceptionLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
+		this.format = null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
 		try {
-			this.logger.log(exceptionEvent.getThrowable() + ": " + exceptionEvent.getThrowable().getCause());
-			this.logger.log("\r\n");
+			format = new Formatter();
+			format.format(EXC_STR, exceptionEvent.getSource().getClass(), exceptionEvent.getThrowable(), exceptionEvent
+					.getThrowable().getCause());
+			this.logger.log(format.toString());
+			format.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

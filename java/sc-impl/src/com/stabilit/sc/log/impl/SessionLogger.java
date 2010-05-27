@@ -16,65 +16,44 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.log.impl;
 
-import java.io.IOException;
 import java.util.Formatter;
 
 import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.listener.IPerformanceListener;
-import com.stabilit.sc.listener.PerformanceEvent;
+import com.stabilit.sc.listener.ISessionListener;
+import com.stabilit.sc.listener.SessionEvent;
 import com.stabilit.sc.log.ILogger;
 import com.stabilit.sc.log.ILoggerDecorator;
 
-/**
- * The Class PerformanceLogger. Provides functionality of logging an <code>PerformanceEvent</code>.
- */
-public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator {
-
-	/** The thread local is needed to save timestamps in running thread. */
-	private ThreadLocal<PerformanceEvent> threadLocal;
+public class SessionLogger implements ISessionListener, ILoggerDecorator {
 
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
 	private Formatter format;
-	private String END_STR = "perf by class %s.%s time(ms) %s.%s";
+	private String CREATE_SESSION_STR = "create session:%s";
+	private String DELETE_SESSION_STR = "delete session:%s";
 
-	/**
-	 * Instantiates a new performance logger. Only visible in package for Factory.
-	 * 
-	 * @param logger
-	 *            the logger
-	 */
-	PerformanceLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
-		this.threadLocal = new ThreadLocal<PerformanceEvent>();
+	SessionLogger(ILogger logger) {
 		this.format = null;
+		this.logger = logger.newInstance(this);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void begin(PerformanceEvent performanceEvent) {
-		this.threadLocal.set(performanceEvent);
+	public void createSessionEvent(SessionEvent sessionEvent) throws Exception {
+		format = new Formatter();
+		format.format(CREATE_SESSION_STR, sessionEvent.getSessionId());
+		this.logger.log(format.toString());
+		format.close();
 	}
 
 	/** {@inheritDoc} */
-	public synchronized void end(PerformanceEvent performanceEvent) {
-		try {
-			PerformanceEvent beginEvent = this.threadLocal.get();
-			String beginMethodName = beginEvent.getMethodName();
-			long beginTime = beginEvent.getTime();
-			long endTime = performanceEvent.getTime();
-			Object source = performanceEvent.getSource();
-
-			format = new Formatter();
-			format.format(END_STR, source.getClass().getSimpleName(), beginMethodName, String
-					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-			this.logger.log(format.toString());
-			format.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	@Override
+	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
+		format = new Formatter();
+		format.format(DELETE_SESSION_STR, sessionEvent.getSessionId());
+		this.logger.log(format.toString());
+		format.close();
 	}
 
 	/** {@inheritDoc} */
@@ -92,6 +71,6 @@ public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.PERFORMANCE_LOG_FILE_NAME;
+		return IConstants.SESSION_LOG_FILE_NAME;
 	}
 }

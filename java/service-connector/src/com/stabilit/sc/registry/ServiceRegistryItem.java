@@ -53,8 +53,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	private IClient client;
 	/** The register request, initial request from service. */
 	private IRequest registerRequest; // TODO (TRN) (Done JOT) how does the scmp message relate to the service or
-										// to
-	// service registry??
+										// to service registry??
 	/** The my item pool. */
 	protected ServiceRegistryItemPool myItemPool;
 	/** The allocated. */

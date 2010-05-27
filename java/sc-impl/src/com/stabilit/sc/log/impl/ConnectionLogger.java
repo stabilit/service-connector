@@ -18,6 +18,7 @@ package com.stabilit.sc.log.impl;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Formatter;
 
 import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.listener.ConnectionEvent;
@@ -33,26 +34,32 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
+	private Formatter format;
+	private String CONNECT_EVENT_STR = "connect by class %s - %s:%s";
+	private String DISCONNECT_EVENT_STR = "disconnect by class %s - %s:%s";
+	private String READ_EVENT_STR = "read by class %s - %s:%s : %s";
+	private String WRITE_EVENT_STR = "write by class %s - %s:%s : %s";
+
 	/**
 	 * Instantiates a new connection logger. Only visible in package for Factory.
 	 * 
-	 * @param logger the logger
+	 * @param logger
+	 *            the logger
 	 */
 	ConnectionLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
+		this.format = null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void connectEvent(ConnectionEvent connectionEvent) {
 		try {
-			this.logger.log("------- connect -------\r\n");
-			this.logger.log("connect by class " + connectionEvent.getSource().getClass().getName());
-			this.logger.log(" - ");
-			this.logger.log(InetAddress.getLocalHost().toString());
-			this.logger.log(":");
-			this.logger.log(String.valueOf(connectionEvent.getPort()));
-			this.logger.log("\r\n");
+			format = new Formatter();
+			format.format(CONNECT_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+					.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()));
+			this.logger.log(format.toString());
+			format.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,13 +69,11 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	@Override
 	public synchronized void disconnectEvent(ConnectionEvent connectionEvent) {
 		try {
-			this.logger.log("------- disconnect -------\r\n");
-			this.logger.log("disconnect by class " + connectionEvent.getSource().getClass().getName());
-			this.logger.log(" - ");
-			this.logger.log(InetAddress.getLocalHost().toString());
-			this.logger.log(":");
-			this.logger.log(String.valueOf(connectionEvent.getPort()));
-			this.logger.log("\r\n");
+			format = new Formatter();
+			format.format(DISCONNECT_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+					.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()));
+			this.logger.log(format.toString());
+			format.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -79,17 +84,19 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	public synchronized void readEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.logger.log(">>>>>>>> ");
-			this.logger.log(InetAddress.getLocalHost().toString());
-			this.logger.log(":");
-			this.logger.log(String.valueOf(connectionEvent.getPort()));
-			this.logger.log(" - read >>>>>>>\r\n");
+			format = new Formatter();
+
 			if (length > 0) {
-				this.logger.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
+				format.format(READ_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
+						(byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length));
 			} else {
-				this.logger.log((byte[]) connectionEvent.getData());
+				format.format(READ_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
+						(byte[]) connectionEvent.getData()));
 			}
-			this.logger.log("\r\n");
+			this.logger.log(format.toString());
+			format.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,17 +107,19 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	public synchronized void writeEvent(ConnectionEvent connectionEvent) {
 		try {
 			int length = connectionEvent.getLength();
-			this.logger.log("<<<<<<<< ");
-			this.logger.log(InetAddress.getLocalHost().toString());
-			this.logger.log(":");
-			this.logger.log(String.valueOf(connectionEvent.getPort()));
-			this.logger.log(" - write <<<<<<<<\r\n");
+			format = new Formatter();
+
 			if (length > 0) {
-				this.logger.log((byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length);
+				format.format(WRITE_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
+						(byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length));
 			} else {
-				this.logger.log((byte[]) connectionEvent.getData());
+				format.format(WRITE_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
+						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
+						(byte[]) connectionEvent.getData()));
 			}
-			this.logger.log("\r\n");
+			this.logger.log(format.toString());
+			format.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

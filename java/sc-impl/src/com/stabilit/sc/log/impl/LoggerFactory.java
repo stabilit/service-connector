@@ -92,6 +92,9 @@ public final class LoggerFactory extends Factory {
 			// Runtime logger
 			loggerDecorator = new RuntimeLogger((ILogger) this.getInstance(key));
 			this.add(RuntimeLogger.class, loggerDecorator);
+			// Session logger
+			loggerDecorator = new SessionLogger((ILogger) this.getInstance(key));
+			this.add(SessionLogger.class, loggerDecorator);
 			// General logger
 			loggerDecorator = new GeneralLogger((ILogger) this.getInstance(key));
 			this.add(GeneralLogger.class, loggerDecorator);

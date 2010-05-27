@@ -68,7 +68,7 @@ public class ConnectionEvent extends EventObject {
 		this.offset = offset;
 		this.length = length;
 		this.data = data;
-		this.port = port;
+		this.port = port;		
 	}
 
 	/**

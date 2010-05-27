@@ -58,12 +58,11 @@ public interface IConstants {
 	public final String EXCEPTION_LOG_FILE_NAME = "exc.log";
 	/** The file name of general log file. */
 	public final String GENERAL_LOG_FILE_NAME = "gen.log";
-	/** The file name of scmp log file. */
-	public final String SCMP_LOG_FILE_NAME = "scmp.log";
 	/** The file name of performance log file. */
 	public final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
 	/** The file name of warning log file. */
-	public final String RUNTIME_LOG_FILE_NAME = "wrn.log";
+	public final String RUNTIME_LOG_FILE_NAME = "rtm.log";
+	public final String SESSION_LOG_FILE_NAME = "ses.log";
 
 	/** The ACCEPT_PARAMS. */
 	public final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";

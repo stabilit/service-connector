@@ -57,18 +57,6 @@ public class Log4jLogger implements ILogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public void log(byte[] buffer) throws IOException {
-		this.log.info(new String(buffer));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void log(byte[] buffer, int offset, int length) throws IOException {
-		this.log.info(new String(buffer, offset, length));
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void log(String msg) throws IOException {
 		this.log.info(msg);
 	}

@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.registry;
 
+import com.stabilit.sc.listener.SessionPoint;
 import com.stabilit.sc.scmp.Session;
 
 /**
@@ -52,14 +53,22 @@ public final class SessionRegistry extends Registry {
 	 *            the session
 	 */
 	public void add(Object key, Session session) {
+		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void remove(Object key) {
+		super.remove(key);
+		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
 	/**
 	 * Gets a session entry.
 	 * 
-	 * @param key the key
-	 * 
+	 * @param key
+	 *            the key
 	 * @return the session
 	 */
 	@Override

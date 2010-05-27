@@ -27,9 +27,11 @@ import com.stabilit.sc.listener.IExceptionListener;
 import com.stabilit.sc.listener.ILoggerListener;
 import com.stabilit.sc.listener.IPerformanceListener;
 import com.stabilit.sc.listener.IRuntimeListener;
+import com.stabilit.sc.listener.ISessionListener;
 import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.listener.PerformancePoint;
 import com.stabilit.sc.listener.RuntimePoint;
+import com.stabilit.sc.listener.SessionPoint;
 import com.stabilit.sc.log.Level;
 import com.stabilit.sc.log.impl.ConnectionLogger;
 import com.stabilit.sc.log.impl.ExceptionLogger;
@@ -37,6 +39,7 @@ import com.stabilit.sc.log.impl.GeneralLogger;
 import com.stabilit.sc.log.impl.LoggerFactory;
 import com.stabilit.sc.log.impl.PerformanceLogger;
 import com.stabilit.sc.log.impl.RuntimeLogger;
+import com.stabilit.sc.log.impl.SessionLogger;
 import com.stabilit.sc.sim.Simulation;
 import com.stabilit.sc.srv.cmd.factory.CommandFactory;
 import com.stabilit.sc.srv.conf.ServerConfig;
@@ -70,6 +73,7 @@ public class SetupTestCases {
 			PerformancePoint.getInstance().addListener(
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
 			PerformancePoint.getInstance().setOn(true);
+			SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
