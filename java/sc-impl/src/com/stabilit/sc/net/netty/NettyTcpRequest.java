@@ -32,8 +32,8 @@ import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp
- * frame. Based on JBoss Netty.
+ * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp frame.
+ * Based on JBoss Netty.
  */
 public class NettyTcpRequest extends RequestAdapter {
 
@@ -50,8 +50,8 @@ public class NettyTcpRequest extends RequestAdapter {
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public NettyTcpRequest(MessageEvent event, SocketAddress socketAddress) {
-		this.socketAddress = socketAddress;
+	public NettyTcpRequest(MessageEvent event, SocketAddress localAddress, SocketAddress remoteAddress) {
+		super(localAddress, remoteAddress);
 		this.mapBean = new MapBean<Object>();
 		this.request = (ChannelBuffer) event.getMessage();
 		this.message = null;
@@ -62,8 +62,7 @@ public class NettyTcpRequest extends RequestAdapter {
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.socketAddress).getPort(),
-				buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);

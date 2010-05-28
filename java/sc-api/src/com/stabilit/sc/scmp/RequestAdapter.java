@@ -33,15 +33,19 @@ public abstract class RequestAdapter implements IRequest {
 	protected SCMPMessage message;
 	/** The map bean. MapBean to store any data. */
 	protected MapBean<Object> mapBean;
-	/** The socket address. */
-	protected SocketAddress socketAddress;
+	/** The local socket address. */
+	protected SocketAddress localSocketAddress;	
+	/** The remote socket address. */
+	protected SocketAddress remoteSocketAddress;
 	/** The request context. */
 	protected IRequestContext requestContext;
 
 	/**
 	 * Instantiates a new request adapter.
 	 */
-	public RequestAdapter() {
+	public RequestAdapter(SocketAddress localAddress, SocketAddress remoteAddress) {
+		this.localSocketAddress = localAddress;
+		this.remoteSocketAddress = remoteAddress;
 		this.message = null;
 	}
 
@@ -91,8 +95,14 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public SocketAddress getSocketAddress() {
-		return socketAddress;
+	public SocketAddress getLocalSocketAddress() {
+		return localSocketAddress;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public SocketAddress getRemoteSocketAddress() {
+		return remoteSocketAddress;
 	}
 
 	/** {@inheritDoc} */

@@ -32,8 +32,8 @@ import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http
- * frame. Based on JBoss Netty.
+ * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame.
+ * Based on JBoss Netty.
  */
 public class NettyHttpRequest extends RequestAdapter {
 
@@ -47,15 +47,15 @@ public class NettyHttpRequest extends RequestAdapter {
 	 * 
 	 * @param httpRequest
 	 *            the request
-	 * @param socketAddress
+	 * @param localAddress
 	 *            the socket address
 	 */
-	public NettyHttpRequest(HttpRequest httpRequest, SocketAddress socketAddress) {
+	public NettyHttpRequest(HttpRequest httpRequest, SocketAddress localAddress, SocketAddress remoteAddress) {
+		super(localAddress, remoteAddress);
 		this.mapBean = new MapBean<Object>();
 		this.request = httpRequest;
 		this.message = null;
-		this.socketAddress = socketAddress;
-		this.requestContext = new RequestContext(this.socketAddress);
+		this.requestContext = new RequestContext(this.remoteSocketAddress);
 	}
 
 	/** {@inheritDoc} */
@@ -64,8 +64,10 @@ public class NettyHttpRequest extends RequestAdapter {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.socketAddress).getPort(),
-				buffer); // logs inside if registered
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer); // logs
+		// inside
+		// if
+		// registered
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);

@@ -95,7 +95,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 
 		// adding ip of current node to header field ip address list
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
-		SocketAddress socketAddress = request.getSocketAddress();
+		SocketAddress socketAddress = request.getLocalSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();

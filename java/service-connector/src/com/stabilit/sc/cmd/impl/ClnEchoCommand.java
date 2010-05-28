@@ -94,7 +94,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 		}
 		// adding ip of current unit to ip address list
 		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		SocketAddress socketAddress = request.getSocketAddress();
+		SocketAddress socketAddress = request.getLocalSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();

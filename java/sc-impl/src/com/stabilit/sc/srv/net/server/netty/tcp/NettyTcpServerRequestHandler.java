@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.srv.net.server.netty.tcp;
 
-import java.net.SocketAddress;
-
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
@@ -90,8 +88,8 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		SocketAddress socketAddress = ctx.getChannel().getLocalAddress();
-		IRequest request = new NettyTcpRequest(event, socketAddress);
+		Channel channel = ctx.getChannel();
+		IRequest request = new NettyTcpRequest(event, channel.getLocalAddress(), channel.getRemoteAddress());
 		SCMPMessage scmpReq = request.getMessage();
 
 		if (scmpReq == null) {
@@ -116,7 +114,6 @@ public class NettyTcpServerRequestHandler extends SimpleChannelUpstreamHandler {
 			this.compositeSender = null;
 		}
 		try {
-			Channel channel = ctx.getChannel();
 			// needs to set a key in thread local to identify thread later and get access to the server
 			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());

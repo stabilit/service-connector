@@ -80,7 +80,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		// setting up client to connect backend server
 		SCClientFactory clientFactory = new SCClientFactory();
 		int serverPort = Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.PORT_NR));
-		SocketAddress socketAddress = request.getSocketAddress();
+		SocketAddress socketAddress = request.getLocalSocketAddress();
 		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
 		IServerConfigItem serverConfig = serverContext.getServer().getServerConfig();
 		String serverConnection = serverConfig.getConnection();

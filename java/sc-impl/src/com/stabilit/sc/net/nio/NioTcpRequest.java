@@ -19,6 +19,7 @@ package com.stabilit.sc.net.nio;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -35,8 +36,8 @@ import com.stabilit.sc.srv.net.SCMPCommunicationException;
 import com.stabilit.sc.util.MapBean;
 
 /**
- * The Class NioTcpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Tcp
- * frame. Based on Nio.
+ * The Class NioTcpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Tcp frame.
+ * Based on Nio.
  */
 public class NioTcpRequest extends RequestAdapter {
 
@@ -52,9 +53,9 @@ public class NioTcpRequest extends RequestAdapter {
 	 *            the socket channel
 	 */
 	public NioTcpRequest(SocketChannel socketChannel) {
+		super(socketChannel.socket().getLocalSocketAddress(), socketChannel.socket().getRemoteSocketAddress());
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
-		this.socketAddress = socketChannel.socket().getLocalSocketAddress();
 		this.message = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
@@ -76,7 +77,7 @@ public class NioTcpRequest extends RequestAdapter {
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(),
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(),
 				byteReadBuffer, 0, bytesRead);
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -54,7 +54,7 @@ public class SrvEchoCommand extends CommandAdapter {
 		SCMPMessage result = null;
 
 		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
-		SocketAddress socketAddress = request.getSocketAddress();
+		SocketAddress socketAddress = request.getLocalSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();

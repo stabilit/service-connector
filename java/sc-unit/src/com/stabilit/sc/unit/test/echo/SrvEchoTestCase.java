@@ -16,17 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit.test.echo;
 
-import java.util.Map;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnEchoCall;
-import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPBodyType;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.session.SuperSessionTestCase;
 
