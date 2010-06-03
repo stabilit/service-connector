@@ -19,8 +19,8 @@ package com.stabilit.sc.unit.test;
 import org.junit.Test;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPConnectCall;
-import com.stabilit.sc.cln.call.SCMPDisconnectCall;
+import com.stabilit.sc.cln.call.SCMPAttachCall;
+import com.stabilit.sc.cln.call.SCMPDetachCall;
 import com.stabilit.sc.cln.scmp.SCMPClientSession;
 import com.stabilit.sc.scmp.SCMPMessage;
 
@@ -47,12 +47,12 @@ public class StressCase extends SuperTestCase {
 	public void connectDisconnect() {
 		for (int i = 0; i < 10000; i++) {
 			try {
-				SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+				SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
 				connectCall.setCompression(false);
 				connectCall.setKeepAliveTimeout(30);
 				connectCall.setKeepAliveInterval(360);
 				SCMPMessage result = connectCall.invoke();
-				SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
+				SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
 						.newInstance(client);
 				disconnectCall.invoke();
 			} catch (Exception e) {
@@ -69,7 +69,7 @@ public class StressCase extends SuperTestCase {
 	@Test
 	public void createDeleteSession() {
 		try {
-			SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
+			SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
 			connectCall.setCompression(false);
 			connectCall.setKeepAliveTimeout(30);
 			connectCall.setKeepAliveInterval(360);
@@ -89,7 +89,7 @@ public class StressCase extends SuperTestCase {
 			e.printStackTrace();
 		}
 		try {
-			SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL
+			SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
 					.newInstance(client);
 			disconnectCall.invoke();
 		} catch (Exception e) {

@@ -28,8 +28,8 @@ import com.stabilit.sc.scmp.SCMPError;
 import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.connect.ConnectTestCase;
-import com.stabilit.sc.unit.test.connect.DisconnectTestCase;
+import com.stabilit.sc.unit.test.attach.AttachTestCase;
+import com.stabilit.sc.unit.test.attach.DetachTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
 import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
 import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
@@ -51,8 +51,8 @@ import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 @RunWith(Suite.class)
 @SuiteClasses( { 
-	ConnectTestCase.class,
-	DisconnectTestCase.class, 
+	AttachTestCase.class,
+	DetachTestCase.class, 
 	ClnCreateSessionTestCase.class,
 	ClnDeleteSessionTestCase.class, 
 	RegisterServiceTestCase.class, 

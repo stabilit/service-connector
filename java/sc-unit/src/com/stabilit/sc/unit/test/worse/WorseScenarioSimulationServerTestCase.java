@@ -132,7 +132,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	@Override
 	public void tearDown() throws Exception {
 		this.deRegisterServiceAfter();
-		this.clnDisconnectAfter();
+		this.clnDetachAfter();
 		client.disconnect();
 		client.destroy();
 	}

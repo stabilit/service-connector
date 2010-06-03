@@ -14,20 +14,27 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.session;
+package com.stabilit.sc.unit.test.attach;
+
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.scmp.SCMPClientSession;
-import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
+import com.stabilit.sc.cln.call.SCMPCallFactory;
+import com.stabilit.sc.cln.call.SCMPAttachCall;
+import com.stabilit.sc.cln.call.SCMPDetachCall;
+import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.sc.util.ValidatorUtility;
 
 /**
  * @author JTraber
  */
-public abstract class SuperSessionTestCase extends SuperAttachTestCase {
+public abstract class SuperAttachTestCase extends SuperTestCase {
 
-	private SCMPClientSession scmpSession = null;
+	protected Date localDateTimeOfConnect;
 
 	/**
 	 * The Constructor.
@@ -35,28 +42,37 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public SuperSessionTestCase(String fileName) {
+	public SuperAttachTestCase(String fileName) {
 		super(fileName);
 	}
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		clnCreateSessionBefore();
+		clnAttachBefore();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		clnDeleteSessionAfter();
+		clnDetachAfter();
 		super.tearDown();
 	}
 
-	public void clnCreateSessionBefore() throws Exception {
-		this.scmpSession = new SCMPClientSession(client, "simulation", "Session Info");
-		this.scmpSession.createSession();			
+	public void clnAttachBefore() throws Exception {
+		SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+
+		connectCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		connectCall.setCompression(false);
+		connectCall.setKeepAliveTimeout(30);
+		connectCall.setKeepAliveInterval(360);
+		connectCall.invoke();
+		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(connectCall.getRequest().getHeader(
+				SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 	}
 
-	public void clnDeleteSessionAfter() throws Exception {
-		this.scmpSession.deleteSession();
+	public void clnDetachAfter() throws Exception {
+		SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
+				.newInstance(client);
+		disconnectCall.invoke();
 	}
 }

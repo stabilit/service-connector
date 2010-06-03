@@ -32,12 +32,12 @@ import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
-import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
+import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
 
 /**
  * The Class ClnCreateSessionTestCase.
  */
-public class ClnCreateSessionTestCase extends SuperConnectTestCase {
+public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 	/**
 	 * The Constructor.
@@ -57,7 +57,7 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 	 */
 	@Test
 	public void failClnCreateSessionNotConnected() throws Exception {
-		this.clnDisconnectAfter();
+		this.clnDetachAfter();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(client);
 
@@ -69,9 +69,9 @@ public class ClnCreateSessionTestCase extends SuperConnectTestCase {
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
 			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.NOT_CONNECTED, SCMPMsgType.CLN_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPError.NOT_ATTACHED, SCMPMsgType.CLN_CREATE_SESSION);
 		}
-		this.clnConnectBefore();
+		this.clnAttachBefore();
 	}
 
 	/**

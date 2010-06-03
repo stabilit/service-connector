@@ -22,12 +22,12 @@ import org.junit.Before;
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.sc.unit.test.connect.SuperConnectTestCase;
+import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
 
 /**
  * @author JTraber
  */
-public abstract class SuperRegisterTestCase extends SuperConnectTestCase {
+public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	/**
 	 * The Constructor.

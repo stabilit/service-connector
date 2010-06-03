@@ -65,11 +65,11 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			ClientFactory clientFactory = new ClientFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect
-			clnConnectBefore();
+			clnAttachBefore();
 			registerServiceBefore();
 			clnCreateSessionBefore();
 			// needs to get disconnected (remove entry in connection registry before killing connection)
-			clnDisconnectAfter();
+			clnDetachAfter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

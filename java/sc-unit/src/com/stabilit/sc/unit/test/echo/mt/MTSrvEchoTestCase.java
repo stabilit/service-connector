@@ -43,7 +43,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		for (int i = 0; i < 3; i++) {
 			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
 			srvEchoTestCase.setClient(this.newClient());
-			srvEchoTestCase.clnConnectBefore();
+			srvEchoTestCase.clnAttachBefore();
 			srvEchoTestCase.clnCreateSessionBefore();
 			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
 			th.start();
@@ -53,7 +53,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {
 			map.get(srvEchoTestCase).join();
 			srvEchoTestCase.clnDeleteSessionAfter();
-			srvEchoTestCase.clnDisconnectAfter();
+			srvEchoTestCase.clnDetachAfter();
 		}
 	}
 
@@ -64,7 +64,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		for (int i = 0; i < 10; i++) {
 			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
 			srvEchoTestCase.setClient(this.newClient());
-			srvEchoTestCase.clnConnectBefore();
+			srvEchoTestCase.clnAttachBefore();
 			srvEchoTestCase.clnCreateSessionBefore();
 			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSessionSrvEchoTestForMultipleClients");
 			th.start();
@@ -74,7 +74,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {
 			map.get(srvEchoTestCase).join();
 			srvEchoTestCase.clnDeleteSessionAfter();
-			srvEchoTestCase.clnDisconnectAfter();
+			srvEchoTestCase.clnDetachAfter();
 		}
 	}
 }
