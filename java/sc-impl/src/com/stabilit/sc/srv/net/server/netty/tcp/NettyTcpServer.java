@@ -31,11 +31,11 @@ import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.srv.server.ServerConnectionAdapter;
 
 /**
- * The Class NettyTcpServerConnection. Concrete server connection implementation with JBoss Netty for Tcp.
+ * The Class NettyTcpServer. Concrete server connection implementation with JBoss Netty for Tcp.
  * 
  * @author JTraber
  */
-public class NettyTcpServerConnection extends ServerConnectionAdapter implements Runnable {
+public class NettyTcpServer extends ServerConnectionAdapter implements Runnable {
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
@@ -53,7 +53,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	/**
 	 * Instantiates a new netty tcp server connection.
 	 */
-	public NettyTcpServerConnection() {
+	public NettyTcpServer() {
 		this.bootstrap = null;
 		this.channel = null;
 		this.port = 0;
@@ -117,7 +117,7 @@ public class NettyTcpServerConnection extends ServerConnectionAdapter implements
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
-		return new NettyTcpServerConnection();
+		return new NettyTcpServer();
 	}
 
 	/** {@inheritDoc} */

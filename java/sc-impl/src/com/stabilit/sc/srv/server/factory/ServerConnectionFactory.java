@@ -18,8 +18,8 @@ package com.stabilit.sc.srv.server.factory;
 
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.net.server.netty.http.NettyHttpServerConnection;
-import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpServerConnection;
+import com.stabilit.sc.srv.net.server.netty.http.NettyHttpServer;
+import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpServer;
 import com.stabilit.sc.srv.net.server.nio.http.NioHttpServer;
 import com.stabilit.sc.srv.net.server.nio.tcp.NioTcpServer;
 import com.stabilit.sc.srv.server.IServerConnection;
@@ -44,11 +44,11 @@ public class ServerConnectionFactory extends Factory {
 	 */
 	public ServerConnectionFactory() {
 		// jboss netty http server
-		IServerConnection nettyHttpServer = new NettyHttpServerConnection();
+		IServerConnection nettyHttpServer = new NettyHttpServer();
 		add(DEFAULT, nettyHttpServer);
 		add(NETTY_HTTP, nettyHttpServer);
 		// jboss netty tcp server
-		IServerConnection nettyTCPServer = new NettyTcpServerConnection();
+		IServerConnection nettyTCPServer = new NettyTcpServer();
 		add(NETTY_TCP, nettyTCPServer);
 		// nio tcp Server
 		IServerConnection nioTcpServer = new NioTcpServer();

@@ -30,11 +30,11 @@ import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
 import com.stabilit.sc.srv.server.ServerConnectionAdapter;
 
 /**
- * The Class NettyHttpServerConnection. Concrete server connection implementation with JBoss Netty for Http.
+ * The Class NettyHttpServer. Concrete server connection implementation with JBoss Netty for Http.
  * 
  * @author JTraber
  */
-public class NettyHttpServerConnection extends ServerConnectionAdapter implements Runnable {
+public class NettyHttpServer extends ServerConnectionAdapter implements Runnable {
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
@@ -52,7 +52,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	/**
 	 * Instantiates a new netty http server connection.
 	 */
-	public NettyHttpServerConnection() {
+	public NettyHttpServer() {
 		this.bootstrap = null;
 		this.channel = null;
 		this.host = null;
@@ -117,7 +117,7 @@ public class NettyHttpServerConnection extends ServerConnectionAdapter implement
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
-		return new NettyHttpServerConnection();
+		return new NettyHttpServer();
 	}
 
 	/** {@inheritDoc} */
