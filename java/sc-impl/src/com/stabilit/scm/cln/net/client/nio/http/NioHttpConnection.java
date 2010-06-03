@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.scm.cln.client.IConnection;
+import com.stabilit.scm.cln.req.IConnection;
 import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ConnectionPoint;

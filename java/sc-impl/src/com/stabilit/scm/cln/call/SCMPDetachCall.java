@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.scmp.SCMPMsgType;
 
 /**
@@ -39,13 +39,13 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPDetachCall(IClient client) {
+	public SCMPDetachCall(IRequester client) {
 		this.client = client;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client) {
+	public ISCMPCall newInstance(IRequester client) {
 		return new SCMPDetachCall(client);
 	}
 

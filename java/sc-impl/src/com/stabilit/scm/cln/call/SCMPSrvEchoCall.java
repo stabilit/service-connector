@@ -18,7 +18,7 @@ package com.stabilit.scm.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -46,7 +46,7 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	 * @param clientMessage
 	 *            the client message
 	 */
-	public SCMPSrvEchoCall(IClient client, SCMPMessage clientMessage) {
+	public SCMPSrvEchoCall(IRequester client, SCMPMessage clientMessage) {
 		super(client, clientMessage);
 	}
 
@@ -70,7 +70,7 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, SCMPMessage clientMessage) {
+	public ISCMPCall newInstance(IRequester client, SCMPMessage clientMessage) {
 		return new SCMPSrvEchoCall(client, clientMessage);
 	}
 

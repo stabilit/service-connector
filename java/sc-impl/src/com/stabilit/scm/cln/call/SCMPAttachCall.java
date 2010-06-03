@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
@@ -42,7 +42,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPAttachCall(IClient client) {
+	public SCMPAttachCall(IRequester client) {
 		this.client = client;
 	}
 
@@ -57,7 +57,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client) {
+	public ISCMPCall newInstance(IRequester client) {
 		return new SCMPAttachCall(client);
 	}
 

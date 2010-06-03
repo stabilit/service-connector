@@ -39,9 +39,9 @@ import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
-import com.stabilit.scm.cln.client.IConnection;
 import com.stabilit.scm.cln.net.CommunicationException;
 import com.stabilit.scm.cln.net.client.netty.NettyOperationListener;
+import com.stabilit.scm.cln.req.IConnection;
 import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ConnectionPoint;

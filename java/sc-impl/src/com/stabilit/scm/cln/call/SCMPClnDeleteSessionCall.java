@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.client.IClient;
-import com.stabilit.scm.cln.client.IClientSession;
+import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -43,7 +43,7 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 * @param client
 	 *            the client
 	 */
-	public SCMPClnDeleteSessionCall(IClient client) {
+	public SCMPClnDeleteSessionCall(IRequester client) {
 		super(client);
 	}
 
@@ -55,19 +55,19 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDeleteSessionCall(IClient client, IClientSession scmpSession) {
+	public SCMPClnDeleteSessionCall(IRequester client, IClientSession scmpSession) {
 		super(client, scmpSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client) {
+	public ISCMPCall newInstance(IRequester client) {
 		return new SCMPClnDeleteSessionCall(client);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client, IClientSession scmpSession) {
+	public ISCMPCall newInstance(IRequester client, IClientSession scmpSession) {
 		return new SCMPClnDeleteSessionCall(client, scmpSession);
 	}
 

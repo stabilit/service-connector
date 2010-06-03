@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req.factory;
 
-import com.stabilit.scm.cln.client.IConnection;
 import com.stabilit.scm.cln.net.client.netty.http.NettyHttpConnection;
 import com.stabilit.scm.cln.net.client.netty.tcp.NettyTcpConnection;
 import com.stabilit.scm.cln.net.client.nio.http.NioHttpConnection;
 import com.stabilit.scm.cln.net.client.nio.tcp.NioTcpConnection;
+import com.stabilit.scm.cln.req.IConnection;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
 

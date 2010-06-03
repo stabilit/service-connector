@@ -16,22 +16,22 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
 import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
 
 /**
- * A factory for creating Client objects.
+ * A factory for creating Requester objects.
  */
-public class ClientFactory extends Factory {
+public class RequesterFactory extends Factory {
 
 	/**
-	 * Instantiates a new client factory.
+	 * Instantiates a new requester factory.
 	 */
-	public ClientFactory() {
-		Client client = new Client();
+	public RequesterFactory() {
+		Requester client = new Requester();
 		this.factoryMap.put(DEFAULT, client);
 	}
 
@@ -42,9 +42,9 @@ public class ClientFactory extends Factory {
 	 *            the client configuration
 	 * @return the i client
 	 */
-	public IClient newInstance(IClientConfigItem clientConfig) {
+	public IRequester newInstance(IClientConfigItem clientConfig) {
 		IFactoryable factoryInstance = this.newInstance();
-		IClient client = (IClient) factoryInstance;
+		IRequester client = (IRequester) factoryInstance;
 		client.setClientConfig(clientConfig);
 		return client;
 	}
@@ -62,9 +62,9 @@ public class ClientFactory extends Factory {
 	 *            the number of threads
 	 * @return the client
 	 */
-	public IClient newInstance(String host, int port, String con, int numberOfThreads) {
+	public IRequester newInstance(String host, int port, String con, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
-		IClient client = (IClient) factoryInstance;
+		IRequester client = (IRequester) factoryInstance;
 		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con, numberOfThreads);
 		client.setClientConfig(clientConfigItem);
 		return client;

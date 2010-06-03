@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.scmp;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.cln.client.IClient;
-import com.stabilit.scm.cln.client.IClientSession;
+import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.scmp.SCMPMessage;
 
@@ -34,7 +34,7 @@ import com.stabilit.scm.scmp.SCMPMessage;
 public class SCMPClientSession implements IClientSession {
 
 	/** The client. */
-	private IClient client;
+	private IRequester client;
 	/** The session id. */
 	private String sessionId;
 	/** The service name. */
@@ -50,7 +50,7 @@ public class SCMPClientSession implements IClientSession {
 	 * @param client
 	 *            the client
 	 */
-	public SCMPClientSession(IClient client) {
+	public SCMPClientSession(IRequester client) {
 		this(client, null, null);
 	}
 
@@ -64,7 +64,7 @@ public class SCMPClientSession implements IClientSession {
 	 * @param sessionInfo
 	 *            the session info
 	 */
-	public SCMPClientSession(IClient client, String serviceName, String sessionInfo) {
+	public SCMPClientSession(IRequester client, String serviceName, String sessionInfo) {
 		this.client = client;
 		this.serviceName = serviceName;
 		this.sessionInfo = sessionInfo;

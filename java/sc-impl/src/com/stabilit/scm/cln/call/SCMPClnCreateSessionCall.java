@@ -18,7 +18,7 @@ package com.stabilit.scm.cln.call;
 
 import java.net.InetAddress;
 
-import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -44,7 +44,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPClnCreateSessionCall(IClient client) {
+	public SCMPClnCreateSessionCall(IRequester client) {
 		this.client = client;
 	}
 
@@ -63,7 +63,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IClient client) {
+	public ISCMPCall newInstance(IRequester client) {
 		return new SCMPClnCreateSessionCall(client);
 	}
 

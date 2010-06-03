@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.client.IClient;
-import com.stabilit.scm.cln.client.IClientSession;
-import com.stabilit.scm.cln.client.IConnection;
 import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IConnection;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.factory.ConnectionFactory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.PerformancePoint;
@@ -31,12 +31,12 @@ import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Client. Implements a general behavior of a client. Defines how to connect/disconnect, send/receive has to
+ * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive has to
  * process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
-public class Client implements IClient {
+public class Requester implements IRequester {
 
 	/** The client config. */
 	private IClientConfigItem clientConfig;
@@ -53,14 +53,14 @@ public class Client implements IClient {
 	/**
 	 * Instantiates a new client.
 	 */
-	public Client() {
+	public Requester() {
 		msgID = new SCMPMessageID();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
-		return new Client();
+		return new Requester();
 	}
 
 	/** {@inheritDoc} */
