@@ -14,45 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.registry;
-
-import com.stabilit.scm.util.MapBean;
+package com.stabilit.scm.srv.server;
 
 /**
- * The Class ConnectionRegistry. Registry stores entries for properly connected clients.
+ * The Class EndpointAdapter. Provides basic functionality for endpoints.
  * 
  * @author JTraber
  */
-public final class ConnectionRegistry extends Registry {
+public abstract class EndpointAdapter implements IEndpoint {
 
-	/** The instance. */
-	private static ConnectionRegistry instance = new ConnectionRegistry();
+	/** The server. */
+	protected IServer server;
 
 	/**
-	 * Instantiates a new connection registry.
+	 * Instantiates a new EndpointAdapter.
 	 */
-	private ConnectionRegistry() {
+	public EndpointAdapter() {
+		this.server = null;
 	}
 
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static ConnectionRegistry getCurrentInstance() {
-		return instance;
+	/** {@inheritDoc} */
+	@Override
+	public IServer getServer() {
+		return server;
 	}
 
-	/**
-	 * Adds an entry.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param mapBean
-	 *            the map bean
-	 *            TODO (TRN) (DONE JOT) what is this good for? - adding a connection to the registry
-	 */
-	public void add(Object key, MapBean<Object> mapBean) {
-		this.put(key, mapBean);
+	/** {@inheritDoc} */
+	public void setServer(IServer server) {
+		this.server = server;
 	}
 }

@@ -87,7 +87,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
+		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		Assert.assertEquals("", scEntry);
 		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.clnAttachBefore();

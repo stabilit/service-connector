@@ -27,7 +27,7 @@ import com.stabilit.scm.ctx.IRequestContext;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.LoggerPoint;
-import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ClientRegistry;
 import com.stabilit.scm.registry.ServiceRegistry;
 import com.stabilit.scm.registry.ServiceRegistryItem;
 import com.stabilit.scm.registry.SessionRegistry;
@@ -95,8 +95,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// first verify that client has correctly attached
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
+		MapBean<?> mapBean = clientRegistry.get(socketAddress);
 
 		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {

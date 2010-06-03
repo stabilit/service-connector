@@ -23,7 +23,7 @@ import com.stabilit.scm.ctx.IRequestContext;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.LoggerPoint;
-import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ClientRegistry;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.IResponse;
 import com.stabilit.scm.scmp.SCMPError;
@@ -88,9 +88,9 @@ public class AttachCommand extends CommandAdapter implements IPassThrough {
 	public void run(IRequest request, IResponse response) throws Exception {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
+		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		MapBean<?> mapBean = clientRegistry.get(socketAddress);
 
 		if (mapBean != null) {
 			if (LoggerPoint.getInstance().isWarn()) {
@@ -101,7 +101,7 @@ public class AttachCommand extends CommandAdapter implements IPassThrough {
 			throw scmpCommandException;
 		}
 		// add entry in connection registry for current client
-		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
+		clientRegistry.add(socketAddress, request.getAttributeMapBean());
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);

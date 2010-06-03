@@ -28,14 +28,14 @@ import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.srv.net.server.nio.RequestThread;
-import com.stabilit.scm.srv.server.ServerEndpointAdapter;
+import com.stabilit.scm.srv.server.EndpointAdapter;
 
 /**
  * The Class NioHttpEndpoint. Concrete server implementation with Nio for Http.
  * 
  * @author JTraber
  */
-public class NioHttpEndpoint extends ServerEndpointAdapter implements Runnable {
+public class NioHttpEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The host. */
 	private String host;

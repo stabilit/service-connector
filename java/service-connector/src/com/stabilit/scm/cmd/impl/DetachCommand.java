@@ -21,7 +21,7 @@ import java.net.SocketAddress;
 import com.stabilit.scm.ctx.IRequestContext;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.LoggerPoint;
-import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ClientRegistry;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.IResponse;
 import com.stabilit.scm.scmp.SCMPError;
@@ -82,9 +82,9 @@ public class DetachCommand extends CommandAdapter implements IPassThrough {
 	public void run(IRequest request, IResponse response) throws Exception {
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
+		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
+		MapBean<?> mapBean = clientRegistry.get(socketAddress);
 		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
@@ -94,7 +94,7 @@ public class DetachCommand extends CommandAdapter implements IPassThrough {
 			throw scmpCommandException;
 		}
 		// remove client entry from connection registry
-		connectionRegistry.remove(socketAddress);
+		clientRegistry.remove(socketAddress);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());

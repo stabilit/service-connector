@@ -27,14 +27,14 @@ import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.srv.registry.ServerRegistry;
 import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.scm.srv.server.ServerEndpointAdapter;
+import com.stabilit.scm.srv.server.EndpointAdapter;
 
 /**
  * The Class NettyHttpEndpoint. Concrete server implementation with JBoss Netty for Http.
  * 
  * @author JTraber
  */
-public class NettyHttpEndpoint extends ServerEndpointAdapter implements Runnable {
+public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;

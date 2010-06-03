@@ -18,7 +18,7 @@ package com.stabilit.scm.cmd.impl;
 
 import com.stabilit.scm.cln.msg.impl.InspectMessage;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ClientRegistry;
 import com.stabilit.scm.registry.ServiceRegistry;
 import com.stabilit.scm.registry.SessionRegistry;
 import com.stabilit.scm.scmp.IRequest;
@@ -77,7 +77,7 @@ public class InspectCommand extends CommandAdapter {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
+		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 
@@ -88,7 +88,7 @@ public class InspectCommand extends CommandAdapter {
 		InspectMessage inspectMsg = new InspectMessage();
 
 		// dump internal registries
-		inspectMsg.setAttribute("connectionRegistry", connectionRegistry);
+		inspectMsg.setAttribute("clientRegistry", clientRegistry);
 		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
 		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);
 		scmpReply.setBody(inspectMsg);

@@ -72,7 +72,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 
 		String expectedScEntry = ":compression=false;localDateTime=" + localDateTimeOfConnect
 				+ ";scVersion=1.0-000;keepAliveTimeout=30,360;";
-		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
+		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
@@ -110,7 +110,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 
 		String expectedScEntry = ":compression=false;localDateTime=" + localDateTimeOfConnect
 				+ ";scVersion=1.0-000;keepAliveTimeout=30,360;";
-		String scEntry = (String) inspectMsg.getAttribute("connectionRegistry");
+		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
