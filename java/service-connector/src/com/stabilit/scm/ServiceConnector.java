@@ -96,9 +96,9 @@ public final class ServiceConnector {
 		try {
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-			ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.sc.registry:type=ConnectionRegistry");
-			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
-			ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
+			ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.scm.registry:type=ConnectionRegistry");
+			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
+			ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(ConnectionRegistry.getCurrentInstance(), mxbeanNameConnReg);

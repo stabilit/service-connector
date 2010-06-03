@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.scm.cln.client;
 
-import com.stabilit.sc.cln.config.IClientConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Interface IClient abstracts client functionality.

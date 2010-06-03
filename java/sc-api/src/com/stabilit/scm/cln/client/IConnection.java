@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.scm.cln.client;
 
-import com.stabilit.sc.net.ICommunicationPoint;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.net.ICommunicationPoint;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Interface IConnection abstracts any connection to a server.

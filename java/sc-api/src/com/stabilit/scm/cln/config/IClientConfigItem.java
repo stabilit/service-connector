@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.config;
+package com.stabilit.scm.cln.config;
 
 /**
  * The Interface IClientConfigItem.

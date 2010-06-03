@@ -25,7 +25,6 @@ import org.junit.Test;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.echo.EchoSCTestCase;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
-import com.stabilit.scm.unit.test.mt.MTSuperTestCase.MTClientThread;
 
 public class MTEchoSCTestCase extends MTSuperTestCase {
 

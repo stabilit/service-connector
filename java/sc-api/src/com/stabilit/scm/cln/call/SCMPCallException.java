@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.call;
+package com.stabilit.scm.cln.call;
 
-import com.stabilit.sc.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPFault;
 
 /**
  * The Class SCMPCallException. Exception occurs when invoking a call fails.

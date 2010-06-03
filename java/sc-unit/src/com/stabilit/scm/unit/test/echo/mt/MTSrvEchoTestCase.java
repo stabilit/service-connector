@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
-import com.stabilit.scm.unit.test.mt.MTSuperTestCase.MTClientThread;
 
 public class MTSrvEchoTestCase extends MTSuperTestCase {
 
