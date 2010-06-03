@@ -102,7 +102,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: not connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

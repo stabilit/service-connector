@@ -61,7 +61,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CONNECT;
+		return SCMPMsgType.ATTACH;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: already connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}

@@ -55,7 +55,7 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.DISCONNECT;
+		return SCMPMsgType.DETACH;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class DisconnectCommand extends CommandAdapter implements IPassThrough {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_CONNECTED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
