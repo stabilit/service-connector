@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp;
+package com.stabilit.scm.scmp;
 
 import java.net.SocketAddress;
 
-import com.stabilit.sc.ctx.IRequestContext;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.ctx.IRequestContext;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.

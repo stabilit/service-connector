@@ -14,18 +14,18 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.scm.cln.client;
 
-import com.stabilit.sc.cln.client.factory.ConnectionFactory;
-import com.stabilit.sc.cln.config.IClientConfigItem;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.PerformancePoint;
-import com.stabilit.sc.listener.RuntimePoint;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMessageID;
-import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
-import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.cln.client.factory.ConnectionFactory;
+import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.listener.RuntimePoint;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMessageID;
+import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 
 /**
  * The Class Client. Implements a general behavior of a client. Defines how to connect/disconnect, send/receive has to

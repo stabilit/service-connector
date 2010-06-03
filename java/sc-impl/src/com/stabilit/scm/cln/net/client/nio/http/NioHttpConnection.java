@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.net.client.nio.http;
+package com.stabilit.scm.cln.net.client.nio.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,16 +22,16 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.cln.client.IConnection;
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.net.FrameDecoderFactory;
-import com.stabilit.sc.net.IFrameDecoder;
-import com.stabilit.sc.net.SCMPStreamHttpUtil;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.srv.net.SCMPCommunicationException;
+import com.stabilit.scm.cln.client.IConnection;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.net.FrameDecoderFactory;
+import com.stabilit.scm.net.IFrameDecoder;
+import com.stabilit.scm.net.SCMPStreamHttpUtil;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.srv.net.SCMPCommunicationException;
 
 /**
  * The Class NioHttpConnection. Concrete connection implementation on Nio base for Http.

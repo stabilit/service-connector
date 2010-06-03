@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cmd.impl;
+package com.stabilit.scm.cmd.impl;
 
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.registry.ConnectionRegistry;
-import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.SessionRegistry;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.util.DateTimeUtility;
+import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ServiceRegistry;
+import com.stabilit.scm.registry.SessionRegistry;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.cmd.SCMPValidatorException;
+import com.stabilit.scm.util.DateTimeUtility;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used

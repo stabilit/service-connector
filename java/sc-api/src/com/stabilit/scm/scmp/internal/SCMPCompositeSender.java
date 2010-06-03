@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp.internal;
+package com.stabilit.scm.scmp.internal;
 
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides

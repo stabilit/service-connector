@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
-import com.stabilit.sc.log.Level;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
+import com.stabilit.scm.log.Level;
 
 /**
  * The Class Log4jLogger. Provides Access to log4j framework. Logging works over log4j. Configurations are in log4j

@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.sim;
+package com.stabilit.scm.sim;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.sim.cmd.factory.impl.SimulationServerCommandFactory;
-import com.stabilit.sc.sim.server.SimluationServerFactory;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
-import com.stabilit.sc.srv.conf.ServerConfig;
-import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.server.IServer;
-import com.stabilit.sc.srv.server.ServerFactory;
+import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
+import com.stabilit.scm.sim.server.SimluationServerFactory;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.conf.ServerConfig;
+import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.server.ServerFactory;
 
 public class Simulation {
 

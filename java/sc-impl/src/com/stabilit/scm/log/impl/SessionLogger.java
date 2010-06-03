@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
 import java.util.Formatter;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.listener.ISessionListener;
-import com.stabilit.sc.listener.SessionEvent;
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.listener.ISessionListener;
+import com.stabilit.scm.listener.SessionEvent;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
 
 public class SessionLogger implements ISessionListener, ILoggerDecorator {
 

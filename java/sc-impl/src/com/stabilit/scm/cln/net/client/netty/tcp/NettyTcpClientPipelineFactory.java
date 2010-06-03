@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.net.client.netty.tcp;
+package com.stabilit.scm.cln.net.client.netty.tcp;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -24,8 +24,8 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
  * A factory for creating NettyTcpClientPipelineFactory objects.

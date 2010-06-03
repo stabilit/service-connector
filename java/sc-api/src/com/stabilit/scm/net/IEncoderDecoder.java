@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.

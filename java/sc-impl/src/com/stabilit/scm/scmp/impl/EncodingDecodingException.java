@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp.impl;
+package com.stabilit.scm.scmp.impl;
 
 /**
  * The Class EncodingDecodingException. Occurs when encoding/decoding fails.

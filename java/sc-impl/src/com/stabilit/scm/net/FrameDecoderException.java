@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
 /**
  * The Class FrameDecoderException. Occurs when decoding frame fails.

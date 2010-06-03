@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.scm.registry;
 
-import com.stabilit.sc.listener.SessionPoint;
-import com.stabilit.sc.scmp.Session;
+import com.stabilit.scm.listener.SessionPoint;
+import com.stabilit.scm.scmp.Session;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions.

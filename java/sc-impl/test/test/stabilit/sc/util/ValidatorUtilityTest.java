@@ -25,8 +25,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.util.ValidatorException;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.scm.util.ValidatorException;
+import com.stabilit.scm.util.ValidatorUtility;
 
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.

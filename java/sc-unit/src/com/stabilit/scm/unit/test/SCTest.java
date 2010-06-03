@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.scm.unit.test;
 
 import junit.framework.Assert;
 
@@ -24,25 +24,25 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.stabilit.sc.test.SCImplTest;
 
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.attach.AttachTestCase;
-import com.stabilit.sc.unit.test.attach.DetachTestCase;
-import com.stabilit.sc.unit.test.echo.EchoSCLargeTestCase;
-import com.stabilit.sc.unit.test.echo.EchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.SrvEchoLargeTestCase;
-import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
-import com.stabilit.sc.unit.test.register.DeRegisterServiceTestCase;
-import com.stabilit.sc.unit.test.register.RegisterServiceTestCase;
-import com.stabilit.sc.unit.test.session.ClnCreateSessionTestCase;
-import com.stabilit.sc.unit.test.session.ClnDeleteSessionTestCase;
-import com.stabilit.sc.unit.test.srvData.SrvDataLargeTestCase;
-import com.stabilit.sc.unit.test.srvData.SrvDataTestCase;
-import com.stabilit.sc.unit.test.worse.WorseSCServerToClientTestCase;
-import com.stabilit.sc.unit.test.worse.WorseSCServerToServiceTestCase;
-import com.stabilit.sc.unit.test.worse.WorseScenarioSimulationServerTestCase;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.attach.AttachTestCase;
+import com.stabilit.scm.unit.test.attach.DetachTestCase;
+import com.stabilit.scm.unit.test.echo.EchoSCLargeTestCase;
+import com.stabilit.scm.unit.test.echo.EchoSCTestCase;
+import com.stabilit.scm.unit.test.echo.SrvEchoLargeTestCase;
+import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
+import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
+import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
+import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
+import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
+import com.stabilit.scm.unit.test.srvData.SrvDataLargeTestCase;
+import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
+import com.stabilit.scm.unit.test.worse.WorseSCServerToClientTestCase;
+import com.stabilit.scm.unit.test.worse.WorseSCServerToServiceTestCase;
+import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 /**
  * @author JTraber

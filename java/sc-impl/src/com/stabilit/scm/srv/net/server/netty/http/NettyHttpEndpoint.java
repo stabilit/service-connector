@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty.http;
+package com.stabilit.scm.srv.net.server.netty.http;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
@@ -23,11 +23,11 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.srv.registry.ServerRegistry;
-import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.sc.srv.server.ServerEndpointAdapter;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.scm.srv.server.ServerEndpointAdapter;
 
 /**
  * The Class NettyHttpEndpoint. Concrete server implementation with JBoss Netty for Http.

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc;
+package com.stabilit.scm;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -22,17 +22,17 @@ import java.util.List;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import com.stabilit.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.registry.ConnectionRegistry;
-import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.SessionRegistry;
-import com.stabilit.sc.server.SCServerFactory;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
-import com.stabilit.sc.srv.conf.ServerConfig;
-import com.stabilit.sc.srv.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.server.IServer;
+import com.stabilit.scm.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.registry.ServiceRegistry;
+import com.stabilit.scm.registry.SessionRegistry;
+import com.stabilit.scm.server.SCServerFactory;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.conf.ServerConfig;
+import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.server.IServer;
 
 /**
  * The Class ServiceConnector. Starts the core (servers) of the Service Connector.

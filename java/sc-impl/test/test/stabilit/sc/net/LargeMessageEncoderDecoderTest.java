@@ -25,15 +25,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.SCMPBodyType;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPHeadlineKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.SCMPPart;
+import com.stabilit.scm.net.EncoderDecoderFactory;
+import com.stabilit.scm.net.IEncoderDecoder;
+import com.stabilit.scm.scmp.SCMPBodyType;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.internal.SCMPPart;
 
 /**
  * The Class LargeMessageEncoderDecoderTest.

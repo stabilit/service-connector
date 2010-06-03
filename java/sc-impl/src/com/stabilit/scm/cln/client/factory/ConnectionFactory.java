@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client.factory;
+package com.stabilit.scm.cln.client.factory;
 
-import com.stabilit.sc.cln.client.IConnection;
-import com.stabilit.sc.cln.net.client.netty.http.NettyHttpConnection;
-import com.stabilit.sc.cln.net.client.netty.tcp.NettyTcpConnection;
-import com.stabilit.sc.cln.net.client.nio.http.NioHttpConnection;
-import com.stabilit.sc.cln.net.client.nio.tcp.NioTcpConnection;
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.scm.cln.client.IConnection;
+import com.stabilit.scm.cln.net.client.netty.http.NettyHttpConnection;
+import com.stabilit.scm.cln.net.client.netty.tcp.NettyTcpConnection;
+import com.stabilit.scm.cln.net.client.nio.http.NioHttpConnection;
+import com.stabilit.scm.cln.net.client.nio.tcp.NioTcpConnection;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * A factory for creating connection objects. Provides access to concrete client instances. 

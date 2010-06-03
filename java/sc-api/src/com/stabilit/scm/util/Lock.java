@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.util;
+package com.stabilit.scm.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.scm.listener.ExceptionPoint;
 
 /**
  * The Class Lock. Used instead of synchronized, is faster. Guarantees thread safety.

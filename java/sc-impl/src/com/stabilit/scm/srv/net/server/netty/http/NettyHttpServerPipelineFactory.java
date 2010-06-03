@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty.http;
+package com.stabilit.scm.srv.net.server.netty.http;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -23,7 +23,7 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * A factory for creating NettyHttpServerPipeline objects.

@@ -20,9 +20,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
-import com.stabilit.sc.scmp.internal.SCMPSendPart;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.scmp.internal.SCMPSendPart;
 
 /**
  * The Class SCMPLargeResponseTest.

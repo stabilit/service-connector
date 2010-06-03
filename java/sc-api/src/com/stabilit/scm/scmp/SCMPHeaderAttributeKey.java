@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp;
+package com.stabilit.scm.scmp;
 
 /**
  * The Enum SCMPHeaderAttributeKey. Defines possible header attributes in SCMP.

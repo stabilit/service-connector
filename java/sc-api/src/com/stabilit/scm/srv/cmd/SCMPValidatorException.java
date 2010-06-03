@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.scm.srv.cmd;
 
-import com.stabilit.sc.scmp.IFaultResponse;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.util.MapBean;
-import com.stabilit.sc.util.ValidatorException;
+import com.stabilit.scm.scmp.IFaultResponse;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.util.ValidatorException;
 
 /**
  * The Class SCMPValidatorException. Occurs when validation of a request fails.

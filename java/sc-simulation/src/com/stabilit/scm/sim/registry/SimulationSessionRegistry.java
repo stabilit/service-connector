@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.sim.registry;
+package com.stabilit.scm.sim.registry;
 
-import com.stabilit.sc.registry.Registry;
-import com.stabilit.sc.scmp.Session;
+import com.stabilit.scm.registry.Registry;
+import com.stabilit.scm.scmp.Session;
 
 /**
  * @author JTraber

@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.client;
+package com.stabilit.scm.srv.client;
 
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.cln.config.IClientConfigItem;
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * A factory for creating SCClient objects. Provides access to concrete instances of SC clients.

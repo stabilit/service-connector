@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.call;
+package com.stabilit.scm.cln.call;
 
 /**
  * The Class SCMPCallFactory. Responsible for instantiating calls.

@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.msg.impl;
+package com.stabilit.scm.cln.msg.impl;
 
-import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.SCMPMsgType;
 
 /**
  * The Class EchoMessage. Echo Message used for testing/maintaining.

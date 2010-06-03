@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.registry;
+package com.stabilit.scm.srv.registry;
 
-import com.stabilit.sc.registry.Registry;
-import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.server.IServer;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.registry.Registry;
+import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ServerRegistry. Server registry stores every server which completed register process correctly.

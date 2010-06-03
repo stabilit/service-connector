@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log;
+package com.stabilit.scm.log;
 
-import com.stabilit.sc.factory.IFactoryable;
+import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * The Interface ILoggerDecorator. For decorating a concrete logger.

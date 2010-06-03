@@ -14,16 +14,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
 import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.listener.ILoggerListener;
-import com.stabilit.sc.listener.LoggerEvent;
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.listener.ILoggerListener;
+import com.stabilit.scm.listener.LoggerEvent;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
 
 /**
  * The Class GeneralLogger. Provides functionality of logging an <code>LoggerEvent</code>.

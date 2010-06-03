@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty.http;
+package com.stabilit.scm.srv.net.server.netty.http;
 
 import java.net.SocketAddress;
 
@@ -26,27 +26,27 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.LoggerPoint;
-import com.stabilit.sc.listener.PerformancePoint;
-import com.stabilit.sc.net.netty.NettyHttpRequest;
-import com.stabilit.sc.net.netty.NettyHttpResponse;
-import com.stabilit.sc.scmp.IFaultResponse;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMessageID;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
-import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.net.server.netty.NettyCommandRequest;
-import com.stabilit.sc.srv.registry.ServerRegistry;
-import com.stabilit.sc.util.Lock;
-import com.stabilit.sc.util.LockAdapter;
-import com.stabilit.sc.util.Lockable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.net.netty.NettyHttpRequest;
+import com.stabilit.scm.net.netty.NettyHttpResponse;
+import com.stabilit.scm.scmp.IFaultResponse;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMessageID;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.srv.cmd.ICommand;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.net.server.netty.NettyCommandRequest;
+import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.util.Lock;
+import com.stabilit.scm.util.LockAdapter;
+import com.stabilit.scm.util.Lockable;
 
 /**
  * The Class NettyHttpServerRequestHandler. This class is responsible for handling Http requests. Is called from the

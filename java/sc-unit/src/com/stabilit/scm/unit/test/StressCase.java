@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.scm.unit.test;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPAttachCall;
-import com.stabilit.sc.cln.call.SCMPDetachCall;
-import com.stabilit.sc.cln.scmp.SCMPClientSession;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class StressTest.

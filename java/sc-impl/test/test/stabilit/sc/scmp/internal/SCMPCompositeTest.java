@@ -20,12 +20,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.scmp.SCMPBodyType;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
-import com.stabilit.sc.scmp.internal.SCMPPart;
+import com.stabilit.scm.scmp.SCMPBodyType;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.scmp.internal.SCMPPart;
 
 /**
  * The Class SCMPCompositeTest.

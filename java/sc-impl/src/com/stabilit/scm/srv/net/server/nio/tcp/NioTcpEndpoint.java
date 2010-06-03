@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.nio.tcp;
+package com.stabilit.scm.srv.net.server.nio.tcp;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,11 +24,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.srv.net.server.nio.RequestThread;
-import com.stabilit.sc.srv.server.ServerEndpointAdapter;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.srv.net.server.nio.RequestThread;
+import com.stabilit.scm.srv.server.ServerEndpointAdapter;
 
 /**
  * The Class NioTcpEndpoint. Concrete server implementation with Nio for Tcp.

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.conf;
+package com.stabilit.scm.srv.conf;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.srv.config.IServerConfigItem;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.srv.config.IServerConfigItem;
 
 /**
  * The Class ServerConfig. Server configuration may hold more than one configuration for a server, is represented by

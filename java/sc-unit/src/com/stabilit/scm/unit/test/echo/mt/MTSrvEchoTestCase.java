@@ -14,15 +14,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.echo.mt;
+package com.stabilit.scm.unit.test.echo.mt;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 
-import com.stabilit.sc.unit.test.echo.SrvEchoTestCase;
-import com.stabilit.sc.unit.test.mt.MTSuperTestCase;
+import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
+import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
+import com.stabilit.scm.unit.test.mt.MTSuperTestCase.MTClientThread;
 
 public class MTSrvEchoTestCase extends MTSuperTestCase {
 

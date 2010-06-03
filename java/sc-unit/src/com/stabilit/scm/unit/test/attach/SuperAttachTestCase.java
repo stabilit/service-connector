@@ -14,20 +14,20 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.attach;
+package com.stabilit.scm.unit.test.attach;
 
 import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPAttachCall;
-import com.stabilit.sc.cln.call.SCMPDetachCall;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.unit.test.SuperTestCase;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.unit.test.SuperTestCase;
+import com.stabilit.scm.util.ValidatorUtility;
 
 /**
  * @author JTraber

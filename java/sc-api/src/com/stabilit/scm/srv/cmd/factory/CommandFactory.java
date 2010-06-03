@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd.factory;
+package com.stabilit.scm.srv.cmd.factory;
 
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.srv.cmd.ICommand;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.srv.cmd.ICommand;
 
 /**
  * A factory for creating Command objects.

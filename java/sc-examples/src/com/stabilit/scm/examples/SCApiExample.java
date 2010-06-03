@@ -19,17 +19,17 @@
 /**
  * 
  */
-package com.stabilit.sc.examples;
+package com.stabilit.scm.examples;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnDataCall;
-import com.stabilit.sc.cln.call.SCMPAttachCall;
-import com.stabilit.sc.cln.call.SCMPDetachCall;
-import com.stabilit.sc.cln.client.ClientFactory;
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.cln.scmp.SCMPClientSession;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnDataCall;
+import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.cln.client.ClientFactory;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 
 /**

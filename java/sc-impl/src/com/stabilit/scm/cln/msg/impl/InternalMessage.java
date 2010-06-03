@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.msg.impl;
+package com.stabilit.scm.cln.msg.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,9 +27,9 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.net.DefaultEncoderDecoder;
-import com.stabilit.sc.scmp.IInternalMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.scm.net.DefaultEncoderDecoder;
+import com.stabilit.scm.scmp.IInternalMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
 
 /**
  * The Class InternalMessage. Internal Messages are used to communicate for testing / maintaining reasons.

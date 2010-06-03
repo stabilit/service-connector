@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
 
 /**
  * A factory for creating logger objects. Provides access to the concrete logger instances and logger decorator's.

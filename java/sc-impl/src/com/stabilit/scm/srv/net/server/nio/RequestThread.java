@@ -14,32 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.nio;
+package com.stabilit.scm.srv.net.server.nio;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.LoggerPoint;
-import com.stabilit.sc.listener.PerformancePoint;
-import com.stabilit.sc.net.nio.NioHttpRequest;
-import com.stabilit.sc.net.nio.NioHttpResponse;
-import com.stabilit.sc.net.nio.NioTcpDisconnectException;
-import com.stabilit.sc.scmp.IFaultResponse;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMessageID;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.SCMPCompositeSender;
-import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
-import com.stabilit.sc.srv.registry.ServerRegistry;
-import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.sc.srv.server.IServer;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.net.nio.NioHttpRequest;
+import com.stabilit.scm.net.nio.NioHttpResponse;
+import com.stabilit.scm.net.nio.NioTcpDisconnectException;
+import com.stabilit.scm.scmp.IFaultResponse;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMessageID;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.srv.cmd.ICommand;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.scm.srv.server.IServer;
 
 /**
  * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a command

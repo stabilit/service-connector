@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.scm.srv.cmd;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPMsgType;
 
 /**
  * The Interface ICommand.

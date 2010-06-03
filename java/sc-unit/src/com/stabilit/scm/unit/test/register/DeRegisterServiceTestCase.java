@@ -14,23 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.register;
+package com.stabilit.scm.unit.test.register;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallException;
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.call.SCMPInspectCall;
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.scm.cln.call.SCMPCallException;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SCTest;
 
 public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 

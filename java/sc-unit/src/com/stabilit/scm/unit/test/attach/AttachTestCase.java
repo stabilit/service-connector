@@ -14,25 +14,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.attach;
+package com.stabilit.scm.unit.test.attach;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallException;
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPAttachCall;
-import com.stabilit.sc.cln.call.SCMPDetachCall;
-import com.stabilit.sc.cln.call.SCMPInspectCall;
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SCTest;
-import com.stabilit.sc.unit.test.SuperTestCase;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallException;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SCTest;
+import com.stabilit.scm.unit.test.SuperTestCase;
+import com.stabilit.scm.util.ValidatorUtility;
 
 public class AttachTestCase extends SuperTestCase {
 

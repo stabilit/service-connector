@@ -14,36 +14,36 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.scm.unit.test;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.stabilit.sc.ServiceConnector;
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.IConnectionListener;
-import com.stabilit.sc.listener.IExceptionListener;
-import com.stabilit.sc.listener.ILoggerListener;
-import com.stabilit.sc.listener.IPerformanceListener;
-import com.stabilit.sc.listener.IRuntimeListener;
-import com.stabilit.sc.listener.ISessionListener;
-import com.stabilit.sc.listener.LoggerPoint;
-import com.stabilit.sc.listener.PerformancePoint;
-import com.stabilit.sc.listener.RuntimePoint;
-import com.stabilit.sc.listener.SessionPoint;
-import com.stabilit.sc.log.Level;
-import com.stabilit.sc.log.impl.ConnectionLogger;
-import com.stabilit.sc.log.impl.ExceptionLogger;
-import com.stabilit.sc.log.impl.GeneralLogger;
-import com.stabilit.sc.log.impl.LoggerFactory;
-import com.stabilit.sc.log.impl.PerformanceLogger;
-import com.stabilit.sc.log.impl.RuntimeLogger;
-import com.stabilit.sc.log.impl.SessionLogger;
-import com.stabilit.sc.sim.Simulation;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
-import com.stabilit.sc.srv.conf.ServerConfig;
-import com.stabilit.sc.unit.UnitCommandFactory;
+import com.stabilit.scm.ServiceConnector;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.listener.IConnectionListener;
+import com.stabilit.scm.listener.IExceptionListener;
+import com.stabilit.scm.listener.ILoggerListener;
+import com.stabilit.scm.listener.IPerformanceListener;
+import com.stabilit.scm.listener.IRuntimeListener;
+import com.stabilit.scm.listener.ISessionListener;
+import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.listener.RuntimePoint;
+import com.stabilit.scm.listener.SessionPoint;
+import com.stabilit.scm.log.Level;
+import com.stabilit.scm.log.impl.ConnectionLogger;
+import com.stabilit.scm.log.impl.ExceptionLogger;
+import com.stabilit.scm.log.impl.GeneralLogger;
+import com.stabilit.scm.log.impl.LoggerFactory;
+import com.stabilit.scm.log.impl.PerformanceLogger;
+import com.stabilit.scm.log.impl.RuntimeLogger;
+import com.stabilit.scm.log.impl.SessionLogger;
+import com.stabilit.scm.sim.Simulation;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.conf.ServerConfig;
+import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**
  * @author JTraber

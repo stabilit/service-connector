@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.scm.registry;
 
-import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.RuntimePoint;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.listener.RuntimePoint;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).

@@ -14,16 +14,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.scm.registry;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.registry.ServerRegistry;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ServiceRegistryItemPool. Pools incoming request for one service. It depends on service resource and

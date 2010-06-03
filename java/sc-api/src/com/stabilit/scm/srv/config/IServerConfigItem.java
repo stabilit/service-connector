@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.sc.srv.config;
+package com.stabilit.scm.srv.config;
 
 /**
  * The Interface IServerConfigItem.

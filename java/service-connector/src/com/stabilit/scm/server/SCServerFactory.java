@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.server;
+package com.stabilit.scm.server;
 
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.server.IServer;
-import com.stabilit.sc.srv.server.Server;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.server.Server;
 
 /**
  * A factory for creating SCServer objects. Provides access to concrete instances of SC servers.

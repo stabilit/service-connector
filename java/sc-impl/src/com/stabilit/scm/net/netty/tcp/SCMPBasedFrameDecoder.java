@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net.netty.tcp;
+package com.stabilit.scm.net.netty.tcp;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -22,8 +22,8 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
-import com.stabilit.sc.net.FrameDecoderFactory;
-import com.stabilit.sc.net.IFrameDecoder;
+import com.stabilit.scm.net.FrameDecoderFactory;
+import com.stabilit.scm.net.IFrameDecoder;
 
 /**
  * The Class SCMPBasedFrameDecoder. Decodes a SCMP frame.

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net.netty;
+package com.stabilit.scm.net.netty;
 
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
@@ -23,11 +23,11 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.ResponseAdapter;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.net.EncoderDecoderFactory;
+import com.stabilit.scm.net.IEncoderDecoder;
+import com.stabilit.scm.scmp.ResponseAdapter;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Tcp

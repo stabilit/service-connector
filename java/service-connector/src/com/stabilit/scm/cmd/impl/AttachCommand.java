@@ -14,30 +14,30 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cmd.impl;
+package com.stabilit.scm.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Date;
 
-import com.stabilit.sc.ctx.IRequestContext;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.listener.LoggerPoint;
-import com.stabilit.sc.registry.ConnectionRegistry;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.KeepAlive;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.IPassThrough;
-import com.stabilit.sc.srv.cmd.SCMPCommandException;
-import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.util.DateTimeUtility;
-import com.stabilit.sc.util.MapBean;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.scm.ctx.IRequestContext;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.registry.ConnectionRegistry;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.internal.KeepAlive;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.cmd.IPassThrough;
+import com.stabilit.scm.srv.cmd.SCMPCommandException;
+import com.stabilit.scm.srv.cmd.SCMPValidatorException;
+import com.stabilit.scm.util.DateTimeUtility;
+import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.util.ValidatorUtility;
 
 /**
  * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach

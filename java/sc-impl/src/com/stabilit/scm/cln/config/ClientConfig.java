@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.config;
+package com.stabilit.scm.cln.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.stabilit.sc.config.IConstants;
+import com.stabilit.scm.config.IConstants;
 
 /**
  * The Class ClientConfig. Client configuration may hold more than one configuration for a client, is represented

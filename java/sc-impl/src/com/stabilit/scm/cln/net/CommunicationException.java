@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.sc.cln.net;
+package com.stabilit.scm.cln.net;
 
 /**
  * The Class CommunicationException. Occurs when communicating process fails.

@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.net.client.netty.http;
+package com.stabilit.scm.cln.net.client.netty.http;
 
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.sc.cln.net.client.netty.NettyEvent;
+import com.stabilit.scm.cln.net.client.netty.NettyEvent;
 
 /**
  * The Class NettyHttpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching

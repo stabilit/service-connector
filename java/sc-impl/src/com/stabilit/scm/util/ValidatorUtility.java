@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.util;
+package com.stabilit.scm.util;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.scmp.internal.KeepAlive;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.scmp.internal.KeepAlive;
 
 /**
  * The Class ValidatorUtility.

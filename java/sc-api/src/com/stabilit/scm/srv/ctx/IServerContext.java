@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.ctx;
+package com.stabilit.scm.srv.ctx;
 
-import com.stabilit.sc.ctx.IContext;
-import com.stabilit.sc.srv.server.IServer;
+import com.stabilit.scm.ctx.IContext;
+import com.stabilit.scm.srv.server.IServer;
 
 /**
  * The Interface IServerContext.

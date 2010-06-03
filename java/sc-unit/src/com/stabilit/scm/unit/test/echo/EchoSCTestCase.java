@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.echo;
+package com.stabilit.scm.unit.test.echo;
 
 import java.util.Map;
 
@@ -23,16 +23,16 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPEchoSCCall;
-import com.stabilit.sc.cln.client.ClientFactory;
-import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPBodyType;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPEchoSCCall;
+import com.stabilit.scm.cln.client.ClientFactory;
+import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.scmp.SCMPBodyType;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SetupTestCases;
+import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class EchoSCTestCase extends SuperTestCase {
 

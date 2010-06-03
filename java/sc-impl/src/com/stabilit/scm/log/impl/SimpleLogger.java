@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,10 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
-import com.stabilit.sc.log.Level;
-import com.stabilit.sc.util.DateTimeUtility;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
+import com.stabilit.scm.log.Level;
+import com.stabilit.scm.util.DateTimeUtility;
 
 /**
  * The Class SimpleLogger. A simple implementation of a logger. Writes files using native java library.

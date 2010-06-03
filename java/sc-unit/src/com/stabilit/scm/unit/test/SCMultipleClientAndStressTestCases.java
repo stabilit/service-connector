@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.scm.unit.test;
 
 import junit.framework.Assert;
 
@@ -22,12 +22,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.echo.mt.MTEchoSCTestCase;
-import com.stabilit.sc.unit.test.echo.mt.MTSrvEchoTestCase;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.echo.mt.MTEchoSCTestCase;
+import com.stabilit.scm.unit.test.echo.mt.MTSrvEchoTestCase;
 
 /**
  * The Class SCMultipleClientAndStressTest.

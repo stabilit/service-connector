@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.scmp;
+package com.stabilit.scm.cln.scmp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stabilit.sc.registry.Registry;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.registry.Registry;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class SCMPSessionRegistry. Registry manages SCMPClientSessions.

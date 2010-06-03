@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.listener;
+package com.stabilit.scm.listener;
 
 import java.util.EventListener;
 
-import com.stabilit.sc.log.Level;
+import com.stabilit.scm.log.Level;
 
 /**
  * The Class LoggerPoint. Allows logging - fire debug/info/warn/exception/error/log/trace.

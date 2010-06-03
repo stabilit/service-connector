@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.scmp;
+package com.stabilit.scm.cln.scmp;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnCreateSessionCall;
-import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.client.IClientSession;
-import com.stabilit.sc.listener.RuntimePoint;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.client.IClientSession;
+import com.stabilit.scm.listener.RuntimePoint;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class SCMPClientSession. Represents a virtual connection between client and server. API programmer needs to

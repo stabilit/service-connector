@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp.internal;
+package com.stabilit.scm.scmp.internal;
 
-import com.stabilit.sc.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.scmp.SCMPHeadlineKey;
 
 /**
  * The Enum SCMPInternalStatus. Defines possible internal states in SCMP. Internal status reflects state of

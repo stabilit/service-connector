@@ -14,16 +14,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty;
+package com.stabilit.scm.srv.net.server.netty;
 
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.internal.SCMPCompositeReceiver;
-import com.stabilit.sc.scmp.internal.SCMPPart;
-import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.IPassThrough;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.scmp.internal.SCMPPart;
+import com.stabilit.scm.srv.cmd.ICommand;
+import com.stabilit.scm.srv.cmd.IPassThrough;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 
 /**
  * The Class NettyCommandRequest. NettyCommandRequest provides functions to read the command from a incoming request and

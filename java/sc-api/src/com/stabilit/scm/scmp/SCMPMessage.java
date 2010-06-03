@@ -14,14 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.scmp;
+package com.stabilit.scm.scmp;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.sc.SCVersion;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
+import com.stabilit.scm.SCVersion;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.scmp.internal.SCMPInternalStatus;
 
 /**
  * Service Connector Message Protocol. Data container for one message.

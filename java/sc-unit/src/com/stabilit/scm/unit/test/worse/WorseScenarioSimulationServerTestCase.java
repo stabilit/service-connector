@@ -14,25 +14,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.worse;
+package com.stabilit.scm.unit.test.worse;
 
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallException;
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnDataCall;
-import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.call.SCMPClnSystemCall;
-import com.stabilit.sc.cln.call.SCMPInspectCall;
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SCTest;
-import com.stabilit.sc.unit.test.session.SuperSessionRegisterTestCase;
+import com.stabilit.scm.cln.call.SCMPCallException;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnDataCall;
+import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.cln.call.SCMPClnSystemCall;
+import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SCTest;
+import com.stabilit.scm.unit.test.session.SuperSessionRegisterTestCase;
 
 /**
  * @author JTraber

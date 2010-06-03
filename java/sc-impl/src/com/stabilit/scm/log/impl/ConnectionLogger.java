@@ -14,17 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.log.impl;
+package com.stabilit.scm.log.impl;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Formatter;
 
-import com.stabilit.sc.config.IConstants;
-import com.stabilit.sc.listener.ConnectionEvent;
-import com.stabilit.sc.listener.IConnectionListener;
-import com.stabilit.sc.log.ILogger;
-import com.stabilit.sc.log.ILoggerDecorator;
+import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.listener.ConnectionEvent;
+import com.stabilit.scm.listener.IConnectionListener;
+import com.stabilit.scm.log.ILogger;
+import com.stabilit.scm.log.ILoggerDecorator;
 
 /**
  * The Class ConnectionLogger. Provides functionality of logging a <code>ConnectionEvent</code>.

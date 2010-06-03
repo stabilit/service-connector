@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.SCMPHeadlineKey;
 
 /**
  * The Class DefaultFrameDecoder.

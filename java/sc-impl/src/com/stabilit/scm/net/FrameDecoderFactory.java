@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
-import com.stabilit.sc.factory.Factory;
+import com.stabilit.scm.factory.Factory;
+
 
 /**
  * The Class FrameDecoderFactory. Provides access to concrete frame decoders.

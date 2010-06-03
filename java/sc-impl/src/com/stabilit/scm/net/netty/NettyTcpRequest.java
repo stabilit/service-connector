@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net.netty;
+package com.stabilit.scm.net.netty;
 
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
@@ -23,13 +23,13 @@ import java.net.SocketAddress;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.sc.ctx.RequestContext;
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.RequestAdapter;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.ctx.RequestContext;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.net.EncoderDecoderFactory;
+import com.stabilit.scm.net.IEncoderDecoder;
+import com.stabilit.scm.scmp.RequestAdapter;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp frame.

@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server.factory;
+package com.stabilit.scm.srv.server.factory;
 
-import com.stabilit.sc.factory.Factory;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.net.server.netty.http.NettyHttpEndpoint;
-import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpEnpoint;
-import com.stabilit.sc.srv.net.server.nio.http.NioHttpEndpoint;
-import com.stabilit.sc.srv.net.server.nio.tcp.NioTcpEndpoint;
-import com.stabilit.sc.srv.server.IEndpoint;
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.srv.net.server.netty.http.NettyHttpEndpoint;
+import com.stabilit.scm.srv.net.server.netty.tcp.NettyTcpEnpoint;
+import com.stabilit.scm.srv.net.server.nio.http.NioHttpEndpoint;
+import com.stabilit.scm.srv.net.server.nio.tcp.NioTcpEndpoint;
+import com.stabilit.scm.srv.server.IEndpoint;
 
 /**
  * A factory for creating ServerConnection objects. Provides access to concrete server instances. Possible servers

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.ctx;
+package com.stabilit.scm.ctx;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

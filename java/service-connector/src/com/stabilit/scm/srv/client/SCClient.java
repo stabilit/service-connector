@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.client;
+package com.stabilit.scm.srv.client;
 
-import com.stabilit.sc.cln.client.Client;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.PerformancePoint;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.client.Client;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class SCClient. Defines behavior of client in the context of Service Connector.

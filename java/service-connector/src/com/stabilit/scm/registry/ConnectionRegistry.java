@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.scm.registry;
 
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ConnectionRegistry. Registry stores entries for properly connected clients.

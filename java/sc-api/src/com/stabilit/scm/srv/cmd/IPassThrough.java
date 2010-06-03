@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.scm.srv.cmd;
 
 /**
  * The Interface IPassThrough. Marks commands which pass through messages. Is used to decide if a part message

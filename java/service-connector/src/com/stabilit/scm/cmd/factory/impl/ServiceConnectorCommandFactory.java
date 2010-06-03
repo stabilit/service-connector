@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cmd.factory.impl;
+package com.stabilit.scm.cmd.factory.impl;
 
-import com.stabilit.sc.cmd.impl.ClnCreateSessionCommand;
-import com.stabilit.sc.cmd.impl.ClnDataCommand;
-import com.stabilit.sc.cmd.impl.ClnDeleteSessionCommand;
-import com.stabilit.sc.cmd.impl.ClnEchoCommand;
-import com.stabilit.sc.cmd.impl.ClnSystemCommand;
-import com.stabilit.sc.cmd.impl.AttachCommand;
-import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
-import com.stabilit.sc.cmd.impl.DetachCommand;
-import com.stabilit.sc.cmd.impl.EchoSCCommand;
-import com.stabilit.sc.cmd.impl.InspectCommand;
-import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
-import com.stabilit.sc.srv.cmd.ICommand;
-import com.stabilit.sc.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.cmd.impl.AttachCommand;
+import com.stabilit.scm.cmd.impl.ClnCreateSessionCommand;
+import com.stabilit.scm.cmd.impl.ClnDataCommand;
+import com.stabilit.scm.cmd.impl.ClnDeleteSessionCommand;
+import com.stabilit.scm.cmd.impl.ClnEchoCommand;
+import com.stabilit.scm.cmd.impl.ClnSystemCommand;
+import com.stabilit.scm.cmd.impl.DeRegisterServiceCommand;
+import com.stabilit.scm.cmd.impl.DetachCommand;
+import com.stabilit.scm.cmd.impl.EchoSCCommand;
+import com.stabilit.scm.cmd.impl.InspectCommand;
+import com.stabilit.scm.cmd.impl.RegisterServiceCommand;
+import com.stabilit.scm.srv.cmd.ICommand;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 
 /**
  * A factory for creating ServiceConnectorCommand objects. 

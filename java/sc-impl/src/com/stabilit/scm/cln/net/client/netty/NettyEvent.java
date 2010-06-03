@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.sc.cln.net.client.netty;
+package com.stabilit.scm.cln.net.client.netty;
 
 /**
  * The Class NettyEvent. Wraps a successful response of Netty framework. Used to unify the process of catching the

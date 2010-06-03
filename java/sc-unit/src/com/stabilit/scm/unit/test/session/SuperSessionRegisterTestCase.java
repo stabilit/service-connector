@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.session;
+package com.stabilit.scm.unit.test.session;
 
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.scmp.SCMPClientSession;
-import com.stabilit.sc.unit.test.register.SuperRegisterTestCase;
+import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.unit.test.register.SuperRegisterTestCase;
 
 /**
  * @author JTraber

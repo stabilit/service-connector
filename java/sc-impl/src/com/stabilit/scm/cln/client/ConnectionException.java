@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.scm.cln.client;
 
 /**
  * The Class ConnectionException. Occures when setting up connection fails.

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,9 +23,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
-import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.scmp.SCMPBodyType;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.scmp.SCMPBodyType;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class SCMPStreamHttpUtil. Defines SCMP encoding/decoding of object into/from stream. Only used in case of

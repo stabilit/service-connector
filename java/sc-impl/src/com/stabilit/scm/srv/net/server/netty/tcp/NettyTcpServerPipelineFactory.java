@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty.tcp;
+package com.stabilit.scm.srv.net.server.netty.tcp;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 
-import com.stabilit.sc.net.netty.tcp.SCMPBasedFrameDecoder;
+import com.stabilit.scm.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
  * A factory for creating NettyTcpServerPipeline objects.

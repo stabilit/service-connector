@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.scm.unit.test;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,10 +25,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.sc.cln.client.ClientFactory;
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.config.ClientConfig;
-import com.stabilit.sc.listener.ConnectionPoint;
+import com.stabilit.scm.cln.client.ClientFactory;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.listener.ConnectionPoint;
 
 /**
  * @author JTraber

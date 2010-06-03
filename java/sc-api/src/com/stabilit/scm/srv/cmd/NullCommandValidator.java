@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.cmd;
+package com.stabilit.scm.srv.cmd;
 
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.util.ValidatorException;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.util.ValidatorException;
 
 /**
  * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation.

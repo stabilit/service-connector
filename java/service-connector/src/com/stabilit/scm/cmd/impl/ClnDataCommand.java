@@ -14,28 +14,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cmd.impl;
+package com.stabilit.scm.cmd.impl;
 
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.registry.ServiceRegistry;
-import com.stabilit.sc.registry.ServiceRegistryItem;
-import com.stabilit.sc.registry.SessionRegistry;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.Session;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.IPassThrough;
-import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.srv.net.SCMPCommunicationException;
-import com.stabilit.sc.util.ValidatorUtility;
+import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.registry.ServiceRegistry;
+import com.stabilit.scm.registry.ServiceRegistryItem;
+import com.stabilit.scm.registry.SessionRegistry;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPError;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.scmp.Session;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.cmd.IPassThrough;
+import com.stabilit.scm.srv.cmd.SCMPValidatorException;
+import com.stabilit.scm.srv.net.SCMPCommunicationException;
+import com.stabilit.scm.util.ValidatorUtility;
 
 /**
  * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data

@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.sc.cln.net.client.netty;
+package com.stabilit.scm.cln.net.client.netty;
 
 /**
  * The Class NettyExceptionEvent. Wraps an exception response from Netty framework. Used to unify the process of

@@ -14,17 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net.nio;
+package com.stabilit.scm.net.nio;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.sc.listener.ConnectionPoint;
-import com.stabilit.sc.net.EncoderDecoderFactory;
-import com.stabilit.sc.net.IEncoderDecoder;
-import com.stabilit.sc.scmp.ResponseAdapter;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.scm.listener.ConnectionPoint;
+import com.stabilit.scm.net.EncoderDecoderFactory;
+import com.stabilit.scm.net.IEncoderDecoder;
+import com.stabilit.scm.scmp.ResponseAdapter;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
  * The Class NioTcpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Tcp frame.

@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.listener;
+package com.stabilit.scm.listener;
 
 import java.util.EventObject;
 
-import com.stabilit.sc.log.Level;
+import com.stabilit.scm.log.Level;
 
 /**
  * The Class LoggerEvent. Event for logging purpose.

@@ -14,19 +14,19 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.session;
+package com.stabilit.scm.unit.test.session;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.sc.cln.call.SCMPInspectCall;
-import com.stabilit.sc.cln.msg.impl.InspectMessage;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
 
 public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 

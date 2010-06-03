@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test.register;
+package com.stabilit.scm.unit.test.register;
 
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.sc.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
 /**
  * @author JTraber

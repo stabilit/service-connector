@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.net.client.netty;
+package com.stabilit.scm.cln.net.client.netty;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -22,8 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
-import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.listener.ExceptionPoint;
+import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.listener.ExceptionPoint;
 
 /**
  * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework.

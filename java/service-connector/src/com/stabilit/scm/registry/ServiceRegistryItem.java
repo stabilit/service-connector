@@ -14,32 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.registry;
+package com.stabilit.scm.registry;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import com.stabilit.sc.cln.call.SCMPCallFactory;
-import com.stabilit.sc.cln.call.SCMPClnEchoCall;
-import com.stabilit.sc.cln.call.SCMPClnSystemCall;
-import com.stabilit.sc.cln.call.SCMPSrvCreateSessionCall;
-import com.stabilit.sc.cln.call.SCMPSrvDataCall;
-import com.stabilit.sc.cln.call.SCMPSrvDeleteSessionCall;
-import com.stabilit.sc.cln.call.SCMPSrvEchoCall;
-import com.stabilit.sc.cln.call.SCMPSrvSystemCall;
-import com.stabilit.sc.cln.client.ConnectionException;
-import com.stabilit.sc.cln.client.IClient;
-import com.stabilit.sc.cln.net.CommunicationException;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.srv.client.SCClientFactory;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.net.SCMPCommunicationException;
-import com.stabilit.sc.util.MapBean;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnEchoCall;
+import com.stabilit.scm.cln.call.SCMPClnSystemCall;
+import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
+import com.stabilit.scm.cln.call.SCMPSrvDataCall;
+import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
+import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
+import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
+import com.stabilit.scm.cln.client.ConnectionException;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.srv.client.SCClientFactory;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.net.SCMPCommunicationException;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ServiceRegistryItem. Provides access to a service. Gets initialized when service registers and saves

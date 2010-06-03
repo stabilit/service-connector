@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.sim.cmd.impl;
+package com.stabilit.scm.sim.cmd.impl;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import com.stabilit.sc.cmd.impl.CommandAdapter;
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.scmp.IRequest;
-import com.stabilit.sc.scmp.IResponse;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.srv.cmd.ICommandValidator;
-import com.stabilit.sc.srv.cmd.SCMPValidatorException;
+import com.stabilit.scm.cmd.impl.CommandAdapter;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.IResponse;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.srv.cmd.ICommandValidator;
+import com.stabilit.scm.srv.cmd.SCMPValidatorException;
 
 public class SrvEchoCommand extends CommandAdapter {
 

@@ -14,12 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server;
+package com.stabilit.scm.srv.server;
 
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.ctx.IServerContext;
-import com.stabilit.sc.srv.ctx.ServerContext;
-import com.stabilit.sc.srv.server.factory.ServerEnpointFactory;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.ctx.ServerContext;
+import com.stabilit.scm.srv.server.factory.ServerEnpointFactory;
 
 /**
  * The Class Server. Abstracts server functionality from a application view. It is not the technical representation

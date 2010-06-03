@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
+package com.stabilit.scm.net;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,17 +29,17 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
-import com.stabilit.sc.scmp.IInternalMessage;
-import com.stabilit.sc.scmp.SCMPBodyType;
-import com.stabilit.sc.scmp.SCMPFault;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.sc.scmp.SCMPHeadlineKey;
-import com.stabilit.sc.scmp.SCMPMessage;
-import com.stabilit.sc.scmp.impl.EncodingDecodingException;
-import com.stabilit.sc.scmp.internal.SCMPInternalStatus;
-import com.stabilit.sc.scmp.internal.SCMPPart;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.scmp.IInternalMessage;
+import com.stabilit.scm.scmp.SCMPBodyType;
+import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.scmp.impl.EncodingDecodingException;
+import com.stabilit.scm.scmp.internal.SCMPInternalStatus;
+import com.stabilit.scm.scmp.internal.SCMPPart;
 
 /**
  * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of object into/from stream.

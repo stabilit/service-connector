@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server;
+package com.stabilit.scm.srv.server;
 
-import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.config.IServerConfigItem;
-import com.stabilit.sc.srv.ctx.IServerContext;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.ctx.IServerContext;
 
 /**
  * The Interface IServer.
