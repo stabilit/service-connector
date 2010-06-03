@@ -22,7 +22,7 @@ import com.stabilit.scm.srv.net.server.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.srv.net.server.netty.tcp.NettyTcpEnpoint;
 import com.stabilit.scm.srv.net.server.nio.http.NioHttpEndpoint;
 import com.stabilit.scm.srv.net.server.nio.tcp.NioTcpEndpoint;
-import com.stabilit.scm.srv.server.IEndpoint;
+import com.stabilit.scm.srv.res.IEndpoint;
 
 /**
  * A factory for creating ServerConnection objects. Provides access to concrete server instances. Possible servers

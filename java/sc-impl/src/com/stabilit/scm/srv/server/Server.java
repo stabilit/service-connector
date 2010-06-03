@@ -19,6 +19,8 @@ package com.stabilit.scm.srv.server;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.ctx.IServerContext;
 import com.stabilit.scm.srv.ctx.ServerContext;
+import com.stabilit.scm.srv.res.IEndpoint;
+import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.server.factory.ServerEnpointFactory;
 
 /**
@@ -27,7 +29,7 @@ import com.stabilit.scm.srv.server.factory.ServerEnpointFactory;
  * 
  * @author JTraber
  */
-public abstract class Server implements IServer {
+public abstract class Server implements IResponder {
 
 	/** The server configuration. */
 	private IServerConfigItem serverConfig;

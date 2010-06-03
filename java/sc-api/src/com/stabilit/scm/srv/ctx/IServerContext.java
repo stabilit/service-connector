@@ -17,7 +17,7 @@
 package com.stabilit.scm.srv.ctx;
 
 import com.stabilit.scm.ctx.IContext;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 
 /**
  * The Interface IServerContext.
@@ -31,5 +31,5 @@ public interface IServerContext extends IContext {
 	 * 
 	 * @return the server
 	 */
-	public IServer getServer();
+	public IResponder getServer();
 }

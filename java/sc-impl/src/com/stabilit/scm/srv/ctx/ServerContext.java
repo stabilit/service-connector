@@ -18,7 +18,7 @@ package com.stabilit.scm.srv.ctx;
 
 import com.stabilit.scm.ctx.ContextAdapter;
 import com.stabilit.scm.srv.registry.ServerRegistry;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 
 
 /**
@@ -27,20 +27,20 @@ import com.stabilit.scm.srv.server.IServer;
 public class ServerContext extends ContextAdapter implements IServerContext {
 		
 	/** The server. */
-	private IServer server;
+	private IResponder server;
 	
 	/**
 	 * Instantiates a new server context.
 	 * 
 	 * @param server the server
 	 */
-	public ServerContext(IServer server) {
+	public ServerContext(IResponder server) {
 		this.server = server;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IServer getServer() {
+	public IResponder getServer() {
 		return server;
 	}
 

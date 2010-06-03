@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.server;
+package com.stabilit.scm.srv.res;
 
 import com.stabilit.scm.net.ICommunicationPoint;
 
@@ -53,7 +53,7 @@ public interface IEndpoint extends ICommunicationPoint {
 	 * 
 	 * @return the server
 	 */
-	public IServer getServer();
+	public IResponder getServer();
 
 	/**
 	 * Sets the server.
@@ -61,5 +61,5 @@ public interface IEndpoint extends ICommunicationPoint {
 	 * @param server
 	 *            the new server
 	 */
-	public void setServer(IServer server);
+	public void setServer(IResponder server);
 }

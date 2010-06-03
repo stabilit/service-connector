@@ -39,7 +39,7 @@ import com.stabilit.scm.srv.cmd.ICommandValidator;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.registry.ServerRegistry;
 import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 
 /**
  * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a command
@@ -52,7 +52,7 @@ public class RequestThread implements Runnable {
 	/** The command factory. */
 	CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 	/** The server. */
-	private IServer server = null;
+	private IResponder server = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
 
@@ -64,7 +64,7 @@ public class RequestThread implements Runnable {
 	 * @param server
 	 *            the server
 	 */
-	public RequestThread(SocketChannel requestSocket, IServer server) {
+	public RequestThread(SocketChannel requestSocket, IResponder server) {
 		this.socketChannel = requestSocket;
 		this.server = server;
 		this.msgID = new SCMPMessageID();

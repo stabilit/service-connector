@@ -28,7 +28,7 @@ import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.srv.net.server.nio.RequestThread;
-import com.stabilit.scm.srv.server.EndpointAdapter;
+import com.stabilit.scm.srv.res.EndpointAdapter;
 
 /**
  * The Class NioHttpEndpoint. Concrete server implementation with Nio for Http.

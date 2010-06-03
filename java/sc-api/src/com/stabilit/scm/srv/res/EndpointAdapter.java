@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.server;
+package com.stabilit.scm.srv.res;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
@@ -24,7 +24,7 @@ package com.stabilit.scm.srv.server;
 public abstract class EndpointAdapter implements IEndpoint {
 
 	/** The server. */
-	protected IServer server;
+	protected IResponder server;
 
 	/**
 	 * Instantiates a new EndpointAdapter.
@@ -35,12 +35,12 @@ public abstract class EndpointAdapter implements IEndpoint {
 
 	/** {@inheritDoc} */
 	@Override
-	public IServer getServer() {
+	public IResponder getServer() {
 		return server;
 	}
 
 	/** {@inheritDoc} */
-	public void setServer(IServer server) {
+	public void setServer(IResponder server) {
 		this.server = server;
 	}
 }

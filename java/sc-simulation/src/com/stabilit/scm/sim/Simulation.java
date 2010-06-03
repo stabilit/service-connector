@@ -27,7 +27,7 @@ import com.stabilit.scm.srv.conf.ServerConfig;
 import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.ctx.IServerContext;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.server.ServerFactory;
 
 public class Simulation {
@@ -49,7 +49,7 @@ public class Simulation {
 		List<ServerConfigItem> serverConfigList = srvConfig.getServerConfigList();
 		ServerFactory serverFactory = new SimluationServerFactory();
 		for (IServerConfigItem serverConfigItem : serverConfigList) {
-			IServer server = serverFactory.newInstance(serverConfigItem);
+			IResponder server = serverFactory.newInstance(serverConfigItem);
 			IServerContext serverContext = server.getServerContext();
 			serverContext.setAttribute(ClientConfig.class.getName(), clientConfig);
 			try {

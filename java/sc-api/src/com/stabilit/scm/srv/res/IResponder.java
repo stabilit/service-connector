@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.server;
+package com.stabilit.scm.srv.res;
 
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.ctx.IServerContext;
 
 /**
- * The Interface IServer.
+ * The Interface IRequester.
  * 
  * @author JTraber
  */
-public interface IServer extends IFactoryable {
+public interface IResponder extends IFactoryable {
 
 	/**
-	 * Gets the server context.
+	 * Gets the requester context.
 	 * 
 	 * @return the server context
 	 */

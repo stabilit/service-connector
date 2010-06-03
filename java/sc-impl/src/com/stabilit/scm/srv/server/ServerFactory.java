@@ -19,6 +19,7 @@ package com.stabilit.scm.srv.server;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.res.IResponder;
 
 /**
  * A factory for creating Server objects.
@@ -39,9 +40,9 @@ public class ServerFactory extends Factory {
 	 * 
 	 * @return the server
 	 */
-	public IServer newInstance(IServerConfigItem serverConfig) {
+	public IResponder newInstance(IServerConfigItem serverConfig) {
 		IFactoryable factoryInstance = this.newInstance();
-		IServer server = (IServer) factoryInstance;
+		IResponder server = (IResponder) factoryInstance;
 		server.setServerConfig(serverConfig);
 		return server;
 	}

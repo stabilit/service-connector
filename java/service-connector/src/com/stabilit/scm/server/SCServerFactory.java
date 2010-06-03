@@ -19,7 +19,7 @@ package com.stabilit.scm.server;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.server.Server;
 
 /**
@@ -44,9 +44,9 @@ public class SCServerFactory extends Factory {
 	 *            the server configuration
 	 * @return the i server
 	 */
-	public IServer newInstance(IServerConfigItem serverConfig) {
+	public IResponder newInstance(IServerConfigItem serverConfig) {
 		IFactoryable factoryInstance = this.newInstance();
-		IServer server = (IServer) factoryInstance;
+		IResponder server = (IResponder) factoryInstance;
 		server.setServerConfig(serverConfig);
 		return server;
 	}

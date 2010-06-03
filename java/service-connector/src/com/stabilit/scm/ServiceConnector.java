@@ -32,7 +32,7 @@ import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.conf.ServerConfig;
 import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 
 /**
  * The Class ServiceConnector. Starts the core (servers) of the Service Connector.
@@ -79,7 +79,7 @@ public final class ServiceConnector {
 		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
 		SCServerFactory serverFactory = new SCServerFactory();
 		for (IServerConfigItem serverConfig : serverConfigList) {
-			IServer server = serverFactory.newInstance(serverConfig);
+			IResponder server = serverFactory.newInstance(serverConfig);
 			try {
 				server.create();
 				server.runAsync();

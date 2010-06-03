@@ -18,7 +18,7 @@ package com.stabilit.scm.srv.registry;
 
 import com.stabilit.scm.registry.Registry;
 import com.stabilit.scm.srv.ctx.IServerContext;
-import com.stabilit.scm.srv.server.IServer;
+import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.util.MapBean;
 
 /**
@@ -97,8 +97,8 @@ public final class ServerRegistry extends Registry {
 		 * @param server
 		 *            the server
 		 */
-		public ServerRegistryItem(IServer server) {
-			this.setAttribute(IServer.class.getName(), server);
+		public ServerRegistryItem(IResponder server) {
+			this.setAttribute(IResponder.class.getName(), server);
 		}
 
 		/**
@@ -107,7 +107,7 @@ public final class ServerRegistry extends Registry {
 		 * @return the server context
 		 */
 		public IServerContext getServerContext() {
-			IServer server = (IServer) this.getAttribute(IServer.class.getName());
+			IResponder server = (IResponder) this.getAttribute(IResponder.class.getName());
 			if (server == null) {
 				return null;
 			}
