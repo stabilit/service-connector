@@ -16,33 +16,76 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
+import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.scmp.SCMPMessage;
+
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to
- * manage several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
+ * The Interface IRequester abstracts client functionality.
  * 
  * @author JTraber
  */
-public interface IClientSession {
+public interface IRequester extends IFactoryable {
 
 	/**
-	 * Gets the session id.
+	 * Disconnect.
 	 * 
-	 * @return the sessionId
+	 * @throws Exception the exception
 	 */
-	public abstract String getSessionId();
+	public void disconnect() throws Exception;
 
 	/**
-	 * Gets the service name.
+	 * Destroy.
 	 * 
-	 * @return the serviceName
+	 * @throws Exception the exception
 	 */
-	public abstract String getServiceName();
+	public void destroy() throws Exception;
 
 	/**
-	 * Gets the session info.
+	 * Connect.
 	 * 
-	 * @return the sessionInfo
+	 * @throws Exception the exception
 	 */
-	public abstract String getSessionInfo();
+	public void connect() throws Exception;
+
+	/**
+	 * Send and receive, synchronous operation.
+	 * 
+	 * @param scmp the scmp
+	 * 
+	 * @return the scmp
+	 * 
+	 * @throws Exception exception in sending/receiving process
+	 */
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+
+
+	/**
+	 * Sets the client config.
+	 * 
+	 * @param clientConfig the new client config
+	 */
+	public void setClientConfig(IClientConfigItem clientConfig);
+
+	/**
+	 * Gets the client session.
+	 * 
+	 * @return the client session
+	 */
+	public IClientSession getClientSession();
+	
+	/**
+	 * Sets the client session.
+	 * 
+	 * @param clientSession the new client session
+	 */
+	public void setClientSession(IClientSession clientSession);
+	
+	/**
+	 * Returns a hash code which identifies client connection.
+	 * 
+	 * @return the string
+	 */
+	public String toHashCodeString();
 
 }
