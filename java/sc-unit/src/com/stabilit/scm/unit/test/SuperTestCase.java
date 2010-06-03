@@ -25,9 +25,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.cln.client.ClientFactory;
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.listener.ConnectionPoint;
 
 /**
@@ -38,7 +38,7 @@ public abstract class SuperTestCase {
 
 	protected String fileName;
 	protected ClientConfig config = null;
-	protected IClient client = null;
+	protected IRequester client = null;
 
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;
@@ -51,7 +51,7 @@ public abstract class SuperTestCase {
 				new String[] { "sc-unit-nio-tcp.properties" });
 	}
 
-	public void setClient(IClient client) {
+	public void setClient(IRequester client) {
 		this.client = client;
 	}
 
@@ -61,7 +61,7 @@ public abstract class SuperTestCase {
 		try {
 			config = new ClientConfig();
 			config.load(fileName);
-			ClientFactory clientFactory = new ClientFactory();
+			RequesterFactory clientFactory = new RequesterFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect
 		} catch (Throwable e) {

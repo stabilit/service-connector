@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.client;
 
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
 import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
 
@@ -33,7 +33,7 @@ public class SCClientFactory extends Factory {
 	 * Instantiates a new SCClientFactory.
 	 */
 	public SCClientFactory() {
-		IClient client = new SCClient();
+		IRequester client = new SCClient();
 		this.factoryMap.put(DEFAULT, client);
 	}
 
@@ -50,9 +50,9 @@ public class SCClientFactory extends Factory {
 	 *            the number of threads
 	 * @return the client
 	 */
-	public IClient newInstance(String host, int port, String connection, int numberOfThreads) {
+	public IRequester newInstance(String host, int port, String connection, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
-		IClient client = (IClient) factoryInstance;
+		IRequester client = (IRequester) factoryInstance;
 		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, connection,
 				numberOfThreads);
 		client.setClientConfig(clientConfigItem);

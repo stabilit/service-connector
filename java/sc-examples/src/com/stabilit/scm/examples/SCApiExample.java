@@ -25,9 +25,9 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.client.ClientFactory;
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.cln.scmp.SCMPClientSession;
 import com.stabilit.scm.scmp.SCMPMessage;
 
@@ -39,14 +39,14 @@ public class SCApiExample {
 
 	private String fileName;
 	private ClientConfig config = null;
-	private IClient client = null;
+	private IRequester client = null;
 	private SCMPClientSession scmpSession = null;
 
 	public void runExample() throws Exception {
 
 		config = new ClientConfig();
 		config.load(fileName);
-		ClientFactory clientFactory = new ClientFactory();
+		RequesterFactory clientFactory = new RequesterFactory();
 		client = clientFactory.newInstance(config.getClientConfig());
 		client.connect(); // physical connect
 

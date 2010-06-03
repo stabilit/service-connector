@@ -18,9 +18,9 @@ package com.stabilit.scm.sim.server;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.cln.client.ClientFactory;
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.server.Server;
@@ -30,11 +30,11 @@ import com.stabilit.scm.srv.server.Server;
  * 
  */
 public class SimluationServer extends Server {
-	private ClientFactory clientFactory;
-	private IClient client;
+	private RequesterFactory clientFactory;
+	private IRequester client;
 
 	public SimluationServer() {
-		clientFactory = new ClientFactory();
+		clientFactory = new RequesterFactory();
 		client = null;
 	}
 

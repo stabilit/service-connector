@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.client;
 
-import com.stabilit.scm.cln.client.Client;
+import com.stabilit.scm.cln.req.Requester;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.PerformancePoint;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -26,7 +26,7 @@ import com.stabilit.scm.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public class SCClient extends Client {
+public class SCClient extends Requester {
 
 	/**
 	 * Instantiates a new SCClient.

@@ -27,9 +27,9 @@ import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
-import com.stabilit.scm.cln.client.ConnectionException;
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.net.CommunicationException;
+import com.stabilit.scm.cln.req.ConnectionException;
+import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.scmp.IRequest;
@@ -50,7 +50,7 @@ import com.stabilit.scm.util.MapBean;
 public class ServiceRegistryItem extends MapBean<String> implements IFactoryable {
 
 	/** The client. */
-	private IClient client;
+	private IRequester client;
 	/** The register request, initial request from service. */
 	private IRequest registerRequest; // TODO (TRN) (Done JOT) how does the scmp message relate to the service or
 										// to service registry??

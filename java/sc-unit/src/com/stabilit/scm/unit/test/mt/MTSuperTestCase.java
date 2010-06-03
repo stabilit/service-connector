@@ -30,10 +30,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.cln.client.Client;
-import com.stabilit.scm.cln.client.ClientFactory;
-import com.stabilit.scm.cln.client.IClient;
 import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.Requester;
+import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.listener.ConnectionPoint;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.util.ReflectionUtil;
@@ -47,11 +47,11 @@ public abstract class MTSuperTestCase {
 	protected String fileName;
 	protected int maxClients;
 	protected ClientConfig config = null;
-	protected List<IClient> clientList = null;
+	protected List<IRequester> clientList = null;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
-		this.clientList = new ArrayList<IClient>();
+		this.clientList = new ArrayList<IRequester>();
 	}
 
 	@Parameters
@@ -66,12 +66,12 @@ public abstract class MTSuperTestCase {
 		SetupTestCases.setupAll();
 	}
 
-	public IClient newClient() {
+	public IRequester newClient() {
 		try {
 			config = new ClientConfig();
 			config.load(fileName);
-			ClientFactory clientFactory = new ClientFactory();
-			IClient client = new Client();
+			RequesterFactory clientFactory = new RequesterFactory();
+			IRequester client = new Requester();
 			client = clientFactory.newInstance(config.getClientConfig());
 			client.connect(); // physical connect
 			this.clientList.add(client);
@@ -84,7 +84,7 @@ public abstract class MTSuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		for (IClient client : this.clientList) {
+		for (IRequester client : this.clientList) {
 			client.disconnect();
 			client.destroy();
 		}
@@ -92,7 +92,7 @@ public abstract class MTSuperTestCase {
 
 	@Override
 	protected void finalize() throws Throwable {
-		for (IClient client : this.clientList) {
+		for (IRequester client : this.clientList) {
 			client.disconnect();
 			client.destroy();
 		}
