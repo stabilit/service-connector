@@ -14,10 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.client;
+package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.client.factory.ConnectionFactory;
+import com.stabilit.scm.cln.client.IClient;
+import com.stabilit.scm.cln.client.IClientSession;
+import com.stabilit.scm.cln.client.IConnection;
 import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.req.factory.ConnectionFactory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.PerformancePoint;
 import com.stabilit.scm.listener.RuntimePoint;
