@@ -59,20 +59,20 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	}
 
 	public void clnAttachBefore() throws Exception {
-		SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
 
-		connectCall.setVersion(SCMPMessage.SC_VERSION.toString());
-		connectCall.setCompression(false);
-		connectCall.setKeepAliveTimeout(30);
-		connectCall.setKeepAliveInterval(360);
-		connectCall.invoke();
-		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(connectCall.getRequest().getHeader(
+		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		attachCall.setCompression(false);
+		attachCall.setKeepAliveTimeout(30);
+		attachCall.setKeepAliveInterval(360);
+		attachCall.invoke();
+		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(attachCall.getRequest().getHeader(
 				SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 	}
 
 	public void clnDetachAfter() throws Exception {
-		SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
 				.newInstance(client);
-		disconnectCall.invoke();
+		detachCall.invoke();
 	}
 }

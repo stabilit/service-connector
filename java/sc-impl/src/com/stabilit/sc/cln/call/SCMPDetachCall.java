@@ -20,21 +20,21 @@ import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPDisconnectCall. Call disconnects on SCMP level.
+ * The Class SCMPDetachCall. Call detaches on SCMP level.
  * 
  * @author JTraber
  */
 public class SCMPDetachCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new SCMPDisconnectCall.
+	 * Instantiates a new SCMPDetachCall.
 	 */
 	public SCMPDetachCall() {
 		this(null);
 	}
 
 	/**
-	 * Instantiates a new SCMPDisconnectCall.
+	 * Instantiates a new SCMPDetachCall.
 	 * 
 	 * @param client
 	 *            the client to use when invoking call

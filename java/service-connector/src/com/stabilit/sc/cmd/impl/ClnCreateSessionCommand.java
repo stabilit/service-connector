@@ -92,7 +92,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		// first verify that client has correctly connected
+		// first verify that client has correctly attached
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
@@ -100,7 +100,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: not connected");
+				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			scmpCommandException.setMessageType(getKey().getResponseName());

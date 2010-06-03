@@ -56,7 +56,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		clnDataCall.setRequestBody(sb.toString());
 		SCMPMessage scmpReply = clnDataCall.invoke();
 
-		/*********************************** Verify connect response msg **********************************/
+		/*********************************** Verify attach response msg **********************************/
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
 		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));

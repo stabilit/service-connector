@@ -17,41 +17,35 @@
 package com.stabilit.sc.cmd.impl;
 
 import java.net.SocketAddress;
-import java.util.Date;
 
 import com.stabilit.sc.ctx.IRequestContext;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.listener.LoggerPoint;
 import com.stabilit.sc.registry.ConnectionRegistry;
 import com.stabilit.sc.scmp.IRequest;
 import com.stabilit.sc.scmp.IResponse;
 import com.stabilit.sc.scmp.SCMPError;
-import com.stabilit.sc.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.scmp.SCMPMessage;
 import com.stabilit.sc.scmp.SCMPMsgType;
-import com.stabilit.sc.scmp.internal.KeepAlive;
 import com.stabilit.sc.srv.cmd.ICommandValidator;
 import com.stabilit.sc.srv.cmd.IPassThrough;
 import com.stabilit.sc.srv.cmd.SCMPCommandException;
 import com.stabilit.sc.srv.cmd.SCMPValidatorException;
-import com.stabilit.sc.util.DateTimeUtility;
 import com.stabilit.sc.util.MapBean;
-import com.stabilit.sc.util.ValidatorUtility;
 
 /**
- * The Class ConnectCommand. Responsible for validation and execution of connect command. Allows client to connect
- * (virtual connect) to SC. Client is registered in Connection Registry of SC.
+ * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to
+ * detach (virtual detach) to SC. Client will be removed from Client Registry of SC.
  * 
  * @author JTraber
  */
-public class ConnectCommand extends CommandAdapter implements IPassThrough {
+public class DetachCommand extends CommandAdapter implements IPassThrough {
 
 	/**
-	 * Instantiates a new ConnectCommand.
+	 * Instantiates a new DetachCommand.
 	 */
-	public ConnectCommand() {
-		this.commandValidator = new ConnectCommandValidator();
+	public DetachCommand() {
+		this.commandValidator = new DetachCommandValidator();
 	}
 
 	/**
@@ -61,7 +55,7 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 	 */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ATTACH;
+		return SCMPMsgType.DETACH;
 	}
 
 	/**
@@ -91,22 +85,19 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 		ConnectionRegistry connectionRegistry = ConnectionRegistry.getCurrentInstance();
 
 		MapBean<?> mapBean = connectionRegistry.get(socketAddress);
-
-		if (mapBean != null) {
+		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: already connected");
+				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		// add entry in connection registry for current client
-		connectionRegistry.add(socketAddress, request.getAttributeMapBean());
-
+		// remove client entry from connection registry
+		connectionRegistry.remove(socketAddress);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
 	}
 
@@ -121,47 +112,20 @@ public class ConnectCommand extends CommandAdapter implements IPassThrough {
 	}
 
 	/**
-	 * The Class ConnectCommandValidator.
+	 * The Class DetachCommandValidator.
 	 */
-	public class ConnectCommandValidator implements ICommandValidator {
+	public class DetachCommandValidator implements ICommandValidator {
 
 		/**
-		 * Validate request.
+		 * Validate request, nothing to validate in case of detach.
 		 * 
 		 * @param request
 		 *            the request
-		 * @throws Exception
-		 *             the exception
+		 * @throws SCMPValidatorException
+		 *             the SCMP validator exception
 		 */
 		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-
-			try {
-				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-				SCMPMessage.SC_VERSION.isSupported(scVersion);
-				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
-				// compression default = true
-				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
-				if (compression == null) {
-					compression = true;
-				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
-				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
-						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
-				// KeepAliveTimeout && KeepAliveInterval
-				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
-						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
-						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
-				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
-				throw validatorException;
-			}
+		public void validate(IRequest request) throws SCMPValidatorException {
 		}
 	}
 }

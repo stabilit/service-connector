@@ -40,21 +40,21 @@ public class StressCase extends SuperTestCase {
 	}
 
 	/**
-	 * Connect disconnect. Test to find the limit of available sockets in operating system by connecting and
+	 * Attach detach. Test to find the limit of available sockets in operating system by connecting and
 	 * disconnecting client from SC.
 	 */
-	// @Test
+	@Test
 	public void connectDisconnect() {
 		for (int i = 0; i < 10000; i++) {
 			try {
-				SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
-				connectCall.setCompression(false);
-				connectCall.setKeepAliveTimeout(30);
-				connectCall.setKeepAliveInterval(360);
-				SCMPMessage result = connectCall.invoke();
-				SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
+				SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+				attachCall.setCompression(false);
+				attachCall.setKeepAliveTimeout(30);
+				attachCall.setKeepAliveInterval(360);
+				SCMPMessage result = attachCall.invoke();
+				SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
 						.newInstance(client);
-				disconnectCall.invoke();
+				detachCall.invoke();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -69,11 +69,11 @@ public class StressCase extends SuperTestCase {
 	@Test
 	public void createDeleteSession() {
 		try {
-			SCMPAttachCall connectCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
-			connectCall.setCompression(false);
-			connectCall.setKeepAliveTimeout(30);
-			connectCall.setKeepAliveInterval(360);
-			SCMPMessage result = connectCall.invoke();
+			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+			attachCall.setCompression(false);
+			attachCall.setKeepAliveTimeout(30);
+			attachCall.setKeepAliveInterval(360);
+			SCMPMessage result = attachCall.invoke();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,9 +89,9 @@ public class StressCase extends SuperTestCase {
 			e.printStackTrace();
 		}
 		try {
-			SCMPDetachCall disconnectCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
+			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
 					.newInstance(client);
-			disconnectCall.invoke();
+			detachCall.invoke();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

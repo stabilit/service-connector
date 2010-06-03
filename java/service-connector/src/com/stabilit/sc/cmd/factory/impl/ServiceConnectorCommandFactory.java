@@ -21,9 +21,9 @@ import com.stabilit.sc.cmd.impl.ClnDataCommand;
 import com.stabilit.sc.cmd.impl.ClnDeleteSessionCommand;
 import com.stabilit.sc.cmd.impl.ClnEchoCommand;
 import com.stabilit.sc.cmd.impl.ClnSystemCommand;
-import com.stabilit.sc.cmd.impl.ConnectCommand;
+import com.stabilit.sc.cmd.impl.AttachCommand;
 import com.stabilit.sc.cmd.impl.DeRegisterServiceCommand;
-import com.stabilit.sc.cmd.impl.DisconnectCommand;
+import com.stabilit.sc.cmd.impl.DetachCommand;
 import com.stabilit.sc.cmd.impl.EchoSCCommand;
 import com.stabilit.sc.cmd.impl.InspectCommand;
 import com.stabilit.sc.cmd.impl.RegisterServiceCommand;
@@ -64,10 +64,10 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 *            TODO (TRN) (Open JOT)list is not complete. Why?
 	 */
 	public void init(CommandFactory commandFactory) {
-		ICommand connectCommand = new ConnectCommand();
-		commandFactory.add(connectCommand.getRequestKeyName(), connectCommand);
-		ICommand disconnectCommand = new DisconnectCommand();
-		commandFactory.add(disconnectCommand.getRequestKeyName(), disconnectCommand);
+		ICommand attachCommand = new AttachCommand();
+		commandFactory.add(attachCommand.getRequestKeyName(), attachCommand);
+		ICommand detachCommand = new DetachCommand();
+		commandFactory.add(detachCommand.getRequestKeyName(), detachCommand);
 		ICommand inspectCommand = new InspectCommand();
 		commandFactory.add(inspectCommand.getRequestKeyName(), inspectCommand);
 		ICommand echoSCCommand = new EchoSCCommand();
