@@ -28,7 +28,7 @@ import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.ctx.IServerContext;
 import com.stabilit.scm.srv.res.IResponder;
-import com.stabilit.scm.srv.server.ServerFactory;
+import com.stabilit.scm.srv.res.ServerFactory;
 
 public class Simulation {
 
