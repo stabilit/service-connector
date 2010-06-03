@@ -23,13 +23,14 @@ package com.stabilit.sc.examples;
 
 import com.stabilit.sc.cln.call.SCMPCallFactory;
 import com.stabilit.sc.cln.call.SCMPClnDataCall;
-import com.stabilit.sc.cln.call.SCMPConnectCall;
-import com.stabilit.sc.cln.call.SCMPDisconnectCall;
+import com.stabilit.sc.cln.call.SCMPAttachCall;
+import com.stabilit.sc.cln.call.SCMPDetachCall;
 import com.stabilit.sc.cln.client.ClientFactory;
 import com.stabilit.sc.cln.client.IClient;
 import com.stabilit.sc.cln.config.ClientConfig;
 import com.stabilit.sc.cln.scmp.SCMPClientSession;
 import com.stabilit.sc.scmp.SCMPMessage;
+
 
 /**
  * @author JTraber
@@ -49,12 +50,12 @@ public class SCApiExample {
 		client = clientFactory.newInstance(config.getClientConfig());
 		client.connect(); // physical connect
 
-		// virtual connect
-		SCMPConnectCall connectCall = (SCMPConnectCall) SCMPCallFactory.CONNECT_CALL.newInstance(client);
-		connectCall.setCompression(false);
-		connectCall.setKeepAliveTimeout(30);
-		connectCall.setKeepAliveInterval(360);
-		connectCall.invoke();
+		// attach
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		attachCall.setCompression(false);
+		attachCall.setKeepAliveTimeout(30);
+		attachCall.setKeepAliveInterval(360);
+		attachCall.invoke();
 
 		this.scmpSession = new SCMPClientSession(client, "simulation", "Session Info");
 		this.scmpSession.createSession();
@@ -70,9 +71,9 @@ public class SCApiExample {
 
 		this.scmpSession.deleteSession();
 
-		// virtual disconnect
-		SCMPDisconnectCall disconnectCall = (SCMPDisconnectCall) SCMPCallFactory.DISCONNECT_CALL.newInstance(client);
-		disconnectCall.invoke();
+		// detach
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(client);
+		detachCall.invoke();
 
 		client.disconnect(); // physical disconnect
 		client.destroy();
