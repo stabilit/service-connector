@@ -17,14 +17,14 @@
 package com.stabilit.scm.server;
 
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.res.Server;
+import com.stabilit.scm.srv.res.Responder;
 
 /**
  * The Class SCServer. Defines behavior of server in context of Service Connector.
  * 
  * @author JTraber
  */
-public class SCServer extends Server {
+public class SCServer extends Responder {
 
 	/**
 	 * Instantiates a new sC server.

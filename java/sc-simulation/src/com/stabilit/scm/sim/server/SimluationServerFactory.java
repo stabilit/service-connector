@@ -19,16 +19,16 @@ package com.stabilit.scm.sim.server;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.res.IResponder;
-import com.stabilit.scm.srv.res.Server;
-import com.stabilit.scm.srv.res.ServerFactory;
+import com.stabilit.scm.srv.res.Responder;
+import com.stabilit.scm.srv.res.ResponderFactory;
 
 /**
  * @author JTraber
  *
  */
-public class SimluationServerFactory extends ServerFactory {
+public class SimluationServerFactory extends ResponderFactory {
 	public SimluationServerFactory() {
-	    Server server = new SimluationServer();
+	    Responder server = new SimluationServer();
 	    this.factoryMap.put(DEFAULT, server);
 	}
 	

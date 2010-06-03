@@ -22,14 +22,14 @@ import com.stabilit.scm.srv.config.IServerConfigItem;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
- * A factory for creating Server objects.
+ * A factory for creating responder objects.
  */
-public class ServerFactory extends Factory {
+public class ResponderFactory extends Factory {
 
 	/**
-	 * Instantiates a new server factory.
+	 * Instantiates a new ResponderFactory.
 	 */
-	public ServerFactory() {
+	public ResponderFactory() {
 	}
 
 	/**

@@ -21,15 +21,15 @@ import com.stabilit.scm.srv.ctx.IServerContext;
 import com.stabilit.scm.srv.ctx.ServerContext;
 import com.stabilit.scm.srv.res.IEndpoint;
 import com.stabilit.scm.srv.res.IResponder;
-import com.stabilit.scm.srv.res.factory.ServerEnpointFactory;
+import com.stabilit.scm.srv.res.factory.EndpointFactory;
 
 /**
- * The Class Server. Abstracts server functionality from a application view. It is not the technical representation
- * of a server connection.
+ * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation
+ * of a responder connection.
  * 
  * @author JTraber
  */
-public abstract class Server implements IResponder {
+public abstract class Responder implements IResponder {
 
 	/** The server configuration. */
 	private IServerConfigItem serverConfig;
@@ -43,7 +43,7 @@ public abstract class Server implements IResponder {
 	public void setServerConfig(IServerConfigItem serverConfig) {
 		this.serverConfig = serverConfig;
 		this.serverContext = new ServerContext(this);
-		ServerEnpointFactory serverConnectionFactory = new ServerEnpointFactory();
+		EndpointFactory serverConnectionFactory = new EndpointFactory();
 		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getConnection());
 		this.serverConnection.setServer(this);
 		this.serverConnection.setHost(this.serverConfig.getHost());

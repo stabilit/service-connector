@@ -25,10 +25,10 @@ import com.stabilit.scm.srv.net.server.nio.tcp.NioTcpEndpoint;
 import com.stabilit.scm.srv.res.IEndpoint;
 
 /**
- * A factory for creating ServerConnection objects. Provides access to concrete server instances. Possible servers
+ * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints
  * are shown in key string constants below.
  */
-public class ServerEnpointFactory extends Factory {
+public class EndpointFactory extends Factory {
 
 	/** The Constant NIO_HTTP. */
 	private static final String NIO_HTTP = "nio.http";
@@ -40,9 +40,9 @@ public class ServerEnpointFactory extends Factory {
 	private static final String NETTY_HTTP = "netty.http";
 
 	/**
-	 * Instantiates a new server connection factory.
+	 * Instantiates a new EnpointFactory.
 	 */
-	public ServerEnpointFactory() {
+	public EndpointFactory() {
 		// jboss netty http server
 		IEndpoint nettyHttpServer = new NettyHttpEndpoint();
 		add(DEFAULT, nettyHttpServer);
@@ -68,7 +68,7 @@ public class ServerEnpointFactory extends Factory {
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the i server connection
+	 * @return the endpoint
 	 */
 	public IEndpoint newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);

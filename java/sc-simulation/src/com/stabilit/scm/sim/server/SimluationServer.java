@@ -23,13 +23,13 @@ import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.res.Server;
+import com.stabilit.scm.srv.res.Responder;
 
 /**
  * @author JTraber
  * 
  */
-public class SimluationServer extends Server {
+public class SimluationServer extends Responder {
 	private RequesterFactory clientFactory;
 	private IRequester client;
 
