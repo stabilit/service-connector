@@ -174,7 +174,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.CONNECT.getResponseName());
+			scmpFault.setMessageType(SCMPMsgType.ATTACH.getResponseName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}

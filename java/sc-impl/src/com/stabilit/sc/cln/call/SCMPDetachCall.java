@@ -24,12 +24,12 @@ import com.stabilit.sc.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPDisconnectCall extends SCMPCallAdapter {
+public class SCMPDetachCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPDisconnectCall.
 	 */
-	public SCMPDisconnectCall() {
+	public SCMPDetachCall() {
 		this(null);
 	}
 
@@ -39,19 +39,19 @@ public class SCMPDisconnectCall extends SCMPCallAdapter {
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPDisconnectCall(IClient client) {
+	public SCMPDetachCall(IClient client) {
 		this.client = client;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
-		return new SCMPDisconnectCall(client);
+		return new SCMPDetachCall(client);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.DISCONNECT;
+		return SCMPMsgType.DETACH;
 	}
 }

@@ -24,17 +24,17 @@ package com.stabilit.sc.cln.call;
 public final class SCMPCallFactory {
 
 	/**
-	 * Instantiates a new sCMP call factory.
+	 * Instantiates a new SCMPCallFactory.
 	 */
 	private SCMPCallFactory() {
 	}
 
 	/********************** Calls to SC **********************/
 
-	/** The CONNECT_CALL. */
-	public static final ISCMPCall CONNECT_CALL = new SCMPConnectCall();
-	/** The DISCONNECT_CALL. */
-	public static final ISCMPCall DISCONNECT_CALL = new SCMPDisconnectCall();
+	/** The ATTACH_CALL. */
+	public static final ISCMPCall ATTACH_CALL = new SCMPAttachCall();
+	/** The DETACH_CALL. */
+	public static final ISCMPCall DETACH_CALL = new SCMPDetachCall();
 	/** The REGISTER_SERVICE_CALL. */
 	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
 	/** The DEREGISTER_SERVICE_CALL. */

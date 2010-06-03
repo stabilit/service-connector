@@ -23,26 +23,26 @@ import com.stabilit.sc.scmp.SCMPMsgType;
 import com.stabilit.sc.util.DateTimeUtility;
 
 /**
- * The Class SCMPConnectCall. Call connects on SCMP level.
+ * The Class SCMPAttachCall. Call attaches on SCMP level.
  * 
  * @author JTraber
  */
-public class SCMPConnectCall extends SCMPCallAdapter {
+public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new SCMPConnectCall.
+	 * Instantiates a new SCMPAttachCall.
 	 */
-	public SCMPConnectCall() {
+	public SCMPAttachCall() {
 		this(null);
 	}
 
 	/**
-	 * Instantiates a new SCMPConnectCall.
+	 * Instantiates a new SCMPAttachCall.
 	 * 
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPConnectCall(IClient client) {
+	public SCMPAttachCall(IClient client) {
 		this.client = client;
 	}
 
@@ -58,7 +58,7 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IClient client) {
-		return new SCMPConnectCall(client);
+		return new SCMPAttachCall(client);
 	}
 
 	/**
@@ -109,6 +109,6 @@ public class SCMPConnectCall extends SCMPCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CONNECT;
+		return SCMPMsgType.ATTACH;
 	}
 }
