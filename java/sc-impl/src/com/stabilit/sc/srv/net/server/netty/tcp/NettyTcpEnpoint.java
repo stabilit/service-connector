@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.netty.http;
+package com.stabilit.sc.srv.net.server.netty.tcp;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
@@ -23,18 +23,19 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
+import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.srv.registry.ServerRegistry;
 import com.stabilit.sc.srv.registry.ServerRegistry.ServerRegistryItem;
-import com.stabilit.sc.srv.server.ServerConnectionAdapter;
+import com.stabilit.sc.srv.server.ServerEndpointAdapter;
 
 /**
- * The Class NettyHttpServer. Concrete server connection implementation with JBoss Netty for Http.
+ * The Class NettyTcpEnpoint. Concrete server implementation with JBoss Netty for Tcp.
  * 
  * @author JTraber
  */
-public class NettyHttpServer extends ServerConnectionAdapter implements Runnable {
+public class NettyTcpEnpoint extends ServerEndpointAdapter implements Runnable {
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
@@ -47,17 +48,17 @@ public class NettyHttpServer extends ServerConnectionAdapter implements Runnable
 	/** The numberOfThreads. */
 	private int numberOfThreads;
 	/** The channel factory. */
-	NioServerSocketChannelFactory channelFactory;
+	private NioServerSocketChannelFactory channelFactory;
 
 	/**
-	 * Instantiates a new netty http server connection.
+	 * Instantiates a new NettyTcpEnpoint.
 	 */
-	public NettyHttpServer() {
+	public NettyTcpEnpoint() {
 		this.bootstrap = null;
 		this.channel = null;
-		this.host = null;
 		this.port = 0;
-		this.numberOfThreads = 10;
+		this.host = null;
+		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
 		this.channelFactory = null;
 	}
 
@@ -69,7 +70,7 @@ public class NettyHttpServer extends ServerConnectionAdapter implements Runnable
 				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory());
+		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory());
 	}
 
 	/** {@inheritDoc} */
@@ -82,7 +83,7 @@ public class NettyHttpServer extends ServerConnectionAdapter implements Runnable
 	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws InterruptedException {
-		this.channel = this.bootstrap.bind(new InetSocketAddress(host, this.port));
+		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		serverRegistry.add(this.channel.getId(), new ServerRegistryItem(this.server));
@@ -110,14 +111,13 @@ public class NettyHttpServer extends ServerConnectionAdapter implements Runnable
 			this.bootstrap.releaseExternalResources();
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
-			return;
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
-		return new NettyHttpServer();
+		return new NettyTcpEnpoint();
 	}
 
 	/** {@inheritDoc} */
@@ -127,6 +127,7 @@ public class NettyHttpServer extends ServerConnectionAdapter implements Runnable
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}

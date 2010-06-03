@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.net.server.nio.tcp;
+package com.stabilit.sc.srv.net.server.nio.http;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -28,14 +28,14 @@ import com.stabilit.sc.config.IConstants;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.ExceptionPoint;
 import com.stabilit.sc.srv.net.server.nio.RequestThread;
-import com.stabilit.sc.srv.server.ServerConnectionAdapter;
+import com.stabilit.sc.srv.server.ServerEndpointAdapter;
 
 /**
- * The Class NioTcpServer. Concrete server connection implementation with Nio for Tcp.
+ * The Class NioHttpEndpoint. Concrete server implementation with Nio for Http.
  * 
  * @author JTraber
  */
-public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
+public class NioHttpEndpoint extends ServerEndpointAdapter implements Runnable {
 
 	/** The host. */
 	private String host;
@@ -49,9 +49,9 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	private ThreadPoolExecutor pool;
 
 	/**
-	 * Instantiates a new NioTcpServer.
+	 * Instantiates a new NioHttpEndpoint.
 	 */
-	public NioTcpServer() {
+	public NioHttpEndpoint() {
 		this.host = null;
 		this.port = 0;
 		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
@@ -63,7 +63,7 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	@Override
 	public void create() {
 		try {
-			pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, 10, TimeUnit.MICROSECONDS,
+			this.pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, IConstants.MAX_KEEP_ALIVE_OF_THREADS, TimeUnit.MICROSECONDS,
 					new LinkedBlockingQueue<Runnable>());
 			// Create a new blocking server socket channel
 			this.serverChannel = ServerSocketChannel.open();
@@ -122,7 +122,6 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	}
 
 	/** {@inheritDoc} */
-	@Override
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
 	}
@@ -130,6 +129,6 @@ public class NioTcpServer extends ServerConnectionAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
-		return new NioTcpServer();
+		return new NioHttpEndpoint();
 	}
 }

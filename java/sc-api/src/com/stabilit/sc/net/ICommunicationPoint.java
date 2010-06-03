@@ -14,52 +14,36 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server;
+package com.stabilit.sc.net;
 
-import com.stabilit.sc.net.IConnection;
+import com.stabilit.sc.factory.IFactoryable;
 
 /**
- * The Interface IServerConnection.
- * 
- * @author JTraber
+ * The Interface ICommunicationPoint abstracts any communication point (server, client).
  */
-public interface IServerConnection extends IConnection {
+public interface ICommunicationPoint extends IFactoryable {
 
 	/**
-	 * Destroys server connection.
-	 */
-	public void destroy();
-
-	/**
-	 * Creates a server connection.
-	 */
-	public void create();
-
-	/**
-	 * Runs asynchronously. Starts server in another thread.
-	 */
-	public void runAsync();
-
-	/**
-	 * Run sync. Starts server in incoming thread.
+	 * Sets the host.
 	 * 
-	 * @throws InterruptedException
-	 *             the interrupted exception
+	 * @param host
+	 *            the host
 	 */
-	public void runSync() throws InterruptedException;
+	public void setHost(String host);
 
 	/**
-	 * Gets the server.
+	 * Sets the port.
 	 * 
-	 * @return the server
+	 * @param port
+	 *            the port
 	 */
-	public IServer getServer();
+	public void setPort(int port);
 
 	/**
-	 * Sets the server.
+	 * Sets the number of threads.
 	 * 
-	 * @param server
-	 *            the new server
+	 * @param numberOfThreads
+	 *            the new number of threads
 	 */
-	public void setServer(IServer server);
+	public void setNumberOfThreads(int numberOfThreads);
 }

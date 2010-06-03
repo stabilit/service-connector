@@ -14,50 +14,52 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.cln.client;
+package com.stabilit.sc.srv.server;
 
-import com.stabilit.sc.net.IConnection;
-import com.stabilit.sc.scmp.SCMPMessage;
+import com.stabilit.sc.net.ICommunicationPoint;
 
 /**
- * The Interface IClientConnection abstracts any connection to a server.
+ * The Interface IEndpoint.
  * 
  * @author JTraber
  */
-public interface IClientConnection extends IConnection {
+public interface IEndpoint extends ICommunicationPoint {
 
 	/**
-	 * Connect.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 * Destroys endpoint.
 	 */
-	void connect() throws Exception;
+	public void destroy();
 
 	/**
-	 * Send and receive synchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
-	 * @throws Exception
-	 *             the exception
+	 * Creates an endpoint.
 	 */
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+	public void create();
 
 	/**
-	 * Disconnect.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 * Runs asynchronously. Starts server in another thread.
 	 */
-	public void disconnect() throws Exception;
+	public void runAsync();
 
 	/**
-	 * Destroys connection.
+	 * Run sync. Starts server in incoming thread.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
-	public void destroy() throws Exception;
+	public void runSync() throws InterruptedException;
+
+	/**
+	 * Gets the server.
+	 * 
+	 * @return the server
+	 */
+	public IServer getServer();
+
+	/**
+	 * Sets the server.
+	 * 
+	 * @param server
+	 *            the new server
+	 */
+	public void setServer(IServer server);
 }

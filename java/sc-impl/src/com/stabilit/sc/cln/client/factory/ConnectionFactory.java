@@ -14,21 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server.factory;
+package com.stabilit.sc.cln.client.factory;
 
+import com.stabilit.sc.cln.client.IConnection;
+import com.stabilit.sc.cln.net.client.netty.http.NettyHttpConnection;
+import com.stabilit.sc.cln.net.client.netty.tcp.NettyTcpConnection;
+import com.stabilit.sc.cln.net.client.nio.http.NioHttpConnection;
+import com.stabilit.sc.cln.net.client.nio.tcp.NioTcpConnection;
 import com.stabilit.sc.factory.Factory;
 import com.stabilit.sc.factory.IFactoryable;
-import com.stabilit.sc.srv.net.server.netty.http.NettyHttpServer;
-import com.stabilit.sc.srv.net.server.netty.tcp.NettyTcpServer;
-import com.stabilit.sc.srv.net.server.nio.http.NioHttpServer;
-import com.stabilit.sc.srv.net.server.nio.tcp.NioTcpServer;
-import com.stabilit.sc.srv.server.IServerConnection;
 
 /**
- * A factory for creating ServerConnection objects. Provides access to concrete server instances. Possible servers
- * are shown in key string constants below.
+ * A factory for creating connection objects. Provides access to concrete client instances. 
+ * Possible connection types are shown as constants below.
  */
-public class ServerConnectionFactory extends Factory {
+public class ConnectionFactory extends Factory {
 
 	/** The Constant NIO_HTTP. */
 	private static final String NIO_HTTP = "nio.http";
@@ -40,26 +40,26 @@ public class ServerConnectionFactory extends Factory {
 	private static final String NETTY_HTTP = "netty.http";
 
 	/**
-	 * Instantiates a new server connection factory.
+	 * Instantiates a new ConnectionFactory.
 	 */
-	public ServerConnectionFactory() {
-		// jboss netty http server
-		IServerConnection nettyHttpServer = new NettyHttpServer();
-		add(DEFAULT, nettyHttpServer);
-		add(NETTY_HTTP, nettyHttpServer);
-		// jboss netty tcp server
-		IServerConnection nettyTCPServer = new NettyTcpServer();
-		add(NETTY_TCP, nettyTCPServer);
-		// nio tcp Server
-		IServerConnection nioTcpServer = new NioTcpServer();
-		add(NIO_TCP, nioTcpServer);
-		// nio http Server
-		IServerConnection nioHttpServer = new NioHttpServer();
-		add(NIO_HTTP, nioHttpServer);
+	public ConnectionFactory() {
+		// jboss netty http client
+		IConnection nettyHttpClient = new NettyHttpConnection();
+		add(DEFAULT, nettyHttpClient);
+		add(NETTY_HTTP, nettyHttpClient);
+		// jboss netty tcp client
+		IConnection nettyTCPClient = new NettyTcpConnection();
+		add(NETTY_TCP, nettyTCPClient);
+		// nio tcp client
+		IConnection nioTCPClient = new NioTcpConnection();
+		add(NIO_TCP, nioTCPClient);
+		// nio http client
+		IConnection nioHttpClient = new NioHttpConnection();
+		add(NIO_HTTP, nioHttpClient);
 	}
 
 	/** {@inheritDoc} */
-	public IServerConnection newInstance() {
+	public IConnection newInstance() {
 		return newInstance(DEFAULT);
 	}
 
@@ -67,11 +67,11 @@ public class ServerConnectionFactory extends Factory {
 	 * New instance.
 	 * 
 	 * @param key
-	 *            the key
-	 * @return the i server connection
+	 *            the key designating the connection type 
+	 * @return the i client connection
 	 */
-	public IServerConnection newInstance(String key) {
+	public IConnection newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);
-		return (IServerConnection) factoryInstance; // should be a clone if implemented
+		return (IConnection) factoryInstance; // should be a clone if implemented
 	}
 }

@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.cln.client;
 
-import com.stabilit.sc.cln.client.factory.ClientConnectionFactory;
+import com.stabilit.sc.cln.client.factory.ConnectionFactory;
 import com.stabilit.sc.cln.config.IClientConfigItem;
 import com.stabilit.sc.factory.IFactoryable;
 import com.stabilit.sc.listener.PerformancePoint;
@@ -39,7 +39,7 @@ public class Client implements IClient {
 	private IClientConfigItem clientConfig;
 
 	/** The client connection. */
-	protected IClientConnection clientConnection;
+	protected IConnection clientConnection;
 
 	/** The client session. */
 	protected IClientSession clientSession;
@@ -64,7 +64,7 @@ public class Client implements IClient {
 	@Override
 	public void setClientConfig(IClientConfigItem clientConfig) {
 		this.clientConfig = clientConfig;
-		ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
+		ConnectionFactory clientConnectionFactory = new ConnectionFactory();
 		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getConnection());
 		clientConnection.setHost(clientConfig.getHost());
 		clientConnection.setPort(clientConfig.getPort());

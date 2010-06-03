@@ -14,33 +14,50 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.srv.server;
+package com.stabilit.sc.cln.client;
+
+import com.stabilit.sc.net.ICommunicationPoint;
+import com.stabilit.sc.scmp.SCMPMessage;
 
 /**
- * The Class ServerConnectionAdapter. Provides basic functionality for server connections.
+ * The Interface IConnection abstracts any connection to a server.
  * 
  * @author JTraber
  */
-public abstract class ServerConnectionAdapter implements IServerConnection {
-
-	/** The server. */
-	protected IServer server;
+public interface IConnection extends ICommunicationPoint {
 
 	/**
-	 * Instantiates a new server connection adapter.
+	 * Connect.
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
-	public ServerConnectionAdapter() {
-		this.server = null;
-	}
+	void connect() throws Exception;
 
-	/** {@inheritDoc} */
-	@Override
-	public IServer getServer() {
-		return server;
-	}
+	/**
+	 * Send and receive synchronous operation.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the scmp
+	 * @throws Exception
+	 *             the exception
+	 */
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
 
-	/** {@inheritDoc} */
-	public void setServer(IServer server) {
-		this.server = server;
-	}
+	/**
+	 * Disconnect.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void disconnect() throws Exception;
+
+	/**
+	 * Destroys connection.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void destroy() throws Exception;
 }

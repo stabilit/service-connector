@@ -19,7 +19,7 @@ package com.stabilit.sc.srv.server;
 import com.stabilit.sc.srv.config.IServerConfigItem;
 import com.stabilit.sc.srv.ctx.IServerContext;
 import com.stabilit.sc.srv.ctx.ServerContext;
-import com.stabilit.sc.srv.server.factory.ServerConnectionFactory;
+import com.stabilit.sc.srv.server.factory.ServerEnpointFactory;
 
 /**
  * The Class Server. Abstracts server functionality from a application view. It is not the technical representation
@@ -32,7 +32,7 @@ public abstract class Server implements IServer {
 	/** The server configuration. */
 	private IServerConfigItem serverConfig;
 	/** The server connection. */
-	private IServerConnection serverConnection;
+	private IEndpoint serverConnection;
 	/** The server context. */
 	protected IServerContext serverContext;
 
@@ -41,7 +41,7 @@ public abstract class Server implements IServer {
 	public void setServerConfig(IServerConfigItem serverConfig) {
 		this.serverConfig = serverConfig;
 		this.serverContext = new ServerContext(this);
-		ServerConnectionFactory serverConnectionFactory = new ServerConnectionFactory();
+		ServerEnpointFactory serverConnectionFactory = new ServerEnpointFactory();
 		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getConnection());
 		this.serverConnection.setServer(this);
 		this.serverConnection.setHost(this.serverConfig.getHost());

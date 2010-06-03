@@ -14,35 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.net;
-
-import com.stabilit.sc.factory.IFactoryable;
+package com.stabilit.sc.srv.server;
 
 /**
- * The Interface IConnection abstracts any Connection.
+ * The Class ServerEndpointAdapter. Provides basic functionality for server endpoints.
+ * 
+ * @author JTraber
  */
-public interface IConnection extends IFactoryable {
+public abstract class ServerEndpointAdapter implements IEndpoint {
+
+	/** The server. */
+	protected IServer server;
 
 	/**
-	 * Sets the host.
-	 * 
-	 * @param host
-	 *            the host
+	 * Instantiates a new server connection adapter.
 	 */
-	public void setHost(String host);
+	public ServerEndpointAdapter() {
+		this.server = null;
+	}
 
-	/**
-	 * Sets the port.
-	 * 
-	 * @param port
-	 *            the port
-	 */
-	public void setPort(int port);
-	
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads);
+	/** {@inheritDoc} */
+	@Override
+	public IServer getServer() {
+		return server;
+	}
+
+	/** {@inheritDoc} */
+	public void setServer(IServer server) {
+		this.server = server;
+	}
 }
