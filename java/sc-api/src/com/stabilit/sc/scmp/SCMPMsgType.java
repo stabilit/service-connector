@@ -23,10 +23,10 @@ package com.stabilit.sc.scmp;
  */
 public enum SCMPMsgType {
 
-	/** The CONNECT. */
-	CONNECT("CONNECT"),
-	/** The DISCONNECT. */
-	DISCONNECT("DISCONNECT"),
+	/** The ATTACH. */
+	ATTACH("ATTACH"),
+	/** The DETACH. */
+	DETACH("DETACH"),
 	/** The KEEP_ALIVE. */
 	KEEP_ALIVE("KEEP_ALIVE"),
 	/** The ECHO_SC. */
@@ -56,7 +56,7 @@ public enum SCMPMsgType {
 	CLN_SYSTEM("CLN_SYSTEM"),
 	/** The SRV_SYSTEM. */
 	SRV_SYSTEM("SRV_SYSTEM"),
-	
+
 	/** The SUBSCRIBE. */
 	SUBSCRIBE("SUBSCRIBE"),
 	/** The UNSUBSCRIBE. */

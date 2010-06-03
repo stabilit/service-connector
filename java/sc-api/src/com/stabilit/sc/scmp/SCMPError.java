@@ -32,9 +32,9 @@ public enum SCMPError {
 	/** The not found. */
 	NOT_FOUND("404", "Not found error occured."),
 	/** The not connected. */
-	NOT_CONNECTED("405", "Not connected."),
-	/** The already connected. */
-	ALREADY_CONNECTED("406", "Already connected."),
+	NOT_ATTACHED("405", "Not attached."),
+	/** The already attached. */
+	ALREADY_ATTACHED("406", "Already attached."),
 	/** The protocol mismatch. */
 	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
 	/** The already registered. */
@@ -55,7 +55,7 @@ public enum SCMPError {
 	CONNECTION_LOST("502", "Connection lost.");
 
 	/** The error code. */
-	private String errorCode;		//TODO this should be int!
+	private String errorCode; // TODO this should be int!
 	/** The error text. */
 	private String errorText;
 

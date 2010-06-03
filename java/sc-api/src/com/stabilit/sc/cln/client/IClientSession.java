@@ -17,7 +17,7 @@
 package com.stabilit.sc.cln.client;
 
 /**
- * The Interface IClientSession. Represents a virtual connection between client and server. API programmer needs to
+ * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to
  * manage several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
  * 
  * @author JTraber
