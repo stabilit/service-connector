@@ -49,6 +49,7 @@ public class SimluationServer extends Responder {
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
 		registerService.setServiceName("simulation");
 		registerService.setMaxSessions(1);
+		registerService.setMultithreaded(true);
 		registerService.setPortNumber(serverConfigItem.getPort());
 		registerService.invoke();
 	}

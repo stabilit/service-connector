@@ -21,6 +21,7 @@ import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
@@ -56,9 +57,11 @@ public final class ServiceRegistry extends Registry {
 	 *            the item pool
 	 */
 	public void add(Object key, ServiceRegistryItemPool itemPool) {
-		this.put(key, itemPool);
+		// try to get service list
+		ServicePoolList servicePoolList = (ServicePoolList)this.getServicePoolList(key);
+		servicePoolList.add(itemPool);
 	}
-
+		
 	/**
 	 * Allocate a session on a backend server.
 	 * 
@@ -71,8 +74,8 @@ public final class ServiceRegistry extends Registry {
 	public synchronized ServiceRegistryItem allocate(IRequest request) throws Exception {
 		SCMPMessage scmpMessage = request.getMessage();
 		String serviceName = scmpMessage.getServiceName();
-		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.get(serviceName);
-		if (itemPool.isAvailable() == false) {
+		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.getServiceItemPool(serviceName);
+		if (itemPool == null) {
 			return null;
 		}
 		ServiceRegistryItem item = itemPool.getAvailableItem();
@@ -100,12 +103,123 @@ public final class ServiceRegistry extends Registry {
 				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
-		ServiceRegistryItemPool itemPool = item.myItemPool;
+		ServiceRegistryItemPool itemPool = item.myParentPool;
 		if (itemPool == null) {
 			RuntimePoint.getInstance().fireRuntime(this, "ServiceRegistryItem has not item pool.");
 			return;
 		}
 		itemPool.freeItem(item);
 		return;
+	}
+
+	private synchronized ServiceRegistryItemPool getServiceItemPool(Object key) {
+		ServicePoolList servicePoolList = (ServicePoolList)this.getServicePoolList(key);
+		if (servicePoolList == null) {
+			return null;
+		}
+		ServiceRegistryItemPool itemPool = servicePoolList.getAvailable(); 
+		return itemPool;
+	}
+
+
+	/**
+	 * Gets the service pool list.
+	 * 
+	 * @param key the key
+	 * 
+	 * @return the service pool list
+	 */
+	private ServicePoolList getServicePoolList(Object key) {
+		// try to get service list
+		ServicePoolList servicePoolList = (ServicePoolList)this.get(key);
+		if (servicePoolList == null) {
+			this.put(key, new ServicePoolList((String) key));
+		}
+		return (ServicePoolList)this.get(key);
+	}
+
+	// member class ServicePoolList
+	private class ServicePoolList extends MapBean<Object> {
+		private String serviceName;
+		private int capacity = 16;
+		private int nextIndex = 0;
+		private int activeSize = 0;
+		private ServiceRegistryItemPool[] poolArray;
+		
+		public ServicePoolList(String serviceName) {
+			this.serviceName = serviceName;
+			poolArray = new ServiceRegistryItemPool[this.capacity];
+			this.activeSize = 0;
+		}
+
+		public synchronized void add(ServiceRegistryItemPool itemPool) {
+			if (activeSize == this.poolArray.length) {
+				// reorganize array
+				this.reorganize();
+			}
+			for (int i = 0; i < this.poolArray.length; i++) {
+				if (this.poolArray[i] == null) {
+					this.activeSize++;
+					this.poolArray[i] = itemPool;
+					break;
+				}
+			}			
+		}
+		
+		public synchronized void remove(ServiceRegistryItemPool itemPool) {
+    	    for (int i = 0; i < poolArray.length; i++) {
+				if (poolArray[i] == itemPool) {
+					poolArray[i] = null;
+					this.activeSize--;
+					break;
+				}
+			}		
+		}
+		
+		public synchronized ServiceRegistryItemPool getAvailable() {
+			if (this.activeSize <= 0) {
+				return null;
+			}
+    	    for (int i = nextIndex; i < poolArray.length; i++) {
+    	    	ServiceRegistryItemPool itemPool = this.poolArray[i];
+    	    	if (itemPool == null) {
+    	    		continue;
+    	    	}
+    	    	if (itemPool.isAvailable()) {
+    	    		this.nextIndex = i+1;
+    	    		if (this.nextIndex == this.poolArray.length) {
+    	    			this.nextIndex = 0;
+    	    		}
+    	    		return itemPool;
+    	    	}
+    	    }
+    	    for (int i = 0; i <= nextIndex; i++) {
+    	    	ServiceRegistryItemPool itemPool = this.poolArray[i];
+    	    	if (itemPool == null) {
+    	    		continue;
+    	    	}
+    	    	if (itemPool.isAvailable()) {
+    	    		this.nextIndex = i;
+    	    		return itemPool;
+    	    	}
+    	    }    	   
+    	    return null;
+		}
+
+		/**
+		 * @return the serviceName
+		 */
+		public String getServiceName() {
+			return serviceName;
+		}
+				
+		
+		private void reorganize() {
+			ServiceRegistryItemPool[] newItemPool = new ServiceRegistryItemPool[this.poolArray.length << 1];
+			for (int i = 0; i < this.poolArray.length; i++) {
+				newItemPool[i] = this.poolArray[i];
+			}
+			this.poolArray = newItemPool;
+		}
 	}
 }

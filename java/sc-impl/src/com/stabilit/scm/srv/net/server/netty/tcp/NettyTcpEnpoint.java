@@ -26,8 +26,8 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.srv.registry.ServerRegistry;
-import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
+import com.stabilit.scm.srv.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.srv.res.EndpointAdapter;
 
 /**
@@ -85,8 +85,8 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	public void runSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		serverRegistry.add(this.channel.getId(), new ServerRegistryItem(this.server));
+		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
+		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.server));
 		synchronized (this) {
 			wait();
 		}

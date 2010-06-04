@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,37 +14,27 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.cln.service;
 
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to manage
- * several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
- * 
  * @author JTraber
  */
-public interface IClientSession {
+public abstract class SCServiceBuilder implements IServiceBuilder {
 
-	/**
-	 * Gets the session id.
-	 * 
-	 * @return the sessionId
-	 */
-	public abstract String getSessionId();
+	protected String host;
+	protected int port;
+	protected String connection;
+	protected int numberOfThreads;
 
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the serviceName
-	 */
-	public abstract String getServiceName();
-
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
-
-	public abstract void deleteSession() throws Exception;
+	public SCServiceBuilder(String host, int port) {
+		this.host = host;
+		this.port = port;
+		this.connection = "netty.http";
+		this.numberOfThreads = 10;
+	}
 }

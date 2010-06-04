@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,37 +14,38 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.cln.service;
+
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnDataCall;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to manage
- * several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
- * 
  * @author JTraber
+ *
  */
-public interface IClientSession {
+public class SCDataService extends SCServiceAdapter {
 
-	/**
-	 * Gets the session id.
-	 * 
-	 * @return the sessionId
-	 */
-	public abstract String getSessionId();
+	private String messageInfo;
+	
+	@Override
+	public Object invoke() throws Exception {
+		// data call - session is stored inside client!!
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
+		clnDataCall.setMessagInfo(this.messageInfo);
+		clnDataCall.setRequestBody(this.data);
+		SCMPMessage scmpReply = clnDataCall.invoke();
+		return scmpReply.getBody();
+	}
 
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the serviceName
-	 */
-	public abstract String getServiceName();
+	@Override
+	public void setMessagInfo(String messageInfo) {
+	     this.messageInfo = messageInfo;	
+	}
 
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
-
-	public abstract void deleteSession() throws Exception;
 }

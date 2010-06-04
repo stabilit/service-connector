@@ -37,8 +37,8 @@ import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.srv.cmd.ICommand;
 import com.stabilit.scm.srv.cmd.ICommandValidator;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.registry.ServerRegistry;
-import com.stabilit.scm.srv.registry.ServerRegistry.ServerRegistryItem;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
+import com.stabilit.scm.srv.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
@@ -75,9 +75,9 @@ public class RequestThread implements Runnable {
 
 		SCMPCompositeSender scmpLargeResponse = null;
 		try {
-			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
 			// adds server to registry
-			serverRegistry.add(this.socketChannel, new ServerRegistryItem(this.server));
+			serverRegistry.add(this.socketChannel, new ResponderRegistryItem(this.server));
 			// needs to set a key in thread local to identify thread later and get access to the server
 			serverRegistry.setThreadLocal(this.socketChannel);
 			while (true) {

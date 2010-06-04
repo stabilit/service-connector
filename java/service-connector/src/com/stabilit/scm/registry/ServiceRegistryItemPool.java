@@ -21,8 +21,10 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.srv.ctx.IServerContext;
-import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
 import com.stabilit.scm.util.MapBean;
 
 /**
@@ -31,31 +33,46 @@ import com.stabilit.scm.util.MapBean;
  * 
  * @author JTraber
  */
+/**
+ * @author JTraber
+ *
+ */
 public class ServiceRegistryItemPool extends MapBean<String> {
 
 	/** The max items. */
-	private int maxItems = -1;
+	private int maxSessions = -1;
+	
+	/** The multithreaded. */
+	private boolean multithreaded = false;
+	
 	/** The request. */
 	private IRequest request;
+	
 	/** The server context. */
 	private IServerContext serverContext;
+	
 	/** The free item list. */
 	private List<ServiceRegistryItem> freeItemList;
+	
 	/** The allocated item list. */
 	private List<ServiceRegistryItem> allocatedItemList;
 
 	/**
 	 * Instantiates a new service registry item pool.
 	 * 
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 */
 	public ServiceRegistryItemPool(IRequest request) {
 		this.request = request;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		this.allocatedItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
 		this.serverContext = serverRegistry.getCurrentContext();
+		// init maxSessions and multithreaded attributes from given request
+		SCMPMessage scmpReq = request.getMessage();
+		this.maxSessions = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.MAX_SESSIONS);  // required attribute
+		this.multithreaded = false; // scmpReq.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED); // required attribute
+		this.initFreeList();
 	}
 
 	/**
@@ -68,6 +85,14 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 			// there is no limit
 			return true;
 		}
+		if (this.isMultithreaded()) {
+			// we have max session limit
+			int allocatedSize = this.allocatedItemList.size();
+			if (allocatedSize >= this.maxSessions) {
+				return false;
+			}
+			return true;
+		}
 		return this.freeItemList.isEmpty() == false;
 	}
 
@@ -77,7 +102,25 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	 * @return true, if is no limit
 	 */
 	public synchronized boolean isNoLimit() {
-		return this.maxItems < 0;
+		return this.maxSessions <= 0;
+	}
+	
+	/**
+	 * Checks if is multithreaded.
+	 * 
+	 * @return true, if is multithreaded
+	 */
+	public boolean isMultithreaded() {
+		return this.multithreaded;
+	}
+	
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @return the maxSessions
+	 */
+	public int getMaxSessions() {
+		return this.maxSessions;
 	}
 
 	/**
@@ -91,11 +134,26 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 		}
 		if (this.isNoLimit()) {
 			ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.serverContext);
-			item.myItemPool = this;
+			item.myParentPool = this;
 			this.allocatedItemList.add(item);
 			return item;
 		}
-		ServiceRegistryItem item = freeItemList.get(0);
+		ServiceRegistryItem item = null;
+		if (this.freeItemList.isEmpty() == false) {
+		    item = freeItemList.get(0);
+		}
+		if (item == null) {
+			// check if we can allocate a new one
+			int allocatedSize = this.allocatedItemList.size();
+			if (allocatedSize >= this.maxSessions) {
+				return null;
+			}
+			// we can allocate more
+			item = new ServiceRegistryItem(this.request, this.serverContext);
+			item.myParentPool = this;
+			this.allocatedItemList.add(item);
+			return item;
+		}
 		this.allocatedItemList.add(item);
 		freeItemList.remove(item);
 		return item;
@@ -104,8 +162,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	/**
 	 * Free item.
 	 * 
-	 * @param item
-	 *            the item
+	 * @param item the item
 	 */
 	public synchronized void freeItem(ServiceRegistryItem item) {
 		this.allocatedItemList.remove(item);
@@ -128,4 +185,25 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * Inits the free list.
+	 */
+	private void initFreeList() {
+		if (this.isMultithreaded()) {
+			if (this.isNoLimit()) {
+				// nothing to do
+				return;
+			}
+			return;
+		}
+		// init free list is not required for the
+		for (int i = 0; i < this.maxSessions; i++) {
+		    ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.serverContext);
+		    item.myParentPool = this;
+		    this.freeItemList.add(item);
+		}
+		return;
+	}
+
 }

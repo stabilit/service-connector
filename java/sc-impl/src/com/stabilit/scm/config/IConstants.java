@@ -33,9 +33,9 @@ public interface IConstants {
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
 	public final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 	/** The read timout in seconds. */
-	public final int READ_TIMEOUT = 4;
+	public final int READ_TIMEOUT = 200;
 	/** The write timout in seconds. */
-	public final int WRITE_TIMEOUT = 4;
+	public final int WRITE_TIMEOUT = 200;
 
 	/** The REGEX. */
 	public final String COMMA_OR_SEMICOLON = ",|;";

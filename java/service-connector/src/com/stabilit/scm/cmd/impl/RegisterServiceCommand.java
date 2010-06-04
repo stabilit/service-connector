@@ -93,18 +93,16 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
-		MapBean<?> mapBean = serviceRegistry.get(serviceName);
-
-		if (mapBean != null) {
-			// server already registered
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: service already registered");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_REGISTERED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
-
+//		MapBean<?> mapBean = serviceRegistry.get(serviceName);
+//		if (mapBean != null) {
+//			// server already registered
+//			if (LoggerPoint.getInstance().isWarn()) {
+//				LoggerPoint.getInstance().fireWarn(this, "command error: service already registered");
+//			}
+//			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_REGISTERED);
+//			scmpCommandException.setMessageType(getKey().getResponseName());
+//			throw scmpCommandException;
+//		}
 		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(request);
 		serviceRegistry.add(serviceName, serviceRegistryItemPool);
 
@@ -150,13 +148,11 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				// maxSessions
 				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				ValidatorUtility.validateInt(0, maxSessions);
-				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS.getName(), maxSessions);
 				// multiThreaded default = false
 				Boolean multiThreaded = message.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED);
 				if (multiThreaded == null) {
-					multiThreaded = false;
-				}
-				request.setAttribute(SCMPHeaderAttributeKey.MULTI_THREADED.getName(), multiThreaded);
+					throw new ValidationException("Multithreaded header attribute MUST be set!");
+				}				
 				// portNr
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				ValidatorUtility.validateInt(1, portNr, 99999);

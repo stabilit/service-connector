@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,37 +14,35 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.cln.service;
+
+import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IRequester;
+
 
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to manage
- * several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
- * 
  * @author JTraber
+ *
  */
-public interface IClientSession {
+public interface IService {
 
-	/**
-	 * Gets the session id.
-	 * 
-	 * @return the sessionId
-	 */
-	public abstract String getSessionId();
+	public abstract IServiceContext getServiceContext();
 
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the serviceName
-	 */
-	public abstract String getServiceName();
+	public abstract void setMessagInfo(String messageInfo);
 
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
+	public abstract void setData(Object obj);
 
-	public abstract void deleteSession() throws Exception;
+	public abstract Object invoke() throws Exception;
+
+	public abstract void destroyService() throws Exception;
+
+	public abstract void setRequestor(IRequester client);
+
+	public abstract void setSession(IClientSession session);
+	
 }

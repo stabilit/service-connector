@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,37 +14,38 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.examples;
+
+import com.stabilit.scm.cln.service.ISCBuilderFactory;
+import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.cln.service.IServiceBuilder;
+import com.stabilit.scm.cln.service.IServiceContext;
+import com.stabilit.scm.cln.service.SCBuilderFactory;
+
 
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to manage
- * several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
- * 
  * @author JTraber
  */
-public interface IClientSession {
+public class SCNewBuilderFactoryApiExample {
 
-	/**
-	 * Gets the session id.
-	 * 
-	 * @return the sessionId
-	 */
-	public abstract String getSessionId();
-
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the serviceName
-	 */
-	public abstract String getServiceName();
-
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
-
-	public abstract void deleteSession() throws Exception;
+	public void runExample() throws Exception {
+		try {
+			ISCBuilderFactory scFactory = new SCBuilderFactory();
+			IServiceBuilder sc1Builder = scFactory.newDataServiceBuilder("localhost", 8080);
+			IService dataService1 = sc1Builder.createService("simulation");
+			IServiceContext serviceContext1 = dataService1.getServiceContext();		
+			dataService1.setMessagInfo("message info");
+			byte[] data = new byte[1024];
+			dataService1.setData(data);
+			Object resp = dataService1.invoke();
+			dataService1.destroyService();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
 }

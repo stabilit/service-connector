@@ -35,48 +35,23 @@ import com.stabilit.scm.scmp.SCMPMessage;
 /**
  * @author JTraber
  */
-public class SCApiExample {
-
-	private String fileName;
-	private ClientConfig config = null;
-	private IRequester client = null;
-	private SCMPClientSession scmpSession = null;
+public class SCNewServiceConnectorApiExample {
 
 	public void runExample() throws Exception {
+		
+//		IServiceConnector sc1 = new ServiceConnector("localhost", 8080);
+//		IServiceBuilder sb1 = sc1.newDataServiceBuilder();
+//		IService dataService1 = sb1.createService();
+//		IServiceContext serviceContext1 = dataService1.getServiceContext();
+//		ISessionContext sessionContext1 = dataService1.getSessionContext();		
+//		
+//		dataService1.setMessagInfo("message info");
+//		dataService1.setRequestBody("hello world body!");
+//		SCMPMessage scmpReply = dataService1.invoke();
+//		
+//		//.....
+//		dataService1.destroyService();
 
-		config = new ClientConfig();
-		config.load(fileName);
-		RequesterFactory clientFactory = new RequesterFactory();
-		client = clientFactory.newInstance(config.getClientConfig());
-		client.connect(); // physical connect
-
-		// attach
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
-		attachCall.setCompression(false);
-		attachCall.setKeepAliveTimeout(30);
-		attachCall.setKeepAliveInterval(360);
-		attachCall.invoke();
-
-		this.scmpSession = new SCMPClientSession(client, "simulation", "Session Info");
-		this.scmpSession.createSession();
-
-		// data call - session is stored inside client!!
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setRequestBody("hello world body!");
-		SCMPMessage scmpReply = clnDataCall.invoke();
-
-		// response
-		System.out.println(scmpReply.getBody());
-
-		this.scmpSession.deleteSession();
-
-		// detach
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(client);
-		detachCall.invoke();
-
-		client.disconnect(); // physical disconnect
-		client.destroy();
 	}
 	
 	public void runExample2() {

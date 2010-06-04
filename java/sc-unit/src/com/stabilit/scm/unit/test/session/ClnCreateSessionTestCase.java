@@ -118,7 +118,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = ":com.stabilit.scm.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;serviceName=simulation;;";
+		String expectedScEntry = ":com.stabilit.scm.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=simulation;;";
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);

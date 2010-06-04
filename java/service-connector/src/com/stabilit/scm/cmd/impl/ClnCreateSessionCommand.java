@@ -135,6 +135,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		try {
 			// try to allocate session on a backend server
 			serviceRegistryItem = serviceRegistry.allocate(request);
+			if (serviceRegistryItem == null) {
+				System.out.println("ClnCreateSessionCommand.run()");
+			}
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionPoint.getInstance().fireException(this, ex);

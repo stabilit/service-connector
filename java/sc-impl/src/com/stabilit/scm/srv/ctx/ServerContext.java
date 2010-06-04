@@ -17,7 +17,7 @@
 package com.stabilit.scm.srv.ctx;
 
 import com.stabilit.scm.ctx.ContextAdapter;
-import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
 import com.stabilit.scm.srv.res.IResponder;
 
 
@@ -50,7 +50,7 @@ public class ServerContext extends ContextAdapter implements IServerContext {
 	 * @return the current instance
 	 */
 	public static IServerContext getCurrentInstance() {
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
 		return (IServerContext) serverRegistry.getCurrentContext();
 	}
 }

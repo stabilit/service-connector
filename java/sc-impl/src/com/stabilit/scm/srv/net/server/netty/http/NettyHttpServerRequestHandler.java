@@ -43,7 +43,7 @@ import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.srv.cmd.ICommand;
 import com.stabilit.scm.srv.cmd.ICommandValidator;
 import com.stabilit.scm.srv.net.server.netty.NettyCommandRequest;
-import com.stabilit.scm.srv.registry.ServerRegistry;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
 import com.stabilit.scm.util.Lock;
 import com.stabilit.scm.util.LockAdapter;
 import com.stabilit.scm.util.Lockable;
@@ -123,7 +123,7 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 
 		try {
 			// needs to set a key in thread local to identify thread later and get access to the server
-			ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
 			serverRegistry.setThreadLocal(channel.getParent().getId());
 			lock.runLocked(commandRequestLock); // init commandRequest if not set
 			ICommand command = this.commandRequest.readCommand(request, response);

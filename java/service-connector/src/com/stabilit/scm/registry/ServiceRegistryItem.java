@@ -55,11 +55,16 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	private IRequest registerRequest; // TODO (TRN) (Done JOT) how does the scmp message relate to the service or
 										// to service registry??
 	/** The my item pool. */
-	protected ServiceRegistryItemPool myItemPool;
+	protected ServiceRegistryItemPool myParentPool;
 	/** The allocated. */
 	private boolean allocated;
 	/** The obsolete. */
 	private boolean obsolete;
+	private SCClientFactory clientFactory;
+	private int serverPort;
+	private String serverHost;
+	private String serverConnection;
+	private int numberOfThreads;
 
 	/**
 	 * Instantiates a new service registry item.
@@ -72,20 +77,19 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	public ServiceRegistryItem(IRequest request, IServerContext serverContext) {
 		this.registerRequest = request; // TODO (TRN) (Done JOT) the parameters are crazy
 		this.allocated = false;
-		this.myItemPool = null;
+		this.myParentPool = null;
 		this.obsolete = false;
 
 		SCMPMessage scmpMessage = request.getMessage();
 		this.setAttributeMap(scmpMessage.getHeader());
 		// setting up client to connect backend server
-		SCClientFactory clientFactory = new SCClientFactory();
-		int serverPort = Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.PORT_NR));
+		this.clientFactory = new SCClientFactory();
+		this.serverPort = Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.PORT_NR));
 		SocketAddress socketAddress = request.getLocalSocketAddress();
-		String serverHost = ((InetSocketAddress) socketAddress).getHostName();
+		this.serverHost = ((InetSocketAddress) socketAddress).getHostName();
 		IServerConfigItem serverConfig = serverContext.getServer().getServerConfig();
-		String serverConnection = serverConfig.getConnection();
-		int numberOfThreads = serverConfig.getNumberOfThreads();
-		client = clientFactory.newInstance(serverHost, serverPort, serverConnection, numberOfThreads);
+		this.serverConnection = serverConfig.getConnection();
+		this.numberOfThreads = serverConfig.getNumberOfThreads();
 	}
 
 	/**
@@ -98,6 +102,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public void srvCreateSession(SCMPMessage message) throws Exception { // TODO (TRN) This is weird!
 		try {
+			client = clientFactory.newInstance(serverHost, serverPort, serverConnection, numberOfThreads);
 			client.connect();
 		} catch (ConnectionException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
