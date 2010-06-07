@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit;
 
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 
 /**
  * @author JTraber

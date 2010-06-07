@@ -28,10 +28,10 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPEchoSCCall;
 import com.stabilit.scm.common.conf.RequeserConfig;
 import com.stabilit.scm.common.net.req.RequesterFactory;
-import com.stabilit.scm.scmp.SCMPBodyType;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPBodyType;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.SuperTestCase;
 

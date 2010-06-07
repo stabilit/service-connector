@@ -26,9 +26,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
-import com.stabilit.scm.listener.ConnectionPoint;
 
 /**
  * @author JTraber
