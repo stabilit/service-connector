@@ -55,7 +55,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 *            the requester
 	 */
 	public SCMPCallAdapter(IRequester req) {
-		this(req, req.getServiceSession());
+		this(req, null);
 	}
 
 	/**

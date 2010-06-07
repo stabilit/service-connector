@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.config.IRequesterConfigItem;
+import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.scmp.SCMPMessage;
 
@@ -69,21 +69,6 @@ public interface IRequester extends IFactoryable {
 	 *            the new requester config
 	 */
 	public void setRequesterConfig(IRequesterConfigItem requesterConfig);
-
-	/**
-	 * Gets the service session.
-	 * 
-	 * @return the service session
-	 */
-	public IServiceSession getServiceSession();
-
-	/**
-	 * Sets the service session.
-	 * 
-	 * @param serviceSession
-	 *            the new service session
-	 */
-	public void setServiceSession(IServiceSession serviceSession);
 
 	/**
 	 * Returns a hash code which identifies client connection.
