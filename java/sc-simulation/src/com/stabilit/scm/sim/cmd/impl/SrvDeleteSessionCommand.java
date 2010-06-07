@@ -17,21 +17,21 @@
 package com.stabilit.scm.sim.cmd.impl;
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
 import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.SCMPCommandException;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
-import com.stabilit.scm.util.MapBean;
 
 public class SrvDeleteSessionCommand extends CommandAdapter {
 

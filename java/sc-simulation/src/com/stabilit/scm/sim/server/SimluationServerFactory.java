@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.server;
 
+import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.net.res.ResponderFactory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.res.IResponder;
+import com.stabilit.scm.common.res.IResponder;
 
 /**
  * @author JTraber

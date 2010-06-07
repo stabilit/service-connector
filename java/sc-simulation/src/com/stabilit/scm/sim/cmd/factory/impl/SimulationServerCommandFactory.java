@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.factory.impl;
 
+import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.sim.cmd.impl.SrvCreateSessionCommand;
 import com.stabilit.scm.sim.cmd.impl.SrvDataCommand;
 import com.stabilit.scm.sim.cmd.impl.SrvDeleteSessionCommand;
 import com.stabilit.scm.sim.cmd.impl.SrvEchoCommand;
 import com.stabilit.scm.sim.cmd.impl.SrvSystemCommand;
-import com.stabilit.scm.srv.cmd.ICommand;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 
 public class SimulationServerCommandFactory extends CommandFactory {
 

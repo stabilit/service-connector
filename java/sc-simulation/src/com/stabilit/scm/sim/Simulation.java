@@ -19,16 +19,16 @@ package com.stabilit.scm.sim;
 import java.io.IOException;
 import java.util.List;
 
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.conf.RequeserConfig;
 import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
+import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.net.res.ResponderFactory;
+import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
 import com.stabilit.scm.sim.server.SimluationServerFactory;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.ctx.IResponderContext;
-import com.stabilit.scm.srv.res.IResponder;
 
 public class Simulation {
 

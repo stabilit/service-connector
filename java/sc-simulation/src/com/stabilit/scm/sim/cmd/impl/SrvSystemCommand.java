@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.impl;
 
-import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
 
 public class SrvSystemCommand extends CommandAdapter {
 
