@@ -24,12 +24,12 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.scm.common.ctx.RequestContext;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
-import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.RequestAdapter;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.scmp.RequestAdapter;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame.

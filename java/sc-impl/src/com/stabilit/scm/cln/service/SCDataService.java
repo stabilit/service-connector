@@ -23,7 +23,7 @@ package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * @author JTraber

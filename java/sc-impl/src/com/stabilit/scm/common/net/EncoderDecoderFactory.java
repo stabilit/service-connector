@@ -16,10 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * A factory for creating EncoderDecoder objects.

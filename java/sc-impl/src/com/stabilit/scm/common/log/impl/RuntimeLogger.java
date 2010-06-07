@@ -19,10 +19,10 @@ package com.stabilit.scm.common.log.impl;
 import java.io.IOException;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.listener.IRuntimeListener;
-import com.stabilit.scm.listener.RuntimeEvent;
-import com.stabilit.scm.log.ILogger;
-import com.stabilit.scm.log.ILoggerDecorator;
+import com.stabilit.scm.common.listener.IRuntimeListener;
+import com.stabilit.scm.common.listener.RuntimeEvent;
+import com.stabilit.scm.common.log.ILogger;
+import com.stabilit.scm.common.log.ILoggerDecorator;
 
 /**
  * The Class RuntimeLogger. Provides functionality of logging an <code>WarningEvent</code>.

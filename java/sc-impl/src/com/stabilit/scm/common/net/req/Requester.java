@@ -16,17 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.cln.net.req.IConnection;
-import com.stabilit.scm.cln.net.req.IServiceSession;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.PerformancePoint;
-import com.stabilit.scm.listener.RuntimePoint;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMessageID;
-import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
-import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageID;
+import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
  * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
@@ -41,9 +39,6 @@ public class Requester implements IRequester {
 
 	/** The client connection. */
 	protected IConnection connection;
-
-	/** The service session. */
-	protected IServiceSession serviceSession;
 
 	/** The msg id for the next request. */
 	private SCMPMessageID msgID;

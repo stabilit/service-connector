@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.ctx.ResponderContext;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.ctx.IResponderContext;
-import com.stabilit.scm.srv.res.IEndpoint;
-import com.stabilit.scm.srv.res.IResponder;
+import com.stabilit.scm.common.res.IEndpoint;
+import com.stabilit.scm.common.res.IResponder;
 
 /**
  * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation

@@ -20,8 +20,8 @@ import java.util.Map;
 
 import com.stabilit.scm.cln.net.req.IServiceSession;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPSrvSystemCall. Call causes ending specific threads on backend server. Used for testing connection

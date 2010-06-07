@@ -28,7 +28,7 @@ import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * A factory for creating NettyHttpRequesterPipeline objects.

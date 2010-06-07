@@ -25,10 +25,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.nio.RequestThread;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.srv.res.EndpointAdapter;
+import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**
  * The Class NioTcpEndpoint. Concrete server implementation with Nio for Tcp.

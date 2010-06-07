@@ -39,18 +39,18 @@ import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
-import com.stabilit.scm.cln.net.req.IConnection;
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
+import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpClientConnection. Concrete connection implementation with JBoss Netty for Http.

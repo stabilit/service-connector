@@ -20,9 +20,9 @@ import java.net.InetAddress;
 
 import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnCreateSessionCall. Call tries creating a session to a backend server over a SC.

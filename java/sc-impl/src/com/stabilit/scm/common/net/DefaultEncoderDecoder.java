@@ -29,16 +29,15 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.IInternalMessage;
-import com.stabilit.scm.scmp.SCMPBodyType;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPHeadlineKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.internal.SCMPInternalStatus;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.IInternalMessage;
+import com.stabilit.scm.common.scmp.SCMPBodyType;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.

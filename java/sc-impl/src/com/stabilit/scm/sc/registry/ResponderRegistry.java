@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.registry.Registry;
-import com.stabilit.scm.srv.ctx.IResponderContext;
-import com.stabilit.scm.srv.res.IResponder;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.

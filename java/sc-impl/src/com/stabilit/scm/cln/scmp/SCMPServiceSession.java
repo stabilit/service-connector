@@ -20,9 +20,9 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.listener.RuntimePoint;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class SCMPServiceSession. Represents a virtual connection between client and server. API programmer needs to

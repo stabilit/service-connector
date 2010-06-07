@@ -17,8 +17,8 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPDeRegisterServiceCall. Call deregisters server.

@@ -26,10 +26,10 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
-import com.stabilit.scm.listener.ExceptionPoint;
 
 /**
  * The Class NettyTcpRequesterResponseHandler. Used to wait until operation us successfully done by netty framework.

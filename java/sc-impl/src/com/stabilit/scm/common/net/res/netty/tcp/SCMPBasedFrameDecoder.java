@@ -23,7 +23,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
 import com.stabilit.scm.common.net.FrameDecoderFactory;
-import com.stabilit.scm.net.IFrameDecoder;
+import com.stabilit.scm.common.net.IFrameDecoder;
 
 /**
  * The Class SCMPBasedFrameDecoder. Decodes a SCMP frame.

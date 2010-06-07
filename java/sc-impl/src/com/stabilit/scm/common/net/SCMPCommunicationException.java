@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.scmp.IFaultResponse;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class SCMPCommunicationException. Occurs when communication fails.

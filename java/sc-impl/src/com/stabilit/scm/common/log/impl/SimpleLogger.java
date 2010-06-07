@@ -26,10 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.stabilit.scm.log.ILogger;
-import com.stabilit.scm.log.ILoggerDecorator;
-import com.stabilit.scm.log.Level;
-import com.stabilit.scm.util.DateTimeUtility;
+import com.stabilit.scm.common.log.ILogger;
+import com.stabilit.scm.common.log.ILoggerDecorator;
+import com.stabilit.scm.common.log.Level;
+import com.stabilit.scm.common.util.DateTimeUtility;
 
 /**
  * The Class SimpleLogger. A simple implementation of a logger. Writes files using native java library.

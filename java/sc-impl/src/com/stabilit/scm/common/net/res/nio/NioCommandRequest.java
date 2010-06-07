@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res.nio;
 
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
-import com.stabilit.scm.scmp.internal.SCMPPart;
-import com.stabilit.scm.srv.cmd.ICommand;
-import com.stabilit.scm.srv.cmd.IPassThrough;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
 /**
  * The Class NioCommandRequest. NioCommandRequest provides functions to read the command from a incoming request

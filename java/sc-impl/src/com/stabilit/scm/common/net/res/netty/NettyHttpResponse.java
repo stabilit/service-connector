@@ -28,11 +28,11 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
-import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.ResponseAdapter;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.scmp.ResponseAdapter;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http

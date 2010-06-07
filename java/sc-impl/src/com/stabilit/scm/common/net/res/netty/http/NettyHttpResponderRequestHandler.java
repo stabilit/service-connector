@@ -26,27 +26,27 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
+import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.listener.LoggerPoint;
-import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageID;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
+import com.stabilit.scm.common.util.Lock;
+import com.stabilit.scm.common.util.LockAdapter;
+import com.stabilit.scm.common.util.Lockable;
 import com.stabilit.scm.sc.registry.ResponderRegistry;
-import com.stabilit.scm.scmp.IFaultResponse;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMessageID;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
-import com.stabilit.scm.srv.cmd.ICommand;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.util.Lock;
-import com.stabilit.scm.util.LockAdapter;
-import com.stabilit.scm.util.Lockable;
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the

@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
 import com.stabilit.scm.common.net.res.nio.http.NioHttpEndpoint;
 import com.stabilit.scm.common.net.res.nio.tcp.NioTcpEndpoint;
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.res.IEndpoint;
+import com.stabilit.scm.common.res.IEndpoint;
 
 /**
  * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints

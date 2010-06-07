@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.msg.impl;
 
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class EchoMessage. Echo Message used for testing/maintaining.

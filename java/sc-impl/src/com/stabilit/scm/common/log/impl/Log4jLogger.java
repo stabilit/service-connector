@@ -20,9 +20,9 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.log.ILogger;
-import com.stabilit.scm.log.ILoggerDecorator;
-import com.stabilit.scm.log.Level;
+import com.stabilit.scm.common.log.ILogger;
+import com.stabilit.scm.common.log.ILoggerDecorator;
+import com.stabilit.scm.common.log.Level;
 
 /**
  * The Class Log4jLogger. Provides Access to log4j framework. Logging works over log4j. Configurations are in log4j

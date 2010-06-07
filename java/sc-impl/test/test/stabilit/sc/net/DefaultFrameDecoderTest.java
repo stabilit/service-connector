@@ -19,10 +19,10 @@ package test.stabilit.sc.net;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.net.IFrameDecoder;
+import com.stabilit.scm.common.net.IFrameDecoder;
 
 /**
  * The Class DefaultFrameDecoderTest.

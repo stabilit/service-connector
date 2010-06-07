@@ -21,7 +21,8 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.common.factory.Factory;
+
 
 /**
  * @author JTraber

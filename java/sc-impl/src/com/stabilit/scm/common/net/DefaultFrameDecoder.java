@@ -16,9 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.net.IFrameDecoder;
-import com.stabilit.scm.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 
 /**
  * The Class DefaultFrameDecoder.

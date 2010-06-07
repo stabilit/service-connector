@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.log.ILogger;
-import com.stabilit.scm.log.ILoggerDecorator;
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.log.ILogger;
+import com.stabilit.scm.common.log.ILoggerDecorator;
 
 /**
  * A factory for creating logger objects. Provides access to the concrete logger instances and logger decorator's.

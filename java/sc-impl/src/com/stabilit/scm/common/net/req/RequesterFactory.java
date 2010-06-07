@@ -18,8 +18,8 @@ package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequeserConfig;
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
  * A factory for creating Requester objects.

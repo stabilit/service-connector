@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.listener.ExceptionEvent;
-import com.stabilit.scm.listener.IExceptionListener;
-import com.stabilit.scm.log.ILogger;
-import com.stabilit.scm.log.ILoggerDecorator;
+import com.stabilit.scm.common.listener.ExceptionEvent;
+import com.stabilit.scm.common.listener.IExceptionListener;
+import com.stabilit.scm.common.log.ILogger;
+import com.stabilit.scm.common.log.ILoggerDecorator;
 
 /**
  * The Class ExceptionLogger. Provides functionality of logging an <code>ExceptionEvent</code>.

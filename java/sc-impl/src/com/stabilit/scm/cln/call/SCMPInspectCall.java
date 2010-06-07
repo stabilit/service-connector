@@ -19,9 +19,9 @@ package com.stabilit.scm.cln.call;
 import java.net.InetAddress;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations.

@@ -17,9 +17,9 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.internal.SCMPPart;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls to a backend server.

@@ -26,13 +26,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
-import com.stabilit.scm.net.IEncoderDecoder;
-import com.stabilit.scm.scmp.SCMPBodyType;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPHeadlineKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.scmp.SCMPBodyType;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class DefaultEncoderDecoderTest.

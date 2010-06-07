@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.net.IFrameDecoder;
+import com.stabilit.scm.common.factory.Factory;
+
 
 
 /**

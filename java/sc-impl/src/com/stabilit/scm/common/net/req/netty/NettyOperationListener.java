@@ -22,8 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
-import com.stabilit.scm.listener.ExceptionPoint;
 
 /**
  * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework.

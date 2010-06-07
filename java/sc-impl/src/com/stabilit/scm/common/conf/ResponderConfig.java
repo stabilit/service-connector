@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.stabilit.scm.srv.config.IResponderConfigItem;
 
 /**
  * The Class ResponderConfig. Responder configuration may hold more than one configuration for a responder, is represented by

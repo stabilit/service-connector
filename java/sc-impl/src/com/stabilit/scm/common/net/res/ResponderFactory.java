@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.res.IResponder;
+import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.res.IResponder;
 
 /**
  * A factory for creating responder objects.

@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.scmp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stabilit.scm.registry.Registry;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class SCMPSessionRegistry. Registry manages SCMPClientSessions.

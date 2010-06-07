@@ -21,9 +21,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.scmp.internal.KeepAlive;
-import com.stabilit.scm.util.DateTimeUtility;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.internal.KeepAlive;
 
 /**
  * The Class ValidatorUtility.

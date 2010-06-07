@@ -20,10 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
-import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.scmp.ResponseAdapter;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.ResponseAdapter;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class NioHttpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Http

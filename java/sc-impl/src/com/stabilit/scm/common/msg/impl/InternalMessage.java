@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stabilit.scm.common.net.DefaultEncoderDecoder;
-import com.stabilit.scm.scmp.IInternalMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.IInternalMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class InternalMessage. Internal Messages are used to communicate for testing / maintaining reasons.

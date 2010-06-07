@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
  * The Class HttpFrameDecoder. Decodes a Http frame.

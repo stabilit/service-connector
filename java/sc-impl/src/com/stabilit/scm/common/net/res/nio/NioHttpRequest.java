@@ -24,15 +24,15 @@ import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.ctx.RequestContext;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
+import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
-import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.IFrameDecoder;
-import com.stabilit.scm.scmp.RequestAdapter;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.scmp.RequestAdapter;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class NioHttpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Http frame.
