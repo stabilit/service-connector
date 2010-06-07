@@ -29,7 +29,7 @@ import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 import com.stabilit.scm.common.conf.RequeserConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 
 /**
