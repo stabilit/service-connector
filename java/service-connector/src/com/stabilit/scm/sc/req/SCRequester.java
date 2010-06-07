@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.req;
 
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.PerformancePoint;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.

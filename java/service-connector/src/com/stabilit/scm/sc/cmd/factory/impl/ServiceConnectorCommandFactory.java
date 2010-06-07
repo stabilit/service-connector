@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.factory.impl;
 
+import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.sc.cmd.impl.AttachCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnCreateSessionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnDataCommand;
@@ -27,13 +29,10 @@ import com.stabilit.scm.sc.cmd.impl.DetachCommand;
 import com.stabilit.scm.sc.cmd.impl.EchoSCCommand;
 import com.stabilit.scm.sc.cmd.impl.InspectCommand;
 import com.stabilit.scm.sc.cmd.impl.RegisterServiceCommand;
-import com.stabilit.scm.srv.cmd.ICommand;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
 
 /**
- * A factory for creating ServiceConnectorCommand objects. 
- * Provides access to concrete instances of Service
- * Connector commands.
+ * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector
+ * commands.
  * 
  * @author JTraber
  */
@@ -60,8 +59,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 * Initialize the command factory.
 	 * 
 	 * @param commandFactory
-	 *            the command factory
-	 *            TODO (TRN) (Open JOT)list is not complete. Why?
+	 *            the command factory TODO (TRN) (Open JOT)list is not complete. Why?
 	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand attachCommand = new AttachCommand();

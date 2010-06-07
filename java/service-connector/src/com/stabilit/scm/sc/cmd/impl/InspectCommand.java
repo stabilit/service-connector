@@ -16,19 +16,19 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
-import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
-import com.stabilit.scm.util.DateTimeUtility;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used

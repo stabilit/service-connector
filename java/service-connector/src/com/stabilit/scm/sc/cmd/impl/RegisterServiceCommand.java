@@ -20,20 +20,20 @@ import java.net.SocketAddress;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistryItemPool;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.IPassThrough;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
 
 /**
  * The Class RegisterServiceCommand. Responsible for validation and execution of register command. Used to register

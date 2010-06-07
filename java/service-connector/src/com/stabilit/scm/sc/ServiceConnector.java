@@ -22,17 +22,17 @@ import java.util.List;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
-import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.res.SCResponderFactory;
-import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.res.IResponder;
 
 /**
  * The Class ServiceConnector. Starts the core (responders) of the Service Connector.

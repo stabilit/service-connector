@@ -18,20 +18,20 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.SocketAddress;
 
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.registry.ClientRegistry;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.IPassThrough;
-import com.stabilit.scm.srv.cmd.SCMPCommandException;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
-import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to

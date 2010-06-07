@@ -18,24 +18,24 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.scmp.Session;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.IPassThrough;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
 
 /**
  * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data

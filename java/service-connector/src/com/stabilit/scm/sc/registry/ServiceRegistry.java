@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.CommunicationException;
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.listener.RuntimePoint;
-import com.stabilit.scm.registry.Registry;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).

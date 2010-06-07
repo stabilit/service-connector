@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.registry.Registry;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class ClientRegistry. Registry stores entries for properly connected and attached clients.

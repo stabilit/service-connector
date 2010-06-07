@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class EchoSCCommand. Responsible for validation and execution of echoSC command. Simply sends back incoming

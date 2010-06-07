@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.srv.ctx.IResponderContext;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class ServiceRegistryItemPool. Pools incoming request for one service. It depends on service resource and

@@ -27,18 +27,18 @@ import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
+import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.req.SCRequesterFactory;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.ctx.IResponderContext;
-import com.stabilit.scm.util.MapBean;
 
 /**
  * The Class ServiceRegistryItem. Provides access to a service. Gets initialized when service registers and saves

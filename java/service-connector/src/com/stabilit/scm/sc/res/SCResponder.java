@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.res;
 
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.Responder;
-import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * The Class SCResponder. Defines behavior of responder in context of Service Connector.

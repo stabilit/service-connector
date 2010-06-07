@@ -18,9 +18,9 @@ package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.factory.Factory;
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
 
 /**
  * A factory for creating SCRequester objects. Provides access to concrete instances of SC requesters.

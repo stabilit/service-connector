@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.NullCommandValidator;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
+import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.Session;
-import com.stabilit.scm.srv.cmd.ICommand;
-import com.stabilit.scm.srv.cmd.ICommandValidator;
-import com.stabilit.scm.srv.cmd.NullCommandValidator;
-import com.stabilit.scm.srv.cmd.SCMPCommandException;
 
 /**
  * The Class CommandAdapter.
