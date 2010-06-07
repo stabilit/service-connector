@@ -20,8 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.EncoderDecoderFactory;
 import com.stabilit.scm.net.IEncoderDecoder;
 import com.stabilit.scm.scmp.ResponseAdapter;
 import com.stabilit.scm.scmp.SCMPMessage;

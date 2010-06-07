@@ -26,9 +26,9 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
-import com.stabilit.scm.cln.net.CommunicationException;
-import com.stabilit.scm.common.net.req.NettyEvent;
-import com.stabilit.scm.common.net.req.NettyExceptionEvent;
+import com.stabilit.scm.common.net.CommunicationException;
+import com.stabilit.scm.common.net.req.netty.NettyEvent;
+import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
 import com.stabilit.scm.listener.ExceptionPoint;
 
 /**

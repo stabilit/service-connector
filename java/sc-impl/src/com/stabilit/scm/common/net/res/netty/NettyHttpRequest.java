@@ -23,9 +23,9 @@ import java.net.SocketAddress;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
-import com.stabilit.scm.ctx.RequestContext;
+import com.stabilit.scm.common.ctx.RequestContext;
+import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.EncoderDecoderFactory;
 import com.stabilit.scm.net.IEncoderDecoder;
 import com.stabilit.scm.scmp.RequestAdapter;
 import com.stabilit.scm.scmp.SCMPMessage;

@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.scmp;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.scmp.SCMPMessage;
 
@@ -57,15 +57,15 @@ public class SCMPServiceSession implements IServiceSession {
 	/**
 	 * The Constructor.
 	 * 
-	 * @param client
+	 * @param req
 	 *            the client
 	 * @param serviceName
 	 *            the service name
 	 * @param sessionInfo
 	 *            the session info
 	 */
-	public SCMPServiceSession(IRequester client, String serviceName, String sessionInfo) {
-		this.req = client;
+	public SCMPServiceSession(IRequester req, String serviceName, String sessionInfo) {
+		this.req = req;
 		this.serviceName = serviceName;
 		this.sessionInfo = sessionInfo;
 		this.responseMessage = null;
@@ -92,8 +92,8 @@ public class SCMPServiceSession implements IServiceSession {
 
 		if (this.responseMessage != null) {
 			this.sessionId = this.responseMessage.getSessionId();
-			this.req.setServiceSession(this);
 		}
+		return;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class SCMPServiceSession implements IServiceSession {
 	 */
 	public void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.req);
+				.newInstance(this.req, this);
 		deleteSessionCall.invoke();
 	}
 

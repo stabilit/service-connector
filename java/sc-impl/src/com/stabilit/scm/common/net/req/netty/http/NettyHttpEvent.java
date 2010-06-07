@@ -18,7 +18,7 @@ package com.stabilit.scm.common.net.req.netty.http;
 
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.scm.common.net.req.NettyEvent;
+import com.stabilit.scm.common.net.req.netty.NettyEvent;
 
 /**
  * The Class NettyHttpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching

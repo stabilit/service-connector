@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.call;
 import java.net.InetAddress;
 import java.util.Map;
 
-import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -38,16 +38,6 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 */
 	public SCMPClnEchoCall() {
 		this(null, null);
-	}
-
-	/**
-	 * Instantiates a new SCMPClnEchoCall.
-	 * 
-	 * @param client
-	 *            the client
-	 */
-	public SCMPClnEchoCall(IRequester client) {
-		super(client);
 	}
 
 	/**
@@ -74,12 +64,6 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 			throw new SCMPCallException((SCMPFault) responseMessage);
 		}
 		return this.responseMessage;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPClnEchoCall(client);
 	}
 
 	/** {@inheritDoc} */

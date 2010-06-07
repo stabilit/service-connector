@@ -57,8 +57,8 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPAttachCall(client);
+	public ISCMPCall newInstance(IRequester req) {
+		return new SCMPAttachCall(req);
 	}
 
 	/**

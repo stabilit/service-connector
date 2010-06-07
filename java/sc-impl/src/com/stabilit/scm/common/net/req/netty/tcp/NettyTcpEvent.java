@@ -23,7 +23,7 @@ package com.stabilit.scm.common.net.req.netty.tcp;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
-import com.stabilit.scm.common.net.req.NettyEvent;
+import com.stabilit.scm.common.net.req.netty.NettyEvent;
 
 /**
  * The Class NettyTcpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching

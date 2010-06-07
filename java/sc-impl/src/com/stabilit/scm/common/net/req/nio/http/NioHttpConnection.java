@@ -23,15 +23,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.cln.req.IConnection;
-import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.net.FrameDecoderFactory;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ConnectionPoint;
-import com.stabilit.scm.net.FrameDecoderFactory;
 import com.stabilit.scm.net.IFrameDecoder;
-import com.stabilit.scm.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.srv.net.SCMPCommunicationException;
 
 /**
  * The Class NioHttpConnection. Concrete connection implementation on Nio base for Http.

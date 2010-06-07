@@ -24,8 +24,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.net.res.nio.RequestThread;
-import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.srv.res.EndpointAdapter;

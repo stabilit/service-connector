@@ -36,7 +36,7 @@ public class SCDataService extends SCServiceAdapter {
 	@Override
 	public Object invoke() throws Exception {
 		// data call - session is stored inside client!!
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, session);
 		clnDataCall.setMessagInfo(this.messageInfo);
 		clnDataCall.setRequestBody(this.data);
 		SCMPMessage scmpReply = clnDataCall.invoke();

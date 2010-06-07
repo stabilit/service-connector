@@ -23,6 +23,8 @@ import com.stabilit.scm.listener.ConnectionPoint;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.LoggerPoint;
 import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.sc.registry.ResponderRegistry;
+import com.stabilit.scm.sc.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.scmp.IFaultResponse;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPFault;
@@ -34,8 +36,6 @@ import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.srv.cmd.ICommand;
 import com.stabilit.scm.srv.cmd.ICommandValidator;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.registry.ResponderRegistry;
-import com.stabilit.scm.srv.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
