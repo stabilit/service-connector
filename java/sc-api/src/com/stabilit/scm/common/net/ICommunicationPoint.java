@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.net;
+package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
  * The Interface ICommunicationPoint abstracts any communication point (server, client).

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp;
+package com.stabilit.scm.common.scmp;
 
 /**
  * The Enum SCMPBodyType. Defines possible body types in SCMP.

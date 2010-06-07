@@ -14,70 +14,56 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.res;
+package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.ctx.IResponderContext;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Interface IRequester.
- * 
- * @author JTraber
+ * The Interface ICommand.
  */
-public interface IResponder extends IFactoryable {
+public interface ICommand extends IFactoryable {
 
 	/**
-	 * Gets the requester context.
+	 * Gets the key.
 	 * 
-	 * @return the responder context
+	 * @return the key
 	 */
-	public IResponderContext getResponderContext();
+	public SCMPMsgType getKey();
 
 	/**
-	 * Sets the responder configuration.
+	 * Gets the request key name.
 	 * 
-	 * @param respConfig
-	 *            the new responder configuration
+	 * @return the request key name
 	 */
-	public void setResponderConfig(IResponderConfigItem respConfig);
+	public String getRequestKeyName();
 
 	/**
-	 * Creates the responder.
+	 * Gets the response key name.
 	 * 
+	 * @return the response key name
+	 */
+	public String getResponseKeyName();
+
+	/**
+	 * Gets the command validator.
+	 * 
+	 * @return the command validator
+	 */
+	public ICommandValidator getCommandValidator();
+
+	/**
+	 * Run command.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void create() throws Exception;
+	public void run(IRequest request, IResponse response) throws Exception;
 
-	/**
-	 * Run asynchronously. Starts responder in another thread.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void runAsync() throws Exception;
-
-	/**
-	 * Run sync. Starts responder in incoming thread.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void runSync() throws Exception;
-
-	/**
-	 * Gets the responder configuration.
-	 * 
-	 * @return the responder configuration
-	 */
-	public IResponderConfigItem getResponderConfig();
-
-	/**
-	 * Destroys responder.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void destroy() throws Exception;
 }

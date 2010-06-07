@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp;
+package com.stabilit.scm.common.scmp;
 
 import java.util.Map;
 
-import com.stabilit.scm.util.DateTimeUtility;
+import com.stabilit.scm.common.util.DateTimeUtility;
 
 /**
  * The Class SCMPFault. Indicates an error and causes the <code>SCMPHeadlineKey.EXC</code> on the wire protocol.

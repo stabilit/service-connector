@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp.internal;
+package com.stabilit.scm.common.scmp.internal;
 
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class SCMPSendPart. Represents an outgoing part SCMP of a large message.

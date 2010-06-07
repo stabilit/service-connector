@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.registry.jmx;
+package com.stabilit.scm.common.registry.jmx;
 
 import java.beans.ConstructorProperties;
 
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.

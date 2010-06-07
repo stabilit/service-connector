@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.net.ICommunicationPoint;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.net.ICommunicationPoint;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Interface IConnection abstracts any connection to a responder.

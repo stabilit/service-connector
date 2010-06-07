@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp.internal;
+package com.stabilit.scm.common.scmp.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.listener.RuntimePoint;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to

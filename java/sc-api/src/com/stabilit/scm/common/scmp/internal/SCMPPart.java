@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp.internal;
+package com.stabilit.scm.common.scmp.internal;
 
 import java.util.Map;
 
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at

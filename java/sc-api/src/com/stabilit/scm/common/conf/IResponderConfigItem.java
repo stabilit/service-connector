@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.config;
+package com.stabilit.scm.common.conf;
 
 /**
  * The Interface IResponderConfigItem.

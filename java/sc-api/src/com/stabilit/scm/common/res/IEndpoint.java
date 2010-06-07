@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.res;
+package com.stabilit.scm.common.res;
 
-import com.stabilit.scm.net.ICommunicationPoint;
+import com.stabilit.scm.common.net.ICommunicationPoint;
 
 /**
  * The Interface IEndpoint.

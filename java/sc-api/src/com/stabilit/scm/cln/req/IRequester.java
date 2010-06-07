@@ -17,8 +17,8 @@
 package com.stabilit.scm.cln.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.scmp.SCMPMessage;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Interface IRequester abstracts requester functionality.

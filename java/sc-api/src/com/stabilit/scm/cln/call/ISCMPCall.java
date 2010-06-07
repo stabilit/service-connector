@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.cln.net.req.IServiceSession;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Interface ISCMPCall. Basic functionality of a SCMPCall.

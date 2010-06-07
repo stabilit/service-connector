@@ -14,59 +14,40 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.cmd.factory;
+package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.factory.Factory;
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.SCMPMsgType;
-import com.stabilit.scm.srv.cmd.ICommand;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.util.ValidatorException;
 
 /**
- * A factory for creating Command objects.
+ * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation.
+ * Throws more specific exception (ValidatorException).
+ * 
+ * @author JTraber
  */
-public class CommandFactory extends Factory {
+public final class NullCommandValidator implements ICommandValidator {
 
-	/** The command factory. */
-	protected static CommandFactory commandFactory = null;
+	/** The null command validator. */
+	private static ICommandValidator nullCommandValidator = new NullCommandValidator();
 
 	/**
-	 * Instantiates a new command factory.
+	 * New instance.
+	 * 
+	 * @return the command validator
 	 */
-	public CommandFactory() {
+	public static ICommandValidator newInstance() {
+		return nullCommandValidator;
 	}
 
 	/**
-	 * Gets the current command factory.
-	 * 
-	 * @return the current command factory
+	 * Instantiates a new null command validator.
 	 */
-	public static CommandFactory getCurrentCommandFactory() {
-		return commandFactory;
+	private NullCommandValidator() {
 	}
 
-	/**
-	 * Sets the current command factory.
-	 * 
-	 * @param commandFactory
-	 *            the new current command factory
-	 */
-	public static void setCurrentCommandFactory(CommandFactory commandFactory) {
-		CommandFactory.commandFactory = commandFactory;
-	}
-
-	/**
-	 * New command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @return the command
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ICommand newCommand(IRequest request) throws Exception {
-		SCMPMsgType key = request.getKey();
-		IFactoryable factoryInstance = this.newInstance(key.getRequestName());
-		return (ICommand) factoryInstance;
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws ValidatorException {
+		throw new ValidatorException("no validator implemented");
 	}
 }

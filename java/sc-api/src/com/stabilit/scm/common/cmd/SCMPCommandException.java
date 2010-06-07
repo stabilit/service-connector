@@ -14,42 +14,34 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.cmd;
+package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.scmp.IFaultResponse;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPError;
-import com.stabilit.scm.scmp.SCMPFault;
-import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.util.MapBean;
-import com.stabilit.scm.util.ValidatorException;
+import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
- * The Class SCMPValidatorException. Occurs when validation of a request fails.
+ * The Class SCMPCommandException. Occurs when processing a command fails.
  * 
  * @author JTraber
  */
-public class SCMPValidatorException extends ValidatorException implements IFaultResponse {
+public class SCMPCommandException extends Exception implements IFaultResponse {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -5190062727277529571L;
-	/** The attr bean. */
+	private static final long serialVersionUID = -7198688558643060L;
+	/** The attribute bean. */
 	private MapBean<String> attrBean;
 
 	/**
-	 * Instantiates a new SCMPValidatorException.
-	 */
-	public SCMPValidatorException() {
-		this(SCMPError.VALIDATION_ERROR);
-	}
-
-	/**
-	 * Instantiates a new SCMPValidatorException.
+	 * Instantiates a new SCMPCommandException.
 	 * 
 	 * @param errorCode
 	 *            the error code
 	 */
-	public SCMPValidatorException(SCMPError errorCode) {
+	public SCMPCommandException(SCMPError errorCode) {
 		this.attrBean = new MapBean<String>();
 		this.setErrorCode(errorCode);
 	}

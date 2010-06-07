@@ -14,33 +14,24 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.res;
+package com.stabilit.scm.common.cmd;
+
+import com.stabilit.scm.common.scmp.IRequest;
 
 /**
- * The Class EndpointAdapter. Provides basic functionality for endpoints.
+ * The Interface ICommandValidator.
  * 
  * @author JTraber
  */
-public abstract class EndpointAdapter implements IEndpoint {
-
-	/** The responder. */
-	protected IResponder resp;
+public interface ICommandValidator {
 
 	/**
-	 * Instantiates a new EndpointAdapter.
+	 * Validate request.
+	 * 
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
-	public EndpointAdapter() {
-		this.resp = null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IResponder getResponder() {
-		return resp;
-	}
-
-	/** {@inheritDoc} */
-	public void setResponder(IResponder resp) {
-		this.resp = resp;
-	}
+	public void validate(IRequest request) throws Exception;
 }

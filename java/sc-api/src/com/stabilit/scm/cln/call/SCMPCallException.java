@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPFault;
 
 /**
  * The Class SCMPCallException. Exception occurs when invoking a call fails.

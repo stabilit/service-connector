@@ -14,14 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.registry;
+package com.stabilit.scm.common.registry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.stabilit.scm.registry.jmx.IRegistryMXBean;
-import com.stabilit.scm.registry.jmx.MapBeanWrapperJMX;
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
+import com.stabilit.scm.common.registry.jmx.MapBeanWrapperJMX;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class Registry. Provides functionality for general registries.

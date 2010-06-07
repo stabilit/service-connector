@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm;
+package com.stabilit.scm.common;
 
-import com.stabilit.scm.listener.ExceptionPoint;
-import com.stabilit.scm.util.ValidatorException;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.util.ValidatorException;
 
 /**
  * The Enum SCVersion. Responsible to provide SCVersion and compatibility checks.

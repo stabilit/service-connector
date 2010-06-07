@@ -14,22 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.ctx;
-
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.srv.res.IResponder;
+package com.stabilit.scm.common.res;
 
 /**
- * The Interface IResponderContext.
+ * The Class EndpointAdapter. Provides basic functionality for endpoints.
  * 
  * @author JTraber
  */
-public interface IResponderContext extends IContext {
+public abstract class EndpointAdapter implements IEndpoint {
+
+	/** The responder. */
+	protected IResponder resp;
 
 	/**
-	 * Gets the responder.
-	 * 
-	 * @return the responder
+	 * Instantiates a new EndpointAdapter.
 	 */
-	public IResponder getResponder();
+	public EndpointAdapter() {
+		this.resp = null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IResponder getResponder() {
+		return resp;
+	}
+
+	/** {@inheritDoc} */
+	public void setResponder(IResponder resp) {
+		this.resp = resp;
+	}
 }

@@ -14,24 +14,70 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.cmd;
+package com.stabilit.scm.common.res;
 
-import com.stabilit.scm.scmp.IRequest;
+import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
- * The Interface ICommandValidator.
+ * The Interface IRequester.
  * 
  * @author JTraber
  */
-public interface ICommandValidator {
+public interface IResponder extends IFactoryable {
 
 	/**
-	 * Validate request.
+	 * Gets the requester context.
 	 * 
-	 * @param request
-	 *            the request
+	 * @return the responder context
+	 */
+	public IResponderContext getResponderContext();
+
+	/**
+	 * Sets the responder configuration.
+	 * 
+	 * @param respConfig
+	 *            the new responder configuration
+	 */
+	public void setResponderConfig(IResponderConfigItem respConfig);
+
+	/**
+	 * Creates the responder.
+	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void validate(IRequest request) throws Exception;
+	public void create() throws Exception;
+
+	/**
+	 * Run asynchronously. Starts responder in another thread.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void runAsync() throws Exception;
+
+	/**
+	 * Run sync. Starts responder in incoming thread.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void runSync() throws Exception;
+
+	/**
+	 * Gets the responder configuration.
+	 * 
+	 * @return the responder configuration
+	 */
+	public IResponderConfigItem getResponderConfig();
+
+	/**
+	 * Destroys responder.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void destroy() throws Exception;
 }

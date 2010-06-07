@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp;
+package com.stabilit.scm.common.scmp;
 
 import java.util.UUID;
 
-import com.stabilit.scm.util.MapBean;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation

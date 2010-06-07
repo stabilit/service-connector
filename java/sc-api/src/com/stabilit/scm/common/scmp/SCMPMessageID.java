@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.scmp;
+package com.stabilit.scm.common.scmp;
 
 /**
  * The Class SCMPMessageID. Responsible to provide correct message id for a specific request/response. Message id

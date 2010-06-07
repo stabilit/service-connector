@@ -14,56 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.cmd;
+package com.stabilit.scm.common.ctx;
 
-import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.scmp.IRequest;
-import com.stabilit.scm.scmp.IResponse;
-import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.common.res.IResponder;
 
 /**
- * The Interface ICommand.
+ * The Interface IResponderContext.
+ * 
+ * @author JTraber
  */
-public interface ICommand extends IFactoryable {
+public interface IResponderContext extends IContext {
 
 	/**
-	 * Gets the key.
+	 * Gets the responder.
 	 * 
-	 * @return the key
+	 * @return the responder
 	 */
-	public SCMPMsgType getKey();
-
-	/**
-	 * Gets the request key name.
-	 * 
-	 * @return the request key name
-	 */
-	public String getRequestKeyName();
-
-	/**
-	 * Gets the response key name.
-	 * 
-	 * @return the response key name
-	 */
-	public String getResponseKeyName();
-
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	public ICommandValidator getCommandValidator();
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void run(IRequest request, IResponse response) throws Exception;
-
+	public IResponder getResponder();
 }
