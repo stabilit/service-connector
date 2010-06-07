@@ -41,7 +41,7 @@ import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.cln.net.CommunicationException;
 import com.stabilit.scm.cln.req.IConnection;
-import com.stabilit.scm.common.net.netty.NettyOperationListener;
+import com.stabilit.scm.common.net.req.NettyOperationListener;
 import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ConnectionPoint;

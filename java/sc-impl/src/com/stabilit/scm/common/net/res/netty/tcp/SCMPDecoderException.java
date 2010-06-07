@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +13,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.common.net.req.netty.tcp;
-
-import org.jboss.netty.buffer.ChannelBuffer;
-
-import com.stabilit.scm.common.net.req.NettyEvent;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.net.res.netty.tcp;
 
 /**
- * The Class NettyTcpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching
- * the response synchronously.
+ * The Class SCMPDecoderException. Occurs when decoding SCMP frame fails.
  * 
  * @author JTraber
  */
-public class NettyTcpEvent extends NettyEvent {
+public class SCMPDecoderException extends Exception {
 
-	/** The buffer. */
-	private ChannelBuffer response;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -6537338790870840933L;
 
 	/**
-	 * Instantiates a NettyTcpEvent.
-	 * 
-	 * @param buffer
-	 *            the buffer
+	 * Instantiates a new sCMP decoder exception.
 	 */
-	public NettyTcpEvent(ChannelBuffer buffer) {
-		this.response = buffer;
+	public SCMPDecoderException() {
+		super();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Object getResponse() {
-		return response;
+	/**
+	 * Instantiates a new sCMP decoder exception.
+	 * 
+	 * @param msg
+	 *            the msg
+	 */
+	public SCMPDecoderException(String msg) {
+		super(msg);
 	}
 }

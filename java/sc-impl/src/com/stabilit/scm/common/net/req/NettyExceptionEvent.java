@@ -19,36 +19,38 @@
 /**
  * 
  */
-package com.stabilit.scm.common.net.req.netty.tcp;
-
-import org.jboss.netty.buffer.ChannelBuffer;
-
-import com.stabilit.scm.common.net.req.NettyEvent;
+package com.stabilit.scm.common.net.req;
 
 /**
- * The Class NettyTcpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching
- * the response synchronously.
+ * The Class NettyExceptionEvent. Wraps an exception response from Netty framework. Used to unify the process of
+ * catching the response synchronously.
  * 
  * @author JTraber
  */
-public class NettyTcpEvent extends NettyEvent {
+public class NettyExceptionEvent extends NettyEvent {
 
-	/** The buffer. */
-	private ChannelBuffer response;
+	/** The th. */
+	private Throwable th;
 
 	/**
-	 * Instantiates a NettyTcpEvent.
+	 * Instantiates a new NettyExceptionEvent.
 	 * 
-	 * @param buffer
-	 *            the buffer
+	 * @param th
+	 *            the th
 	 */
-	public NettyTcpEvent(ChannelBuffer buffer) {
-		this.response = buffer;
+	public NettyExceptionEvent(Throwable th) {
+		this.th = th;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Object getResponse() {
-		return response;
+	public boolean isFault() {
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Throwable getResponse() {
+		return th;
 	}
 }

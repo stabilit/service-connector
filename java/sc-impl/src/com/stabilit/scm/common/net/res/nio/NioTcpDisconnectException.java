@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +13,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.common.net.req.netty.tcp;
-
-import org.jboss.netty.buffer.ChannelBuffer;
-
-import com.stabilit.scm.common.net.req.NettyEvent;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.net.res.nio;
 
 /**
- * The Class NettyTcpEvent. Wraps a successful response of Netty framework. Used to unify the process of catching
- * the response synchronously.
+ * The Class NioTcpDisconnectException. Exception occurs when server is i reading on a socket and client
+ * disconnects.
  * 
  * @author JTraber
  */
-public class NettyTcpEvent extends NettyEvent {
+public class NioTcpDisconnectException extends Exception {
 
-	/** The buffer. */
-	private ChannelBuffer response;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2863411772880184904L;
 
 	/**
-	 * Instantiates a NettyTcpEvent.
-	 * 
-	 * @param buffer
-	 *            the buffer
+	 * Instantiates a new nio tcp disconnect exception.
 	 */
-	public NettyTcpEvent(ChannelBuffer buffer) {
-		this.response = buffer;
+	public NioTcpDisconnectException() {
+		super();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Object getResponse() {
-		return response;
+	/**
+	 * Instantiates a new nio tcp disconnect exception.
+	 * 
+	 * @param msg the msg
+	 */
+	public NioTcpDisconnectException(String msg) {
+		super(msg);
 	}
 }

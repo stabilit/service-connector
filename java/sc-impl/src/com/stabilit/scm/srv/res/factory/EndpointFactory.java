@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.res.factory;
 
+import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
+import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
+import com.stabilit.scm.common.net.res.nio.http.NioHttpEndpoint;
+import com.stabilit.scm.common.net.res.nio.tcp.NioTcpEndpoint;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.net.server.netty.http.NettyHttpEndpoint;
-import com.stabilit.scm.srv.net.server.netty.tcp.NettyTcpEnpoint;
-import com.stabilit.scm.srv.net.server.nio.http.NioHttpEndpoint;
-import com.stabilit.scm.srv.net.server.nio.tcp.NioTcpEndpoint;
 import com.stabilit.scm.srv.res.IEndpoint;
 
 /**
