@@ -20,18 +20,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.ServiceConnector;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
-import com.stabilit.scm.cln.config.RequeserConfig;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.RequesterFactory;
+import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.sc.ServiceConnector;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.net.SCMPCommunicationException;
 import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -82,7 +82,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, this.scmpSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");

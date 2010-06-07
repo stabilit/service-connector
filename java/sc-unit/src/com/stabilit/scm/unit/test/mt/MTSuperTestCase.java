@@ -30,10 +30,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.cln.config.RequeserConfig;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.Requester;
-import com.stabilit.scm.cln.req.RequesterFactory;
+import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.listener.ConnectionPoint;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.util.ReflectionUtil;

@@ -25,14 +25,14 @@ import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.common.msg.impl.InspectMessage;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
-import com.stabilit.scm.util.ValidatorUtility;
 
 public class AttachTestCase extends SuperTestCase {
 

@@ -24,7 +24,7 @@ import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;

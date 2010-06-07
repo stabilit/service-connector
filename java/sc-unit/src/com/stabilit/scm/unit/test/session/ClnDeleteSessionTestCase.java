@@ -23,7 +23,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
@@ -43,7 +43,7 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client);
+				.newInstance(client, this.scmpSession);
 		SCMPMessage result = deleteSessionCall.invoke();
 
 		/*************************** verify delete session **********************************/

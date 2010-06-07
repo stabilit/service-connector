@@ -24,8 +24,8 @@ import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.msg.impl.InspectMessage;
 import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
@@ -118,7 +118,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = ":com.stabilit.scm.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=simulation;;";
+		String expectedScEntry = ":com.stabilit.scm.sc.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=simulation;;";
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);

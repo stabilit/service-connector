@@ -22,18 +22,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.ServiceConnector;
 import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnSystemCall;
-import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.cln.config.RequeserConfig;
-import com.stabilit.scm.cln.msg.impl.InspectMessage;
-import com.stabilit.scm.cln.req.RequesterFactory;
+import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.msg.impl.InspectMessage;
+import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.sc.ServiceConnector;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
@@ -83,7 +81,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	@Test
 	public void clnDeleteSessionSimulationServerDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client, this.scmpSession);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
@@ -91,7 +89,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the failure
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client);
+				.newInstance(client, this.scmpSession);
 		deleteSessionCall.invoke();
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
@@ -120,12 +118,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	public void clnDataSimulationServerDisconnect() throws Exception {
 
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client, this.scmpSession);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, this.scmpSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");

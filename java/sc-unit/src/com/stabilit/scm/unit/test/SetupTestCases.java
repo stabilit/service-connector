@@ -19,7 +19,14 @@ package com.stabilit.scm.unit.test;
 import java.io.File;
 import java.io.IOException;
 
-import com.stabilit.scm.ServiceConnector;
+import com.stabilit.scm.common.conf.ResponderConfig;
+import com.stabilit.scm.common.log.impl.ConnectionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
+import com.stabilit.scm.common.log.impl.GeneralLogger;
+import com.stabilit.scm.common.log.impl.LoggerFactory;
+import com.stabilit.scm.common.log.impl.PerformanceLogger;
+import com.stabilit.scm.common.log.impl.RuntimeLogger;
+import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.listener.ConnectionPoint;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.IConnectionListener;
@@ -33,16 +40,9 @@ import com.stabilit.scm.listener.PerformancePoint;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.listener.SessionPoint;
 import com.stabilit.scm.log.Level;
-import com.stabilit.scm.log.impl.ConnectionLogger;
-import com.stabilit.scm.log.impl.ExceptionLogger;
-import com.stabilit.scm.log.impl.GeneralLogger;
-import com.stabilit.scm.log.impl.LoggerFactory;
-import com.stabilit.scm.log.impl.PerformanceLogger;
-import com.stabilit.scm.log.impl.RuntimeLogger;
-import com.stabilit.scm.log.impl.SessionLogger;
+import com.stabilit.scm.sc.ServiceConnector;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.conf.ResponderConfig;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**

@@ -27,7 +27,7 @@ import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
  */
 public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 
-	private SCMPServiceSession scmpSession = null;
+	protected SCMPServiceSession scmpSession = null;
 
 	/**
 	 * The Constructor.
