@@ -14,22 +14,29 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.ctx;
-
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.srv.res.IResponder;
+package com.stabilit.scm.common.ctx;
 
 /**
- * The Interface IResponderContext.
- * 
- * @author JTraber
+ * The Interface IContext abstracts any kind of context.
  */
-public interface IResponderContext extends IContext {
+public interface IContext {
 
 	/**
-	 * Gets the responder.
+	 * Gets the attribute.
 	 * 
-	 * @return the responder
+	 * @param name
+	 *            the name
+	 * @return the attribute
 	 */
-	public IResponder getResponder();
+	public Object getAttribute(String name);
+
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
+	public void setAttribute(String name, Object value);
 }

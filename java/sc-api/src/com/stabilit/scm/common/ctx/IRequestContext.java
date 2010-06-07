@@ -14,47 +14,19 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.ctx;
+package com.stabilit.scm.common.ctx;
 
 import java.net.SocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class RequestContext. Holds the context of a request.
+ * The Interface IRequestContext.
  */
-public class RequestContext extends ContextAdapter implements IRequestContext {
+public interface IRequestContext extends IContext {
 
 	/**
-	 * Instantiates a new request context.
-	 */
-	public RequestContext() {
-		this.attrMap = new ConcurrentHashMap<String, Object>();
-	}
-
-	/**
-	 * The Constructor.
+	 * Gets the socket address.
 	 * 
-	 * @param remoteAddress
-	 *            the remote address
+	 * @return the socket address
 	 */
-	public RequestContext(SocketAddress remoteAddress) {
-		this();
-		this.setSocketAddress(remoteAddress);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SocketAddress getSocketAddress() {
-		return (SocketAddress) this.getAttribute(SocketAddress.class.getName());
-	}
-
-	/**
-	 * Sets the socket address.
-	 * 
-	 * @param socketAddress
-	 *            the new socket address
-	 */
-	public void setSocketAddress(SocketAddress socketAddress) {
-		this.setAttribute(SocketAddress.class.getName(), socketAddress);
-	}
+	public SocketAddress getSocketAddress();
 }

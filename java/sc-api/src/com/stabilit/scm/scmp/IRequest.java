@@ -18,7 +18,7 @@ package com.stabilit.scm.scmp;
 
 import java.net.SocketAddress;
 
-import com.stabilit.scm.ctx.IRequestContext;
+import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.util.MapBean;
 
 /**

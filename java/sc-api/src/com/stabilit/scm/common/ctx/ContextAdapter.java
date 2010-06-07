@@ -14,29 +14,37 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.ctx;
+package com.stabilit.scm.common.ctx;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Interface IContext abstracts any kind of context.
+ * The Class ContextAdapter. Provides basic functionality for Contexts.
+ * 
+ * @author JTraber
  */
-public interface IContext {
+public class ContextAdapter implements IContext {
+
+	/** The attr map to store data. */
+	protected Map<String, Object> attrMap;
 
 	/**
-	 * Gets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @return the attribute
+	 * Instantiates a new context adapter.
 	 */
-	public Object getAttribute(String name);
+	public ContextAdapter() {
+		attrMap = new ConcurrentHashMap<String, Object>();
+	}
 
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(String name, Object value);
+	/** {@inheritDoc} */
+	@Override
+	public Object getAttribute(String name) {
+		return this.attrMap.get(name);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setAttribute(String name, Object value) {
+		this.attrMap.put(name, value);
+	}
 }

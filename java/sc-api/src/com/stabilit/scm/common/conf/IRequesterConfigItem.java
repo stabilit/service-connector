@@ -14,19 +14,72 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.ctx;
-
-import java.net.SocketAddress;
+package com.stabilit.scm.common.conf;
 
 /**
- * The Interface IRequestContext.
+ * The Interface IRequesterConfigItem.
+ * 
+ * @author JTraber
  */
-public interface IRequestContext extends IContext {
+public interface IRequesterConfigItem {
 
 	/**
-	 * Gets the socket address.
+	 * Gets the port.
 	 * 
-	 * @return the socket address
+	 * @return the port
 	 */
-	public SocketAddress getSocketAddress();
+	public int getPort();
+
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the new port
+	 */
+	public void setPort(int port);
+
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
+	public String getHost();
+
+	/**
+	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the new host
+	 */
+	public void setHost(String host);
+
+	/**
+	 * Gets the connection. Connection identifies concrete implementation of a client.
+	 * 
+	 * @return the connection
+	 */
+	public String getConnection();
+
+	/**
+	 * Sets the connection.
+	 * 
+	 * @param connection
+	 *            the new connection
+	 */
+	public void setConnection(String connection);
+
+	/**
+	 * Sets the number of threads.
+	 * 
+	 * @param numberOfThreads
+	 *            the new number of threads
+	 */
+	public void setNumberOfThreads(int numberOfThreads);
+
+	/**
+	 * Gets the number of threads.
+	 * 
+	 * @return the number of threads
+	 */
+	public int getNumberOfThreads();
 }
