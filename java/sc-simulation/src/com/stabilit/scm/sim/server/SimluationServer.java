@@ -18,12 +18,12 @@ package com.stabilit.scm.sim.server;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.cln.config.RequeserConfig;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.RequesterFactory;
+import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.srv.config.IResponderConfigItem;
-import com.stabilit.scm.srv.res.Responder;
 
 /**
  * @author JTraber

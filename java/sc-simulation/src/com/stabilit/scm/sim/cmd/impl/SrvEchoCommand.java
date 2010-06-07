@@ -20,8 +20,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import com.stabilit.scm.cmd.impl.CommandAdapter;
 import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.IResponse;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;

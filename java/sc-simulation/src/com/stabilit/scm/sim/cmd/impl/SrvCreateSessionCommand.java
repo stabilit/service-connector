@@ -20,10 +20,11 @@ import java.util.Map;
 
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.scm.cmd.impl.CommandAdapter;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.listener.LoggerPoint;
+import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.IResponse;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
@@ -34,7 +35,6 @@ import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
 import com.stabilit.scm.srv.cmd.ICommandValidator;
 import com.stabilit.scm.srv.cmd.SCMPValidatorException;
 import com.stabilit.scm.util.MapBean;
-import com.stabilit.scm.util.ValidatorUtility;
 
 public class SrvCreateSessionCommand extends CommandAdapter {
 

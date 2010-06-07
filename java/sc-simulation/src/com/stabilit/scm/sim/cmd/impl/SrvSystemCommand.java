@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.impl;
 
-import com.stabilit.scm.cmd.impl.CommandAdapter;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.registry.ServiceRegistry;
+import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
+import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.IResponse;
 import com.stabilit.scm.scmp.SCMPMessage;
