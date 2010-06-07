@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.req.IClientSession;
 import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
@@ -33,9 +33,9 @@ import com.stabilit.scm.scmp.internal.SCMPPart;
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** The client to used to invoke the call. */
-	protected IRequester client;
+	protected IRequester req;
 	/** The scmp session to use for the call. */
-	protected IClientSession scmpSession;
+	protected IServiceSession scmpSession;
 	/** The request message. */
 	protected SCMPMessage requestMessage;
 	/** The response message. */
@@ -51,23 +51,23 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/**
 	 * Instantiates a new SCMPCallAdapter.
 	 * 
-	 * @param client
-	 *            the client
+	 * @param req
+	 *            the requester
 	 */
-	public SCMPCallAdapter(IRequester client) {
-		this(client, client.getClientSession());
+	public SCMPCallAdapter(IRequester req) {
+		this(req, req.getServiceSession());
 	}
 
 	/**
 	 * Instantiates a new SCMPCallAdapter.
 	 * 
-	 * @param client
-	 *            the client
+	 * @param req
+	 *            the requester
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPCallAdapter(IRequester client, IClientSession scmpSession) {
-		this.client = client;
+	public SCMPCallAdapter(IRequester req, IServiceSession scmpSession) {
+		this.req = req;
 		this.scmpSession = scmpSession;
 
 		if (this.scmpSession != null) {
@@ -83,19 +83,19 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
+	public ISCMPCall newInstance(IRequester req) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, IClientSession clientSession) {
+	public ISCMPCall newInstance(IRequester req, IServiceSession serviceSession) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, SCMPMessage scmpMessage) {
+	public ISCMPCall newInstance(IRequester req, SCMPMessage scmpMessage) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
@@ -116,7 +116,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
-		this.responseMessage = client.sendAndReceive(this.requestMessage);
+		this.responseMessage = req.sendAndReceive(this.requestMessage);
 
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);
@@ -261,13 +261,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public ISCMPCall newInstance(IRequester client, IClientSession clientSession) {
+		public ISCMPCall newInstance(IRequester req, IServiceSession serviceSession) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public ISCMPCall newInstance(IRequester client, SCMPMessage scmpMessage) {
+		public ISCMPCall newInstance(IRequester req, SCMPMessage scmpMessage) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 	}

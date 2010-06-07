@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.conf;
+package com.stabilit.scm.cln.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,34 +23,33 @@ import java.util.List;
 import java.util.Properties;
 
 import com.stabilit.scm.config.IConstants;
-import com.stabilit.scm.srv.config.IServerConfigItem;
 
 /**
- * The Class ServerConfig. Server configuration may hold more than one configuration for a server, is represented by
- * <code>ServerConfigItem</code>.
+ * The Class RequeserConfig. Requester configuration may hold more than one configuration for a requester, is represented
+ * by <code>RequesterConfigItem</code>.
  * 
  * @author JTraber
  */
-public class ServerConfig {
+public class RequeserConfig {
 
 	/** The props. */
 	private Properties props;
-	/** The server configuration list. */
-	private List<ServerConfigItem> serverConfigList;
+	/** The requester configuration item list. */
+	private List<RequesterConfigItem> reqConfigItemList;
 	/** The logger key. */
 	private String loggerKey;
 
 	/**
-	 * Instantiates a new server configuration.
+	 * Instantiates a new client configuration.
 	 */
-	public ServerConfig() {
-		this.serverConfigList = null;
+	public RequeserConfig() {
+		this.reqConfigItemList = null;
 		this.props = null;
 		this.loggerKey = null;
 	}
 
 	/**
-	 * Load.
+	 * Loads configuration from a file.
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -62,28 +61,28 @@ public class ServerConfig {
 		props = new Properties();
 		props.load(is);
 
-		String serverNames = props.getProperty("serverNames");
+		String respNames = props.getProperty(IConstants.CONNECTION_NAMES);
 
-		String[] servers = serverNames.split(",|;");
-		serverConfigList = new ArrayList<ServerConfigItem>();
+		String[] resps = respNames.split(IConstants.COMMA_OR_SEMICOLON);
+		reqConfigItemList = new ArrayList<RequesterConfigItem>();
 
-		for (String serverName : servers) {
-			ServerConfigItem serverConfig = new ServerConfigItem(serverName);
+		for (String respName : resps) {
+			RequesterConfigItem reqConfigItem = new RequesterConfigItem();
 
-			serverConfigList.add(serverConfig);
+			reqConfigItemList.add(reqConfigItem);
 
-			int port = Integer.parseInt((String) props.get(serverName + IConstants.PORT_QUALIFIER));
+			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
 
-			serverConfig.setPort(port);
-			serverConfig.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
-			serverConfig.setConnection((String) props.get(serverName + IConstants.CON_QUALIFIER));
-			serverConfig.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
+			reqConfigItem.setPort(port);
+			reqConfigItem.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
+			reqConfigItem.setConnection((String) props.get(respName + IConstants.CON_QUALIFIER));
+			reqConfigItem.setNumberOfThreads(Integer.parseInt((String) props.get(respName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
-
+		
 		this.loggerKey = props.getProperty("root.logger");
 	}
-
+	
 	/**
 	 * Gets the logger key.
 	 * 
@@ -94,48 +93,61 @@ public class ServerConfig {
 	}
 
 	/**
-	 * Gets the server configuration list.
+	 * Gets the client configuration list.
 	 * 
-	 * @return the server configuration list
+	 * @return the client configuration list
 	 */
-	public List<ServerConfigItem> getServerConfigList() {
-		return serverConfigList;
+	public List<RequesterConfigItem> getClientConfigList() {
+		return reqConfigItemList;
 	}
 
 	/**
-	 * The Class ServerConfigItem.
+	 * Gets the client configuration.
+	 * 
+	 * @return the client configuration
 	 */
-	public class ServerConfigItem implements IServerConfigItem {
+	public IRequesterConfigItem getClientConfig() {
+		return reqConfigItemList.get(0);
+	}
 
-		/** The server name. */
-		private String serverName;
+	/**
+	 * The Class RequesterConfigItem.
+	 */
+	public class RequesterConfigItem implements IRequesterConfigItem {
+
 		/** The port. */
 		private int port;
 		/** The host. */
 		private String host;
-		/** The con. */
-		private String con;
-		/** The number of threads. */
+		/** The connection identifies concrete client implementation. */
+		private String connection;
+		/** The number of threads to use in thread pool of this client. */
 		private int numberOfThreads;
 
 		/**
-		 * The Constructor.
-		 * 
-		 * @param serverName
-		 *            the server name
+		 * Instantiates a new RequesterConfigItem.
 		 */
-		public ServerConfigItem(String serverName) {
-			this.serverName = serverName;
+		public RequesterConfigItem() {
 		}
 
-		/** {@inheritDoc} */
-		public String getServerName() {
-			return serverName;
-		}
-
-		/** {@inheritDoc} */
-		public void setServerName(String serverName) {
-			this.serverName = serverName;
+		/**
+		 * Instantiates a new RequesterConfigItem.
+		 * 
+		 * @param host
+		 *            the host
+		 * @param port
+		 *            the port
+		 * @param numberOfThreads
+		 *            the number of threads
+		 * @param connection
+		 *            the connection
+		 */
+		public RequesterConfigItem(String host, int port, String connection, int numberOfThreads) {
+			super();
+			this.port = port;
+			this.host = host;
+			this.connection = connection;
+			this.numberOfThreads = numberOfThreads;
 		}
 
 		/** {@inheritDoc} */
@@ -160,12 +172,12 @@ public class ServerConfig {
 
 		/** {@inheritDoc} */
 		public String getConnection() {
-			return con;
+			return connection;
 		}
 
 		/** {@inheritDoc} */
-		public void setConnection(String con) {
-			this.con = con;
+		public void setConnection(String connection) {
+			this.connection = connection;
 		}
 
 		/** {@inheritDoc} */

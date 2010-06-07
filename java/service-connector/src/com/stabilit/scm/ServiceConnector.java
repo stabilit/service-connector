@@ -27,15 +27,15 @@ import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.registry.ClientRegistry;
 import com.stabilit.scm.registry.ServiceRegistry;
 import com.stabilit.scm.registry.SessionRegistry;
-import com.stabilit.scm.server.SCServerFactory;
+import com.stabilit.scm.server.SCResponderFactory;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.conf.ServerConfig;
-import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.conf.ResponderConfig;
+import com.stabilit.scm.srv.conf.ResponderConfig.ResponderConfigItem;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
- * The Class ServiceConnector. Starts the core (servers) of the Service Connector.
+ * The Class ServiceConnector. Starts the core (responders) of the Service Connector.
  * 
  * @author JTraber
  */
@@ -60,13 +60,13 @@ public final class ServiceConnector {
 	}
 
 	/**
-	 * Run SC servers.
+	 * Run SC responders.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	private static void run() throws Exception {
-		ServerConfig config = new ServerConfig();
+		ResponderConfig config = new ResponderConfig();
 		config.load("sc.properties");
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
@@ -76,13 +76,13 @@ public final class ServiceConnector {
 
 		ServiceConnector.initializeJMXStuff();
 
-		List<ServerConfigItem> serverConfigList = config.getServerConfigList();
-		SCServerFactory serverFactory = new SCServerFactory();
-		for (IServerConfigItem serverConfig : serverConfigList) {
-			IResponder server = serverFactory.newInstance(serverConfig);
+		List<ResponderConfigItem> respConfigList = config.getResponderConfigList();
+		SCResponderFactory respFactory = new SCResponderFactory();
+		for (IResponderConfigItem respConfig : respConfigList) {
+			IResponder resp = respFactory.newInstance(respConfig);
 			try {
-				server.create();
-				server.runAsync();
+				resp.create();
+				resp.runAsync();
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(ServiceConnector.class, e);
 			}

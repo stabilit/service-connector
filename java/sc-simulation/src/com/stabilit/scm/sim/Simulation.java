@@ -19,14 +19,14 @@ package com.stabilit.scm.sim;
 import java.io.IOException;
 import java.util.List;
 
-import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.config.RequeserConfig;
 import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
 import com.stabilit.scm.sim.server.SimluationServerFactory;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.conf.ServerConfig;
-import com.stabilit.scm.srv.conf.ServerConfig.ServerConfigItem;
-import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.conf.ResponderConfig;
+import com.stabilit.scm.srv.conf.ResponderConfig.ResponderConfigItem;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
+import com.stabilit.scm.srv.ctx.IResponderContext;
 import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.res.ResponderFactory;
 
@@ -37,21 +37,21 @@ public class Simulation {
 	}
 
 	private static void run() throws IOException {
-		ServerConfig srvConfig = new ServerConfig();
+		ResponderConfig srvConfig = new ResponderConfig();
 		srvConfig.load("sc-sim.properties");
-		ClientConfig clientConfig = new ClientConfig();
+		RequeserConfig clientConfig = new RequeserConfig();
 		clientConfig.load("sc-sim.properties");
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
 		}
-		List<ServerConfigItem> serverConfigList = srvConfig.getServerConfigList();
+		List<ResponderConfigItem> serverConfigList = srvConfig.getResponderConfigList();
 		ResponderFactory serverFactory = new SimluationServerFactory();
-		for (IServerConfigItem serverConfigItem : serverConfigList) {
+		for (IResponderConfigItem serverConfigItem : serverConfigList) {
 			IResponder server = serverFactory.newInstance(serverConfigItem);
-			IServerContext serverContext = server.getServerContext();
-			serverContext.setAttribute(ClientConfig.class.getName(), clientConfig);
+			IResponderContext serverContext = server.getResponderContext();
+			serverContext.setAttribute(RequeserConfig.class.getName(), clientConfig);
 			try {
 				server.create();
 				server.runAsync();

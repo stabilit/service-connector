@@ -24,7 +24,7 @@ import com.stabilit.scm.ServiceConnector;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
-import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.config.RequeserConfig;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.scmp.SCMPError;
@@ -60,7 +60,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 			ServiceConnector.main(null);
 			Simulation.main(null);
-			config = new ClientConfig();
+			config = new RequeserConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
@@ -97,7 +97,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	}
 
 	private void tearDownSCServerToService() throws Exception {
-		ClientConfig config = new ClientConfig();
+		RequeserConfig config = new RequeserConfig();
 		config.load("sc-sim.properties");
 		RequesterFactory clientFactory = new RequesterFactory();
 		IRequester tearDownClient = clientFactory.newInstance(config.getClientConfig());

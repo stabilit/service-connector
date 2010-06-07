@@ -14,29 +14,42 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.net.server.netty.tcp;
-
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-
-import com.stabilit.scm.net.netty.tcp.SCMPBasedFrameDecoder;
+package com.stabilit.scm.cln.req;
 
 /**
- * A factory for creating NettyTcpServerPipeline objects.
+ * The Interface IServiceSession. Represents a virtual link between client and server. API programmer needs to manage
+ * several service sessions on his own. Necessary to make session calls like SCMPClnDataCall.
  * 
  * @author JTraber
  */
-public class NettyTcpServerPipelineFactory implements ChannelPipelineFactory {
+public interface IServiceSession {
 
-	/** {@inheritDoc} */
-	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
-		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
-		// responsible for handling request
-		pipeline.addLast("handler", new NettyTcpServerRequestHandler());
-		return pipeline;
-	}
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the sessionId
+	 */
+	public abstract String getSessionId();
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the serviceName
+	 */
+	public abstract String getServiceName();
+
+	/**
+	 * Gets the session info.
+	 * 
+	 * @return the sessionInfo
+	 */
+	public abstract String getSessionInfo();
+
+	/**
+	 * Delete session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void deleteSession() throws Exception;
 }

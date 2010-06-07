@@ -21,15 +21,6 @@
  */
 package com.stabilit.scm.examples;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnDataCall;
-import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.config.ClientConfig;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.RequesterFactory;
-import com.stabilit.scm.cln.scmp.SCMPClientSession;
-import com.stabilit.scm.scmp.SCMPMessage;
 
 
 /**

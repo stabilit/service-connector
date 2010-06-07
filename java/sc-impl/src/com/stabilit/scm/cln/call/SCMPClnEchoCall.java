@@ -19,7 +19,7 @@ package com.stabilit.scm.cln.call;
 import java.net.InetAddress;
 import java.util.Map;
 
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
@@ -58,7 +58,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnEchoCall(IRequester client, IClientSession scmpSession) {
+	public SCMPClnEchoCall(IRequester client, IServiceSession scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -67,9 +67,9 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	public SCMPMessage invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, client.hashCode());
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, req.hashCode());
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
-		this.responseMessage = client.sendAndReceive(this.requestMessage);
+		this.responseMessage = req.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);
 		}
@@ -84,7 +84,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, IClientSession scmpSession) {
+	public ISCMPCall newInstance(IRequester client, IServiceSession scmpSession) {
 		return new SCMPClnEchoCall(client, scmpSession);
 	}
 

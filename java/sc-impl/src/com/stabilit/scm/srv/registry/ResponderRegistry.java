@@ -17,12 +17,12 @@
 package com.stabilit.scm.srv.registry;
 
 import com.stabilit.scm.registry.Registry;
-import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.ctx.IResponderContext;
 import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.util.MapBean;
 
 /**
- * The Class ResponderRegistry. Responder registry stores every server which completed register process correctly.
+ * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
  * 
  * @author JTraber
  */
@@ -34,7 +34,7 @@ public final class ResponderRegistry extends Registry {
 	private ThreadLocal<Object> threadLocal;
 
 	/**
-	 * Instantiates a new server registry.
+	 * Instantiates a new responder registry.
 	 */
 	private ResponderRegistry() {
 		threadLocal = new ThreadLocal<Object>();
@@ -52,7 +52,7 @@ public final class ResponderRegistry extends Registry {
 	}
 
 	/**
-	 * Gets the current instance of server registry.
+	 * Gets the current instance of responder registry.
 	 * 
 	 * @return the current instance
 	 */
@@ -61,7 +61,7 @@ public final class ResponderRegistry extends Registry {
 	}
 
 	/**
-	 * Adds an entry of a server.
+	 * Adds an entry of a responder.
 	 * 
 	 * @param key
 	 *            the key
@@ -77,41 +77,41 @@ public final class ResponderRegistry extends Registry {
 	 * 
 	 * @return the current context
 	 */
-	public IServerContext getCurrentContext() {
+	public IResponderContext getCurrentContext() {
 		// gets the key from thread local, key has been set before of the same thread by calling method
 		// setThreadLocal(object obj), very useful to identify current context
 		Object key = this.threadLocal.get();
-		ResponderRegistryItem serverRegistryItem = (ResponderRegistryItem) this.get(key);
-		return serverRegistryItem.getServerContext();
+		ResponderRegistryItem responderRegistryItem = (ResponderRegistryItem) this.get(key);
+		return responderRegistryItem.getResponderContext();
 	}
 
 	/**
-	 * The Class ServerRegistryItem. Represents an entry in registry of a server. Holds server context and an
-	 * attribute map to store any data related to the server.
+	 * The Class ResponderRegistryItem. Represents an entry in registry of a responder. Holds responder context and an
+	 * attribute map to store any data related to the responder.
 	 */
 	public static class ResponderRegistryItem extends MapBean<Object> {
 
 		/**
-		 * Instantiates a new server registry item.
+		 * Instantiates a new responder registry item.
 		 * 
-		 * @param server
-		 *            the server
+		 * @param responder
+		 *            the responder
 		 */
-		public ResponderRegistryItem(IResponder server) {
-			this.setAttribute(IResponder.class.getName(), server);
+		public ResponderRegistryItem(IResponder resp) {
+			this.setAttribute(IResponder.class.getName(), resp);
 		}
 
 		/**
-		 * Gets the server context.
+		 * Gets the responder context.
 		 * 
-		 * @return the server context
+		 * @return the responder context
 		 */
-		public IServerContext getServerContext() {
-			IResponder server = (IResponder) this.getAttribute(IResponder.class.getName());
-			if (server == null) {
+		public IResponderContext getResponderContext() {
+			IResponder resp = (IResponder) this.getAttribute(IResponder.class.getName());
+			if (resp == null) {
 				return null;
 			}
-			return server.getServerContext();
+			return resp.getResponderContext();
 		}
 	}
 }

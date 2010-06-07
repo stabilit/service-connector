@@ -42,7 +42,7 @@ import com.stabilit.scm.log.impl.RuntimeLogger;
 import com.stabilit.scm.log.impl.SessionLogger;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.srv.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.conf.ServerConfig;
+import com.stabilit.scm.srv.conf.ResponderConfig;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**
@@ -56,7 +56,7 @@ public class SetupTestCases {
 	}
 
 	public static void init() throws IOException {
-		ServerConfig config = new ServerConfig();
+		ResponderConfig config = new ResponderConfig();
 		config.load("sc.properties");
 
 		deleteLog();

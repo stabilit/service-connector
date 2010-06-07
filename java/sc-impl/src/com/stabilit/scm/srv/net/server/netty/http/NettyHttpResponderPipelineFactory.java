@@ -14,54 +14,35 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.net.client.netty.http;
+package com.stabilit.scm.srv.net.server.netty.http;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
-import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
-import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.jboss.netty.util.Timer;
+import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
+import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
-import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * A factory for creating NettyHttpClientPipeline objects.
+ * A factory for creating NettyHttpServerPipeline objects.
  * 
  * @author JTraber
  */
-public class NettyHttpClientPipelineFactory implements ChannelPipelineFactory {
-
-	/** The timer to observe timeouts. */
-	private Timer timer;
-
-	/**
-	 * Instantiates a new NettyHttpClientPipelineFactory.
-	 */
-	public NettyHttpClientPipelineFactory() {
-		this.timer = new HashedWheelTimer();
-	}
+public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
-		// responsible for decoding responses - Netty
-		pipeline.addLast("decoder", new HttpResponseDecoder());
-		// responsible for encoding requests - Netty
-		pipeline.addLast("encoder", new HttpRequestEncoder());
+		// responsible for decoding requests - Netty
+		pipeline.addLast("decoder", new HttpRequestDecoder());
+		// responsible for encoding responses - Netty
+		pipeline.addLast("encoder", new HttpResponseEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMPMessage.LARGE_MESSAGE_LIMIT + 4 << 10));
-		// responsible for observing read timeout - Netty
-		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
-		// responsible for observing write timeout - Netty
-		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
-		// responsible for handle responses - Stabilit
-		pipeline.addLast("handler", new NettyHttpClientResponseHandler());
+		// responsible for handle requests - Stabilit
+		pipeline.addLast("handler", new NettyHttpResponderRequestHandler());
 		return pipeline;
 	}
 }

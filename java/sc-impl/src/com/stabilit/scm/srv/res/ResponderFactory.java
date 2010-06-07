@@ -18,7 +18,7 @@ package com.stabilit.scm.srv.res;
 
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
@@ -35,15 +35,15 @@ public class ResponderFactory extends Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @param serverConfig
-	 *            the server configuration
+	 * @param responderConfig
+	 *            the responder configuration
 	 * 
-	 * @return the server
+	 * @return the responder
 	 */
-	public IResponder newInstance(IServerConfigItem serverConfig) {
+	public IResponder newInstance(IResponderConfigItem respConfig) {
 		IFactoryable factoryInstance = this.newInstance();
-		IResponder server = (IResponder) factoryInstance;
-		server.setServerConfig(serverConfig);
-		return server;
+		IResponder responder = (IResponder) factoryInstance;
+		responder.setResponderConfig(respConfig);
+		return responder;
 	}
 }

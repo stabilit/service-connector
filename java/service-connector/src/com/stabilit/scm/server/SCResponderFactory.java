@@ -14,36 +14,40 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.req;
+package com.stabilit.scm.server;
+
+import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.factory.IFactoryable;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
+import com.stabilit.scm.srv.res.IResponder;
+import com.stabilit.scm.srv.res.Responder;
 
 /**
- * The Interface IClientSession. Represents a virtual link between client and server. API programmer needs to manage
- * several client sessions on his own. Necessary to make session calls like SCMPClnDataCall.
+ * A factory for creating SCResponder objects. Provides access to concrete instances of SC responders.
  * 
  * @author JTraber
  */
-public interface IClientSession {
+public class SCResponderFactory extends Factory {
 
 	/**
-	 * Gets the session id.
-	 * 
-	 * @return the sessionId
+	 * Instantiates a new SCResponderFactory.
 	 */
-	public abstract String getSessionId();
+	public SCResponderFactory() {
+		Responder resp = new SCResponder();
+		this.factoryMap.put(DEFAULT, resp);
+	}
 
 	/**
-	 * Gets the service name.
+	 * New instance.
 	 * 
-	 * @return the serviceName
+	 * @param responderConfig
+	 *            the responder configuration
+	 * @return the responder
 	 */
-	public abstract String getServiceName();
-
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
-
-	public abstract void deleteSession() throws Exception;
+	public IResponder newInstance(IResponderConfigItem respConfig) {
+		IFactoryable factoryInstance = this.newInstance();
+		IResponder responder = (IResponder) factoryInstance;
+		responder.setResponderConfig(respConfig);
+		return responder;
+	}
 }

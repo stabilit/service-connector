@@ -25,7 +25,7 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.RequesterFactory;
-import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 
 /**
  * @author JTraber
@@ -53,7 +53,7 @@ public class SCDataServiceBuilder extends SCServiceBuilder {
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
-		SCMPClientSession scmpSession = new SCMPClientSession(client, serviceName, "");
+		SCMPServiceSession scmpSession = new SCMPServiceSession(client, serviceName, "");
 		scmpSession.createSession();
 		dataService.setRequestor(client);
 		dataService.setSession(scmpSession);

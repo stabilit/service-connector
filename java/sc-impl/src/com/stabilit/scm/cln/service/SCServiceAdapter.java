@@ -23,7 +23,7 @@ package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
 
 /**
@@ -33,7 +33,7 @@ import com.stabilit.scm.cln.req.IRequester;
 public abstract class SCServiceAdapter implements IService {
 
 	protected IRequester client;
-	protected IClientSession session;
+	protected IServiceSession session;
 	protected Object data;
 	
 	@Override
@@ -64,7 +64,7 @@ public abstract class SCServiceAdapter implements IService {
 	}
 	
 	@Override
-	public void setSession(IClientSession session) {
+	public void setSession(IServiceSession session) {
 		this.session = session;
 	}
 

@@ -44,7 +44,7 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	 *            the client message
 	 */
 	public SCMPServerCallAdapter(IRequester client, SCMPMessage clientMessage) {
-		this.client = client;
+		this.req = client;
 		this.scmpSession = null;
 		if (clientMessage != null) {
 			if (clientMessage.isPart()) {

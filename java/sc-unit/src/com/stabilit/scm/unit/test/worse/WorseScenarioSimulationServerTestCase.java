@@ -19,19 +19,29 @@ package com.stabilit.scm.unit.test.worse;
 import junit.framework.Assert;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.scm.ServiceConnector;
 import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnSystemCall;
+import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.cln.config.RequeserConfig;
 import com.stabilit.scm.cln.msg.impl.InspectMessage;
+import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
+import com.stabilit.scm.sim.Simulation;
+import com.stabilit.scm.srv.cmd.factory.CommandFactory;
+import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
+import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.session.SuperSessionRegisterTestCase;
 
 /**
@@ -49,6 +59,27 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		super(fileName);
 	}
 
+	@Before
+	@Override
+	public void setup() {
+		try {
+			SetupTestCases.init();
+			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+			ServiceConnector.main(null);
+			Simulation.main(null);
+			config = new RequeserConfig();
+			config.load(fileName);
+			RequesterFactory clientFactory = new RequesterFactory();
+			client = clientFactory.newInstance(config.getClientConfig());
+			client.connect(); // physical connect
+			clnAttachBefore();
+			registerServiceBefore();
+			clnCreateSessionBefore();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Test
 	public void clnDeleteSessionSimulationServerDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
@@ -57,8 +88,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		systemCall.invoke();
 
 		/*
-		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the
-		 * failure
+		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the failure
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(client);
@@ -78,9 +108,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9100, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
+		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9000, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=simulation}]";
 		scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
+
+		// remove entry in serviceRegistry on Sc
+		this.deRegisterServiceAfter("simulation");
 	}
 
 	@Test
@@ -116,14 +149,17 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		scEntry = scEntry.substring(scEntry.indexOf(":"));
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9100, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, serviceName=simulation}]";
+		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9000, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=simulation}]";
 		scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
+
+		// remove entry in serviceRegistry on Sc
+		this.deRegisterServiceAfter("simulation");
 	}
 
 	/**
-	 * Tear down. Needs to be overridden because clnDeleteSession() from usual procedure is not possible this time
-	 * - backend server already down.
+	 * Tear down. Needs to be overridden because clnDeleteSession() from usual procedure is not possible this time -
+	 * backend server already down.
 	 * 
 	 * @throws Exception
 	 *             the exception

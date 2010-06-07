@@ -17,7 +17,7 @@
 package com.stabilit.scm.sim.server;
 
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
 import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.res.Responder;
 import com.stabilit.scm.srv.res.ResponderFactory;
@@ -32,10 +32,10 @@ public class SimluationServerFactory extends ResponderFactory {
 	    this.factoryMap.put(DEFAULT, server);
 	}
 	
-	public IResponder newInstance(IServerConfigItem serverConfig) {
+	public IResponder newInstance(IResponderConfigItem serverConfig) {
 		IFactoryable factoryInstance = this.newInstance();
 		IResponder server = (IResponder)factoryInstance;
-		server.setServerConfig(serverConfig);
+		server.setResponderConfig(serverConfig);
 		return server;
 	}
 

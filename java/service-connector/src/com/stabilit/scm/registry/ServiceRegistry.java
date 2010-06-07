@@ -221,5 +221,18 @@ public final class ServiceRegistry extends Registry {
 			}
 			this.poolArray = newItemPool;
 		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			
+			for (int i = 0; i < poolArray.length; i++) {
+				if(poolArray[i] == null) {
+					continue;
+				}
+				sb.append(poolArray[i].toString());
+			}
+			return sb.toString();
+		}
 	}
 }

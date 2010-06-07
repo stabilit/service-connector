@@ -45,14 +45,14 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPEchoSCCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
-		this.responseMessage = client.sendAndReceive(this.requestMessage);
+		this.responseMessage = req.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);
 		}

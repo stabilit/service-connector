@@ -18,11 +18,11 @@ package com.stabilit.scm.sim.server;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.config.RequeserConfig;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.RequesterFactory;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IServerConfigItem;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
 import com.stabilit.scm.srv.res.Responder;
 
 /**
@@ -41,8 +41,8 @@ public class SimluationServer extends Responder {
 	@Override
 	public void create() throws Exception {
 		super.create();
-		ClientConfig clientConfig = (ClientConfig) this.getServerContext().getAttribute(ClientConfig.class.getName());
-		IServerConfigItem serverConfigItem = (IServerConfigItem) this.getServerContext().getServer().getServerConfig();
+		RequeserConfig clientConfig = (RequeserConfig) this.getResponderContext().getAttribute(RequeserConfig.class.getName());
+		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder().getResponderConfig();
 		client = clientFactory.newInstance(clientConfig.getClientConfig());
 		client.connect(); // physical connect
 		// scmp registerService		

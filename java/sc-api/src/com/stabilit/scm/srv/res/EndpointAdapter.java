@@ -23,24 +23,24 @@ package com.stabilit.scm.srv.res;
  */
 public abstract class EndpointAdapter implements IEndpoint {
 
-	/** The server. */
-	protected IResponder server;
+	/** The responder. */
+	protected IResponder resp;
 
 	/**
 	 * Instantiates a new EndpointAdapter.
 	 */
 	public EndpointAdapter() {
-		this.server = null;
+		this.resp = null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IResponder getServer() {
-		return server;
+	public IResponder getResponder() {
+		return resp;
 	}
 
 	/** {@inheritDoc} */
-	public void setServer(IResponder server) {
-		this.server = server;
+	public void setResponder(IResponder resp) {
+		this.resp = resp;
 	}
 }

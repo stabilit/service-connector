@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.config;
+package com.stabilit.scm.srv.conf;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,33 +23,34 @@ import java.util.List;
 import java.util.Properties;
 
 import com.stabilit.scm.config.IConstants;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
 
 /**
- * The Class ClientConfig. Client configuration may hold more than one configuration for a client, is represented
- * by <code>ClientConfigItem</code>.
+ * The Class ResponderConfig. Responder configuration may hold more than one configuration for a responder, is represented by
+ * <code>ResponderConfigItem</code>.
  * 
  * @author JTraber
  */
-public class ClientConfig {
+public class ResponderConfig {
 
 	/** The props. */
 	private Properties props;
-	/** The client configuration item list. */
-	private List<ClientConfigItem> clientConfigItemList;
+	/** The responder configuration list. */
+	private List<ResponderConfigItem> respConfigList;
 	/** The logger key. */
 	private String loggerKey;
 
 	/**
-	 * Instantiates a new client configuration.
+	 * Instantiates a new ResponderConfig.
 	 */
-	public ClientConfig() {
-		this.clientConfigItemList = null;
+	public ResponderConfig() {
+		this.respConfigList = null;
 		this.props = null;
 		this.loggerKey = null;
 	}
 
 	/**
-	 * Loads configuration from a file.
+	 * Load.
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -61,28 +62,28 @@ public class ClientConfig {
 		props = new Properties();
 		props.load(is);
 
-		String serverNames = props.getProperty(IConstants.CONNECTION_NAMES);
+		String respNames = props.getProperty("serverNames");
 
-		String[] servers = serverNames.split(IConstants.COMMA_OR_SEMICOLON);
-		clientConfigItemList = new ArrayList<ClientConfigItem>();
+		String[] resps = respNames.split(",|;");
+		respConfigList = new ArrayList<ResponderConfigItem>();
 
-		for (String serverName : servers) {
-			ClientConfigItem clientConfigItem = new ClientConfigItem();
+		for (String respName : resps) {
+			ResponderConfigItem respConfig = new ResponderConfigItem(respName);
 
-			clientConfigItemList.add(clientConfigItem);
+			respConfigList.add(respConfig);
 
-			int port = Integer.parseInt((String) props.get(serverName + IConstants.PORT_QUALIFIER));
+			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
 
-			clientConfigItem.setPort(port);
-			clientConfigItem.setHost((String) props.get(serverName + IConstants.HOST_QUALIFIER));
-			clientConfigItem.setConnection((String) props.get(serverName + IConstants.CON_QUALIFIER));
-			clientConfigItem.setNumberOfThreads(Integer.parseInt((String) props.get(serverName
+			respConfig.setPort(port);
+			respConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
+			respConfig.setConnection((String) props.get(respName + IConstants.CON_QUALIFIER));
+			respConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName
 					+ IConstants.THREAD_QUALIFIER)));
 		}
-		
+
 		this.loggerKey = props.getProperty("root.logger");
 	}
-	
+
 	/**
 	 * Gets the logger key.
 	 * 
@@ -93,61 +94,48 @@ public class ClientConfig {
 	}
 
 	/**
-	 * Gets the client configuration list.
+	 * Gets the responder configuration list.
 	 * 
-	 * @return the client configuration list
+	 * @return the responder configuration list
 	 */
-	public List<ClientConfigItem> getClientConfigList() {
-		return clientConfigItemList;
+	public List<ResponderConfigItem> getResponderConfigList() {
+		return respConfigList;
 	}
 
 	/**
-	 * Gets the client configuration.
-	 * 
-	 * @return the client configuration
+	 * The Class ResponderConfigItem.
 	 */
-	public IClientConfigItem getClientConfig() {
-		return clientConfigItemList.get(0);
-	}
+	public class ResponderConfigItem implements IResponderConfigItem {
 
-	/**
-	 * The Class ClientConfigItem.
-	 */
-	public class ClientConfigItem implements IClientConfigItem {
-
+		/** The responder name. */
+		private String respName;
 		/** The port. */
 		private int port;
 		/** The host. */
 		private String host;
-		/** The connection identifies concrete client implementation. */
-		private String connection;
-		/** The number of threads to use in thread pool of this client. */
+		/** The con. */
+		private String con;
+		/** The number of threads. */
 		private int numberOfThreads;
 
 		/**
-		 * Instantiates a new client configuration item.
+		 * The Constructor.
+		 * 
+		 * @param respName
+		 *            the responder name
 		 */
-		public ClientConfigItem() {
+		public ResponderConfigItem(String respName) {
+			this.respName = respName;
 		}
 
-		/**
-		 * Instantiates a new client configuration item.
-		 * 
-		 * @param host
-		 *            the host
-		 * @param port
-		 *            the port
-		 * @param numberOfThreads
-		 *            the number of threads
-		 * @param connection
-		 *            the connection
-		 */
-		public ClientConfigItem(String host, int port, String connection, int numberOfThreads) {
-			super();
-			this.port = port;
-			this.host = host;
-			this.connection = connection;
-			this.numberOfThreads = numberOfThreads;
+		/** {@inheritDoc} */
+		public String getResponderName() {
+			return respName;
+		}
+
+		/** {@inheritDoc} */
+		public void setResponderName(String respName) {
+			this.respName = respName;
 		}
 
 		/** {@inheritDoc} */
@@ -172,12 +160,12 @@ public class ClientConfig {
 
 		/** {@inheritDoc} */
 		public String getConnection() {
-			return connection;
+			return con;
 		}
 
 		/** {@inheritDoc} */
-		public void setConnection(String connection) {
-			this.connection = connection;
+		public void setConnection(String con) {
+			this.con = con;
 		}
 
 		/** {@inheritDoc} */

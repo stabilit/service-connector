@@ -89,7 +89,7 @@ public class NioHttpEndpoint extends EndpointAdapter implements Runnable {
 			try {
 				SocketChannel socketChannel;
 				socketChannel = serverChannel.accept();
-				pool.execute(new RequestThread(socketChannel, this.server));
+				pool.execute(new RequestThread(socketChannel, this.resp));
 			} catch (IOException e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

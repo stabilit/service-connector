@@ -14,43 +14,29 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.ctx;
+package com.stabilit.scm.srv.net.server.netty.tcp;
 
-import com.stabilit.scm.ctx.ContextAdapter;
-import com.stabilit.scm.srv.registry.ResponderRegistry;
-import com.stabilit.scm.srv.res.IResponder;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.Channels;
 
+import com.stabilit.scm.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
- * The Class ServerContext.
+ * A factory for creating NettyTcpResponderPipelineFactory objects.
+ * 
+ * @author JTraber
  */
-public class ServerContext extends ContextAdapter implements IServerContext {
-		
-	/** The server. */
-	private IResponder server;
-	
-	/**
-	 * Instantiates a new server context.
-	 * 
-	 * @param server the server
-	 */
-	public ServerContext(IResponder server) {
-		this.server = server;
-	}
+public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	public IResponder getServer() {
-		return server;
-	}
-
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static IServerContext getCurrentInstance() {
-		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		return (IServerContext) serverRegistry.getCurrentContext();
+	public ChannelPipeline getPipeline() throws Exception {
+		ChannelPipeline pipeline = Channels.pipeline();
+		// responsible for reading until SCMP frame is complete
+		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
+		// responsible for handling request
+		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
+		return pipeline;
 	}
 }

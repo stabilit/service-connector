@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
 
 /**
@@ -51,11 +51,11 @@ public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
 	 * @param clientSession
 	 *            the client session
 	 */
-	public SCMPSessionCallAdapter(IRequester client, IClientSession clientSession) {
+	public SCMPSessionCallAdapter(IRequester client, IServiceSession clientSession) {
 		super(client, clientSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract ISCMPCall newInstance(IRequester client, IClientSession clientSession);
+	public abstract ISCMPCall newInstance(IRequester client, IServiceSession clientSession);
 }

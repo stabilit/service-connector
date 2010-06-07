@@ -45,7 +45,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPClnCreateSessionCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */

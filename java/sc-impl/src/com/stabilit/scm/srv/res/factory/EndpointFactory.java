@@ -43,19 +43,19 @@ public class EndpointFactory extends Factory {
 	 * Instantiates a new EnpointFactory.
 	 */
 	public EndpointFactory() {
-		// jboss netty http server
-		IEndpoint nettyHttpServer = new NettyHttpEndpoint();
-		add(DEFAULT, nettyHttpServer);
-		add(NETTY_HTTP, nettyHttpServer);
-		// jboss netty tcp server
-		IEndpoint nettyTCPServer = new NettyTcpEnpoint();
-		add(NETTY_TCP, nettyTCPServer);
-		// nio tcp Server
-		IEndpoint nioTcpServer = new NioTcpEndpoint();
-		add(NIO_TCP, nioTcpServer);
-		// nio http Server
-		IEndpoint nioHttpServer = new NioHttpEndpoint();
-		add(NIO_HTTP, nioHttpServer);
+		// jboss netty http endpoint
+		IEndpoint nettyHttpEndpoint = new NettyHttpEndpoint();
+		add(DEFAULT, nettyHttpEndpoint);
+		add(NETTY_HTTP, nettyHttpEndpoint);
+		// jboss netty tcp endpoint
+		IEndpoint nettyTCPEndpoint = new NettyTcpEnpoint();
+		add(NETTY_TCP, nettyTCPEndpoint);
+		// nio tcp endpoint
+		IEndpoint nioTcpEndpoint = new NioTcpEndpoint();
+		add(NIO_TCP, nioTcpEndpoint);
+		// nio http endpoint
+		IEndpoint nioHttpEndpoint = new NioHttpEndpoint();
+		add(NIO_HTTP, nioHttpEndpoint);
 	}
 
 	/** {@inheritDoc} */

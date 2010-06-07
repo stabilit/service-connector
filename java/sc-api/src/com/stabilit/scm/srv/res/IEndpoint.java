@@ -36,12 +36,12 @@ public interface IEndpoint extends ICommunicationPoint {
 	public void create();
 
 	/**
-	 * Runs asynchronously. Starts server in another thread.
+	 * Runs asynchronously. Starts responder in another thread.
 	 */
 	public void runAsync();
 
 	/**
-	 * Run sync. Starts server in incoming thread.
+	 * Run sync. Starts responder in incoming thread.
 	 * 
 	 * @throws InterruptedException
 	 *             the interrupted exception
@@ -49,17 +49,17 @@ public interface IEndpoint extends ICommunicationPoint {
 	public void runSync() throws InterruptedException;
 
 	/**
-	 * Gets the server.
+	 * Gets the responder.
 	 * 
-	 * @return the server
+	 * @return the responder
 	 */
-	public IResponder getServer();
+	public IResponder getResponder();
 
 	/**
-	 * Sets the server.
+	 * Sets the responder.
 	 * 
-	 * @param server
-	 *            the new server
+	 * @param resp
+	 *            the new responder
 	 */
-	public void setServer(IResponder server);
+	public void setResponder(IResponder resp);
 }

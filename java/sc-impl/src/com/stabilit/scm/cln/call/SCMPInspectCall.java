@@ -52,7 +52,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPInspectCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */

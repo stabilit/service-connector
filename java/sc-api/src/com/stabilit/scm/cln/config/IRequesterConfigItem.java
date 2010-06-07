@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +13,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.srv.config;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.cln.config;
 
 /**
- * The Interface IServerConfigItem.
+ * The Interface IRequesterConfigItem.
  * 
  * @author JTraber
  */
-public interface IServerConfigItem {
-
-	/**
-	 * Gets the server name.
-	 * 
-	 * @return the server name
-	 */
-	public abstract String getServerName();
-
-	/**
-	 * Sets the server name.
-	 * 
-	 * @param serverName
-	 *            the new server name
-	 */
-	public abstract void setServerName(String serverName);
+public interface IRequesterConfigItem {
 
 	/**
 	 * Gets the port.
 	 * 
 	 * @return the port
 	 */
-	public abstract int getPort();
+	public int getPort();
 
 	/**
 	 * Sets the port.
@@ -56,14 +36,14 @@ public interface IServerConfigItem {
 	 * @param port
 	 *            the new port
 	 */
-	public abstract void setPort(int port);
+	public void setPort(int port);
 
 	/**
 	 * Gets the host.
 	 * 
 	 * @return the host
 	 */
-	public abstract String getHost();
+	public String getHost();
 
 	/**
 	 * Sets the host.
@@ -71,14 +51,14 @@ public interface IServerConfigItem {
 	 * @param host
 	 *            the new host
 	 */
-	public abstract void setHost(String host);
+	public void setHost(String host);
 
 	/**
-	 * Gets the connection. Connection identifies concrete implementation of a server.
+	 * Gets the connection. Connection identifies concrete implementation of a client.
 	 * 
 	 * @return the connection
 	 */
-	public abstract String getConnection();
+	public String getConnection();
 
 	/**
 	 * Sets the connection.
@@ -86,7 +66,7 @@ public interface IServerConfigItem {
 	 * @param connection
 	 *            the new connection
 	 */
-	public abstract void setConnection(String connection);
+	public void setConnection(String connection);
 
 	/**
 	 * Sets the number of threads.

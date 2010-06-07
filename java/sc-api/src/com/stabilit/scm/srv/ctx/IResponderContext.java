@@ -20,16 +20,16 @@ import com.stabilit.scm.ctx.IContext;
 import com.stabilit.scm.srv.res.IResponder;
 
 /**
- * The Interface IServerContext.
+ * The Interface IResponderContext.
  * 
  * @author JTraber
  */
-public interface IServerContext extends IContext {
+public interface IResponderContext extends IContext {
 
 	/**
-	 * Gets the server.
+	 * Gets the responder.
 	 * 
-	 * @return the server
+	 * @return the responder
 	 */
-	public IResponder getServer();
+	public IResponder getResponder();
 }

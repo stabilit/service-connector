@@ -20,7 +20,7 @@ import com.stabilit.scm.net.ICommunicationPoint;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * The Interface IConnection abstracts any connection to a server.
+ * The Interface IConnection abstracts any connection to a responder.
  * 
  * @author JTraber
  */

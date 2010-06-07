@@ -25,10 +25,10 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.config.ClientConfig;
+import com.stabilit.scm.cln.config.RequeserConfig;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.RequesterFactory;
-import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 
@@ -38,13 +38,13 @@ import com.stabilit.scm.scmp.SCMPMessage;
 public class SCApiExample {
 
 	private String fileName;
-	private ClientConfig config = null;
+	private RequeserConfig config = null;
 	private IRequester client = null;
-	private SCMPClientSession scmpSession = null;
+	private SCMPServiceSession scmpSession = null;
 
 	public void runExample() throws Exception {
 
-		config = new ClientConfig();
+		config = new RequeserConfig();
 		config.load(fileName);
 		RequesterFactory clientFactory = new RequesterFactory();
 		client = clientFactory.newInstance(config.getClientConfig());
@@ -57,7 +57,7 @@ public class SCApiExample {
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
 
-		this.scmpSession = new SCMPClientSession(client, "simulation", "Session Info");
+		this.scmpSession = new SCMPServiceSession(client, "simulation", "Session Info");
 		this.scmpSession.createSession();
 
 		// data call - session is stored inside client!!

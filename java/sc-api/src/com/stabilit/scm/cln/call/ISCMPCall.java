@@ -17,8 +17,8 @@
 
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.req.IClientSession;
 import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.scmp.SCMPMessage;
 import com.stabilit.scm.scmp.SCMPMsgType;
 
@@ -32,33 +32,33 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param client
-	 *            the client to use for the call
+	 * @param req
+	 *            the requester to use for the call
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester client);
+	public ISCMPCall newInstance(IRequester req);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param client
-	 *            the client to use for the call
-	 * @param clientSession
-	 *            the client session
+	 * @param req
+	 *            the requester to use for the call
+	 * @param serviceSession
+	 *            the service session
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester client, IClientSession clientSession);
+	public ISCMPCall newInstance(IRequester req, IServiceSession clientSession);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param client
-	 *            the client
+	 * @param req
+	 *            the requester
 	 * @param scmpMessage
 	 *            the scmp message
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester client, SCMPMessage scmpMessage);
+	public ISCMPCall newInstance(IRequester req, SCMPMessage scmpMessage);
 
 	/**
 	 * Invoke.

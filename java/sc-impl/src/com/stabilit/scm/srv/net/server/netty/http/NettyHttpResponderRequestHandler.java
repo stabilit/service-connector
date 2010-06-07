@@ -49,14 +49,14 @@ import com.stabilit.scm.util.LockAdapter;
 import com.stabilit.scm.util.Lockable;
 
 /**
- * The Class NettyHttpServerRequestHandler. This class is responsible for handling Http requests. Is called from the
+ * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
  * Netty framework by catching events (message received, exception caught). Functionality to handle large messages is
  * also inside.
  * 
  * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The command request. */
 	private NettyCommandRequest commandRequest = null;
@@ -81,9 +81,9 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 	};
 
 	/**
-	 * Instantiates a new netty http server request handler.
+	 * Instantiates a new NettyHttpResponderRequestHandler.
 	 */
-	public NettyHttpServerRequestHandler() {
+	public NettyHttpResponderRequestHandler() {
 		msgID = new SCMPMessageID();
 	}
 
@@ -122,9 +122,9 @@ public class NettyHttpServerRequestHandler extends SimpleChannelUpstreamHandler 
 		}
 
 		try {
-			// needs to set a key in thread local to identify thread later and get access to the server
-			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-			serverRegistry.setThreadLocal(channel.getParent().getId());
+			// needs to set a key in thread local to identify thread later and get access to the responder
+			ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
+			respRegistry.setThreadLocal(channel.getParent().getId());
 			lock.runLocked(commandRequestLock); // init commandRequest if not set
 			ICommand command = this.commandRequest.readCommand(request, response);
 			if (commandRequest.isComplete() == false) {

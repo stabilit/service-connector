@@ -35,9 +35,9 @@ import com.stabilit.scm.listener.ExceptionPoint;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.srv.client.SCClientFactory;
-import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.client.SCRequesterFactory;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
+import com.stabilit.scm.srv.ctx.IResponderContext;
 import com.stabilit.scm.srv.net.SCMPCommunicationException;
 import com.stabilit.scm.util.MapBean;
 
@@ -59,22 +59,27 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	/** The allocated. */
 	private boolean allocated;
 	/** The obsolete. */
-	private boolean obsolete;
-	private SCClientFactory clientFactory;
-	private int serverPort;
-	private String serverHost;
-	private String serverConnection;
+	private boolean obsolete;	
+	/** The client factory. */
+	private SCRequesterFactory reqFactory;	
+	/** The resp port. */
+	private int respPort;	
+	/** The resp host. */
+	private String respHost;	
+	/** The endpoint. */
+	private String endpoint;	
+	/** The number of threads. */
 	private int numberOfThreads;
 
 	/**
 	 * Instantiates a new service registry item.
 	 * 
-	 * @param serverContext
-	 *            the server context
+	 * @param respContext
+	 *            the responder context
 	 * @param request
 	 *            the request
 	 */
-	public ServiceRegistryItem(IRequest request, IServerContext serverContext) {
+	public ServiceRegistryItem(IRequest request, IResponderContext respContext) {
 		this.registerRequest = request; // TODO (TRN) (Done JOT) the parameters are crazy
 		this.allocated = false;
 		this.myParentPool = null;
@@ -83,12 +88,12 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		SCMPMessage scmpMessage = request.getMessage();
 		this.setAttributeMap(scmpMessage.getHeader());
 		// setting up client to connect backend server
-		this.clientFactory = new SCClientFactory();
-		this.serverPort = Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.PORT_NR));
+		this.reqFactory = new SCRequesterFactory();
+		this.respPort = Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.PORT_NR));
 		SocketAddress socketAddress = request.getLocalSocketAddress();
-		this.serverHost = ((InetSocketAddress) socketAddress).getHostName();
-		IServerConfigItem serverConfig = serverContext.getServer().getServerConfig();
-		this.serverConnection = serverConfig.getConnection();
+		this.respHost = ((InetSocketAddress) socketAddress).getHostName();
+		IResponderConfigItem serverConfig = respContext.getResponder().getResponderConfig();
+		this.endpoint = serverConfig.getConnection();
 		this.numberOfThreads = serverConfig.getNumberOfThreads();
 	}
 
@@ -102,7 +107,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 	 */
 	public void srvCreateSession(SCMPMessage message) throws Exception { // TODO (TRN) This is weird!
 		try {
-			client = clientFactory.newInstance(serverHost, serverPort, serverConnection, numberOfThreads);
+			client = reqFactory.newInstance(respHost, respPort, endpoint, numberOfThreads);
 			client.connect();
 		} catch (ConnectionException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);

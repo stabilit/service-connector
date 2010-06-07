@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMsgType;
@@ -53,7 +53,7 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	 * @param scmpSession
 	 *            the scmp session
 	 */
-	public SCMPClnDataCall(IRequester client, IClientSession scmpSession) {
+	public SCMPClnDataCall(IRequester client, IServiceSession scmpSession) {
 		super(client, scmpSession);
 	}
 
@@ -65,7 +65,7 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, IClientSession clientSession) {
+	public ISCMPCall newInstance(IRequester client, IServiceSession clientSession) {
 		return new SCMPClnDataCall(client, clientSession);
 	}
 

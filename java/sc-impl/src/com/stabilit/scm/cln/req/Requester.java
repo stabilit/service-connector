@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.config.IClientConfigItem;
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.config.IRequesterConfigItem;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IConnection;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.req.factory.ConnectionFactory;
@@ -31,27 +31,27 @@ import com.stabilit.scm.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive has to
- * process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
+ * has to process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
 public class Requester implements IRequester {
 
-	/** The client config. */
-	private IClientConfigItem clientConfig;
+	/** The requester config. */
+	private IRequesterConfigItem clientConfig;
 
 	/** The client connection. */
-	protected IConnection clientConnection;
+	protected IConnection connection;
 
-	/** The client session. */
-	protected IClientSession clientSession;
+	/** The service session. */
+	protected IServiceSession serviceSession;
 
 	/** The msg id for the next request. */
 	private SCMPMessageID msgID;
 
 	/**
-	 * Instantiates a new client.
+	 * Instantiates a new requester.
 	 */
 	public Requester() {
 		msgID = new SCMPMessageID();
@@ -65,31 +65,31 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setClientConfig(IClientConfigItem clientConfig) {
+	public void setRequesterConfig(IRequesterConfigItem clientConfig) {
 		this.clientConfig = clientConfig;
 		ConnectionFactory clientConnectionFactory = new ConnectionFactory();
-		this.clientConnection = clientConnectionFactory.newInstance(this.clientConfig.getConnection());
-		clientConnection.setHost(clientConfig.getHost());
-		clientConnection.setPort(clientConfig.getPort());
-		clientConnection.setNumberOfThreads(clientConfig.getNumberOfThreads());
+		this.connection = clientConnectionFactory.newInstance(this.clientConfig.getConnection());
+		connection.setHost(clientConfig.getHost());
+		connection.setPort(clientConfig.getPort());
+		connection.setNumberOfThreads(clientConfig.getNumberOfThreads());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		clientConnection.connect();
+		connection.connect();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
-		clientConnection.destroy();
+		connection.destroy();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
-		clientConnection.disconnect();
+		connection.disconnect();
 	}
 
 	/** {@inheritDoc} */
@@ -132,7 +132,7 @@ public class Requester implements IRequester {
 		}
 		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		// process send and receive
-		SCMPMessage ret = clientConnection.sendAndReceive(message);
+		SCMPMessage ret = connection.sendAndReceive(message);
 
 		if (message.isPart()) {
 			// incoming message is a part groupCall is made by client - part response can be ignored
@@ -185,7 +185,7 @@ public class Requester implements IRequester {
 		msgID.incrementPartSequenceNr();
 		while (part != null) {
 			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
-			SCMPMessage ret = clientConnection.sendAndReceive(part);
+			SCMPMessage ret = connection.sendAndReceive(part);
 
 			if (part.isRequest()) {
 				/*
@@ -232,7 +232,7 @@ public class Requester implements IRequester {
 		while (true) {
 			SCMPMessage message = scmpComposite.getPart();
 			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
-			ret = clientConnection.sendAndReceive(message); // pull
+			ret = connection.sendAndReceive(message); // pull
 
 			if (ret == null) {
 				return ret;
@@ -253,23 +253,23 @@ public class Requester implements IRequester {
 	}
 
 	/**
-	 * Gets the client session.
+	 * Gets the service session.
 	 * 
-	 * @return the client session
+	 * @return the service session
 	 */
 	@Override
-	public IClientSession getClientSession() {
-		return this.clientSession;
+	public IServiceSession getServiceSession() {
+		return this.serviceSession;
 	}
 
 	/**
-	 * Sets the client session.
+	 * Sets the service session.
 	 * 
-	 * @param clientSession
-	 *            the new client session
+	 * @param serviceSession
+	 *            the new service session
 	 */
 	@Override
-	public void setClientSession(IClientSession clientSession) {
-		this.clientSession = clientSession;
+	public void setServiceSession(IServiceSession serviceSession) {
+		this.serviceSession = serviceSession;
 	}
 }

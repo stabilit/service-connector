@@ -51,6 +51,7 @@ import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 @RunWith(Suite.class)
 @SuiteClasses( { 
+	WorseScenarioSimulationServerTestCase.class,
 	AttachTestCase.class,
 	DetachTestCase.class, 
 	ClnCreateSessionTestCase.class,
@@ -64,7 +65,6 @@ import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 	EchoSCTestCase.class,
 	EchoSCLargeTestCase.class,
 	SCImplTest.class,
-	WorseScenarioSimulationServerTestCase.class,
 	WorseSCServerToServiceTestCase.class,
 	WorseSCServerToClientTestCase.class})
 public class SCTest {

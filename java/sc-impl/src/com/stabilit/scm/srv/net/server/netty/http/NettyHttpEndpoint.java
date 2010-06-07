@@ -30,7 +30,7 @@ import com.stabilit.scm.srv.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.srv.res.EndpointAdapter;
 
 /**
- * The Class NettyHttpEndpoint. Concrete server implementation with JBoss Netty for Http.
+ * The Class NettyHttpEndpoint. Concrete responder implementation with JBoss Netty for Http.
  * 
  * @author JTraber
  */
@@ -47,7 +47,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	/** The numberOfThreads. */
 	private int numberOfThreads;
 	/** The channel factory. */
-	NioServerSocketChannelFactory channelFactory;
+	private NioServerSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a NettyHttpEndpoint.
@@ -69,7 +69,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory());
+		bootstrap.setPipelineFactory(new NettyHttpResponderPipelineFactory());
 	}
 
 	/** {@inheritDoc} */
@@ -85,7 +85,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(host, this.port));
 		// adds server to registry
 		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.server));
+		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.resp));
 		synchronized (this) {
 			wait();
 		}

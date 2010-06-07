@@ -28,19 +28,19 @@ import com.stabilit.scm.config.IConstants;
 import com.stabilit.scm.net.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
- * A factory for creating NettyTcpClientPipelineFactory objects.
+ * A factory for creating NettyTcpRequesterPipelineFactory objects.
  * 
  * @author JTraber
  */
-public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory {
 
 	/** The timer to observe timeouts. */
 	private Timer timer;
 
 	/**
-	 * Instantiates a new NettyTcpClientPipelineFactory.
+	 * Instantiates a new NettyTcpRequesterPipelineFactory.
 	 */
-	public NettyTcpClientPipelineFactory() {
+	public NettyTcpRequesterPipelineFactory() {
 		this.timer = new HashedWheelTimer();
 	}
 
@@ -54,7 +54,7 @@ public class NettyTcpClientPipelineFactory implements ChannelPipelineFactory {
 		// responsible for observing write timeout - Netty
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handling response
-		pipeline.addLast("handler", new NettyTcpClientResponseHandler());
+		pipeline.addLast("handler", new NettyTcpRequesterResponseHandler());
 		return pipeline;
 	}
 }

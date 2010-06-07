@@ -31,7 +31,7 @@ import com.stabilit.scm.srv.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.srv.res.EndpointAdapter;
 
 /**
- * The Class NettyTcpEnpoint. Concrete server implementation with JBoss Netty for Tcp.
+ * The Class NettyTcpEnpoint. Concrete responder implementation with JBoss Netty for Tcp.
  * 
  * @author JTraber
  */
@@ -70,7 +70,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 				Executors.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpServerPipelineFactory());
+		bootstrap.setPipelineFactory(new NettyTcpResponderPipelineFactory());
 	}
 
 	/** {@inheritDoc} */
@@ -86,7 +86,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
 		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.server));
+		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.resp));
 		synchronized (this) {
 			wait();
 		}

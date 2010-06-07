@@ -14,40 +14,52 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.server;
+package com.stabilit.scm.srv.client;
 
-import com.stabilit.scm.factory.Factory;
+import com.stabilit.scm.cln.req.Requester;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.res.IResponder;
-import com.stabilit.scm.srv.res.Responder;
+import com.stabilit.scm.listener.PerformancePoint;
+import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * A factory for creating SCServer objects. Provides access to concrete instances of SC servers.
+ * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
  * 
  * @author JTraber
  */
-public class SCServerFactory extends Factory {
+public class SCRequester extends Requester {
 
 	/**
-	 * Instantiates a new SCServerFactory.
+	 * Instantiates a new SCRequester.
 	 */
-	public SCServerFactory() {
-		Responder server = new SCServer();
-		this.factoryMap.put(DEFAULT, server);
+	public SCRequester() {
 	}
 
 	/**
 	 * New instance.
 	 * 
-	 * @param serverConfig
-	 *            the server configuration
-	 * @return the i server
+	 * @return the factoryable
 	 */
-	public IResponder newInstance(IServerConfigItem serverConfig) {
-		IFactoryable factoryInstance = this.newInstance();
-		IResponder server = (IResponder) factoryInstance;
-		server.setServerConfig(serverConfig);
-		return server;
+	@Override
+	public IFactoryable newInstance() {
+		return new SCRequester();
+	}
+
+	/**
+	 * Send and receive.
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the sCMP
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Override
+	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
+		try {
+			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+			return connection.sendAndReceive(scmp);
+		} finally {
+			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
+		}
 	}
 }

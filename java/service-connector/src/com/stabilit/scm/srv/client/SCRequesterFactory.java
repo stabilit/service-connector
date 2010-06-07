@@ -16,50 +16,46 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.client;
 
-import com.stabilit.scm.cln.req.Requester;
+import com.stabilit.scm.cln.config.RequeserConfig;
+import com.stabilit.scm.cln.config.IRequesterConfigItem;
+import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.listener.PerformancePoint;
-import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * The Class SCClient. Defines behavior of client in the context of Service Connector.
+ * A factory for creating SCRequester objects. Provides access to concrete instances of SC requesters.
  * 
  * @author JTraber
  */
-public class SCClient extends Requester {
+public class SCRequesterFactory extends Factory {
 
 	/**
-	 * Instantiates a new SCClient.
+	 * Instantiates a new SCRequesterFactory.
 	 */
-	public SCClient() {
+	public SCRequesterFactory() {
+		IRequester req = new SCRequester();
+		this.factoryMap.put(DEFAULT, req);
 	}
 
 	/**
 	 * New instance.
 	 * 
-	 * @return the factoryable
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connection
+	 *            the connection defines concrete client implementation
+	 * @param numberOfThreads
+	 *            the number of threads
+	 * @return the requester
 	 */
-	@Override
-	public IFactoryable newInstance() {
-		return new SCClient();
-	}
-
-	/**
-	 * Send and receive.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the sCMP
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Override
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		try {
-			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
-			return clientConnection.sendAndReceive(scmp);
-		} finally {
-			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-		}
+	public IRequester newInstance(String host, int port, String connection, int numberOfThreads) {
+		IFactoryable factoryInstance = this.newInstance();
+		IRequester req = (IRequester) factoryInstance;
+		IRequesterConfigItem requesterConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, connection,
+				numberOfThreads);
+		req.setRequesterConfig(requesterConfigItem);
+		return req;
 	}
 }

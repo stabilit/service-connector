@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.req.IClientSession;
 import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.cln.req.IServiceSession;
 
 
 /**
@@ -43,6 +43,6 @@ public interface IService {
 
 	public abstract void setRequestor(IRequester client);
 
-	public abstract void setSession(IClientSession session);
+	public abstract void setSession(IServiceSession session);
 	
 }

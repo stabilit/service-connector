@@ -23,7 +23,7 @@ import java.util.List;
 import com.stabilit.scm.scmp.IRequest;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;
-import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.ctx.IResponderContext;
 import com.stabilit.scm.srv.registry.ResponderRegistry;
 import com.stabilit.scm.util.MapBean;
 
@@ -48,8 +48,8 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	/** The request. */
 	private IRequest request;
 	
-	/** The server context. */
-	private IServerContext serverContext;
+	/** The responder context. */
+	private IResponderContext respContext;
 	
 	/** The free item list. */
 	private List<ServiceRegistryItem> freeItemList;
@@ -66,8 +66,8 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 		this.request = request;
 		this.freeItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
 		this.allocatedItemList = Collections.synchronizedList(new ArrayList<ServiceRegistryItem>());
-		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		this.serverContext = serverRegistry.getCurrentContext();
+		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+		this.respContext = responderRegistry.getCurrentContext();
 		// init maxSessions and multithreaded attributes from given request
 		SCMPMessage scmpReq = request.getMessage();
 		this.maxSessions = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.MAX_SESSIONS);  // required attribute
@@ -133,7 +133,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 			return null;
 		}
 		if (this.isNoLimit()) {
-			ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.serverContext);
+			ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.respContext);
 			item.myParentPool = this;
 			this.allocatedItemList.add(item);
 			return item;
@@ -149,7 +149,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 				return null;
 			}
 			// we can allocate more
-			item = new ServiceRegistryItem(this.request, this.serverContext);
+			item = new ServiceRegistryItem(this.request, this.respContext);
 			item.myParentPool = this;
 			this.allocatedItemList.add(item);
 			return item;
@@ -199,7 +199,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 		}
 		// init free list is not required for the
 		for (int i = 0; i < this.maxSessions; i++) {
-		    ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.serverContext);
+		    ServiceRegistryItem item = new ServiceRegistryItem(this.request, this.respContext);
 		    item.myParentPool = this;
 		    this.freeItemList.add(item);
 		}

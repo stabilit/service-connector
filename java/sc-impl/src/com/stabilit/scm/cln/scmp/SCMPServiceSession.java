@@ -19,22 +19,22 @@ package com.stabilit.scm.cln.scmp;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.cln.req.IClientSession;
+import com.stabilit.scm.cln.req.IServiceSession;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * The Class SCMPClientSession. Represents a virtual connection between client and server. API programmer needs to
- * manage several client sessions on his own. Necessary to make session calls like SCMPClnDataCall. Needed calls
+ * The Class SCMPServiceSession. Represents a virtual connection between client and server. API programmer needs to
+ * manage several service sessions on his own. Necessary to make session calls like SCMPClnDataCall. Needed calls
  * (CLN_CREATE_SESSION, CLN_DELETE_SESSION) to create/delete a session are wrapped inside method.
  * 
  * @author JTraber
  */
-public class SCMPClientSession implements IClientSession {
+public class SCMPServiceSession implements IServiceSession {
 
-	/** The client. */
-	private IRequester client;
+	/** The requester. */
+	private IRequester req;
 	/** The session id. */
 	private String sessionId;
 	/** The service name. */
@@ -45,12 +45,12 @@ public class SCMPClientSession implements IClientSession {
 	private SCMPMessage responseMessage;
 
 	/**
-	 * Instantiates a new SCMPClientSession.
+	 * Instantiates a new SCMPServiceSession.
 	 * 
 	 * @param client
 	 *            the client
 	 */
-	public SCMPClientSession(IRequester client) {
+	public SCMPServiceSession(IRequester client) {
 		this(client, null, null);
 	}
 
@@ -64,8 +64,8 @@ public class SCMPClientSession implements IClientSession {
 	 * @param sessionInfo
 	 *            the session info
 	 */
-	public SCMPClientSession(IRequester client, String serviceName, String sessionInfo) {
-		this.client = client;
+	public SCMPServiceSession(IRequester client, String serviceName, String sessionInfo) {
+		this.req = client;
 		this.serviceName = serviceName;
 		this.sessionInfo = sessionInfo;
 		this.responseMessage = null;
@@ -85,14 +85,14 @@ public class SCMPClientSession implements IClientSession {
 			return;
 		}
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(client);
+				.newInstance(req);
 		createSessionCall.setServiceName(this.serviceName);
 		createSessionCall.setSessionInfo(this.sessionInfo);
 		this.responseMessage = createSessionCall.invoke();
 
 		if (this.responseMessage != null) {
 			this.sessionId = this.responseMessage.getSessionId();
-			this.client.setClientSession(this);
+			this.req.setServiceSession(this);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class SCMPClientSession implements IClientSession {
 	 */
 	public void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.client);
+				.newInstance(this.req);
 		deleteSessionCall.invoke();
 	}
 

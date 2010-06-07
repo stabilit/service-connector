@@ -43,7 +43,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPAttachCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */

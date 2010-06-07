@@ -14,72 +14,43 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.config;
+package com.stabilit.scm.srv.ctx;
+
+import com.stabilit.scm.ctx.ContextAdapter;
+import com.stabilit.scm.srv.registry.ResponderRegistry;
+import com.stabilit.scm.srv.res.IResponder;
+
 
 /**
- * The Interface IClientConfigItem.
- * 
- * @author JTraber
+ * The Class ResponderContext.
  */
-public interface IClientConfigItem {
+public class ResponderContext extends ContextAdapter implements IResponderContext {
+		
+	/** The responder. */
+	private IResponder responder;
+	
+	/**
+	 * Instantiates a new ResponderContext.
+	 * 
+	 * @param resp the responder
+	 */
+	public ResponderContext(IResponder resp) {
+		this.responder = resp;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IResponder getResponder() {
+		return responder;
+	}
 
 	/**
-	 * Gets the port.
+	 * Gets the current instance.
 	 * 
-	 * @return the port
+	 * @return the current instance
 	 */
-	public int getPort();
-
-	/**
-	 * Sets the port.
-	 * 
-	 * @param port
-	 *            the new port
-	 */
-	public void setPort(int port);
-
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public String getHost();
-
-	/**
-	 * Sets the host.
-	 * 
-	 * @param host
-	 *            the new host
-	 */
-	public void setHost(String host);
-
-	/**
-	 * Gets the connection. Connection identifies concrete implementation of a client.
-	 * 
-	 * @return the connection
-	 */
-	public String getConnection();
-
-	/**
-	 * Sets the connection.
-	 * 
-	 * @param connection
-	 *            the new connection
-	 */
-	public void setConnection(String connection);
-
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads
-	 *            the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads);
-
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
+	public static IResponderContext getCurrentInstance() {
+		ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
+		return (IResponderContext) respRegistry.getCurrentContext();
+	}
 }

@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.config.ClientConfig;
-import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.config.RequeserConfig;
+import com.stabilit.scm.cln.config.IRequesterConfigItem;
 import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.factory.Factory;
 import com.stabilit.scm.factory.IFactoryable;
@@ -42,10 +42,10 @@ public class RequesterFactory extends Factory {
 	 *            the client configuration
 	 * @return the i client
 	 */
-	public IRequester newInstance(IClientConfigItem clientConfig) {
+	public IRequester newInstance(IRequesterConfigItem clientConfig) {
 		IFactoryable factoryInstance = this.newInstance();
 		IRequester client = (IRequester) factoryInstance;
-		client.setClientConfig(clientConfig);
+		client.setRequesterConfig(clientConfig);
 		return client;
 	}
 
@@ -65,8 +65,8 @@ public class RequesterFactory extends Factory {
 	public IRequester newInstance(String host, int port, String con, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
 		IRequester client = (IRequester) factoryInstance;
-		IClientConfigItem clientConfigItem = new ClientConfig().new ClientConfigItem(host, port, con, numberOfThreads);
-		client.setClientConfig(clientConfigItem);
+		IRequesterConfigItem clientConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, con, numberOfThreads);
+		client.setRequesterConfig(clientConfigItem);
 		return client;
 	}
 }

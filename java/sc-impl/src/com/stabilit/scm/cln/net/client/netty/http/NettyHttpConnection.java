@@ -96,7 +96,7 @@ public class NettyHttpConnection implements IConnection {
 		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
-		this.pipelineFactory = new NettyHttpClientPipelineFactory();
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory();
 	}
 
 	/** {@inheritDoc} */
@@ -184,7 +184,7 @@ public class NettyHttpConnection implements IConnection {
 		}
 		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer); // logs inside
 		// gets response message synchronous
-		NettyHttpClientResponseHandler handler = channel.getPipeline().get(NettyHttpClientResponseHandler.class);
+		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);

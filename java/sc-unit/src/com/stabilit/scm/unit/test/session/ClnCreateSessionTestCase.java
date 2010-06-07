@@ -25,7 +25,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.cln.msg.impl.InspectMessage;
-import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 import com.stabilit.scm.scmp.SCMPError;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
@@ -106,7 +106,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	 */
 	@Test
 	public void clnCreateSession() throws Exception {
-		SCMPClientSession localSession = new SCMPClientSession(client);
+		SCMPServiceSession localSession = new SCMPServiceSession(client);
 		localSession.setServiceName("simulation");
 		localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		localSession.createSession();

@@ -17,8 +17,8 @@
 package com.stabilit.scm.srv.res;
 
 import com.stabilit.scm.factory.IFactoryable;
-import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.ctx.IServerContext;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
+import com.stabilit.scm.srv.ctx.IResponderContext;
 
 /**
  * The Interface IRequester.
@@ -30,20 +30,20 @@ public interface IResponder extends IFactoryable {
 	/**
 	 * Gets the requester context.
 	 * 
-	 * @return the server context
+	 * @return the responder context
 	 */
-	public IServerContext getServerContext();
+	public IResponderContext getResponderContext();
 
 	/**
-	 * Sets the server configuration.
+	 * Sets the responder configuration.
 	 * 
-	 * @param serverConfig
-	 *            the new server configuration
+	 * @param respConfig
+	 *            the new responder configuration
 	 */
-	public void setServerConfig(IServerConfigItem serverConfig);
+	public void setResponderConfig(IResponderConfigItem respConfig);
 
 	/**
-	 * Creates the.
+	 * Creates the responder.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -51,7 +51,7 @@ public interface IResponder extends IFactoryable {
 	public void create() throws Exception;
 
 	/**
-	 * Run async. Starts server in another thread.
+	 * Run asynchronously. Starts responder in another thread.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -59,7 +59,7 @@ public interface IResponder extends IFactoryable {
 	public void runAsync() throws Exception;
 
 	/**
-	 * Run sync. Starts server in incoming thread.
+	 * Run sync. Starts responder in incoming thread.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -67,14 +67,14 @@ public interface IResponder extends IFactoryable {
 	public void runSync() throws Exception;
 
 	/**
-	 * Gets the server configuration.
+	 * Gets the responder configuration.
 	 * 
-	 * @return the server configuration
+	 * @return the responder configuration
 	 */
-	public IServerConfigItem getServerConfig();
+	public IResponderConfigItem getResponderConfig();
 
 	/**
-	 * Destroys server.
+	 * Destroys responder.
 	 * 
 	 * @throws Exception
 	 *             the exception

@@ -41,7 +41,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPRegisterServiceCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */

@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.scmp.SCMPClientSession;
+import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
@@ -79,7 +79,7 @@ public class StressCase extends SuperTestCase {
 		}
 		try {
 			for (int i = 0; i < 10000; i++) {
-				SCMPClientSession localSession = new SCMPClientSession(client);
+				SCMPServiceSession localSession = new SCMPServiceSession(client);
 				localSession.setServiceName("simulation");
 				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 				localSession.createSession();

@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.res;
 
-import com.stabilit.scm.srv.config.IServerConfigItem;
-import com.stabilit.scm.srv.ctx.IServerContext;
-import com.stabilit.scm.srv.ctx.ServerContext;
+import com.stabilit.scm.srv.config.IResponderConfigItem;
+import com.stabilit.scm.srv.ctx.IResponderContext;
+import com.stabilit.scm.srv.ctx.ResponderContext;
 import com.stabilit.scm.srv.res.IEndpoint;
 import com.stabilit.scm.srv.res.IResponder;
 import com.stabilit.scm.srv.res.factory.EndpointFactory;
@@ -31,59 +31,59 @@ import com.stabilit.scm.srv.res.factory.EndpointFactory;
  */
 public abstract class Responder implements IResponder {
 
-	/** The server configuration. */
-	private IServerConfigItem serverConfig;
-	/** The server connection. */
-	private IEndpoint serverConnection;
-	/** The server context. */
-	protected IServerContext serverContext;
+	/** The responder configuration. */
+	private IResponderConfigItem respConfig;
+	/** The endpoint connection. */
+	private IEndpoint endpoint;
+	/** The responder context. */
+	protected IResponderContext respContext;
 
 	/** {@inheritDoc} */
 	@Override
-	public void setServerConfig(IServerConfigItem serverConfig) {
-		this.serverConfig = serverConfig;
-		this.serverContext = new ServerContext(this);
-		EndpointFactory serverConnectionFactory = new EndpointFactory();
-		this.serverConnection = serverConnectionFactory.newInstance(this.serverConfig.getConnection());
-		this.serverConnection.setServer(this);
-		this.serverConnection.setHost(this.serverConfig.getHost());
-		this.serverConnection.setPort(this.serverConfig.getPort());
-		this.serverConnection.setNumberOfThreads(this.serverConfig.getNumberOfThreads());
+	public void setResponderConfig(IResponderConfigItem respConfig) {
+		this.respConfig = respConfig;
+		this.respContext = new ResponderContext(this);
+		EndpointFactory endpointFactory = new EndpointFactory();
+		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnection());
+		this.endpoint.setResponder(this);
+		this.endpoint.setHost(this.respConfig.getHost());
+		this.endpoint.setPort(this.respConfig.getPort());
+		this.endpoint.setNumberOfThreads(this.respConfig.getNumberOfThreads());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		serverConnection.create();
+		endpoint.create();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void runAsync() throws Exception {
-		serverConnection.runAsync();
+		endpoint.runAsync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws Exception {
-		serverConnection.runSync();
+		endpoint.runSync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
-		serverConnection.destroy();
+		endpoint.destroy();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IServerContext getServerContext() {
-		return serverContext;
+	public IResponderContext getResponderContext() {
+		return respContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IServerConfigItem getServerConfig() {
-		return serverConfig;
+	public IResponderConfigItem getResponderConfig() {
+		return respConfig;
 	}
 }

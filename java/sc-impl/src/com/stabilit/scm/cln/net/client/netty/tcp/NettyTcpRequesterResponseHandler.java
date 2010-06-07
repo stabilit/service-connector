@@ -14,17 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.net.client.netty.http;
+package com.stabilit.scm.cln.net.client.netty.tcp;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.scm.cln.net.CommunicationException;
 import com.stabilit.scm.cln.net.client.netty.NettyEvent;
@@ -32,17 +32,21 @@ import com.stabilit.scm.cln.net.client.netty.NettyExceptionEvent;
 import com.stabilit.scm.listener.ExceptionPoint;
 
 /**
- * The Class NettyHttpClientResponseHandler. Used to wait until operation us successfully done by netty framework.
+ * The Class NettyTcpRequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
  * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
  * operation fails.
- * 
- * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	/** Queue to store the answer. */
 	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
+
+	/**
+	 * The Constructor.
+	 */
+	public NettyTcpRequesterResponseHandler() {
+	}
 
 	/**
 	 * Gets the message synchronously.
@@ -51,15 +55,15 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 	 * @throws CommunicationException
 	 *             the communication exception
 	 */
-	HttpResponse getMessageSync() throws CommunicationException {
-		NettyEvent eventMessage;
+	ChannelBuffer getMessageSync() throws CommunicationException {
+		NettyEvent response;
 		boolean interrupted = false;
 		for (;;) {
 			try {
 				// take() waits until message arrives in queue, locking inside queue
-				eventMessage = answer.take();
-				if (eventMessage.isFault()) {
-					throw new CommunicationException(((NettyExceptionEvent) eventMessage).getResponse().getCause());
+				response = answer.take();
+				if (response.isFault()) {
+					throw new CommunicationException(((NettyExceptionEvent) response).getResponse().getCause());
 				}
 				break;
 			} catch (InterruptedException e) {
@@ -72,21 +76,22 @@ public class NettyHttpClientResponseHandler extends SimpleChannelUpstreamHandler
 			// interruption happens when waiting for response - interrupt now
 			Thread.currentThread().interrupt();
 		}
-		return (HttpResponse) eventMessage.getResponse();
+		return (ChannelBuffer) response.getResponse();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
-		answer.offer(nettyEvent);
+		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
+		NettyTcpEvent response = new NettyTcpEvent(chBuffer);
+		answer.offer(response);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
-		NettyEvent nettyEvent = new NettyExceptionEvent(th);
-		answer.offer(nettyEvent);
+		NettyEvent response = new NettyExceptionEvent(th);
+		answer.offer(response);
 	}
 }

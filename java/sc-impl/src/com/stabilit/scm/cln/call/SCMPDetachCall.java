@@ -40,7 +40,7 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPDetachCall(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	/** {@inheritDoc} */

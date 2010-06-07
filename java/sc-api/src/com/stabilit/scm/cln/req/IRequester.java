@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.req;
 
-import com.stabilit.scm.cln.config.IClientConfigItem;
+import com.stabilit.scm.cln.config.IRequesterConfigItem;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.scmp.SCMPMessage;
 
 /**
- * The Interface IRequester abstracts client functionality.
+ * The Interface IRequester abstracts requester functionality.
  * 
  * @author JTraber
  */
@@ -30,57 +30,61 @@ public interface IRequester extends IFactoryable {
 	/**
 	 * Disconnect.
 	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void disconnect() throws Exception;
 
 	/**
 	 * Destroy.
 	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void destroy() throws Exception;
 
 	/**
 	 * Connect.
 	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void connect() throws Exception;
 
 	/**
 	 * Send and receive, synchronous operation.
 	 * 
-	 * @param scmp the scmp
-	 * 
+	 * @param scmp
+	 *            the scmp
 	 * @return the scmp
-	 * 
-	 * @throws Exception exception in sending/receiving process
+	 * @throws Exception
+	 *             exception in sending/receiving process
 	 */
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
 
+	/**
+	 * Sets the requester config.
+	 * 
+	 * @param requesterConfig
+	 *            the new requester config
+	 */
+	public void setRequesterConfig(IRequesterConfigItem requesterConfig);
 
 	/**
-	 * Sets the client config.
+	 * Gets the service session.
 	 * 
-	 * @param clientConfig the new client config
+	 * @return the service session
 	 */
-	public void setClientConfig(IClientConfigItem clientConfig);
+	public IServiceSession getServiceSession();
 
 	/**
-	 * Gets the client session.
+	 * Sets the service session.
 	 * 
-	 * @return the client session
+	 * @param serviceSession
+	 *            the new service session
 	 */
-	public IClientSession getClientSession();
-	
-	/**
-	 * Sets the client session.
-	 * 
-	 * @param clientSession the new client session
-	 */
-	public void setClientSession(IClientSession clientSession);
-	
+	public void setServiceSession(IServiceSession serviceSession);
+
 	/**
 	 * Returns a hash code which identifies client connection.
 	 * 
