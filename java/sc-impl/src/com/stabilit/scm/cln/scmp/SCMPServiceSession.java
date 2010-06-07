@@ -19,8 +19,8 @@ package com.stabilit.scm.cln.scmp;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.IServiceSession;
+import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.listener.RuntimePoint;
 import com.stabilit.scm.scmp.SCMPMessage;
 

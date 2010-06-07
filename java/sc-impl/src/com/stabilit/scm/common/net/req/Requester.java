@@ -16,9 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.cln.req.IConnection;
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.IServiceSession;
+import com.stabilit.scm.cln.net.req.IConnection;
+import com.stabilit.scm.cln.net.req.IServiceSession;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.factory.IFactoryable;
 import com.stabilit.scm.listener.PerformancePoint;

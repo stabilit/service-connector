@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequeserConfig;
 import com.stabilit.scm.factory.Factory;

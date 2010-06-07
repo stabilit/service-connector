@@ -23,8 +23,8 @@ package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.req.IRequester;
 import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
 
 /**

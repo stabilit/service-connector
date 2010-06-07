@@ -18,7 +18,7 @@ package com.stabilit.scm.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.scm.cln.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.scmp.SCMPFault;
 import com.stabilit.scm.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.scmp.SCMPMessage;

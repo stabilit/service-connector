@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.cln.req.IConnection;
+import com.stabilit.scm.cln.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpConnection;
 import com.stabilit.scm.common.net.req.nio.http.NioHttpConnection;

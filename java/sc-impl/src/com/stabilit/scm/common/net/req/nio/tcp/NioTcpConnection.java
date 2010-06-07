@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.scm.cln.req.IConnection;
+import com.stabilit.scm.cln.net.req.IConnection;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
