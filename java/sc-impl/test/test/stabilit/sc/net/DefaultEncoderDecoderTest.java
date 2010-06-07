@@ -25,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.net.EncoderDecoderFactory;
+import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.net.IEncoderDecoder;
 import com.stabilit.scm.scmp.SCMPBodyType;
 import com.stabilit.scm.scmp.SCMPFault;
