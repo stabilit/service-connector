@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.req.IRequester;
-import com.stabilit.scm.cln.req.IServiceSession;
+import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.common.net.req.IRequester;
 
 
 /**
