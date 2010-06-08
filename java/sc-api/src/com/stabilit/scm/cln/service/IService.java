@@ -44,5 +44,9 @@ public interface IService {
 	public abstract void setRequestor(IRequester client);
 
 	public abstract void setSession(IServiceSession session);
+
+	public abstract ISessionContext getSessionContext();
+
+	public abstract void setRequestBody(Object data);
 	
 }

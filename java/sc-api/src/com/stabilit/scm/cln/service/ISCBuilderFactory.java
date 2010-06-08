@@ -27,6 +27,6 @@ package com.stabilit.scm.cln.service;
  */
 public interface ISCBuilderFactory {
 
-	public abstract IServiceBuilder newDataServiceBuilder(String host, int port) throws Exception;
+	public abstract IServiceBuilder createDataServiceBuilder(String host, int port) throws Exception;
 
 }

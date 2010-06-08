@@ -19,33 +19,15 @@
 /**
  * 
  */
-package com.stabilit.scm.examples;
-
-import com.stabilit.scm.cln.service.ISCBuilderFactory;
-import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.cln.service.IServiceBuilder;
-import com.stabilit.scm.cln.service.IServiceContext;
-import com.stabilit.scm.cln.service.SCBuilderFactory;
+package com.stabilit.scm.cln.service;
 
 
 /**
  * @author JTraber
+ *
  */
-public class SCNewBuilderFactoryApiExample {
+public interface IServiceConnector {
 
-	public void runExample() throws Exception {
-		try {
-			ISCBuilderFactory scFactory = new SCBuilderFactory();
-			IServiceBuilder sc1Builder = scFactory.newDataServiceBuilder("localhost", 8080);
-			IService dataService1 = sc1Builder.createService("simulation");
-			IServiceContext serviceContext1 = dataService1.getServiceContext();		
-			dataService1.setMessagInfo("message info");
-			byte[] data = new byte[1024];
-			dataService1.setData(data);
-			Object resp = dataService1.invoke();
-			dataService1.destroyService();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-	}
+	IServiceBuilder newDataServiceBuilder();
+
 }

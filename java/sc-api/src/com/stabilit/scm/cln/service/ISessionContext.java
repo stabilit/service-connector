@@ -21,19 +21,10 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.common.factory.Factory;
-
-
 /**
  * @author JTraber
+ *
  */
-public class SCBuilderFactory extends Factory implements ISCBuilderFactory {
+public interface ISessionContext {
 
-	public SCBuilderFactory() {
-	}
-
-	@Override
-	public IServiceBuilder createDataServiceBuilder(String host, int port) throws Exception {		
-		return new SCDataServiceBuilder(host, port);
-	}
 }

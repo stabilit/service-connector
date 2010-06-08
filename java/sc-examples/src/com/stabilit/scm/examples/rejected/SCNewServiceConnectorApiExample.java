@@ -19,21 +19,39 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.examples.rejected;
 
-import com.stabilit.scm.common.factory.Factory;
-
+import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.cln.service.IServiceBuilder;
+import com.stabilit.scm.cln.service.IServiceConnector;
+import com.stabilit.scm.cln.service.IServiceContext;
+import com.stabilit.scm.cln.service.ISessionContext;
+import com.stabilit.scm.cln.service.ServiceConnector;
 
 /**
  * @author JTraber
  */
-public class SCBuilderFactory extends Factory implements ISCBuilderFactory {
+public class SCNewServiceConnectorApiExample {
 
-	public SCBuilderFactory() {
+	public static void main(String[] args) throws Exception {
+		SCNewServiceConnectorApiExample newServiceConnectorApiExample = new SCNewServiceConnectorApiExample();
+		newServiceConnectorApiExample.runExample();
 	}
+	
+	public void runExample() throws Exception {
 
-	@Override
-	public IServiceBuilder createDataServiceBuilder(String host, int port) throws Exception {		
-		return new SCDataServiceBuilder(host, port);
+		IServiceConnector sc1 = new ServiceConnector("localhost", 8080);
+		IServiceBuilder sb1 = sc1.newDataServiceBuilder();
+		IService dataService1 = sb1.createService("simulation");
+		
+		IServiceContext serviceContext1 = dataService1.getServiceContext();
+		ISessionContext sessionContext1 = dataService1.getSessionContext();
+
+		byte[] data = new byte[1024];
+		dataService1.setMessagInfo("message info");
+		dataService1.setRequestBody(data);		
+		Object reply = dataService1.invoke();
+
+		dataService1.destroyService();
 	}
 }

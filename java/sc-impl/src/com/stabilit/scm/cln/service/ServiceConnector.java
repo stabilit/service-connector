@@ -19,35 +19,24 @@
 /**
  * 
  */
-package com.stabilit.scm.examples;
-
-
+package com.stabilit.scm.cln.service;
 
 /**
  * @author JTraber
  */
-public class SCNewServiceConnectorApiExample {
+public class ServiceConnector implements IServiceConnector {
 
-	public void runExample() throws Exception {
-		
-//		IServiceConnector sc1 = new ServiceConnector("localhost", 8080);
-//		IServiceBuilder sb1 = sc1.newDataServiceBuilder();
-//		IService dataService1 = sb1.createService();
-//		IServiceContext serviceContext1 = dataService1.getServiceContext();
-//		ISessionContext sessionContext1 = dataService1.getSessionContext();		
-//		
-//		dataService1.setMessagInfo("message info");
-//		dataService1.setRequestBody("hello world body!");
-//		SCMPMessage scmpReply = dataService1.invoke();
-//		
-//		//.....
-//		dataService1.destroyService();
+	private String host;
+	private int port;
 
+	public ServiceConnector(String host, int port) {
+		this.host = host;
+		this.port = port;
 	}
-	
-	public void runExample2() {
-		
-		
-		
+
+	@Override
+	public IServiceBuilder newDataServiceBuilder() {
+		return new SCDataServiceBuilder(this.host, this.port);
 	}
+
 }

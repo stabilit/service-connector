@@ -19,21 +19,41 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.examples;
 
-import com.stabilit.scm.common.factory.Factory;
-
+import com.stabilit.scm.cln.service.ISCBuilderFactory;
+import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.cln.service.IServiceBuilder;
+import com.stabilit.scm.cln.service.IServiceContext;
+import com.stabilit.scm.cln.service.SCBuilderFactory;
 
 /**
  * @author JTraber
  */
-public class SCBuilderFactory extends Factory implements ISCBuilderFactory {
+public class SCLargeDataServiceApiExample {
 
-	public SCBuilderFactory() {
+	public static void main(String[] args) throws Exception {
+		SCLargeDataServiceApiExample scLargeDataServiceApiExample = new SCLargeDataServiceApiExample();
+		scLargeDataServiceApiExample.runExample();
 	}
 
-	@Override
-	public IServiceBuilder createDataServiceBuilder(String host, int port) throws Exception {		
-		return new SCDataServiceBuilder(host, port);
+	public void runExample() throws Exception {
+		try {
+			ISCBuilderFactory scFactory = new SCBuilderFactory();
+			IServiceBuilder sc1Builder = scFactory.createDataServiceBuilder("localhost", 8080);
+			IService dataService1 = sc1Builder.createService("simulation");
+
+			IServiceContext serviceContext1 = dataService1.getServiceContext();
+
+			byte[] data = new byte[1024 << 8]; // 256 Kb buffer
+			dataService1.setData(data);
+			dataService1.setMessagInfo("message info");
+
+			Object resp = dataService1.invoke();
+
+			dataService1.destroyService();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

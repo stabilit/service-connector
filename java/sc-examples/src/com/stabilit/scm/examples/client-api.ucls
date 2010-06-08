@@ -1,0 +1,158 @@
+<class-diagram version="0.9.86" automaticImage="JPEG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.IServiceContext" project="sc-api" 
+    file="/sc-api/src/com/stabilit/scm/cln/service/IServiceContext.java" binary="false">    
+    <position x="146" y="488" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.IServiceBuilder" project="sc-api" 
+    file="/sc-api/src/com/stabilit/scm/cln/service/IServiceBuilder.java" binary="false">    
+    <position x="697" y="58" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.ISCBuilderFactory" 
+    project="sc-api" file="/sc-api/src/com/stabilit/scm/cln/service/ISCBuilderFactory.java" binary="false">    
+    <position x="1017" y="209" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <interface corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.IService" project="sc-api" 
+    file="/sc-api/src/com/stabilit/scm/cln/service/IService.java" binary="false">    
+    <position x="457" y="229" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.SCBuilderFactory" project="sc-impl" 
+    file="/sc-impl/src/com/stabilit/scm/cln/service/SCBuilderFactory.java" binary="false">    
+    <position x="1025" y="678" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.SCServiceAdapter" project="sc-impl" 
+    file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceAdapter.java" binary="false">    
+    <position x="448" y="494" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.SCServiceBuilder" project="sc-impl" 
+    file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceBuilder.java" binary="false">    
+    <position x="693" y="313" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.SCDataService" project="sc-impl" 
+    file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataService.java" binary="false">    
+    <position x="435" y="689" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="com.stabilit.scm.cln.service.SCDataServiceBuilder" 
+    project="sc-impl" file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataServiceBuilder.java" binary="false">    
+    <position x="718" y="681" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <dependency>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCBuilderFactory" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCBuilderFactory.java" binary="false"/>    
+    <target project="sc-impl" name="com.stabilit.scm.cln.service.SCDataServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataServiceBuilder.java" binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCServiceAdapter" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceAdapter.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IService" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IService.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCDataServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataServiceBuilder.java" binary="false"/>    
+    <target project="sc-impl" name="com.stabilit.scm.cln.service.SCDataService" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataService.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCDataService" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataService.java" binary="false"/>    
+    <target project="sc-impl" name="com.stabilit.scm.cln.service.SCServiceAdapter" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceAdapter.java" binary="false"/>  
+  </generalization>  
+  <dependency>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCBuilderFactory" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCBuilderFactory.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IServiceBuilder" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceBuilder.java" binary="false"/>  
+  </dependency>  
+  <generalization>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCDataServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataServiceBuilder.java" binary="false"/>    
+    <target project="sc-impl" name="com.stabilit.scm.cln.service.SCServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceBuilder.java" binary="false"/>  
+  </generalization>  
+  <realization>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCBuilderFactory" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCBuilderFactory.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.ISCBuilderFactory" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/ISCBuilderFactory.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-api" name="com.stabilit.scm.cln.service.IServiceBuilder" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceBuilder.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IService" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCDataServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCDataServiceBuilder.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IService" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IService.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCServiceAdapter" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceAdapter.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IServiceContext" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceContext.java" binary="false"/>  
+  </dependency>  
+  <realization>    
+    <source project="sc-impl" name="com.stabilit.scm.cln.service.SCServiceBuilder" 
+      file="/sc-impl/src/com/stabilit/scm/cln/service/SCServiceBuilder.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IServiceBuilder" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceBuilder.java" binary="false"/>  
+  </realization>  
+  <dependency>    
+    <source project="sc-api" name="com.stabilit.scm.cln.service.ISCBuilderFactory" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/ISCBuilderFactory.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IServiceBuilder" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceBuilder.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="sc-api" name="com.stabilit.scm.cln.service.IService" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IService.java" binary="false"/>    
+    <target project="sc-api" name="com.stabilit.scm.cln.service.IServiceContext" 
+      file="/sc-api/src/com/stabilit/scm/cln/service/IServiceContext.java" binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
