@@ -71,4 +71,21 @@ public class ListenerSupport<T extends EventListener> {
 		}
 		listenerArray[size++] = listener;
 	}
+	/**
+	 * Removes the listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
+	public synchronized void removeListener(T listener) {
+		EventListener[] newArray = new EventListener[size];
+		int newIndex = 0;
+		for (int i = 0; i < this.listenerArray.length; i++) {
+			if (this.listenerArray[i] != listener) {
+				newArray[newIndex++] = this.listenerArray[i];
+			}
+		}
+		this.size = newIndex;
+		this.listenerArray = newArray;
+	}
 }
