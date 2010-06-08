@@ -76,7 +76,7 @@ public class SrvEchoCommand extends CommandAdapter {
 		result.setBody(message.getBody());
 		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		result.setHeader(SCMPHeaderAttributeKey.SERVER_ID, request.getContext().getSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getContext().getSocketAddress().hashCode());
 		result.setMessageType(getKey().getResponseName());
 		response.setSCMP(result);
 	}

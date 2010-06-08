@@ -67,26 +67,36 @@ public enum SCMPHeaderAttributeKey {
 	PORT_NR("portNr"),
 	/** The REJECT_SESSION. */
 	REJECT_SESSION("rejectSession"),
-	/** The SCCLIENT_ID. */
-	SCCLIENT_ID("scclientId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
-	/** The SCSERVER_ID. */
-	SCSERVER_ID("scserverId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SC_ERROR_CODE. */
 	SC_ERROR_CODE("scErrorCode"),
 	/** The SC_ERROR_TEXT. */
 	SC_ERROR_TEXT("scErrorText"),
 	/** The SC_VERSION. */
 	SC_VERSION("scVersion"),
-	/** The SERVER_ID. */
-	SERVER_ID("serverId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SERVICE_NAME. */
 	SERVICE_NAME("serviceName"),
-	/** The SERVICE_REGISTRY_IDd. */
-	SERVICE_REGISTRY_ID("serviceRegistryId"), // TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SESSION_ID. */
 	SESSION_ID("sessionId"),
 	/** The SESSION_INFO. */
-	SESSION_INFO("sessionInfo");
+	SESSION_INFO("sessionInfo"),
+	/** The REQ_ID. */
+	CLN_REQ_ID("clnReqId"), 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The RES_ID. */
+	CLN_RES_ID("clnResId"), 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SC_REQ_ID. */
+	SC_REQ_ID("scReqId"), 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SC_RES_ID. */
+	SC_RES_ID("scResId"), 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SRV_REQ_ID. */
+	SRV_REQ_ID("srvReqId"), 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	/** The SRV_RES_ID. */
+	SRV_RES_ID("srvResId"); 
+	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 
 	/** The name. */
 	private String name;

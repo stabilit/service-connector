@@ -184,7 +184,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		checkServiceAlive();
 		SCMPSrvEchoCall echoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(req, scmp);
 		echoCall.setHeader(scmp.getHeader());
-		echoCall.setHeader(SCMPHeaderAttributeKey.SERVICE_REGISTRY_ID, this.hashCode());
+		echoCall.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, this.hashCode());
 		echoCall.setRequestBody(scmp.getBody());
 		return echoCall.invoke();
 	}

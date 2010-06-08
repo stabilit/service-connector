@@ -41,13 +41,13 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	/**
 	 * Instantiates a new SCMPSrvEchoCall.
 	 * 
-	 * @param client
+	 * @param req
 	 *            the client
 	 * @param clientMessage
 	 *            the client message
 	 */
-	public SCMPSrvEchoCall(IRequester client, SCMPMessage clientMessage) {
-		super(client, clientMessage);
+	public SCMPSrvEchoCall(IRequester req, SCMPMessage clientMessage) {
+		super(req, clientMessage);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	@Override
 	public SCMPMessage invoke() throws Exception {
 		this.requestMessage.setMessageType(getMessageType().getRequestName());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SCCLIENT_ID, req.hashCode());
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, req.hashCode());
 		this.responseMessage = req.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);

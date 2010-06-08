@@ -137,7 +137,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThrough {
 		}
 		result.setMessageType(getKey().getResponseName());
 		result.removeHeader("kill");
-		result.setHeader(SCMPHeaderAttributeKey.SCSERVER_ID, request.getContext().getSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.CLN_RES_ID, request.getContext().getSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 
