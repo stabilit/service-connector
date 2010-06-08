@@ -132,7 +132,7 @@ public final class ValidatorUtility {
 			throw new ValidatorException("intValue must be numeric.");
 		}
 
-		if (intValue <= lowerLimit) {
+		if (intValue < lowerLimit) {
 			throw new ValidatorException("intValue to low.");
 		}
 	}

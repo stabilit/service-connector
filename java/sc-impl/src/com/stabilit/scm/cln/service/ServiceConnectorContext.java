@@ -21,43 +21,21 @@
  */
 package com.stabilit.scm.cln.service;
 
-/**
- * @author JTraber
- */
-public class ServiceConnector implements IServiceConnector {
+import com.stabilit.scm.common.util.MapBean;
 
-	private String host;
-	private int port;
-	private ServiceConnectorContext serviceConnectorCtx;
+public class ServiceConnectorContext extends MapBean<String> implements IServiceConnectorContext {
 
-	public ServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.serviceConnectorCtx = new ServiceConnectorContext();
-		this.serviceConnectorCtx.setAttribute("port", this.port);
-		this.serviceConnectorCtx.setAttribute("host", this.host);
+	public void setAttribute(String name, int port) {
+		super.setAttribute(name, new Integer(port).toString());
 	}
 
 	@Override
-	public void connect() throws Exception {
-		
+	public String getHost() {
+		return getAttribute("Host");
 	}
 
 	@Override
-	public ISession createDataSession(String string) {
-		return null;
-	}
-
-	@Override
-	public void disconnect() throws Exception {
-	}
-
-	@Override
-	public IServiceConnectorContext getSCContext() {
-		return serviceConnectorCtx;
-	}
-
-	@Override
-	public void setAttribute(String string, int i) {
+	public String getPort() {
+		return getAttribute("Port");
 	}
 }

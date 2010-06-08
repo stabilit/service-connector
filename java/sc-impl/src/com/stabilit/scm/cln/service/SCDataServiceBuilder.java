@@ -29,7 +29,6 @@ import com.stabilit.scm.common.net.req.RequesterFactory;
 
 /**
  * @author JTraber
- *
  */
 public class SCDataServiceBuilder extends SCServiceBuilder {
 
@@ -38,23 +37,22 @@ public class SCDataServiceBuilder extends SCServiceBuilder {
 	 * @param port
 	 */
 	public SCDataServiceBuilder(String host, int port) {
-		super(host,port);
+		super(host, port);
 	}
 
 	public IService createService(String serviceName) throws Exception {
-		IService dataService = new SCDataService();
 		RequesterFactory clientFactory = new RequesterFactory();
-		IRequester client = clientFactory.newInstance(this.host, this.port,  this.connection, this.numberOfThreads);
-		client.connect(); // physical connect
+		IRequester req = clientFactory.newInstance(this.host, this.port, this.connection, this.numberOfThreads);
+		req.connect(); // physical connect
 		// attach
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
-		SCMPServiceSession scmpSession = new SCMPServiceSession(client, serviceName, "");
+		SCMPServiceSession scmpSession = new SCMPServiceSession(req, serviceName, "");
 		scmpSession.createSession();
-		dataService.setRequestor(client);
+		IService dataService = new SCDataService(req, scmpSession);
 		dataService.setSession(scmpSession);
 		return dataService;
 	}

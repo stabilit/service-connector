@@ -22,12 +22,21 @@
 package com.stabilit.scm.cln.service;
 
 
+
 /**
  * @author JTraber
  *
  */
 public interface IServiceConnector {
 
-	IServiceBuilder newDataServiceBuilder();
+	void setAttribute(String string, int i);
+
+	void connect() throws Exception;
+	
+	void disconnect() throws Exception;
+
+	ISession createDataSession(String string);
+
+	IServiceConnectorContext getSCContext();
 
 }

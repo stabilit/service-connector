@@ -29,5 +29,4 @@ package com.stabilit.scm.cln.service;
 public interface IServiceBuilder {
 
 	public abstract IService createService(String serviceName) throws Exception;
-
 }

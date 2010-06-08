@@ -23,41 +23,18 @@ package com.stabilit.scm.cln.service;
 
 /**
  * @author JTraber
+ *
  */
-public class ServiceConnector implements IServiceConnector {
+public interface ISession {
 
-	private String host;
-	private int port;
-	private ServiceConnectorContext serviceConnectorCtx;
+	ISessionContext getSessionContext();
 
-	public ServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.serviceConnectorCtx = new ServiceConnectorContext();
-		this.serviceConnectorCtx.setAttribute("port", this.port);
-		this.serviceConnectorCtx.setAttribute("host", this.host);
-	}
+	void setData(byte[] data);
 
-	@Override
-	public void connect() throws Exception {
-		
-	}
+	void setMessagInfo(String string);
 
-	@Override
-	public ISession createDataSession(String string) {
-		return null;
-	}
+	Object invoke();
 
-	@Override
-	public void disconnect() throws Exception {
-	}
+	void deleteSession();
 
-	@Override
-	public IServiceConnectorContext getSCContext() {
-		return serviceConnectorCtx;
-	}
-
-	@Override
-	public void setAttribute(String string, int i) {
-	}
 }

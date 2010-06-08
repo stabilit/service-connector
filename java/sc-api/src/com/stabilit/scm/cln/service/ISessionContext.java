@@ -26,5 +26,5 @@ package com.stabilit.scm.cln.service;
  *
  */
 public interface ISessionContext {
-
+	String getServiceName();
 }

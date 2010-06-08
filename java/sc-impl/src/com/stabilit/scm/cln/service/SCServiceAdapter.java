@@ -28,24 +28,29 @@ import com.stabilit.scm.common.net.req.IRequester;
 
 /**
  * @author JTraber
- *
  */
 public abstract class SCServiceAdapter implements IService {
 
-	protected IRequester client;
+	protected IRequester req;
 	protected IServiceSession session;
 	protected Object data;
-	
+
+	public SCServiceAdapter(IRequester req) {
+		this.req = req;
+		this.session = null;
+		this.data = null;
+	}
+
 	@Override
 	public void destroyService() throws Exception {
 		this.session.deleteSession();
 
 		// detach
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(client);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke();
 
-		this.client.disconnect(); // physical disconnect
-		this.client.destroy();
+		this.req.disconnect(); // physical disconnect
+		this.req.destroy();
 	}
 
 	@Override
@@ -57,15 +62,14 @@ public abstract class SCServiceAdapter implements IService {
 	public void setData(Object obj) {
 		this.data = obj;
 	}
-	
+
 	@Override
 	public void setRequestor(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
-	
+
 	@Override
 	public void setSession(IServiceSession session) {
 		this.session = session;
 	}
-
 }

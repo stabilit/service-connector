@@ -21,30 +21,47 @@
  */
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
+import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * @author JTraber
- *
  */
 public class SCDataService extends SCServiceAdapter {
 
 	private String messageInfo;
-	
+	private SCMPClnDataCall clnDataCall;
+	private ISCMPCall scmpGroupCall;
+
+	public SCDataService(IRequester req, SCMPServiceSession session) {
+		super(req);
+		this.scmpGroupCall = null;
+		this.messageInfo = null;
+		this.clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, session);
+	}
+
 	@Override
 	public Object invoke() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, session);
-		clnDataCall.setMessagInfo(this.messageInfo);
-		clnDataCall.setRequestBody(this.data);
-		SCMPMessage scmpReply = clnDataCall.invoke();
+		SCMPMessage scmpReply = null;
+
+		this.clnDataCall.setMessagInfo(this.messageInfo);
+		this.clnDataCall.setRequestBody(this.data);
+
+		if (this.scmpGroupCall != null) {
+			scmpReply = this.scmpGroupCall.invoke();
+		} else {
+			scmpReply = this.clnDataCall.invoke();
+		}
 		return scmpReply.getBody();
 	}
 
 	@Override
 	public void setMessagInfo(String messageInfo) {
-	     this.messageInfo = messageInfo;	
+		this.messageInfo = messageInfo;
 	}
 
 	@Override
@@ -57,4 +74,14 @@ public class SCDataService extends SCServiceAdapter {
 		this.data = data;
 	}
 
+	@Override
+	public void closeGroup() throws Exception {
+		this.scmpGroupCall.closeGroup(); // send REQ (no body content)
+		this.scmpGroupCall = null;
+	}
+
+	@Override
+	public void openGroup() throws Exception {
+		this.scmpGroupCall = this.clnDataCall.openGroup();
+	}	
 }

@@ -21,43 +21,15 @@
  */
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.common.factory.Factory;
+
 /**
  * @author JTraber
  */
-public class ServiceConnector implements IServiceConnector {
-
-	private String host;
-	private int port;
-	private ServiceConnectorContext serviceConnectorCtx;
-
-	public ServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.serviceConnectorCtx = new ServiceConnectorContext();
-		this.serviceConnectorCtx.setAttribute("port", this.port);
-		this.serviceConnectorCtx.setAttribute("host", this.host);
-	}
+public class ServiceConnectorFactory extends Factory implements IServiceConnectorFactory {
 
 	@Override
-	public void connect() throws Exception {
-		
-	}
-
-	@Override
-	public ISession createDataSession(String string) {
-		return null;
-	}
-
-	@Override
-	public void disconnect() throws Exception {
-	}
-
-	@Override
-	public IServiceConnectorContext getSCContext() {
-		return serviceConnectorCtx;
-	}
-
-	@Override
-	public void setAttribute(String string, int i) {
+	public IServiceConnector createServiceConnector(String host, int port) throws Exception {
+		return new ServiceConnector(host, port);
 	}
 }

@@ -48,5 +48,9 @@ public interface IService {
 	public abstract ISessionContext getSessionContext();
 
 	public abstract void setRequestBody(Object data);
+
+	public abstract void openGroup() throws Exception;
+
+	public abstract void closeGroup() throws Exception;
 	
 }

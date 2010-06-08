@@ -223,6 +223,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			SCMPMessage message = new SCMPMessage();
 			message.setHeader(SCMPCallAdapter.this.requestMessage);
 			message.setBody(null);
+			message.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, 0);
 			message.setInternalStatus(SCMPInternalStatus.GROUP);
 			SCMPCallAdapter.this.requestMessage = message;
 			SCMPMessage result = this.parentCall.invoke();

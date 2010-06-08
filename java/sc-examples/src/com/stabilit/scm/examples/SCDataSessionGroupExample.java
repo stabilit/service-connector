@@ -19,39 +19,35 @@
 /**
  * 
  */
-package com.stabilit.scm.examples.rejected;
-
-import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.cln.service.IServiceBuilder;
-import com.stabilit.scm.cln.service.IServiceConnector;
-import com.stabilit.scm.cln.service.IServiceContext;
-import com.stabilit.scm.cln.service.ISessionContext;
-import com.stabilit.scm.cln.service.ServiceConnector;
+package com.stabilit.scm.examples;
 
 /**
  * @author JTraber
  */
-public class SCNewServiceConnectorApiExample {
-
-	public static void main(String[] args) throws Exception {
-		SCNewServiceConnectorApiExample newServiceConnectorApiExample = new SCNewServiceConnectorApiExample();
-		newServiceConnectorApiExample.runExample();
-	}
+public class SCDataSessionGroupExample {
 	
-	public void runExample() throws Exception {
 
-		IServiceConnector sc1 = new ServiceConnector("localhost", 8080);
-		IServiceBuilder sb1 = sc1.newDataServiceBuilder();
-		IService dataService1 = sb1.createService("simulation");
-		
-		IServiceContext serviceContext1 = dataService1.getServiceContext();
-		ISessionContext sessionContext1 = dataService1.getSessionContext();
-
-		byte[] data = new byte[1024];
-		dataService1.setMessagInfo("message info");
-		dataService1.setRequestBody(data);		
-		Object reply = dataService1.invoke();
-
-		dataService1.destroyService();
-	}
+	// public void runGroupDataExample() {
+	// try {
+	// IServiceConnectorFactory scFactory = new ServiceConnectorFactory();
+	// IServiceBuilder sc1Builder = scFactory.createServiceConnector("localhost", 8080);
+	// IService dataService1 = sc1Builder.createService("simulation");
+	//
+	// IServiceContext serviceContext1 = dataService1.getServiceContext();
+	//
+	// dataService1.openGroup();
+	//
+	// dataService1.setMessagInfo("message info");
+	//
+	// for (int i = 0; i < 5; i++) {
+	// byte[] data = new byte[1024];
+	// dataService1.setData(data);
+	// Object resp = dataService1.invoke();
+	// }
+	// dataService1.closeGroup();
+	// dataService1.destroyService();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 }
