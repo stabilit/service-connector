@@ -30,10 +30,13 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	/** The statistics point. */
 	private static StatisticsPoint statisticsPoint = new StatisticsPoint();
 
+	private IConnectionListener connectionListener;
+
 	/**
 	 * Instantiates a new connection point.
 	 */
 	private StatisticsPoint() {
+		this.connectionListener = new StatisticsConnectionListener();
 	}
 
 	/**
@@ -48,11 +51,19 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	public synchronized void addListener(IStatisticsListener listener) {
 		if (this.isEmpty()) {
 			// register connection point
-			ConnectionPoint.getInstance().addListener(new StatisticsConnectionListener());
+			ConnectionPoint.getInstance().addListener(connectionListener);
 		}
-		super.addListener(listener);		
+		super.addListener(listener);
 	}
-	
+
+	public synchronized void removeListener(IStatisticsListener listener) {
+		// register connection point
+		super.removeListener(listener);
+		if (this.isEmpty()) {
+			ConnectionPoint.getInstance().removeListener(connectionListener);
+		}
+	}
+
 	/**
 	 * Fire statistics.
 	 * 
@@ -75,32 +86,33 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	}
 
 	// member class
-	class StatisticsConnectionListener implements IConnectionListener
-	{
+	class StatisticsConnectionListener implements IConnectionListener {
 		@Override
-		public void connectEvent(ConnectionEvent connectionEvent)
-				throws Exception {		
+		public void connectEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
-			statisticsEvent.setEventType(StatisticsEnum.READ);
-		    fireConnectionStatistics(statisticsEvent);	
+			statisticsEvent.setEventType(StatisticsEnum.CONNECT);
+			fireConnectionStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void disconnectEvent(ConnectionEvent connectionEvent)
-				throws Exception {			
+		public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
-		    fireConnectionStatistics(statisticsEvent);	
+			statisticsEvent.setEventType(StatisticsEnum.DISCONNECT);
+			fireConnectionStatistics(statisticsEvent);
 		}
+
 		@Override
 		public void readEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
-		    fireConnectionStatistics(statisticsEvent);	
+			statisticsEvent.setEventType(StatisticsEnum.READ);
+			fireConnectionStatistics(statisticsEvent);
 		}
+
 		@Override
-		public void writeEvent(ConnectionEvent connectionEvent)
-				throws Exception {
+		public void writeEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
-		    fireConnectionStatistics(statisticsEvent);	
-		}		
+			statisticsEvent.setEventType(StatisticsEnum.WRITE);
+			fireConnectionStatistics(statisticsEvent);
+		}
 	}
 }

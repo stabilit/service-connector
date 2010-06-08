@@ -51,7 +51,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 	 */
 	public void fireConnect(Object source, int port) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, null);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, null, 0, 0);
 			ConnectionPoint.getInstance().fireConnect(connectionEvent);
 		}
 	}
@@ -66,7 +66,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 	 */
 	public void fireDisconnect(Object source, int port) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, null);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, null, 0, 0);
 			ConnectionPoint.getInstance().fireDisconnect(connectionEvent);
 		}
 	}
@@ -83,7 +83,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 	 */
 	public void fireWrite(Object source, int port, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, buffer);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, buffer, 0, buffer.length);
 			ConnectionPoint.getInstance().fireWrite(connectionEvent);
 		}
 	}
@@ -121,7 +121,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 	 */
 	public void fireRead(Object source, int port, byte[] buffer) {
 		if (getInstance().isEmpty() == false) {
-			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, buffer);
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, port, buffer, 0, buffer.length);
 			ConnectionPoint.getInstance().fireRead(connectionEvent);
 		}
 	}

@@ -26,6 +26,8 @@ import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceBuilder;
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.SCBuilderFactory;
+import com.stabilit.scm.common.listener.DefaultStatisticsListener;
+import com.stabilit.scm.common.listener.StatisticsPoint;
 
 /**
  * @author JTraber
@@ -37,7 +39,22 @@ public class SCLargeDataServiceApiExample {
 		scLargeDataServiceApiExample.runExample();
 	}
 
-	public void runExample() throws Exception {
+	public static class WithStatistics {
+		public static void main(String[] args) {
+			SCLargeDataServiceApiExample scLargeDataServiceApiExample = new SCLargeDataServiceApiExample();
+			scLargeDataServiceApiExample.runStatistics();
+		}
+	}
+
+	public void runStatistics() {
+		DefaultStatisticsListener defaultStatisticsListener = new DefaultStatisticsListener();
+		StatisticsPoint.getInstance().addListener(defaultStatisticsListener);
+		runExample();
+		StatisticsPoint.getInstance().removeListener(defaultStatisticsListener);
+		System.out.println(defaultStatisticsListener);
+	}
+
+	public void runExample() {
 		try {
 			ISCBuilderFactory scFactory = new SCBuilderFactory();
 			IServiceBuilder sc1Builder = scFactory.createDataServiceBuilder("localhost", 8080);

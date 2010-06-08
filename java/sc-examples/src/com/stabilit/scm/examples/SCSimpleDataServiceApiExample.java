@@ -26,31 +26,48 @@ import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceBuilder;
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.SCBuilderFactory;
+import com.stabilit.scm.common.listener.DefaultStatisticsListener;
+import com.stabilit.scm.common.listener.StatisticsPoint;
 
 /**
  * @author JTraber
  */
 public class SCSimpleDataServiceApiExample {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SCSimpleDataServiceApiExample scSingleDataServiceApiExample = new SCSimpleDataServiceApiExample();
 		scSingleDataServiceApiExample.runExample();
 	}
 
-	public void runExample() throws Exception {
+	public static class WithStatistics {
+		public static void main(String[] args) {
+			SCSimpleDataServiceApiExample scSingleDataServiceApiExample = new SCSimpleDataServiceApiExample();
+			scSingleDataServiceApiExample.runStatistics();
+		}
+	}
+
+	public void runStatistics() {
+		DefaultStatisticsListener defaultStatisticsListener = new DefaultStatisticsListener();
+		StatisticsPoint.getInstance().addListener(defaultStatisticsListener);
+		runExample();
+		StatisticsPoint.getInstance().removeListener(defaultStatisticsListener);			
+		System.out.println(defaultStatisticsListener);		
+	}
+	
+	public void runExample() {
 		try {
 			ISCBuilderFactory scFactory = new SCBuilderFactory();
 			IServiceBuilder sc1Builder = scFactory.createDataServiceBuilder("localhost", 8080);
 			IService dataService1 = sc1Builder.createService("simulation");
-			
+
 			IServiceContext serviceContext1 = dataService1.getServiceContext();
-			
+
 			byte[] data = new byte[1024];
 			dataService1.setData(data);
 			dataService1.setMessagInfo("message info");
 
 			Object resp = dataService1.invoke();
-			
+
 			dataService1.destroyService();
 		} catch (Exception e) {
 			e.printStackTrace();
