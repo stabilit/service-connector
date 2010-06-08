@@ -77,10 +77,14 @@ public final class ServiceRegistry extends Registry {
 		String serviceName = scmpMessage.getServiceName();
 		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.getServiceItemPool(serviceName);
 		if (itemPool == null) {
+			if (RuntimePoint.getInstance().isEmpty() == false) {
+			   RuntimePoint.getInstance().fireRuntime(this, "allocate: getServiceItemPool returned null for serviceName = " + serviceName);
+			}
 			return null;
 		}
-		ServiceRegistryItem item = itemPool.getAvailableItem();
+		ServiceRegistryItem item = itemPool.getAvailableItem();		
 		item.srvCreateSession(scmpMessage);
+		ServiceRegistryPoint.getInstance().fireAllocate(this, scmpMessage);
 		return item;
 	}
 
@@ -106,10 +110,13 @@ public final class ServiceRegistry extends Registry {
 		}
 		ServiceRegistryItemPool itemPool = item.myParentPool;
 		if (itemPool == null) {
-			RuntimePoint.getInstance().fireRuntime(this, "ServiceRegistryItem has not item pool.");
+			if (RuntimePoint.getInstance().isEmpty() == false) {
+			   RuntimePoint.getInstance().fireRuntime(this, "deallocate: ServiceRegistryItem has no parent pool.");
+			}
 			return;
 		}
 		itemPool.freeItem(item);
+		ServiceRegistryPoint.getInstance().fireDeallocate(this, scmpMessage);
 		return;
 	}
 

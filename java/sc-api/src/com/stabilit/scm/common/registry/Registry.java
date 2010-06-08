@@ -23,6 +23,7 @@ import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
 import com.stabilit.scm.common.registry.jmx.MapBeanWrapperJMX;
 import com.stabilit.scm.common.util.MapBean;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Registry. Provides functionality for general registries.
  * 
@@ -54,10 +55,9 @@ public abstract class Registry implements IRegistryMXBean {
 
 	/**
 	 * Gets an entry by key.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the map bean<?>
+	 *
+	 * @param key the key
+	 * @return the map bean
 	 */
 	public MapBean<?> get(Object key) {
 		return registryMap.get(key);
@@ -73,6 +73,16 @@ public abstract class Registry implements IRegistryMXBean {
 		this.registryMap.remove(key);
 	}
 
+	
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
+	public int getSize() {
+		return this.registryMap.size();
+	}
+	
 	/**
 	 * Looks up a key.
 	 * 
@@ -84,7 +94,12 @@ public abstract class Registry implements IRegistryMXBean {
 		return registryMap.containsKey(key);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		StringBuffer dump = new StringBuffer();
@@ -96,7 +111,12 @@ public abstract class Registry implements IRegistryMXBean {
 		return dump.toString();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the entries.
+	 *
+	 * @return the entries
+	 * {@inheritDoc}
+	 */
 	@Override
 	public MapBeanWrapperJMX[] getEntries() {
 		MapBeanWrapperJMX[] mapBeanStringJMX = new MapBeanWrapperJMX[registryMap.size()];
