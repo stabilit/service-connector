@@ -29,12 +29,15 @@ public interface ISession {
 
 	ISessionContext getSessionContext();
 
-	void setData(byte[] data);
-
 	void setMessagInfo(String string);
 
-	Object invoke();
+	Object invoke() throws Exception;
 
-	void deleteSession();
+	void deleteSession() throws Exception;
 
+	void setData(Object obj);
+
+	void closeGroup() throws Exception;
+
+	void openGroup() throws Exception;
 }

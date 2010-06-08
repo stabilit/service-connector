@@ -35,7 +35,7 @@ public interface IServiceConnector {
 	
 	void disconnect() throws Exception;
 
-	ISession createDataSession(String string);
+	ISession createDataSession(String string) throws Exception;
 
 	IServiceConnectorContext getSCContext();
 

@@ -31,13 +31,13 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 /**
  * @author JTraber
  */
-public class SCDataService extends SCServiceAdapter {
+public class SCDataSession extends SCSessionAdapter {
 
 	private String messageInfo;
 	private SCMPClnDataCall clnDataCall;
 	private ISCMPCall scmpGroupCall;
 
-	public SCDataService(IRequester req, SCMPServiceSession session) {
+	public SCDataSession(IRequester req, SCMPServiceSession session) {
 		super(req);
 		this.scmpGroupCall = null;
 		this.messageInfo = null;
@@ -65,12 +65,7 @@ public class SCDataService extends SCServiceAdapter {
 	}
 
 	@Override
-	public ISessionContext getSessionContext() {
-		return null;
-	}
-
-	@Override
-	public void setRequestBody(Object data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 
@@ -83,5 +78,10 @@ public class SCDataService extends SCServiceAdapter {
 	@Override
 	public void openGroup() throws Exception {
 		this.scmpGroupCall = this.clnDataCall.openGroup();
-	}	
+	}
+
+	@Override
+	public void deleteSession() throws Exception {
+		this.session.deleteSession();	
+	}
 }

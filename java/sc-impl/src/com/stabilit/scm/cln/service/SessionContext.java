@@ -21,39 +21,15 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.scmp.SCMPServiceSession;
-import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
  * @author JTraber
  */
-public class SCDataServiceBuilder extends SCServiceBuilder {
+public class SessionContext extends MapBean<String> implements ISessionContext {
 
-	/**
-	 * @param host
-	 * @param port
-	 */
-	public SCDataServiceBuilder(String host, int port) {
-		super(host, port);
-	}
-
-	public IService createService(String serviceName) throws Exception {
-		RequesterFactory clientFactory = new RequesterFactory();
-		IRequester req = clientFactory.newInstance(this.host, this.port, this.connection, this.numberOfThreads);
-		req.connect(); // physical connect
-		// attach
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setCompression(false);
-		attachCall.setKeepAliveTimeout(30);
-		attachCall.setKeepAliveInterval(360);
-		attachCall.invoke();
-		SCMPServiceSession scmpSession = new SCMPServiceSession(req, serviceName, "");
-		scmpSession.createSession();
-		IService dataService = new SCDataService(req, scmpSession);
-		dataService.setSession(scmpSession);
-		return dataService;
+	@Override
+	public String getServiceName() {
+		return getAttribute("serviceName");
 	}
 }
