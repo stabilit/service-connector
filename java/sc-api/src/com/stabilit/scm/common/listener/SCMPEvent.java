@@ -16,10 +16,37 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
-public interface IStatisticsListener extends EventListener {
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
-	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
+/**
+ * The Class SCMPEvent. Event for logging scmp message purpose.
+ */
+public class SCMPEvent extends EventObject {
 
+	private static final long serialVersionUID = -7902182048824790108L;
+	private SCMPMessage scmp;
+
+	/**
+	 * Instantiates a new scmp event.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param scmp
+	 *            the scmp message instance
+	 */
+	public SCMPEvent(Object source, SCMPMessage scmp) {
+		super(source);
+		this.scmp = scmp;
+	}
+
+	/**
+	 * Gets the scmp instance.
+	 * 
+	 * @return the scmp instance
+	 */
+	public SCMPMessage getSCMP() {
+		return scmp;
+	}
 }

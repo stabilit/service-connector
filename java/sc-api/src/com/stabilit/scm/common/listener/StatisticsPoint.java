@@ -19,11 +19,12 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 enum StatisticsEnum {
-	READ, WRITE, CONNECT, DISCONNECT;
-}
+	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME
+, CREATE_SESSION, DELETE_SESSION, DECODE_SCMP, ENCODE_SCMP}
 
 /**
- * The Class ConnectionPoint. Allows logging on connection level - fire read/write, connect/disconnect.
+ * The Class ConnectionPoint. Allows logging on connection level - fire
+ * read/write, connect/disconnect.
  */
 public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> {
 
@@ -31,12 +32,22 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	private static StatisticsPoint statisticsPoint = new StatisticsPoint();
 
 	private IConnectionListener connectionListener;
+	private IExceptionListener exceptionListener;
+	private ILoggerListener loggerListener;
+	private IRuntimeListener runtimeListener;
+	private ISessionListener sessionListener;
+	private ISCMPListener scmpListener;
 
 	/**
 	 * Instantiates a new connection point.
 	 */
 	private StatisticsPoint() {
 		this.connectionListener = new StatisticsConnectionListener();
+		this.exceptionListener = new StatisticsExceptionListener();
+		this.loggerListener = new StatisticsLoggerListener();
+		this.runtimeListener = new StatisticsRuntimeListener();
+		this.sessionListener = new StatisticsSessionListener();
+		this.scmpListener = new StatisticsSCMPListener();
 	}
 
 	/**
@@ -52,6 +63,11 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		if (this.isEmpty()) {
 			// register connection point
 			ConnectionPoint.getInstance().addListener(connectionListener);
+			ExceptionPoint.getInstance().addListener(exceptionListener);
+			LoggerPoint.getInstance().addListener(loggerListener);
+			RuntimePoint.getInstance().addListener(runtimeListener);
+			SessionPoint.getInstance().addListener(sessionListener);
+			SCMPPoint.getInstance().addListener(scmpListener);
 		}
 		super.addListener(listener);
 	}
@@ -61,6 +77,11 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		super.removeListener(listener);
 		if (this.isEmpty()) {
 			ConnectionPoint.getInstance().removeListener(connectionListener);
+			ExceptionPoint.getInstance().removeListener(exceptionListener);
+			LoggerPoint.getInstance().removeListener(loggerListener);
+			RuntimePoint.getInstance().removeListener(runtimeListener);
+			SessionPoint.getInstance().removeListener(sessionListener);
+			SCMPPoint.getInstance().removeListener(scmpListener);
 		}
 	}
 
@@ -72,13 +93,13 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	 * @param port
 	 *            the port
 	 */
-	public void fireConnectionStatistics(StatisticsEvent statisticsEvent) {
+	public void fireStatistics(StatisticsEvent statisticsEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
 			try {
 				IStatisticsListener statisticsListener = (IStatisticsListener) localArray[i];
-				statisticsListener.connectionStatistics(statisticsEvent);
+				statisticsListener.statistics(statisticsEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -88,31 +109,114 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	// member class
 	class StatisticsConnectionListener implements IConnectionListener {
 		@Override
-		public void connectEvent(ConnectionEvent connectionEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
+		public void connectEvent(ConnectionEvent connectionEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.CONNECT);
-			fireConnectionStatistics(statisticsEvent);
+			fireStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
+		public void disconnectEvent(ConnectionEvent connectionEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.DISCONNECT);
-			fireConnectionStatistics(statisticsEvent);
+			fireStatistics(statisticsEvent);
 		}
 
 		@Override
 		public void readEvent(ConnectionEvent connectionEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.READ);
-			fireConnectionStatistics(statisticsEvent);
+			fireStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void writeEvent(ConnectionEvent connectionEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
+		public void writeEvent(ConnectionEvent connectionEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.WRITE);
-			fireConnectionStatistics(statisticsEvent);
+			fireStatistics(statisticsEvent);
+		}
+	}
+
+	// member class
+	class StatisticsExceptionListener implements IExceptionListener {
+		@Override
+		public void exceptionEvent(ExceptionEvent exceptionEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					exceptionEvent.getSource(), exceptionEvent);
+			statisticsEvent.setEventType(StatisticsEnum.EXCEPTION);
+			fireStatistics(statisticsEvent);
+		}
+	}
+
+	// member class
+	class StatisticsLoggerListener implements ILoggerListener {
+
+		@Override
+		public void logEvent(LoggerEvent loggerEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					loggerEvent.getSource(), loggerEvent);
+			statisticsEvent.setEventType(StatisticsEnum.LOGGER);
+			fireStatistics(statisticsEvent);
+		}
+	}
+	
+	// member class
+	class StatisticsRuntimeListener implements IRuntimeListener {
+
+		@Override
+		public void runtimeEvent(RuntimeEvent runtimeEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					runtimeEvent.getSource(), runtimeEvent);
+			statisticsEvent.setEventType(StatisticsEnum.RUNTIME);
+			fireStatistics(statisticsEvent);
+		}
+	}
+	
+	// member class
+	class StatisticsSessionListener implements ISessionListener {
+
+		@Override
+		public void createSessionEvent(SessionEvent sessionEvent) {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					sessionEvent.getSource(), sessionEvent);
+			statisticsEvent.setEventType(StatisticsEnum.CREATE_SESSION);
+			fireStatistics(statisticsEvent);
+		}
+
+		@Override
+		public void deleteSessionEvent(SessionEvent sessionEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					sessionEvent.getSource(), sessionEvent);
+			statisticsEvent.setEventType(StatisticsEnum.DELETE_SESSION);
+			fireStatistics(statisticsEvent);			
+		}
+	}
+	// member class
+	class StatisticsSCMPListener implements ISCMPListener {
+
+		@Override
+		public void decodeEvent(SCMPEvent scmpEvent) {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					scmpEvent.getSource(), scmpEvent);
+			statisticsEvent.setEventType(StatisticsEnum.DECODE_SCMP);
+			fireStatistics(statisticsEvent);						
+		}
+
+		@Override
+		public void encodeEvent(SCMPEvent scmpEvent) {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					scmpEvent.getSource(), scmpEvent);
+			statisticsEvent.setEventType(StatisticsEnum.ENCODE_SCMP);
+			fireStatistics(statisticsEvent);									
 		}
 	}
 }

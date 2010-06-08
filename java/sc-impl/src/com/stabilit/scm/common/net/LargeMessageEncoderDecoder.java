@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.SCMPPoint;
 import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -153,6 +154,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
+		SCMPPoint.getInstance().fireDecode(this, scmpMsg);
 		return scmpMsg;
 	}
 
@@ -232,6 +234,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					bw.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
 					return;
 				}
 
@@ -251,6 +254,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
 					return;
 				} else {
 					// set internal status to save communication state
@@ -271,6 +275,7 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		}
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+		SCMPPoint.getInstance().fireEncode(this, scmpMsg);
 		return;
 	}
 

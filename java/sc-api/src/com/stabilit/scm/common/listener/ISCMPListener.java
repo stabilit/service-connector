@@ -18,8 +18,10 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
-public interface IStatisticsListener extends EventListener {
+public interface ISCMPListener extends EventListener {
 
-	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
+	public abstract void encodeEvent(SCMPEvent scmpEvent);
+
+	public abstract void decodeEvent(SCMPEvent scmpEvent);
 
 }
