@@ -77,7 +77,7 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode req test.
+	 * Decode REQ test.
 	 */
 	@Test
 	public void decodeREQTest() {
@@ -99,7 +99,7 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode res test.
+	 * Decode RES test.
 	 */
 	@Test
 	public void decodeRESTest() {
@@ -122,7 +122,7 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode exc test.
+	 * Decode EXC test.
 	 */
 	@Test
 	public void decodeEXCTest() {

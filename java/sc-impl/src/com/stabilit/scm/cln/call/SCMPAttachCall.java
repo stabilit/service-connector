@@ -43,7 +43,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 *            the client to use when invoking call
 	 */
 	public SCMPAttachCall(IRequester client) {
-		this.req = client;
+		this.requester = client;
 	}
 
 	/** {@inheritDoc} */
@@ -57,8 +57,8 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPAttachCall(req);
+	public ISCMPCall newInstance(IRequester requester) {
+		return new SCMPAttachCall(requester);
 	}
 
 	/**

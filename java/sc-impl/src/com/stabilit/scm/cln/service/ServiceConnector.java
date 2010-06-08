@@ -38,7 +38,7 @@ public class ServiceConnector implements IServiceConnector {
 	private String host;
 	private int port;
 	private ServiceConnectorContext serviceConnectorCtx;
-	private IRequester req; // becomes a pool later
+	private IRequester requester; // becomes a pool later
 	private RequesterFactory clientFactory;
 
 	public ServiceConnector(String host, int port) {
@@ -52,10 +52,10 @@ public class ServiceConnector implements IServiceConnector {
 
 	@Override
 	public void connect() throws Exception {
-		req = clientFactory.newInstance(this.host, this.port, this.connection, this.numberOfThreads);
-		req.connect();
+		requester = clientFactory.newInstance(this.host, this.port, this.connection, this.numberOfThreads);
+		requester.connect();
 		// attach
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
 		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
@@ -64,20 +64,20 @@ public class ServiceConnector implements IServiceConnector {
 
 	@Override
 	public ISession createDataSession(String serviceName) throws Exception {		
-		SCMPServiceSession scmpSession = new SCMPServiceSession(req, serviceName, "");
+		SCMPServiceSession scmpSession = new SCMPServiceSession(requester, serviceName, "");
 		scmpSession.createSession();
-		ISession scDataSession = new SCDataSession(req, scmpSession);
+		ISession scDataSession = new SCDataSession(requester, scmpSession);
 		return scDataSession;
 	}
 
 	@Override
 	public void disconnect() throws Exception {
 		// detach
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(requester);
 		detachCall.invoke();
 
-		this.req.disconnect(); // physical disconnect
-		this.req.destroy();
+		this.requester.disconnect(); // physical disconnect
+		this.requester.destroy();
 	}
 
 	@Override

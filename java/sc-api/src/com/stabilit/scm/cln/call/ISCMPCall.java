@@ -32,33 +32,33 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester to use for the call
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester req);
+	public ISCMPCall newInstance(IRequester requester);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester to use for the call
 	 * @param serviceSession
 	 *            the service session
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester req, IServiceSession clientSession);
+	public ISCMPCall newInstance(IRequester requester, IServiceSession clientSession);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester
 	 * @param scmpMessage
 	 *            the scmp message
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester req, SCMPMessage scmpMessage);
+	public ISCMPCall newInstance(IRequester requester, SCMPMessage scmpMessage);
 
 	/**
 	 * Invoke.

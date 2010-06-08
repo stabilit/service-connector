@@ -51,7 +51,6 @@ public final class ClientRegistry extends Registry {
 	 *            the key
 	 * @param mapBean
 	 *            the map bean
-	 *            TODO (TRN) (DONE JOT) what is this good for? - adding a connection to the registry
 	 */
 	public void add(Object key, MapBean<Object> mapBean) {
 		this.put(key, mapBean);

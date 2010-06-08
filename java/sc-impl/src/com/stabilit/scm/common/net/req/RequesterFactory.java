@@ -30,8 +30,8 @@ public class RequesterFactory extends Factory {
 	 * Instantiates a new requester factory.
 	 */
 	public RequesterFactory() {
-		Requester req = new Requester();
-		this.factoryMap.put(DEFAULT, req);
+		Requester requester = new Requester();
+		this.factoryMap.put(DEFAULT, requester);
 	}
 
 	/**
@@ -43,9 +43,9 @@ public class RequesterFactory extends Factory {
 	 */
 	public IRequester newInstance(IRequesterConfigItem clientConfig) {
 		IFactoryable factoryInstance = this.newInstance();
-		IRequester req = (IRequester) factoryInstance;
-		req.setRequesterConfig(clientConfig);
-		return req;
+		IRequester requester = (IRequester) factoryInstance;
+		requester.setRequesterConfig(clientConfig);
+		return requester;
 	}
 
 	/**
@@ -55,17 +55,17 @@ public class RequesterFactory extends Factory {
 	 *            the host
 	 * @param port
 	 *            the port
-	 * @param con
+	 * @param config
 	 *            the configuration
 	 * @param numberOfThreads
 	 *            the number of threads
 	 * @return the requester
 	 */
-	public IRequester newInstance(String host, int port, String con, int numberOfThreads) {
+	public IRequester newInstance(String host, int port, String config, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
-		IRequester req = (IRequester) factoryInstance;
-		IRequesterConfigItem clientConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, con, numberOfThreads);
-		req.setRequesterConfig(clientConfigItem);
-		return req;
+		IRequester requester = (IRequester) factoryInstance;
+		IRequesterConfigItem clientConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, config, numberOfThreads);
+		requester.setRequesterConfig(clientConfigItem);
+		return requester;
 	}
 }

@@ -76,7 +76,7 @@ public class DefaultEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode req test.
+	 * Decode REQ test.
 	 */
 	@Test
 	public void decodeREQTest() {
@@ -98,7 +98,7 @@ public class DefaultEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode res test.
+	 * Decode RES test.
 	 */
 	@Test
 	public void decodeRESTest() {
@@ -207,7 +207,7 @@ public class DefaultEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode req test.
+	 * Encode REQ test.
 	 */
 	@Test
 	public void encodeREQTest() {
@@ -227,7 +227,7 @@ public class DefaultEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode res test.
+	 * Encode RES test.
 	 */
 	@Test
 	public void encodeRESTest() {
@@ -253,7 +253,7 @@ public class DefaultEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode exc test.
+	 * Encode EXC test.
 	 */
 	@Test
 	public void encodeEXCTest() {

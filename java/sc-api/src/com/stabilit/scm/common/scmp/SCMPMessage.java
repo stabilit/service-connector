@@ -26,9 +26,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 /**
  * Service Connector Message Protocol. Data container for one message.
  */
-public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, maybe interface, but not necessary)
-	// should have an abstract superclass to ensure that mandatory methods are really
-	// implemented. ??
+public class SCMPMessage {
 
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.ONE;
@@ -90,7 +88,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	 * @return true, if is fault
 	 */
 	public boolean isFault() {
-		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
+		return false; // this is the default value!
 	}
 
 	/**
@@ -99,7 +97,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	 * @return true, if is part
 	 */
 	public boolean isPart() {
-		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
+		return false; // this is the default value!
 	}
 
 	/**
@@ -108,7 +106,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	 * @return true, if there is body offset
 	 */
 	public boolean isBodyOffset() {
-		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
+		return false; // this is the default value!
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	 * @return the body offset
 	 */
 	public int getBodyOffset() {
-		return 0; // implemented in sub classes TODO (Done JOT) this is the default value!
+		return 0; // this is the default value!
 	}
 
 	/**
@@ -126,7 +124,7 @@ public class SCMPMessage { // TODO (TRN) (Done JOT no abstract class required, m
 	 * @return true, if is composite
 	 */
 	public boolean isComposite() {
-		return false; // implemented in sub classes TODO (Done JOT) this is the default value!
+		return false; // this is the default value!
 	}
 
 	/**

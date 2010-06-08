@@ -166,8 +166,8 @@ public class Requester implements IRequester {
 	 * Sends large scmp.
 	 * 
 	 * @param scmp
-	 *            the scmp
-	 * @return the sCMP
+	 *            the scmp message
+	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */

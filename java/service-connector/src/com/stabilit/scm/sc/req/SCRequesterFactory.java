@@ -33,8 +33,8 @@ public class SCRequesterFactory extends Factory {
 	 * Instantiates a new SCRequesterFactory.
 	 */
 	public SCRequesterFactory() {
-		IRequester req = new SCRequester();
-		this.factoryMap.put(DEFAULT, req);
+		IRequester requester = new SCRequester();
+		this.factoryMap.put(DEFAULT, requester);
 	}
 
 	/**
@@ -52,10 +52,10 @@ public class SCRequesterFactory extends Factory {
 	 */
 	public IRequester newInstance(String host, int port, String connection, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
-		IRequester req = (IRequester) factoryInstance;
+		IRequester requester = (IRequester) factoryInstance;
 		IRequesterConfigItem requesterConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, connection,
 				numberOfThreads);
-		req.setRequesterConfig(requesterConfigItem);
-		return req;
+		requester.setRequesterConfig(requesterConfigItem);
+		return requester;
 	}
 }

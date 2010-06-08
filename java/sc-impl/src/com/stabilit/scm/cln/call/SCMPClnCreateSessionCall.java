@@ -41,11 +41,11 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.
 	 * 
-	 * @param req
-	 *            the requster to use when invoking call
+	 * @param requester
+	 *            the requester to use when invoking call
 	 */
-	public SCMPClnCreateSessionCall(IRequester req) {
-		this.req = req;
+	public SCMPClnCreateSessionCall(IRequester requester) {
+		this.requester = requester;
 	}
 
 	/** {@inheritDoc} */
@@ -63,8 +63,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPClnCreateSessionCall(req);
+	public ISCMPCall newInstance(IRequester requester) {
+		return new SCMPClnCreateSessionCall(requester);
 	}
 
 	/**

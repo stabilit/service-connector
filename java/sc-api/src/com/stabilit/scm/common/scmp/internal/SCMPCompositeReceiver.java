@@ -39,7 +39,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
-	private SCMPMessage currentPart;			// TODO currentPart should be SCMPPart
+	private SCMPMessage currentPart;			// TODO currentPart should be SCMPPart?
 	/** The scmp fault. */
 	private SCMPFault scmpFault;
 	/** The scmp offset. */

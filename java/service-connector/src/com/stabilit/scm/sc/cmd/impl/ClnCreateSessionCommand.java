@@ -93,6 +93,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		// first verify that client has correctly attached
+		// TODO (TRN) This will not work when appl is connected twice to the same SC or two apps on the same node connects to the same SC!
+		// instead of using socketAddress the client must have a clientId that is key to the ClientRegistry
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
@@ -102,15 +104,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);	// TODO (TRN) => unknown client
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
 
-		// get free service
+		// get free server
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();	
 		// adding ip of current unit to header field ip address list
 		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		if (socketAddress instanceof InetSocketAddress) {
@@ -134,7 +136,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		ServiceRegistryItem serviceRegistryItem = null;
 		try {
 			// try to allocate session on a backend server
+			// TODO (TRN) take care, no free server can be available! => throw new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+
 			serviceRegistryItem = serviceRegistry.allocate(request);
+			// TODO (TRN) take care, the server can reject the session! The server response must be evaluated
 			if (serviceRegistryItem == null) {
 				System.out.println("ClnCreateSessionCommand.run()");
 			}
@@ -146,7 +151,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}
-		// finally save session
+		
+		// finally add session to the registry
 		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
 		sessionRegistry.add(session.getId(), session);
 
