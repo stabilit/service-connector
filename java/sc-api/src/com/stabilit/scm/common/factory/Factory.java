@@ -32,7 +32,7 @@ public class Factory {
 
 	/** The Constant DEFAULT. Key for default instance. */
 	protected static final String DEFAULT = "default";
-	/** The factory map stores instances created by factory. */
+	/** The map stores factory instances */
 	protected Map<Object, IFactoryable> factoryMap = new ConcurrentHashMap<Object, IFactoryable>();
 
 	/**
@@ -99,6 +99,6 @@ public class Factory {
 		if (factoryInstance == null) {
 			return null;
 		}
-		return factoryInstance.newInstance();
+		return factoryInstance.newInstance();	// invoke the constructor
 	}
 }
