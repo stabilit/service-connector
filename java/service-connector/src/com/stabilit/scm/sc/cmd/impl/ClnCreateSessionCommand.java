@@ -93,10 +93,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		// first verify that client has correctly attached
-		// TODO (TRN) This will not work when appl is connected twice to the same SC or two apps on the same node connects to the same SC!
-		// instead of using socketAddress the client must have a clientId that is key to the ClientRegistry
 		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
+		SocketAddress socketAddress = requestContext.getSocketAddress();	// IP and port
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 		MapBean<?> mapBean = clientRegistry.get(socketAddress);
 
@@ -109,24 +107,24 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			throw scmpCommandException;
 		}
 
-		// get free server
+		// check service
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();	
-		// adding ip of current unit to header field ip address list
-		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		if (socketAddress instanceof InetSocketAddress) {
-			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-			ipList += inetSocketAddress.getAddress();
-			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		}
-
 		mapBean = serviceRegistry.get(serviceName);
 		if (mapBean == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
+		}
+		
+		// adding ip of current unit to header field ip address list
+		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		if (socketAddress instanceof InetSocketAddress) {
+			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+			ipList += inetSocketAddress.getAddress();
+			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();

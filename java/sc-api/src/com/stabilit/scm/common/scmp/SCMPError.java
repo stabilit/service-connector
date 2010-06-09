@@ -55,7 +55,7 @@ public enum SCMPError {
 	CONNECTION_LOST("502", "Connection lost.");
 
 	/** The error code. */
-	private String errorCode; // TODO (TRN) this should be int!
+	private String errorCode; // should not be int because it is transmitted over the line
 	/** The error text. */
 	private String errorText;
 

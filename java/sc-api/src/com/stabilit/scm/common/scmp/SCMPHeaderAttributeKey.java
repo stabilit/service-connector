@@ -82,9 +82,6 @@ public enum SCMPHeaderAttributeKey {
 	/** The REQ_ID. */
 	CLN_REQ_ID("clnReqId"), 
 	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
-	/** The RES_ID. */
-	CLN_RES_ID("clnResId"), 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SC_REQ_ID. */
 	SC_REQ_ID("scReqId"), 
 	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
