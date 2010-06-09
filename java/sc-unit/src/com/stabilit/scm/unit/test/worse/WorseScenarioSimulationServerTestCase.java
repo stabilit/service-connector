@@ -29,7 +29,7 @@ import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnSystemCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -65,7 +65,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 			ServiceConnector.main(null);
 			Simulation.main(null);
-			config = new RequeserConfig();
+			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
 			client = clientFactory.newInstance(config.getClientConfig());

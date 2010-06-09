@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
@@ -39,7 +39,7 @@ public class Simulation {
 	private static void run() throws IOException {
 		ResponderConfig srvConfig = new ResponderConfig();
 		srvConfig.load("sc-sim.properties");
-		RequeserConfig clientConfig = new RequeserConfig();
+		RequesterConfig clientConfig = new RequesterConfig();
 		clientConfig.load("sc-sim.properties");
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
@@ -51,7 +51,7 @@ public class Simulation {
 		for (IResponderConfigItem serverConfigItem : serverConfigList) {
 			IResponder server = serverFactory.newInstance(serverConfigItem);
 			IResponderContext serverContext = server.getResponderContext();
-			serverContext.setAttribute(RequeserConfig.class.getName(), clientConfig);
+			serverContext.setAttribute(RequesterConfig.class.getName(), clientConfig);
 			try {
 				server.create();
 				server.runAsync();

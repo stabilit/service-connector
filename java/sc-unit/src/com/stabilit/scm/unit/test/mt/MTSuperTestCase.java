@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
@@ -46,7 +46,7 @@ public abstract class MTSuperTestCase {
 
 	protected String fileName;
 	protected int maxClients;
-	protected RequeserConfig config = null;
+	protected RequesterConfig config = null;
 	protected List<IRequester> clientList = null;
 
 	public MTSuperTestCase(final String fileName) {
@@ -68,7 +68,7 @@ public abstract class MTSuperTestCase {
 
 	public IRequester newClient() {
 		try {
-			config = new RequeserConfig();
+			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
 			IRequester client = new Requester();

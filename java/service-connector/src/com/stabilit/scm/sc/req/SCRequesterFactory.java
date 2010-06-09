@@ -17,7 +17,7 @@
 package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -53,7 +53,7 @@ public class SCRequesterFactory extends Factory {
 	public IRequester newInstance(String host, int port, String connection, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
 		IRequester requester = (IRequester) factoryInstance;
-		IRequesterConfigItem requesterConfigItem = new RequeserConfig().new RequesterConfigItem(host, port, connection,
+		IRequesterConfigItem requesterConfigItem = new RequesterConfig().new RequesterConfigItem(host, port, connection,
 				numberOfThreads);
 		requester.setRequesterConfig(requesterConfigItem);
 		return requester;

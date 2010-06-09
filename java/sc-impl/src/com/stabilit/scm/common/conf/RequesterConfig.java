@@ -28,7 +28,7 @@ import java.util.Properties;
  * 
  * @author JTraber
  */
-public class RequeserConfig {
+public class RequesterConfig {
 
 	/** The props. */
 	private Properties props;
@@ -40,7 +40,7 @@ public class RequeserConfig {
 	/**
 	 * Instantiates a new client configuration.
 	 */
-	public RequeserConfig() {
+	public RequesterConfig() {
 		this.reqConfigItemList = null;
 		this.props = null;
 		this.loggerKey = null;

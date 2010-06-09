@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.common.conf.RequeserConfig;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
@@ -37,7 +37,7 @@ import com.stabilit.scm.common.net.req.RequesterFactory;
 public abstract class SuperTestCase {
 
 	protected String fileName;
-	protected RequeserConfig config = null;
+	protected RequesterConfig config = null;
 	protected IRequester client = null;
 
 	public SuperTestCase(final String fileName) {
@@ -59,7 +59,7 @@ public abstract class SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
-			config = new RequeserConfig();
+			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
 			client = clientFactory.newInstance(config.getClientConfig());
