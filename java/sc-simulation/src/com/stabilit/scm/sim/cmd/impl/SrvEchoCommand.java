@@ -60,16 +60,16 @@ public class SrvEchoCommand extends CommandAdapter {
 			ipList += inetSocketAddress.getAddress();
 			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
-
-		if (message.getBodyLength() > 0) {
-			if (message.getBody().toString().length() > 100) {
-				System.out.println("SrvEchoCommand body = " + message.getBody().toString().substring(0, 100));
-			} else {
-				System.out.println("SrvEchoCommand body = " + message.getBody().toString());
-			}
-		} else {
-			System.out.println("SrvEchoCommand empty body");
-		}
+//
+//		if (message.getBodyLength() > 0) {
+//			if (message.getBody().toString().length() > 100) {
+//				System.out.println("SrvEchoCommand body = " + message.getBody().toString().substring(0, 100));
+//			} else {
+//				System.out.println("SrvEchoCommand body = " + message.getBody().toString());
+//			}
+//		} else {
+//			System.out.println("SrvEchoCommand empty body");
+//		}
 
 		result = new SCMPMessage();
 		result.setIsReply(true);

@@ -57,87 +57,92 @@ public class SrvDataCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
-				.getCurrentInstance();
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
 		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
-
-		if (mapBean == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: session not found");  
-			}
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME,
-					request.getAttribute(
-							SCMPHeaderAttributeKey.SERVICE_NAME.getName())
-							.toString());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE,
-					SCMPError.SERVER_ERROR.getErrorCode());
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
-					SCMPError.SERVER_ERROR.getErrorText());
-			scmpReply.setMessageType(getKey().getResponseName());
-			response.setSCMP(scmpReply);
-			return;
-		}
-
-		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setSessionId(sessionId);
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getServiceName().toString());
-		scmpReply
-				.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
-		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
-		// SCMPHeaderType.COMPRESSION).toString());
-
-		if (message.getBody().toString().startsWith("large") || message.isPart()) {
-			StringBuilder sb = new StringBuilder();
-			int i = 0;
-			sb.append("large:");
-			for (i = 0; i < 10000; i++) {
-				if (sb.length() > 60000) {
-					break;
-				}
-				sb.append(i);
-			}
-			if (i >= 10000) {
-				scmpReply.setBody(sb.toString());
-				response.setSCMP(scmpReply);
-			} else {
-				scmpReply = new SCMPPart();
-				scmpReply.setMessageType(getKey().getResponseName());
-				scmpReply.setSessionId(sessionId);
-				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-						.getServiceName()
-						.toString());
-				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO,
-						"Session info");
-				scmpReply.setBody(sb.toString());
-				response.setSCMP(scmpReply);
-			}
-			return;
-		}
-
-		List<String> msg = (List<String>) mapBean.getAttribute("messageQueue");
-
-		// init dummy message list
-		if (msg == null) {
-			msg = new ArrayList<String>();
-			for (int i = 0; i < 100; i++) {
-				msg.add("Message number " + i);
-			}
-			mapBean.setAttribute("messageQueueId", 0);
-			mapBean.setAttribute("messageQueue", msg);
-			scmpReply.setBody(msg.get(0));
-			response.setSCMP(scmpReply);
-			return;
-		}
-		int messageQueueId = (Integer) mapBean.getAttribute("messageQueueId");
-		messageQueueId++;
-		scmpReply.setBody(msg.get(messageQueueId));
-		mapBean.setAttribute("messageQueueId", messageQueueId);
-		response.setSCMP(scmpReply);
+		response.setSCMP(message);
+		return;
+		
+//		SCMPMessage scmpReply = new SCMPMessage();
+//		scmpReply.setIsReply(true);
+//			
+//		String sessionId = message.getSessionId();
+//
+//		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
+//		.getCurrentInstance();
+//		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
+//
+//		if (mapBean == null) {
+//			if (LoggerPoint.getInstance().isWarn()) {
+//				LoggerPoint.getInstance().fireWarn(this, "command error: session not found");  
+//			}
+//			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME,
+//					request.getAttribute(
+//							SCMPHeaderAttributeKey.SERVICE_NAME.getName())
+//							.toString());
+//			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE,
+//					SCMPError.SERVER_ERROR.getErrorCode());
+//			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
+//					SCMPError.SERVER_ERROR.getErrorText());
+//			scmpReply.setMessageType(getKey().getResponseName());
+//			response.setSCMP(scmpReply);
+//			return;
+//		}
+//
+//		scmpReply.setMessageType(getKey().getResponseName());
+//		scmpReply.setSessionId(sessionId);
+//		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
+//				.getServiceName().toString());
+//		scmpReply
+//				.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
+//		// scmpReply.setHeader(SCMPHeaderType.COMPRESSION, request.getAttribute(
+//		// SCMPHeaderType.COMPRESSION).toString());
+//
+//		if (message.getBody().toString().startsWith("large") || message.isPart()) {
+//			StringBuilder sb = new StringBuilder();
+//			int i = 0;
+//			sb.append("large:");
+//			for (i = 0; i < 10000; i++) {
+//				if (sb.length() > 60000) {
+//					break;
+//				}
+//				sb.append(i);
+//			}
+//			if (i >= 10000) {
+//				scmpReply.setBody(sb.toString());
+//				response.setSCMP(scmpReply);
+//			} else {
+//				scmpReply = new SCMPPart();
+//				scmpReply.setMessageType(getKey().getResponseName());
+//				scmpReply.setSessionId(sessionId);
+//				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
+//						.getServiceName()
+//						.toString());
+//				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO,
+//						"Session info");
+//				scmpReply.setBody(sb.toString());
+//				response.setSCMP(scmpReply);
+//			}
+//			return;
+//		}
+//
+//		List<String> msg = (List<String>) mapBean.getAttribute("messageQueue");
+//
+//		// init dummy message list
+//		if (msg == null) {
+//			msg = new ArrayList<String>();
+//			for (int i = 0; i < 1000000; i++) {
+//				msg.add("Message number " + i);
+//			}
+//			mapBean.setAttribute("messageQueueId", 0);
+//			mapBean.setAttribute("messageQueue", msg);
+//			scmpReply.setBody(msg.get(0));
+//			response.setSCMP(scmpReply);
+//			return;
+//		}
+//		int messageQueueId = (Integer) mapBean.getAttribute("messageQueueId");
+//		messageQueueId++;
+//		scmpReply.setBody(msg.get(messageQueueId));
+//		mapBean.setAttribute("messageQueueId", messageQueueId);
+//		response.setSCMP(scmpReply);
 	}
 
 	@Override
