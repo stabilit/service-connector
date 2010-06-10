@@ -41,7 +41,7 @@ import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.RuntimeLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.sc.ServiceConnector;
+import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
@@ -97,7 +97,7 @@ public class SetupTestCases {
 //				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(null);
+				SC.main(null);
 				Simulation.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -111,7 +111,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-				ServiceConnector.main(null);
+				SC.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

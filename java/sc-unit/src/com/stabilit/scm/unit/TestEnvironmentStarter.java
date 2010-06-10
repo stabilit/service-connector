@@ -46,7 +46,7 @@ import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.RuntimeLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.sc.ServiceConnector;
+import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.sim.Simulation;
 
 public class TestEnvironmentStarter {
@@ -59,7 +59,7 @@ public class TestEnvironmentStarter {
 	private void startUpServer() throws Exception {
 //		this.init();
 		CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-		ServiceConnector.main(null);
+		SC.main(null);
 		Simulation.main(null);
 	}
 

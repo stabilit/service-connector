@@ -30,7 +30,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.sc.ServiceConnector;
+import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
@@ -62,7 +62,7 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		try {
 			SetupTestCases.init();
 			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
-			ServiceConnector.main(null);
+			SC.main(null);
 			Simulation.main(null);
 			config = new RequesterConfig();
 			config.load(fileName);
