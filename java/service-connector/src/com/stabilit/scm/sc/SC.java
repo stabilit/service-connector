@@ -39,12 +39,12 @@ import com.stabilit.scm.sc.res.SCResponderFactory;
  * 
  * @author JTraber
  */
-public final class ServiceConnector {
+public final class SC {
 
 	/**
 	 * Instantiates a new service connector.
 	 */
-	private ServiceConnector() {
+	private SC() {
 	}
 
 	/**
@@ -56,7 +56,7 @@ public final class ServiceConnector {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		ServiceConnector.run();
+		SC.run();
 	}
 
 	/**
@@ -74,7 +74,7 @@ public final class ServiceConnector {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
 
-		ServiceConnector.initializeJMXStuff();
+		SC.initializeJMXStuff();
 
 		List<ResponderConfigItem> respConfigList = config.getResponderConfigList();
 		SCResponderFactory respFactory = new SCResponderFactory();
@@ -84,7 +84,7 @@ public final class ServiceConnector {
 				resp.create();
 				resp.runAsync();
 			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(ServiceConnector.class, e);
+				ExceptionPoint.getInstance().fireException(SC.class, e);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ public final class ServiceConnector {
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
 		} catch (Throwable th) {
-			ExceptionPoint.getInstance().fireException(ServiceConnector.class, th);
+			ExceptionPoint.getInstance().fireException(SC.class, th);
 		}
 	}
 }
