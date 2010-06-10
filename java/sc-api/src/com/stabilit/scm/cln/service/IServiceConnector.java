@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,29 +13,50 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
-
-
 /**
+ * The Interface IServiceConnector. Reveals functionality of a ServiceConnector instance.
+ * 
  * @author JTraber
- *
  */
 public interface IServiceConnector {
 
-	void setAttribute(String string, int i);
+	/**
+	 * Connects to SC.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void connect() throws Exception;
 
-	void connect() throws Exception;
-	
-	void disconnect() throws Exception;
+	/**
+	 * Disconnects from SC.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void disconnect() throws Exception;
 
-	ISession createDataSession(String string) throws Exception;
+	/**
+	 * New data session to SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the sc session
+	 * @throws Exception
+	 *             the exception
+	 */
+	public ISCSession newDataSession(String serviceName) throws Exception;
 
-	IServiceConnectorContext getSCContext();
-
+	/**
+	 * Sets the attribute. Attributes for ServiceConnector.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
+	public void setAttribute(String name, Object value);
 }

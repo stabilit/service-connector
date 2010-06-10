@@ -17,7 +17,7 @@
 
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -32,8 +32,8 @@ public interface ISCMPCall {
 	/**
 	 * New instance of a call.
 	 * 
-	 * @param requester
-	 *            the requester to use for the call
+	 * @param requester the requester to use for the call
+	 * 
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IRequester requester);
@@ -41,21 +41,19 @@ public interface ISCMPCall {
 	/**
 	 * New instance.
 	 * 
-	 * @param requester
-	 *            the requester to use for the call
-	 * @param serviceSession
-	 *            the service session
+	 * @param requester the requester
+	 * @param scSession the sc session
+	 * 
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester requester, IServiceSession clientSession);
+	public ISCMPCall newInstance(IRequester requester, ISCSession scSession);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param requester
-	 *            the requester
-	 * @param scmpMessage
-	 *            the scmp message
+	 * @param requester the requester
+	 * @param scmpMessage the scmp message
+	 * 
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IRequester requester, SCMPMessage scmpMessage);
@@ -64,16 +62,15 @@ public interface ISCMPCall {
 	 * Invoke.
 	 * 
 	 * @return the scmp message
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public SCMPMessage invoke() throws Exception;
 
 	/**
 	 * Sets the body.
 	 * 
-	 * @param body
-	 *            the new body
+	 * @param body the new body
 	 */
 	public void setRequestBody(Object body);
 
@@ -102,8 +99,8 @@ public interface ISCMPCall {
 	 * Open group.
 	 * 
 	 * @return the iSCMP call
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public ISCMPCall openGroup() throws Exception;
 
@@ -111,8 +108,8 @@ public interface ISCMPCall {
 	 * Close group, sends the ending request.
 	 * 
 	 * @return the result
-	 * @throws Exception
-	 *             the exception
+	 * 
+	 * @throws Exception the exception
 	 */
 	public SCMPMessage closeGroup() throws Exception;
 }

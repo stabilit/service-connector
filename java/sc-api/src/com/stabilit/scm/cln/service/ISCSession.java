@@ -14,36 +14,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.net.req;
+package com.stabilit.scm.cln.service;
 
 /**
- * The Interface IServiceSession. Represents a virtual link between client and server. API programmer needs to manage
- * several service sessions on his own. Necessary to make session calls like SCMPClnDataCall.
+ * The Interface ISCSession. Reveals functionality of a sc session.
  * 
  * @author JTraber
  */
-public interface IServiceSession {
+public interface ISCSession {
 
 	/**
-	 * Gets the session id.
+	 * Executes the session.
 	 * 
-	 * @return the sessionId
+	 * @param obj
+	 *            the data body to execute
+	 * @return the object
+	 * @throws Exception
+	 *             the exception
 	 */
-	public abstract String getSessionId();
-
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the serviceName
-	 */
-	public abstract String getServiceName();
-
-	/**
-	 * Gets the session info.
-	 * 
-	 * @return the sessionInfo
-	 */
-	public abstract String getSessionInfo();
+	public Object execute(Object obj) throws Exception;
 
 	/**
 	 * Delete session.
@@ -51,5 +40,59 @@ public interface IServiceSession {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void deleteSession() throws Exception;
+	public void deleteSession() throws Exception;
+
+	/**
+	 * Close group.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void closeGroup() throws Exception;
+
+	/**
+	 * Open group.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void openGroup() throws Exception;
+
+	/**
+	 * Creates the session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void createSession() throws Exception;
+
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
+	public String getSessionId();
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName();
+
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param string
+	 *            the new message info
+	 */
+	public void setMessageInfo(String string);
+
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param string
+	 *            the new session info
+	 */
+	public void setSessionInfo(String string);
 }

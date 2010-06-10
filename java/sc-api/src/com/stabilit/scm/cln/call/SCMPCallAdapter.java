@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -34,10 +34,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
-	/** The scmp session to use for the call. */
-	protected IServiceSession scmpSession;
+	
+	/** The sc session to use for the call. */
+	protected ISCSession scSession;
+	
 	/** The request message. */
 	protected SCMPMessage requestMessage;
+	
 	/** The response message. */
 	protected SCMPMessage responseMessage;
 
@@ -51,8 +54,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/**
 	 * Instantiates a new SCMPCallAdapter.
 	 * 
-	 * @param requester
-	 *            the requester
+	 * @param requester the requester
 	 */
 	public SCMPCallAdapter(IRequester requester) {
 		this(requester, null);
@@ -61,16 +63,14 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/**
 	 * Instantiates a new SCMPCallAdapter.
 	 * 
-	 * @param requester
-	 *            the requester
-	 * @param scmpSession
-	 *            the scmp session
+	 * @param requester the requester
+	 * @param scmpSession the scmp session
 	 */
-	public SCMPCallAdapter(IRequester requester, IServiceSession scmpSession) {
+	public SCMPCallAdapter(IRequester requester, ISCSession scmpSession) {
 		this.requester = requester;
-		this.scmpSession = scmpSession;
+		this.scSession = scmpSession;
 
-		if (this.scmpSession != null) {
+		if (this.scSession != null) {
 			this.requestMessage = new SCMPMessage();
 			this.requestMessage.setSessionId(scmpSession.getSessionId());
 			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, scmpSession.getServiceName());
@@ -89,7 +89,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, IServiceSession serviceSession) {
+	public ISCMPCall newInstance(IRequester requester, ISCSession serviceSession) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
@@ -144,8 +144,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/**
 	 * Sets the compression.
 	 * 
-	 * @param compression
-	 *            the new compression
+	 * @param compression the new compression
 	 */
 	public void setCompression(boolean compression) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
@@ -155,28 +154,28 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a
 	 * large or small message request and response. But all of them are handled as partial messages, large calls
 	 * will be split into partial calls (PRQ). The client uses group calls if the active communication is open end.
-	 * Closing the group will send the completing request (REQ). 
+	 * Closing the group will send the completing request (REQ).
 	 * 
-	 * Communication sample: 
+	 * Communication sample:
 	 * openGroup... (no transport)
-	 * PRQ -> <-PRS 
-	 * .... 
-	 * PRQ-> <-PRS 
-	 * closeGroup...(terminates group) 
+	 * PRQ -> <-PRS
+	 * ....
+	 * PRQ-> <-PRS
+	 * closeGroup...(terminates group)
 	 * REQ-> <-RES
 	 */
 	public final class SCMPGroupCall implements ISCMPCall {
 
 		/** The parent call. */
 		private ISCMPCall parentCall;
+		
 		/** The group state. */
 		private SCMPGroupState groupState;
 
 		/**
 		 * Instantiates a new SCMPGroupCall.
 		 * 
-		 * @param parentCall
-		 *            the parent call
+		 * @param parentCall the parent call
 		 */
 		private SCMPGroupCall(ISCMPCall parentCall) {
 			this.parentCall = parentCall;
@@ -262,7 +261,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public ISCMPCall newInstance(IRequester requester, IServiceSession serviceSession) {
+		public ISCMPCall newInstance(IRequester requester, ISCSession serviceSession) {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
@@ -280,6 +279,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** The OPEN state. */
 		OPEN,
+		
 		/** The CLOSE state. */
 		CLOSE;
 	}
