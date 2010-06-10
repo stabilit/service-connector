@@ -84,10 +84,9 @@ public class SCDataSession implements ISCSession {
 					"responseMessage already set - create session inoked two times!");
 			return;
 		}
-		// sets a create session call
+		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req);
-		createSessionCall.setServiceName(this.serviceName);
+				.newInstance(req, this.serviceName);
 		createSessionCall.setSessionInfo(this.sessionInfo);
 		this.responseMessage = createSessionCall.invoke();
 

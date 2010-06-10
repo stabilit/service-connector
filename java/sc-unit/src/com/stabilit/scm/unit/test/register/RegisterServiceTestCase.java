@@ -51,23 +51,12 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	@Test
 	public void failRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req);
+				.newInstance(req, "P01_RTXS_RPRWS1");
 
-		/*********************** serviceName not set *******************/
+		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
-		registerServiceCall.setImmediateConnect(true);
 
-		try {
-			registerServiceCall.invoke();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException ex) {
-			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("1", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
-		}
-		/*********************** maxSessions 0 value *******************/
-		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(0);
 		registerServiceCall.setImmediateConnect(true);
 
@@ -76,7 +65,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("1", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 		/*********************** port too high 10000 *******************/
@@ -89,7 +78,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
 
@@ -101,11 +90,10 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		RequesterFactory reqFactory = new RequesterFactory();
 		IRequester req = (IRequester) reqFactory.newInstance("localhost", 9000, "netty.tcp", 16);
 		req.connect();
-		
-		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req);
 
-		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
+		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+				.newInstance(req, "P01_RTXS_RPRWS1");
+
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
@@ -123,17 +111,14 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req);
-		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+				.newInstance(req, "P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 	}
 
 	// TODO verify second registry!!
 	public void secondRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req);
-
-		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
+				.newInstance(req, "");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setImmediateConnect(true);
@@ -149,8 +134,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		}
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req);
-		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+				.newInstance(req, "P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 	}
 }

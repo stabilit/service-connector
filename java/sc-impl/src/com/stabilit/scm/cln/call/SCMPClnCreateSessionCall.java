@@ -63,17 +63,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
 		return new SCMPClnCreateSessionCall(requester, serviceName);
 	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
+	
 	/**
 	 * Sets the session info.
 	 * 

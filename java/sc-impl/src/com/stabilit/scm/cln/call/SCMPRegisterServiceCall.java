@@ -31,35 +31,25 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPRegisterServiceCall.
 	 */
 	public SCMPRegisterServiceCall() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
 	 * Instantiates a new SCMPRegisterServiceCall.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
+	 * @param req
+	 *            the requesters to use when invoking call
 	 */
-	public SCMPRegisterServiceCall(IRequester client) {
-		this.requester = client;
+	public SCMPRegisterServiceCall(IRequester req, String serviceName) {
+		super(req, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPRegisterServiceCall(client);
+	public ISCMPCall newInstance(IRequester req, String serviceName) {
+		return new SCMPRegisterServiceCall(req, serviceName);
 	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
+	
 	/**
 	 * Sets the max sessions.
 	 * 

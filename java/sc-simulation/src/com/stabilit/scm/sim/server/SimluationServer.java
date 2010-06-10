@@ -27,49 +27,43 @@ import com.stabilit.scm.common.net.res.Responder;
 
 /**
  * @author JTraber
- * 
  */
 public class SimluationServer extends Responder {
-	private RequesterFactory clientFactory;
-	private IRequester client;
+	private RequesterFactory reqFactory;
+	private IRequester req;
 
 	public SimluationServer() {
-		clientFactory = new RequesterFactory();
-		client = null;
-	}	
+		reqFactory = new RequesterFactory();
+		req = null;
+	}
 
 	@Override
 	public void runAsync() throws Exception {
 		super.runAsync();
-		// needs to register service in SC
-		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(RequesterConfig.class.getName());
-		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder().getResponderConfig();
-		client = clientFactory.newInstance(clientConfig.getClientConfig());
-		client.connect(); // physical connect
-		// scmp registerService		
-		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
-		registerService.setServiceName("simulation");
-		registerService.setMaxSessions(1);
-		registerService.setPortNumber(serverConfigItem.getPort());
-		registerService.setImmediateConnect(true);
-		registerService.invoke();
+		this.makeRegisterService();
 	}
 
 	@Override
 	public void runSync() throws Exception {
 		super.runSync();
+		this.makeRegisterService();
+	}
+
+	private void makeRegisterService() throws Exception {
 		// needs to register service in SC
-		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(RequesterConfig.class.getName());
-		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder().getResponderConfig();
-		client = clientFactory.newInstance(clientConfig.getClientConfig());
-		client.connect(); // physical connect
-		// scmp registerService		
-		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
-		registerService.setServiceName("simulation");
+		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(
+				RequesterConfig.class.getName());
+		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder()
+				.getResponderConfig();
+		req = reqFactory.newInstance(clientConfig.getClientConfig());
+		req.connect(); // physical connect
+		// scmp registerService
+		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+				.newInstance(req, "simulation");
 		registerService.setMaxSessions(1);
 		registerService.setPortNumber(serverConfigItem.getPort());
 		registerService.setImmediateConnect(true);
-		registerService.invoke();		
+		registerService.invoke();
 	}
 
 	@Override

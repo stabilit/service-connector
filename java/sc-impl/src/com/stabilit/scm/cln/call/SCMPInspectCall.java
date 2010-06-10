@@ -48,17 +48,17 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 	/**
 	 * Instantiates a new sCMP inspect call.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
+	 * @param req
+	 *            the requester to use when invoking call
 	 */
-	public SCMPInspectCall(IRequester client) {
-		this.requester = client;
+	public SCMPInspectCall(IRequester req) {
+		super(req);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPInspectCall(client);
+	public ISCMPCall newInstance(IRequester req) {
+		return new SCMPInspectCall(req);
 	}
 
 	/** {@inheritDoc} */

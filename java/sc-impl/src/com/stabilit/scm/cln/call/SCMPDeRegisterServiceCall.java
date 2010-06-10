@@ -17,7 +17,6 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -48,16 +47,6 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
 		return new SCMPDeRegisterServiceCall(requester, serviceName);
-	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/** {@inheritDoc} */

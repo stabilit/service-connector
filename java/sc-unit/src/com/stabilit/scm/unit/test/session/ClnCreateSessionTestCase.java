@@ -60,10 +60,9 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void failClnCreateSessionNotConnected() throws Exception {
 		this.clnDetachAfter();
+		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req);
-
-		createSessionCall.setServiceName("simulation");
+				.newInstance(req, "simluation");
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		try {
 			createSessionCall.invoke();
@@ -108,10 +107,9 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	 */
 	@Test
 	public void clnCreateSession() throws Exception {
-		// sets a create session call
+		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req);
-		createSessionCall.setServiceName("simluation");
+				.newInstance(req, "simluation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		SCMPMessage responseMessage = createSessionCall.invoke();
 		/*************************** verify create session **********************************/

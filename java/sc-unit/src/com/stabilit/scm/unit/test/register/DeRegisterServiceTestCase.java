@@ -47,9 +47,8 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req);
+				.newInstance(req, "P01_RTXS_RPRWS1");
 
-		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 
 		/*************** scmp inspect ********/
@@ -69,9 +68,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServiceCall() throws Exception {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req);
-
-		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
+				.newInstance(req, "P01_RTXS_RPRWS1");
 
 		try {
 			deRegisterServiceCall.invoke();
@@ -79,8 +76,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
 			Assert.assertEquals("4", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(e.getFault(), SCMPError.NOT_REGISTERED,
-					SCMPMsgType.DEREGISTER_SERVICE);
+			SCTest.verifyError(e.getFault(), SCMPError.NOT_REGISTERED, SCMPMsgType.DEREGISTER_SERVICE);
 		}
 		super.registerServiceBefore();
 	}

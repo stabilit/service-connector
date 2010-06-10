@@ -49,6 +49,11 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this(null, null, null);
 	}
 
+	public SCMPCallAdapter(IRequester requester) {
+		this.requester = requester;
+		this.requestMessage = new SCMPMessage();
+	}
+	
 	/**
 	 * Instantiates a new scmp call adapter.
 	 * 
@@ -58,8 +63,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 *            the service name
 	 */
 	public SCMPCallAdapter(IRequester requester, String serviceName) {
-		this.requester = requester;
-		this.requestMessage = new SCMPMessage();
+		this(requester);
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
