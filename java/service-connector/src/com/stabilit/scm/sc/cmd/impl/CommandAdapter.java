@@ -53,7 +53,7 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		Session session = sessionRegistry.get(sessionId);
+		Session session = sessionRegistry.getSession(sessionId);
 
 		if (session == null) {
 			// incoming session not found

@@ -85,7 +85,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		SCMPMessage result = null;
 		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 		if (LoggerPoint.getInstance().isDebug()) {
@@ -137,7 +137,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			}
 		} catch (CommunicationException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
+			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			serviceRegistryItem.markObsolete();
 			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(

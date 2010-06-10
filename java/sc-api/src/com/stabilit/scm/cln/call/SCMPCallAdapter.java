@@ -89,7 +89,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, ISCSession serviceSession) {
+	public ISCMPCall newInstance(IRequester requester, ISCSession scSession) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 

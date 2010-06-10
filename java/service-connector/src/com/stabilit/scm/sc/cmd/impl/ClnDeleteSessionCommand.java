@@ -81,7 +81,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
 
@@ -97,7 +97,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		// delete session entry from session registry
-		SessionRegistry.getCurrentInstance().remove(sessionId);
+		SessionRegistry.getCurrentInstance().removeSession(sessionId);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -131,7 +131,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 			try {
 				// serviceName
 				String serviceName = (String) message.getServiceName();

@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,14 +14,17 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.cmd;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.sc;
 
 /**
- * The Interface IPassThroughPartMsg. Marks commands which pass through messages. Is used to decide if an arriving part
- * message, has to be queued and await completion before pass it over to the command or pass it over directly.
- * 
  * @author JTraber
+ *
  */
-public interface IPassThroughPartMsg {
+public class Server {
+
 }

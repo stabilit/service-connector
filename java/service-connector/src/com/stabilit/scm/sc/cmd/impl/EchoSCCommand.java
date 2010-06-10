@@ -69,7 +69,7 @@ public class EchoSCCommand extends CommandAdapter {
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);

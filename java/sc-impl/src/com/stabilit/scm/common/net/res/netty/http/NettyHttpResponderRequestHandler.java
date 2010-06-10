@@ -96,7 +96,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		SocketAddress localSocketAddress = channel.getLocalAddress();
 		SocketAddress remoteSocketAddress = channel.getRemoteAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
-		SCMPMessage scmpReq = request.getMessage();
+		SCMPMessage scmpReq = request.getSCMP();
 
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
@@ -135,7 +135,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				response.write();
 				return;
 			}
-			scmpReq = request.getMessage();
+			scmpReq = request.getSCMP();
 			if (command == null) {
 				if (LoggerPoint.getInstance().isDebug()) {
 					LoggerPoint.getInstance().fireDebug(this, "Request unkown, " + request);

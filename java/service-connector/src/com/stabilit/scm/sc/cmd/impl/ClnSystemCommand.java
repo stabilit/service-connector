@@ -87,7 +87,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		Map<String, String> header = message.getHeader();
 
 		SCMPMessage result = null;
@@ -127,7 +127,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 			}
 		} catch (CommunicationException e) {
 			// srvSystem or clnSystem failed, connection disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
+			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			serviceRegistryItem.markObsolete();
 			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(

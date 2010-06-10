@@ -52,11 +52,11 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
+		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.getSession(sessionId);
 
 		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
@@ -66,7 +66,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		simSessReg.remove(sessionId);
+		simSessReg.removeSession(sessionId);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -85,7 +85,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 
 			try {
 				// serviceName

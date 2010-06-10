@@ -48,7 +48,7 @@ public class SrvEchoCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		Map<String, String> header = message.getHeader();
 
 		SCMPMessage result = null;

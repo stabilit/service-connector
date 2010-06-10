@@ -14,60 +14,43 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.registry;
+package com.stabilit.scm.sc;
 
-import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.common.scmp.Session;
+import java.net.SocketAddress;
+
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
- * The Class SessionRegistry. Registry stores entries for properly created sessions.
+ * The Class Client. Represents an attached client.
  * 
  * @author JTraber
  */
-public class SessionRegistry extends Registry {
+public class Client extends MapBean<Object> {
 
-	/** The instance. */
-	private static SessionRegistry instance = new SessionRegistry();
-
-	/**
-	 * Instantiates a new session registry.
-	 */
-	public SessionRegistry() {
-	}
+	/** The scmp received when client attached on SC. */
+	private SCMPMessage scmp;
+	/** The socket address of the client, unique identifier. */
+	private SocketAddress socketAddress;
 
 	/**
-	 * Gets the current instance.
+	 * Instantiates a new client.
 	 * 
-	 * @return the current instance
+	 * @param socketAddress
+	 *            the socket address
+	 * @param scmp
+	 *            the scmp
 	 */
-	public static SessionRegistry getCurrentInstance() {
-		return instance;
+	public Client(SocketAddress socketAddress, SCMPMessage scmp) {
+		this.scmp = scmp;
+		this.socketAddress = socketAddress;
 	}
 
-	/**
-	 * Adds a session entry.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param session
-	 *            the session
-	 */
-	public void addSession(Session session) {
-		SessionPoint.getInstance().fireCreate(this, session.getId());
-		this.put(session.getId(), session);
+	public Object getSocketAddress() {
+		return socketAddress;
 	}
 
-	public void removeSession(Session session) {
-		this.removeSession(session.getId());
-	}
-	
-	public void removeSession(Object key) {
-		super.remove(key);
-		SessionPoint.getInstance().fireDelete(this, (String) key);
-	}
-	
-	public Session getSession(Object key) {
-		return (Session) super.get(key);
+	public SCMPMessage getScmp() {
+		return scmp;
 	}
 }

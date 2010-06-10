@@ -102,7 +102,7 @@ public class RequestThread implements Runnable {
 				ICommand command = commandRequest.readCommand();
 				try {
 					if (command == null) {
-						SCMPMessage scmpReq = request.getMessage();
+						SCMPMessage scmpReq = request.getSCMP();
 						SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 						scmpFault.setMessageType(scmpReq.getMessageType());
 						scmpFault.setLocalDateTime();
@@ -147,7 +147,7 @@ public class RequestThread implements Runnable {
 					response.setSCMP(firstSCMP);
 				} else {
 					SCMPMessage message = response.getSCMP();
-					if (message.isPart() || request.getMessage().isPart()) {
+					if (message.isPart() || request.getSCMP().isPart()) {
 						msgID.incrementPartSequenceNr();
 						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 					} else {

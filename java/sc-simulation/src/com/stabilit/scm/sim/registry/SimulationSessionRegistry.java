@@ -16,20 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.registry;
 
-import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.Session;
+import com.stabilit.scm.sc.registry.SessionRegistry;
 
 /**
  * @author JTraber
  *
  */
-public final class SimulationSessionRegistry extends Registry {
+public class SimulationSessionRegistry extends SessionRegistry {
 	
 	private static SimulationSessionRegistry instance = new SimulationSessionRegistry();
-	
-	private SimulationSessionRegistry() {
-	}
-	
+
 	public static SimulationSessionRegistry getCurrentInstance() {
 		return instance;
 	}	

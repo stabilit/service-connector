@@ -90,7 +90,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		NettyTcpResponse response = new NettyTcpResponse(event);
 		Channel channel = ctx.getChannel();
 		IRequest request = new NettyTcpRequest(event, channel.getLocalAddress(), channel.getRemoteAddress());
-		SCMPMessage scmpReq = request.getMessage();
+		SCMPMessage scmpReq = request.getSCMP();
 
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
@@ -129,7 +129,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				return;
 			}
 			if (command == null) {
-				scmpReq = request.getMessage();
+				scmpReq = request.getSCMP();
 				SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();

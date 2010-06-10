@@ -23,7 +23,6 @@ import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
 import com.stabilit.scm.common.registry.jmx.MapBeanWrapperJMX;
 import com.stabilit.scm.common.util.MapBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Registry. Provides functionality for general registries.
  * 
@@ -59,7 +58,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param key the key
 	 * @return the map bean
 	 */
-	public MapBean<?> get(Object key) {
+	protected MapBean<?> get(Object key) {
 		return registryMap.get(key);
 	}
 
@@ -69,7 +68,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param key
 	 *            the key
 	 */
-	public void remove(Object key) {
+	protected void remove(Object key) {
 		this.registryMap.remove(key);
 	}
 

@@ -68,7 +68,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		this.respContext = responderRegistry.getCurrentContext();
 		// init maxSessions and multithreaded attributes from given request
-		SCMPMessage scmpReq = request.getMessage();
+		SCMPMessage scmpReq = request.getSCMP();
 		this.maxSessions = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.MAX_SESSIONS);  // required attribute
 		this.multithreaded = false; // scmpReq.getHeaderBoolean(SCMPHeaderAttributeKey.MULTI_THREADED); // required attribute
 		this.initFreeList();
@@ -178,7 +178,7 @@ public class ServiceRegistryItemPool extends MapBean<String> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(request.getMessage().toString());
+		sb.append(request.getSCMP().toString());
 		for (ServiceRegistryItem serviceRegistryItem : allocatedItemList) {
 			sb.append(serviceRegistryItem.toString());
 		}

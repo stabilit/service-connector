@@ -84,7 +84,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
 
@@ -97,7 +97,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			response.setSCMP(scmpReply);
 		} catch (CommunicationException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
-			SessionRegistry.getCurrentInstance().remove(message.getSessionId());
+			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			serviceRegistryItem.markObsolete();
 			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, request);
 			ExceptionPoint.getInstance().fireException(this, e);
@@ -133,7 +133,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 			try {
 				// sessionId
 				String sessionId = message.getSessionId();

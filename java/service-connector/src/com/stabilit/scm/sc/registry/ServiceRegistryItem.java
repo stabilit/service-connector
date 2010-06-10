@@ -83,7 +83,7 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		this.myParentPool = null;
 		this.obsolete = false;
 
-		SCMPMessage scmpMessage = request.getMessage();
+		SCMPMessage scmpMessage = request.getSCMP();
 		this.setAttributeMap(scmpMessage.getHeader());
 		// setting up client to connect backend server
 		this.reqFactory = new SCRequesterFactory();

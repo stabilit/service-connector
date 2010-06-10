@@ -54,21 +54,21 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
 				.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.get(sessionId);
+		Session session = simSessReg.getSession(sessionId);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 
-		if (mapBean == null) {
-			Session session = new Session();
+		if (session == null) {
+			session = new Session();
 			session.setAttribute("available", false);
 			simSessReg.add(sessionId, (Session) session);
-		} else if ((Boolean) mapBean.getAttribute("available")) {
-			mapBean.setAttribute("available", false);
+		} else if ((Boolean) session.getAttribute("available")) {
+			session.setAttribute("available", false);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 					.getServiceName());
 		} else {
@@ -93,7 +93,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// serviceName

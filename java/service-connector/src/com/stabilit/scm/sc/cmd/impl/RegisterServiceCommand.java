@@ -85,9 +85,12 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
+		
+		// if service is not here - the service gets initialized and stored
+		// server will be added to service
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
 //		MapBean<?> mapBean = serviceRegistry.get(serviceName);
 //		if (mapBean != null) {
@@ -100,7 +103,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 //			throw scmpCommandException;
 //		}
 		ServiceRegistryItemPool serviceRegistryItemPool = new ServiceRegistryItemPool(request);
-		serviceRegistry.add(serviceName, serviceRegistryItemPool);
+		serviceRegistry.addService(serviceName, serviceRegistryItemPool);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -134,7 +137,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 			try {
 				// serviceName
 				String serviceName = (String) message.getServiceName();

@@ -31,7 +31,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.sc.Service;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 
 /**
@@ -82,11 +82,11 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
-		MapBean<?> mapBean = serviceRegistry.get(serviceName);
+		Service service = serviceRegistry.getService(serviceName);
 
-		if (mapBean == null) {
+		if (service == null) {
 			// server not registered - deregister not possible
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: service not registered");
@@ -95,7 +95,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		serviceRegistry.remove(serviceName);
+		serviceRegistry.removeService(service);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -128,7 +128,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 
 			try {
 				// serviceName

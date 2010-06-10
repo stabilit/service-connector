@@ -35,8 +35,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.KeepAlive;
 import com.stabilit.scm.common.util.DateTimeUtility;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.sc.Client;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 
 /**
@@ -90,9 +90,9 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		MapBean<?> mapBean = clientRegistry.get(socketAddress);
+		Client client = clientRegistry.getClient(socketAddress);
 
-		if (mapBean != null) {
+		if (client != null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: already attache");
 			}
@@ -100,9 +100,13 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
+		
+		client = new Client(socketAddress, request.getSCMP());
+		
 		// add entry in connection registry for current client
-		clientRegistry.add(socketAddress, request.getAttributeMapBean());
+		clientRegistry.addClient(client);
 
+		//set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -135,7 +139,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+			SCMPMessage message = request.getSCMP();
 
 			try {
 				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);

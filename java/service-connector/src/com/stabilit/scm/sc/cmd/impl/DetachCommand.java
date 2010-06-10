@@ -84,7 +84,7 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		MapBean<?> mapBean = clientRegistry.get(socketAddress);
+		MapBean<?> mapBean = clientRegistry.getClient(socketAddress);
 		if (mapBean == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
@@ -94,7 +94,7 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 			throw scmpCommandException;
 		}
 		// remove client entry from connection registry
-		clientRegistry.remove(socketAddress);
+		clientRegistry.removeClient(socketAddress);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());

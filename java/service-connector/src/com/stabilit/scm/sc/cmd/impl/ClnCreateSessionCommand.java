@@ -39,17 +39,18 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.Session;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.sc.Client;
+import com.stabilit.scm.sc.Service;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 
 /**
- * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command
- * runs successfully if backend server accepts clients request and allows creating a session. Session is saved in a
- * session registry of SC.
+ * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
+ * successfully if backend server accepts clients request and allows creating a session. Session is saved in a session
+ * registry of SC.
  */
 public class ClnCreateSessionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -94,47 +95,51 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	public void run(IRequest request, IResponse response) throws Exception {
 		// first verify that client has correctly attached
 		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();	// IP and port
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-		MapBean<?> mapBean = clientRegistry.get(socketAddress);
+		SocketAddress socketAddress = requestContext.getSocketAddress(); // IP and port
 
-		if (mapBean == null) {
+		// lookup if client is correctly attached
+		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
+		Client client = clientRegistry.getClient(socketAddress);
+
+		if (client == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);	// TODO (TRN) => unknown client
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED); 
+			// TODO (TRN) => unknown client
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
 
 		// check service
-		SCMPMessage message = request.getMessage();
-		String serviceName = message.getServiceName();
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();	
-		mapBean = serviceRegistry.get(serviceName);
-		if (mapBean == null) {
+		SCMPMessage scmp = request.getSCMP();
+		String serviceName = scmp.getServiceName();
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+
+		Service service = serviceRegistry.getService(serviceName);
+		if (service == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		
+
 		// adding ip of current unit to header field ip address list
-		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		// create session
 		Session session = new Session();
-		message.setSessionId(session.getId());
+		scmp.setSessionId(session.getId());
 		ServiceRegistryItem serviceRegistryItem = null;
 		try {
 			// try to allocate session on a backend server
-			// TODO (TRN) take care, no free server can be available! => throw new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+			// TODO (TRN) take care, no free server can be available! => throw new
+			// SCMPCommandException(SCMPError.NO_FREE_SERVER);
 
 			serviceRegistryItem = serviceRegistry.allocate(request);
 			// TODO (TRN) take care, the server can reject the session! The server response must be evaluated
@@ -144,15 +149,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionPoint.getInstance().fireException(this, ex);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPError.SERVER_ERROR);
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}
-		
+
 		// finally add session to the registry
 		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
-		sessionRegistry.add(session.getId(), session);
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+		sessionRegistry.addSession(session);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -188,7 +193,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
+			Map<String, String> scmpHeader = request.getSCMP().getHeader();
 
 			try {
 				// serviceName

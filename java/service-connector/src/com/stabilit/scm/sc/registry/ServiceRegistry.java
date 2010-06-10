@@ -23,6 +23,7 @@ import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.sc.Service;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
@@ -49,20 +50,26 @@ public final class ServiceRegistry extends Registry {
 		return instance;
 	}
 
-	/**
-	 * Adds an entry.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param itemPool
-	 *            the item pool
-	 */
-	public void add(Object key, ServiceRegistryItemPool itemPool) {
+	public void addService(Object key, ServiceRegistryItemPool itemPool) {
 		// try to get service list
-		ServicePoolList servicePoolList = (ServicePoolList)this.getServicePoolList(key);
+		ServicePoolList servicePoolList = (ServicePoolList) this.getServicePoolList(key);
 		servicePoolList.add(itemPool);
 	}
-		
+
+	public Service getService(String serviceName) {
+		return (Service) this.get(serviceName);
+	}
+
+	public void removeService(Service service) {
+		this.removeService(service.getServiceName());
+	}
+	
+	public void removeService(Object key) {
+		super.remove(key);
+	}
+	
+	/*************** needs to be reworked *********************/
+
 	/**
 	 * Allocate a session on a backend server.
 	 * 
@@ -73,16 +80,17 @@ public final class ServiceRegistry extends Registry {
 	 *             the exception
 	 */
 	public synchronized ServiceRegistryItem allocate(IRequest request) throws Exception {
-		SCMPMessage scmpMessage = request.getMessage();
+		SCMPMessage scmpMessage = request.getSCMP();
 		String serviceName = scmpMessage.getServiceName();
 		ServiceRegistryItemPool itemPool = (ServiceRegistryItemPool) this.getServiceItemPool(serviceName);
 		if (itemPool == null) {
 			if (RuntimePoint.getInstance().isEmpty() == false) {
-			   RuntimePoint.getInstance().fireRuntime(this, "allocate: getServiceItemPool returned null for serviceName = " + serviceName);
+				RuntimePoint.getInstance().fireRuntime(this,
+						"allocate: getServiceItemPool returned null for serviceName = " + serviceName);
 			}
 			return null;
 		}
-		ServiceRegistryItem item = itemPool.getAvailableItem();		
+		ServiceRegistryItem item = itemPool.getAvailableItem();
 		item.srvCreateSession(scmpMessage);
 		ServiceRegistryPoint.getInstance().fireAllocate(this, scmpMessage);
 		return item;
@@ -99,7 +107,7 @@ public final class ServiceRegistry extends Registry {
 	 *             the exception
 	 */
 	public synchronized void deallocate(ServiceRegistryItem item, IRequest request) throws Exception {
-		SCMPMessage scmpMessage = request.getMessage();
+		SCMPMessage scmpMessage = request.getSCMP();
 		if (item.isAllocated()) {
 			// try catch necessary because method gets invoked in error scenario
 			try {
@@ -111,7 +119,7 @@ public final class ServiceRegistry extends Registry {
 		ServiceRegistryItemPool itemPool = item.myParentPool;
 		if (itemPool == null) {
 			if (RuntimePoint.getInstance().isEmpty() == false) {
-			   RuntimePoint.getInstance().fireRuntime(this, "deallocate: ServiceRegistryItem has no parent pool.");
+				RuntimePoint.getInstance().fireRuntime(this, "deallocate: ServiceRegistryItem has no parent pool.");
 			}
 			return;
 		}
@@ -121,29 +129,28 @@ public final class ServiceRegistry extends Registry {
 	}
 
 	private synchronized ServiceRegistryItemPool getServiceItemPool(Object key) {
-		ServicePoolList servicePoolList = (ServicePoolList)this.getServicePoolList(key);
+		ServicePoolList servicePoolList = (ServicePoolList) this.getServicePoolList(key);
 		if (servicePoolList == null) {
 			return null;
 		}
-		ServiceRegistryItemPool itemPool = servicePoolList.getAvailable(); 
+		ServiceRegistryItemPool itemPool = servicePoolList.getAvailable();
 		return itemPool;
 	}
-
 
 	/**
 	 * Gets the service pool list.
 	 * 
-	 * @param key the key
-	 * 
+	 * @param key
+	 *            the key
 	 * @return the service pool list
 	 */
 	private ServicePoolList getServicePoolList(Object key) {
 		// try to get service list
-		ServicePoolList servicePoolList = (ServicePoolList)this.get(key);
+		ServicePoolList servicePoolList = (ServicePoolList) this.get(key);
 		if (servicePoolList == null) {
 			this.put(key, new ServicePoolList((String) key));
 		}
-		return (ServicePoolList)this.get(key);
+		return (ServicePoolList) this.get(key);
 	}
 
 	// member class ServicePoolList
@@ -153,7 +160,7 @@ public final class ServiceRegistry extends Registry {
 		private int nextIndex = 0;
 		private int activeSize = 0;
 		private ServiceRegistryItemPool[] poolArray;
-		
+
 		public ServicePoolList(String serviceName) {
 			this.serviceName = serviceName;
 			poolArray = new ServiceRegistryItemPool[this.capacity];
@@ -171,47 +178,47 @@ public final class ServiceRegistry extends Registry {
 					this.poolArray[i] = itemPool;
 					break;
 				}
-			}			
+			}
 		}
-		
+
 		public synchronized void remove(ServiceRegistryItemPool itemPool) {
-    	    for (int i = 0; i < poolArray.length; i++) {
+			for (int i = 0; i < poolArray.length; i++) {
 				if (poolArray[i] == itemPool) {
 					poolArray[i] = null;
 					this.activeSize--;
 					break;
 				}
-			}		
+			}
 		}
-		
+
 		public synchronized ServiceRegistryItemPool getAvailable() {
 			if (this.activeSize <= 0) {
 				return null;
 			}
-    	    for (int i = nextIndex; i < poolArray.length; i++) {
-    	    	ServiceRegistryItemPool itemPool = this.poolArray[i];
-    	    	if (itemPool == null) {
-    	    		continue;
-    	    	}
-    	    	if (itemPool.isAvailable()) {
-    	    		this.nextIndex = i+1;
-    	    		if (this.nextIndex == this.poolArray.length) {
-    	    			this.nextIndex = 0;
-    	    		}
-    	    		return itemPool;
-    	    	}
-    	    }
-    	    for (int i = 0; i <= nextIndex; i++) {
-    	    	ServiceRegistryItemPool itemPool = this.poolArray[i];
-    	    	if (itemPool == null) {
-    	    		continue;
-    	    	}
-    	    	if (itemPool.isAvailable()) {
-    	    		this.nextIndex = i;
-    	    		return itemPool;
-    	    	}
-    	    }    	   
-    	    return null;
+			for (int i = nextIndex; i < poolArray.length; i++) {
+				ServiceRegistryItemPool itemPool = this.poolArray[i];
+				if (itemPool == null) {
+					continue;
+				}
+				if (itemPool.isAvailable()) {
+					this.nextIndex = i + 1;
+					if (this.nextIndex == this.poolArray.length) {
+						this.nextIndex = 0;
+					}
+					return itemPool;
+				}
+			}
+			for (int i = 0; i <= nextIndex; i++) {
+				ServiceRegistryItemPool itemPool = this.poolArray[i];
+				if (itemPool == null) {
+					continue;
+				}
+				if (itemPool.isAvailable()) {
+					this.nextIndex = i;
+					return itemPool;
+				}
+			}
+			return null;
 		}
 
 		/**
@@ -220,8 +227,7 @@ public final class ServiceRegistry extends Registry {
 		public String getServiceName() {
 			return serviceName;
 		}
-				
-		
+
 		private void reorganize() {
 			ServiceRegistryItemPool[] newItemPool = new ServiceRegistryItemPool[this.poolArray.length << 1];
 			for (int i = 0; i < this.poolArray.length; i++) {
@@ -229,13 +235,13 @@ public final class ServiceRegistry extends Registry {
 			}
 			this.poolArray = newItemPool;
 		}
-		
+
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
-			
+
 			for (int i = 0; i < poolArray.length; i++) {
-				if(poolArray[i] == null) {
+				if (poolArray[i] == null) {
 					continue;
 				}
 				sb.append(poolArray[i].toString());

@@ -43,11 +43,11 @@ public interface IRequest {
 	public IRequestContext getContext();
 
 	/**
-	 * Gets the message.
+	 * Gets the scmp.
 	 * 
 	 * @return the message
 	 */
-	public SCMPMessage getMessage();
+	public SCMPMessage getSCMP();
 
 	/**
 	 * Sets the scmp message in the request.

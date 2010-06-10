@@ -51,7 +51,7 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage getMessage() {
+	public SCMPMessage getSCMP() {
 		if (message == null) {
 			try {
 				load();
@@ -123,7 +123,7 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
-		SCMPMessage message = this.getMessage();
+		SCMPMessage message = this.getSCMP();
 		if (message == null) {
 			return null;
 		}

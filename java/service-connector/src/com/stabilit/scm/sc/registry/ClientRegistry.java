@@ -16,8 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
+import java.net.SocketAddress;
+
 import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.sc.Client;
 
 /**
  * The Class ClientRegistry. Registry stores entries for properly connected and attached clients.
@@ -45,14 +47,27 @@ public final class ClientRegistry extends Registry {
 	}
 
 	/**
-	 * Adds an entry.
+	 * Adds the client to the registry.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param mapBean
-	 *            the map bean
+	 * @param client
+	 *            the client
 	 */
-	public void add(Object key, MapBean<Object> mapBean) {
-		this.put(key, mapBean);
+	public void addClient(Client client) {
+		this.put(client.getSocketAddress(), client);
 	}
+
+	/**
+	 * Gets the client.
+	 * 
+	 * @param socketAddress
+	 *            the socket address
+	 * @return the client
+	 */
+	public Client getClient(SocketAddress socketAddress) {
+		return (Client) this.get(socketAddress);
+	}
+
+	public void removeClient(SocketAddress socketAddress) {
+		super.remove(socketAddress);
+	}	
 }
