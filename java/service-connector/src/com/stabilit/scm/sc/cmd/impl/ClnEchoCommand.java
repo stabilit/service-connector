@@ -101,15 +101,15 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
 			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
-		if (message.getBodyLength() > 0) {
-			if (message.getBody().toString().length() > 100) {
-				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
-			} else {
-				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
-			}
-		} else {
-			System.out.println("ClnEchoCommand empty body");
-		}
+//		if (message.getBodyLength() > 0) {
+//			if (message.getBody().toString().length() > 100) {
+//				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
+//			} else {
+//				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
+//			}
+//		} else {
+//			System.out.println("ClnEchoCommand empty body");
+//		}
 
 		Session session = getSessionById(message.getSessionId());
 		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
