@@ -55,8 +55,8 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
+			req = clientFactory.newInstance(config.getClientConfig());
+			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -64,7 +64,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 
 	@Test
 	public void invokeTwoPartsTest() throws Exception {
-		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(req);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
@@ -82,7 +82,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 
 	@Test
 	public void groupCallTest() throws Exception {
-		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(req);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
@@ -100,7 +100,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
-		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(req);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		StringBuilder expected = new StringBuilder();

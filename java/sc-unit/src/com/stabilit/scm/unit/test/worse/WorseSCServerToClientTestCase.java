@@ -63,8 +63,8 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
+			req = clientFactory.newInstance(config.getClientConfig());
+			req.connect(); // physical connect
 			clnAttachBefore();
 			registerServiceBefore();
 			clnCreateSessionBefore();
@@ -78,11 +78,11 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	@Test
 	public void clnDataSCServerToClientDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(client);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(req);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, this.scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
@@ -121,7 +121,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		client.disconnect();
-		client.destroy();
+		req.disconnect();
+		req.destroy();
 	}
 }

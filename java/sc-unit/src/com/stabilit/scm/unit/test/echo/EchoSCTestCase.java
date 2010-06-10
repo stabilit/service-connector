@@ -53,8 +53,8 @@ public class EchoSCTestCase extends SuperTestCase {
 			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
+			req = clientFactory.newInstance(config.getClientConfig());
+			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -62,16 +62,16 @@ public class EchoSCTestCase extends SuperTestCase {
 
 	@Test
 	public void invokeSingleEchoSCTest() throws Exception {
-		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(req);
 
 		SCMPMessage result = null;
 		Map<String, String> header = null;
 
-		echoCall.setRequestBody("hello world!" + client.toHashCodeString());
+		echoCall.setRequestBody("hello world!" + req.toHashCodeString());
 		result = echoCall.invoke();
 		System.out.println("result = " + result.getBody());
 		header = result.getHeader();
-		Assert.assertEquals("hello world!" + client.toHashCodeString(), result.getBody());
+		Assert.assertEquals("hello world!" + req.toHashCodeString(), result.getBody());
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 
@@ -83,16 +83,16 @@ public class EchoSCTestCase extends SuperTestCase {
 
 	@Test
 	public void invokeMultipleEchoSCTest() throws Exception {
-		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(client);
+		SCMPEchoSCCall echoCall = (SCMPEchoSCCall) SCMPCallFactory.ECHO_SC_CALL.newInstance(req);
 
 		SCMPMessage result = null;
 		int i = 0;
 		String echoString = null;
 		for (i = 0; i < 10000; i++) {
-			echoString = "hello world " + i + client.toHashCodeString();
+			echoString = "hello world " + i + req.toHashCodeString();
 			echoCall.setRequestBody(echoString);
 			result = echoCall.invoke();
-			Assert.assertEquals("hello world " + i + client.toHashCodeString(), result.getBody());
+			Assert.assertEquals("hello world " + i + req.toHashCodeString(), result.getBody());
 			Assert.assertEquals(echoString.length() + "", result
 					.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 			Assert.assertEquals(SCMPBodyType.text.getName(), result

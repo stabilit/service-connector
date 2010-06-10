@@ -47,13 +47,13 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
@@ -69,7 +69,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServiceCall() throws Exception {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
 

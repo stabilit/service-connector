@@ -47,7 +47,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 
 	@Test
 	public void secondAttach() throws Exception {
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
 		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		attachCall.setCompression(false);
@@ -66,7 +66,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 
 	@Test
 	public void detach() throws Exception {
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(client);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 
 		SCMPMessage result = null;
 		try {
@@ -83,7 +83,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 		Assert.assertEquals("2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
@@ -96,7 +96,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 	@Test
 	public void secondDetach() throws Exception {
 		super.clnDetachAfter();
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(client);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		try {
 			detachCall.invoke();
 			Assert.fail("Should throw Exception!");

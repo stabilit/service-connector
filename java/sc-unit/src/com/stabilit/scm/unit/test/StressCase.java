@@ -21,7 +21,8 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.cln.service.ISCSession;
+import com.stabilit.scm.cln.service.SCDataSession;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -40,20 +41,19 @@ public class StressCase extends SuperTestCase {
 	}
 
 	/**
-	 * Attach detach. Test to find the limit of available sockets in operating system by connecting and
-	 * disconnecting client from SC.
+	 * Attach detach. Test to find the limit of available sockets in operating system by connecting and disconnecting
+	 * client from SC.
 	 */
 	@Test
 	public void connectDisconnect() {
 		for (int i = 0; i < 10000; i++) {
 			try {
-				SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+				SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 				attachCall.setCompression(false);
 				attachCall.setKeepAliveTimeout(30);
 				attachCall.setKeepAliveInterval(360);
 				SCMPMessage result = attachCall.invoke();
-				SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
-						.newInstance(client);
+				SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 				detachCall.invoke();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -69,7 +69,7 @@ public class StressCase extends SuperTestCase {
 	@Test
 	public void createDeleteSession() {
 		try {
-			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 			attachCall.setCompression(false);
 			attachCall.setKeepAliveTimeout(30);
 			attachCall.setKeepAliveInterval(360);
@@ -79,8 +79,8 @@ public class StressCase extends SuperTestCase {
 		}
 		try {
 			for (int i = 0; i < 10000; i++) {
-				SCMPServiceSession localSession = new SCMPServiceSession(client);
-				localSession.setServiceName("simulation");
+				ISCSession localSession = new SCDataSession("simulation", req);
+				localSession.setMessageInfo("messageInfo");
 				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 				localSession.createSession();
 				localSession.deleteSession();
@@ -89,8 +89,7 @@ public class StressCase extends SuperTestCase {
 			e.printStackTrace();
 		}
 		try {
-			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
-					.newInstance(client);
+			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 			detachCall.invoke();
 		} catch (Exception e) {
 			e.printStackTrace();

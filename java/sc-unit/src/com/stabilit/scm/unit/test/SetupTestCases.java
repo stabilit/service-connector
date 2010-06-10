@@ -94,7 +94,7 @@ public class SetupTestCases {
 	public static void setupAll() {
 		if (setupTestCases == null) {
 			try {
-				init();
+//				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				ServiceConnector.main(null);

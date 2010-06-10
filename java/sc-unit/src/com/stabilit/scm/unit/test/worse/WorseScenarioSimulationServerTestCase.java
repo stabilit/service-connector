@@ -68,8 +68,8 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
+			req = clientFactory.newInstance(config.getClientConfig());
+			req.connect(); // physical connect
 			clnAttachBefore();
 			registerServiceBefore();
 			clnCreateSessionBefore();
@@ -81,7 +81,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	@Test
 	public void clnDeleteSessionSimulationServerDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client, this.scmpSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req, this.scSession);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
@@ -89,10 +89,10 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the failure
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, this.scmpSession);
+				.newInstance(req, this.scSession);
 		deleteSessionCall.invoke();
 
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
@@ -118,12 +118,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	public void clnDataSimulationServerDisconnect() throws Exception {
 
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(client, this.scmpSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req, this.scSession);
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(client, this.scmpSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession);
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
@@ -133,7 +133,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			SCTest.verifyError(ex.getFault(), SCMPError.SERVER_ERROR, SCMPMsgType.CLN_DATA);
 		}
 
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
@@ -167,7 +167,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	public void tearDown() throws Exception {
 		this.deRegisterServiceAfter();
 		this.clnDetachAfter();
-		client.disconnect();
-		client.destroy();
+		req.disconnect();
+		req.destroy();
 	}
 }

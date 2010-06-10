@@ -38,7 +38,7 @@ public abstract class SuperTestCase {
 
 	protected String fileName;
 	protected RequesterConfig config = null;
-	protected IRequester client = null;
+	protected IRequester req = null;
 
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;
@@ -52,7 +52,7 @@ public abstract class SuperTestCase {
 	}
 
 	public void setClient(IRequester client) {
-		this.client = client;
+		this.req = client;
 	}
 
 	@Before
@@ -62,8 +62,8 @@ public abstract class SuperTestCase {
 			config = new RequesterConfig();
 			config.load(fileName);
 			RequesterFactory clientFactory = new RequesterFactory();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
+			req = clientFactory.newInstance(config.getClientConfig());
+			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -71,15 +71,15 @@ public abstract class SuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		client.disconnect();
-		client.destroy();
+		req.disconnect();
+		req.destroy();
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		client.disconnect(); // physical disconnect
-		client.destroy();
+		req.disconnect(); // physical disconnect
+		req.destroy();
 		ConnectionPoint.getInstance().clearAll();
-		client = null;
+		req = null;
 	}
 }

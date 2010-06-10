@@ -19,7 +19,8 @@ package com.stabilit.scm.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.cln.service.ISCSession;
+import com.stabilit.scm.cln.service.SCDataSession;
 import com.stabilit.scm.unit.test.register.SuperRegisterTestCase;
 
 /**
@@ -27,7 +28,7 @@ import com.stabilit.scm.unit.test.register.SuperRegisterTestCase;
  */
 public abstract class SuperSessionRegisterTestCase extends SuperRegisterTestCase {
 
-	protected SCMPServiceSession scmpSession = null;
+	protected ISCSession scSession = null;
 
 	/**
 	 * The Constructor.
@@ -52,13 +53,13 @@ public abstract class SuperSessionRegisterTestCase extends SuperRegisterTestCase
 	}
 
 	public void clnCreateSessionBefore() throws Exception {
-		this.scmpSession = new SCMPServiceSession(this.client);
-		this.scmpSession.setServiceName("simulation");
-		this.scmpSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		this.scmpSession.createSession();
+		this.scSession = new SCDataSession("simulation", this.req);
+		this.scSession.setMessageInfo("SNBZHP - TradingClientGUI 10.2.7");
+		this.scSession.setSessionInfo("message info");
+		this.scSession.createSession();
 	}
 
 	public void clnDeleteSessionAfter() throws Exception {
-		this.scmpSession.deleteSession();
+		this.scSession.deleteSession();
 	}
 }

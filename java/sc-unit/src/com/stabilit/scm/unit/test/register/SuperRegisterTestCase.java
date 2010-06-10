@@ -53,7 +53,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	public void registerServiceBefore() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
@@ -68,7 +68,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	
 	public void deRegisterServiceAfter(String serviceName) throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 		deRegisterServiceCall.setServiceName(serviceName);
 		deRegisterServiceCall.invoke();
 	}

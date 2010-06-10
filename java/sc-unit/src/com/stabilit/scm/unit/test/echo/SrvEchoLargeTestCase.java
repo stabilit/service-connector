@@ -46,7 +46,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeTwoPartsTest() throws Exception {
 
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
@@ -66,7 +66,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void invokeMorePartsTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 89840; i++) {
@@ -86,7 +86,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void groupCallTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
@@ -106,7 +106,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		StringBuilder expected = new StringBuilder();

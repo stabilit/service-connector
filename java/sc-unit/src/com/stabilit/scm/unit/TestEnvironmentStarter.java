@@ -57,7 +57,7 @@ public class TestEnvironmentStarter {
 	}
 
 	private void startUpServer() throws Exception {
-		this.init();
+//		this.init();
 		CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 		ServiceConnector.main(null);
 		Simulation.main(null);

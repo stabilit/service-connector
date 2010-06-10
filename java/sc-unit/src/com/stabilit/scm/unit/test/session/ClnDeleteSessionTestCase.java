@@ -43,7 +43,7 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(client, this.scmpSession);
+				.newInstance(req, this.scSession);
 		SCMPMessage result = deleteSessionCall.invoke();
 
 		/*************************** verify delete session **********************************/
@@ -53,7 +53,7 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/

@@ -49,7 +49,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	@Test
 	public void failRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		/*********************** serviceName not set *******************/
 		registerServiceCall.setMaxSessions(10);
@@ -93,7 +93,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	@Test
 	public void registerServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
@@ -102,7 +102,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		registerServiceCall.invoke();
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
@@ -113,7 +113,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 	}
@@ -121,7 +121,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	// TODO verify second registry!!
 	public void secondRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
@@ -138,7 +138,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		}
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(client);
+				.newInstance(req);
 		deRegisterServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
 	}

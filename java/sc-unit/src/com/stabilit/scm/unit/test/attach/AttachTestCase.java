@@ -47,7 +47,7 @@ public class AttachTestCase extends SuperTestCase {
 
 	@Test
 	public void failAttach() throws Exception {
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		/******************* incompatible scmp version ******************/
 		attachCall.setVersion("2.0-00");
 		try {
@@ -61,7 +61,7 @@ public class AttachTestCase extends SuperTestCase {
 
 	@Test
 	public void attach() throws Exception {
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
 		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
@@ -77,7 +77,7 @@ public class AttachTestCase extends SuperTestCase {
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(client);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
@@ -94,7 +94,7 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertEquals(expectedScEntry, scEntry);
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
-				.newInstance(client);
+				.newInstance(req);
 		detachCall.invoke();
 	}
 }

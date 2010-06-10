@@ -59,7 +59,7 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	}
 
 	public void clnAttachBefore() throws Exception {
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(client);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
 		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		attachCall.setCompression(false);
@@ -72,7 +72,7 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 
 	public void clnDetachAfter() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
-				.newInstance(client);
+				.newInstance(req);
 		detachCall.invoke();
 	}
 }

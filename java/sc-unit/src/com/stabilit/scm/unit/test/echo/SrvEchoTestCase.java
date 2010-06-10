@@ -52,12 +52,23 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMPMessage result = null;
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
+				this.scSession);
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 		clnEchoCall.setRequestBody("hello world");
-		result = clnEchoCall.invoke();
 
+		double startTime = System.currentTimeMillis();
+		double anzMsg = 100000;
+		for (int i = 0; i < anzMsg; i++) {
+			clnEchoCall.setRequestBody("hello world");
+			result = clnEchoCall.invoke();
+		}
+		double endTime = System.currentTimeMillis();
+		System.out.println("Needed Time in sec: " + (endTime - startTime) / 1000L);
+		System.out.println("Number of msg: " + anzMsg);
+		System.out.println("Msg in sec: " + (anzMsg / ((endTime - startTime) / 1000L)));
+		
 		Assert.assertEquals("hello world", result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(result.getSessionId());
@@ -71,21 +82,22 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	 * @throws Exception
 	 *             the exception
 	 */
-	@Test
+	// @Test
 	public void invokeMultipleSrvEchoTest() throws Exception {
 
 		long startTime = System.currentTimeMillis();
 		int anzMsg = 1000;
 		SCMPMessage result = null;
 
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
+				this.scSession);
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 
 		for (int i = 0; i < anzMsg; i++) {
-			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
 			result = clnEchoCall.invoke();
-			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
+			Assert.assertEquals("hello world, index = " + i + req.toHashCodeString(), result.getBody());
 			Assert.assertEquals((i + 3) + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
@@ -99,7 +111,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	 * @throws Exception
 	 *             the exception
 	 */
-	@Test
+	// @Test
 	public void invokeMultipleSessionSrvEchoTest() throws Exception {
 		super.clnDeleteSessionAfter();
 		long startTime = System.currentTimeMillis();
@@ -108,13 +120,14 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
-			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client, this.scmpSession);
+			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
+					this.scSession);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
-			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
 			result = clnEchoCall.invoke();
-			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
-			Assert.assertEquals((i*3)+5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("hello world, index = " + i + req.toHashCodeString(), result.getBody());
+			Assert.assertEquals((i * 3) + 5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
@@ -135,13 +148,13 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
-			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(client);
+			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req);
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
-			clnEchoCall.setRequestBody("hello world, index = " + i + client.toHashCodeString());
+			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
 			result = clnEchoCall.invoke();
-			Assert.assertEquals("hello world, index = " + i + client.toHashCodeString(), result.getBody());
-			Assert.assertEquals((i*3)+5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("hello world, index = " + i + req.toHashCodeString(), result.getBody());
+			Assert.assertEquals((i * 3) + 5 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			super.clnDeleteSessionAfter();
 		}
 		System.out.println(anzMsg / ((System.currentTimeMillis() - startTime) / 1000D) + " msg pro sec");
