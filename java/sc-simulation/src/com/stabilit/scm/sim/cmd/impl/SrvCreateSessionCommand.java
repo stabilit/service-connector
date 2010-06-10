@@ -30,10 +30,9 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.scmp.Session;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
+import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
 
 public class SrvCreateSessionCommand extends CommandAdapter {

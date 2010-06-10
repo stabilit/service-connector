@@ -21,42 +21,41 @@
  */
 package com.stabilit.scm.sc.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
  * @author JTraber
- *
  */
 public class Service extends MapBean<String> {
-	
-	private String type; //todo enum machen oder klasse
+
+	private String type; // todo enum machen oder klasse
 	private String name;
 	private String location;
-	
-	private Map<String, Server> listOfServers;
+	private int serverIndex;
+	private List<Server> listOfServers;
 
 	public Service(String name) {
 		this.name = name;
 		this.type = null;
 		this.location = null;
-		this.listOfServers = new HashMap<String, Server>();
+		this.serverIndex = 0;
+		this.listOfServers = new ArrayList<Server>();
 	}
-	
+
 	public String getServiceName() {
 		return name;
 	}
 
 	public void addServer(Server server) {
-		listOfServers.put(server.getSocketAddress().toString(), server);
+		listOfServers.add(server);
 	}
-	
+
 	public void removeServer(Server server) {
-		listOfServers.remove(server.getSocketAddress().toString());
-	}	
+		listOfServers.remove(server);
+	}
 
 	public String getType() {
 		return type;
@@ -74,10 +73,19 @@ public class Service extends MapBean<String> {
 		this.location = location;
 	}
 
-	public Server allocateServer(SCMPMessage scmp) {
-		
-		
-		
+	public Server allocateServer() {
+		for (int i = 0; i < listOfServers.size(); i++) {
+			// increment serverIndex
+			serverIndex++;
+			if (serverIndex >= listOfServers.size()) {
+				// serverIndex reached the end of list no more servers
+				serverIndex = 0;
+			}
+			Server server = listOfServers.get(serverIndex);
+			if (server.hasFreeSession()) {
+				return server;
+			}
+		}
 		return null;
 	}
 }

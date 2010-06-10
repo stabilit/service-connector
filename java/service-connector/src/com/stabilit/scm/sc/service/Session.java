@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.scmp;
+package com.stabilit.scm.sc.service;
 
 import java.util.UUID;
 
@@ -22,12 +22,14 @@ import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
- * between a client an a server.
+ * between a client and a server.
  */
 public class Session extends MapBean<Object> {
 
 	/** The id. */
 	private String id;
+
+	private Server server;
 
 	/**
 	 * Instantiates a new session.
@@ -35,6 +37,7 @@ public class Session extends MapBean<Object> {
 	public Session() {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
+		this.server = null;
 	}
 
 	/**
@@ -44,5 +47,13 @@ public class Session extends MapBean<Object> {
 	 */
 	public String getId() {
 		return this.id;
+	}
+
+	public void setServer(Server server) {
+		this.server = server;
+	}
+
+	public Server getServer() {
+		return this.server;
 	}
 }

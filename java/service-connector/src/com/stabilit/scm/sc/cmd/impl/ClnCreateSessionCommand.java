@@ -38,15 +38,14 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Client;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -105,7 +104,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED); 
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			// TODO (TRN) => unknown client
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
@@ -135,25 +134,20 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
-		
-		// allocates a server for this session
-		Server server = service.allocateServer(reqMessage);
-		
-		
-		
-		
-		
-		ServiceRegistryItem serviceRegistryItem = null;
-		try {
-			// try to allocate session on a backend server
-			// TODO (TRN) take care, no free server can be available! => throw new
-			// SCMPCommandException(SCMPError.NO_FREE_SERVER);
 
-			serviceRegistryItem = serviceRegistry.allocate(request);
-			// TODO (TRN) take care, the server can reject the session! The server response must be evaluated
-			if (serviceRegistryItem == null) {
-				System.out.println("ClnCreateSessionCommand.run()");
-			}
+		// allocates a server for this session
+		Server server = service.allocateServer();
+
+		if (server != null) {
+			// no available server for this service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
+		}
+
+		try {
+			// creates session
+			server.createSession(reqMessage);
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionPoint.getInstance().fireException(this, ex);
@@ -163,7 +157,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 
 		// finally add session to the registry
-		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
+		session.setServer(server);
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		sessionRegistry.addSession(session.getId(), session);
 

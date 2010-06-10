@@ -54,7 +54,9 @@ public enum SCMPError {
 	/** The IMMEDIATE_CONNECT_FAILED. */
 	IMMEDIATE_CONNECT_FAILED("503", "Immediate connect failed"),
 	/** The SERVER_ALREADY_REGISTERED for this service. */
-	SERVER_ALREADY_REGISTERED("504", "Server is already registered for this service.");
+	SERVER_ALREADY_REGISTERED("504", "Server is already registered for this service."),
+	/** The NO_SERVER_AVAILABLE. */
+	NO_FREE_SERVER("505", "No server available for this service.");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

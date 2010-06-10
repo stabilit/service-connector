@@ -18,7 +18,7 @@ package com.stabilit.scm.sc.registry;
 
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.common.scmp.Session;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions.

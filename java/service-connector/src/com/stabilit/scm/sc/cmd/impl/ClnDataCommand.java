@@ -31,11 +31,11 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data

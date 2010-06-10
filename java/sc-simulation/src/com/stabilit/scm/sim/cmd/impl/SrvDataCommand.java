@@ -16,27 +16,19 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.scmp.internal.SCMPPart;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
-import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
 
 public class SrvDataCommand extends CommandAdapter {
 

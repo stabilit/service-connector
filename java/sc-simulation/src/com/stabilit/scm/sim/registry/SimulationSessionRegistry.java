@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.registry;
 
-import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * @author JTraber

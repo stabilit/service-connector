@@ -34,9 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Simply sends back incoming
