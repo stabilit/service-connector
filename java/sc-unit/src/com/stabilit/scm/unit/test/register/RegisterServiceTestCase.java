@@ -26,6 +26,8 @@ import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -54,6 +56,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************** serviceName not set *******************/
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setImmediateConnect(true);
 
 		try {
 			registerServiceCall.invoke();
@@ -66,6 +69,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(0);
+		registerServiceCall.setImmediateConnect(true);
 
 		try {
 			registerServiceCall.invoke();
@@ -78,6 +82,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
+		registerServiceCall.setImmediateConnect(true);
 
 		try {
 			registerServiceCall.invoke();
@@ -87,16 +92,23 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
+
+		// TODO immediate not set
 	}
 
 	@Test
 	public void registerServiceCall() throws Exception {
+		RequesterFactory reqFactory = new RequesterFactory();
+		IRequester req = (IRequester) reqFactory.newInstance("localhost", 9000, "netty.tcp", 16);
+		req.connect();
+		
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req);
 
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setPortNumber(7000);
+		registerServiceCall.setImmediateConnect(true);
 
 		registerServiceCall.invoke();
 		/*************** scmp inspect ********/
@@ -105,7 +117,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=1, portNr=9100, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=simulation}]";
+		String expectedScEntry = "P01_RTXS_RPRWS1:simulation:";
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		Assert.assertEquals(expectedScEntry, scEntry);
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
@@ -124,6 +136,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setServiceName("P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setImmediateConnect(true);
 
 		try {
 			registerServiceCall.invoke();
@@ -131,8 +144,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
 			Assert.assertEquals("1", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		//TODO
-			//SCTest.verifyError(e.getFault(), SCMPError.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
+			// TODO
+			// SCTest.verifyError(e.getFault(), SCMPError.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
 		}
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL

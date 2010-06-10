@@ -80,6 +80,10 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
 	}
 
+	public void setImmediateConnect(boolean immediateConnect) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnect);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {

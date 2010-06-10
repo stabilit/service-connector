@@ -95,6 +95,12 @@ public abstract class RequestAdapter implements IRequest {
 	public void setAttribute(String key, Object value) {
 		mapBean.setAttribute(key, value);
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void setAttribute(SCMPHeaderAttributeKey key, Object value) {
+		this.setAttribute(key.getName(), value);
+	}
 
 	/** {@inheritDoc} */
 	@Override

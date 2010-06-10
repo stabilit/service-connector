@@ -19,37 +19,47 @@
 /**
  * 
  */
-package com.stabilit.scm.sc;
+package com.stabilit.scm.sc.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.sc.registry.ServiceRegistry;
 
 /**
  * @author JTraber
- *
  */
-public class Service extends MapBean<String> {
-	
-	private String typ; //todo enum machen
-	private String name;
-	private String location;
-	
-	private Map<String, Server> listOfServers;
+public class ServiceLoader {
 
-	public Service(String name, String typ,  String location) {
-		this.typ = typ;
-		this.name = name;
-		this.location = location;
-		this.listOfServers = new HashMap<String, Server>();
-	}
-	
-	public String getServiceName() {
-		return name;
-	}
+	/**
+	 * Loads services from a file.
+	 * 
+	 * @param fileName
+	 *            the file name
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public static void load(String fileName) throws IOException {
+		InputStream is = ClassLoader.getSystemResourceAsStream(fileName);
+		Properties props = new Properties();
+		props.load(is);
 
-	public void addServer(Server server) {
-		listOfServers.put(server.getSocketAddress().toString(), server);
+		String serviceNamesString = props.getProperty(IConstants.SERVICE_NAMES);
+		String[] serviceNames = serviceNamesString.split(IConstants.COMMA_OR_SEMICOLON);
+
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		for (String serviceName : serviceNames) {
+			Service service = new Service(serviceName);
+			
+			
+			// TODO verify with jan
+			// service.setLocation(props.get(serviceName + IConstants.LOCATION_QUALIFIER));
+			// service.setType(props.get(serviceName + IConstants.TYPEs_QUALIFIER));
+			
+			serviceRegistry.addService(service.getServiceName(), service);
+			
+		}
 	}
 }

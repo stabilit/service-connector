@@ -14,14 +14,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc;
+package com.stabilit.scm.sc.service;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.registry.ResponderRegistry;
@@ -49,6 +51,7 @@ public class Server extends MapBean<String> {
 		String connectionKey = serverConfig.getConnection();
 		int numberOfThreads = serverConfig.getNumberOfThreads();
 		this.host = socketAdress.getHostName();
+		this.listOfRequesters = new ArrayList<IRequester>();
 
 		//init list of requesters
 		RequesterFactory reqFactory = new RequesterFactory();
@@ -79,5 +82,16 @@ public class Server extends MapBean<String> {
 
 	public int getMaxSessions() {
 		return maxSessions;
+	}
+	
+	public void destroy() {
+		for (IRequester req : listOfRequesters) {
+			try {
+				req.disconnect();
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+				continue;
+			}
+		}
 	}
 }

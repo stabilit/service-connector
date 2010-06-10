@@ -23,11 +23,11 @@ import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
-import com.stabilit.scm.sc.Service;
 import com.stabilit.scm.sc.log.ServiceRegistryPoint;
+import com.stabilit.scm.sc.service.Service;
 
 /**
- * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
+ * The Class ServiceRegistry. Registry stores entries for properly registered services.
  * 
  * @author JTraber
  */
@@ -51,11 +51,8 @@ public final class ServiceRegistry extends Registry {
 		return instance;
 	}
 
-	//TODO
-	public void addService(Object key, ServiceRegistryItemPool itemPool) {
-		// try to get service list
-		ServicePoolList servicePoolList = (ServicePoolList) this.getServicePoolList(key);
-		servicePoolList.add(itemPool);
+	public void addService(Object key, Service service) {
+		super.put(key, service);
 	}
 
 	public Service getService(String serviceName) {
@@ -65,11 +62,11 @@ public final class ServiceRegistry extends Registry {
 	public void removeService(Service service) {
 		this.removeService(service.getServiceName());
 	}
-	
+
 	public void removeService(Object key) {
 		super.remove(key);
 	}
-	
+
 	/*************** needs to be reworked *********************/
 
 	/**

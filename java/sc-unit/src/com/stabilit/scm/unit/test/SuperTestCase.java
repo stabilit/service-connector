@@ -51,8 +51,8 @@ public abstract class SuperTestCase {
 				new String[] { "sc-unit-nio-tcp.properties" });
 	}
 
-	public void setClient(IRequester client) {
-		this.req = client;
+	public void setClient(IRequester req) {
+		this.req = req;
 	}
 
 	@Before

@@ -49,6 +49,8 @@ public interface IConstants {
 	public final String THREAD_QUALIFIER = ".thread";
 	/** The connection names. */
 	public final String CONNECTION_NAMES = "connectionNames";
+	/** The services Names. */
+	public final String SERVICE_NAMES = "serviceNames";
 
 	/** The logging directory. */
 	public final String LOG_DIR = "log/";

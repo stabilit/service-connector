@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,50 +13,44 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.sc.service;
+
+import java.net.SocketAddress;
+
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.MapBean;
+
 /**
+ * The Class Client. Represents an attached client.
  * 
- */
-package com.stabilit.scm.sc.registry;
-
-import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.sc.service.Server;
-
-/**
  * @author JTraber
- *
  */
-public class ServerRegistry extends Registry {
-	
-	/** The instance. */
-	private static ServerRegistry instance = new ServerRegistry();
+public class Client extends MapBean<Object> {
 
-	private ServerRegistry() {
-	}
-
-	/**
-	 * Gets the current instance of server registry.
-	 * 
-	 * @return the current instance
-	 */
-	public static ServerRegistry getCurrentInstance() {
-		return instance;
-	}
+	/** The scmp received when client attached on SC. */
+	private SCMPMessage scmp;
+	/** The socket address of the client, unique identifier. */
+	private SocketAddress socketAddress;
 
 	/**
-	 * Adds an entry of a server.
+	 * Instantiates a new client.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param item
-	 *            the item
+	 * @param socketAddress
+	 *            the socket address
+	 * @param scmp
+	 *            the scmp
 	 */
-	public void addServer(Object key, Server server) {
-		this.put(key, server);
+	public Client(SocketAddress socketAddress, SCMPMessage scmp) {
+		this.scmp = scmp;
+		this.socketAddress = socketAddress;
 	}
-	
-	public Server getServer(Object key) {
-		return (Server)super.get(key);
+
+	public Object getSocketAddress() {
+		return socketAddress;
+	}
+
+	public SCMPMessage getScmp() {
+		return scmp;
 	}
 }

@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,44 +14,70 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.sc.service;
 
-import java.net.SocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
- * The Class Client. Represents an attached client.
- * 
  * @author JTraber
+ *
  */
-public class Client extends MapBean<Object> {
+public class Service extends MapBean<String> {
+	
+	private String type; //todo enum machen oder klasse
+	private String name;
+	private String location;
+	
+	private Map<String, Server> listOfServers;
 
-	/** The scmp received when client attached on SC. */
-	private SCMPMessage scmp;
-	/** The socket address of the client, unique identifier. */
-	private SocketAddress socketAddress;
-
-	/**
-	 * Instantiates a new client.
-	 * 
-	 * @param socketAddress
-	 *            the socket address
-	 * @param scmp
-	 *            the scmp
-	 */
-	public Client(SocketAddress socketAddress, SCMPMessage scmp) {
-		this.scmp = scmp;
-		this.socketAddress = socketAddress;
+	public Service(String name) {
+		this.name = name;
+		this.type = null;
+		this.location = null;
+		this.listOfServers = new HashMap<String, Server>();
+	}
+	
+	public String getServiceName() {
+		return name;
 	}
 
-	public Object getSocketAddress() {
-		return socketAddress;
+	public void addServer(Server server) {
+		listOfServers.put(server.getSocketAddress().toString(), server);
+	}
+	
+	public void removeServer(Server server) {
+		listOfServers.remove(server.getSocketAddress().toString());
+	}	
+
+	public String getType() {
+		return type;
 	}
 
-	public SCMPMessage getScmp() {
-		return scmp;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public Server allocateServer(SCMPMessage scmp) {
+		
+		
+		
+		return null;
 	}
 }

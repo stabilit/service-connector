@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import java.net.SocketAddress;
+
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
@@ -31,8 +33,10 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.Service;
+import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Service;
 
 /**
  * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
@@ -81,9 +85,10 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
+		SocketAddress socketAddress = request.getRemoteSocketAddress();
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		Service service = serviceRegistry.getService(serviceName);
 
 		if (service == null) {
@@ -95,7 +100,13 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		serviceRegistry.removeService(service);
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		Server server = serverRegistry.getServer(socketAddress + serviceName);
+		// release all resources used by server, disconnects requesters
+		server.destroy();
+		// remove server in service
+		service.removeServer(server);
+
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());

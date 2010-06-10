@@ -23,12 +23,10 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -37,11 +35,10 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.Server;
-import com.stabilit.scm.sc.Service;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistryItemPool;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Service;
 
 /**
  * The Class RegisterServiceCommand. Responsible for validation and execution of register command. Used to register
@@ -99,23 +96,31 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
 
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		Service service = serviceRegistry.getService(serviceName);
 
 		if (service == null) {
-			// TODO woher felder??
-			service = new Service(serviceName, "typ", "location");
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+					SCMPError.UNKNOWN_SERVICE);
+			communicationException.setMessageType(getResponseKeyName());
+			throw communicationException;
 		}
 
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		// TODO what if server is already registered
-		serverRegistry.getServer(socketAddress);
+		Server server = serverRegistry.getServer(socketAddress + serviceName);
+
+		if (server != null) {
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+					SCMPError.SERVER_ALREADY_REGISTERED);
+			communicationException.setMessageType(getResponseKeyName());
+			throw communicationException;
+		}
 
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 
-		Server server = new Server((InetSocketAddress) socketAddress, maxSessions, portNr);
+		server = new Server((InetSocketAddress) socketAddress, portNr, maxSessions);
 		try {
 			if (immediateConnect) {
 				// server connections gets connected immediately
@@ -123,15 +128,17 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			}
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(SCMPError.IMMEDIATE_CONNECT_FAILED);
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+					SCMPError.IMMEDIATE_CONNECT_FAILED);
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}
 		// add server to service
 		service.addServer(server);
 
+		// TODO ... key
 		// add server to server registry
-		serverRegistry.addServer(server.getSocketAddress(), server);
+		serverRegistry.addServer(server.getSocketAddress() + serviceName, server);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -174,14 +181,22 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
+				
 				// maxSessions
 				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
-				ValidatorUtility.validateInt(0, maxSessions);
+				// validate with lowest limit 1
+				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions);
+				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessionsInt);
+				
+				// immmediateConnect
+				String immediateConnect = (String) message.getHeader(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
+				boolean immediateConnectBool = ValidatorUtility.validateBoolean(immediateConnect);
+				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnectBool);
 				
 				// portNr
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-				ValidatorUtility.validateInt(1, portNr, 99999);
-				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR.getName(), portNr);
+				int portNrInt = ValidatorUtility.validateInt(1, portNr, 99999);
+				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR, portNrInt);
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();

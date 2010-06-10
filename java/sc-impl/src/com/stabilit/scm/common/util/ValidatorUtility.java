@@ -120,7 +120,7 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static void validateInt(int lowerLimit, String intStringValue) throws ValidatorException {
+	public static int validateInt(int lowerLimit, String intStringValue) throws ValidatorException {
 		if (intStringValue == null) {
 			throw new ValidatorException("intValue must be set.");
 		}
@@ -135,6 +135,7 @@ public final class ValidatorUtility {
 		if (intValue < lowerLimit) {
 			throw new ValidatorException("intValue to low.");
 		}
+		return intValue;
 	}
 
 	/**
@@ -149,8 +150,7 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static void validateInt(int lowerLimit, String intStringValue, int upperLimit)
-			throws ValidatorException {
+	public static int validateInt(int lowerLimit, String intStringValue, int upperLimit) throws ValidatorException {
 		if (intStringValue == null) {
 			throw new ValidatorException("intValue must be set.");
 		}
@@ -165,6 +165,7 @@ public final class ValidatorUtility {
 		if (intValue <= lowerLimit || intValue >= upperLimit) {
 			throw new ValidatorException("intValue not within limits.");
 		}
+		return intValue;
 	}
 
 	/**
@@ -189,5 +190,25 @@ public final class ValidatorUtility {
 		if (length < minSize || length > maxSize) {
 			throw new ValidatorException("stringValue length is not within limits.");
 		}
+	}
+
+	/**
+	 * Validate boolean.
+	 * 
+	 * @param booleanValue
+	 *            the boolean value
+	 * @return the boolean
+	 */
+	public static Boolean validateBoolean(String booleanValue) {
+		if (booleanValue == null) {
+			return null;
+		}
+		if ("0".equals(booleanValue)) {
+			return false;
+		}
+		if ("1".equals(booleanValue)) {
+			return true;
+		}
+		return null;
 	}
 }

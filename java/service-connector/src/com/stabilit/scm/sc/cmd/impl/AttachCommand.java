@@ -36,8 +36,8 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.KeepAlive;
 import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.Client;
 import com.stabilit.scm.sc.registry.ClientRegistry;
+import com.stabilit.scm.sc.service.Client;
 
 /**
  * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach

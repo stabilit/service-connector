@@ -40,12 +40,13 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.Session;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.Client;
-import com.stabilit.scm.sc.Service;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Client;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Service;
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -93,7 +94,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		// first verify that client has correctly attached
 		IRequestContext requestContext = request.getContext();
 		SocketAddress socketAddress = requestContext.getSocketAddress(); // IP and port
 
@@ -112,8 +112,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 
 		// check service
-		SCMPMessage scmp = request.getSCMP();
-		String serviceName = scmp.getServiceName();
+		SCMPMessage reqMessage = request.getSCMP();
+		String serviceName = reqMessage.getServiceName();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		Service service = serviceRegistry.getService(serviceName);
@@ -125,16 +125,24 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 
 		// adding ip of current unit to header field ip address list
-		String ipList = scmp.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String ipList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
 			ipList += inetSocketAddress.getAddress();
-			scmp.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
 		// create session
 		Session session = new Session();
-		scmp.setSessionId(session.getId());
+		reqMessage.setSessionId(session.getId());
+		
+		// allocates a server for this session
+		Server server = service.allocateServer(reqMessage);
+		
+		
+		
+		
+		
 		ServiceRegistryItem serviceRegistryItem = null;
 		try {
 			// try to allocate session on a backend server

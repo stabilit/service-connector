@@ -36,11 +36,12 @@ public class SimluationServer extends Responder {
 	public SimluationServer() {
 		clientFactory = new RequesterFactory();
 		client = null;
-	}
+	}	
 
 	@Override
-	public void create() throws Exception {
-		super.create();
+	public void runAsync() throws Exception {
+		super.runAsync();
+		// needs to register service in SC
 		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(RequesterConfig.class.getName());
 		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder().getResponderConfig();
 		client = clientFactory.newInstance(clientConfig.getClientConfig());
@@ -50,7 +51,25 @@ public class SimluationServer extends Responder {
 		registerService.setServiceName("simulation");
 		registerService.setMaxSessions(1);
 		registerService.setPortNumber(serverConfigItem.getPort());
+		registerService.setImmediateConnect(true);
 		registerService.invoke();
+	}
+
+	@Override
+	public void runSync() throws Exception {
+		super.runSync();
+		// needs to register service in SC
+		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(RequesterConfig.class.getName());
+		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder().getResponderConfig();
+		client = clientFactory.newInstance(clientConfig.getClientConfig());
+		client.connect(); // physical connect
+		// scmp registerService		
+		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(client);
+		registerService.setServiceName("simulation");
+		registerService.setMaxSessions(1);
+		registerService.setPortNumber(serverConfigItem.getPort());
+		registerService.setImmediateConnect(true);
+		registerService.invoke();		
 	}
 
 	@Override

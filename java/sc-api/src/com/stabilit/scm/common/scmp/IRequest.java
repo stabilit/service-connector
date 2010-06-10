@@ -65,6 +65,8 @@ public interface IRequest {
 	 *            the value
 	 */
 	public void setAttribute(String key, Object value);
+	
+	public void setAttribute(SCMPHeaderAttributeKey key, Object value);
 
 	/**
 	 * Gets an attribute of the attribute map.

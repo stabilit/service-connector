@@ -30,9 +30,11 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ClientRegistry;
+import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.res.SCResponderFactory;
+import com.stabilit.scm.sc.service.ServiceLoader;
 
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.
@@ -69,6 +71,9 @@ public final class SC {
 		ResponderConfig config = new ResponderConfig();
 		config.load("sc.properties");
 
+		// load services
+		ServiceLoader.load("sc.properties");
+		
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
@@ -98,12 +103,14 @@ public final class SC {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			ObjectName mxbeanNameConnReg = new ObjectName("com.stabilit.scm.registry:type=ClientRegistry");
 			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
-			ObjectName mxbeanNameServReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
+			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
+			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.scm.registry:type=ServerRegistry");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(ClientRegistry.getCurrentInstance(), mxbeanNameConnReg);
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
-			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServReg);
+			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
+			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(SC.class, th);
 		}
