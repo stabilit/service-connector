@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.net.req.IServiceSession;
 import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
+import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -40,19 +40,19 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
-	 * @param scmpSession
-	 *            the scmp session
+	 * @param req
+	 *            the requester to use when invoking call
+	 * @param scSession
+	 *            the sc session
 	 */
-	public SCMPClnDeleteSessionCall(IRequester client, IServiceSession scmpSession) {
-		super(client, scmpSession);
+	public SCMPClnDeleteSessionCall(IRequester req, ISCSession scSession) {
+		super(req, scSession);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, IServiceSession scmpSession) {
-		return new SCMPClnDeleteSessionCall(client, scmpSession);
+	public ISCMPCall newInstance(IRequester req, ISCSession scmpSession) {
+		return new SCMPClnDeleteSessionCall(req, scmpSession);
 	}
 
 	/**

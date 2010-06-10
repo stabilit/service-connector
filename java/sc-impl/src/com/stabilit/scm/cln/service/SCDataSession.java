@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,43 +13,108 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
-import com.stabilit.scm.cln.scmp.SCMPServiceSession;
+import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
+ * The Class SCDataSession. Represents a data session to a server over SC. Provides functionality to communicate with a
+ * service.
+ * 
  * @author JTraber
  */
-public class SCDataSession extends SCSessionAdapter {
+public class SCDataSession implements ISCSession {
 
-	private String messageInfo;
+	/** The cln data call. */
 	private SCMPClnDataCall clnDataCall;
+	/** The scmp group call. */
 	private ISCMPCall scmpGroupCall;
+	/** The requester. */
+	private IRequester req;
+	/** The response message. */
+	private SCMPMessage responseMessage;
+	/** The session id. */
+	private String sessionId;
+	/** The service name. */
+	private String serviceName;
+	/** The message info. */
+	private String messageInfo;
+	/** The session info. */
+	private String sessionInfo;
+	/** The compression. */
+	private boolean compression;
 
-	public SCDataSession(IRequester req, SCMPServiceSession session) {
-		super(req);
+	/**
+	 * Instantiates a new sc data session.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param req
+	 *            the requester
+	 */
+	public SCDataSession(String serviceName, IRequester req) {
+		this.serviceName = serviceName;
+		this.req = req;
 		this.scmpGroupCall = null;
 		this.messageInfo = null;
-		this.clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, session);
+		this.sessionInfo = null;
+		this.messageInfo = null;
+		this.clnDataCall = null;
+		this.compression = true; // compression default is yes
 	}
 
+	/**
+	 * Creates the session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
-	public Object invoke() throws Exception {
+	public void createSession() throws Exception {
+		if (this.responseMessage != null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"responseMessage already set - create session inoked two times!");
+			return;
+		}
+		// sets a create session call
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(req);
+		createSessionCall.setServiceName(this.serviceName);
+		createSessionCall.setSessionInfo(this.sessionInfo);
+		this.responseMessage = createSessionCall.invoke();
+
+		if (this.responseMessage != null) {
+			this.sessionId = this.responseMessage.getSessionId();
+		}
+		this.clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this);
+	}
+
+	/**
+	 * Execute.
+	 * 
+	 * @param data
+	 *            the data
+	 * @return the object
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Override
+	public Object execute(Object data) throws Exception {
 		SCMPMessage scmpReply = null;
 
 		this.clnDataCall.setMessagInfo(this.messageInfo);
-		this.clnDataCall.setRequestBody(this.data);
+		this.clnDataCall.setCompression(this.compression);
+		this.clnDataCall.setRequestBody(data);
 
+		// if group call is requested - invoke group call
 		if (this.scmpGroupCall != null) {
 			scmpReply = this.scmpGroupCall.invoke();
 		} else {
@@ -59,29 +123,116 @@ public class SCDataSession extends SCSessionAdapter {
 		return scmpReply.getBody();
 	}
 
-	@Override
-	public void setMessagInfo(String messageInfo) {
-		this.messageInfo = messageInfo;
+	/**
+	 * Delete session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void deleteSession() throws Exception {
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(this.req, this);
+		deleteSessionCall.invoke();
 	}
 
-	@Override
-	public void setData(Object data) {
-		this.data = data;
-	}
-
+	/**
+	 * Close group.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void closeGroup() throws Exception {
 		this.scmpGroupCall.closeGroup(); // send REQ (no body content)
 		this.scmpGroupCall = null;
 	}
 
+	/**
+	 * Open group.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void openGroup() throws Exception {
 		this.scmpGroupCall = this.clnDataCall.openGroup();
 	}
 
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the sessionId
+	 */
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the serviceName
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	/**
+	 * Sets the service name.
+	 * 
+	 * @param serviceName
+	 *            the serviceName to set
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	/**
+	 * Gets the session info.
+	 * 
+	 * @return the sessionInfo
+	 */
+	public String getSessionInfo() {
+		return sessionInfo;
+	}
+
+	/**
+	 * Checks if is compression.
+	 * 
+	 * @return true, if is compression
+	 */
+	public boolean isCompression() {
+		return compression;
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compression
+	 *            the new compression
+	 */
+	void setCompression(boolean compression) {
+		this.compression = compression;
+	}
+
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param messageInfo
+	 *            the new message info
+	 */
 	@Override
-	public void deleteSession() throws Exception {
-		this.session.deleteSession();	
+	public void setMessageInfo(String messageInfo) {
+		this.messageInfo = messageInfo;
+	}
+
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            the new session info
+	 */
+	@Override
+	public void setSessionInfo(String sessionInfo) {
+		this.sessionInfo = sessionInfo;
 	}
 }

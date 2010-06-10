@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.net.req.IServiceSession;
+import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -38,19 +38,19 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	/**
 	 * Instantiates a new SCMPClnDataCall.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
-	 * @param scmpSession
-	 *            the scmp session
+	 * @param req
+	 *            the requester to use when invoking call
+	 * @param scSession
+	 *            the sc session
 	 */
-	public SCMPClnDataCall(IRequester client, IServiceSession scmpSession) {
-		super(client, scmpSession);
+	public SCMPClnDataCall(IRequester req, ISCSession scSession) {
+		super(req, scSession);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, IServiceSession clientSession) {
-		return new SCMPClnDataCall(client, clientSession);
+	public ISCMPCall newInstance(IRequester client, ISCSession scSession) {
+		return new SCMPClnDataCall(client, scSession);
 	}
 
 	/**

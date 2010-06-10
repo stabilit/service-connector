@@ -36,26 +36,27 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Instantiates a new SCMPServerCallAdapter.
+	 * Instantiates a new SCMPServerCallAdapter. Constructor is necessary because in SC you need to hand over received
+	 * message because behavior is different if message is of type part.
 	 * 
-	 * @param client
-	 *            the client
-	 * @param clientMessage
-	 *            the client message
+	 * @param req
+	 *            the requester
+	 * @param message
+	 *            the message
 	 */
-	public SCMPServerCallAdapter(IRequester client, SCMPMessage clientMessage) {
-		this.requester = client;
-		this.scmpSession = null;
-		if (clientMessage != null) {
-			if (clientMessage.isPart()) {
+	public SCMPServerCallAdapter(IRequester req, SCMPMessage message) {
+		this.requester = req;
+		this.scSession = null;
+		if (message != null) {
+			if (message.isPart()) {
 				// on SC scmpSession might be a part - call to server must be a part too
 				this.requestMessage = new SCMPPart();
-				this.requestMessage.setHeader(clientMessage.getHeader());
+				this.requestMessage.setHeader(message.getHeader());
 			} else {
 				this.requestMessage = new SCMPMessage();
 			}
-			this.requestMessage.setSessionId(clientMessage.getSessionId());
-			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, clientMessage.getServiceName());
+			this.requestMessage.setSessionId(message.getSessionId());
+			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		}
 
 		if (this.requestMessage == null) {
@@ -65,6 +66,6 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract ISCMPCall newInstance(IRequester client, SCMPMessage clientMessage);
+	public abstract ISCMPCall newInstance(IRequester req, SCMPMessage message);
 
 }

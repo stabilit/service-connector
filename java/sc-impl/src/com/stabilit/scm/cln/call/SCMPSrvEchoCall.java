@@ -42,12 +42,12 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	 * Instantiates a new SCMPSrvEchoCall.
 	 * 
 	 * @param req
-	 *            the client
-	 * @param clientMessage
-	 *            the client message
+	 *            the requester
+	 * @param message
+	 *            the message
 	 */
-	public SCMPSrvEchoCall(IRequester req, SCMPMessage clientMessage) {
-		super(req, clientMessage);
+	public SCMPSrvEchoCall(IRequester req, SCMPMessage message) {
+		super(req, message);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client, SCMPMessage clientMessage) {
-		return new SCMPSrvEchoCall(client, clientMessage);
+	public ISCMPCall newInstance(IRequester req, SCMPMessage message) {
+		return new SCMPSrvEchoCall(req, message);
 	}
 
 	/**

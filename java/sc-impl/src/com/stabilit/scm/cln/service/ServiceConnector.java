@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,62 +13,101 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.scmp.SCMPServiceSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.util.MapBean;
 
 /**
+ * The Class ServiceConnector. Represents the service connector on client side. Provides functions to create sessions to
+ * a server and to connect/disconnect to an SC. This component is responsible to observe the availability of the SC. If
+ * the SC gets unreachable every open session has to be deleted.
+ * 
  * @author JTraber
  */
 public class ServiceConnector implements IServiceConnector {
 
-	private String connection;
-	private int numberOfThreads;
+	/** The host of the SC. */
 	private String host;
+	/** The port of the SC. */
 	private int port;
-	private ServiceConnectorContext serviceConnectorCtx;
+	/** The number of threads to use on client side. */
+	private int numberOfThreads;
+	/** The connection key, identifies low level component to use for communication (netty, nio). */
+	private String connectionKey;
+	/** The requester. */
 	private IRequester requester; // becomes a pool later
-	private RequesterFactory clientFactory;
+	/** The req factory. */
+	private RequesterFactory reqFactory;
+	/** The attributes. */
+	private MapBean<Object> attributes;
 
+	/**
+	 * Instantiates a new service connector.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 */
 	public ServiceConnector(String host, int port) {
 		this.host = host;
 		this.port = port;
-		this.serviceConnectorCtx = new ServiceConnectorContext();
-		this.serviceConnectorCtx.setAttribute("port", this.port);
-		this.serviceConnectorCtx.setAttribute("host", this.host);
-		this.clientFactory = new RequesterFactory();		
+		this.connectionKey = "netty.http"; // default is netty http
+		this.numberOfThreads = 16; // default is 16 threads
+		this.reqFactory = new RequesterFactory();
+		attributes = new MapBean<Object>();
 	}
 
+	/**
+	 * Connect to SC. With this connect observing the SC starts.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void connect() throws Exception {
-		requester = clientFactory.newInstance(this.host, this.port, this.connection, this.numberOfThreads);
+		requester = reqFactory.newInstance(this.host, this.port, this.connectionKey, this.numberOfThreads);
 		requester.connect();
-		// attach
+		// sets up the attach call
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
 		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
-		attachCall.invoke();	
+		// attaches client
+		attachCall.invoke();
 	}
 
+	/**
+	 * New data session. Data session allows using a service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the iSC session
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
-	public ISession createDataSession(String serviceName) throws Exception {		
-		SCMPServiceSession scmpSession = new SCMPServiceSession(requester, serviceName, "");
-		scmpSession.createSession();
-		ISession scDataSession = new SCDataSession(requester, scmpSession);
+	public ISCSession newDataSession(String serviceName) throws Exception {
+		SCDataSession scDataSession = new SCDataSession(serviceName, requester);
+
+		if ((Boolean) this.attributes.getAttribute("compression") == false) {
+			scDataSession.setCompression(false);
+		}
 		return scDataSession;
 	}
 
+	/**
+	 * Disconnect from SC. Every open session needs to be closed.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public void disconnect() throws Exception {
 		// detach
@@ -80,12 +118,16 @@ public class ServiceConnector implements IServiceConnector {
 		this.requester.destroy();
 	}
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
 	@Override
-	public IServiceConnectorContext getSCContext() {
-		return serviceConnectorCtx;
-	}
-
-	@Override
-	public void setAttribute(String string, int i) {
+	public void setAttribute(String name, Object value) {
+		this.attributes.setAttribute(name, value);
 	}
 }
