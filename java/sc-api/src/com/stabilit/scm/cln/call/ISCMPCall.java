@@ -17,7 +17,6 @@
 
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -30,47 +29,63 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 public interface ISCMPCall {
 
 	/**
-	 * New instance of a call.
+	 * New instance.
 	 * 
-	 * @param requester the requester to use for the call
-	 * 
+	 * @param requester
+	 *            the requester
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IRequester requester);
 
 	/**
-	 * New instance.
+	 * New instance of a call.
 	 * 
-	 * @param requester the requester
-	 * @param scSession the sc session
-	 * 
-	 * @return the iSCMP call
+	 * @param requester
+	 *            the requester to use for the call
+	 * @param serviceName
+	 *            the service name
+	 * @return the scmp call
 	 */
-	public ISCMPCall newInstance(IRequester requester, ISCSession scSession);
+	public ISCMPCall newInstance(IRequester requester, String serviceName);
 
 	/**
 	 * New instance.
 	 * 
-	 * @param requester the requester
-	 * @param scmpMessage the scmp message
+	 * @param requester
+	 *            the requester
+	 * @param sessionId
+	 *            the session id
+	 * @param serviceName
+	 *            the service name
+	 * @return the scmp call
+	 */
+	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId);
+
+	/**
+	 * New instance. Is used on SC because received message is used to create a forward call.
 	 * 
+	 * @param requester
+	 *            the requester
+	 * @param receivedMessage
+	 *            the scmp message
 	 * @return the iSCMP call
 	 */
-	public ISCMPCall newInstance(IRequester requester, SCMPMessage scmpMessage);
+	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage);
 
 	/**
 	 * Invoke.
 	 * 
 	 * @return the scmp message
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public SCMPMessage invoke() throws Exception;
 
 	/**
 	 * Sets the body.
 	 * 
-	 * @param body the new body
+	 * @param body
+	 *            the new body
 	 */
 	public void setRequestBody(Object body);
 
@@ -99,8 +114,8 @@ public interface ISCMPCall {
 	 * Open group.
 	 * 
 	 * @return the iSCMP call
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public ISCMPCall openGroup() throws Exception;
 
@@ -108,8 +123,8 @@ public interface ISCMPCall {
 	 * Close group, sends the ending request.
 	 * 
 	 * @return the result
-	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public SCMPMessage closeGroup() throws Exception;
 }

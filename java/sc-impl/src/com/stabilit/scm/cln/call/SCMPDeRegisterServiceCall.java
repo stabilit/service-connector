@@ -31,23 +31,23 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPDeRegisterServiceCall.
 	 */
 	public SCMPDeRegisterServiceCall() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
 	 * Instantiates a new SCMPDeRegisterServiceCall.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
+	 * @param requester the requester to use when invoking call
+	 * @param serviceName the service name
 	 */
-	public SCMPDeRegisterServiceCall(IRequester client) {
-		this.requester = client;
+	public SCMPDeRegisterServiceCall(IRequester requester, String serviceName) {
+		super(requester, serviceName);
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPDeRegisterServiceCall(client);
+	public ISCMPCall newInstance(IRequester requester, String serviceName) {
+		return new SCMPDeRegisterServiceCall(requester, serviceName);
 	}
 
 	/**

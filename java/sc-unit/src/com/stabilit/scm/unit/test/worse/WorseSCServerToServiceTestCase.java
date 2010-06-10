@@ -39,8 +39,8 @@ import com.stabilit.scm.unit.test.session.SuperSessionRegisterTestCase;
 
 /**
  * Test case is not working at this time. Keep Alive is not implemented yet - means nothing realizes that server to
- * service is down. After registration of service only deregistration uses the server data communication works with
- * SC client to service.
+ * service is down. After registration of service only deregistration uses the server data communication works with SC
+ * client to service.
  * 
  * @author JTraber
  */
@@ -84,16 +84,16 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		tearDownSCServerToService();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
+				.getServiceName(), this.scSession.getSessionId());
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
 		try {
 			clnDataCall.invoke();
 		} catch (SCMPCommunicationException ex) {
-			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()),
-					(String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()),
-					SCMPError.CONNECTION_LOST);
+			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()), (String) ex
+					.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()), SCMPError.CONNECTION_LOST);
 		}
 		tearDownSCServerToClient();
 	}
@@ -117,7 +117,7 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(req);
 		systemCall.invoke();
 	}
-	
+
 	@After
 	@Override
 	public void tearDown() throws Exception {

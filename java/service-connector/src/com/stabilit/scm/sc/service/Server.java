@@ -33,19 +33,40 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
+ * The Class Server.
+ * 
  * @author JTraber
  */
 public class Server extends MapBean<String> {
 
+	/** The host. */
 	private String host;
+
+	/** The port nr. */
 	private int portNr;
+
+	/** The max sessions. */
 	private int maxSessions;
+
+	/** The socket address. */
 	private SocketAddress socketAddress;
+
 	/** The free requester list. */
 	private List<IRequester> freeReqList;
+
 	/** The occupied requester list. */
 	private List<IRequester> occupiedReqList;
 
+	/**
+	 * Instantiates a new server.
+	 * 
+	 * @param socketAdress
+	 *            the socket adress
+	 * @param portNr
+	 *            the port nr
+	 * @param maxSessions
+	 *            the max sessions
+	 */
 	public Server(InetSocketAddress socketAdress, int portNr, int maxSessions) {
 		this.socketAddress = socketAdress;
 		this.portNr = portNr;
@@ -68,10 +89,21 @@ public class Server extends MapBean<String> {
 		}
 	}
 
+	/**
+	 * Gets the socket address.
+	 * 
+	 * @return the socket address
+	 */
 	public SocketAddress getSocketAddress() {
 		return socketAddress;
 	}
 
+	/**
+	 * Immediate connect.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void immediateConnect() throws Exception {
 		for (IRequester req : freeReqList) {
 			req.connect();
@@ -79,29 +111,35 @@ public class Server extends MapBean<String> {
 	}
 
 	/**
-	 * Creates the session on server. Any failure from server will be returned by exception.
+	 * Creates the session.
 	 * 
 	 * @param msgToForward
 	 *            the msg to forward
+	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void createSession(SCMPMessage msgToForward) throws Exception {
+	public SCMPMessage createSession(SCMPMessage msgToForward) throws Exception {
 		IRequester req = freeReqList.remove(0);
 
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(req);
 		createSessionCall.setHeader(msgToForward.getHeader());
+		SCMPMessage serverReply = null;
 		try {
-			createSessionCall.invoke();
+			serverReply = createSessionCall.invoke();
 		} catch (Exception e) {
 			// create session failed - add requester to free list
 			freeReqList.add(req);
 			throw e;
 		}
 		occupiedReqList.add(req);
+		return serverReply;
 	}
 
+	/**
+	 * Destroy.
+	 */
 	public void destroy() {
 		for (IRequester req : freeReqList) {
 			try {
@@ -113,18 +151,38 @@ public class Server extends MapBean<String> {
 		}
 	}
 
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return host;
 	}
 
+	/**
+	 * Gets the port nr.
+	 * 
+	 * @return the port nr
+	 */
 	public int getPortNr() {
 		return portNr;
 	}
 
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @return the max sessions
+	 */
 	public int getMaxSessions() {
 		return maxSessions;
 	}
 
+	/**
+	 * Checks for free session.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean hasFreeSession() {
 		return this.freeReqList.size() < this.maxSessions;
 	}

@@ -33,17 +33,18 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPAttachCall.
 	 */
 	public SCMPAttachCall() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
 	 * Instantiates a new SCMPAttachCall.
 	 * 
-	 * @param client
-	 *            the client to use when invoking call
+	 * @param req
+	 *            the requester to use when invoking call
 	 */
-	public SCMPAttachCall(IRequester client) {
-		this.requester = client;
+	public SCMPAttachCall(IRequester req, String serviceName) {
+		this.requester = req;
+		this.serviceName = serviceName;
 	}
 
 	/** {@inheritDoc} */
@@ -54,11 +55,12 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 		super.invoke();
 		return this.responseMessage;
 	}
+	
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester) {
-		return new SCMPAttachCall(requester);
+	public ISCMPCall newInstance(IRequester requester, String serviceName) {
+		return new SCMPClnCreateSessionCall(requester, serviceName);
 	}
 
 	/**

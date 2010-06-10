@@ -82,16 +82,16 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
+				.getServiceName(), this.scSession.getSessionId());
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
 		try {
 			clnDataCall.invoke();
 		} catch (SCMPCommunicationException ex) {
-			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()),
-					(String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()),
-					SCMPError.CONNECTION_LOST);
+			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()), (String) ex
+					.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()), SCMPError.CONNECTION_LOST);
 		}
 		tearDownSCServerToService();
 	}
@@ -104,16 +104,15 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 		tearDownClient.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer
-		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL
-				.newInstance(tearDownClient);
+		SCMPSrvSystemCall systemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(tearDownClient);
 		systemCall.setRequestBody("simulation:P01_RTXS_RPRWS1");
 		systemCall.invoke();
 		tearDownClient.disconnect();
 	}
 
 	/**
-	 * Tear down. Needs to be overridden because clnDeleteSession() from usual procedure is not possible this time
-	 * - backend server already down.
+	 * Tear down. Needs to be overridden because clnDeleteSession() from usual procedure is not possible this time -
+	 * backend server already down.
 	 * 
 	 * @throws Exception
 	 *             the exception

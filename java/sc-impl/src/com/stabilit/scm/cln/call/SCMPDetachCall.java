@@ -36,17 +36,17 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 	/**
 	 * Instantiates a new SCMPDetachCall.
 	 * 
-	 * @param client
+	 * @param req
 	 *            the client to use when invoking call
 	 */
-	public SCMPDetachCall(IRequester client) {
-		this.requester = client;
+	public SCMPDetachCall(IRequester req) {
+		this.requester = req;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPDetachCall(client);
+	public ISCMPCall newInstance(IRequester req) {
+		return new SCMPDetachCall(req);
 	}
 
 	/** {@inheritDoc} */

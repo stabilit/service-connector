@@ -19,7 +19,6 @@ package com.stabilit.scm.cln.call;
 import java.net.InetAddress;
 import java.util.Map;
 
-import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -37,7 +36,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 * Instantiates a SCMPClnEchoCall.
 	 */
 	public SCMPClnEchoCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	/**
@@ -45,11 +44,13 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call
-	 * @param scSession
-	 *            the sc session
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
 	 */
-	public SCMPClnEchoCall(IRequester req, ISCSession scSession) {
-		super(req, scSession);
+	public SCMPClnEchoCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
@@ -68,8 +69,8 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, ISCSession scSession) {
-		return new SCMPClnEchoCall(req, scSession);
+	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
+		return new SCMPClnEchoCall(req, serviceName, sessionId);
 	}
 
 	/**

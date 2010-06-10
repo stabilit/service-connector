@@ -81,7 +81,8 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	@Test
 	public void clnDeleteSessionSimulationServerDisconnect() throws Exception {
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req, this.scSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req,
+				this.scSession.getServiceName(), this.scSession.getSessionId());
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
@@ -89,7 +90,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the failure
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(req, this.scSession);
+				.newInstance(req, this.scSession.getServiceName(), this.scSession.getSessionId());
 		deleteSessionCall.invoke();
 
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
@@ -118,12 +119,14 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 	public void clnDataSimulationServerDisconnect() throws Exception {
 
 		// disconnects simulation server from SC after sending response
-		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req, this.scSession);
+		SCMPClnSystemCall systemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req,
+				this.scSession.getServiceName(), this.scSession.getSessionId());
 		systemCall.setMaxNodes(2);
 		systemCall.invoke();
 
 		// data call should fail because connection lost to simulation server
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
+				.getServiceName(), this.scSession.getSessionId());
 		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");

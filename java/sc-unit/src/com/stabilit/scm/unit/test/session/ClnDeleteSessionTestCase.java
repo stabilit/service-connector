@@ -43,7 +43,7 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(req, this.scSession);
+				.newInstance(req, this.scSession.getServiceName(), this.scSession.getSessionId());
 		SCMPMessage result = deleteSessionCall.invoke();
 
 		/*************************** verify delete session **********************************/

@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -31,10 +30,10 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 
 	/**
-	 * Instantiates a new SCMPClnSystemCall.
+	 * Instantiates a SCMPClnSystemCall.
 	 */
 	public SCMPClnSystemCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	/**
@@ -42,17 +41,19 @@ public class SCMPClnSystemCall extends SCMPSessionCallAdapter {
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call
-	 * @param scSession
-	 *            the scmp session
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
 	 */
-	public SCMPClnSystemCall(IRequester req, ISCSession scSession) {
-		super(req, scSession);
+	public SCMPClnSystemCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, ISCSession scSession) {
-		return new SCMPClnSystemCall(req, scSession);
+	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
+		return new SCMPClnSystemCall(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */

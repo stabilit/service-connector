@@ -34,7 +34,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPClnCreateSessionCall.
 	 */
 	public SCMPClnCreateSessionCall() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
@@ -42,9 +42,11 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 * 
 	 * @param requester
 	 *            the requester to use when invoking call
+	 * @param serviceName
+	 *            the service name
 	 */
-	public SCMPClnCreateSessionCall(IRequester requester) {
-		this.requester = requester;
+	public SCMPClnCreateSessionCall(IRequester requester, String serviceName) {
+		super(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */
@@ -58,8 +60,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester) {
-		return new SCMPClnCreateSessionCall(requester);
+	public ISCMPCall newInstance(IRequester requester, String serviceName) {
+		return new SCMPClnCreateSessionCall(requester, serviceName);
 	}
 
 	/**

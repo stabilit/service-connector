@@ -52,8 +52,8 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMPMessage result = null;
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
-				this.scSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession
+				.getServiceName(), this.scSession.getSessionId());
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 		clnEchoCall.setRequestBody("hello world");
@@ -68,7 +68,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		System.out.println("Needed Time in sec: " + (endTime - startTime) / 1000L);
 		System.out.println("Number of msg: " + anzMsg);
 		System.out.println("Msg in sec: " + (anzMsg / ((endTime - startTime) / 1000L)));
-		
+
 		Assert.assertEquals("hello world", result.getBody());
 		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(result.getSessionId());
@@ -89,8 +89,8 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		int anzMsg = 1000;
 		SCMPMessage result = null;
 
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
-				this.scSession);
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, this.scSession
+				.getServiceName(), this.scSession.getSessionId());
 		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setServiceName("simulation");
 
@@ -121,7 +121,8 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
-					this.scSession);
+					this.scSession
+					.getServiceName(), this.scSession.getSessionId());
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());

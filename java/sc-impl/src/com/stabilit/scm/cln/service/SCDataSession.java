@@ -94,7 +94,8 @@ public class SCDataSession implements ISCSession {
 		if (this.responseMessage != null) {
 			this.sessionId = this.responseMessage.getSessionId();
 		}
-		this.clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this);
+		this.clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.serviceName,
+				this.sessionId);
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class SCDataSession implements ISCSession {
 	 */
 	public void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.req, this);
+				.newInstance(this.req, this.serviceName, this.sessionId);
 		deleteSessionCall.invoke();
 	}
 

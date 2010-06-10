@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import java.util.Map;
 
-import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -34,7 +33,7 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPSrvAbortSessionCall.
 	 */
 	public SCMPSrvAbortSessionCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	/**
@@ -45,14 +44,8 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 	 * @param scSession
 	 *            the scmp session
 	 */
-	public SCMPSrvAbortSessionCall(IRequester req, ISCSession scSession) {
-		super(req, scSession);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPSrvAbortSessionCall(req, null);
+	public SCMPSrvAbortSessionCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	/**

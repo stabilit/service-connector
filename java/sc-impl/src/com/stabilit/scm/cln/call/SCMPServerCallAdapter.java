@@ -46,7 +46,6 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	 */
 	public SCMPServerCallAdapter(IRequester req, SCMPMessage message) {
 		this.requester = req;
-		this.scSession = null;
 		if (message != null) {
 			if (message.isPart()) {
 				// on SC scmpSession might be a part - call to server must be a part too
