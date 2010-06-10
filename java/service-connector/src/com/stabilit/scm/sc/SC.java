@@ -35,7 +35,7 @@ import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.res.SCResponderFactory;
 
 /**
- * The Class ServiceConnector. Starts the core (responders) of the Service Connector.
+ * The Class SC. Starts the core (responders) of the Service Connector.
  * 
  * @author JTraber
  */
