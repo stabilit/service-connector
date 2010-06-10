@@ -48,6 +48,8 @@ public class NioTcpConnection implements IConnection {
 	private int numberOfThreads;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
+	/** state of connection. */
+	private boolean isConnected;
 
 	/**
 	 * Instantiates a new NioTcpConnection.
@@ -58,6 +60,7 @@ public class NioTcpConnection implements IConnection {
 		this.host = null;
 		this.numberOfThreads = 10;
 		this.encoderDecoder = null;
+		this.isConnected = false;
 	}
 
 	/** {@inheritDoc} */
@@ -156,5 +159,11 @@ public class NioTcpConnection implements IConnection {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean isConnected() {
+		return this.isConnected;
 	}
 }

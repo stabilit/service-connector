@@ -157,7 +157,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// finally add session to the registry
 		session.setAttribute(ServiceRegistryItem.class.getName(), serviceRegistryItem);
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		sessionRegistry.addSession(session);
+		sessionRegistry.addSession(session.getId(), session);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();

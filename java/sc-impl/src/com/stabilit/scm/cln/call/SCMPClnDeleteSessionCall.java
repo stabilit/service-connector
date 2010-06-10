@@ -16,11 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -63,17 +61,6 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 */
 	public void setServiceName(String serviceName) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMessage invoke() throws Exception {
-		super.invoke();
-		String sessionId = this.responseMessage.getSessionId();
-		String serviceName = this.responseMessage.getServiceName();
-		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
-		sessionRegistry.remove(sessionId, serviceName);
-		return this.responseMessage;
 	}
 
 	/** {@inheritDoc} */

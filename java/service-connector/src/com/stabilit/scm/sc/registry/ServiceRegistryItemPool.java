@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;

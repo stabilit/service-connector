@@ -244,4 +244,9 @@ public class Requester implements IRequester {
 		}
 		return scmpComposite;
 	}
+
+	@Override
+	public boolean isConnected() {
+		return this.connection.isConnected();
+	}
 }

@@ -1,6 +1,7 @@
-package com.stabilit.scm.sc.registry;
+package com.stabilit.scm.sc.log;
 
 import java.util.EventListener;
+
 
 public interface IServiceRegistryListener extends EventListener {
 

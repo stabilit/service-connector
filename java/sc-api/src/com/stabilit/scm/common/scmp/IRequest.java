@@ -19,7 +19,6 @@ package com.stabilit.scm.common.scmp;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.ctx.IRequestContext;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Interface IRequest abstracts a request.
@@ -75,14 +74,9 @@ public interface IRequest {
 	 * @return the attribute
 	 */
 	public Object getAttribute(String key);
-
-	/**
-	 * Gets the attribute map bean.
-	 * 
-	 * @return the attribute map bean
-	 */
-	public MapBean<Object> getAttributeMapBean();
-
+	
+	public Object getAttribute(SCMPHeaderAttributeKey key);
+	
 	/**
 	 * Gets the socket address.
 	 * 

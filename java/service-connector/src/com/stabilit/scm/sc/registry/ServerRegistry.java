@@ -19,12 +19,45 @@
 /**
  * 
  */
-package com.stabilit.scm.sc;
+package com.stabilit.scm.sc.registry;
+
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.sc.Server;
 
 /**
  * @author JTraber
  *
  */
-public class Server {
+public class ServerRegistry extends Registry {
+	
+	/** The instance. */
+	private static ServerRegistry instance = new ServerRegistry();
 
+	private ServerRegistry() {
+	}
+
+	/**
+	 * Gets the current instance of server registry.
+	 * 
+	 * @return the current instance
+	 */
+	public static ServerRegistry getCurrentInstance() {
+		return instance;
+	}
+
+	/**
+	 * Adds an entry of a server.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param item
+	 *            the item
+	 */
+	public void addServer(Object key, Server server) {
+		this.put(key, server);
+	}
+	
+	public Server getServer(Object key) {
+		return (Server)super.get(key);
+	}
 }

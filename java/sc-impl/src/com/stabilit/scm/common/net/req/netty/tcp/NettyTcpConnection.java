@@ -70,6 +70,8 @@ public class NettyTcpConnection implements IConnection {
 	private InetSocketAddress localSocketAddress;
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
+	/** state of connection. */
+	private boolean isConnected;
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
@@ -84,6 +86,7 @@ public class NettyTcpConnection implements IConnection {
 		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
+		this.isConnected = false;
 		this.pipelineFactory = new NettyTcpRequesterPipelineFactory();
 	}
 
@@ -210,5 +213,11 @@ public class NettyTcpConnection implements IConnection {
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in client connection
 		this.bootstrap.releaseExternalResources();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean isConnected() {
+		return this.isConnected;
 	}
 }

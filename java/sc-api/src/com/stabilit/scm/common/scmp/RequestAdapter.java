@@ -34,7 +34,7 @@ public abstract class RequestAdapter implements IRequest {
 	/** The map bean. MapBean to store any data. */
 	protected MapBean<Object> mapBean;
 	/** The local socket address. */
-	protected SocketAddress localSocketAddress;	
+	protected SocketAddress localSocketAddress;
 	/** The remote socket address. */
 	protected SocketAddress remoteSocketAddress;
 	/** The request context. */
@@ -78,7 +78,16 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(String key) {
-		return mapBean.getAttribute(key);
+		// looks up the attribute in request map and in received message map
+		if (this.mapBean.containsKey(key)) {
+			return this.mapBean.getAttribute(key);
+		}
+		return this.message.getHeader(key);
+	}
+
+	@Override
+	public Object getAttribute(SCMPHeaderAttributeKey key) {
+		return this.getAttribute(key.getName());
 	}
 
 	/** {@inheritDoc} */
@@ -89,16 +98,10 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public MapBean<Object> getAttributeMapBean() {
-		return mapBean;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SocketAddress getLocalSocketAddress() {
 		return localSocketAddress;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public SocketAddress getRemoteSocketAddress() {

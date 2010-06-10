@@ -26,6 +26,8 @@ import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.IFaultResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -35,8 +37,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
-import com.stabilit.scm.sc.registry.ResponderRegistry;
-import com.stabilit.scm.sc.registry.ResponderRegistry.ResponderRegistryItem;
 
 /**
  * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a command

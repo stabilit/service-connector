@@ -37,8 +37,6 @@ public enum SCMPError {
 	ALREADY_ATTACHED("406", "Already attached."),
 	/** The protocol mismatch. */
 	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
-	/** The already registered. */
-	ALREADY_REGISTERED("408", "Already registered."),
 	/** The not registered. */
 	NOT_REGISTERED("409", "Not registered."),
 	/** The already allocated. */
@@ -52,7 +50,9 @@ public enum SCMPError {
 	/** The unknown service. */
 	UNKNOWN_SERVICE("501", "Unknown service requested."),
 	/** The connection lost. */
-	CONNECTION_LOST("502", "Connection lost.");
+	CONNECTION_LOST("502", "Connection lost."),
+	/** The IMMEDIATE_CONNECT_FAILED. */
+	IMMEDIATE_CONNECT_FAILED("503", "Immediate connect failed");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

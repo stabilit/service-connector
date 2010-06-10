@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import java.net.InetAddress;
 
-import com.stabilit.scm.cln.scmp.SCMPSessionRegistry;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -54,10 +53,6 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke();
-		String serviceName = this.responseMessage.getServiceName();
-		String sessionId = this.responseMessage.getSessionId();
-		SCMPSessionRegistry sessionRegistry = SCMPSessionRegistry.getCurrentInstance();
-		sessionRegistry.add(sessionId, serviceName);
 		return this.responseMessage;
 	}
 

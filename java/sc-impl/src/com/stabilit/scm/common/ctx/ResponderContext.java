@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.ctx;
 
+import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.sc.registry.ResponderRegistry;
 
 
 /**

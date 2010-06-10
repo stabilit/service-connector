@@ -60,4 +60,6 @@ public interface IConnection extends ICommunicationPoint {
 	 *             the exception
 	 */
 	public void destroy() throws Exception;
+
+	boolean isConnected();
 }

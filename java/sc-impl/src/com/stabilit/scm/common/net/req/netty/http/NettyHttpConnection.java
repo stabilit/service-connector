@@ -81,6 +81,8 @@ public class NettyHttpConnection implements IConnection {
 	private InetSocketAddress localSocketAddress;
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
+	/** state of connection. */
+	private boolean isConnected;
 
 	/**
 	 * Instantiates a new netty http connection.
@@ -96,6 +98,7 @@ public class NettyHttpConnection implements IConnection {
 		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
+		this.isConnected = false;
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory();
 	}
 
@@ -124,6 +127,7 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
+		this.isConnected = true;
 	}
 
 	/** {@inheritDoc} */
@@ -231,5 +235,11 @@ public class NettyHttpConnection implements IConnection {
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in client connection
 		this.bootstrap.releaseExternalResources();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isConnected() {
+		return this.isConnected;
 	}
 }

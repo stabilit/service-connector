@@ -25,9 +25,9 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.EndpointAdapter;
-import com.stabilit.scm.sc.registry.ResponderRegistry;
-import com.stabilit.scm.sc.registry.ResponderRegistry.ResponderRegistryItem;
 
 /**
  * The Class NettyHttpEndpoint. Concrete responder implementation with JBoss Netty for Http.

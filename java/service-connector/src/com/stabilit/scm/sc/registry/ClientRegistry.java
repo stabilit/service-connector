@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
-import java.net.SocketAddress;
-
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.Client;
 
@@ -46,28 +44,15 @@ public final class ClientRegistry extends Registry {
 		return instance;
 	}
 
-	/**
-	 * Adds the client to the registry.
-	 * 
-	 * @param client
-	 *            the client
-	 */
-	public void addClient(Client client) {
-		this.put(client.getSocketAddress(), client);
+	public void addClient(Object key, Client client) {
+		this.put(key, client);
 	}
 
-	/**
-	 * Gets the client.
-	 * 
-	 * @param socketAddress
-	 *            the socket address
-	 * @return the client
-	 */
-	public Client getClient(SocketAddress socketAddress) {
-		return (Client) this.get(socketAddress);
+	public Client getClient(Object key) {
+		return (Client) this.get(key);
 	}
 
-	public void removeClient(SocketAddress socketAddress) {
-		super.remove(socketAddress);
+	public void removeClient(Object key) {
+		super.remove(key);
 	}	
 }

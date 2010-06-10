@@ -1,8 +1,9 @@
-package com.stabilit.scm.sc.registry;
+package com.stabilit.scm.sc.log;
 
 import java.util.EventObject;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.sc.registry.ServiceRegistry;
 
 /**
  * The Class ServiceRegistryEvent.

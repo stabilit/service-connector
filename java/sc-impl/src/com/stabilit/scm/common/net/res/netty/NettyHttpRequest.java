@@ -64,10 +64,7 @@ public class NettyHttpRequest extends RequestAdapter {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer); // logs
-		// inside
-		// if
-		// registered
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);

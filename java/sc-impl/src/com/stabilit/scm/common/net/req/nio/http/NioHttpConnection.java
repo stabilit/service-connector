@@ -48,6 +48,8 @@ public class NioHttpConnection implements IConnection {
 	private int numberOfThreads;
 	/** The stream Http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
+	/** state of connection. */
+	private boolean isConnected;
 
 	/**
 	 * Instantiates a new nio NioHttpConnection.
@@ -57,6 +59,7 @@ public class NioHttpConnection implements IConnection {
 		this.port = 0;
 		this.host = null;
 		this.numberOfThreads = 10;
+		this.isConnected = false;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
@@ -154,5 +157,11 @@ public class NioHttpConnection implements IConnection {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean isConnected() {
+		return this.isConnected;
 	}
 }

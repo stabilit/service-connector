@@ -24,6 +24,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.Service;
+import com.stabilit.scm.sc.log.ServiceRegistryPoint;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly registered services (backend servers).
@@ -50,6 +51,7 @@ public final class ServiceRegistry extends Registry {
 		return instance;
 	}
 
+	//TODO
 	public void addService(Object key, ServiceRegistryItemPool itemPool) {
 		// try to get service list
 		ServicePoolList servicePoolList = (ServicePoolList) this.getServicePoolList(key);

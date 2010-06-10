@@ -45,28 +45,20 @@ public class SessionRegistry extends Registry {
 		return instance;
 	}
 
-	/**
-	 * Adds a session entry.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param session
-	 *            the session
-	 */
-	public void addSession(Session session) {
+	public void addSession(Object key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
-		this.put(session.getId(), session);
+		this.put(key, session);
 	}
 
 	public void removeSession(Session session) {
 		this.removeSession(session.getId());
 	}
-	
+
 	public void removeSession(Object key) {
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
-	
+
 	public Session getSession(Object key) {
 		return (Session) super.get(key);
 	}

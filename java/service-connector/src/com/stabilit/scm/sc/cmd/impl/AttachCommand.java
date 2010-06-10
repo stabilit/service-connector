@@ -90,6 +90,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
+		// check if client already attached
 		Client client = clientRegistry.getClient(socketAddress);
 
 		if (client != null) {
@@ -104,7 +105,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		client = new Client(socketAddress, request.getSCMP());
 		
 		// add entry in connection registry for current client
-		clientRegistry.addClient(client);
+		clientRegistry.addClient(client.getSocketAddress(), client);
 
 		//set up response
 		SCMPMessage scmpReply = new SCMPMessage();

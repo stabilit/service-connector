@@ -99,6 +99,10 @@ public class MapBean<T> {
 	public T removeAttribute(String name) {
 		return this.attrMap.remove(name);
 	}
+	
+	public boolean containsKey(String key) {
+		return this.attrMap.containsKey(key);
+	}
 
 	/**
 	 * Returns key=value; pairs in a string.

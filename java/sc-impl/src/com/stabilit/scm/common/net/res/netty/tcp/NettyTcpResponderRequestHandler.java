@@ -31,6 +31,7 @@ import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
+import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.scmp.IFaultResponse;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -43,7 +44,6 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.common.util.Lock;
 import com.stabilit.scm.common.util.LockAdapter;
 import com.stabilit.scm.common.util.Lockable;
-import com.stabilit.scm.sc.registry.ResponderRegistry;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty

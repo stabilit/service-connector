@@ -59,8 +59,6 @@ public enum SCMPHeaderAttributeKey {
 	MSG_INFO("msgInfo"),
 	/** The MSG_TYPE. */
 	MSG_TYPE("msgType"),
-	/** The MULTI_THREADED. */
-	MULTI_THREADED("multiThreaded"),
 	/** The NO_DATA. */
 	NO_DATA("noData"),
 	/** The PORT_NR. */
@@ -81,19 +79,16 @@ public enum SCMPHeaderAttributeKey {
 	SESSION_INFO("sessionInfo"),
 	/** The REQ_ID. */
 	CLN_REQ_ID("clnReqId"), 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SC_REQ_ID. */
 	SC_REQ_ID("scReqId"), 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SC_RES_ID. */
 	SC_RES_ID("scResId"), 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SRV_REQ_ID. */
 	SRV_REQ_ID("srvReqId"), 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
 	/** The SRV_RES_ID. */
-	SRV_RES_ID("srvResId"); 
-	// TODO (TRN) (DONE JOT) unknown to me - debug purposes testing multiple clients
+	SRV_RES_ID("srvResId"),
+	/** The IMMEDIAT_CONNECT. */
+	IMMEDIATE_CONNECT("immediateConnect"); 
 
 	/** The name. */
 	private String name;

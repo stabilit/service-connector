@@ -37,14 +37,14 @@ public class RequesterFactory extends Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @param clientConfig
-	 *            the client configuration
+	 * @param reqConfig
+	 *            the requester configuration
 	 * @return the requester
 	 */
-	public IRequester newInstance(IRequesterConfigItem clientConfig) {
+	public IRequester newInstance(IRequesterConfigItem reqConfig) {
 		IFactoryable factoryInstance = this.newInstance();
 		IRequester requester = (IRequester) factoryInstance;
-		requester.setRequesterConfig(clientConfig);
+		requester.setRequesterConfig(reqConfig);
 		return requester;
 	}
 
@@ -55,16 +55,16 @@ public class RequesterFactory extends Factory {
 	 *            the host
 	 * @param port
 	 *            the port
-	 * @param config
-	 *            the configuration
+	 * @param connectionKey
+	 *            the connection key identifies low level communication part
 	 * @param numberOfThreads
 	 *            the number of threads
 	 * @return the requester
 	 */
-	public IRequester newInstance(String host, int port, String config, int numberOfThreads) {
+	public IRequester newInstance(String host, int port, String connectionKey, int numberOfThreads) {
 		IFactoryable factoryInstance = this.newInstance();
 		IRequester requester = (IRequester) factoryInstance;
-		IRequesterConfigItem clientConfigItem = new RequesterConfig().new RequesterConfigItem(host, port, config, numberOfThreads);
+		IRequesterConfigItem clientConfigItem = new RequesterConfig().new RequesterConfigItem(host, port, connectionKey, numberOfThreads);
 		requester.setRequesterConfig(clientConfigItem);
 		return requester;
 	}

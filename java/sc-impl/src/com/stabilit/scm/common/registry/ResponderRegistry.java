@@ -14,10 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.registry;
+package com.stabilit.scm.common.registry;
 
 import com.stabilit.scm.common.ctx.IResponderContext;
-import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.MapBean;
 

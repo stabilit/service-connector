@@ -71,16 +71,6 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Sets the multithreaded.
-	 * 
-	 * @param multiThreaded
-	 *            the new multithreaded
-	 */
-	public void setMultithreaded(boolean multiThreaded) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.MULTI_THREADED, multiThreaded);
-	}
-
-	/**
 	 * Sets the port number.
 	 * 
 	 * @param portNumber

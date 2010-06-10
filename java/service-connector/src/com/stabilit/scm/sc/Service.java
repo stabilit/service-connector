@@ -21,6 +21,7 @@
  */
 package com.stabilit.scm.sc;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.scm.common.util.MapBean;
@@ -37,17 +38,18 @@ public class Service extends MapBean<String> {
 	
 	private Map<String, Server> listOfServers;
 
-	public Service(String typ, String name, String location) {
+	public Service(String name, String typ,  String location) {
 		this.typ = typ;
 		this.name = name;
 		this.location = location;
+		this.listOfServers = new HashMap<String, Server>();
 	}
 	
-	public void addServer() {
-		
-	}
-
 	public String getServiceName() {
 		return name;
+	}
+
+	public void addServer(Server server) {
+		listOfServers.put(server.getSocketAddress().toString(), server);
 	}
 }

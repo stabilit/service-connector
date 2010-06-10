@@ -76,5 +76,7 @@ public interface IRequester extends IFactoryable {
 	 * @return the string
 	 */
 	public String toHashCodeString();
+	
+	public boolean isConnected();
 
 }
