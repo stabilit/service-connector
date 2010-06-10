@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.examples;
+package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.IServiceConnector;

@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.examples;
+package com.stabilit.scm.cln;
 
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.StatisticsPoint;
