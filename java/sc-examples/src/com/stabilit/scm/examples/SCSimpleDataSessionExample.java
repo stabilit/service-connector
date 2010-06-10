@@ -28,11 +28,10 @@ import com.stabilit.scm.cln.service.ServiceConnector;
 public class SCSimpleDataSessionExample {
 
 	public static void main(String[] args) {
-		SCSimpleDataSessionExample scSingleDataServiceApiExample = new SCSimpleDataSessionExample();
-		scSingleDataServiceApiExample.runExample();
+		SCSimpleDataSessionExample.runExample();
 	}
 
-	public void runExample() {
+	public static void runExample() {
 		IServiceConnector sc = null;
 		try {
 			sc = new ServiceConnector("localhost", 8080);
@@ -46,20 +45,21 @@ public class SCSimpleDataSessionExample {
 			ISCSession dataSessionA = sc.newDataSession("simulation");
 			dataSessionA.setMessageInfo("sessionInfo");
 			dataSessionA.setSessionInfo("messageInfo");
-			// creates session
+			// creates a session
 			dataSessionA.createSession();
 
 			byte[] buffer = new byte[1024];
 			Object resp = dataSessionA.execute(buffer);
-
-			// deletes session
+			System.out.println(resp);
+			
+			// deletes the session
 			dataSessionA.deleteSession();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				// disconnects from sc
+				// disconnects from SC
 				sc.disconnect();
 			} catch (Exception e) {
 				sc = null;
