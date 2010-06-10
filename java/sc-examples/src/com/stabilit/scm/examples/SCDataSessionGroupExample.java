@@ -21,11 +21,13 @@
  */
 package com.stabilit.scm.examples;
 
+import com.stabilit.scm.common.listener.DefaultStatisticsListener;
+import com.stabilit.scm.common.listener.StatisticsPoint;
+
 /**
  * @author JTraber
  */
-public class SCDataSessionGroupExample {
-	
+public class SCDataSessionGroupExample {	
 
 	// public void runGroupDataExample() {
 	// try {
@@ -49,5 +51,20 @@ public class SCDataSessionGroupExample {
 	// } catch (Exception e) {
 	// e.printStackTrace();
 	// }
+	// }
+
+	// public static class WithStatistics {
+	// public static void main(String[] args) {
+	// SCSimpleDataSessionExample scSingleDataServiceApiExample = new SCSimpleDataSessionExample();
+	// scSingleDataServiceApiExample.runStatistics();
+	// }
+	// }
+	//	
+	// public void runStatistics() {
+	// DefaultStatisticsListener defaultStatisticsListener = new DefaultStatisticsListener();
+	// StatisticsPoint.getInstance().addListener(defaultStatisticsListener);
+	// runExample();
+	// StatisticsPoint.getInstance().removeListener(defaultStatisticsListener);
+	// System.out.println(defaultStatisticsListener);
 	// }
 }

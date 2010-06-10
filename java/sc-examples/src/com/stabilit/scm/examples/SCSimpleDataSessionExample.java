@@ -21,14 +21,9 @@
  */
 package com.stabilit.scm.examples;
 
+import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.IServiceConnector;
-import com.stabilit.scm.cln.service.IServiceConnectorContext;
-import com.stabilit.scm.cln.service.IServiceConnectorFactory;
-import com.stabilit.scm.cln.service.ISession;
-import com.stabilit.scm.cln.service.ISessionContext;
-import com.stabilit.scm.cln.service.ServiceConnectorFactory;
-import com.stabilit.scm.common.listener.DefaultStatisticsListener;
-import com.stabilit.scm.common.listener.StatisticsPoint;
+import com.stabilit.scm.cln.service.ServiceConnector;
 
 public class SCSimpleDataSessionExample {
 
@@ -38,54 +33,37 @@ public class SCSimpleDataSessionExample {
 	}
 
 	public void runExample() {
-		IServiceConnector sc1 = null;
+		IServiceConnector sc = null;
 		try {
-			IServiceConnectorFactory scFactory = new ServiceConnectorFactory();
-			sc1 = scFactory.createServiceConnector("localhost", 8080);
-			sc1.setAttribute("keep-alive", 100);
+			sc = new ServiceConnector("localhost", 8080);
+			sc.setAttribute("keepAliveInterval", 60);
+			sc.setAttribute("keepAliveTimeout", 10);
+			sc.setAttribute("compression", false);
 
-			sc1.connect();
+			// connects to SC, starts observing connection
+			sc.connect();
 
-			IServiceConnectorContext sc1Context1 = sc1.getSCContext();
-			String host = sc1Context1.getHost();
-			String port = sc1Context1.getPort();
+			ISCSession dataSessionA = sc.newDataSession("simulation");
+			dataSessionA.setMessageInfo("sessionInfo");
+			dataSessionA.setSessionInfo("messageInfo");
+			// creates session
+			dataSessionA.createSession();
 
-			ISession dataSessionA = sc1.createDataSession("simulation");
-			ISessionContext sessionContextA = dataSessionA.getSessionContext();
+			byte[] buffer = new byte[1024];
+			Object resp = dataSessionA.execute(buffer);
 
-			String serviceName = sessionContextA.getServiceName();
-
-			byte[] data = new byte[1024];
-			dataSessionA.setData(data);
-			dataSessionA.setMessagInfo("message info");
-
-			Object resp = dataSessionA.invoke();
+			// deletes session
 			dataSessionA.deleteSession();
 
-			sc1.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				sc1.disconnect();
+				// disconnects from sc
+				sc.disconnect();
 			} catch (Exception e) {
-				sc1 = null;
+				sc = null;
 			}
 		}
-	}
-	
-	public static class WithStatistics {
-		public static void main(String[] args) {
-			SCSimpleDataSessionExample scSingleDataServiceApiExample = new SCSimpleDataSessionExample();
-			scSingleDataServiceApiExample.runStatistics();
-		}
-	}
-	
-	public void runStatistics() {
-		DefaultStatisticsListener defaultStatisticsListener = new DefaultStatisticsListener();
-		StatisticsPoint.getInstance().addListener(defaultStatisticsListener);
-		runExample();
-		StatisticsPoint.getInstance().removeListener(defaultStatisticsListener);
-		System.out.println(defaultStatisticsListener);
 	}
 }
