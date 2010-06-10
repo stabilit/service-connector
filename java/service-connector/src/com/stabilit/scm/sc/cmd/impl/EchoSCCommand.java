@@ -77,11 +77,11 @@ public class EchoSCCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey().getResponseName());
 		scmpReply.setSessionId(message.getSessionId());
 		scmpReply.setBody(obj);
-		if (obj.toString().length() > 100) {
-			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));
-		} else {
-			System.out.println("EchoSCCommand body = " + obj.toString());
-		}
+//		if (obj.toString().length() > 100) {
+//			System.out.println("EchoSCCommand body = " + obj.toString().substring(0, 100));
+//		} else {
+//			System.out.println("EchoSCCommand body = " + obj.toString());
+//		}
 		response.setSCMP(scmpReply);
 		return;
 	}
