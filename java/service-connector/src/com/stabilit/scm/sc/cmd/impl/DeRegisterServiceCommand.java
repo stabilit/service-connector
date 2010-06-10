@@ -19,7 +19,7 @@ package com.stabilit.scm.sc.cmd.impl;
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
@@ -40,7 +40,7 @@ import com.stabilit.scm.sc.registry.ServiceRegistry;
  * 
  * @author JTraber
  */
-public class DeRegisterServiceCommand extends CommandAdapter implements IPassThrough {
+public class DeRegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new DeRegisterServiceCommand.

@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
@@ -51,7 +51,7 @@ import com.stabilit.scm.sc.registry.SessionRegistry;
  * runs successfully if backend server accepts clients request and allows creating a session. Session is saved in a
  * session registry of SC.
  */
-public class ClnCreateSessionCommand extends CommandAdapter implements IPassThrough {
+public class ClnCreateSessionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new ClnCreateSessionCommand.

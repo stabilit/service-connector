@@ -17,7 +17,7 @@
 package com.stabilit.scm.common.net.res.nio;
 
 import com.stabilit.scm.common.cmd.ICommand;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -86,7 +86,7 @@ public class NioCommandRequest {
 			// message is complete request
 			return this.command;
 		}
-		if (this.command instanceof IPassThrough) {
+		if (this.command instanceof IPassThroughPartMsg) {
 			// request not for local server, forward to next server
 			return this.command;
 		}

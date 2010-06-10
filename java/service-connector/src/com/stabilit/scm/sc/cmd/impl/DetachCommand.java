@@ -19,7 +19,7 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
@@ -39,7 +39,7 @@ import com.stabilit.scm.sc.registry.ClientRegistry;
  * 
  * @author JTraber
  */
-public class DetachCommand extends CommandAdapter implements IPassThrough {
+public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new DetachCommand.

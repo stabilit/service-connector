@@ -17,7 +17,7 @@
 package com.stabilit.scm.common.net.res.netty;
 
 import com.stabilit.scm.common.cmd.ICommand;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -68,7 +68,7 @@ public class NettyCommandRequest {
 		if (message == null) {
 			return null;
 		}		
-		if (command instanceof IPassThrough) {
+		if (command instanceof IPassThroughPartMsg) {
 			// request not for local server, forward to next server
 			complete = true;
 			return command;

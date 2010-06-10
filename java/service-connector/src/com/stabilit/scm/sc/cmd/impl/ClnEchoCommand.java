@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
@@ -44,7 +44,7 @@ import com.stabilit.scm.sc.registry.SessionRegistry;
  * 
  * @author JTraber
  */
-public class ClnEchoCommand extends CommandAdapter implements IPassThrough {
+public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new ClnEchoCommand.

@@ -19,7 +19,7 @@ package com.stabilit.scm.sc.cmd.impl;
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -43,7 +43,7 @@ import com.stabilit.scm.sc.registry.SessionRegistry;
  * 
  * @author JTraber
  */
-public class ClnDataCommand extends CommandAdapter implements IPassThrough {
+public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new ClnDataCommand.

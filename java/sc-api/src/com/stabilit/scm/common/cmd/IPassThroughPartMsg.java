@@ -22,5 +22,5 @@ package com.stabilit.scm.common.cmd;
  * 
  * @author JTraber
  */
-public interface IPassThrough {
+public interface IPassThroughPartMsg {
 }

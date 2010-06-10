@@ -21,7 +21,7 @@ import java.net.SocketAddress;
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThrough;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
@@ -41,7 +41,7 @@ import com.stabilit.scm.sc.registry.ServiceRegistryItemPool;
  * 
  * @author JTraber
  */
-public class RegisterServiceCommand extends CommandAdapter implements IPassThrough {
+public class RegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new RegisterServiceCommand.
