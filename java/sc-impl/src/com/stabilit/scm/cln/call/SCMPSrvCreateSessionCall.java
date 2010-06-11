@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import java.util.Map;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -40,7 +41,17 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvDataCall(req, receivedMessage);
+		return new SCMPSrvCreateSessionCall(req, receivedMessage);
+	}
+
+	@Override
+	public SCMPMessage invoke() throws Exception {
+		// adding ip of current unit to header field ip address list
+		InetAddress localHost = InetAddress.getLocalHost();
+		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipList += "/" + localHost.getHostAddress();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+		return super.invoke();
 	}
 
 	/**
@@ -51,16 +62,6 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 	 */
 	public void setSessionId(String sessionId) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
 	}
 
 	/**

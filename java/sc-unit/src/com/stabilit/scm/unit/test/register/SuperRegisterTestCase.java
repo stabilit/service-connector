@@ -56,6 +56,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 				.newInstance(req, "P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9000);
+		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.invoke();
 	}
 

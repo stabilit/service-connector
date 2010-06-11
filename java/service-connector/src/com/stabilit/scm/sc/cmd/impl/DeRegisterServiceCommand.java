@@ -88,6 +88,23 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
+
+		if (server == null) {
+			// server not registered - deregister not possible
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
+		}
+
+		// release all resources used by server, disconnects requesters
+		server.destroy();
+		serverRegistry.removeServer(server);
+
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		Service service = serviceRegistry.getService(serviceName);
 
@@ -100,21 +117,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
 		}
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		Server server = serverRegistry.getServer(socketAddress + "_" + serviceName);
-		
-		if(server == null) {
-			// server not registered - deregister not possible
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
-		
-		// release all resources used by server, disconnects requesters
-		server.destroy();
+
 		// remove server in service
 		service.removeServer(server);
 

@@ -113,7 +113,6 @@ public class ServiceRegistryItem extends MapBean<String> implements IFactoryable
 		try {
 			SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 					.newInstance(requester);
-			createSessionCall.setHeader(message.getHeader());
 			createSessionCall.invoke();
 			this.allocated = true;
 		} catch (Exception ex) {

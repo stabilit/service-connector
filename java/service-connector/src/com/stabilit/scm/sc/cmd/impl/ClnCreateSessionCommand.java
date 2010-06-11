@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Map;
 
@@ -121,14 +120,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
 			scmpCommandException.setMessageType(getKey().getResponseName());
 			throw scmpCommandException;
-		}
-
-		// adding ip of current unit to header field ip address list
-		String ipList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		if (socketAddress instanceof InetSocketAddress) {
-			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-			ipList += inetSocketAddress.getAddress();
-			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
 
 		// create session

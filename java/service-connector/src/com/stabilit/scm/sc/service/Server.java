@@ -43,6 +43,8 @@ public class Server extends MapBean<String> {
 	private String host;
 	/** The port nr. */
 	private int portNr;
+	/** The service name. */
+	private String serviceName;
 	/** The max sessions. */
 	private int maxSessions;
 	/** The socket address. */
@@ -62,7 +64,8 @@ public class Server extends MapBean<String> {
 	 * @param maxSessions
 	 *            the max sessions
 	 */
-	public Server(InetSocketAddress socketAdress, int portNr, int maxSessions) {
+	public Server(InetSocketAddress socketAdress, String serviceName, int portNr, int maxSessions) {
+		this.serviceName = serviceName;
 		this.socketAddress = socketAdress;
 		this.portNr = portNr;
 		this.maxSessions = maxSessions;
@@ -74,6 +77,7 @@ public class Server extends MapBean<String> {
 		int numberOfThreads = serverConfig.getNumberOfThreads();
 		this.host = socketAdress.getHostName();
 		this.freeReqList = new ArrayList<IRequester>();
+		this.occupiedReqList = new ArrayList<IRequester>();
 
 		// init list of requesters
 		RequesterFactory reqFactory = new RequesterFactory();
@@ -118,8 +122,7 @@ public class Server extends MapBean<String> {
 		IRequester req = freeReqList.remove(0);
 
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
-				.newInstance(req);
-		createSessionCall.setHeader(msgToForward.getHeader());
+				.newInstance(req, msgToForward);
 		SCMPMessage serverReply = null;
 		try {
 			serverReply = createSessionCall.invoke();
@@ -179,11 +182,20 @@ public class Server extends MapBean<String> {
 	 * @return true, if successful
 	 */
 	public boolean hasFreeSession() {
-		return this.freeReqList.size() < this.maxSessions;
+		return this.freeReqList.size() <= this.maxSessions;
+	}
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return serviceName;
 	}
 
 	@Override
 	public String toString() {
-		return socketAddress + " : " + portNr + " : " + maxSessions;
+		return serviceName + "_" + socketAddress + " : " + portNr + " : " + maxSessions;
 	}
 }

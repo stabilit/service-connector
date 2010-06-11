@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
 import com.stabilit.scm.common.registry.Registry;
@@ -26,10 +21,9 @@ import com.stabilit.scm.sc.service.Server;
 
 /**
  * @author JTraber
- *
  */
 public class ServerRegistry extends Registry {
-	
+
 	/** The instance. */
 	private static ServerRegistry instance = new ServerRegistry();
 
@@ -56,8 +50,35 @@ public class ServerRegistry extends Registry {
 	public void addServer(Object key, Server server) {
 		this.put(key, server);
 	}
-	
+
+	/**
+	 * Gets the server.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the server
+	 */
 	public Server getServer(Object key) {
-		return (Server)super.get(key);
+		return (Server) super.get(key);
+	}
+
+	/**
+	 * Removes the server.
+	 * 
+	 * @param server
+	 *            the server
+	 */
+	public void removeServer(Server server) {
+		super.remove(server.getServiceName() + "_" + server.getSocketAddress());
+	}
+
+	/**
+	 * Removes the server.
+	 * 
+	 * @param key
+	 *            the key
+	 */
+	public void removeServer(Object key) {
+		super.remove(key);
 	}
 }

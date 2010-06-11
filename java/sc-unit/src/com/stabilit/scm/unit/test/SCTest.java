@@ -90,8 +90,11 @@ public class SCTest {
 		actual = actual.replaceAll("localhost/127.0.0.1:\\d*", "localhost/127.0.0.1:");
 		
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
-		Map<String, String> actualMap = splitStringToMap(expected, "\\|", "\\:");
+		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
 		
+		if(!expectedMap.equals(actualMap)) {
+			System.out.println("unlgleich");
+		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
 	

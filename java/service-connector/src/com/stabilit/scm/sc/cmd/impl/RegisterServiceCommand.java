@@ -107,7 +107,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			throw communicationException;
 		}
 
-		Server server = serverRegistry.getServer(socketAddress + "_" + serviceName);
+		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
 
 		if (server != null) {
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
@@ -120,7 +120,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 
-		server = new Server((InetSocketAddress) socketAddress, portNr, maxSessions);
+		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions);
 		try {
 			if (immediateConnect) {
 				// server connections gets connected immediately
@@ -138,7 +138,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		// TODO ... key
 		// add server to server registry
-		serverRegistry.addServer(server.getSocketAddress() + "_" + serviceName, server);
+		serverRegistry.addServer(serviceName + "_" + server.getSocketAddress(), server);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -181,18 +181,18 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				if (serviceName == null || serviceName.equals("")) {
 					throw new ValidationException("ServiceName must be set!");
 				}
-				
+
 				// maxSessions
 				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				// validate with lowest limit 1
 				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessionsInt);
-				
+
 				// immmediateConnect
 				String immediateConnect = (String) message.getHeader(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 				boolean immediateConnectBool = ValidatorUtility.validateBoolean(immediateConnect);
 				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnectBool);
-				
+
 				// portNr
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				int portNrInt = ValidatorUtility.validateInt(1, portNr, 99999);

@@ -17,7 +17,6 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
@@ -46,21 +45,19 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	 */
 	public SCMPServerCallAdapter(IRequester req, SCMPMessage message) {
 		this.requester = req;
-		if (message != null) {
-			if (message.isPart()) {
-				// on SC scmpSession might be a part - call to server must be a part too
-				this.requestMessage = new SCMPPart();
-				this.requestMessage.setHeader(message.getHeader());
-			} else {
-				this.requestMessage = new SCMPMessage();
-			}
-			this.requestMessage.setSessionId(message.getSessionId());
-			this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
-		}
 
-		if (this.requestMessage == null) {
+		if (message == null) {
 			this.requestMessage = new SCMPMessage();
+			return;
 		}
+		//TODO test that if u can really just hand over received message
+		if (message.isPart()) {
+			// on SC message might be a part - call to server must be a part too
+			this.requestMessage = new SCMPPart();
+			this.requestMessage.setHeader(message.getHeader());
+		} else {
+			this.requestMessage = message;
+		}		
 	}
 
 	/** {@inheritDoc} */

@@ -25,8 +25,6 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.SCDataSession;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -84,7 +82,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req);
+				.newInstance(req, "");
 
 		/*********************** serviceName not set *******************/
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -109,21 +107,21 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	public void clnCreateSession() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "simluation");
+				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		SCMPMessage responseMessage = createSessionCall.invoke();
+		String sessId = responseMessage.getSessionId();
 		/*************************** verify create session **********************************/
-		Assert.assertNotNull(responseMessage.getSessionId());
+		Assert.assertNotNull(sessId);
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = ":com.stabilit.scm.sc.registry.ServiceRegistryItem=messageID=1;portNr=7000;maxSessions=1;msgType=REGISTER_SERVICE;multiThreaded=1;serviceName=simulation;;";
+		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 1|";
 		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
-		scEntry = scEntry.substring(scEntry.indexOf(":"));
-		Assert.assertEquals(expectedScEntry, scEntry);
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
