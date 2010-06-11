@@ -17,7 +17,6 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -25,7 +24,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public interface IRequester extends IFactoryable {
+public interface IRequester {
 
 	/**
 	 * Disconnect.
@@ -76,7 +75,12 @@ public interface IRequester extends IFactoryable {
 	 * @return the string
 	 */
 	public String toHashCodeString();
-	
+
+	/**
+	 * Checks if is connected.
+	 * 
+	 * @return true, if is connected
+	 */
 	public boolean isConnected();
 
 }

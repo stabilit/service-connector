@@ -19,8 +19,10 @@ package com.stabilit.scm.cln.service;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.common.conf.IRequesterConfigItem;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
@@ -42,8 +44,6 @@ public class ServiceConnector implements IServiceConnector {
 	private String connectionKey;
 	/** The requester. */
 	private IRequester requester; // becomes a pool later
-	/** The req factory. */
-	private RequesterFactory reqFactory;
 	/** The attributes. */
 	private MapBean<Object> attributes;
 
@@ -60,7 +60,6 @@ public class ServiceConnector implements IServiceConnector {
 		this.port = port;
 		this.connectionKey = "netty.http"; // default is netty http
 		this.numberOfThreads = 16; // default is 16 threads
-		this.reqFactory = new RequesterFactory();
 		attributes = new MapBean<Object>();
 	}
 
@@ -72,7 +71,9 @@ public class ServiceConnector implements IServiceConnector {
 	 */
 	@Override
 	public void connect() throws Exception {
-		requester = reqFactory.newInstance(this.host, this.port, this.connectionKey, this.numberOfThreads);
+		IRequester req = new Requester();
+		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem("localhost", 9000, "netty.tcp", 16);
+		req.setRequesterConfig(config);
 		requester.connect();
 		// sets up the attach call
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);

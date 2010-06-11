@@ -22,18 +22,16 @@ import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
 
 /**
  * @author JTraber
  */
 public class SimluationServer extends Responder {
-	private RequesterFactory reqFactory;
 	private IRequester req;
 
 	public SimluationServer() {
-		reqFactory = new RequesterFactory();
 		req = null;
 	}
 
@@ -55,7 +53,8 @@ public class SimluationServer extends Responder {
 				RequesterConfig.class.getName());
 		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder()
 				.getResponderConfig();
-		req = reqFactory.newInstance(clientConfig.getClientConfig());
+		req = new Requester();
+		req.setRequesterConfig(clientConfig.getRequesterConfig());
 		req.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

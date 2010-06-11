@@ -29,7 +29,7 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.conf.RequesterConfig.RequesterConfigItem;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -70,9 +70,7 @@ public class Performance {
 		con.setNumberOfThreads(10);
 		con.setPort(8080);
 
-		RequesterFactory requesterFactory = new RequesterFactory();
-		IRequester req = (IRequester) requesterFactory.getInstance();
-
+		IRequester req = new Requester();
 		RequesterConfigItem config = new RequesterConfig().new RequesterConfigItem("localhost", 8080, "netty.http", 16);
 		req.setRequesterConfig(config);
 		req.connect();

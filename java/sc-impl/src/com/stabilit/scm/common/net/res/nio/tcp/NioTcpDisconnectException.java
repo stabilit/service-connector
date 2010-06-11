@@ -14,40 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.res;
-
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.factory.Factory;
-import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.net.res.Responder;
-import com.stabilit.scm.common.res.IResponder;
+package com.stabilit.scm.common.net.res.nio.tcp;
 
 /**
- * A factory for creating SCResponder objects. Provides access to concrete instances of SC responders.
+ * The Class NioTcpDisconnectException. Exception occurs when server is i reading on a socket and client
+ * disconnects.
  * 
  * @author JTraber
  */
-public class SCResponderFactory extends Factory {
+public class NioTcpDisconnectException extends Exception {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2863411772880184904L;
 
 	/**
-	 * Instantiates a new SCResponderFactory.
+	 * Instantiates a new nio tcp disconnect exception.
 	 */
-	public SCResponderFactory() {
-		Responder resp = new SCResponder();
-		this.baseInstances.put(DEFAULT, resp);
+	public NioTcpDisconnectException() {
+		super();
 	}
 
 	/**
-	 * New instance.
+	 * Instantiates a new nio tcp disconnect exception.
 	 * 
-	 * @param responderConfig
-	 *            the responder configuration
-	 * @return the responder
+	 * @param msg the msg
 	 */
-	public IResponder newInstance(IResponderConfigItem respConfig) {
-		IFactoryable factoryInstance = this.newInstance();
-		IResponder responder = (IResponder) factoryInstance;
-		responder.setResponderConfig(respConfig);
-		return responder;
+	public NioTcpDisconnectException(String msg) {
+		super(msg);
 	}
 }

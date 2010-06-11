@@ -33,7 +33,7 @@ import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.res.SCResponderFactory;
+import com.stabilit.scm.sc.res.SCResponder;
 import com.stabilit.scm.sc.service.ServiceLoader;
 
 /**
@@ -82,9 +82,10 @@ public final class SC {
 		SC.initializeJMXStuff();
 
 		List<ResponderConfigItem> respConfigList = config.getResponderConfigList();
-		SCResponderFactory respFactory = new SCResponderFactory();
+		
 		for (IResponderConfigItem respConfig : respConfigList) {
-			IResponder resp = respFactory.newInstance(respConfig);
+			IResponder resp = new SCResponder();
+			resp.setResponderConfig(respConfig);
 			try {
 				resp.create();
 				resp.runAsync();

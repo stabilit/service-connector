@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 
 /**
  * @author JTraber
@@ -61,8 +61,8 @@ public abstract class SuperTestCase {
 		try {
 			config = new RequesterConfig();
 			config.load(fileName);
-			RequesterFactory clientFactory = new RequesterFactory();
-			req = clientFactory.newInstance(config.getClientConfig());
+			req = new Requester();
+			req.setRequesterConfig(config.getRequesterConfig());
 			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();

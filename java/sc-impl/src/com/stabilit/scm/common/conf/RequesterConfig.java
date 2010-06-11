@@ -91,20 +91,20 @@ public class RequesterConfig {
 	}
 
 	/**
-	 * Gets the client configuration list.
+	 * Gets the Requester configuration list.
 	 * 
-	 * @return the client configuration list
+	 * @return the Requester configuration list
 	 */
-	public List<RequesterConfigItem> getClientConfigList() {
+	public List<RequesterConfigItem> getRequesterConfigList() {
 		return reqConfigItemList;
 	}
 
 	/**
-	 * Gets the client configuration.
+	 * Gets the Requester configuration.
 	 * 
-	 * @return the client configuration
+	 * @return the Requester configuration
 	 */
-	public IRequesterConfigItem getClientConfig() {
+	public IRequesterConfigItem getRequesterConfig() {
 		return reqConfigItemList.get(0);
 	}
 

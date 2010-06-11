@@ -31,7 +31,9 @@ import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
+import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
+import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
@@ -39,7 +41,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
-import com.stabilit.scm.sc.req.SCRequesterFactory;
+import com.stabilit.scm.sc.req.SCRequester;
 
 /**
  * The Class Server.
@@ -91,11 +93,12 @@ public class Server extends MapBean<String> {
 		this.freeReqList = new ArrayList<IRequester>();
 		this.occupiedReqList = new HashMap<String, IRequester>();
 
-		// init list of requesters
-		SCRequesterFactory reqFactory = new SCRequesterFactory();
-		IRequester req = null;
+		
+		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.portNr, connectionKey, numberOfThreads);
+		// init list of requesters		
 		for (int i = 0; i < maxSessions; i++) {
-			req = reqFactory.newInstance(this.host, this.portNr, connectionKey, numberOfThreads);
+			IRequester req = new SCRequester();
+			req.setRequesterConfig(config);
 			freeReqList.add(req);
 		}
 	}

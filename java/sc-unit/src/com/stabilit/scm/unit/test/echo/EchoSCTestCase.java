@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPEchoSCCall;
 import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -52,8 +52,8 @@ public class EchoSCTestCase extends SuperTestCase {
 		try {
 			config = new RequesterConfig();
 			config.load(fileName);
-			RequesterFactory clientFactory = new RequesterFactory();
-			req = clientFactory.newInstance(config.getClientConfig());
+			req = new Requester();
+			req.setRequesterConfig(config.getRequesterConfig());
 			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();

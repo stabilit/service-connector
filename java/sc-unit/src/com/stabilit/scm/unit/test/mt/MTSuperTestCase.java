@@ -34,7 +34,6 @@ import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.util.ReflectionUtil;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -45,13 +44,13 @@ import com.stabilit.scm.unit.test.SetupTestCases;
 public abstract class MTSuperTestCase {
 
 	protected String fileName;
-	protected int maxClients;
+	protected int maxRequesters;
 	protected RequesterConfig config = null;
-	protected List<IRequester> clientList = null;
+	protected List<IRequester> reqList = null;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
-		this.clientList = new ArrayList<IRequester>();
+		this.reqList = new ArrayList<IRequester>();
 	}
 
 	@Parameters
@@ -70,12 +69,11 @@ public abstract class MTSuperTestCase {
 		try {
 			config = new RequesterConfig();
 			config.load(fileName);
-			RequesterFactory clientFactory = new RequesterFactory();
-			IRequester client = new Requester();
-			client = clientFactory.newInstance(config.getClientConfig());
-			client.connect(); // physical connect
-			this.clientList.add(client);
-			return client;
+			IRequester req = new Requester();
+			req.setRequesterConfig(config.getRequesterConfig());
+			req.connect(); // physical connect
+			this.reqList.add(req);
+			return req;
 		} catch (Throwable e) {
 			e.printStackTrace();
 			return null;
@@ -84,7 +82,7 @@ public abstract class MTSuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		for (IRequester client : this.clientList) {
+		for (IRequester client : this.reqList) {
 			client.disconnect();
 			client.destroy();
 		}
@@ -92,12 +90,12 @@ public abstract class MTSuperTestCase {
 
 	@Override
 	protected void finalize() throws Throwable {
-		for (IRequester client : this.clientList) {
+		for (IRequester client : this.reqList) {
 			client.disconnect();
 			client.destroy();
 		}
 		ConnectionPoint.getInstance().clearAll();
-		clientList = null;
+		reqList = null;
 	}
 
 	public static class MTClientThread extends Thread {

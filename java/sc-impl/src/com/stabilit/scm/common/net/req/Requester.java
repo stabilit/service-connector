@@ -17,7 +17,6 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -35,9 +34,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 public class Requester implements IRequester {
 
 	/** The requester config. */
-	private IRequesterConfigItem clientConfig;
+	private IRequesterConfigItem reqConfig;
 
-	/** The client connection. */
+	/** The req connection. */
 	protected IConnection connection;
 
 	/** The msg id for the next request. */
@@ -52,16 +51,10 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public IFactoryable newInstance() {
-		return new Requester();
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void setRequesterConfig(IRequesterConfigItem clientConfig) {
-		this.clientConfig = clientConfig;
+		this.reqConfig = clientConfig;
 		ConnectionFactory clientConnectionFactory = new ConnectionFactory();
-		this.connection = clientConnectionFactory.newInstance(this.clientConfig.getConnection());
+		this.connection = clientConnectionFactory.newInstance(this.reqConfig.getConnection());
 		connection.setHost(clientConfig.getHost());
 		connection.setPort(clientConfig.getPort());
 		connection.setNumberOfThreads(clientConfig.getNumberOfThreads());

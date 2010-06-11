@@ -27,7 +27,7 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.sc.SC;
@@ -62,8 +62,8 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			Simulation.main(null);
 			config = new RequesterConfig();
 			config.load(fileName);
-			RequesterFactory clientFactory = new RequesterFactory();
-			req = clientFactory.newInstance(config.getClientConfig());
+			IRequester req = new Requester();
+			req.setRequesterConfig(config.getRequesterConfig());
 			req.connect(); // physical connect
 			clnAttachBefore();
 			registerServiceBefore();
@@ -98,8 +98,8 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	private void tearDownSCServerToService() throws Exception {
 		RequesterConfig config = new RequesterConfig();
 		config.load("sc-sim.properties");
-		RequesterFactory clientFactory = new RequesterFactory();
-		IRequester tearDownClient = clientFactory.newInstance(config.getClientConfig());
+		IRequester tearDownClient = new Requester();
+		tearDownClient.setRequesterConfig(config.getRequesterConfig());
 		tearDownClient.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer

@@ -14,54 +14,53 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.net.res.nio;
+package com.stabilit.scm.common.net.res.nio.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.ctx.RequestContext;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
-import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
-import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
- * The Class NioTcpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Tcp frame.
+ * The Class NioHttpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Http frame.
  * Based on Nio.
  */
-public class NioTcpRequest extends RequestAdapter {
+public class NioHttpRequest extends RequestAdapter {
 
 	/** The socket channel. */
 	private SocketChannel socketChannel;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
+	/** The stream http util. */
+	private SCMPStreamHttpUtil streamHttpUtil;
 
 	/**
-	 * Instantiates a new nio tcp request.
+	 * Instantiates a new nio http request.
 	 * 
 	 * @param socketChannel
 	 *            the socket channel
 	 */
-	public NioTcpRequest(SocketChannel socketChannel) {
+	public NioHttpRequest(SocketChannel socketChannel) {
 		super(socketChannel.socket().getLocalSocketAddress(), socketChannel.socket().getRemoteSocketAddress());
 		this.mapBean = new MapBean<Object>();
 		this.socketChannel = socketChannel;
 		this.message = null;
 		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
+		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
 	/** {@inheritDoc} */
-	@Override
 	public void load() throws Exception {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
 		int bytesRead = 0;
@@ -71,19 +70,16 @@ public class NioTcpRequest extends RequestAdapter {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		if (bytesRead < 0) {
-			throw new NioTcpDisconnectException("line disconnected");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		// parse headline
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(),
-				byteReadBuffer, 0, bytesRead);
-		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
+		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		baos.write(byteBuffer.array(), 0, bytesRead);
-		// continues reading until tpc frame is complete
-		while (scmpLengthHeadlineInc > bytesRead) {
+		baos.write(byteReadBuffer, 0, bytesRead);
+		// continues reading until http frame is complete
+		while (httpFrameSize > bytesRead) {
 			byteBuffer.clear();
 			int read = 0;
 			try {
@@ -92,16 +88,16 @@ public class NioTcpRequest extends RequestAdapter {
 				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			if (read < 0) {
-				throw new IOException("read failed (<0)");
+				throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 			}
 			bytesRead += read;
 			baos.write(byteBuffer.array(), 0, read);
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
+		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
+		SCMPMessage message = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();
 		this.message = message;
 	}

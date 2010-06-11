@@ -14,38 +14,37 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.net.res.nio;
+package com.stabilit.scm.common.net.res.nio.http;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
-import com.stabilit.scm.common.net.EncoderDecoderFactory;
-import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.common.scmp.ResponseAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NioTcpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Tcp frame.
- * Based on Nio.
+ * The Class NioHttpResponse is responsible for writing a response to a socketChannel. Encodes scmp to a Http
+ * frame. Based on Nio.
  */
-public class NioTcpResponse extends ResponseAdapter {
+public class NioHttpResponse extends ResponseAdapter {
 
 	/** The socket channel. */
 	private SocketChannel socketChannel;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
+	/** The stream http util. */
+	private SCMPStreamHttpUtil streamHttpUtil;
 
 	/**
-	 * Instantiates a new nio tcp response.
+	 * Instantiates a new nio http response.
 	 * 
 	 * @param socketChannel
 	 *            the socket channel
 	 */
-	public NioTcpResponse(SocketChannel socketChannel) {
-		this.scmp = null;
+	public NioHttpResponse(SocketChannel socketChannel) {
 		this.socketChannel = socketChannel;
+		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
 	/**
@@ -57,8 +56,7 @@ public class NioTcpResponse extends ResponseAdapter {
 	 */
 	public byte[] getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		this.encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
-		encoderDecoder.encode(baos, scmp);
+		this.streamHttpUtil.writeResponseSCMP(baos, scmp);
 		baos.close();
 		byte[] buf = baos.toByteArray();
 		return buf;
@@ -80,7 +78,7 @@ public class NioTcpResponse extends ResponseAdapter {
 		byte[] byteWriteBuffer = this.getBuffer();
 		ByteBuffer buffer = ByteBuffer.wrap(byteWriteBuffer);
 		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(),
-				byteWriteBuffer);
+				byteWriteBuffer); // logs inside if registered
 		this.socketChannel.write(buffer);
 	}
 }

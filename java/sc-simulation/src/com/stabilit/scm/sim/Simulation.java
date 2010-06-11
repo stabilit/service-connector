@@ -25,10 +25,9 @@ import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
-import com.stabilit.scm.common.net.res.ResponderFactory;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
-import com.stabilit.scm.sim.server.SimluationServerFactory;
+import com.stabilit.scm.sim.server.SimluationServer;
 
 public class Simulation {
 
@@ -46,15 +45,16 @@ public class Simulation {
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new SimulationServerCommandFactory());
 		}
-		List<ResponderConfigItem> serverConfigList = srvConfig.getResponderConfigList();
-		ResponderFactory serverFactory = new SimluationServerFactory();
-		for (IResponderConfigItem serverConfigItem : serverConfigList) {
-			IResponder server = serverFactory.newInstance(serverConfigItem);
-			IResponderContext serverContext = server.getResponderContext();
-			serverContext.setAttribute(RequesterConfig.class.getName(), clientConfig);
+		List<ResponderConfigItem> respConfigList = srvConfig.getResponderConfigList();
+
+		for (IResponderConfigItem respConfigItem : respConfigList) {
+			IResponder resp = new SimluationServer();
+			resp.setResponderConfig(respConfigItem);
+			IResponderContext respContext = resp.getResponderContext();
+			respContext.setAttribute(RequesterConfig.class.getName(), clientConfig);
 			try {
-				server.create();
-				server.runAsync();
+				resp.create();
+				resp.runAsync();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

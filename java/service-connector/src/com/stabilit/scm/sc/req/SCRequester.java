@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.req;
 
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -27,22 +26,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * @author JTraber
  */
 public class SCRequester extends Requester {
-
-	/**
-	 * Instantiates a new SCRequester.
-	 */
-	public SCRequester() {
-	}
-
-	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return new SCRequester();
-	}
 
 	/**
 	 * Send and receive.
