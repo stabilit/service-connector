@@ -19,18 +19,17 @@ package com.stabilit.scm.common.log.listener;
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IWarning events. The class that is interested in processing a IWarning
- * event implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addIWarningListener</code> method. When
- * the IWarning event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving IRuntime events. The class that is interested in processing a IRuntime event
+ * implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIRuntimeListener</code> method. When the IRuntime event occurs, that object's appropriate method
+ * is invoked.
  * 
  * @see RuntimeEvent
  */
 public interface IRuntimeListener extends EventListener {
 
 	/**
-	 * Warning event.
+	 * Runtime event.
 	 * 
 	 * @param warning
 	 *            the warning
