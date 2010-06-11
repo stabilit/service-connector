@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import java.util.Map;
+import java.net.InetAddress;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -35,23 +35,43 @@ public class SCMPSrvSystemCall extends SCMPServerCallAdapter {
 		this(null, null);
 	}
 
+	public SCMPSrvSystemCall(IRequester requester) {
+		super(requester);
+	}
+	
 	public SCMPSrvSystemCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvDataCall(req, receivedMessage);
+		return new SCMPSrvSystemCall(req, receivedMessage);
+	}
+	
+	
+	@Override
+	public ISCMPCall newInstance(IRequester requester) {
+		return new SCMPSrvSystemCall(requester);
 	}
 
 	/**
-	 * Sets the service name.
+	 * Invoke.
 	 * 
-	 * @param serviceName
-	 *            the new service name
+	 * @return the scmp
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	@Override
+	public SCMPMessage invoke() throws Exception {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, requester.hashCode());
+
+		// adding ip of current unit to header field ip address list
+		InetAddress localHost = InetAddress.getLocalHost();
+		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipList += "/" + localHost.getHostAddress();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+
+		return super.invoke();
 	}
 
 	/**
@@ -62,16 +82,6 @@ public class SCMPSrvSystemCall extends SCMPServerCallAdapter {
 	 */
 	public void setMessageInfo(String messageInfo) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
 	}
 
 	/**

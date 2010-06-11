@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
+import java.net.InetAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -59,13 +59,15 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 	 */
 	@Override
 	public SCMPMessage invoke() throws Exception {
-		this.requestMessage.setMessageType(getMessageType().getRequestName());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, requester.hashCode());
-		this.responseMessage = requester.sendAndReceive(this.requestMessage);
-		if (this.responseMessage.isFault()) {
-			throw new SCMPCallException((SCMPFault) responseMessage);
-		}
-		return this.responseMessage;
+
+		// adding ip of current unit to header field ip address list
+		InetAddress localHost = InetAddress.getLocalHost();
+		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipList += "/" + localHost.getHostAddress();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
+
+		return super.invoke();
 	}
 
 	/** {@inheritDoc} */

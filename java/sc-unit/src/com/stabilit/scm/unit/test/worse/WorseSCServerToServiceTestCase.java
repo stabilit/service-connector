@@ -86,7 +86,6 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		// data call should fail because connection lost to simulation server
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
 				.getServiceName(), this.scSession.getSessionId());
-		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
 		try {

@@ -16,17 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -34,8 +29,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.SCServiceException;
+import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -86,59 +82,40 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getSCMP();
-		SCMPMessage result = null;
+		if (message.getBodyLength() > 0) {
+			if (message.getBody().toString().length() > 100) {
+				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
+			} else {
+				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
+			}
+		} else {
+			System.out.println("ClnEchoCommand empty body");
+		}
+
 		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
 		if (LoggerPoint.getInstance().isDebug()) {
 			LoggerPoint.getInstance().fireDebug(this,
 					"Run command " + this.getKey() + " on Node: " + maxNodes);
 		}
-		// adding ip of current unit to ip address list
-		String ipList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		SocketAddress socketAddress = request.getLocalSocketAddress();
-		if (socketAddress instanceof InetSocketAddress) {
-			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-			ipList += inetSocketAddress.getAddress();
-			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		}
-
-//		if (message.getBodyLength() > 0) {
-//			if (message.getBody().toString().length() > 100) {
-//				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
-//			} else {
-//				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
-//			}
-//		} else {
-//			System.out.println("ClnEchoCommand empty body");
-//		}
-
-		Session session = getSessionById(message.getSessionId());
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
-				.getAttribute(ServiceRegistryItem.class.getName());
-
-		if (serviceRegistryItem == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVER_ERROR);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
-		message.removeHeader(SCMPHeaderAttributeKey.MAX_NODES);
+		
+		Session session = getSessionById(message.getSessionId());	
+		Server server = session.getServer();
+		
+		SCMPMessage result = null;
 
 		try {
 			if (maxNodes == 2) {
 				// forward to next node
-				result = serviceRegistryItem.srvEcho(message);
+				result = server.srvEcho(message);
 			} else {
-				// forward to next node where echo will be executed
+				// forward to next node where cln echo will be executed
 				--maxNodes;
 				message.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
-				result = serviceRegistryItem.clnEcho(message);
+				result = server.clnEcho(message);
 			}
-		} catch (CommunicationException e) {
+		} catch (SCServiceException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			serviceRegistryItem.markObsolete();
 			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);

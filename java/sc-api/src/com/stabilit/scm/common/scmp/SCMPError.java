@@ -44,7 +44,7 @@ public enum SCMPError {
 	/** The not allocated. */
 	NOT_ALLOCATED("411", "Not allocated."),
 	/** The no session found. */
-	NO_SESSION("412", "No session found."),
+	NO_SESSION_FOUND("412", "No session found."),
 	/** The SERVE r_ error. */
 	SERVER_ERROR("500", "Server error occured."),
 	/** The unknown service. */

@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,42 +14,30 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.call;
-
-import com.stabilit.scm.common.net.req.IRequester;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.sc.service;
 
 /**
- * The Class SCMPCallAdapter. Provides basic functionality for calls which needs a session.
- * 
  * @author JTraber
+ *
  */
-public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
+public class SCServiceException extends Exception {
 
-	/**
-	 * Instantiates a new SCMPSessionCallAdapter.
-	 */
-	public SCMPSessionCallAdapter() {
-		this(null, null, null);
-	}
-	
-	public SCMPSessionCallAdapter(String s) {
-		
+	private static final long serialVersionUID = 75222936621899150L;
+
+	public SCServiceException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	/**
-	 * Instantiates a new SCMPSessionCallAdapter.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param sessionId
-	 *            the session id
-	 */
-	public SCMPSessionCallAdapter(IRequester req, String serviceName, String sessionId) {
-		super(req, serviceName, sessionId);
+	public SCServiceException(String message) {
+		super(message);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public abstract ISCMPCall newInstance(IRequester req, String sessionId, String serviceName);
+	public SCServiceException(Throwable cause) {
+		super(cause);
+	}
 }

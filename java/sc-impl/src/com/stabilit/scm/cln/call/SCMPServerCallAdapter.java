@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls to a backend server.
@@ -32,6 +31,13 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	 */
 	public SCMPServerCallAdapter() {
 		this(null, null);
+	}
+
+	/**
+	 * @param requester
+	 */
+	public SCMPServerCallAdapter(IRequester requester) {
+		super(requester);
 	}
 
 	/**
@@ -50,14 +56,7 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 			this.requestMessage = new SCMPMessage();
 			return;
 		}
-		//TODO test that if u can really just hand over received message
-		if (message.isPart()) {
-			// on SC message might be a part - call to server must be a part too
-			this.requestMessage = new SCMPPart();
-			this.requestMessage.setHeader(message.getHeader());
-		} else {
-			this.requestMessage = message;
-		}		
+		this.requestMessage = message;
 	}
 
 	/** {@inheritDoc} */

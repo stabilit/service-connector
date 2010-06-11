@@ -88,6 +88,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 
 		/*
 		 * delete session shouldn't fail even service is down, clean up works fine client doesn't notice the failure
+		 * TODO is right verify with jan
 		 */
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, this.scSession.getServiceName(), this.scSession.getSessionId());
@@ -99,20 +100,18 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
 
-		String expectedScEntry = ":compression=false;localDateTime=" + localDateTimeOfConnect
-				+ ";scVersion=1.0-000;keepAliveTimeout=30,360;";
+		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
+				+ localDateTimeOfConnect + ", keepAliveTimeout=30}]|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
-		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
-		scEntry = scEntry.substring(scEntry.indexOf(":"));
+		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9000, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=simulation}]";
+		expectedScEntry = "P01_RTXS_RPRWS1:0 - P01_RTXS_RPRWS1_localhost/127.0.0.1: : 9000 : 10|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|";
 		scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
+		// truncate /127.0.0.1:3640 because port may vary.
+		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
 		Assert.assertEquals(expectedScEntry, scEntry);
-
-		// remove entry in serviceRegistry on Sc
-		this.deRegisterServiceAfter("simulation");
 	}
 
 	@Test
@@ -127,7 +126,6 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		// data call should fail because connection lost to simulation server
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
 				.getServiceName(), this.scSession.getSessionId());
-		clnDataCall.setServiceName("simulation");
 		clnDataCall.setMessagInfo("asdasd");
 		clnDataCall.setRequestBody("hello");
 		try {
@@ -142,20 +140,18 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
 
-		String expectedScEntry = ":compression=false;localDateTime=" + localDateTimeOfConnect
-				+ ";scVersion=1.0-000;keepAliveTimeout=30,360;";
+		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
+				+ localDateTimeOfConnect + ", keepAliveTimeout=30}]|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
-		scEntry = scEntry.substring(scEntry.indexOf(":") + 1);
-		scEntry = scEntry.substring(scEntry.indexOf(":"));
+		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
 		Assert.assertEquals(expectedScEntry, scEntry);
 
-		expectedScEntry = "P01_RTXS_RPRWS1:SCMP [header={messageID=2, portNr=9000, maxSessions=10, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=P01_RTXS_RPRWS1}]simulation:SCMP [header={messageID=1, portNr=7000, maxSessions=1, msgType=REGISTER_SERVICE, multiThreaded=1, serviceName=simulation}]";
+		expectedScEntry = "P01_RTXS_RPRWS1:0 - P01_RTXS_RPRWS1_localhost/127.0.0.1: : 9000 : 10|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|";
 		scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
+		// truncate /127.0.0.1:3640 because port may vary.
+		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
 		Assert.assertEquals(expectedScEntry, scEntry);
-
-		// remove entry in serviceRegistry on Sc
-		this.deRegisterServiceAfter("simulation");
 	}
 
 	/**

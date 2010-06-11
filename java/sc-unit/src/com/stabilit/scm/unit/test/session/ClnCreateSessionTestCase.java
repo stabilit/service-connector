@@ -127,5 +127,12 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke();
+		
+		/*********************************** Verify registry entries in SC ********************************/
+		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
+		inspect = inspectCall.invoke();
+		inspectMsg = (InspectMessage) inspect.getBody();
+		scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
+		Assert.assertEquals("", scEntry);
 	}
 }

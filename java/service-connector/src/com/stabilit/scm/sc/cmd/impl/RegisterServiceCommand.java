@@ -91,25 +91,16 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
 
-		// if service is not here - a new service gets stored
-		// server will be added to service
 		SCMPMessage message = request.getSCMP();
 		String serviceName = message.getServiceName();
+		// lookup service and checks properness
+		Service service = this.validateService(serviceName);
 
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		Service service = serviceRegistry.getService(serviceName);
-
-		if (service == null) {
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPError.UNKNOWN_SERVICE);
-			communicationException.setMessageType(getResponseKeyName());
-			throw communicationException;
-		}
-
 		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
 
 		if (server != null) {
+			// server registered two times for this service
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ALREADY_REGISTERED);
 			communicationException.setMessageType(getResponseKeyName());
@@ -119,11 +110,11 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-
+		// create new server
 		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions);
 		try {
 			if (immediateConnect) {
-				// server connections gets connected immediately
+				// server connections get connected immediately
 				server.immediateConnect();
 			}
 		} catch (Exception ex) {
@@ -135,9 +126,10 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		}
 		// add server to service
 		service.addServer(server);
-
-		// TODO ... key
-		// add server to server registry
+		//add service to server
+		server.setService(service);
+		
+		// add server to server registry TODO ... key
 		serverRegistry.addServer(serviceName + "_" + server.getSocketAddress(), server);
 
 		SCMPMessage scmpReply = new SCMPMessage();

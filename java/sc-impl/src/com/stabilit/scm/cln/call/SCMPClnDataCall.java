@@ -53,16 +53,6 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	}
 
 	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
-	/**
 	 * Sets the message info.
 	 * 
 	 * @param messageInfo

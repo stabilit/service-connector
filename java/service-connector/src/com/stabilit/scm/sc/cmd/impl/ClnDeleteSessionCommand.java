@@ -30,13 +30,15 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.SCServiceException;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting
- * a session means: Free up backend server from session and delete session entry in SC session registry.
+ * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a
+ * session means: Free up backend server from session and delete session entry in SC session registry.
  * 
  * @author JTraber
  */
@@ -83,26 +85,23 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getSCMP();
 		String sessionId = message.getSessionId();
-		Session session = getSessionById(sessionId);
+		// lookup session and checks properness
+		Session session = this.getSessionById(sessionId);
 
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
-				.getAttribute(ServiceRegistryItem.class.getName());
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-
+		Server server = session.getServer();
 		try {
-			serviceRegistry.deallocate(serviceRegistryItem, request); // calls srvDeleteSession inside
-		} catch (CommunicationException e) {
-			// deallocate failed, connection to backend server disturbed - clean up
-			serviceRegistryItem.markObsolete();			
+			server.deleteSession(message);
+		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
+			//TODO verify with jan
 		}
-		// delete session entry from session registry
-		SessionRegistry.getCurrentInstance().removeSession(sessionId);
+		// delete session on server successful - delete entry from session registry
+		SessionRegistry.getCurrentInstance().removeSession(session);
+
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getServiceName());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		response.setSCMP(scmpReply);
 	}
 

@@ -16,18 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.LoggerPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -35,8 +30,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.SCServiceException;
+import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -90,45 +86,24 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 		SCMPMessage message = request.getSCMP();
 		Map<String, String> header = message.getHeader();
 
-		SCMPMessage result = null;
+		Session session = getSessionById(message.getSessionId());	
+		Server server = session.getServer();
 		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
-
-		// adding ip of current node to header field ip address list
-		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
-		SocketAddress socketAddress = request.getLocalSocketAddress();
-		if (socketAddress instanceof InetSocketAddress) {
-			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-			ipList += inetSocketAddress.getAddress();
-			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		}
-
-		Session session = getSessionById(message.getSessionId());
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
-				.getAttribute(ServiceRegistryItem.class.getName());
-
-		if (serviceRegistryItem == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: serviceRegistryItem not found");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVER_ERROR);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
 		header.remove(SCMPHeaderAttributeKey.MAX_NODES.getName());
+		SCMPMessage result = null;
 		try {
 			if (maxNodes == 2) {
 				// forward to next node
-				result = serviceRegistryItem.srvSystem(message);
+				result = server.srvSystem(message);
 			} else {
-				// forward to next node where system call will be executed
+				// forward to next node where cln system call will be executed
 				--maxNodes;
 				header.put(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
-				result = serviceRegistryItem.clnSystem(message);
+				result = server.clnSystem(message);
 			}
-		} catch (CommunicationException e) {
+		} catch (SCServiceException e) {
 			// srvSystem or clnSystem failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			serviceRegistryItem.markObsolete();
 			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);

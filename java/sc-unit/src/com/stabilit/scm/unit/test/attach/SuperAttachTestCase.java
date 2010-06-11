@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.attach;
 
-import java.util.Date;
-
 import org.junit.After;
 import org.junit.Before;
 
@@ -26,7 +24,6 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 /**
@@ -34,7 +31,7 @@ import com.stabilit.scm.unit.test.SuperTestCase;
  */
 public abstract class SuperAttachTestCase extends SuperTestCase {
 
-	protected Date localDateTimeOfConnect;
+	protected String localDateTimeOfConnect;
 
 	/**
 	 * The Constructor.
@@ -66,13 +63,11 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
-		localDateTimeOfConnect = ValidatorUtility.validateLocalDateTime(attachCall.getRequest().getHeader(
-				SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+		localDateTimeOfConnect = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 	}
 
 	public void clnDetachAfter() throws Exception {
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL
-				.newInstance(req);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke();
 	}
 }

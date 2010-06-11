@@ -23,12 +23,10 @@ import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -38,10 +36,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ClientRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.service.Client;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
@@ -96,51 +91,26 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		SocketAddress socketAddress = requestContext.getSocketAddress(); // IP and port
 
 		// lookup if client is correctly attached
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-		Client client = clientRegistry.getClient(socketAddress);
+		this.validateClient(socketAddress);
 
-		if (client == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
-			// TODO (TRN) => unknown client
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
-
-		// check service
+		// check service is present
 		SCMPMessage reqMessage = request.getSCMP();
 		String serviceName = reqMessage.getServiceName();
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-
-		Service service = serviceRegistry.getService(serviceName);
-		if (service == null) {
-			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
+		Service service = this.validateService(serviceName);
 
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 
-		// allocates a server for this session
+		// tries allocating a server for this session
 		Server server = service.allocateServer();
-
-		if (server == null) {
-			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
-			scmpCommandException.setMessageType(getKey().getResponseName());
-			throw scmpCommandException;
-		}
+		this.validateServer(server);
 
 		try {
 			// creates session
 			SCMPMessage serverReply = server.createSession(reqMessage);
-			
-			//TODO serverReply auswerten in case of reject
+
+			// TODO serverReply auswerten in case of reject
 		} catch (CommunicationException ex) {
 			// allocate session failed, connection to backend server disturbed - clean up
 			ExceptionPoint.getInstance().fireException(this, ex);
@@ -149,10 +119,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			throw communicationException;
 		}
 
-		// finally add session to the registry
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		// add server to session
 		session.setServer(server);
+		// finally add session to the registry
+		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		sessionRegistry.addSession(session.getId(), session);
 
 		// creating reply

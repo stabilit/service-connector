@@ -23,7 +23,6 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -32,9 +31,9 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistryItem;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.SCServiceException;
+import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -87,19 +86,16 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		SCMPMessage message = request.getSCMP();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
-
-		ServiceRegistryItem serviceRegistryItem = (ServiceRegistryItem) session
-				.getAttribute(ServiceRegistryItem.class.getName());
+		
+		Server server = session.getServer();
 		try {
 			// try sending to backend server
-			SCMPMessage scmpReply = serviceRegistryItem.srvData(message);
+			SCMPMessage scmpReply = server.sendData(message);
 			scmpReply.setMessageType(getKey().getResponseName());
 			response.setSCMP(scmpReply);
-		} catch (CommunicationException e) {
+		} catch (SCServiceException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			serviceRegistryItem.markObsolete();
-			ServiceRegistry.getCurrentInstance().deallocate(serviceRegistryItem, request);
 			ExceptionPoint.getInstance().fireException(this, e);
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);

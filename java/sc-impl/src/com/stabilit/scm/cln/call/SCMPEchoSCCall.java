@@ -44,8 +44,8 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	 * @param client
 	 *            the client to use when invoking call
 	 */
-	public SCMPEchoSCCall(IRequester client) {
-		this.requester = client;
+	public SCMPEchoSCCall(IRequester req) {
+		super(req);
 	}
 
 	/** {@inheritDoc} */
@@ -61,8 +61,8 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester client) {
-		return new SCMPEchoSCCall(client);
+	public ISCMPCall newInstance(IRequester req) {
+		return new SCMPEchoSCCall(req);
 	}
 
 	/** {@inheritDoc} */

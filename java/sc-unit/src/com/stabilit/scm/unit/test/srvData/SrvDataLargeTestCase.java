@@ -87,7 +87,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals("16", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals("Session info", scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
-		Assert.assertEquals("Message number 1", scmpReply.getBody());
+		Assert.assertEquals("Message number 0", scmpReply.getBody());
 	}
 
 	@Test

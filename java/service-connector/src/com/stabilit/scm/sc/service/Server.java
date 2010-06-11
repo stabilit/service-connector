@@ -19,18 +19,27 @@ package com.stabilit.scm.sc.service;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnEchoCall;
+import com.stabilit.scm.cln.call.SCMPClnSystemCall;
 import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
+import com.stabilit.scm.cln.call.SCMPSrvDataCall;
+import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
+import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
+import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.sc.req.SCRequesterFactory;
 
 /**
  * The Class Server.
@@ -45,6 +54,8 @@ public class Server extends MapBean<String> {
 	private int portNr;
 	/** The service name. */
 	private String serviceName;
+	/** The service. */
+	private Service service;
 	/** The max sessions. */
 	private int maxSessions;
 	/** The socket address. */
@@ -52,7 +63,7 @@ public class Server extends MapBean<String> {
 	/** The free requester list. */
 	private List<IRequester> freeReqList;
 	/** The occupied requester list. */
-	private List<IRequester> occupiedReqList;
+	private Map<String, IRequester> occupiedReqList;
 
 	/**
 	 * Instantiates a new server.
@@ -65,6 +76,7 @@ public class Server extends MapBean<String> {
 	 *            the max sessions
 	 */
 	public Server(InetSocketAddress socketAdress, String serviceName, int portNr, int maxSessions) {
+		this.service = null;
 		this.serviceName = serviceName;
 		this.socketAddress = socketAdress;
 		this.portNr = portNr;
@@ -77,10 +89,10 @@ public class Server extends MapBean<String> {
 		int numberOfThreads = serverConfig.getNumberOfThreads();
 		this.host = socketAdress.getHostName();
 		this.freeReqList = new ArrayList<IRequester>();
-		this.occupiedReqList = new ArrayList<IRequester>();
+		this.occupiedReqList = new HashMap<String, IRequester>();
 
 		// init list of requesters
-		RequesterFactory reqFactory = new RequesterFactory();
+		SCRequesterFactory reqFactory = new SCRequesterFactory();
 		IRequester req = null;
 		for (int i = 0; i < maxSessions; i++) {
 			req = reqFactory.newInstance(this.host, this.portNr, connectionKey, numberOfThreads);
@@ -104,6 +116,7 @@ public class Server extends MapBean<String> {
 	 *             the exception
 	 */
 	public void immediateConnect() throws Exception {
+		// TODO what if second fails??
 		for (IRequester req : freeReqList) {
 			req.connect();
 		}
@@ -129,9 +142,160 @@ public class Server extends MapBean<String> {
 		} catch (Exception e) {
 			// create session failed - add requester to free list
 			freeReqList.add(req);
-			throw e;
+			throw new SCServiceException("createSession failed", e);
 		}
-		occupiedReqList.add(req);
+		occupiedReqList.put(msgToForward.getSessionId(), req);
+		return serverReply;
+	}
+
+	/**
+	 * Delete session.
+	 * 
+	 * @param session
+	 *            the session to delete
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public void deleteSession(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.remove(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"deleteSession not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("deleteSession not possible - req is null for sessionid:");
+		}
+		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
+				.newInstance(req, message);
+
+		try {
+			deleteSessionCall.invoke();
+		} catch (Exception e) {
+
+			// delete session failed
+			// TODO what to do with current requester
+			throw new SCServiceException("deleteSession failed", e);
+		}
+
+		// delete session successful - add req to free list
+		this.freeReqList.add(req);
+	}
+	
+	/**
+	 * Send data. Tries sending data to server.
+	 * 
+	 * @param message the message
+	 * 
+	 * @return the sCMP message
+	 * 
+	 * @throws SCServiceException the SC service exception
+	 */
+	public SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.get(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"sendData not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("sendData not possible - req is null for sessionid:");
+		}
+		SCMPMessage serverReply = null;
+		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(req, message);
+		try {
+			serverReply = srvDataCall.invoke();
+		} catch (Exception e) {
+			// TODO what to do with current requester
+			throw new SCServiceException("sendData failed", e);
+		}
+		return serverReply;
+	}
+
+	/**
+	 * Srv echo.
+	 * 
+	 * @param message
+	 *            the message
+	 * @return the scmp message
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.get(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"srvEcho not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("srvEcho not possible - req is null for sessionid:");
+		}
+		SCMPMessage serverReply = null;
+		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(req, message);
+		try {
+			serverReply = srvEchoCall.invoke();
+		} catch (Exception e) {
+			// TODO what to do with current requester
+			throw new SCServiceException("srvEcho failed", e);
+		}
+		return serverReply;
+	}
+
+	public SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.get(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"srvEcho not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("srvEcho not possible - req is null for sessionid:");
+		}
+		SCMPMessage serverReply = null;
+		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, message);
+		try {
+			serverReply = clnEchoCall.invoke();
+		} catch (Exception e) {
+			// TODO what to do with current requester
+			throw new SCServiceException("srvEcho failed", e);
+		}
+		return serverReply;
+	}
+
+	public SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.get(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"srvSystem not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("srvSystem not possible - req is null for sessionid:");
+		}
+		SCMPMessage serverReply = null;
+		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(req, message);
+		try {
+			serverReply = srvSystemCall.invoke();
+		} catch (Exception e) {
+			// TODO what to do with current requester
+			throw new SCServiceException("srvSystem failed", e);
+		}
+		return serverReply;
+	}
+
+	public SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
+		String sessionId = message.getSessionId();
+
+		IRequester req = occupiedReqList.get(sessionId);
+		if (req == null) {
+			RuntimePoint.getInstance().fireRuntime(this,
+					"clnSystem not possible - req is null for sessionid: " + sessionId);
+			throw new SCServiceException("clnSystem not possible - req is null for sessionid:");
+		}
+		SCMPMessage serverReply = null;
+		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(req, message);
+		try {
+			serverReply = clnSystemCall.invoke();
+		} catch (Exception e) {
+			// TODO what to do with current requester
+			throw new SCServiceException("clnSystem failed", e);
+		}
 		return serverReply;
 	}
 
@@ -197,5 +361,13 @@ public class Server extends MapBean<String> {
 	@Override
 	public String toString() {
 		return serviceName + "_" + socketAddress + " : " + portNr + " : " + maxSessions;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
+	public Service getService() {
+		return service;
 	}
 }

@@ -59,7 +59,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		clnEchoCall.setRequestBody("hello world");
 
 		double startTime = System.currentTimeMillis();
-		double anzMsg = 100000;
+		double anzMsg = 1000;
 		for (int i = 0; i < anzMsg; i++) {
 			clnEchoCall.setRequestBody("hello world");
 			result = clnEchoCall.invoke();
@@ -73,7 +73,8 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.text.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(result.getSessionId());
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getResponseName(), result.getMessageType());
-		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		anzMsg += 2;
+		Assert.assertEquals((int) anzMsg + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}
 
 	/**
@@ -121,8 +122,7 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < anzMsg; i++) {
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
-					this.scSession
-					.getServiceName(), this.scSession.getSessionId());
+					this.scSession.getServiceName(), this.scSession.getSessionId());
 			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setServiceName("simulation");
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());

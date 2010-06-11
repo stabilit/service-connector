@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
-import java.util.Map;
-
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -40,17 +38,7 @@ public class SCMPSrvDeleteSessionCall extends SCMPServerCallAdapter {
 
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvDataCall(req, receivedMessage);
-	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		return new SCMPSrvDeleteSessionCall(req, receivedMessage);
 	}
 
 	/**
@@ -61,16 +49,6 @@ public class SCMPSrvDeleteSessionCall extends SCMPServerCallAdapter {
 	 */
 	public void setSessionId(String sessionId) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
 	}
 
 	/**
