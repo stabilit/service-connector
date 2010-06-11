@@ -24,7 +24,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.scm.common.ctx.RequestContext;
-import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.RequestAdapter;

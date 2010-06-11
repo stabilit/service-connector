@@ -14,64 +14,82 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
 /**
- * The Class ExceptionPoint. Allows logging on exception level - fire exception.
+ * The Class ConnectionEvent. Event for logging connection purpose.
  */
-public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
+public class ConnectionEvent extends EventObject {
 
-	/** The exception point. */
-	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -8265225164155917995L;
 
-	/**
-	 * Instantiates a new ExceptionPoint.
-	 */
-	private ExceptionPoint() {
-	}
-
-	/**
-	 * Gets the single instance of ExceptionPoint.
-	 * 
-	 * @return single instance of ExceptionPoint
-	 */
-	public static ExceptionPoint getInstance() {
-		return exceptionPoint;
-	}
+	/** The offset. */
+	private int offset;
+	/** The length. */
+	private int length;
+	/** The data. */
+	private Object data;
+	/** The port. */
+	private int port;
 
 	/**
-	 * Fire exception.
+	 * Instantiates a new connection event.
 	 * 
 	 * @param source
 	 *            the source
-	 * @param th
-	 *            the th
+	 * @param data
+	 *            the data
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 * @param port
+	 *            the port
 	 */
-	public void fireException(Object source, Throwable th) {
-		if (getInstance().isEmpty() == false) {
-			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			ExceptionPoint.getInstance().fireException(exceptionEvent);
-		}
+	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
+		super(source);
+		this.offset = offset;
+		this.length = length;
+		this.data = data;
+		this.port = port;		
 	}
 
 	/**
-	 * Fire exception.
+	 * Gets the data.
 	 * 
-	 * @param exceptionEvent
-	 *            the exception event
+	 * @return the data
 	 */
-	public void fireException(ExceptionEvent exceptionEvent) {
-		int localSize = this.size;
-		EventListener[] localArray = this.listenerArray;
-		for (int i = 0; i < localSize; i++) {
-			try {
-				IExceptionListener exceptionListener = (IExceptionListener) localArray[i];
-				exceptionListener.exceptionEvent(exceptionEvent);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	public Object getData() {
+		return data;
+	}
+
+	/**
+	 * Gets the offset.
+	 * 
+	 * @return the offset
+	 */
+	public int getOffset() {
+		return offset;
+	}
+
+	/**
+	 * Gets the length.
+	 * 
+	 * @return the length
+	 */
+	public int getLength() {
+		return length;
+	}
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
 	}
 }

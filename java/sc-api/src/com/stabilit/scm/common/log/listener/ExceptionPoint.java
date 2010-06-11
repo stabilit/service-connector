@@ -14,58 +14,64 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IConnection events. The class that is interested in processing a
- * IConnection event implements this interface, and the object created with that class is registered with a
- * component using the component's <code>addIConnectionListener</code> method. When
- * the IConnection event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see ConnectionEvent
+ * The Class ExceptionPoint. Allows logging on exception level - fire exception.
  */
-public interface IConnectionListener extends EventListener {
+public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
+
+	/** The exception point. */
+	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
 
 	/**
-	 * Write event.
-	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * Instantiates a new ExceptionPoint.
 	 */
-	public void writeEvent(ConnectionEvent connectionEvent) throws Exception;
+	private ExceptionPoint() {
+	}
 
 	/**
-	 * Read event.
+	 * Gets the single instance of ExceptionPoint.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @return single instance of ExceptionPoint
 	 */
-	public void readEvent(ConnectionEvent connectionEvent) throws Exception;
+	public static ExceptionPoint getInstance() {
+		return exceptionPoint;
+	}
 
 	/**
-	 * Connect event.
+	 * Fire exception.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @param source
+	 *            the source
+	 * @param th
+	 *            the th
 	 */
-	public void connectEvent(ConnectionEvent connectionEvent) throws Exception;
+	public void fireException(Object source, Throwable th) {
+		if (getInstance().isEmpty() == false) {
+			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
+			ExceptionPoint.getInstance().fireException(exceptionEvent);
+		}
+	}
 
 	/**
-	 * Disconnect event.
+	 * Fire exception.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @param exceptionEvent
+	 *            the exception event
 	 */
-	public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception;
+	public void fireException(ExceptionEvent exceptionEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				IExceptionListener exceptionListener = (IExceptionListener) localArray[i];
+				exceptionListener.exceptionEvent(exceptionEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

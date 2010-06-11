@@ -25,9 +25,9 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.LoggerPoint;
+import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;

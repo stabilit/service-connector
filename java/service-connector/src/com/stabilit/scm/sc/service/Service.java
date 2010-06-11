@@ -88,4 +88,15 @@ public class Service extends MapBean<String> {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(serverIndex);		
+		for (Server server : listOfServers) {
+			sb.append(" - ");
+			sb.append(server);			
+		}
+		return sb.toString();
+	}
 }

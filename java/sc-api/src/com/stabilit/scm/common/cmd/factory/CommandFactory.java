@@ -37,6 +37,16 @@ public class CommandFactory extends Factory {
 	}
 
 	/**
+	 * Gets the single instance of CommandFactory.
+	 * 
+	 * @return single instance of CommandFactory
+	 */
+	@Override
+	public IFactoryable getInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Gets the current command factory.
 	 * 
 	 * @return the current command factory

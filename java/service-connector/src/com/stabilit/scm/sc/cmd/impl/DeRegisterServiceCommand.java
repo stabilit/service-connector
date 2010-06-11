@@ -25,8 +25,8 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -92,7 +92,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		Service service = serviceRegistry.getService(serviceName);
 
 		if (service == null) {
-			// server not registered - deregister not possible
+			// service not registered - deregister not possible
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: service not registered");
 			}
@@ -101,7 +101,18 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			throw scmpCommandException;
 		}
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		Server server = serverRegistry.getServer(socketAddress + serviceName);
+		Server server = serverRegistry.getServer(socketAddress + "_" + serviceName);
+		
+		if(server == null) {
+			// server not registered - deregister not possible
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
+			scmpCommandException.setMessageType(getKey().getResponseName());
+			throw scmpCommandException;
+		}
+		
 		// release all resources used by server, disconnects requesters
 		server.destroy();
 		// remove server in service

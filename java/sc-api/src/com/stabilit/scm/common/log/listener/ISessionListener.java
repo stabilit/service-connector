@@ -14,28 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
-/**
- * The listener interface for receiving ILogger events. The class that is interested in processing a ILogger event
- * implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addILoggerListener</code> method. When
- * the ILogger event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see LoggerEvent
- */
-public interface ILoggerListener extends EventListener {
+public interface ISessionListener extends EventListener {
 
-	/**
-	 * Log event.
-	 * 
-	 * @param loggerEvent
-	 *            the logger event
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void logEvent(LoggerEvent loggerEvent) throws Exception;
+	public void createSessionEvent(SessionEvent sessionEvent) throws Exception;
+
+	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception;
+
 }

@@ -17,7 +17,7 @@
 package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 

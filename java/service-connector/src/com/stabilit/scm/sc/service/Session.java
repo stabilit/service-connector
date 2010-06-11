@@ -56,4 +56,9 @@ public class Session extends MapBean<Object> {
 	public Server getServer() {
 		return this.server;
 	}
+
+	@Override
+	public String toString() {
+		return id + ":" + server;
+	}
 }

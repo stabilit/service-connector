@@ -130,6 +130,6 @@ public final class EncoderDecoderFactory extends Factory {
 	 * @return the encoder decoders
 	 */
 	public Object[] getEncoderDecoders() {
-		return this.factoryMap.keySet().toArray();
+		return this.baseInstances.keySet().toArray();
 	}
 }

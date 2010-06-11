@@ -34,7 +34,7 @@ public class SCRequesterFactory extends Factory {
 	 */
 	public SCRequesterFactory() {
 		IRequester requester = new SCRequester();
-		this.factoryMap.put(DEFAULT, requester);
+		this.baseInstances.put(DEFAULT, requester);
 	}
 
 	/**

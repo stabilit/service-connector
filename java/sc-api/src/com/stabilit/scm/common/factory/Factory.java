@@ -20,20 +20,25 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class Factory. SuperClass for factories.
+ * The Class Factory. SuperClass for factories. 
  * 
- * *** ATTENTION ***
- * Subclasses must not have any properties other then private static.
- * Otherwise these properties will not be thread-safe!
+ * *** ATTENTION *** 
+ * Subclasses must not have any properties other then
+ * private static. Otherwise these properties will not be thread-safe! 
+ * 
+ * This construct is an extended factory pattern. The factory stores base instances of classes in a map. 
+ * To create an other instance the factory takes the base instance and calls there newInstance method. 
+ * So only the base instance knows how to create himself and factory does not to know more details. 
+ * The base instance need to be created by concrete subclasses of the <code>Factory</code>
  * 
  * @author JTraber
  */
-public class Factory {
+public abstract class Factory {
 
 	/** The Constant DEFAULT. Key for default instance. */
 	protected static final String DEFAULT = "default";
-	/** The map stores factory instances */
-	protected Map<Object, IFactoryable> factoryMap = new ConcurrentHashMap<Object, IFactoryable>();
+	/** The map stores base instances by a key. */
+	protected Map<Object, IFactoryable> baseInstances = new ConcurrentHashMap<Object, IFactoryable>();
 
 	/**
 	 * Gets the single instance of Factory.
@@ -53,7 +58,7 @@ public class Factory {
 	 *            the factory instance
 	 */
 	public void add(Object key, IFactoryable factoryInstance) {
-		factoryMap.put(key, factoryInstance);
+		baseInstances.put(key, factoryInstance);
 	}
 
 	/**
@@ -63,7 +68,7 @@ public class Factory {
 	 *            the key
 	 */
 	public void remove(Object key) {
-		factoryMap.remove(key);
+		baseInstances.remove(key);
 	}
 
 	/**
@@ -74,7 +79,7 @@ public class Factory {
 	 * @return single instance of Factory
 	 */
 	public IFactoryable getInstance(Object key) {
-		IFactoryable factoryInstance = factoryMap.get(key);
+		IFactoryable factoryInstance = baseInstances.get(key);
 		return factoryInstance;
 	}
 
@@ -99,6 +104,6 @@ public class Factory {
 		if (factoryInstance == null) {
 			return null;
 		}
-		return factoryInstance.newInstance();	// invoke the constructor
+		return factoryInstance.newInstance(); // invoke the base instance constructor
 	}
 }

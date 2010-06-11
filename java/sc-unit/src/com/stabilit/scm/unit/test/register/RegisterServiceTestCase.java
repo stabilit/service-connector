@@ -105,14 +105,24 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = "P01_RTXS_RPRWS1:simulation:";
-		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
-		Assert.assertEquals(expectedScEntry, scEntry);
+		String expectedScEntry = "P01_RTXS_RPRWS1:0 - localhost/127.0.0.1: : 7000 : 10|simulation:0 - localhost/127.0.0.1: : 7000 : 1|";
+		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");		
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-
+		
+		expectedScEntry = "localhost/127.0.0.1:_simulation:localhost/127.0.0.1: : 7000 : 1|localhost/127.0.0.1:_P01_RTXS_RPRWS1:localhost/127.0.0.1: : 7000 : 10|";
+		scEntry = (String) inspectMsg.getAttribute("serverRegistry");
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "P01_RTXS_RPRWS1");
 		deRegisterServiceCall.invoke();
+		
+		/*********************************** Verify registry entries in SC ********************************/
+		inspectMsg = (InspectMessage) inspect.getBody();
+		expectedScEntry = "localhost/127.0.0.1:_simulation:localhost/127.0.0.1: : 7000 : 1";
+		scEntry = (String) inspectMsg.getAttribute("serverRegistry");
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
 
 	// TODO verify second registry!!

@@ -14,28 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
-/**
- * The listener interface for receiving IException events. The class that is interested in processing an IException
- * event implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addIExceptionListener</code> method. When
- * the IException event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see ExceptionEvent
- */
-public interface IExceptionListener extends EventListener {
+public interface ISCMPListener extends EventListener {
 
-	/**
-	 * Exception event.
-	 * 
-	 * @param exception
-	 *            the exception
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void exceptionEvent(ExceptionEvent exception) throws Exception;
+	public abstract void encodeEvent(SCMPEvent scmpEvent);
+
+	public abstract void decodeEvent(SCMPEvent scmpEvent);
+
 }

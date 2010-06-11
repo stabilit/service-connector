@@ -14,14 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
-public interface ISessionListener extends EventListener {
+public class SessionEvent extends EventObject {
 
-	public void createSessionEvent(SessionEvent sessionEvent) throws Exception;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -8265225164155917995L;
 
-	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception;
+	private String sessionId;
+	
+	public SessionEvent(Object source, String sessionId) {
+		super(source);
+		this.sessionId = sessionId;
+	}
 
+	public String getSessionId() {
+		return sessionId;
+	}
 }

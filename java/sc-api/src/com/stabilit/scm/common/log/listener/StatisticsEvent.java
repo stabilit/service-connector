@@ -14,39 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventObject;
 
-/**
- * The Class ExceptionEvent. Event for logging exception purpose.
- */
-public class ExceptionEvent extends EventObject {
+public class StatisticsEvent extends EventObject {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -9169664176519752342L;
-	/** The throwable. */
-	private Throwable throwable;
+	private static final long serialVersionUID = -8925639053404385202L;
+	
+	private EventObject eventObject;
+	
+	private StatisticsEnum eventType;
 
-	/**
-	 * Instantiates a new exception event.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param throwable
-	 *            the throwable
-	 */
-	public ExceptionEvent(Object source, Throwable throwable) {
+	public StatisticsEvent(Object source, EventObject eventObject) {
 		super(source);
-		this.throwable = throwable;
+		this.eventObject = eventObject;
 	}
 
-	/**
-	 * Gets the throwable.
-	 * 
-	 * @return the throwable
-	 */
-	public Throwable getThrowable() {
-		return throwable;
+	public EventObject getEventObject() {
+		return eventObject;
 	}
+
+	public StatisticsEnum getEventType() {
+		return eventType;
+	}
+	
+	public void setEventType(StatisticsEnum eventType) {
+		this.eventType = eventType;
+	}
+
 }

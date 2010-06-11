@@ -14,82 +14,53 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventObject;
 
 /**
- * The Class ConnectionEvent. Event for logging connection purpose.
+ * The Class PerformanceEvent. Event for logging performance purpose.
  */
-public class ConnectionEvent extends EventObject {
+public class PerformanceEvent extends EventObject {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -8265225164155917995L;
+	private static final long serialVersionUID = -2561926364455371080L;
 
-	/** The offset. */
-	private int offset;
-	/** The length. */
-	private int length;
-	/** The data. */
-	private Object data;
-	/** The port. */
-	private int port;
+	/** The method name where performance event fired. */
+	private String methodName;
+
+	/** The time. */
+	private long time;
 
 	/**
-	 * Instantiates a new connection event.
+	 * Instantiates a new performance event.
 	 * 
 	 * @param source
 	 *            the source
-	 * @param data
-	 *            the data
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
-	 * @param port
-	 *            the port
+	 * @param methodName
+	 *            the method name
 	 */
-	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
+	public PerformanceEvent(Object source, String methodName) {
 		super(source);
-		this.offset = offset;
-		this.length = length;
-		this.data = data;
-		this.port = port;		
+		this.time = System.nanoTime();
+		this.methodName = methodName;
 	}
 
 	/**
-	 * Gets the data.
+	 * Gets the time.
 	 * 
-	 * @return the data
+	 * @return the time
 	 */
-	public Object getData() {
-		return data;
+	public long getTime() {
+		return time;
 	}
 
 	/**
-	 * Gets the offset.
+	 * Gets the method name.
 	 * 
-	 * @return the offset
+	 * @return the methodName
 	 */
-	public int getOffset() {
-		return offset;
-	}
-
-	/**
-	 * Gets the length.
-	 * 
-	 * @return the length
-	 */
-	public int getLength() {
-		return length;
-	}
-
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
+	public String getMethodName() {
+		return methodName;
 	}
 }

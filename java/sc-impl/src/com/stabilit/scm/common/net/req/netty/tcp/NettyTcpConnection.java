@@ -34,8 +34,8 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ConnectionPoint;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;

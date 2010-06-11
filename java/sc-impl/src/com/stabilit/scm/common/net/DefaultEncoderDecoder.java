@@ -30,8 +30,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.SCMPPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.SCMPPoint;
 import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;

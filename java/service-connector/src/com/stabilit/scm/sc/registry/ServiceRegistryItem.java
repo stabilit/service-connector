@@ -30,7 +30,7 @@ import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IRequester;

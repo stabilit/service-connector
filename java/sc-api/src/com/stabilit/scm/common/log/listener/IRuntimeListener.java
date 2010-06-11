@@ -14,38 +14,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IPerformance events. The class that is interested in processing a
- * IPerformance event implements this interface, and the object created with that class is registered with a
- * component using the component's <code>addIPerformanceListener</code> method. When
- * the IPerformance event occurs, that object's appropriate
+ * The listener interface for receiving IWarning events. The class that is interested in processing a IWarning
+ * event implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIWarningListener</code> method. When
+ * the IWarning event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see PerformanceEvent
+ * @see RuntimeEvent
  */
-public interface IPerformanceListener extends EventListener {
+public interface IRuntimeListener extends EventListener {
 
 	/**
-	 * Begin.
+	 * Warning event.
 	 * 
-	 * @param event
-	 *            the event
+	 * @param warning
+	 *            the warning
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void begin(PerformanceEvent event) throws Exception;
-
-	/**
-	 * End.
-	 * 
-	 * @param event
-	 *            the event
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void end(PerformanceEvent event) throws Exception;
+	public void runtimeEvent(RuntimeEvent warning) throws Exception;
 }

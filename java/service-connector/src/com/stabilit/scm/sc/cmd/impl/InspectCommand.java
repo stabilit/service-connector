@@ -27,6 +27,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.sc.registry.ClientRegistry;
+import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 
@@ -80,7 +81,8 @@ public class InspectCommand extends CommandAdapter {
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getResponseName());
@@ -91,6 +93,7 @@ public class InspectCommand extends CommandAdapter {
 		inspectMsg.setAttribute("clientRegistry", clientRegistry);
 		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
 		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);
+		inspectMsg.setAttribute("serverRegistry", serverRegistry);
 		scmpReply.setBody(inspectMsg);
 		response.setSCMP(scmpReply);
 	}

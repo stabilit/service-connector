@@ -34,7 +34,7 @@ public class SCResponderFactory extends Factory {
 	 */
 	public SCResponderFactory() {
 		Responder resp = new SCResponder();
-		this.factoryMap.put(DEFAULT, resp);
+		this.baseInstances.put(DEFAULT, resp);
 	}
 
 	/**

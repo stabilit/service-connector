@@ -2,7 +2,7 @@ package com.stabilit.scm.sc.log;
 
 import java.util.EventListener;
 
-import com.stabilit.scm.common.listener.ListenerSupport;
+import com.stabilit.scm.common.log.listener.ListenerSupport;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 enum ServiceRegistryEventType {

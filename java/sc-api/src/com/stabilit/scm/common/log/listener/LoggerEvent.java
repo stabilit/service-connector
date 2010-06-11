@@ -14,39 +14,55 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventObject;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.log.Level;
 
 /**
- * The Class SCMPEvent. Event for logging scmp message purpose.
+ * The Class LoggerEvent. Event for logging purpose.
  */
-public class SCMPEvent extends EventObject {
+public class LoggerEvent extends EventObject {
 
-	private static final long serialVersionUID = -7902182048824790108L;
-	private SCMPMessage scmp;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 8286024613410908732L;
+	/** The text. */
+	private String text;
+	/** The level. */
+	private Level level;
 
 	/**
-	 * Instantiates a new scmp event.
+	 * Instantiates a new logger event.
 	 * 
 	 * @param source
 	 *            the source
-	 * @param scmp
-	 *            the scmp message instance
+	 * @param text
+	 *            the text
+	 * @param level
+	 *            the level
 	 */
-	public SCMPEvent(Object source, SCMPMessage scmp) {
+	public LoggerEvent(Object source, String text, Level level) {
 		super(source);
-		this.scmp = scmp;
+		this.text = text;
+		this.level = level;
 	}
 
 	/**
-	 * Gets the scmp instance.
+	 * Gets the text.
 	 * 
-	 * @return the scmp instance
+	 * @return the text
 	 */
-	public SCMPMessage getSCMP() {
-		return scmp;
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * Gets the level of logging.
+	 * 
+	 * @return the level
+	 */
+	public Level getLevel() {
+		return level;
 	}
 }

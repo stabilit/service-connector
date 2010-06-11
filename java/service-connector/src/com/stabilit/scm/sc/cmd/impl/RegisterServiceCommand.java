@@ -26,7 +26,7 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -107,7 +107,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			throw communicationException;
 		}
 
-		Server server = serverRegistry.getServer(socketAddress + serviceName);
+		Server server = serverRegistry.getServer(socketAddress + "_" + serviceName);
 
 		if (server != null) {
 			SCMPCommunicationException communicationException = new SCMPCommunicationException(
@@ -138,7 +138,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		// TODO ... key
 		// add server to server registry
-		serverRegistry.addServer(server.getSocketAddress() + serviceName, server);
+		serverRegistry.addServer(server.getSocketAddress() + "_" + serviceName, server);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);

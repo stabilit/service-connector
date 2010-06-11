@@ -14,28 +14,58 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IWarning events. The class that is interested in processing a IWarning
- * event implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addIWarningListener</code> method. When
- * the IWarning event occurs, that object's appropriate
+ * The listener interface for receiving IConnection events. The class that is interested in processing a
+ * IConnection event implements this interface, and the object created with that class is registered with a
+ * component using the component's <code>addIConnectionListener</code> method. When
+ * the IConnection event occurs, that object's appropriate
  * method is invoked.
  * 
- * @see RuntimeEvent
+ * @see ConnectionEvent
  */
-public interface IRuntimeListener extends EventListener {
+public interface IConnectionListener extends EventListener {
 
 	/**
-	 * Warning event.
+	 * Write event.
 	 * 
-	 * @param warning
-	 *            the warning
+	 * @param connectionEvent
+	 *            the connection event
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void runtimeEvent(RuntimeEvent warning) throws Exception;
+	public void writeEvent(ConnectionEvent connectionEvent) throws Exception;
+
+	/**
+	 * Read event.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void readEvent(ConnectionEvent connectionEvent) throws Exception;
+
+	/**
+	 * Connect event.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void connectEvent(ConnectionEvent connectionEvent) throws Exception;
+
+	/**
+	 * Disconnect event.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception;
 }

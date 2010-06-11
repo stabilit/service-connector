@@ -18,8 +18,8 @@ package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.log.listener.PerformancePoint;
+import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;

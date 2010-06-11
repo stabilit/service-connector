@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.util.ValidatorException;
 
 /**

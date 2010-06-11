@@ -53,4 +53,9 @@ public class Client extends MapBean<Object> {
 	public SCMPMessage getScmp() {
 		return scmp;
 	}
+
+	@Override
+	public String toString() {
+		return socketAddress + ":" + scmp;
+	}
 }

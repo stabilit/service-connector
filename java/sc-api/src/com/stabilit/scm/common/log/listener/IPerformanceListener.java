@@ -14,23 +14,38 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
-public class SessionEvent extends EventObject {
+/**
+ * The listener interface for receiving IPerformance events. The class that is interested in processing a
+ * IPerformance event implements this interface, and the object created with that class is registered with a
+ * component using the component's <code>addIPerformanceListener</code> method. When
+ * the IPerformance event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see PerformanceEvent
+ */
+public interface IPerformanceListener extends EventListener {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -8265225164155917995L;
+	/**
+	 * Begin.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void begin(PerformanceEvent event) throws Exception;
 
-	private String sessionId;
-	
-	public SessionEvent(Object source, String sessionId) {
-		super(source);
-		this.sessionId = sessionId;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
+	/**
+	 * End.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void end(PerformanceEvent event) throws Exception;
 }

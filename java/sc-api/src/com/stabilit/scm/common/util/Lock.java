@@ -18,7 +18,7 @@ package com.stabilit.scm.common.util;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 
 /**
  * The Class Lock. Used instead of synchronized, is faster. Guarantees thread safety.

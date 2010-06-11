@@ -14,14 +14,39 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
-public interface ISCMPListener extends EventListener {
+/**
+ * The Class ExceptionEvent. Event for logging exception purpose.
+ */
+public class ExceptionEvent extends EventObject {
 
-	public abstract void encodeEvent(SCMPEvent scmpEvent);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -9169664176519752342L;
+	/** The throwable. */
+	private Throwable throwable;
 
-	public abstract void decodeEvent(SCMPEvent scmpEvent);
+	/**
+	 * Instantiates a new exception event.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param throwable
+	 *            the throwable
+	 */
+	public ExceptionEvent(Object source, Throwable throwable) {
+		super(source);
+		this.throwable = throwable;
+	}
 
+	/**
+	 * Gets the throwable.
+	 * 
+	 * @return the throwable
+	 */
+	public Throwable getThrowable() {
+		return throwable;
+	}
 }

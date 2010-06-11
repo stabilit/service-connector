@@ -31,7 +31,7 @@ public class RequesterFactory extends Factory {
 	 */
 	public RequesterFactory() {
 		Requester requester = new Requester();
-		this.factoryMap.put(DEFAULT, requester);
+		this.baseInstances.put(DEFAULT, requester);
 	}
 
 	/**

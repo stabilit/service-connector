@@ -26,7 +26,7 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ClientRegistry;

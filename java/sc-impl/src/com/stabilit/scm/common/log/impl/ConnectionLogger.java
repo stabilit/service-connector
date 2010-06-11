@@ -21,10 +21,10 @@ import java.net.InetAddress;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.ConnectionEvent;
-import com.stabilit.scm.common.listener.IConnectionListener;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
+import com.stabilit.scm.common.log.listener.ConnectionEvent;
+import com.stabilit.scm.common.log.listener.IConnectionListener;
 
 /**
  * The Class ConnectionLogger. Provides functionality of logging a <code>ConnectionEvent</code>.

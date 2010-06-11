@@ -19,7 +19,7 @@ package com.stabilit.scm.common.scmp;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.ctx.IRequestContext;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.util.MapBean;
 
 /**

@@ -28,9 +28,9 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.LoggerPoint;
+import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;

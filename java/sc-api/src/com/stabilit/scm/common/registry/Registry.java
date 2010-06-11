@@ -106,6 +106,7 @@ public abstract class Registry implements IRegistryMXBean {
 			dump.append(key);
 			dump.append(":");
 			dump.append(registryMap.get(key).toString());
+			dump.append("|");
 		}
 		return dump.toString();
 	}

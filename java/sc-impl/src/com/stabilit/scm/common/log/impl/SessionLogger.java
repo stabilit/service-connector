@@ -19,10 +19,10 @@ package com.stabilit.scm.common.log.impl;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.ISessionListener;
-import com.stabilit.scm.common.listener.SessionEvent;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
+import com.stabilit.scm.common.log.listener.ISessionListener;
+import com.stabilit.scm.common.log.listener.SessionEvent;
 
 public class SessionLogger implements ISessionListener, ILoggerDecorator {
 

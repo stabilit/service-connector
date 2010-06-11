@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.common.listener.DefaultStatisticsListener;
-import com.stabilit.scm.common.listener.StatisticsPoint;
+import com.stabilit.scm.common.log.listener.DefaultStatisticsListener;
+import com.stabilit.scm.common.log.listener.StatisticsPoint;
 
 /**
  * @author JTraber

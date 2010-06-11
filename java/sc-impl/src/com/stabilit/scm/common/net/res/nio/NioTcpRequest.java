@@ -24,7 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.ctx.RequestContext;
-import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;

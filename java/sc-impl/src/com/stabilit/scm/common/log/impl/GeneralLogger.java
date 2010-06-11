@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.ILoggerListener;
-import com.stabilit.scm.common.listener.LoggerEvent;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
+import com.stabilit.scm.common.log.listener.ILoggerListener;
+import com.stabilit.scm.common.log.listener.LoggerEvent;
 
 /**
  * The Class GeneralLogger. Provides functionality of logging an <code>LoggerEvent</code>.

@@ -14,12 +14,39 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
-public interface IStatisticsListener extends EventListener {
+/**
+ * The Class RuntimeEvent. Event for logging runtime message purpose.
+ */
+public class RuntimeEvent extends EventObject {
 
-	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -3539710122841864955L;
+	/** The text. */
+	private String text;
 
+	/**
+	 * Instantiates a new runtime event.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
+	 */
+	public RuntimeEvent(Object source, String text) {
+		super(source);
+		this.text = text;
+	}
+
+	/**
+	 * Gets the text.
+	 * 
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
 }

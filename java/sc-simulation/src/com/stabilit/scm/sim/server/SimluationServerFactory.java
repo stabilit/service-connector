@@ -29,7 +29,7 @@ import com.stabilit.scm.common.res.IResponder;
 public class SimluationServerFactory extends ResponderFactory {
 	public SimluationServerFactory() {
 	    Responder server = new SimluationServer();
-	    this.factoryMap.put(DEFAULT, server);
+	    this.baseInstances.put(DEFAULT, server);
 	}
 	
 	public IResponder newInstance(IResponderConfigItem serverConfig) {

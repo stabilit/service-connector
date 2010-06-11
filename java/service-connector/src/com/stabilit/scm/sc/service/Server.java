@@ -25,7 +25,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.common.conf.IResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.RequesterFactory;
 import com.stabilit.scm.common.registry.ResponderRegistry;
@@ -41,19 +41,14 @@ public class Server extends MapBean<String> {
 
 	/** The host. */
 	private String host;
-
 	/** The port nr. */
 	private int portNr;
-
 	/** The max sessions. */
 	private int maxSessions;
-
 	/** The socket address. */
 	private SocketAddress socketAddress;
-
 	/** The free requester list. */
 	private List<IRequester> freeReqList;
-
 	/** The occupied requester list. */
 	private List<IRequester> occupiedReqList;
 
@@ -185,5 +180,10 @@ public class Server extends MapBean<String> {
 	 */
 	public boolean hasFreeSession() {
 		return this.freeReqList.size() < this.maxSessions;
+	}
+
+	@Override
+	public String toString() {
+		return socketAddress + " : " + portNr + " : " + maxSessions;
 	}
 }

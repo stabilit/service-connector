@@ -14,64 +14,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.listener;
+package com.stabilit.scm.common.log.listener;
 
 import java.util.EventListener;
 
 /**
- * The Class RuntimePoint. Allows logging general runtime information.
+ * The listener interface for receiving ILogger events. The class that is interested in processing a ILogger event
+ * implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addILoggerListener</code> method. When
+ * the ILogger event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see LoggerEvent
  */
-public final class RuntimePoint extends ListenerSupport<IRuntimeListener> {
-
-	/** The runtime point. */
-	private static RuntimePoint runtimePoint = new RuntimePoint();
+public interface ILoggerListener extends EventListener {
 
 	/**
-	 * Instantiates a new RuntimePoint.
-	 */
-	private RuntimePoint() {
-	}
-
-	/**
-	 * Gets the single instance of RuntimePoint.
+	 * Log event.
 	 * 
-	 * @return single instance of RuntimePoint
+	 * @param loggerEvent
+	 *            the logger event
+	 * @throws Exception
+	 *             the exception
 	 */
-	public static RuntimePoint getInstance() {
-		return runtimePoint;
-	}
-
-	/**
-	 * Fire runtime.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
-	 */
-	public void fireRuntime(Object source, String text) {
-		if (getInstance().isEmpty() == false) {
-			RuntimeEvent runtimeEvent = new RuntimeEvent(source, text);
-			RuntimePoint.getInstance().fireRuntime(runtimeEvent);
-		}
-	}
-
-	/**
-	 * Fire runtime.
-	 * 
-	 * @param runtimeEvent
-	 *            the runtime event
-	 */
-	public void fireRuntime(RuntimeEvent runtimeEvent) {
-		int localSize = this.size;
-		EventListener[] localArray = this.listenerArray;
-		for (int i = 0; i < localSize; i++) {
-			try {
-				IRuntimeListener runtimeListener = (IRuntimeListener) localArray[i];
-				runtimeListener.runtimeEvent(runtimeEvent);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	public void logEvent(LoggerEvent loggerEvent) throws Exception;
 }
