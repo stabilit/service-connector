@@ -17,12 +17,12 @@
 package com.stabilit.scm.common.scmp;
 
 /**
- * The Interface IFaultResponse. Marks exception classes which save specific information for the response. Used to
+ * The Interface IHasFaultResponse. Marks exception classes which save specific information for the response. Used to
  * save data about occurred errors and writing the response on a different level of software architecture.
  * 
  * @author JTraber
  */
-public interface IFaultResponse {
+public interface IHasFaultResponse {
 
 	/**
 	 * Sets the fault response.

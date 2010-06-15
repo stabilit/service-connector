@@ -62,7 +62,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			Simulation.main(null);
 			config = new RequesterConfig();
 			config.load(fileName);
-			IRequester req = new Requester();
+			this.req = new Requester();
 			req.setRequesterConfig(config.getRequesterConfig());
 			req.connect(); // physical connect
 			clnAttachBefore();

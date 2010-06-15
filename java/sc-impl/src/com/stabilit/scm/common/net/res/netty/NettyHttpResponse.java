@@ -21,7 +21,7 @@ import java.net.InetSocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
@@ -41,7 +41,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public class NettyHttpResponse extends ResponseAdapter {
 
 	/** The event from Netty framework. */
-	private MessageEvent event;
+	private ChannelEvent event;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 
@@ -51,7 +51,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 * @param event
 	 *            the event from Netty Framework
 	 */
-	public NettyHttpResponse(MessageEvent event) {
+	public NettyHttpResponse(ChannelEvent event) {
 		this.scmp = null;
 		this.event = event;
 	}
@@ -61,7 +61,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 * 
 	 * @return the event
 	 */
-	public MessageEvent getEvent() {
+	public ChannelEvent getEvent() {
 		return event;
 	}
 

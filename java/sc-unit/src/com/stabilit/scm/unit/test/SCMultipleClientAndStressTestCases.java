@@ -35,29 +35,31 @@ import com.stabilit.scm.unit.test.echo.mt.MTSrvEchoTestCase;
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses({ 
-	// multiple clients test
-	//StressTest.class,
-	MTEchoSCTestCase.class,
-	MTSrvEchoTestCase.class })
+@SuiteClasses( {
+// multiple clients test
+		// StressTest.class,
+		MTEchoSCTestCase.class, MTSrvEchoTestCase.class })
 public final class SCMultipleClientAndStressTestCases {
-	
+
 	/**
 	 * Instantiates a new sC multiple client and stress test.
 	 */
 	private SCMultipleClientAndStressTestCases() {
 	}
-	
+
 	/**
 	 * Verify error.
 	 * 
-	 * @param result the result
-	 * @param error the error
-	 * @param msgType the msg type
+	 * @param result
+	 *            the result
+	 * @param error
+	 *            the error
+	 * @param msgType
+	 *            the msg type
 	 */
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getResponseName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getName());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
 	}

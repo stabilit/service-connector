@@ -32,7 +32,7 @@ import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IHasFaultResponse;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -46,9 +46,9 @@ import com.stabilit.scm.common.util.LockAdapter;
 import com.stabilit.scm.common.util.Lockable;
 
 /**
- * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
- * framework by catching events (message received, exception caught). Functionality to handle large messages is also
- * inside.
+ * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
+ * Netty framework by catching events (message received, exception caught). Functionality to handle large messages is
+ * also inside.
  * 
  * @author JTraber
  */
@@ -152,14 +152,14 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (Exception ex) {
 				ExceptionPoint.getInstance().fireException(this, ex);
-				if (ex instanceof IFaultResponse) {
-					((IFaultResponse) ex).setFaultResponse(response);
+				if (ex instanceof IHasFaultResponse) {
+					((IHasFaultResponse) ex).setFaultResponse(response);
 				}
 			}
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
@@ -194,6 +194,12 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		NettyTcpResponse response = new NettyTcpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
+		Throwable th = e.getCause();
+		if (th instanceof IHasFaultResponse) {
+			((IHasFaultResponse) th).setFaultResponse(response);
+			response.write();
+		}		
 	}
 }

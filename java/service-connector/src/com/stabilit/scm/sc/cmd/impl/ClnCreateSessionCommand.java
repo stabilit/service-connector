@@ -128,7 +128,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
@@ -176,7 +176,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

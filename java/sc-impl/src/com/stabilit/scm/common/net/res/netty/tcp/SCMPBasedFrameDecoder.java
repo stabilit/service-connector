@@ -22,8 +22,10 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
+import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
  * The Class SCMPBasedFrameDecoder. Decodes a SCMP frame.
@@ -61,15 +63,15 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 					return null;
 				}
 				this.decodeState = DecodeState.SIZE;
-			} catch (SCMPDecoderException e) {
+			} catch (FrameDecoderException e) {
 				decodeState = DecodeState.EXC;
-				throw e;
+				throw new SCMPDecoderException(SCMPError.FRAME_DECODER, e);
 			}
 			break;
 		case SIZE:
 			break;
 		default:
-			throw new SCMPDecoderException("invalid scmp header line");
+			throw new SCMPDecoderException(SCMPError.FRAME_DECODER);
 		}
 		if (this.decodeState == DecodeState.SIZE) {
 			int readableBytes = buffer.readableBytes();

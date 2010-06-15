@@ -60,16 +60,16 @@ public class SrvEchoCommand extends CommandAdapter {
 			ipList += inetSocketAddress.getAddress();
 			message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		}
-//
-//		if (message.getBodyLength() > 0) {
-//			if (message.getBody().toString().length() > 100) {
-//				System.out.println("SrvEchoCommand body = " + message.getBody().toString().substring(0, 100));
-//			} else {
-//				System.out.println("SrvEchoCommand body = " + message.getBody().toString());
-//			}
-//		} else {
-//			System.out.println("SrvEchoCommand empty body");
-//		}
+
+		if (message.getBodyLength() > 0) {
+			if (message.getBody().toString().length() > 100) {
+				System.out.println("SrvEchoCommand body = " + message.getBody().toString().substring(0, 100));
+			} else {
+				System.out.println("SrvEchoCommand body = " + message.getBody().toString());
+			}
+		} else {
+			System.out.println("SrvEchoCommand empty body");
+		}
 
 		result = new SCMPMessage();
 		result.setIsReply(true);
@@ -77,7 +77,7 @@ public class SrvEchoCommand extends CommandAdapter {
 		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getContext().getSocketAddress().hashCode());
-		result.setMessageType(getKey().getResponseName());
+		result.setMessageType(getKey().getName());
 		response.setSCMP(result);
 	}
 

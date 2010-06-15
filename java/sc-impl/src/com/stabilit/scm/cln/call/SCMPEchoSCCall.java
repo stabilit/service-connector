@@ -51,7 +51,7 @@ public class SCMPEchoSCCall extends SCMPCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage invoke() throws Exception {
-		this.requestMessage.setMessageType(getMessageType().getRequestName());
+		this.requestMessage.setMessageType(getMessageType().getName());
 		this.responseMessage = requester.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);

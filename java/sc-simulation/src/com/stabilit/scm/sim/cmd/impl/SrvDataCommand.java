@@ -79,12 +79,12 @@ public class SrvDataCommand extends CommandAdapter {
 					SCMPError.SERVER_ERROR.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
 					SCMPError.SERVER_ERROR.getErrorText());
-			scmpReply.setMessageType(getKey().getResponseName());
+			scmpReply.setMessageType(getKey().getName());
 			response.setSCMP(scmpReply);
 			return;
 		}
 
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setSessionId(sessionId);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 				.getServiceName().toString());
@@ -108,7 +108,7 @@ public class SrvDataCommand extends CommandAdapter {
 				response.setSCMP(scmpReply);
 			} else {
 				scmpReply = new SCMPPart();
-				scmpReply.setMessageType(getKey().getResponseName());
+				scmpReply.setMessageType(getKey().getName());
 				scmpReply.setSessionId(sessionId);
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 						.getServiceName()
@@ -190,7 +190,7 @@ public class SrvDataCommand extends CommandAdapter {
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

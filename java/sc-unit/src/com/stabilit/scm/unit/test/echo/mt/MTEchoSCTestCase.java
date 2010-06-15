@@ -19,10 +19,8 @@ package com.stabilit.scm.unit.test.echo.mt;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.echo.EchoSCTestCase;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
 
@@ -38,19 +36,13 @@ public class MTEchoSCTestCase extends MTSuperTestCase {
 		super(fileName);
 	}
 
-	@Before
-	@Override
-	public void setup() throws Exception {
-		SetupTestCases.setupSC();
-	}
-
 	@Test
 	public void invokeMultipleEchoSCTest() throws Exception {
 		Map<EchoSCTestCase, Thread> map = new HashMap<EchoSCTestCase, Thread>();
 
 		for (int i = 0; i < 20; i++) {
 			EchoSCTestCase echoSCTestCase = new EchoSCTestCase(fileName);
-			echoSCTestCase.setClient(this.newClient());
+			echoSCTestCase.setReq(this.newReq());
 			Thread th = new MTClientThread(echoSCTestCase, "invokeMultipleEchoSCTest");
 			th.start();
 			map.put(echoSCTestCase, th);

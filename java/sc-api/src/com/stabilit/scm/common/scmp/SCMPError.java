@@ -56,7 +56,9 @@ public enum SCMPError {
 	/** The SERVER_ALREADY_REGISTERED for this service. */
 	SERVER_ALREADY_REGISTERED("504", "Server is already registered for this service."),
 	/** The NO_SERVER_AVAILABLE. */
-	NO_FREE_SERVER("505", "No server available for this service.");
+	NO_FREE_SERVER("505", "No server available for this service."),
+	/** The FRAME_DECODER. */
+	FRAME_DECODER("506", "Not possible to decode frame, scmp header line must be wrong!");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

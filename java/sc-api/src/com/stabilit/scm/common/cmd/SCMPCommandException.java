@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IHasFaultResponse;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -28,7 +28,7 @@ import com.stabilit.scm.common.util.MapBean;
  * 
  * @author JTraber
  */
-public class SCMPCommandException extends Exception implements IFaultResponse {
+public class SCMPCommandException extends Exception implements IHasFaultResponse {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7198688558643060L;

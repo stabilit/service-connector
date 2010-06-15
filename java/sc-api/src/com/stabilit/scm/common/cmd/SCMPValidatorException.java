@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IHasFaultResponse;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -29,11 +29,11 @@ import com.stabilit.scm.common.util.ValidatorException;
  * 
  * @author JTraber
  */
-public class SCMPValidatorException extends ValidatorException implements IFaultResponse {
+public class SCMPValidatorException extends ValidatorException implements IHasFaultResponse {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5190062727277529571L;
-	/** The attr bean. */
+	/** The attribute bean. */
 	private MapBean<String> attrBean;
 
 	/**

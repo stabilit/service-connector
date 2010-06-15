@@ -110,7 +110,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}
-		result.setMessageType(getKey().getResponseName());
+		result.setMessageType(getKey().getName());
 		result.removeHeader("kill");
 		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getContext().getSocketAddress().hashCode());
 		response.setSCMP(result);

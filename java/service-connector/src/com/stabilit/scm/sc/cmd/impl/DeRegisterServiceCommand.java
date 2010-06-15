@@ -97,7 +97,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 
@@ -114,7 +114,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				LoggerPoint.getInstance().fireWarn(this, "command error: service not registered");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 
@@ -123,7 +123,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
 	}
@@ -164,7 +164,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

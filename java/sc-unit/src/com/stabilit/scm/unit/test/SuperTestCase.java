@@ -44,14 +44,20 @@ public abstract class SuperTestCase {
 		this.fileName = fileName;
 	}
 
+	// @Parameters
+	// public static Collection<String[]> getParameters() {
+	// return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
+	// new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
+	// new String[] { "sc-unit-nio-tcp.properties" });
+	// }
+
 	@Parameters
 	public static Collection<String[]> getParameters() {
 		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
-				new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
-				new String[] { "sc-unit-nio-tcp.properties" });
+				new String[] { "sc-unit-netty-tcp.properties" });
 	}
 
-	public void setClient(IRequester req) {
+	public void setReq(IRequester req) {
 		this.req = req;
 	}
 

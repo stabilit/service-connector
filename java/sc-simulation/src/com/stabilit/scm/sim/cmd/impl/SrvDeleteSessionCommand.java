@@ -63,7 +63,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 				LoggerPoint.getInstance().fireWarn(this, "command error: session is no allocated");  
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ALLOCATED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 		simSessReg.removeSession(sessionId);
@@ -72,7 +72,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		scmpReply.setIsReply(true);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
 				.getServiceName());
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		response.setSCMP(scmpReply);
 	}
 
@@ -101,7 +101,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

@@ -51,8 +51,8 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
-				.getServiceName(), this.scSession.getSessionId());
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+				this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(sb.toString());
 		SCMPMessage scmpReply = clnDataCall.invoke();
@@ -62,7 +62,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
 		Assert.assertEquals(SCMPBodyType.text.getName(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		Assert.assertEquals(SCMPMsgType.CLN_DATA.getResponseName(), scmpReply.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_DATA.getName(), scmpReply.getMessageType());
 		String serviceName = clnDataCall.getRequest().getServiceName();
 		String sessionId = clnDataCall.getRequest().getSessionId();
 		Assert.assertEquals(serviceName, scmpReply.getServiceName());
@@ -72,8 +72,8 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvDataLargeRequestSmallResponseTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
-				.getServiceName(), this.scSession.getSessionId());
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+				this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
@@ -92,8 +92,8 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvDataLargeRequestLargeResponseTest() throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, this.scSession
-				.getServiceName(), this.scSession.getSessionId());
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+				this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
 		sb.append("large:");

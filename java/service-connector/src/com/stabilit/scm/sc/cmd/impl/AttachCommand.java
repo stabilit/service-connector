@@ -98,7 +98,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 				LoggerPoint.getInstance().fireWarn(this, "command error: already attache");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 		
@@ -110,7 +110,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		//set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
 	}
@@ -164,7 +164,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

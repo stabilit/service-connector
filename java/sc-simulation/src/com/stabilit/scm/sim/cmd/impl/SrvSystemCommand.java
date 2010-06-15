@@ -52,7 +52,7 @@ public class SrvSystemCommand extends CommandAdapter {
 		}
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setSessionId(scmpReq.getSessionId());
 		scmpReply.setHeader("kill", "true");
 		response.setSCMP(scmpReply);

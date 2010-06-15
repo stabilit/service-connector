@@ -34,8 +34,9 @@ import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;
+import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IHasFaultResponse;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -162,8 +163,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (Throwable ex) {
 				ExceptionPoint.getInstance().fireException(this, ex);
-				if (ex instanceof IFaultResponse) {
-					((IFaultResponse) ex).setFaultResponse(response);
+				if (ex instanceof IHasFaultResponse) {
+					((IHasFaultResponse) ex).setFaultResponse(response);
 				} else {
 					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
 					scmpFault.setMessageType(scmpReq.getMessageType());
@@ -174,7 +175,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.ATTACH.getResponseName());
+			scmpFault.setMessageType(SCMPMsgType.ATTACH.getName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
@@ -209,6 +210,11 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		NettyHttpResponse response = new NettyHttpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
+		if (e instanceof IHasFaultResponse) {
+			((IHasFaultResponse) e).setFaultResponse(response);
+			response.write();
+		}
 	}
 }

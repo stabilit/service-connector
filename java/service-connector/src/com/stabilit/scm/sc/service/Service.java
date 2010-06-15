@@ -22,6 +22,7 @@
 package com.stabilit.scm.sc.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.util.MapBean;
@@ -42,7 +43,7 @@ public class Service extends MapBean<String> {
 		this.type = null;
 		this.location = null;
 		this.serverIndex = 0;
-		this.listOfServers = new ArrayList<Server>();
+		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
 	}
 
 	public String getServiceName() {
@@ -73,7 +74,7 @@ public class Service extends MapBean<String> {
 		this.location = location;
 	}
 
-	public Server allocateServer() {
+	public synchronized Server allocateServer() {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			// increment serverIndex
 			serverIndex++;

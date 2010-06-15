@@ -76,10 +76,6 @@ public enum SCMPMsgType {
 
 	/** The name. */
 	private String name;
-	/** The request name. */
-	private String requestName;
-	/** The response name. */
-	private String responseName;
 
 	/**
 	 * Instantiates a SCMPMsgType.
@@ -89,26 +85,15 @@ public enum SCMPMsgType {
 	 */
 	private SCMPMsgType(String name) {
 		this.name = name;
-		this.requestName = name;
-		this.responseName = name;
 	}
 
 	/**
-	 * Gets the request name.
+	 * Gets the name.
 	 * 
-	 * @return the request name
+	 * @return the name
 	 */
-	public String getRequestName() {
-		return requestName;
-	}
-
-	/**
-	 * Gets the response name.
-	 * 
-	 * @return the response name
-	 */
-	public String getResponseName() {
-		return responseName;
+	public String getName() {
+		return name;
 	}
 
 	/** {@inheritDoc} */

@@ -74,7 +74,7 @@ public class EchoSCCommand extends CommandAdapter {
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		Object obj = message.getBody();
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setSessionId(message.getSessionId());
 		scmpReply.setBody(obj);
 //		if (obj.toString().length() > 100) {

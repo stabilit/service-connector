@@ -29,31 +29,30 @@ public class SessionLogger implements ISessionListener, ILoggerDecorator {
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
-	private Formatter format;
+	private Formatter createSessionFormat;
+	private Formatter deleteSessionFormat;
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
 
 	SessionLogger(ILogger logger) {
-		this.format = null;
+		this.createSessionFormat = null;
 		this.logger = logger.newInstance(this);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void createSessionEvent(SessionEvent sessionEvent) throws Exception {
-		format = new Formatter();
-		format.format(CREATE_SESSION_STR, sessionEvent.getSessionId());
-		this.logger.log(format.toString());
-		format.close();
+		createSessionFormat = new Formatter();
+		createSessionFormat.format(CREATE_SESSION_STR, sessionEvent.getSessionId());
+		this.logger.log(createSessionFormat.toString());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
-		format = new Formatter();
-		format.format(DELETE_SESSION_STR, sessionEvent.getSessionId());
-		this.logger.log(format.toString());
-		format.close();
+		deleteSessionFormat = new Formatter();
+		deleteSessionFormat.format(DELETE_SESSION_STR, sessionEvent.getSessionId());
+		this.logger.log(deleteSessionFormat.toString());
 	}
 
 	/** {@inheritDoc} */

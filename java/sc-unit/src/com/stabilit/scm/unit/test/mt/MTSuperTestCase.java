@@ -30,6 +30,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -47,25 +50,44 @@ public abstract class MTSuperTestCase {
 	protected int maxRequesters;
 	protected RequesterConfig config = null;
 	protected List<IRequester> reqList = null;
+	private IRequester registerReq = null;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
 		this.reqList = new ArrayList<IRequester>();
 	}
 
+	// @Parameters
+	// public static Collection<String[]> getParameters() {
+	// return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
+	// new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
+	// new String[] { "sc-unit-nio-tcp.properties" });
+	// }
+
 	@Parameters
 	public static Collection<String[]> getParameters() {
 		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
-				new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
-				new String[] { "sc-unit-nio-tcp.properties" });
+				new String[] { "sc-unit-netty-tcp.properties" });
 	}
 
 	@Before
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
+		RequesterConfig config = new RequesterConfig();
+		config.load("sc-sim.properties");
+		registerReq = new Requester();
+		registerReq.setRequesterConfig(config.getRequesterConfig());
+		registerReq.connect(); // physical connect
+		// scmp registerService
+		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+				.newInstance(registerReq, "simulation");
+		registerService.setMaxSessions(9);
+		registerService.setPortNumber(7000);
+		registerService.setImmediateConnect(true);
+		registerService.invoke();
 	}
 
-	public IRequester newClient() {
+	public IRequester newReq() {
 		try {
 			config = new RequesterConfig();
 			config.load(fileName);
@@ -86,6 +108,12 @@ public abstract class MTSuperTestCase {
 			client.disconnect();
 			client.destroy();
 		}
+		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+				.newInstance(registerReq, "simulation");
+
+		deRegisterServiceCall.invoke();
+		registerReq.disconnect();
+		registerReq.destroy();
 	}
 
 	@Override
@@ -94,6 +122,10 @@ public abstract class MTSuperTestCase {
 			client.disconnect();
 			client.destroy();
 		}
+		if(registerReq != null) {
+			registerReq.disconnect();
+			registerReq.destroy();
+		}		
 		ConnectionPoint.getInstance().clearAll();
 		reqList = null;
 	}

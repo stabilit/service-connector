@@ -32,7 +32,7 @@ import com.stabilit.scm.common.net.res.nio.tcp.NioTcpDisconnectException;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.common.scmp.IFaultResponse;
+import com.stabilit.scm.common.scmp.IHasFaultResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -127,8 +127,8 @@ public class RequestThread implements Runnable {
 						PerformancePoint.getInstance().fireEnd(command, "run");
 					} catch (Exception ex) {
 						ExceptionPoint.getInstance().fireException(this, ex);
-						if (ex instanceof IFaultResponse) {
-							((IFaultResponse) ex).setFaultResponse(response);
+						if (ex instanceof IHasFaultResponse) {
+							((IHasFaultResponse) ex).setFaultResponse(response);
 						}
 					}
 				} catch (Exception ex) {
@@ -138,7 +138,7 @@ public class RequestThread implements Runnable {
 						throw ex;
 					}
 					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-					scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getResponseName());
+					scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
 					scmpFault.setLocalDateTime();
 					response.setSCMP(scmpFault);
 				}

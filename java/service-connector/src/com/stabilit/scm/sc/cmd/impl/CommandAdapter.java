@@ -69,7 +69,7 @@ public abstract class CommandAdapter implements ICommand {
 				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 		return session;
@@ -87,7 +87,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (server == null) {
 			// no available server for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 	}
@@ -108,7 +108,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (service == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 		return service;
@@ -132,7 +132,7 @@ public abstract class CommandAdapter implements ICommand {
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
 			// TODO (TRN) => unknown client
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 	}
@@ -146,12 +146,12 @@ public abstract class CommandAdapter implements ICommand {
 	/** {@inheritDoc} */
 	@Override
 	public String getRequestKeyName() {
-		return this.getKey().getRequestName();
+		return this.getKey().getName();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getResponseKeyName() {
-		return this.getKey().getResponseName();
+		return this.getKey().getName();
 	}
 }

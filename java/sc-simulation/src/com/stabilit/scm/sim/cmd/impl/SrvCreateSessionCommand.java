@@ -79,7 +79,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 					.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
 							"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		response.setSCMP(scmpReply);
 	}
 
@@ -121,7 +121,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 					LoggerPoint.getInstance().fireException(this,"validation error: " + e.getMessage());
 				}
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}

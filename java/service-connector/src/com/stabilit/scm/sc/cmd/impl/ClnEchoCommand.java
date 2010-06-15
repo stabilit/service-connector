@@ -122,7 +122,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			communicationException.setMessageType(getResponseKeyName());
 			throw communicationException;
 		}
-		result.setMessageType(getKey().getResponseName());
+		result.setMessageType(getKey().getName());
 		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getContext().getSocketAddress().hashCode());
 		response.setSCMP(result);
 	}

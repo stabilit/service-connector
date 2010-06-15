@@ -19,8 +19,10 @@ package com.stabilit.scm.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.SCDataSession;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
 /**
@@ -28,7 +30,7 @@ import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
  */
 public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 
-	protected ISCSession scSession = null;
+	protected String sessionId = null;
 
 	/**
 	 * The Constructor.
@@ -53,13 +55,18 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	}
 
 	public void clnCreateSessionBefore() throws Exception {
-		this.scSession = new SCDataSession("simulation", req);
-		this.scSession.setMessageInfo("messageInfo");
-		this.scSession.setSessionInfo("sessionInfo");
-		this.scSession.createSession();
+		// sets up a create session call
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(req, "simulation");
+		createSessionCall.setSessionInfo("sessionInfo");
+		// create session and keep sessionId
+		SCMPMessage resp = createSessionCall.invoke();
+		this.sessionId = resp.getSessionId();
 	}
 
 	public void clnDeleteSessionAfter() throws Exception {
-		this.scSession.deleteSession();
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(this.req, "simulation", this.sessionId);
+		deleteSessionCall.invoke();
 	}
 }

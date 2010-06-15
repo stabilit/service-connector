@@ -70,17 +70,17 @@ public class Server extends MapBean<String> {
 	/**
 	 * Instantiates a new server.
 	 * 
-	 * @param socketAdress
-	 *            the socket adress
+	 * @param socketAddress
+	 *            the socket address
 	 * @param portNr
-	 *            the port nr
+	 *            the port number
 	 * @param maxSessions
 	 *            the max sessions
 	 */
-	public Server(InetSocketAddress socketAdress, String serviceName, int portNr, int maxSessions) {
+	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions) {
 		this.service = null;
 		this.serviceName = serviceName;
-		this.socketAddress = socketAdress;
+		this.socketAddress = socketAddress;
 		this.portNr = portNr;
 		this.maxSessions = maxSessions;
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
@@ -89,13 +89,13 @@ public class Server extends MapBean<String> {
 		// The connection key, identifies low level component to use (netty, nio)
 		String connectionKey = serverConfig.getConnection();
 		int numberOfThreads = serverConfig.getNumberOfThreads();
-		this.host = socketAdress.getHostName();
+		this.host = socketAddress.getHostName();
 		this.freeReqList = new ArrayList<IRequester>();
 		this.occupiedReqList = new HashMap<String, IRequester>();
 
-		
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.portNr, connectionKey, numberOfThreads);
-		// init list of requesters		
+		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.portNr,
+				connectionKey, numberOfThreads);
+		// init list of requesters
 		for (int i = 0; i < maxSessions; i++) {
 			IRequester req = new SCRequester();
 			req.setRequesterConfig(config);
@@ -134,7 +134,7 @@ public class Server extends MapBean<String> {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMPMessage createSession(SCMPMessage msgToForward) throws Exception {
+	public synchronized SCMPMessage createSession(SCMPMessage msgToForward) throws Exception {
 		IRequester req = freeReqList.remove(0);
 
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
@@ -159,7 +159,7 @@ public class Server extends MapBean<String> {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public void deleteSession(SCMPMessage message) throws SCServiceException {
+	public synchronized void deleteSession(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.remove(sessionId);
@@ -174,7 +174,6 @@ public class Server extends MapBean<String> {
 		try {
 			deleteSessionCall.invoke();
 		} catch (Exception e) {
-
 			// delete session failed
 			// TODO what to do with current requester
 			throw new SCServiceException("deleteSession failed", e);
@@ -183,17 +182,17 @@ public class Server extends MapBean<String> {
 		// delete session successful - add req to free list
 		this.freeReqList.add(req);
 	}
-	
+
 	/**
 	 * Send data. Tries sending data to server.
 	 * 
-	 * @param message the message
-	 * 
+	 * @param message
+	 *            the message
 	 * @return the sCMP message
-	 * 
-	 * @throws SCServiceException the SC service exception
+	 * @throws SCServiceException
+	 *             the SC service exception
 	 */
-	public SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
+	public synchronized SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -222,7 +221,7 @@ public class Server extends MapBean<String> {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
+	public synchronized SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -242,7 +241,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
+	public synchronized SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -262,7 +261,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
+	public synchronized SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -282,7 +281,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
+	public synchronized SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -312,6 +311,13 @@ public class Server extends MapBean<String> {
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				continue;
+			} finally {
+				try {
+					req.destroy();
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+					continue;
+				}
 			}
 		}
 	}
@@ -349,7 +355,7 @@ public class Server extends MapBean<String> {
 	 * @return true, if successful
 	 */
 	public boolean hasFreeSession() {
-		return this.freeReqList.size() <= this.maxSessions;
+		return this.freeReqList.size() > 0;
 	}
 
 	/**

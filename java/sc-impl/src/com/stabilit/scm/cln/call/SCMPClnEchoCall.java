@@ -59,7 +59,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, requester.hashCode());
-		this.requestMessage.setMessageType(getMessageType().getRequestName());
+		this.requestMessage.setMessageType(getMessageType().getName());
 		this.responseMessage = requester.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
 			throw new SCMPCallException((SCMPFault) responseMessage);
@@ -71,16 +71,6 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
 		return new SCMPClnEchoCall(req, serviceName, sessionId);
-	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/** {@inheritDoc} */

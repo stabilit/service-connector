@@ -31,7 +31,6 @@ import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
-import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -68,7 +67,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			Simulation.main(null);
 			config = new RequesterConfig();
 			config.load(fileName);
-			IRequester req = new Requester();
+			this.req = new Requester();
 			req.setRequesterConfig(config.getRequesterConfig());
 			req.connect(); // physical connect
 			clnAttachBefore();

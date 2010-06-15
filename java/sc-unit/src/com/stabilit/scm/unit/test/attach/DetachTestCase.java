@@ -79,7 +79,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 		Assert.assertNull(result.getBody());
 		Assert
 				.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.DETACH
-						.getResponseName());
+						.getName());
 		Assert.assertEquals("2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		/*************** scmp inspect ********/

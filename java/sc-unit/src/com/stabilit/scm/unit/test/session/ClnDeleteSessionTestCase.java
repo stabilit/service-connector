@@ -43,12 +43,12 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 	@Test
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(req, this.scSession.getServiceName(), this.scSession.getSessionId());
+				.newInstance(req, "simulation", this.sessionId);
 		SCMPMessage result = deleteSessionCall.invoke();
 
 		/*************************** verify delete session **********************************/
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getResponseName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getName(), result.getMessageType());
 		Assert.assertNotNull(result.getServiceName());
 		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 

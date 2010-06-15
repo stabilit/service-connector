@@ -90,14 +90,14 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
-			scmpCommandException.setMessageType(getKey().getResponseName());
+			scmpCommandException.setMessageType(getKey().getName());
 			throw scmpCommandException;
 		}
 		// remove client entry from connection registry
 		clientRegistry.removeClient(socketAddress);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getResponseName());
+		scmpReply.setMessageType(getKey().getName());
 		response.setSCMP(scmpReply);
 	}
 

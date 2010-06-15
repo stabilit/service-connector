@@ -19,8 +19,19 @@ package com.stabilit.scm.unit.test.echo.mt;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallException;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
 
@@ -42,7 +53,7 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 
 		for (int i = 0; i < 3; i++) {
 			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
-			srvEchoTestCase.setClient(this.newClient());
+			srvEchoTestCase.setReq(this.newReq());
 			srvEchoTestCase.clnAttachBefore();
 			srvEchoTestCase.clnCreateSessionBefore();
 			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTest");
@@ -63,12 +74,52 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 
 		for (int i = 0; i < 10; i++) {
 			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
-			srvEchoTestCase.setClient(this.newClient());
+			srvEchoTestCase.setReq(this.newReq());
 			srvEchoTestCase.clnAttachBefore();
 			srvEchoTestCase.clnCreateSessionBefore();
 			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSessionSrvEchoTestForMultipleClients");
 			th.start();
 			map.put(srvEchoTestCase, th);
+		}
+
+		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {
+			map.get(srvEchoTestCase).join();
+			srvEchoTestCase.clnDeleteSessionAfter();
+			srvEchoTestCase.clnDetachAfter();
+		}
+	}
+	
+	@Test
+	public void invokeSrvEchoNotEnoughServersTest() throws Exception {
+		Map<SrvEchoTestCase, Thread> map = new HashMap<SrvEchoTestCase, Thread>();
+
+		for (int i = 0; i < 10; i++) {
+			SrvEchoTestCase srvEchoTestCase = new SrvEchoTestCase(fileName);
+			srvEchoTestCase.setReq(this.newReq());
+			srvEchoTestCase.clnAttachBefore();
+			srvEchoTestCase.clnCreateSessionBefore();
+			Thread th = new MTClientThread(srvEchoTestCase, "invokeMultipleSrvEchoTestForMultipleClients");
+			th.start();
+			map.put(srvEchoTestCase, th);
+		}
+		
+		IRequester req = this.newReq();
+		
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
+		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		attachCall.setCompression(false);
+		attachCall.setKeepAliveTimeout(30);
+		attachCall.setKeepAliveInterval(360);
+		attachCall.invoke();
+		// sets up a create session call
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(req, "simulation");
+		createSessionCall.setSessionInfo("sessionInfo");
+		try {
+			createSessionCall.invoke();
+			Assert.fail("should throw exception");
+		} catch(SCMPCallException e) {
+			SCTest.verifyError(e.getFault(), SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_CREATE_SESSION);
 		}
 
 		for (SrvEchoTestCase srvEchoTestCase : map.keySet()) {

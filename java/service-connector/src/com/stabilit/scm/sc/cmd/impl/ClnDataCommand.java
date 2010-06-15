@@ -91,7 +91,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		try {
 			// try sending to backend server
 			SCMPMessage scmpReply = server.sendData(message);
-			scmpReply.setMessageType(getKey().getResponseName());
+			scmpReply.setMessageType(getKey().getName());
 			response.setSCMP(scmpReply);
 		} catch (SCServiceException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
@@ -160,7 +160,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getResponseName());
+				validatorException.setMessageType(getKey().getName());
 				throw validatorException;
 			}
 		}
