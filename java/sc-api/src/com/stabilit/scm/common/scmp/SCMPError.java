@@ -52,13 +52,15 @@ public enum SCMPError {
 	/** The connection lost. */
 	CONNECTION_LOST("502", "Connection lost."),
 	/** The IMMEDIATE_CONNECT_FAILED. */
-	IMMEDIATE_CONNECT_FAILED("503", "Immediate connect failed"),
+	IMMEDIATE_CONNECT_FAILED("503", "Immediate connect to server failed."),
 	/** The SERVER_ALREADY_REGISTERED for this service. */
 	SERVER_ALREADY_REGISTERED("504", "Server is already registered for this service."),
 	/** The NO_SERVER_AVAILABLE. */
 	NO_FREE_SERVER("505", "No server available for this service."),
 	/** The FRAME_DECODER. */
-	FRAME_DECODER("506", "Not possible to decode frame, scmp header line must be wrong!");
+	FRAME_DECODER("506", "Not possible to decode frame, scmp header line must be wrong!"),
+	/** The SESSION_REJECTED. */
+	SESSION_REJECTED("507", "Session from server rejected.");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

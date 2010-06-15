@@ -39,6 +39,8 @@ import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.req.SCRequester;
@@ -134,7 +136,7 @@ public class Server extends MapBean<String> {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized SCMPMessage createSession(SCMPMessage msgToForward) throws Exception {
+	public synchronized void createSession(SCMPMessage msgToForward) throws Exception {
 		IRequester req = freeReqList.remove(0);
 
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
@@ -142,13 +144,18 @@ public class Server extends MapBean<String> {
 		SCMPMessage serverReply = null;
 		try {
 			serverReply = createSessionCall.invoke();
+			boolean rejectFlag = serverReply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if(rejectFlag) {
+				SCSessionException e =  new SCSessionException(SCMPError.SESSION_REJECTED);
+				e.setAttributeMap(serverReply.getHeader());
+				throw e;
+			}
 		} catch (Exception e) {
 			// create session failed - add requester to free list
 			freeReqList.add(req);
 			throw new SCServiceException("createSession failed", e);
 		}
 		occupiedReqList.put(msgToForward.getSessionId(), req);
-		return serverReply;
 	}
 
 	/**
@@ -159,7 +166,7 @@ public class Server extends MapBean<String> {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public synchronized void deleteSession(SCMPMessage message) throws SCServiceException {
+	public void deleteSession(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.remove(sessionId);
@@ -192,7 +199,7 @@ public class Server extends MapBean<String> {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public synchronized SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
+	public SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -221,7 +228,7 @@ public class Server extends MapBean<String> {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public synchronized SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
+	public SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -241,7 +248,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public synchronized SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
+	public SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -261,7 +268,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public synchronized SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
+	public SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
@@ -281,7 +288,7 @@ public class Server extends MapBean<String> {
 		return serverReply;
 	}
 
-	public synchronized SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
+	public SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);

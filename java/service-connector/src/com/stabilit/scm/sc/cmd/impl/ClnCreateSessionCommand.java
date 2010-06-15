@@ -27,11 +27,8 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.CommunicationException;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -102,22 +99,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 
-		// tries allocating a server for this session
-		Server server = service.allocateServer();
+		// tries allocating a server for this session if server rejects session exception will be thrown
+		// error codes and error text from server in reject case are inside the exception
+		Server server = service.allocateServerAndCreateSession(reqMessage);
 		this.validateServer(server);
-
-		try {
-			// creates session
-			SCMPMessage serverReply = server.createSession(reqMessage);
-
-			// TODO serverReply auswerten in case of reject
-		} catch (CommunicationException ex) {
-			// allocate session failed, connection to backend server disturbed - clean up
-			ExceptionPoint.getInstance().fireException(this, ex);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getResponseKeyName());
-			throw communicationException;
-		}
 
 		// add server to session
 		session.setServer(server);

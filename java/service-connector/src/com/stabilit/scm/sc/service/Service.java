@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
@@ -74,7 +75,7 @@ public class Service extends MapBean<String> {
 		this.location = location;
 	}
 
-	public synchronized Server allocateServer() {
+	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			// increment serverIndex
 			serverIndex++;
@@ -84,6 +85,7 @@ public class Service extends MapBean<String> {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
+				server.createSession(msgToForward);
 				return server;
 			}
 		}
