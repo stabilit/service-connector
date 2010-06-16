@@ -62,6 +62,8 @@ public class SimluationServer extends Responder {
 		registerService.setMaxSessions(1);
 		registerService.setPortNumber(serverConfigItem.getPort());
 		registerService.setImmediateConnect(true);
+		registerService.setKeepAliveTimeout(30);
+		registerService.setKeepAliveInterval(360);
 		registerService.invoke();
 	}
 

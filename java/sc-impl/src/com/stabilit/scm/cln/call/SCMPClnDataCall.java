@@ -67,4 +67,14 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_DATA;
 	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compression
+	 *            the new compression
+	 */
+	public void setCompression(boolean compression) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
+	}
 }

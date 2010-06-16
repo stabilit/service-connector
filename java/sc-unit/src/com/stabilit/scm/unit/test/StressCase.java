@@ -49,7 +49,6 @@ public class StressCase extends SuperTestCase {
 		for (int i = 0; i < 10000; i++) {
 			try {
 				SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-				attachCall.setCompression(false);
 				attachCall.setKeepAliveTimeout(30);
 				attachCall.setKeepAliveInterval(360);
 				SCMPMessage result = attachCall.invoke();
@@ -70,7 +69,6 @@ public class StressCase extends SuperTestCase {
 	public void createDeleteSession() {
 		try {
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-			attachCall.setCompression(false);
 			attachCall.setKeepAliveTimeout(30);
 			attachCall.setKeepAliveInterval(360);
 			SCMPMessage result = attachCall.invoke();

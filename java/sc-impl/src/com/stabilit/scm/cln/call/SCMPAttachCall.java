@@ -68,13 +68,8 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 * @param version
 	 *            the new version
 	 */
-	public void setVersion(String version) {
+	private void setVersion(String version) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
-	}
-
-	/** {@inheritDoc} */
-	public void setCompression(boolean compression) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compression);
 	}
 
 	/**

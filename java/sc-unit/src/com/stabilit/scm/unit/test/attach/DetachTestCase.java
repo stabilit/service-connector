@@ -49,8 +49,6 @@ public class DetachTestCase extends SuperAttachTestCase {
 	public void secondAttach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
-		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
-		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 

@@ -105,6 +105,15 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * Validate client. Controls if requesting client has not been attached before. Attaching a client two times
+	 * violates the protocol.
+	 * 
+	 * @param client
+	 *            the client
+	 * @throws SCMPCommandException
+	 *             the SCMP command exception
+	 */
 	private void validateClientNotAttached(Client client) throws SCMPCommandException {
 		if (client != null) {
 			if (LoggerPoint.getInstance().isWarn()) {

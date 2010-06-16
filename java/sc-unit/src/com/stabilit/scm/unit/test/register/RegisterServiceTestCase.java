@@ -56,11 +56,12 @@ public class RegisterServiceTestCase extends SuperTestCase {
 				.newInstance(req, "P01_RTXS_RPRWS1");
 
 		/*********************** maxSessions 0 value *******************/
-		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
-
 		registerServiceCall.setMaxSessions(0);
 		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveTimeout(30);
+		registerServiceCall.setKeepAliveInterval(360);
+
 
 		try {
 			registerServiceCall.invoke();
@@ -74,6 +75,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveTimeout(30);
+		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
 			registerServiceCall.invoke();
@@ -83,8 +86,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		}
-
-		// TODO immediate not set
 	}
 
 	@Test
@@ -101,6 +102,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveTimeout(30);
+		registerServiceCall.setKeepAliveInterval(360);
 
 		registerServiceCall.invoke();
 		/*************** scmp inspect ********/
@@ -138,6 +141,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveTimeout(30);
+		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
 			registerServiceCall.invoke();

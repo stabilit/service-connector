@@ -18,7 +18,9 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.DateTimeUtility;
 
 /**
  * The Class SCMPRegisterServiceCall. Call registers a server.
@@ -48,8 +50,27 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName) {
 		return new SCMPRegisterServiceCall(req, serviceName);
+	}	
+	
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMessage invoke() throws Exception {
+		this.setVersion(SCMPMessage.SC_VERSION.toString());
+		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
+		return super.invoke();
 	}
 	
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            the new version
+	 */
+	private void setVersion(String version) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
+	}
+
+
 	/**
 	 * Sets the max sessions.
 	 * 
@@ -58,6 +79,36 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 */
 	public void setMaxSessions(int maxSessions) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
+	}
+
+	/**
+	 * Sets the local date time.
+	 * 
+	 * @param localDateTime
+	 *            the new local date time
+	 */
+	private void setLocalDateTime(String localDateTime) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+	}
+
+	/**
+	 * Sets the keep alive timeout.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the new keep alive timeout
+	 */
+	public void setKeepAliveTimeout(int keepAliveTimeout) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
+	}
+
+	/**
+	 * Sets the keep alive interval.
+	 * 
+	 * @param keepAliveInterval
+	 *            the new keep alive interval
+	 */
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
 
 	/**

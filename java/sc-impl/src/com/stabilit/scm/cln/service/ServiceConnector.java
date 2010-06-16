@@ -77,7 +77,7 @@ public class ServiceConnector implements IServiceConnector {
 		requester.connect();
 		// sets up the attach call
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
-		attachCall.setCompression(false);
+
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		// attaches client

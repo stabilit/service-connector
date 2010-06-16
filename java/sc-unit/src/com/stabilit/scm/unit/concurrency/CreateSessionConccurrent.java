@@ -79,8 +79,6 @@ public class CreateSessionConccurrent extends MTSuperTestCase{
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
 
-		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
-		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();

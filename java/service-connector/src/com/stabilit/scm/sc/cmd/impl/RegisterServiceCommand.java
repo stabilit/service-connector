@@ -18,6 +18,7 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Date;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -32,6 +33,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.internal.KeepAlive;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.service.Server;
@@ -162,8 +164,6 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			try {
-				// TODO fields changed
-
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
@@ -176,15 +176,30 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessionsInt);
 
-				// immmediateConnect
+				// immmediateConnect - default = true
 				String immediateConnect = (String) message.getHeader(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-				boolean immediateConnectBool = ValidatorUtility.validateBoolean(immediateConnect);
+				Boolean immediateConnectBool = ValidatorUtility.validateBoolean(immediateConnect, true);
 				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnectBool);
 
 				// portNr
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				int portNrInt = ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR, portNrInt);
+
+				// scVersion
+				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+				SCMPMessage.SC_VERSION.isSupported(scVersion);
+
+				// localDateTime
+				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
+						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+
+				// KeepAliveTimeout && KeepAliveInterval
+				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
+						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
+						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
+				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

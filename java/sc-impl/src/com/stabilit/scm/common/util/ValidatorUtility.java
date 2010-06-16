@@ -210,7 +210,8 @@ public final class ValidatorUtility {
 	}
 
 	/**
-	 * Validate boolean.
+	 * Validate boolean. Be careful if booleanValue is null - null will be returned. If you unbox the return value to
+	 * type of boolean a NullPointerException will be thrown.
 	 * 
 	 * @param booleanValue
 	 *            the boolean value
@@ -227,5 +228,22 @@ public final class ValidatorUtility {
 			return true;
 		}
 		return null;
+	}
+
+	/**
+	 * Validate boolean. Returns defaultValue if string value is not a valid boolean.
+	 * 
+	 * @param booleanValue
+	 *            the boolean value
+	 * @param defaultValue
+	 *            the default value
+	 * @return the boolean
+	 */
+	public static Boolean validateBoolean(String booleanValue, Boolean defaultValue) {
+		Boolean booleanVal = ValidatorUtility.validateBoolean(booleanValue);
+		if (booleanVal == null) {
+			return defaultValue;
+		}
+		return booleanVal;
 	}
 }

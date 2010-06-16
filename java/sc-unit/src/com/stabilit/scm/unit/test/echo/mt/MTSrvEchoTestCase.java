@@ -29,7 +29,6 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
@@ -106,8 +105,6 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		IRequester req = this.newReq();
 		
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
-		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();

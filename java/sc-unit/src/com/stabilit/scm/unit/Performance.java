@@ -79,7 +79,6 @@ public class Performance {
 		SCMPMessage resp = null;
 
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setCompression(false);
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		SCMPMessage result = attachCall.invoke();

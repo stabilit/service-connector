@@ -103,7 +103,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeOfConnect);
-		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
+		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
 				+ localDateTimeOfConnect
 				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
 				+ localDateTime
@@ -146,7 +146,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeOfConnect);
-		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
+		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
 				+ localDateTimeOfConnect
 				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
 				+ localDateTime
