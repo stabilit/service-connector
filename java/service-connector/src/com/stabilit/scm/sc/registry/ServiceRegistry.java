@@ -16,14 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.RuntimePoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
-import com.stabilit.scm.sc.log.ServiceRegistryPoint;
 import com.stabilit.scm.sc.service.Service;
 
 /**

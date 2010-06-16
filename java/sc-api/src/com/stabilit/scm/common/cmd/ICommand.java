@@ -34,20 +34,6 @@ public interface ICommand extends IFactoryable {
 	public SCMPMsgType getKey();
 
 	/**
-	 * Gets the request key name.
-	 * 
-	 * @return the request key name
-	 */
-	public String getRequestKeyName();
-
-	/**
-	 * Gets the response key name.
-	 * 
-	 * @return the response key name
-	 */
-	public String getResponseKeyName();
-
-	/**
 	 * Gets the command validator.
 	 * 
 	 * @return the command validator
@@ -65,5 +51,4 @@ public interface ICommand extends IFactoryable {
 	 *             the exception
 	 */
 	public void run(IRequest request, IResponse response) throws Exception;
-
 }

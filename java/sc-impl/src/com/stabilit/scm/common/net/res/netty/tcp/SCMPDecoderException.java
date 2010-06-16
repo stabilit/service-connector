@@ -16,25 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res.netty.tcp;
 
-import com.stabilit.scm.common.scmp.IHasFaultResponse;
-import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class SCMPDecoderException. Occurs when decoding SCMP frame fails.
  * 
  * @author JTraber
  */
-public class SCMPDecoderException extends Exception implements IHasFaultResponse {
+public class SCMPDecoderException extends HasFaultResponseException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -6537338790870840933L;
-	/** The attribute bean. */
-	private MapBean<String> faultAttr;
 
 	/**
 	 * Instantiates a new SCMPValidatorException.
@@ -43,48 +38,18 @@ public class SCMPDecoderException extends Exception implements IHasFaultResponse
 	 *            the error code
 	 */
 	public SCMPDecoderException(SCMPError errorCode, Throwable cause) {
-		this(cause);
-		this.setErrorCode(errorCode);
+		super(errorCode, cause);
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
 	}
 
 	/**
-	 * Instantiates a new sCMP decoder exception.
+	 * Instantiates a new SCMPDecoderException.
 	 * 
 	 * @param msg
 	 *            the message
 	 */
 	public SCMPDecoderException(SCMPError errorCode) {
-		this.faultAttr = new MapBean<String>();
-		this.faultAttr.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
-		this.setErrorCode(errorCode);
-	}
-
-	/**
-	 * Instantiates a new sCMP decoder exception.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public SCMPDecoderException(Throwable cause) {
-		super(cause);
-		this.faultAttr = new MapBean<String>();
-		this.faultAttr.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
-	}
-
-	/**
-	 * Sets the error code.
-	 * 
-	 * @param errorCode
-	 *            the new error code
-	 */
-	public void setErrorCode(SCMPError errorCode) {
-		this.faultAttr.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		this.faultAttr.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
-	}
-
-	@Override
-	public void setFaultResponse(IResponse response) {
-		SCMPFault scmpFault = new SCMPFault(faultAttr.getAttributeMap());
-		response.setSCMP(scmpFault);
+		super(errorCode);
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
 	}
 }

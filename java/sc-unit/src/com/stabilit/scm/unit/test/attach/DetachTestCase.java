@@ -103,7 +103,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
 			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(scmpFault, SCMPError.NOT_ATTACHED, SCMPMsgType.DETACH);
+			SCTest.verifyError(scmpFault, SCMPError.UNKNOWN_CLIENT, SCMPMsgType.DETACH);
 		}
 		super.clnAttachBefore();
 	}

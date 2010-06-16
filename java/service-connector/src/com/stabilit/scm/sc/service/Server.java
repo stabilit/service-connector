@@ -131,7 +131,7 @@ public class Server extends MapBean<String> {
 	 * Creates the session.
 	 * 
 	 * @param msgToForward
-	 *            the msg to forward
+	 *            the message to forward
 	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
@@ -144,16 +144,17 @@ public class Server extends MapBean<String> {
 		SCMPMessage serverReply = null;
 		try {
 			serverReply = createSessionCall.invoke();
-			boolean rejectFlag = serverReply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if(rejectFlag) {
-				SCSessionException e =  new SCSessionException(SCMPError.SESSION_REJECTED);
-				e.setAttributeMap(serverReply.getHeader());
-				throw e;
-			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// create session failed - add requester to free list
 			freeReqList.add(req);
 			throw new SCServiceException("createSession failed", e);
+		}
+		Boolean rejectSessionFlag = serverReply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			// server rejected session - throw exception with server errors
+			// TODO what to do with requester when server rejects session
+			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, serverReply.getHeader());
+			throw e;
 		}
 		occupiedReqList.put(msgToForward.getSessionId(), req);
 	}

@@ -19,14 +19,13 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -88,7 +87,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		SocketAddress socketAddress = requestContext.getSocketAddress(); // IP and port
 
 		// lookup if client is correctly attached
-		this.validateClient(socketAddress);
+		this.validateClientAttached(socketAddress);
 
 		// check service is present
 		SCMPMessage reqMessage = request.getSCMP();
@@ -150,7 +149,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("serviceName must be set!");
+					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// ipAddressList
 				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
@@ -158,10 +157,14 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
+			} catch(HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

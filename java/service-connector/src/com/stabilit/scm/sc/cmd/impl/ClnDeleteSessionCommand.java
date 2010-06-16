@@ -23,17 +23,14 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.CommunicationException;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.service.SCServiceException;
 import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -93,7 +90,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			server.deleteSession(message);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
-			//TODO verify with jan
+			// TODO verify with jan
 		}
 		// delete session on server successful - delete entry from session registry
 		SessionRegistry.getCurrentInstance().removeSession(session);
@@ -135,17 +132,21 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("serviceName must be set!");
+					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new ValidationException("sessonId must be set!");
 				}
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

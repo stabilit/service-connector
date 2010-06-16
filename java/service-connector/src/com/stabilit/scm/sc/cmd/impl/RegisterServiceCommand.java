@@ -19,8 +19,6 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -28,6 +26,7 @@ import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -36,7 +35,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ServerRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 
@@ -101,9 +99,9 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		if (server != null) {
 			// server registered two times for this service
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ALREADY_REGISTERED);
-			communicationException.setMessageType(getResponseKeyName());
+			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 
@@ -119,16 +117,16 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 			}
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.IMMEDIATE_CONNECT_FAILED);
-			communicationException.setMessageType(getResponseKeyName());
+			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 		// add server to service
 		service.addServer(server);
-		//add service to server
+		// add service to server
 		server.setService(service);
-		
+
 		// add server to server registry TODO ... key
 		serverRegistry.addServer(serviceName + "_" + server.getSocketAddress(), server);
 
@@ -171,7 +169,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("ServiceName must be set!");
+					throw new SCMPValidatorException("ServiceName must be set!");
 				}
 
 				// maxSessions
@@ -189,10 +187,14 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 				int portNrInt = ValidatorUtility.validateInt(1, portNr, 99999);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR, portNrInt);
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

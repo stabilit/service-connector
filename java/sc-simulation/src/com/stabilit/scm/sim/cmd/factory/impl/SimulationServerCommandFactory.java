@@ -36,14 +36,14 @@ public class SimulationServerCommandFactory extends CommandFactory {
 
 	public void init(CommandFactory commandFactory) {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
-		commandFactory.add(srvCreateSessionCommand.getRequestKeyName(), srvCreateSessionCommand);
+		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
 		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();
-		commandFactory.add(srvDeleteSessionCommand.getRequestKeyName(), srvDeleteSessionCommand);
+		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
 		ICommand srvEchoCommand = new SrvEchoCommand();
-		commandFactory.add(srvEchoCommand.getRequestKeyName(), srvEchoCommand);
+		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
 		ICommand srvDataCommand = new SrvDataCommand();
-		commandFactory.add(srvDataCommand.getRequestKeyName(), srvDataCommand);
+		commandFactory.addCommand(srvDataCommand.getKey(), srvDataCommand);
 		ICommand srvSystemCommand = new SrvSystemCommand();
-		commandFactory.add(srvSystemCommand.getRequestKeyName(), srvSystemCommand);
+		commandFactory.addCommand(srvSystemCommand.getKey(), srvSystemCommand);
 	}
 }

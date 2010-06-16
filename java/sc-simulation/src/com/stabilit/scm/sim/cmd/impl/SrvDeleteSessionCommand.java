@@ -15,22 +15,18 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.impl;
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
+import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
 
 public class SrvDeleteSessionCommand extends CommandAdapter {
@@ -49,24 +45,14 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		return super.getCommandValidator();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getSCMP();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.getSession(sessionId);
-
-		if (mapBean == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: session is no allocated");  
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ALLOCATED);
-			scmpCommandException.setMessageType(getKey().getName());
-			throw scmpCommandException;
-		}
-		simSessReg.removeSession(sessionId);
+		Session session = this.getSessionById(sessionId);
+		simSessReg.removeSession(session);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -91,17 +77,21 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("serviceName must be set!");
+					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessonId must be set!");
+					throw new SCMPValidatorException("sessonId must be set!");
 				}
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

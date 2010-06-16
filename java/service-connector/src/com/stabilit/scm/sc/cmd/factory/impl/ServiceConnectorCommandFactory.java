@@ -63,26 +63,26 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand attachCommand = new AttachCommand();
-		commandFactory.add(attachCommand.getRequestKeyName(), attachCommand);
+		commandFactory.addCommand(attachCommand.getKey(), attachCommand);
 		ICommand detachCommand = new DetachCommand();
-		commandFactory.add(detachCommand.getRequestKeyName(), detachCommand);
+		commandFactory.addCommand(detachCommand.getKey(), detachCommand);
 		ICommand inspectCommand = new InspectCommand();
-		commandFactory.add(inspectCommand.getRequestKeyName(), inspectCommand);
+		commandFactory.addCommand(inspectCommand.getKey(), inspectCommand);
 		ICommand echoSCCommand = new EchoSCCommand();
-		commandFactory.add(echoSCCommand.getRequestKeyName(), echoSCCommand);
+		commandFactory.addCommand(echoSCCommand.getKey(), echoSCCommand);
 		ICommand clnCreateSessionCommand = new ClnCreateSessionCommand();
-		commandFactory.add(clnCreateSessionCommand.getRequestKeyName(), clnCreateSessionCommand);
+		commandFactory.addCommand(clnCreateSessionCommand.getKey(), clnCreateSessionCommand);
 		ICommand clnDeleteSessionCommand = new ClnDeleteSessionCommand();
-		commandFactory.add(clnDeleteSessionCommand.getRequestKeyName(), clnDeleteSessionCommand);
+		commandFactory.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
 		ICommand registerServiceCommand = new RegisterServiceCommand();
-		commandFactory.add(registerServiceCommand.getRequestKeyName(), registerServiceCommand);
+		commandFactory.addCommand(registerServiceCommand.getKey(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
-		commandFactory.add(deRegisterServiceCommand.getRequestKeyName(), deRegisterServiceCommand);
+		commandFactory.addCommand(deRegisterServiceCommand.getKey(), deRegisterServiceCommand);
 		ICommand clnEchoCommand = new ClnEchoCommand();
-		commandFactory.add(clnEchoCommand.getRequestKeyName(), clnEchoCommand);
+		commandFactory.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnDataCommand = new ClnDataCommand();
-		commandFactory.add(clnDataCommand.getRequestKeyName(), clnDataCommand);
+		commandFactory.addCommand(clnDataCommand.getKey(), clnDataCommand);
 		ICommand clnSystemCommand = new ClnSystemCommand();
-		commandFactory.add(clnSystemCommand.getRequestKeyName(), clnSystemCommand);
+		commandFactory.addCommand(clnSystemCommand.getKey(), clnSystemCommand);
 	}
 }

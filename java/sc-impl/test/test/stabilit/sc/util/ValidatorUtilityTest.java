@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package test.stabilit.sc.util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +24,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.common.util.ValidatorException;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
@@ -54,7 +53,7 @@ public class ValidatorUtilityTest {
 		try {
 			Date validDate = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
-		} catch (ParseException e) {
+		} catch (SCMPValidatorException e) {
 			e.printStackTrace();
 		}
 	}
@@ -79,7 +78,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.13");
 			// five ip adresses, serveral correct formats
 			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
@@ -87,7 +86,7 @@ public class ValidatorUtilityTest {
 			// wrong format of ip address, too many digets
 			ValidatorUtility.validateIpAddressList("127.0.0.1545");
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 
@@ -95,7 +94,7 @@ public class ValidatorUtilityTest {
 			// wrong format of ip address, missing digets
 			ValidatorUtility.validateIpAddressList("127.0.0");
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 
@@ -103,7 +102,7 @@ public class ValidatorUtilityTest {
 			// wrong format of ip address, delimiter forbidden
 			ValidatorUtility.validateIpAddressList("127.0.0.1/");
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("iplist has wrong format.", e.getMessage());
 		}
 	}
@@ -117,7 +116,7 @@ public class ValidatorUtilityTest {
 		try {
 			// greater than lowerLimit
 			ValidatorUtility.validateInt(0, "1");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
@@ -125,7 +124,7 @@ public class ValidatorUtilityTest {
 			// lower than lowerLimit
 			ValidatorUtility.validateInt(0, "-1");
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("intValue to low.", e.getMessage());
 		}
 
@@ -133,7 +132,7 @@ public class ValidatorUtilityTest {
 			// no nummeric value
 			ValidatorUtility.validateInt(0, "");
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("intValue must be numeric.", e.getMessage());
 		}
 
@@ -141,7 +140,7 @@ public class ValidatorUtilityTest {
 		try {
 			// greater than lowerLimit and lower than upperLimit
 			ValidatorUtility.validateInt(0, "1", 2);
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
@@ -149,7 +148,7 @@ public class ValidatorUtilityTest {
 			// lower than lowerLimit
 			ValidatorUtility.validateInt(0, "-1", 2);
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("intValue not within limits.", e.getMessage());
 		}
 
@@ -157,7 +156,7 @@ public class ValidatorUtilityTest {
 			// higher than upperLimit
 			ValidatorUtility.validateInt(0, "3", 2);
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("intValue not within limits.", e.getMessage());
 		}
 
@@ -165,7 +164,7 @@ public class ValidatorUtilityTest {
 			// no nummeric value
 			ValidatorUtility.validateInt(0, "", 1);
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("intValue must be numeric.", e.getMessage());
 		}
 	}
@@ -181,7 +180,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateString(1, "abc", FOUR);
 			// length is between 1 and 4
 			ValidatorUtility.validateString(1, "a", FOUR);
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
@@ -189,7 +188,7 @@ public class ValidatorUtilityTest {
 			// length is shorter than 2
 			ValidatorUtility.validateString(2, "a", FOUR);
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
 		}
 
@@ -197,7 +196,7 @@ public class ValidatorUtilityTest {
 			// length is longer than 2
 			ValidatorUtility.validateString(1, "abc", 2);
 			Assert.fail("Should throw exception");
-		} catch (ValidatorException e) {
+		} catch (SCMPValidatorException e) {
 			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
 		}
 	}

@@ -66,6 +66,18 @@ public class CommandFactory extends Factory {
 	}
 
 	/**
+	 * Adds the command.
+	 * 
+	 * @param messageType
+	 *            the message type
+	 * @param factoryInstance
+	 *            the factory instance
+	 */
+	public void addCommand(SCMPMsgType messageType, IFactoryable factoryInstance) {
+		super.add(messageType.getName(), factoryInstance);
+	}
+
+	/**
 	 * New command.
 	 * 
 	 * @param request

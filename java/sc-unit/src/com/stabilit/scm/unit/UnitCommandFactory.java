@@ -25,7 +25,8 @@ import com.stabilit.scm.sim.cmd.factory.impl.SimulationServerCommandFactory;
  * 
  */
 public class UnitCommandFactory extends CommandFactory {
-	public UnitCommandFactory() {
+	@SuppressWarnings("unused")
+	public UnitCommandFactory() {		
 		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(
 				this);
 		SimulationServerCommandFactory simulationServerCommandFactory = new SimulationServerCommandFactory(

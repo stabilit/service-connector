@@ -68,7 +68,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
 			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.NOT_ATTACHED, SCMPMsgType.CLN_CREATE_SESSION);
+			SCTest.verifyError(ex.getFault(), SCMPError.UNKNOWN_CLIENT, SCMPMsgType.CLN_CREATE_SESSION);
 		}
 		this.clnAttachBefore();
 	}

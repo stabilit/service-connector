@@ -23,6 +23,7 @@ import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -117,9 +118,9 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			// srvEcho or clnEcho failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			ExceptionPoint.getInstance().fireException(this, e);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getResponseKeyName());
+			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 		result.setMessageType(getKey().getName());

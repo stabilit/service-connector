@@ -24,6 +24,7 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -105,9 +106,9 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 			// srvSystem or clnSystem failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			ExceptionPoint.getInstance().fireException(this, e);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getResponseKeyName());
+			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 		result.setMessageType(getKey().getName());

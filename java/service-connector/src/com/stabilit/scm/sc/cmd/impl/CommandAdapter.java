@@ -69,7 +69,7 @@ public abstract class CommandAdapter implements ICommand {
 				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
-			scmpCommandException.setMessageType(getKey().getName());
+			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		return session;
@@ -87,7 +87,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (server == null) {
 			// no available server for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
-			scmpCommandException.setMessageType(getKey().getName());
+			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 	}
@@ -108,31 +108,31 @@ public abstract class CommandAdapter implements ICommand {
 		if (service == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
-			scmpCommandException.setMessageType(getKey().getName());
+			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		return service;
 	}
 
 	/**
-	 * Validate client. Lookup client in client registry and verify that it has been attached correctly.
+	 * Validate client attached. Lookup client in client registry and verify that it has been attached correctly.
 	 * 
 	 * @param socketAddress
 	 *            the socket address
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
 	 */
-	protected void validateClient(SocketAddress socketAddress) throws SCMPCommandException {
+	protected void validateClientAttached(SocketAddress socketAddress) throws SCMPCommandException {
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 		Client client = clientRegistry.getClient(socketAddress);
 
 		if (client == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: not attached");
+				LoggerPoint.getInstance().fireWarn(this,
+						"command error: unknown client - client might not be properly attached");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_ATTACHED);
-			// TODO (TRN) => unknown client
-			scmpCommandException.setMessageType(getKey().getName());
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_CLIENT);
+			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 	}
@@ -141,17 +141,5 @@ public abstract class CommandAdapter implements ICommand {
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return commandValidator;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getRequestKeyName() {
-		return this.getKey().getName();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getResponseKeyName() {
-		return this.getKey().getName();
 	}
 }

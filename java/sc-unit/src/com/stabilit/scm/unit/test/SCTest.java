@@ -52,11 +52,23 @@ import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { WorseScenarioSimulationServerTestCase.class, AttachTestCase.class, DetachTestCase.class,
-		ClnCreateSessionTestCase.class, ClnDeleteSessionTestCase.class, RegisterServiceTestCase.class,
-		DeRegisterServiceTestCase.class, SrvDataTestCase.class, SrvDataLargeTestCase.class, SrvEchoTestCase.class,
-		SrvEchoLargeTestCase.class, EchoSCTestCase.class, EchoSCLargeTestCase.class, SCImplTest.class,
-		WorseSCServerToServiceTestCase.class, WorseSCServerToClientTestCase.class })
+@SuiteClasses( { 
+	WorseScenarioSimulationServerTestCase.class, 
+	AttachTestCase.class, 
+	DetachTestCase.class,
+	ClnCreateSessionTestCase.class, 
+	ClnDeleteSessionTestCase.class, 
+	RegisterServiceTestCase.class,		
+	DeRegisterServiceTestCase.class, 
+	SrvDataTestCase.class, 
+	SrvDataLargeTestCase.class, 
+	SrvEchoTestCase.class,
+	SrvEchoLargeTestCase.class, 
+	EchoSCTestCase.class, 
+	EchoSCLargeTestCase.class, 
+	SCImplTest.class,
+	WorseSCServerToServiceTestCase.class, 
+	WorseSCServerToClientTestCase.class })
 public class SCTest {
 
 	private SCTest() {
@@ -64,9 +76,9 @@ public class SCTest {
 
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getName());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
+		Assert.assertEquals(msgType.getName(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
+		Assert.assertEquals(error.getErrorText(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 
 	public static void verifyError(String errorText, String errorCode, SCMPError expectedError) {
@@ -75,27 +87,27 @@ public class SCTest {
 	}
 
 	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter, String keyDelimiter) {
-		Map<String,String> map = new HashMap<String, String>();
-		
+		Map<String, String> map = new HashMap<String, String>();
+
 		String[] rows = stringToSplit.split(entryDelimiter);
-		
+
 		for (String row : rows) {
 			String[] keyValue = row.split(keyDelimiter, 2);
 			map.put(keyValue[0], keyValue[1]);
-		}		
+		}
 		return map;
 	}
-	
+
 	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
 		actual = actual.replaceAll("localhost/127.0.0.1:\\d*", "localhost/127.0.0.1:");
-		
+
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
-		
-		if(!expectedMap.equals(actualMap)) {
+
+		if (!expectedMap.equals(actualMap)) {
 			System.out.println("unlgleich");
 		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
-	
+
 }

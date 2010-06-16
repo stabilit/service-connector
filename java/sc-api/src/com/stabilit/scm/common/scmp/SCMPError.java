@@ -32,7 +32,7 @@ public enum SCMPError {
 	/** The not found. */
 	NOT_FOUND("404", "Not found error occured."),
 	/** The not connected. */
-	NOT_ATTACHED("405", "Not attached."),
+	UNKNOWN_CLIENT("405", "Unknown client."),
 	/** The already attached. */
 	ALREADY_ATTACHED("406", "Already attached."),
 	/** The protocol mismatch. */

@@ -297,7 +297,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute.
+	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and
+	 * if you unbox return value automatically into boolean than a NullPointerException will be thrown.
 	 * 
 	 * @param headerType
 	 *            the header attribute

@@ -32,7 +32,7 @@ import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.scmp.IHasFaultResponse;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -150,11 +150,10 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				PerformancePoint.getInstance().fireBegin(command, "run");
 				command.run(request, response);
 				PerformancePoint.getInstance().fireEnd(command, "run");
-			} catch (Exception ex) {
+			} catch (HasFaultResponseException ex) {
+				// exception carries response inside
 				ExceptionPoint.getInstance().fireException(this, ex);
-				if (ex instanceof IHasFaultResponse) {
-					((IHasFaultResponse) ex).setFaultResponse(response);
-				}
+				ex.setFaultResponse(response);
 			}
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
@@ -197,9 +196,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		NettyTcpResponse response = new NettyTcpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
 		Throwable th = e.getCause();
-		if (th instanceof IHasFaultResponse) {
-			((IHasFaultResponse) th).setFaultResponse(response);
+		if (th instanceof HasFaultResponseException) {
+			((HasFaultResponseException) th).setFaultResponse(response);
 			response.write();
-		}		
+		}
 	}
 }

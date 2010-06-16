@@ -17,7 +17,6 @@
 package com.stabilit.scm.cln.call;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;

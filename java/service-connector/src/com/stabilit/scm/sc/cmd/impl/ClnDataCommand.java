@@ -24,6 +24,7 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -37,8 +38,8 @@ import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data
- * to a server.
+ * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data to a
+ * server.
  * 
  * @author JTraber
  */
@@ -86,7 +87,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		SCMPMessage message = request.getSCMP();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
-		
+
 		Server server = session.getServer();
 		try {
 			// try sending to backend server
@@ -97,9 +98,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			// clnDatat failed, connection to backend server disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			ExceptionPoint.getInstance().fireException(this, e);
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getResponseKeyName());
+			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
+			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 	}
@@ -139,7 +139,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("serviceName must be set!");
+					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// bodyLength
 				String bodyLength = message.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
@@ -157,10 +157,14 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// messageInfo
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

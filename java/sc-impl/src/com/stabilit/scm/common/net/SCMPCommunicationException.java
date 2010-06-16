@@ -16,24 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.common.scmp.IHasFaultResponse;
-import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class SCMPCommunicationException. Occurs when communication fails.
  * 
  * @author JTraber
  */
-public class SCMPCommunicationException extends Exception implements IHasFaultResponse {
+public class SCMPCommunicationException extends HasFaultResponseException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7198688558643060L;
-	/** The attribute bean. */
-	private MapBean<String> attrBean;
 
 	/**
 	 * Instantiates a new sCMP communication exception.
@@ -42,58 +36,6 @@ public class SCMPCommunicationException extends Exception implements IHasFaultRe
 	 *            the error code
 	 */
 	public SCMPCommunicationException(SCMPError errorCode) {
-		this.attrBean = new MapBean<String>();
-		this.setErrorCode(errorCode);
-	}
-
-	/**
-	 * Sets the error code.
-	 * 
-	 * @param errorCode
-	 *            the new error code
-	 */
-	public void setErrorCode(SCMPError errorCode) {
-		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		this.setAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
-	}
-
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(String name, String value) {
-		this.attrBean.setAttribute(name, value);
-	}
-
-	/**
-	 * Gets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @return the attribute
-	 */
-	public Object getAttribute(String name) {
-		return this.attrBean.getAttribute(name);
-	}
-
-	/**
-	 * Sets the message type.
-	 * 
-	 * @param messageType
-	 *            the new message type
-	 */
-	public void setMessageType(String messageType) {
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setFaultResponse(IResponse response) {
-		SCMPFault scmpFault = new SCMPFault(attrBean.getAttributeMap());
-		response.setSCMP(scmpFault);
+		super(errorCode);
 	}
 }

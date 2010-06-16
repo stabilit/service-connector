@@ -27,6 +27,7 @@ import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -40,8 +41,8 @@ import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.service.Client;
 
 /**
- * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach
- * (virtual attach) to SC. Client is registered in Client Registry of SC.
+ * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach (virtual
+ * attach) to SC. Client is registered in Client Registry of SC.
  * 
  * @author JTraber
  */
@@ -90,29 +91,31 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SocketAddress socketAddress = requestContext.getSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		// check if client already attached
+		// check if client has been attached already
 		Client client = clientRegistry.getClient(socketAddress);
+		this.validateClientNotAttached(client);
 
-		if (client != null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: already attache");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
-			scmpCommandException.setMessageType(getKey().getName());
-			throw scmpCommandException;
-		}
-		
 		client = new Client(socketAddress, request.getSCMP());
-		
-		// add entry in connection registry for current client
+		// attach client - add entry in client registry for current client
 		clientRegistry.addClient(client.getSocketAddress(), client);
 
-		//set up response
+		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
+	}
+
+	private void validateClientNotAttached(Client client) throws SCMPCommandException {
+		if (client != null) {
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: already attache");
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
 	}
 
 	/**
@@ -161,10 +164,14 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
+			} catch(HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
+import sun.security.validator.ValidatorException;
+
 import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.util.ValidatorException;
 
 /**
  * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation.

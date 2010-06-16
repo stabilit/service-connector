@@ -34,9 +34,8 @@ import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;
-import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.scmp.IHasFaultResponse;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -161,21 +160,15 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				PerformancePoint.getInstance().fireBegin(command, "run");
 				command.run(request, response);
 				PerformancePoint.getInstance().fireEnd(command, "run");
-			} catch (Throwable ex) {
+			} catch (HasFaultResponseException ex) {
+				// exception carries response inside
 				ExceptionPoint.getInstance().fireException(this, ex);
-				if (ex instanceof IHasFaultResponse) {
-					((IHasFaultResponse) ex).setFaultResponse(response);
-				} else {
-					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-					scmpFault.setMessageType(scmpReq.getMessageType());
-					scmpFault.setLocalDateTime();
-					response.setSCMP(scmpFault);
-				}
+				ex.setFaultResponse(response);
 			}
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.ATTACH.getName());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
@@ -212,8 +205,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
-		if (e instanceof IHasFaultResponse) {
-			((IHasFaultResponse) e).setFaultResponse(response);
+		if (e instanceof HasFaultResponseException) {
+			((HasFaultResponseException) e).setFaultResponse(response);
 			response.write();
 		}
 	}

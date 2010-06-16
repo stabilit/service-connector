@@ -33,7 +33,7 @@ import com.stabilit.scm.common.util.MapBean;
  */
 public class Service extends MapBean<String> {
 
-	private String type; // todo enum machen oder klasse
+	private String type; // TODO enum machen oder klasse
 	private String name;
 	private String location;
 	private int serverIndex;
@@ -44,6 +44,7 @@ public class Service extends MapBean<String> {
 		this.type = null;
 		this.location = null;
 		this.serverIndex = 0;
+		// synchronize the sever list
 		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
 	}
 
@@ -77,7 +78,6 @@ public class Service extends MapBean<String> {
 
 	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
-			// increment serverIndex
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
 				// serverIndex reached the end of list no more servers

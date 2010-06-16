@@ -30,9 +30,7 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
 
 /**

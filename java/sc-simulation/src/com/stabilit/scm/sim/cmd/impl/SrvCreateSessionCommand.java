@@ -18,13 +18,11 @@ package com.stabilit.scm.sim.cmd.impl;
 
 import java.util.Map;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -54,8 +52,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getSCMP();
-		SimulationSessionRegistry simSessReg = SimulationSessionRegistry
-				.getCurrentInstance();
+		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
 		Session session = simSessReg.getSession(sessionId);
@@ -68,16 +65,13 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 			simSessReg.add(sessionId, (Session) session);
 		} else if ((Boolean) session.getAttribute("available")) {
 			session.setAttribute("available", false);
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-					.getServiceName());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		} else {
-			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-					.getServiceName());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
-			scmpReply
-					.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
-							"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
+					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
 		scmpReply.setMessageType(getKey().getName());
 		response.setSCMP(scmpReply);
@@ -96,32 +90,30 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
-					throw new ValidationException("serviceName must be set!");
+					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessonId must be set!");
+					throw new SCMPValidatorException("sessonId must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader
-						.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
-				if (LoggerPoint.getInstance().isException()) {
-					LoggerPoint.getInstance().fireException(this,"validation error: " + e.getMessage());
-				}
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey().getName());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

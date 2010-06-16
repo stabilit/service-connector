@@ -57,7 +57,7 @@ public abstract class Factory {
 	 * @param factoryInstance
 	 *            the factory instance
 	 */
-	public void add(Object key, IFactoryable factoryInstance) {
+	protected void add(Object key, IFactoryable factoryInstance) {
 		baseInstances.put(key, factoryInstance);
 	}
 
@@ -67,7 +67,7 @@ public abstract class Factory {
 	 * @param key
 	 *            the key
 	 */
-	public void remove(Object key) {
+	protected void remove(Object key) {
 		baseInstances.remove(key);
 	}
 

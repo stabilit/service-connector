@@ -25,9 +25,9 @@ import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.sc.SC;
@@ -90,7 +90,7 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 		clnDataCall.setRequestBody("hello");
 		try {
 			clnDataCall.invoke();
-		} catch (SCMPCommunicationException ex) {
+		} catch (HasFaultResponseException ex) {
 			SCTest.verifyError((String) ex.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName()), (String) ex
 					.getAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName()), SCMPError.CONNECTION_LOST);
 		}

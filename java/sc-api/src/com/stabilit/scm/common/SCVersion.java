@@ -16,8 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common;
 
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.util.ValidatorException;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 
 /**
  * The Enum SCVersion. Responsible to provide SCVersion and compatibility checks.
@@ -65,31 +64,27 @@ public enum SCVersion {
 	 * @param text
 	 *            the text
 	 * @return true, if is supported
+	 * @throws SCMPValidatorException
 	 */
-	public boolean isSupported(String text) {
-		try {
-			String[] splitted = text.split("\\.|-");
-			if (splitted.length != 3) {
-				throw new ValidatorException("invalid sc version [" + text + "]");
-			}
-			int release = Integer.parseInt(splitted[0]);
-
-			if (this.release != release) {
-				return false;
-			}
-			int version = Integer.parseInt(splitted[1]);
-			if (this.version < version) {
-				return false;
-			}
-			int revision = Integer.parseInt(splitted[2]);
-			if (this.revision < revision) {
-				return false;
-			}
-			return true;
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+	public boolean isSupported(String text) throws SCMPValidatorException {
+		String[] splitted = text.split("\\.|-");
+		if (splitted.length != 3) {
+			throw new SCMPValidatorException("invalid sc version [" + text + "]");
 		}
-		return false;
+		int release = Integer.parseInt(splitted[0]);
+
+		if (this.release != release) {
+			return false;
+		}
+		int version = Integer.parseInt(splitted[1]);
+		if (this.version < version) {
+			return false;
+		}
+		int revision = Integer.parseInt(splitted[2]);
+		if (this.revision < revision) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

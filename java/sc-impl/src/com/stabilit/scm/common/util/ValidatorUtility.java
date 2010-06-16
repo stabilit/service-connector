@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.internal.KeepAlive;
 
@@ -52,14 +53,20 @@ public final class ValidatorUtility {
 	 * @param localDateTimeString
 	 *            the local date time string
 	 * @return the date
-	 * @throws ParseException
-	 *             the parse exception
+	 * @throws SCMPValidatorException
 	 */
-	public static Date validateLocalDateTime(String localDateTimeString) throws ParseException {
+	public static Date validateLocalDateTime(String localDateTimeString) throws SCMPValidatorException {
 		if (localDateTimeString == null) {
 			return null;
 		}
-		Date localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
+
+		Date localDateTime = null;
+		try {
+			localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
+		} catch (ParseException ex) {
+			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
+			throw new SCMPValidatorException("ParseException when parsing localDateTime: " + localDateTimeString);
+		}
 		return localDateTime;
 	}
 
@@ -71,25 +78,35 @@ public final class ValidatorUtility {
 	 * @param keepAliveInterval
 	 *            the keep alive interval
 	 * @return the keep alive
+	 * @throws SCMPValidatorException
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
 	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
-			throws ValidatorException {
-		int keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
-		int keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
+			throws SCMPValidatorException {
+		int keepAliveTimeoutInt = 0;
+		int keepAliveIntervalInt = 0;
+
+		try {
+			keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
+			keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
+		} catch (NumberFormatException ex) {
+			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
+			throw new SCMPValidatorException("NumberFormatException when parsing keep alive parameters : "
+					+ keepAliveTimeout + " - " + keepAliveInterval);
+		}
 
 		if (keepAliveInterval == null || keepAliveTimeout == null) {
-			throw new ValidatorException("keepAliveTimeout/keepAliveInterval need to be set");
+			throw new SCMPValidatorException("keepAliveTimeout/keepAliveInterval need to be set");
 		}
 
 		if (keepAliveTimeoutInt > KA_TIMEOUT_MAX || keepAliveIntervalInt > KA_INTERVAL_MAX) {
-			throw new ValidatorException("keepAliveTimeout or keepAliveInterval is to high.");
+			throw new SCMPValidatorException("keepAliveTimeout or keepAliveInterval is to high.");
 		}
 
 		if ((keepAliveTimeoutInt == 0 && keepAliveIntervalInt != 0)
 				|| (keepAliveIntervalInt == 0 && keepAliveTimeoutInt != 0)) {
-			throw new ValidatorException(
+			throw new SCMPValidatorException(
 					"keepAliveTimeout and keepAliveInterval must either be both zero or both non zero!");
 		}
 		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
@@ -103,10 +120,10 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static void validateIpAddressList(String ipAddressListString) throws ValidatorException {
+	public static void validateIpAddressList(String ipAddressListString) throws SCMPValidatorException {
 		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
 		if (!m.matches()) {
-			throw new ValidatorException("iplist has wrong format.");
+			throw new SCMPValidatorException("iplist has wrong format.");
 		}
 	}
 
@@ -120,20 +137,20 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static int validateInt(int lowerLimit, String intStringValue) throws ValidatorException {
+	public static int validateInt(int lowerLimit, String intStringValue) throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new ValidatorException("intValue must be set.");
+			throw new SCMPValidatorException("intValue must be set.");
 		}
 		int intValue = 0;
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
 			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
-			throw new ValidatorException("intValue must be numeric.");
+			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 
 		if (intValue < lowerLimit) {
-			throw new ValidatorException("intValue to low.");
+			throw new SCMPValidatorException("intValue to low.");
 		}
 		return intValue;
 	}
@@ -150,20 +167,20 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static int validateInt(int lowerLimit, String intStringValue, int upperLimit) throws ValidatorException {
+	public static int validateInt(int lowerLimit, String intStringValue, int upperLimit) throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new ValidatorException("intValue must be set.");
+			throw new SCMPValidatorException("intValue must be set.");
 		}
 		int intValue = 0;
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
 			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
-			throw new ValidatorException("intValue must be numeric.");
+			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 
 		if (intValue <= lowerLimit || intValue >= upperLimit) {
-			throw new ValidatorException("intValue not within limits.");
+			throw new SCMPValidatorException("intValue not within limits.");
 		}
 		return intValue;
 	}
@@ -180,15 +197,15 @@ public final class ValidatorUtility {
 	 * @throws ValidatorException
 	 *             the validator exception
 	 */
-	public static void validateString(int minSize, String stringValue, int maxSize) throws ValidatorException {
+	public static void validateString(int minSize, String stringValue, int maxSize) throws SCMPValidatorException {
 
 		if (stringValue == null) {
-			throw new ValidatorException("stringValue must be set.");
+			throw new SCMPValidatorException("stringValue must be set.");
 		}
 		int length = stringValue.getBytes().length;
 
 		if (length < minSize || length > maxSize) {
-			throw new ValidatorException("stringValue length is not within limits.");
+			throw new SCMPValidatorException("stringValue length is not within limits.");
 		}
 	}
 
