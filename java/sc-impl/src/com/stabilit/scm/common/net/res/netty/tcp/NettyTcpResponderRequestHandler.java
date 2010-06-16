@@ -41,9 +41,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
-import com.stabilit.scm.common.util.Lock;
-import com.stabilit.scm.common.util.LockAdapter;
-import com.stabilit.scm.common.util.Lockable;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
@@ -59,23 +56,8 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	private NettyCommandRequest commandRequest = null;
 	/** The scmp response composite sender. */
 	private SCMPCompositeSender compositeSender = null;
-	/** The lock. */
-	private final Lock<Object> lock = new Lock<Object>(); // faster than synchronized
 	/** The msg id. */
 	private SCMPMessageID msgID;
-	/** The command request lock. */
-	private Lockable<Object> commandRequestLock = new LockAdapter<Object>() {
-
-		@Override
-		public Object run() throws Exception {
-			// we are locked here
-			if (commandRequest != null) {
-				return commandRequest;
-			}
-			commandRequest = new NettyCommandRequest();
-			return commandRequest;
-		}
-	};
 
 	/**
 	 * Instantiates a new NettyTcpResponderRequestHandler.
@@ -118,7 +100,11 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
 			respRegistry.setThreadLocal(channel.getParent().getId());
 
-			lock.runLocked(commandRequestLock); // init commandRequest if not set
+			// init commandRequest if not set
+			if (commandRequest == null) {
+				this.commandRequest = new NettyCommandRequest();
+			}
+
 			ICommand command = this.commandRequest.readCommand(request, response);
 			if (commandRequest.isComplete() == false) {
 				// request is not complete yet
@@ -182,8 +168,10 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			}
 		}
 		response.write();
+		// sets the command request null - request is complete don't need to know about preceding messages any more
 		commandRequest = null;
-		// needed for testing
+		
+		// needed for testing TODO
 		if ("true".equals(response.getSCMP().getHeader("kill"))) {
 			ctx.getChannel().disconnect();
 			return;
