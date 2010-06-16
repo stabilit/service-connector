@@ -51,7 +51,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
@@ -86,7 +86,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// serviceName

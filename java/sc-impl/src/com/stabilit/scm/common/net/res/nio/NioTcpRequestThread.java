@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.res.nio;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.cmd.ICommand;
@@ -26,9 +27,9 @@ import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.log.listener.PerformancePoint;
-import com.stabilit.scm.common.net.res.nio.http.NioHttpRequest;
-import com.stabilit.scm.common.net.res.nio.http.NioHttpResponse;
 import com.stabilit.scm.common.net.res.nio.tcp.NioTcpDisconnectException;
+import com.stabilit.scm.common.net.res.nio.tcp.NioTcpRequest;
+import com.stabilit.scm.common.net.res.nio.tcp.NioTcpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.IResponder;
@@ -45,7 +46,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  * The Class RequestThread. Class is responsible for an incoming request. Knows process of validating/running a command
  * and deals with large messages.
  */
-public class RequestThread implements Runnable {
+public class NioTcpRequestThread implements Runnable {
 
 	/** The socket channel. */
 	private SocketChannel socketChannel = null;
@@ -64,7 +65,7 @@ public class RequestThread implements Runnable {
 	 * @param server
 	 *            the server
 	 */
-	public RequestThread(SocketChannel requestSocket, IResponder server) {
+	public NioTcpRequestThread(SocketChannel requestSocket, IResponder server) {
 		this.socketChannel = requestSocket;
 		this.server = server;
 		this.msgID = new SCMPMessageID();
@@ -81,8 +82,10 @@ public class RequestThread implements Runnable {
 			// needs to set a key in thread local to identify thread later and get access to the server
 			serverRegistry.setThreadLocal(this.socketChannel);
 			while (true) {
-				NioHttpRequest request = new NioHttpRequest(socketChannel);
-				NioHttpResponse response = new NioHttpResponse(socketChannel);
+				InetSocketAddress localSocketAddress = (InetSocketAddress) this.socketChannel.socket().getLocalSocketAddress();
+				InetSocketAddress remoteSocketAddress = (InetSocketAddress) this.socketChannel.socket().getRemoteSocketAddress();
+				NioTcpRequest request = new NioTcpRequest(socketChannel, localSocketAddress, remoteSocketAddress);
+				NioTcpResponse response = new NioTcpResponse(socketChannel);
 				NioCommandRequest commandRequest = new NioCommandRequest(request, response);
 				if (scmpLargeResponse != null) {
 					// sending of a large response has already been started and incoming scmp is a pull request
@@ -105,7 +108,7 @@ public class RequestThread implements Runnable {
 				ICommand command = commandRequest.readCommand();
 				try {
 					if (command == null) {
-						SCMPMessage scmpReq = request.getSCMP();
+						SCMPMessage scmpReq = request.getMessage();
 						SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 						scmpFault.setMessageType(scmpReq.getMessageType());
 						scmpFault.setLocalDateTime();
@@ -150,7 +153,7 @@ public class RequestThread implements Runnable {
 					response.setSCMP(firstSCMP);
 				} else {
 					SCMPMessage message = response.getSCMP();
-					if (message.isPart() || request.getSCMP().isPart()) {
+					if (message.isPart() || request.getMessage().isPart()) {
 						msgID.incrementPartSequenceNr();
 						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 					} else {

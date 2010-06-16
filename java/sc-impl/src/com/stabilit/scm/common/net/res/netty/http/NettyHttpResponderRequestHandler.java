@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res.netty.http;
 
-import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -75,10 +75,10 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
-		SocketAddress localSocketAddress = channel.getLocalAddress();
-		SocketAddress remoteSocketAddress = channel.getRemoteAddress();
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
-		SCMPMessage scmpReq = request.getSCMP();
+		SCMPMessage scmpReq = request.getMessage();
 
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
@@ -122,7 +122,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				response.write();
 				return;
 			}
-			scmpReq = request.getSCMP();
+			scmpReq = request.getMessage();
 			if (command == null) {
 				if (LoggerPoint.getInstance().isDebug()) {
 					LoggerPoint.getInstance().fireDebug(this, "Request unkown, " + request);

@@ -43,7 +43,7 @@ public class SrvSystemCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage scmpReq = request.getSCMP();
+		SCMPMessage scmpReq = request.getMessage();
 		if(scmpReq.getBodyLength() > 0) {
 			String[] serviceNames = ((String) scmpReq.getBody()).split(":");
 			for (String name : serviceNames) {

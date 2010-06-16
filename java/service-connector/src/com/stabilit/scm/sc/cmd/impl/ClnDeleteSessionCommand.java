@@ -80,7 +80,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		// lookup session and checks properness
 		Session session = this.getSessionById(sessionId);
@@ -127,7 +127,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			try {
 				// serviceName
 				String serviceName = (String) message.getServiceName();

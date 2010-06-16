@@ -84,7 +84,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
@@ -152,7 +152,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			try {
 				// serviceName

@@ -22,7 +22,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -80,8 +79,7 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
+		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
 		MapBean<?> mapBean = clientRegistry.getClient(socketAddress);

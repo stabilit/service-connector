@@ -48,7 +48,7 @@ public class SrvEchoCommand extends CommandAdapter {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		Map<String, String> header = message.getHeader();
 
 		SCMPMessage result = null;
@@ -76,7 +76,7 @@ public class SrvEchoCommand extends CommandAdapter {
 		result.setBody(message.getBody());
 		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getContext().getSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getRemoteSocketAddress().hashCode());
 		result.setMessageType(getKey().getName());
 		response.setSCMP(result);
 	}

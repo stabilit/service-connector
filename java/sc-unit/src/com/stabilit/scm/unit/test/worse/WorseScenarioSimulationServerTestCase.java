@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.worse;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -35,6 +37,7 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.sim.Simulation;
 import com.stabilit.scm.unit.UnitCommandFactory;
@@ -99,9 +102,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
-
+		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeOfConnect);
 		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
-				+ localDateTimeOfConnect + ", keepAliveTimeout=30}]|";
+				+ localDateTimeOfConnect
+				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
+				+ localDateTime
+				+ ";keepAliveTimeout=30,360;|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
@@ -139,9 +145,12 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		Assert.assertEquals("", inspectMsg.getAttribute("sessionRegistry"));
-
+		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeOfConnect);
 		String expectedScEntry = "localhost/127.0.0.1::localhost/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
-				+ localDateTimeOfConnect + ", keepAliveTimeout=30}]|";
+				+ localDateTimeOfConnect
+				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
+				+ localDateTime
+				+ ";keepAliveTimeout=30,360;|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");

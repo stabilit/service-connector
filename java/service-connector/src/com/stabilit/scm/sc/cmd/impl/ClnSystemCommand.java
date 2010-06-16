@@ -84,7 +84,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		Map<String, String> header = message.getHeader();
 
 		Session session = getSessionById(message.getSessionId());	
@@ -113,7 +113,7 @@ public class ClnSystemCommand extends CommandAdapter implements IPassThroughPart
 		}
 		result.setMessageType(getKey().getName());
 		result.removeHeader("kill");
-		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getContext().getSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 

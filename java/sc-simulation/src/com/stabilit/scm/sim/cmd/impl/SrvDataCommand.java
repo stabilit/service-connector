@@ -56,7 +56,7 @@ public class SrvDataCommand extends CommandAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 
@@ -140,7 +140,7 @@ public class SrvDataCommand extends CommandAdapter {
 
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			if (message.isPart()) {
 				return;

@@ -22,7 +22,6 @@ import java.util.Map;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -83,14 +82,13 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress(); // IP and port
+		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
 
 		// lookup if client is correctly attached
 		this.validateClientAttached(socketAddress);
 
 		// check service is present
-		SCMPMessage reqMessage = request.getSCMP();
+		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		Service service = this.validateService(serviceName);
 
@@ -143,7 +141,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getSCMP().getHeader();
+			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
 			try {
 				// serviceName
@@ -157,7 +155,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
-			} catch(HasFaultResponseException ex) {
+			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;

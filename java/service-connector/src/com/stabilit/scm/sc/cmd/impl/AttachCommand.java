@@ -23,7 +23,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
@@ -87,15 +86,14 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
+		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
 		// check if client has been attached already
 		Client client = clientRegistry.getClient(socketAddress);
 		this.validateClientNotAttached(client);
 
-		client = new Client(socketAddress, request.getSCMP());
+		client = new Client(socketAddress, request);
 		// attach client - add entry in client registry for current client
 		clientRegistry.addClient(client.getSocketAddress(), client);
 
@@ -143,28 +141,24 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 
 			try {
+				// scVersion
 				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 				SCMPMessage.SC_VERSION.isSupported(scVersion);
-				request.setAttribute(SCMPHeaderAttributeKey.SC_VERSION.getName(), scVersion);
-				// compression default = true
-				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
-				if (compression == null) {
-					compression = true;
-				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+
 				// localDateTime
 				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
 						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), localDateTime);
+				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+
 				// KeepAliveTimeout && KeepAliveInterval
 				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
 						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
-				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT.getName(), keepAlive);
-			} catch(HasFaultResponseException ex) {
+				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
+			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;

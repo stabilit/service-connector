@@ -23,7 +23,6 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.scm.common.ctx.RequestContext;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
@@ -33,7 +32,6 @@ import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class NioTcpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Tcp frame.
@@ -52,12 +50,9 @@ public class NioTcpRequest extends RequestAdapter {
 	 * @param socketChannel
 	 *            the socket channel
 	 */
-	public NioTcpRequest(SocketChannel socketChannel) {
-		super(socketChannel.socket().getLocalSocketAddress(), socketChannel.socket().getRemoteSocketAddress());
-		this.mapBean = new MapBean<Object>();
+	public NioTcpRequest(SocketChannel socketChannel, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+		super(localAddress, remoteAddress);
 		this.socketChannel = socketChannel;
-		this.message = null;
-		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 	}
 
 	/** {@inheritDoc} */
@@ -77,8 +72,8 @@ public class NioTcpRequest extends RequestAdapter {
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(),
-				byteReadBuffer, 0, bytesRead);
+		ConnectionPoint.getInstance().fireRead(this, this.getLocalSocketAddress().getPort(), byteReadBuffer, 0,
+				bytesRead);
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);
@@ -103,6 +98,6 @@ public class NioTcpRequest extends RequestAdapter {
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
 		bais.close();
-		this.message = message;
+		this.setMessage(message);
 	}
 }

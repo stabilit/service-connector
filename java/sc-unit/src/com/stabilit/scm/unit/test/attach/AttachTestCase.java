@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.attach;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -82,9 +84,13 @@ public class AttachTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
+		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, compression=0, scVersion=1.0-000, localDateTime="
-				+ attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)
-				+ ", keepAliveTimeout=30}]|";
+				+ localDateTimeString
+				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
+				+ localDateTime
+				+ ";keepAliveTimeout=30,360;|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
@@ -92,13 +98,13 @@ public class AttachTestCase extends SuperTestCase {
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke();
-		
+
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectMsg = (InspectMessage) inspect.getBody();
 		scEntry = (String) inspectMsg.getAttribute("clientRegistry");
-		Assert.assertEquals("", scEntry);		
+		Assert.assertEquals("", scEntry);
 	}
 }

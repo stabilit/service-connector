@@ -64,7 +64,7 @@ public class NettyCommandRequest {
 		if (command == null) {
 			return null;
 		}
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		if (message == null) {
 			return null;
 		}		

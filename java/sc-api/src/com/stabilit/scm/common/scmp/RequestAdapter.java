@@ -16,9 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
-import java.net.SocketAddress;
-
-import com.stabilit.scm.common.ctx.IRequestContext;
+import java.net.InetSocketAddress;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.util.MapBean;
 
@@ -30,28 +28,27 @@ import com.stabilit.scm.common.util.MapBean;
 public abstract class RequestAdapter implements IRequest {
 
 	/** The scmp message. */
-	protected SCMPMessage message;
+	private SCMPMessage message;
 	/** The map bean. MapBean to store any data. */
-	protected MapBean<Object> mapBean;
+	private MapBean<Object> mapBean;
 	/** The local socket address. */
-	protected SocketAddress localSocketAddress;
+	private InetSocketAddress localSocketAddress;
 	/** The remote socket address. */
-	protected SocketAddress remoteSocketAddress;
-	/** The request context. */
-	protected IRequestContext requestContext;
+	private InetSocketAddress remoteSocketAddress;
 
 	/**
 	 * Instantiates a new request adapter.
 	 */
-	public RequestAdapter(SocketAddress localAddress, SocketAddress remoteAddress) {
+	public RequestAdapter(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		this.localSocketAddress = localAddress;
 		this.remoteSocketAddress = remoteAddress;
 		this.message = null;
+		this.mapBean = new MapBean<Object>();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage getSCMP() {
+	public SCMPMessage getMessage() {
 		if (message == null) {
 			try {
 				load();
@@ -67,12 +64,6 @@ public abstract class RequestAdapter implements IRequest {
 	@Override
 	public void setMessage(SCMPMessage message) {
 		this.message = message;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IRequestContext getContext() {
-		return requestContext;
 	}
 
 	/** {@inheritDoc} */
@@ -95,7 +86,7 @@ public abstract class RequestAdapter implements IRequest {
 	public void setAttribute(String key, Object value) {
 		mapBean.setAttribute(key, value);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(SCMPHeaderAttributeKey key, Object value) {
@@ -104,13 +95,13 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public SocketAddress getLocalSocketAddress() {
+	public InetSocketAddress getLocalSocketAddress() {
 		return localSocketAddress;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SocketAddress getRemoteSocketAddress() {
+	public InetSocketAddress getRemoteSocketAddress() {
 		return remoteSocketAddress;
 	}
 
@@ -132,11 +123,16 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
-		SCMPMessage message = this.getSCMP();
+		SCMPMessage message = this.getMessage();
 		if (message == null) {
 			return null;
 		}
 		String messageType = message.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
+	}
+	
+	@Override
+	public String toString() {
+		return this.message + " MapBean: " + this.mapBean;
 	}
 }

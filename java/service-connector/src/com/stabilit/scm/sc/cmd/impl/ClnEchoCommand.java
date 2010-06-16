@@ -82,7 +82,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		if (message.getBodyLength() > 0) {
 			if (message.getBody().toString().length() > 100) {
 				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
@@ -124,7 +124,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			throw communicationException;
 		}
 		result.setMessageType(getKey().getName());
-		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getContext().getSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 

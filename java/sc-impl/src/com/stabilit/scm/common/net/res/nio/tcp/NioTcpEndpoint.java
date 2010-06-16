@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.res.nio.RequestThread;
+import com.stabilit.scm.common.net.res.nio.NioTcpRequestThread;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**
@@ -89,7 +89,7 @@ public class NioTcpEndpoint extends EndpointAdapter implements Runnable {
 			try {
 				SocketChannel socketChannel;
 				socketChannel = serverChannel.accept();
-				pool.execute(new RequestThread(socketChannel, this.resp));
+				pool.execute(new NioTcpRequestThread(socketChannel, this.resp));
 			} catch (IOException e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

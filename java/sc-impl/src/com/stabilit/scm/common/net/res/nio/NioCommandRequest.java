@@ -78,7 +78,7 @@ public class NioCommandRequest {
 		if (this.command == null) {
 			return null;
 		}
-		SCMPMessage message = this.request.getSCMP();
+		SCMPMessage message = this.request.getMessage();
 		if (message == null) {
 			return null;
 		}
@@ -103,7 +103,7 @@ public class NioCommandRequest {
 			response.setSCMP(scmpReply);
 			response.write();
 			request.readNext();
-			message = request.getSCMP();
+			message = request.getMessage();
 			if (message != null) {
 				// add the message to composite receiver
 				scmpCompositeRecv.add(message);

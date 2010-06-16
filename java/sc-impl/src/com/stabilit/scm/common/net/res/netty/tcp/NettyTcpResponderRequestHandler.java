@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res.netty.tcp;
 
+import java.net.InetSocketAddress;
+
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
@@ -71,8 +73,10 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
 		Channel channel = ctx.getChannel();
-		IRequest request = new NettyTcpRequest(event, channel.getLocalAddress(), channel.getRemoteAddress());
-		SCMPMessage scmpReq = request.getSCMP();
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
+		IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
+		SCMPMessage scmpReq = request.getMessage();
 
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
@@ -115,7 +119,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				return;
 			}
 			if (command == null) {
-				scmpReq = request.getSCMP();
+				scmpReq = request.getMessage();
 				SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
 				scmpFault.setMessageType(scmpReq.getMessageType());
 				scmpFault.setLocalDateTime();
@@ -170,7 +174,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		response.write();
 		// sets the command request null - request is complete don't need to know about preceding messages any more
 		commandRequest = null;
-		
+
 		// needed for testing TODO
 		if ("true".equals(response.getSCMP().getHeader("kill"))) {
 			ctx.getChannel().disconnect();

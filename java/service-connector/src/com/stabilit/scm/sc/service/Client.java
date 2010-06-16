@@ -18,7 +18,7 @@ package com.stabilit.scm.sc.service;
 
 import java.net.SocketAddress;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
@@ -28,8 +28,8 @@ import com.stabilit.scm.common.util.MapBean;
  */
 public class Client extends MapBean<Object> {
 
-	/** The scmp received when client attached on SC. */
-	private SCMPMessage scmp;
+	/** The request received when client attached on SC. */
+	private IRequest initialRequest;
 	/** The socket address of the client, unique identifier. */
 	private SocketAddress socketAddress;
 
@@ -41,8 +41,8 @@ public class Client extends MapBean<Object> {
 	 * @param scmp
 	 *            the scmp
 	 */
-	public Client(SocketAddress socketAddress, SCMPMessage scmp) {
-		this.scmp = scmp;
+	public Client(SocketAddress socketAddress, IRequest initialRequest) {
+		this.initialRequest = initialRequest;
 		this.socketAddress = socketAddress;
 	}
 
@@ -50,12 +50,12 @@ public class Client extends MapBean<Object> {
 		return socketAddress;
 	}
 
-	public SCMPMessage getScmp() {
-		return scmp;
+	public IRequest getInitialRequest() {
+		return initialRequest;
 	}
 
 	@Override
 	public String toString() {
-		return socketAddress + ":" + scmp;
+		return socketAddress + ":" + initialRequest;
 	}
 }

@@ -23,7 +23,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.ctx.RequestContext;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
@@ -32,7 +31,6 @@ import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class NioHttpRequest is responsible for reading a request from a socketChannel. Decodes scmp from a Http frame.
@@ -51,12 +49,9 @@ public class NioHttpRequest extends RequestAdapter {
 	 * @param socketChannel
 	 *            the socket channel
 	 */
-	public NioHttpRequest(SocketChannel socketChannel) {
-		super(socketChannel.socket().getLocalSocketAddress(), socketChannel.socket().getRemoteSocketAddress());
-		this.mapBean = new MapBean<Object>();
+	public NioHttpRequest(SocketChannel socketChannel, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+		super(localAddress, remoteAddress);
 		this.socketChannel = socketChannel;
-		this.message = null;
-		this.requestContext = new RequestContext(socketChannel.socket().getRemoteSocketAddress());
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 	}
 
@@ -95,10 +90,10 @@ public class NioHttpRequest extends RequestAdapter {
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer);
+		ConnectionPoint.getInstance().fireRead(this, this.getLocalSocketAddress().getPort(), buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) streamHttpUtil.readSCMP(bais);
 		bais.close();
-		this.message = message;
+		this.setMessage(message);
 	}
 }

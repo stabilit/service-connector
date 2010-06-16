@@ -22,7 +22,6 @@ import java.net.SocketAddress;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.ctx.IRequestContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
@@ -85,11 +84,10 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		IRequestContext requestContext = request.getContext();
-		SocketAddress socketAddress = requestContext.getSocketAddress();
+		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
 
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		Service service = this.validateService(serviceName);
@@ -162,7 +160,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			try {
 				// TODO fields changed
 

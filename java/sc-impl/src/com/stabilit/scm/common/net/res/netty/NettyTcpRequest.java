@@ -18,18 +18,15 @@ package com.stabilit.scm.common.net.res.netty;
 
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.scm.common.ctx.RequestContext;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp frame.
@@ -39,8 +36,6 @@ public class NettyTcpRequest extends RequestAdapter {
 
 	/** The request. */
 	private ChannelBuffer request;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
 
 	/**
 	 * Instantiates a new netty tcp request.
@@ -50,22 +45,19 @@ public class NettyTcpRequest extends RequestAdapter {
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	public NettyTcpRequest(MessageEvent event, SocketAddress localAddress, SocketAddress remoteAddress) {
+	public NettyTcpRequest(MessageEvent event, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
-		this.mapBean = new MapBean<Object>();
 		this.request = (ChannelBuffer) event.getMessage();
-		this.message = null;
-		this.requestContext = new RequestContext(event.getRemoteAddress());
 	}
 
 	/** {@inheritDoc} */
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, ((InetSocketAddress) this.localSocketAddress).getPort(), buffer);
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
+		ConnectionPoint.getInstance().fireRead(this, this.getLocalSocketAddress().getPort(), buffer);
+		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
-		this.message = message;
+		this.setMessage(message);
 	}
 }

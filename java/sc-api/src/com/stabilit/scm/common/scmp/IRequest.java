@@ -16,9 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
-import java.net.SocketAddress;
-
-import com.stabilit.scm.common.ctx.IRequestContext;
+import java.net.InetSocketAddress;
 
 /**
  * The Interface IRequest abstracts a request.
@@ -35,18 +33,11 @@ public interface IRequest {
 	public SCMPMsgType getKey() throws Exception;
 
 	/**
-	 * Gets the context.
-	 * 
-	 * @return the context
-	 */
-	public IRequestContext getContext();
-
-	/**
-	 * Gets the scmp.
+	 * Gets the message.
 	 * 
 	 * @return the message
 	 */
-	public SCMPMessage getSCMP();
+	public SCMPMessage getMessage();
 
 	/**
 	 * Sets the scmp message in the request.
@@ -65,7 +56,15 @@ public interface IRequest {
 	 *            the value
 	 */
 	public void setAttribute(String key, Object value);
-	
+
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
 	public void setAttribute(SCMPHeaderAttributeKey key, Object value);
 
 	/**
@@ -76,22 +75,29 @@ public interface IRequest {
 	 * @return the attribute
 	 */
 	public Object getAttribute(String key);
-	
+
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the attribute
+	 */
 	public Object getAttribute(SCMPHeaderAttributeKey key);
-	
+
 	/**
 	 * Gets the socket address.
 	 * 
 	 * @return the socket address
 	 */
-	public SocketAddress getLocalSocketAddress();
+	public InetSocketAddress getLocalSocketAddress();
 
 	/**
 	 * Gets the remote socket address.
 	 * 
 	 * @return the remote socket address
 	 */
-	public SocketAddress getRemoteSocketAddress();
+	public InetSocketAddress getRemoteSocketAddress();
 
 	/**
 	 * Reads the content of the request.

@@ -84,7 +84,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	 */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getSCMP();
+		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
 
@@ -129,7 +129,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		 */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getSCMP();
+			SCMPMessage message = request.getMessage();
 			try {
 				// sessionId
 				String sessionId = message.getSessionId();
