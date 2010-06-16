@@ -109,12 +109,12 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 		// reading body - depends on body type
-		String scmpBodyType = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
-		SCMPBodyType scmpBodyTypEnum = SCMPBodyType.getBodyType(scmpBodyType);
+		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
+		SCMPBodyType scmpBodyTyp = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		scmpMsg.setHeader(metaMap);
 		try {
-			switch (scmpBodyTypEnum) {
+			switch (scmpBodyTyp) {
 			case binary:
 			case undefined:
 				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodyLength);

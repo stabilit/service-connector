@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
+
 /**
  * The Interface IServiceConnector. Reveals functionality of a ServiceConnector instance.
  * 
@@ -59,4 +63,10 @@ public interface IServiceConnector {
 	 *            the value
 	 */
 	public void setAttribute(String name, Object value);
+
+	public ISCSubscription newSubscription(String serviceName, SCMessageHandler messageHandler, String mask);
+
+	public void uploadFile(String string, String targetFileName, InputStream inStream);
+
+	public void downloadFile(String string, String sourceFileName, OutputStream outStream);
 }

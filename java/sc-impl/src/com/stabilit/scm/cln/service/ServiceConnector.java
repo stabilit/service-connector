@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
@@ -130,5 +133,18 @@ public class ServiceConnector implements IServiceConnector {
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attributes.setAttribute(name, value);
+	}
+
+	@Override
+	public ISCSubscription newSubscription(String serviceName, SCMessageHandler messageHandler, String mask) {
+		return null;
+	}
+
+	@Override
+	public void downloadFile(String string, String sourceFileName, OutputStream outStream) {
+	}
+
+	@Override
+	public void uploadFile(String string, String targetFileName, InputStream inStream) {
 	}
 }
