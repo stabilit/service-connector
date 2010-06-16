@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stabilit.scm.common.net.DefaultEncoderDecoder;
+import com.stabilit.scm.common.net.DefaultMessageEncoderDecoder;
 import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
@@ -95,17 +95,17 @@ public class InternalMessage implements IInternalMessage, Serializable {
 	private void encode(StringBuilder eb) {
 		Set<Entry<String, Object>> attrEntrySet = attrMap.entrySet();
 		eb.append(IInternalMessage.class.getName());
-		eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
+		eb.append(DefaultMessageEncoderDecoder.EQUAL_SIGN);
 		eb.append(this.getClass().getName());
 		eb.append("\n");
 		for (Entry<String, Object> entry : attrEntrySet) {
 			String key = entry.getKey();
 			String value = entry.getValue().toString();
-			key = key.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
-			value = value.replace(DefaultEncoderDecoder.EQUAL_SIGN, DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN);
+			key = key.replace(DefaultMessageEncoderDecoder.EQUAL_SIGN, DefaultMessageEncoderDecoder.ESCAPED_EQUAL_SIGN);
+			value = value.replace(DefaultMessageEncoderDecoder.EQUAL_SIGN, DefaultMessageEncoderDecoder.ESCAPED_EQUAL_SIGN);
 
 			eb.append(key);
-			eb.append(DefaultEncoderDecoder.EQUAL_SIGN);
+			eb.append(DefaultMessageEncoderDecoder.EQUAL_SIGN);
 			eb.append(value);
 			eb.append("\n");
 		}
@@ -119,13 +119,13 @@ public class InternalMessage implements IInternalMessage, Serializable {
 			if (line == null || line.length() <= 0) {
 				break;
 			}
-			Pattern decodReg = Pattern.compile(DefaultEncoderDecoder.UNESCAPED_EQUAL_SIGN_REGEX);
+			Pattern decodReg = Pattern.compile(DefaultMessageEncoderDecoder.UNESCAPED_EQUAL_SIGN_REGEX);
 			Matcher match = decodReg.matcher(line);
 			if (match.matches() && match.groupCount() == 2) {
-				String key = match.group(1).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN,
-						DefaultEncoderDecoder.EQUAL_SIGN);
-				String value = match.group(2).replace(DefaultEncoderDecoder.ESCAPED_EQUAL_SIGN,
-						DefaultEncoderDecoder.EQUAL_SIGN);
+				String key = match.group(1).replace(DefaultMessageEncoderDecoder.ESCAPED_EQUAL_SIGN,
+						DefaultMessageEncoderDecoder.EQUAL_SIGN);
+				String value = match.group(2).replace(DefaultMessageEncoderDecoder.ESCAPED_EQUAL_SIGN,
+						DefaultMessageEncoderDecoder.EQUAL_SIGN);
 				this.setAttribute(key, value);
 			}
 		}

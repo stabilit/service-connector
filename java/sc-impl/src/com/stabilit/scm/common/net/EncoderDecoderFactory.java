@@ -45,8 +45,8 @@ public final class EncoderDecoderFactory extends Factory {
 	 * Instantiates a new encoder decoder factory.
 	 */
 	private EncoderDecoderFactory() {
-		IEncoderDecoder encoderDecoder = new DefaultEncoderDecoder();
-		this.add(DefaultEncoderDecoder.class.getName(), encoderDecoder);
+		IEncoderDecoder encoderDecoder = new DefaultMessageEncoderDecoder();
+		this.add(DefaultMessageEncoderDecoder.class.getName(), encoderDecoder);
 		this.add(DEFAULT, encoderDecoder);
 		encoderDecoder = new LargeMessageEncoderDecoder();
 		this.add(LargeMessageEncoderDecoder.class.getName(), encoderDecoder);

@@ -96,14 +96,8 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
-
-		if (server != null) {
-			// server registered two times for this service
-			HasFaultResponseException communicationException = new SCMPCommunicationException(
-					SCMPError.SERVER_ALREADY_REGISTERED);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
-		}
+		// controls that server not has been registered before for specific service
+		this.validateServerNotRegistered(server);
 
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
@@ -135,6 +129,16 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
+	}
+
+	private void validateServerNotRegistered(Server server) throws SCMPCommunicationException {
+		if (server != null) {
+			// server registered two times for this service
+			SCMPCommunicationException communicationException = new SCMPCommunicationException(
+					SCMPError.SERVER_ALREADY_REGISTERED);
+			communicationException.setMessageType(getKey());
+			throw communicationException;
+		}
 	}
 
 	/**

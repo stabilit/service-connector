@@ -45,12 +45,12 @@ import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
  * 
  * @author JTraber
  */
-public class DefaultEncoderDecoder implements IEncoderDecoder {
+public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */
-	DefaultEncoderDecoder() {
+	DefaultMessageEncoderDecoder() {
 	}
 
 	/** {@inheritDoc} */
@@ -61,7 +61,6 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 
 	/** {@inheritDoc} */
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
@@ -118,40 +117,14 @@ public class DefaultEncoderDecoder implements IEncoderDecoder {
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		scmpMsg.setHeader(metaMap);
 		try {
-			if (scmpBodyType == SCMPBodyType.text) {
-				int caLength = Integer.parseInt(scmpBodyLength);
-				char[] caBuffer = new char[caLength];
-				br.read(caBuffer);
-				String bodyString = new String(caBuffer, 0, caLength);
-				scmpMsg.setBody(bodyString);
-				return scmpMsg;
-			}
-			if (scmpBodyType == SCMPBodyType.internalMessage) {
-				String classLine = br.readLine();
-				if (classLine == null) {
-					return null;
-				}
-				String[] t = classLine.split(EQUAL_SIGN);
-				if (IInternalMessage.class.getName().equals(t[0]) == false) {
-					return null;
-				}
-				if (t.length != 2) {
-					return null;
-				}
-				Class messageClass = Class.forName(t[1]);
-				IInternalMessage message = (IInternalMessage) messageClass.newInstance();
-				message.decode(br);
-				scmpMsg.setBody(message);
-				return scmpMsg;
-			}
-			if (scmpBodyType == SCMPBodyType.binary) {
-				int baLength = Integer.parseInt(scmpBodyLength);
-				byte[] baBuffer = new byte[baLength];
-				is.reset();
-				is.skip(readBytes);
-				is.read(baBuffer);
-				scmpMsg.setBody(baBuffer);
-				return scmpMsg;
+			switch (scmpBodyType) {
+			case binary:
+			case undefined:
+				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodyLength);
+			case text:
+				return this.decodeTextData(br, scmpMsg, scmpBodyLength);
+			case internalMessage:
+				return this.decodeInternalMessage(br, scmpMsg);
 			}
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);

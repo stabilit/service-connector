@@ -96,6 +96,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			response.setSCMP(scmpReply);
 		} catch (SCServiceException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
+			// TODO clean up??
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			ExceptionPoint.getInstance().fireException(this, e);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);

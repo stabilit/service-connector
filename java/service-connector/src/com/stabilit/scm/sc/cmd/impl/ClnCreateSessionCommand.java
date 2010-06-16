@@ -21,12 +21,14 @@ import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -114,6 +116,23 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
+	}
+
+	/**
+	 * Validate server. Checks properness of allocated server. If server null no free server available.
+	 * 
+	 * @param server
+	 *            the server
+	 * @throws SCMPCommandException
+	 *             the SCMP command exception
+	 */
+	private void validateServer(Server server) throws SCMPCommandException {
+		if (server == null) {
+			// no available server for this service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
 	}
 
 	/**

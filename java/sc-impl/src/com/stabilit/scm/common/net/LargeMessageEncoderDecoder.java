@@ -32,7 +32,6 @@ import java.util.regex.Matcher;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.SCMPPoint;
-import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -44,7 +43,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
 /**
  * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of object into/from stream.
  */
-public class LargeMessageEncoderDecoder implements IEncoderDecoder {
+public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/**
 	 * Instantiates a new large message encoder decoder.
@@ -60,7 +59,6 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 
 	/** {@inheritDoc} */
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object decode(InputStream is) throws EncodingDecodingException {
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
@@ -112,44 +110,18 @@ public class LargeMessageEncoderDecoder implements IEncoderDecoder {
 		}
 		// reading body - depends on body type
 		String scmpBodyType = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
-		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		SCMPBodyType scmpBodyTypEnum = SCMPBodyType.getBodyType(scmpBodyType);
+		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		scmpMsg.setHeader(metaMap);
 		try {
-			if (scmpBodyTypEnum == SCMPBodyType.text) {
-				int caLength = Integer.parseInt(scmpBodyLength);
-				char[] caBuffer = new char[caLength];
-				br.read(caBuffer);
-				String bodyString = new String(caBuffer, 0, caLength);
-				scmpMsg.setBody(bodyString);
-				return scmpMsg;
-			}
-			if (scmpBodyTypEnum == SCMPBodyType.internalMessage) {
-				String classLine = br.readLine();
-				if (classLine == null) {
-					return null;
-				}
-				String[] t = classLine.split(EQUAL_SIGN);
-				if (IInternalMessage.class.getName().equals(t[0]) == false) {
-					return null;
-				}
-				if (t.length != 2) {
-					return null;
-				}
-				Class messageClass = Class.forName(t[1]);
-				IInternalMessage message = (IInternalMessage) messageClass.newInstance();
-				message.decode(br);
-				scmpMsg.setBody(message);
-				return scmpMsg;
-			}
-			if (scmpBodyTypEnum == SCMPBodyType.binary) {
-				int baLength = Integer.parseInt(scmpBodyLength);
-				byte[] baBuffer = new byte[baLength];
-				is.reset();
-				is.skip(readBytes);
-				is.read(baBuffer);
-				scmpMsg.setBody(baBuffer);
-				return scmpMsg;
+			switch (scmpBodyTypEnum) {
+			case binary:
+			case undefined:
+				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodyLength);
+			case text:
+				return this.decodeTextData(br, scmpMsg, scmpBodyLength);
+			case internalMessage:
+				return this.decodeInternalMessage(br, scmpMsg);
 			}
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
