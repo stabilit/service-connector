@@ -37,9 +37,9 @@ public class SessionServer {
 
 	private static void run() throws IOException {
 		ResponderConfig srvConfig = new ResponderConfig();
-		srvConfig.load("sc-sim.properties");
+		srvConfig.load("session-server.properties");
 		RequesterConfig clientConfig = new RequesterConfig();
-		clientConfig.load("sc-sim.properties");
+		clientConfig.load("session-server.properties");
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
