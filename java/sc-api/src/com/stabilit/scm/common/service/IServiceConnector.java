@@ -14,85 +14,82 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.common.service;
 
 /**
- * The Interface ISCSession. Reveals functionality of a sc session.
+ * The Interface IServiceConnector.
  * 
  * @author JTraber
  */
-public interface ISCSession {
+public interface IServiceConnector {
 
 	/**
-	 * Executes the session.
-	 * 
-	 * @param message
-	 *            the data body to execute
-	 * @return the message
-	 * @throws Exception
-	 *             the exception
-	 */
-	public SCPublishMessage execute(SCPublishMessage message) throws Exception;
-
-	/**
-	 * Delete session.
+	 * Connects to SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void deleteSession() throws Exception;
+	public void connect() throws Exception;
 
 	/**
-	 * Close group.
+	 * Disconnects from SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void closeGroup() throws Exception;
+	public void disconnect() throws Exception;
 
 	/**
-	 * Open group.
+	 * Sets the attribute. Attributes for ServiceConnector.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
-	public void openGroup() throws Exception;
+	public void setAttribute(String name, Object value);
 
 	/**
-	 * Creates the session.
+	 * Gets the number of threads.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @return the number of threads
 	 */
-	public void createSession() throws Exception;
+	public int getNumberOfThreads();
 
 	/**
-	 * Gets the session id.
+	 * Sets the number of threads.
 	 * 
-	 * @return the session id
+	 * @param numberOfThreads
+	 *            the new number of threads
 	 */
-	public String getSessionId();
+	public void setNumberOfThreads(int numberOfThreads);
 
 	/**
-	 * Gets the service name.
+	 * Gets the connection key.
 	 * 
-	 * @return the service name
+	 * @return the connection key
 	 */
-	public String getServiceName();
+	public String getConnectionKey();
 
 	/**
-	 * Sets the message info.
+	 * Sets the connection key.
 	 * 
-	 * @param string
-	 *            the new message info
+	 * @param connectionKey
+	 *            the new connection key
 	 */
-	public void setMessageInfo(String string);
+	public void setConnectionKey(String connectionKey);
 
 	/**
-	 * Sets the session info.
+	 * Gets the host.
 	 * 
-	 * @param string
-	 *            the new session info
+	 * @return the host
 	 */
-	public void setSessionInfo(String string);
+	public String getHost();
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public int getPort();
 }

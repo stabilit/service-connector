@@ -58,7 +58,7 @@ public interface IClientServiceConnector {
 	 */
 	public ISCSession newDataSession(String serviceName) throws Exception;
 	
-	public ISCSubscription newSubscription(String string, SCMessageHandler messageHandler, String mask);
+	public ISCSubscription newSubscription(String string, SCPublishMessageHandler messageHandler, String mask);
 
 	void uploadFile(String string, String targetFileName, InputStream inStream);
 

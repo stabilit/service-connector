@@ -19,53 +19,17 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.service;
-
-
+package com.stabilit.scm.cln.service;
 
 /**
  * @author JTraber
  *
  */
-public interface IServerServiceConnector {
+public abstract class SCPublishMessageHandler {
+
+	public void messageReceived(SCPublishMessage publishedMessage) {
+	}
 	
-	/**
-	 * Connects to SC.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void connect() throws Exception;
-
-	/**
-	 * Disconnects from SC.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void disconnect() throws Exception;
-
-	public void publish(String string, String mask, Object data);
-
-	/**
-	 * Sets the attribute. Attributes for ServiceConnector.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(String name, Object value);
-
-	public int getNumberOfThreads();
-
-	public void setNumberOfThreads(int numberOfThreads);
-
-	public String getConnectionKey();
-
-	public void setConnectionKey(String connectionKey);
-
-	public String getHost();
-	
-	public int getPort();
+	public void exceptionCaught(Exception exception) { 
+	}	
 }

@@ -19,11 +19,14 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.srv.service;
+
+import com.stabilit.scm.common.service.IServiceConnector;
 
 /**
  * @author JTraber
- *
  */
-public class SCMessage {
+public interface IPublishServiceConnector extends IServiceConnector {
+
+	public void publish(String mask, Object data);
 }

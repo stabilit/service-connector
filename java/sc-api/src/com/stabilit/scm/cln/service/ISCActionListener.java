@@ -25,5 +25,11 @@ package com.stabilit.scm.cln.service;
  * @author JTraber
  *
  */
-public class SCMessage {
+public interface ISCActionListener {
+
+	public void createSession();
+	
+	public void deleteSession();
+	
+	public void messageReceived(SCMessage message);
 }

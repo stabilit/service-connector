@@ -23,17 +23,51 @@ package com.stabilit.scm.cln.service;
 
 /**
  * @author JTraber
- *
  */
-public abstract class SCMessageHandler {
+public class SCPublishMessage {
 
-	public void messageReceived(SCMessage subscriptionMessage) {
-		
+	private Object data;
+	private String msgInfo;
+	private String mask;
+	private boolean compression;
+
+	public SCPublishMessage() {
 	}
-	
-	public void exceptionCaught(Exception exception) { 
-		
+
+	public SCPublishMessage(Object data) {
+		super();
+		this.data = data;
 	}
-	
-	
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	public String getMsgInfo() {
+		return msgInfo;
+	}
+
+	public void setMsgInfo(String msgInfo) {
+		this.msgInfo = msgInfo;
+	}
+
+	public String getMask() {
+		return mask;
+	}
+
+	public void setMask(String mask) {
+		this.mask = mask;
+	}
+
+	public boolean isCompression() {
+		return compression;
+	}
+
+	public void setCompression(boolean compression) {
+		this.compression = compression;
+	}
 }

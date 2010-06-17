@@ -19,11 +19,12 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.srv.service;
 
-/**
- * @author JTraber
- *
- */
-public class SCMessage {
+import com.stabilit.scm.cln.service.ISCActionListener;
+import com.stabilit.scm.common.service.IServiceConnector;
+
+public interface ISessionServiceConnector extends IServiceConnector {
+	
+	public void addSCActionListener(ISCActionListener listener);
 }
