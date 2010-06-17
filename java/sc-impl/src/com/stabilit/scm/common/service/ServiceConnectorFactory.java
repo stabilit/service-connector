@@ -19,10 +19,10 @@
 /**
  * 
  */
-package com.stabilit.scm.service;
+package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.srv.service.IServerServiceConnector;
+import com.stabilit.scm.srv.service.IPublishServiceConnector;
 
 
 /**
@@ -34,7 +34,7 @@ public class ServiceConnectorFactory {
 		return new ClientServiceConnector(host, port);
 	}
 
-	public static IServerServiceConnector newServerInstance(String host, int port) {
-		return new ServerServiceConnector(host, port);
+	public static IPublishServiceConnector newPublishServerInstance(String host, int port) {
+		return new PublishServerServiceConnector(host, port);
 	}
 }

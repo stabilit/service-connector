@@ -14,17 +14,23 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.service;
+package com.stabilit.scm.common.service;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.cln.service.IClientServiceConnector;
+import com.stabilit.scm.cln.service.ISCSession;
+import com.stabilit.scm.cln.service.ISCSubscription;
+import com.stabilit.scm.cln.service.SCMessageHandler;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
-import com.stabilit.scm.srv.service.IServerServiceConnector;
 
 /**
  * The Class ServiceConnector. Represents the service connector on client side. Provides functions to create sessions to
@@ -33,7 +39,7 @@ import com.stabilit.scm.srv.service.IServerServiceConnector;
  * 
  * @author JTraber
  */
-class ServerServiceConnector implements IServerServiceConnector {
+class ClientServiceConnector implements IClientServiceConnector {
 
 	/** The host of the SC. */
 	public String host;
@@ -56,7 +62,7 @@ class ServerServiceConnector implements IServerServiceConnector {
 	 * @param port
 	 *            the port
 	 */
-	public ServerServiceConnector(String host, int port) {
+	public ClientServiceConnector(String host, int port) {
 		this.host = host;
 		this.port = port;
 		this.connectionKey = "netty.http"; // default is netty http
@@ -84,6 +90,21 @@ class ServerServiceConnector implements IServerServiceConnector {
 		attachCall.setKeepAliveInterval(360);
 		// attaches client
 		attachCall.invoke();
+	}
+
+	/**
+	 * New data session. Data session allows using a service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the iSC session
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Override
+	public ISCSession newDataSession(String serviceName) throws Exception {
+		SCDataSession scDataSession = new SCDataSession(serviceName, requester);
+		return scDataSession;
 	}
 
 	/**
@@ -140,7 +161,17 @@ class ServerServiceConnector implements IServerServiceConnector {
 	}
 
 	@Override
-	public void publish(String string, String mask, Object data) {
+	public void downloadFile(String string, String sourceFileName, OutputStream outStream) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void uploadFile(String string, String targetFileName, InputStream inStream) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ISCSubscription newSubscription(String string, SCMessageHandler messageHandler, String mask) {
 		throw new UnsupportedOperationException();
 	}
 }
