@@ -39,7 +39,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.SC;
-import com.stabilit.scm.sim.Simulation;
+import com.stabilit.scm.srv.rr.SessionServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -67,7 +67,7 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			SetupTestCases.init();
 			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 			SC.main(null);
-			Simulation.main(null);
+			SessionServer.main(null);
 			config = new RequesterConfig();
 			config.load(fileName);
 			this.req = new Requester();

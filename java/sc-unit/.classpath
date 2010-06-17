@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-simulation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sc-impl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/service-connector"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sc-examples"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

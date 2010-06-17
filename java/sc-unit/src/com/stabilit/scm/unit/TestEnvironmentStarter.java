@@ -47,7 +47,7 @@ import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.log.listener.SessionPoint;
 import com.stabilit.scm.sc.SC;
-import com.stabilit.scm.sim.Simulation;
+import com.stabilit.scm.srv.rr.SessionServer;
 
 public class TestEnvironmentStarter {
 
@@ -60,7 +60,7 @@ public class TestEnvironmentStarter {
 //		this.init();
 		CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 		SC.main(null);
-		Simulation.main(null);
+		SessionServer.main(null);
 	}
 
 	public void init() throws IOException {
