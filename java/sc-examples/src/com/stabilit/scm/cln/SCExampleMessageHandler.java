@@ -21,16 +21,16 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.SCMessageHandler;
-import com.stabilit.scm.cln.service.SCMessage;
+import com.stabilit.scm.cln.service.SCPublishMessageHandler;
+import com.stabilit.scm.cln.service.SCPublishMessage;
 
 /**
  * @author JTraber
  */
-public class SCExampleMessageHandler extends SCMessageHandler {
+public class SCExampleMessageHandler extends SCPublishMessageHandler {
 	
 	@Override
-	public void messageReceived(SCMessage publishedMessage) {
+	public void messageReceived(SCPublishMessage publishedMessage) {
 		//message received, process data
 	}
 
