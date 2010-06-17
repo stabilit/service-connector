@@ -30,7 +30,15 @@ public class SCMessage {
 	private String msgInfo;
 	private String mask;
 	private boolean compression;
-	
+
+	public SCMessage() {
+	}
+
+	public SCMessage(Object data) {
+		super();
+		this.data = data;
+	}
+
 	public Object getData() {
 		return data;
 	}

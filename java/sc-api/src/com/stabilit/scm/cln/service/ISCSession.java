@@ -26,13 +26,13 @@ public interface ISCSession {
 	/**
 	 * Executes the session.
 	 * 
-	 * @param obj
+	 * @param message
 	 *            the data body to execute
-	 * @return the object
+	 * @return the message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public Object execute(Object obj) throws Exception;
+	public SCMessage execute(SCMessage message) throws Exception;
 
 	/**
 	 * Delete session.
