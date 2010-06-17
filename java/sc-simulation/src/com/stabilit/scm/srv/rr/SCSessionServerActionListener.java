@@ -21,41 +21,23 @@
  */
 package com.stabilit.scm.srv.rr;
 
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
-import com.stabilit.scm.srv.service.ISessionServiceConnector;
+import com.stabilit.scm.cln.service.ISCActionListener;
+import com.stabilit.scm.cln.service.SCMessage;
 
+/**
+ * @author JTraber
+ */
+public class SCSessionServerActionListener implements ISCActionListener {
 
-public class SessionServer {
-
-	public static void main(String[] args) throws Exception {
-		SessionServer.runExample();
+	@Override
+	public void createSession() {
 	}
-	
-	public static void runExample() {
-		ISessionServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newSessionServerInstance("localhost", 8080);
-			
-			sc.setConnectionKey("netty.tcp"); //default netty.tcp
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("serviceName", "simulation");
 
-			SCSessionServerActionListener listener = new SCSessionServerActionListener();
-			sc.addSCActionListener(listener);
-			
-			// connects to SC, starts observing connection
-			sc.connect();	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.disconnect();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	@Override
+	public void deleteSession() {
+	}
+
+	@Override
+	public void messageReceived(SCMessage message) {
 	}
 }
