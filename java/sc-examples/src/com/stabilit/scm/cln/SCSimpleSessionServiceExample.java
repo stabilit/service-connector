@@ -23,6 +23,7 @@ package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.IServiceConnector;
+import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.cln.service.ServiceConnector;
 
 public class SCSimpleSessionServiceExample {
@@ -37,7 +38,6 @@ public class SCSimpleSessionServiceExample {
 			sc = new ServiceConnector("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("compression", false);
 
 			// connects to SC, starts observing connection
 			sc.connect();
@@ -49,10 +49,13 @@ public class SCSimpleSessionServiceExample {
 			dataSessionA.createSession();
 
 			byte[] buffer = new byte[1024];
-			//TODO compression on message level
-			Object resp = dataSessionA.execute(buffer);
+			SCMessage message = new SCMessage();
+			message.setData(buffer);
+			message.setCompression(false);
+
+			SCMessage resp = dataSessionA.execute(message);
 			System.out.println(resp);
-			
+
 			// deletes the session
 			dataSessionA.deleteSession();
 

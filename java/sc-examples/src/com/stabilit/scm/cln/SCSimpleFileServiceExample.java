@@ -21,7 +21,9 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.ISCSession;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.stabilit.scm.cln.service.IServiceConnector;
 import com.stabilit.scm.cln.service.ServiceConnector;
 
@@ -35,26 +37,17 @@ public class SCSimpleFileServiceExample {
 		IServiceConnector sc = null;
 		try {
 			sc = new ServiceConnector("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("compression", false);
 
 			// connects to SC, starts observing connection
 			sc.connect();
+			String targetFileName = "";
+			InputStream inStream = null;
+			sc.uploadFile("serviceName", targetFileName, inStream);
 
-			ISCSession dataSessionA = sc.newDataSession("simulation");
-			dataSessionA.setMessageInfo("sessionInfo");
-			dataSessionA.setSessionInfo("messageInfo");
-			// creates a session
-			dataSessionA.createSession();
-
-			byte[] buffer = new byte[1024];
-			Object resp = dataSessionA.execute(buffer);
-			System.out.println(resp);
-			
-			// deletes the session
-			dataSessionA.deleteSession();
-
+			String sourceFileName = "";
+			OutputStream outStream = null;
+			sc.downloadFile("serviceName", sourceFileName, outStream);
+			// List<String> fileNames = sc.listFiles("serviceName");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
