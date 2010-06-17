@@ -24,7 +24,6 @@ package com.stabilit.scm.unit;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.SCDataSession;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.conf.RequesterConfig.RequesterConfigItem;
@@ -36,6 +35,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.scm.service.SCDataSession;
 
 /**
  * @author JTraber

@@ -20,7 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.SCDataSession;
+import com.stabilit.scm.service.SCDataSession;
 import com.stabilit.scm.unit.test.register.SuperRegisterTestCase;
 
 /**

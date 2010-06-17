@@ -20,9 +20,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.IServiceConnector;
+import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.cln.service.ServiceConnector;
+import com.stabilit.scm.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPISessionTestCase {
@@ -35,9 +35,9 @@ public class ClnAPISessionTestCase {
 	@Test
 	public void testClnAPI() throws Exception {
 		
-		IServiceConnector sc = null;
+		IClientServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 
