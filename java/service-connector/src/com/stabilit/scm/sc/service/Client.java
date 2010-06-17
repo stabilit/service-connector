@@ -19,14 +19,13 @@ package com.stabilit.scm.sc.service;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class Client. Represents an attached client.
  * 
  * @author JTraber
  */
-public class Client extends MapBean<Object> {
+public class Client {
 
 	/** The request received when client attached on SC. */
 	private IRequest initialRequest;

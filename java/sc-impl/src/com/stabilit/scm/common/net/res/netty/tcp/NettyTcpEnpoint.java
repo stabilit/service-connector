@@ -27,7 +27,6 @@ import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**
@@ -66,8 +65,8 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void create() {
 		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
-				Executors.newFixedThreadPool(numberOfThreads / 4));
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
+				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyTcpResponderPipelineFactory());
@@ -86,7 +85,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
 		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		serverRegistry.add(this.channel.getId(), new ResponderRegistryItem(this.resp));
+		serverRegistry.addResponder(this.channel.getId(), this.resp);
 		synchronized (this) {
 			wait();
 		}

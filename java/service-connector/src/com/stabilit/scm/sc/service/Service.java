@@ -26,12 +26,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * @author JTraber
  */
-public class Service extends MapBean<String> {
+public class Service {
 
 	private String type; // TODO enum machen oder klasse
 	private String name;

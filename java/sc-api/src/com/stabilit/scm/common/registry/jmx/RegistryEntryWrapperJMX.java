@@ -16,24 +16,44 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.registry.jmx;
 
+import java.beans.ConstructorProperties;
+
 /**
- * The Interface IMapBeanWrapperMXBean. Interface provides access for JMX clients.
+ * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.
  * 
  * @author JTraber
  */
-public interface IMapBeanWrapperMXBean {
+public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
+
+	/** The map bean. */
+	Object obj;
+
+	/** The registry key. */
+	String registryKey;
 
 	/**
-	 * Gets the entry.
+	 * Instantiates a new RegistryEntryWrapperJMX.
 	 * 
-	 * @return the entry
+	 * @param key
+	 *            the key
+	 * @param obj
+	 *            the map bean
 	 */
-	String getEntry();
+	@ConstructorProperties({ "key", "obj" })
+	public RegistryEntryWrapperJMX(String key, Object obj) {
+		this.registryKey = key;
+		this.obj = obj;
+	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
-	String getKey();
+	/** {@inheritDoc} */
+	@Override
+	public String getEntry() {
+		return obj.toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getKey() {
+		return registryKey;
+	}
 }

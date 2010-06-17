@@ -29,8 +29,8 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.registry.ClientRegistry;
+import com.stabilit.scm.sc.service.Client;
 
 /**
  * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to
@@ -82,8 +82,8 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 
-		MapBean<?> mapBean = clientRegistry.getClient(socketAddress);
-		if (mapBean == null) {
+		Client client = clientRegistry.getClient(socketAddress);
+		if (client == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
 			}

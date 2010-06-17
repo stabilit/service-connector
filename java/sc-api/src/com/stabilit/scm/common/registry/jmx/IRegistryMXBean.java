@@ -28,5 +28,5 @@ public interface IRegistryMXBean {
 	 * 
 	 * @return the entries
 	 */
-	MapBeanWrapperJMX[] getEntries();
+	RegistryEntryWrapperJMX[] getEntries();
 }

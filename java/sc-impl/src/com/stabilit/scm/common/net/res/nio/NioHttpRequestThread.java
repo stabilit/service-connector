@@ -31,7 +31,6 @@ import com.stabilit.scm.common.net.res.nio.http.NioHttpRequest;
 import com.stabilit.scm.common.net.res.nio.http.NioHttpResponse;
 import com.stabilit.scm.common.net.res.nio.tcp.NioTcpDisconnectException;
 import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.registry.ResponderRegistry.ResponderRegistryItem;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -53,7 +52,7 @@ public class NioHttpRequestThread implements Runnable {
 	/** The command factory. */
 	CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 	/** The server. */
-	private IResponder server = null;
+	private IResponder responder = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
 
@@ -62,12 +61,12 @@ public class NioHttpRequestThread implements Runnable {
 	 * 
 	 * @param requestSocket
 	 *            the request socket
-	 * @param server
+	 * @param responder
 	 *            the server
 	 */
-	public NioHttpRequestThread(SocketChannel requestSocket, IResponder server) {
+	public NioHttpRequestThread(SocketChannel requestSocket, IResponder responder) {
 		this.socketChannel = requestSocket;
-		this.server = server;
+		this.responder = responder;
 		this.msgID = new SCMPMessageID();
 	}
 
@@ -76,11 +75,11 @@ public class NioHttpRequestThread implements Runnable {
 
 		SCMPCompositeSender scmpLargeResponse = null;
 		try {
-			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-			// adds server to registry
-			serverRegistry.add(this.socketChannel, new ResponderRegistryItem(this.server));
+			ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+			// adds responder to registry
+			responderRegistry.addResponder(this.socketChannel, this.responder);
 			// needs to set a key in thread local to identify thread later and get access to the server
-			serverRegistry.setThreadLocal(this.socketChannel);
+			responderRegistry.setThreadLocal(this.socketChannel);
 			while (true) {
 				InetSocketAddress localSocketAddress = (InetSocketAddress) this.socketChannel.socket().getLocalSocketAddress();
 				InetSocketAddress remoteSocketAddress = (InetSocketAddress) this.socketChannel.socket().getRemoteSocketAddress();
@@ -164,7 +163,7 @@ public class NioHttpRequestThread implements Runnable {
 				response.write();
 				// needed for testing
 				if ("true".equals(response.getSCMP().getHeader("kill"))) {
-					this.server.destroy();
+					this.responder.destroy();
 					return;
 
 				}

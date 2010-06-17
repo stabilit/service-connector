@@ -24,7 +24,7 @@ import com.stabilit.scm.common.util.MapBean;
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
  * between a client and a server.
  */
-public class Session extends MapBean<Object> {
+public class Session extends MapBean<Object>{
 
 	/** The id. */
 	private String id;

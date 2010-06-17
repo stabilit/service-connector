@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
-import com.stabilit.scm.common.registry.jmx.MapBeanWrapperJMX;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
 
 /**
  * The Class Registry. Provides functionality for general registries.
@@ -31,13 +30,13 @@ import com.stabilit.scm.common.util.MapBean;
 public abstract class Registry implements IRegistryMXBean {
 
 	/** The registry map. */
-	private Map<Object, MapBean<?>> registryMap;
+	private Map<Object, Object> registryMap;
 
 	/**
 	 * Instantiates a new registry.
 	 */
 	public Registry() {
-		registryMap = new ConcurrentHashMap<Object, MapBean<?>>();
+		registryMap = new ConcurrentHashMap<Object, Object>();
 	}
 
 	/**
@@ -48,7 +47,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param value
 	 *            the value
 	 */
-	protected void put(Object key, MapBean<?> value) {
+	protected void put(Object key, Object value) {
 		registryMap.put(key, value);
 	}
 
@@ -58,7 +57,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param key the key
 	 * @return the map bean
 	 */
-	protected MapBean<?> get(Object key) {
+	protected Object get(Object key) {
 		return registryMap.get(key);
 	}
 
@@ -118,11 +117,11 @@ public abstract class Registry implements IRegistryMXBean {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MapBeanWrapperJMX[] getEntries() {
-		MapBeanWrapperJMX[] mapBeanStringJMX = new MapBeanWrapperJMX[registryMap.size()];
+	public RegistryEntryWrapperJMX[] getEntries() {
+		RegistryEntryWrapperJMX[] mapBeanStringJMX = new RegistryEntryWrapperJMX[registryMap.size()];
 		int i = 0;
 		for (Object key : registryMap.keySet()) {
-			mapBeanStringJMX[i] = new MapBeanWrapperJMX(key.toString(), (MapBean<?>) registryMap.get(key));
+			mapBeanStringJMX[i] = new RegistryEntryWrapperJMX(key.toString(), registryMap.get(key));
 			i++;
 		}
 		return mapBeanStringJMX;

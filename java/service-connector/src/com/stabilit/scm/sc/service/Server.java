@@ -50,7 +50,7 @@ import com.stabilit.scm.sc.req.SCRequester;
  * 
  * @author JTraber
  */
-public class Server extends MapBean<String> {
+public class Server {
 
 	/** The host. */
 	private String host;

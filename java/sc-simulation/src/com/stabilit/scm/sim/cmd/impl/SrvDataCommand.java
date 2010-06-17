@@ -32,9 +32,9 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
+import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sim.registry.SimulationSessionRegistry;
 
 public class SrvDataCommand extends CommandAdapter {
@@ -61,11 +61,10 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setIsReply(true);
 
 		String sessionId = message.getSessionId();
-
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
-		MapBean<Object> mapBean = (MapBean<Object>) simSessReg.getSession(sessionId);
+		Session session = simSessReg.getSession(sessionId);
 
-		if (mapBean == null) {
+		if (session == null) {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: session not found");
 			}
@@ -110,7 +109,7 @@ public class SrvDataCommand extends CommandAdapter {
 			return;
 		}
 
-		List<String> msg = (List<String>) mapBean.getAttribute("messageQueue");
+		List<String> msg = (List<String>) session.getAttribute("messageQueue");
 
 		// init dummy message list
 		if (msg == null) {
@@ -118,16 +117,16 @@ public class SrvDataCommand extends CommandAdapter {
 			for (int i = 0; i < 1000000; i++) {
 				msg.add("Message number " + i);
 			}
-			mapBean.setAttribute("messageQueueId", 0);
-			mapBean.setAttribute("messageQueue", msg);
+			session.setAttribute("messageQueueId", 0);
+			session.setAttribute("messageQueue", msg);
 			scmpReply.setBody(msg.get(0));
 			response.setSCMP(scmpReply);
 			return;
 		}
-		int messageQueueId = (Integer) mapBean.getAttribute("messageQueueId");
+		int messageQueueId = (Integer) session.getAttribute("messageQueueId");
 		messageQueueId++;
 		scmpReply.setBody(msg.get(messageQueueId));
-		mapBean.setAttribute("messageQueueId", messageQueueId);
+		session.setAttribute("messageQueueId", messageQueueId);
 		response.setSCMP(scmpReply);
 	}
 

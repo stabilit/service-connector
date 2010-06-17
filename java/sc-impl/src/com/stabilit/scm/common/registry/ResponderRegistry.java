@@ -18,7 +18,6 @@ package com.stabilit.scm.common.registry;
 
 import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
@@ -67,8 +66,12 @@ public final class ResponderRegistry extends Registry {
 	 * @param item
 	 *            the item
 	 */
-	public void add(Object key, ResponderRegistryItem item) {
-		this.put(key, item);
+	public void addResponder(Object key, IResponder responder) {
+		this.put(key, responder);
+	}
+
+	public IResponder getResponder(Object key) {
+		return (IResponder) super.get(key);
 	}
 
 	/**
@@ -80,37 +83,7 @@ public final class ResponderRegistry extends Registry {
 		// gets the key from thread local, key has been set before of the same thread by calling method
 		// setThreadLocal(object obj), very useful to identify current context
 		Object key = this.threadLocal.get();
-		ResponderRegistryItem responderRegistryItem = (ResponderRegistryItem) this.get(key);
-		return responderRegistryItem.getResponderContext();
-	}
-
-	/**
-	 * The Class ResponderRegistryItem. Represents an entry in registry of a responder. Holds responder context and an
-	 * attribute map to store any data related to the responder.
-	 */
-	public static class ResponderRegistryItem extends MapBean<Object> {
-
-		/**
-		 * Instantiates a new responder registry item.
-		 * 
-		 * @param responder
-		 *            the responder
-		 */
-		public ResponderRegistryItem(IResponder resp) {
-			this.setAttribute(IResponder.class.getName(), resp);
-		}
-
-		/**
-		 * Gets the responder context.
-		 * 
-		 * @return the responder context
-		 */
-		public IResponderContext getResponderContext() {
-			IResponder resp = (IResponder) this.getAttribute(IResponder.class.getName());
-			if (resp == null) {
-				return null;
-			}
-			return resp.getResponderContext();
-		}
+		IResponder responder = this.getResponder(key);
+		return responder.getResponderContext();
 	}
 }
