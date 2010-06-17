@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.service.ServiceConnectorFactory;
+
 /**
  * The Class PerformanceWithClientApi. Test the performance on client API Layer.
  */
@@ -35,9 +37,9 @@ public class PerformanceWithClientApi {
 	 * Run example.
 	 */
 	public static void runExample() {
-		IServiceConnector sc = null;
+		IClientServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 			sc.setAttribute("compression", false);
