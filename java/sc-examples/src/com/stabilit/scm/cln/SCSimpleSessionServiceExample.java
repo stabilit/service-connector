@@ -21,10 +21,10 @@
  */
 package com.stabilit.scm.cln;
 
+import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.IServiceConnector;
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.cln.service.ServiceConnector;
+import com.stabilit.scm.service.ServiceConnectorFactory;
 
 public class SCSimpleSessionServiceExample {
 
@@ -33,9 +33,9 @@ public class SCSimpleSessionServiceExample {
 	}
 
 	public static void runExample() {
-		IServiceConnector sc = null;
+		IClientServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 
@@ -48,11 +48,12 @@ public class SCSimpleSessionServiceExample {
 			// creates a session
 			dataSessionA.createSession();
 
-			byte[] buffer = new byte[1024];
 			SCMessage message = new SCMessage();
+			
+			byte[] buffer = new byte[1024];
 			message.setData(buffer);
 			message.setCompression(false);
-
+			
 			SCMessage resp = dataSessionA.execute(message);
 			System.out.println(resp);
 

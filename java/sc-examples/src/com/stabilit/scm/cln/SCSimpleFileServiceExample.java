@@ -24,8 +24,8 @@ package com.stabilit.scm.cln;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.stabilit.scm.cln.service.IServiceConnector;
-import com.stabilit.scm.cln.service.ServiceConnector;
+import com.stabilit.scm.cln.service.IClientServiceConnector;
+import com.stabilit.scm.service.ServiceConnectorFactory;
 
 public class SCSimpleFileServiceExample {
 
@@ -34,9 +34,9 @@ public class SCSimpleFileServiceExample {
 	}
 
 	public static void runExample() {
-		IServiceConnector sc = null;
+		IClientServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 
 			// connects to SC, starts observing connection
 			sc.connect();

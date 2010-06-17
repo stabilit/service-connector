@@ -21,9 +21,9 @@
  */
 package com.stabilit.scm.cln;
 
+import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSubscription;
-import com.stabilit.scm.cln.service.IServiceConnector;
-import com.stabilit.scm.cln.service.ServiceConnector;
+import com.stabilit.scm.service.ServiceConnectorFactory;
 
 public class SCSimplePublishingServiceExample {
 
@@ -32,9 +32,9 @@ public class SCSimplePublishingServiceExample {
 	}
 
 	public static void runExample() {
-		IServiceConnector sc = null;
+		IClientServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 			sc.setAttribute("compression", false);
