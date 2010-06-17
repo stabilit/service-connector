@@ -74,9 +74,10 @@ public class ServiceConnector implements IServiceConnector {
 	 */
 	@Override
 	public void connect() throws Exception {
-		IRequester req = new Requester();
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem("localhost", 9000, "netty.tcp", 16);
-		req.setRequesterConfig(config);
+		requester = new Requester();
+		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.port,
+				this.connectionKey, this.numberOfThreads);
+		requester.setRequesterConfig(config);
 		requester.connect();
 		// sets up the attach call
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
@@ -99,10 +100,6 @@ public class ServiceConnector implements IServiceConnector {
 	@Override
 	public ISCSession newDataSession(String serviceName) throws Exception {
 		SCDataSession scDataSession = new SCDataSession(serviceName, requester);
-
-		if ((Boolean) this.attributes.getAttribute("compression") == false) {
-			scDataSession.setCompression(false);
-		}
 		return scDataSession;
 	}
 

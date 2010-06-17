@@ -49,8 +49,6 @@ public class SCDataSession implements ISCSession {
 	private String messageInfo;
 	/** The session info. */
 	private String sessionInfo;
-	/** The compression. */
-	private boolean compression;
 
 	/**
 	 * Instantiates a new sc data session.
@@ -68,7 +66,6 @@ public class SCDataSession implements ISCSession {
 		this.sessionInfo = null;
 		this.messageInfo = null;
 		this.clnDataCall = null;
-		this.compression = true; // compression default is yes
 	}
 
 	/**
@@ -100,19 +97,19 @@ public class SCDataSession implements ISCSession {
 	/**
 	 * Execute.
 	 * 
-	 * @param data
+	 * @param message
 	 *            the data
 	 * @return the object
 	 * @throws Exception
 	 *             the exception
 	 */
 	@Override
-	public Object execute(Object data) throws Exception {
+	public SCMessage execute(SCMessage message) throws Exception {
 		SCMPMessage scmpReply = null;
 
 		this.clnDataCall.setMessagInfo(this.messageInfo);
-		this.clnDataCall.setCompression(this.compression);
-		this.clnDataCall.setRequestBody(data);
+		this.clnDataCall.setCompression(message.isCompression());
+		this.clnDataCall.setRequestBody(message.getData());
 
 		// if group call is requested - invoke group call
 		if (this.scmpGroupCall != null) {
@@ -120,7 +117,7 @@ public class SCDataSession implements ISCSession {
 		} else {
 			scmpReply = this.clnDataCall.invoke();
 		}
-		return scmpReply.getBody();
+		return new SCMessage(scmpReply.getBody());
 	}
 
 	/**
@@ -193,25 +190,6 @@ public class SCDataSession implements ISCSession {
 	 */
 	public String getSessionInfo() {
 		return sessionInfo;
-	}
-
-	/**
-	 * Checks if is compression.
-	 * 
-	 * @return true, if is compression
-	 */
-	public boolean isCompression() {
-		return compression;
-	}
-
-	/**
-	 * Sets the compression.
-	 * 
-	 * @param compression
-	 *            the new compression
-	 */
-	void setCompression(boolean compression) {
-		this.compression = compression;
 	}
 
 	/**

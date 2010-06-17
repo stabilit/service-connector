@@ -56,7 +56,8 @@ public class PerformanceWithClientApi {
 			double startTime = System.currentTimeMillis();
 			for (int i = 0; i < anzMsg; i++) {
 				byte[] data = new byte[128];
-				Object resp = dataSessionA.execute(data);
+				SCMessage message = new SCMessage(data);
+				Object resp = dataSessionA.execute(message);
 			}
 			double endTime = System.currentTimeMillis();
 
