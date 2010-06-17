@@ -29,6 +29,7 @@ import com.stabilit.scm.common.net.res.Responder;
  * @author JTraber
  */
 public class SimluationServer extends Responder {
+
 	private IRequester req;
 
 	public SimluationServer() {

@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -46,11 +45,6 @@ public class SrvDataCommand extends CommandAdapter {
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_DATA;
-	}
-
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -128,11 +122,6 @@ public class SrvDataCommand extends CommandAdapter {
 		scmpReply.setBody(msg.get(messageQueueId));
 		session.setAttribute("messageQueueId", messageQueueId);
 		response.setSCMP(scmpReply);
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	public class SrvDataCommandValidator implements ICommandValidator {

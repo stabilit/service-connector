@@ -21,7 +21,6 @@ import javax.xml.bind.ValidationException;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -52,36 +51,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		this.commandValidator = new ClnDataCommandValidator();
 	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_DATA;
 	}
 
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
@@ -106,28 +82,11 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	}
 
 	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
-	/**
 	 * The Class ClnDataCommandValidator.
 	 */
 	public class ClnDataCommandValidator implements ICommandValidator {
-
-		/**
-		 * Validate request.
-		 * 
-		 * @param request
-		 *            the request
-		 * @throws Exception
-		 *             the exception
-		 */
+		
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();

@@ -23,7 +23,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -52,36 +51,13 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		this.commandValidator = new ClnCreateSessionCommandValidator();
 	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
 
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
@@ -136,28 +112,11 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	}
 
 	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
-	/**
 	 * The Class ClnCreateSessionCommandValidator.
 	 */
 	public class ClnCreateSessionCommandValidator implements ICommandValidator {
 
-		/**
-		 * Validate request.
-		 * 
-		 * @param request
-		 *            the request
-		 * @throws Exception
-		 *             the exception
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getMessage().getHeader();

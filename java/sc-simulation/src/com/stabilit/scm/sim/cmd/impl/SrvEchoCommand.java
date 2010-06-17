@@ -22,7 +22,6 @@ import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -39,11 +38,6 @@ public class SrvEchoCommand extends CommandAdapter {
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_ECHO;
-	}
-
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
 	}
 
 	@Override
@@ -79,11 +73,6 @@ public class SrvEchoCommand extends CommandAdapter {
 		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getRemoteSocketAddress().hashCode());
 		result.setMessageType(getKey().getName());
 		response.setSCMP(result);
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	public class SrvEchoCommandValidator implements ICommandValidator {

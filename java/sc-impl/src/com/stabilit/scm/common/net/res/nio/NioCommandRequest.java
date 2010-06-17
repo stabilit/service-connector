@@ -74,7 +74,7 @@ public class NioCommandRequest {
 	public ICommand readCommand() throws Exception {
 		this.request.read();
 		// gets the command
-		this.command = CommandFactory.getCurrentCommandFactory().newCommand(this.request);
+		this.command = CommandFactory.getCurrentCommandFactory().getCommand(this.request);
 		if (this.command == null) {
 			return null;
 		}

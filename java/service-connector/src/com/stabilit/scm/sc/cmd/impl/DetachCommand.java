@@ -22,7 +22,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -47,36 +46,13 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		this.commandValidator = new DetachCommandValidator();
 	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.DETACH;
 	}
 
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
@@ -100,28 +76,11 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 	}
 
 	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
-	/**
 	 * The Class DetachCommandValidator.
 	 */
 	public class DetachCommandValidator implements ICommandValidator {
 
-		/**
-		 * Validate request, nothing to validate in case of detach.
-		 * 
-		 * @param request
-		 *            the request
-		 * @throws SCMPValidatorException
-		 *             the SCMP validator exception
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

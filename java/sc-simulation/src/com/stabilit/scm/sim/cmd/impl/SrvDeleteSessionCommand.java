@@ -15,9 +15,9 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sim.cmd.impl;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -41,11 +41,6 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 	}
 
 	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		SimulationSessionRegistry simSessReg = SimulationSessionRegistry.getCurrentInstance();
@@ -56,15 +51,9 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message
-				.getServiceName());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		scmpReply.setMessageType(getKey().getName());
 		response.setSCMP(scmpReply);
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	public class SrvDeleteSessionCommandValidator implements ICommandValidator {

@@ -60,7 +60,7 @@ public class NettyCommandRequest {
 	public ICommand readCommand(IRequest request, IResponse response) throws Exception {
 		request.read();
 		// gets the command
-		ICommand command = CommandFactory.getCurrentCommandFactory().newCommand(request);
+		ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request);
 		if (command == null) {
 			return null;
 		}

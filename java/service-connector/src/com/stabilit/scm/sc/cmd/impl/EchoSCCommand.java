@@ -18,7 +18,6 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -37,36 +36,13 @@ public class EchoSCCommand extends CommandAdapter {
 		this.commandValidator = new EchoSCCommandValidator();
 	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.ECHO_SC;
 	}
 
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
@@ -87,28 +63,11 @@ public class EchoSCCommand extends CommandAdapter {
 	}
 
 	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
-	/**
 	 * The Class EchoSCCommandValidator.
 	 */
 	public class EchoSCCommandValidator implements ICommandValidator {
 
-		/**
-		 * Validate request, nothing to validate in case of echoSC.
-		 * 
-		 * @param request
-		 *            the request
-		 * @throws SCMPValidatorException
-		 *             the SCMP validator exception
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

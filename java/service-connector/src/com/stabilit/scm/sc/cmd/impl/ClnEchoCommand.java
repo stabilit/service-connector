@@ -19,7 +19,6 @@ package com.stabilit.scm.sc.cmd.impl;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
@@ -50,36 +49,13 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		this.commandValidator = new ClnEchoCommandValidator();
 	}
 
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_ECHO;
 	}
 
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return super.getCommandValidator();
-	}
-
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
@@ -129,28 +105,11 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	}
 
 	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
-	}
-
-	/**
 	 * The Class ClnEchoCommandValidator.
 	 */
 	public class ClnEchoCommandValidator implements ICommandValidator {
 
-		/**
-		 * Validate request, nothing to validate in case of echo.
-		 * 
-		 * @param request
-		 *            the request
-		 * @throws SCMPValidatorException
-		 *             the SCMP validator exception
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}

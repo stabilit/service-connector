@@ -14,46 +14,20 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sim.cmd.impl;
+package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
 
-public class SrvSystemCommand extends CommandAdapter {
+public class AttachCommandNoValidate extends AttachCommand {
 
-	public SrvSystemCommand() {
-		this.commandValidator = new SrvSystemCommandValidator();
+	public AttachCommandNoValidate() {
+		this.commandValidator = new AttachCommandNoValidateValidator();
 	}
 
-	@Override
-	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_SYSTEM;
-	}
+	public class AttachCommandNoValidateValidator implements ICommandValidator {
 
-	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage scmpReq = request.getMessage();
-		if (scmpReq.getBodyLength() > 0) {
-			String[] serviceNames = ((String) scmpReq.getBody()).split(":");
-			for (String name : serviceNames) {
-				ServiceRegistry.getCurrentInstance().removeService(name);
-			}
-		}
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
-		scmpReply.setSessionId(scmpReq.getSessionId());
-		scmpReply.setHeader("kill", "true");
-		response.setSCMP(scmpReply);
-	}
-
-	public class SrvSystemCommandValidator implements ICommandValidator {
-
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 		}

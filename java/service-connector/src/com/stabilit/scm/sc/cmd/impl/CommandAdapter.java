@@ -22,6 +22,7 @@ import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.NullCommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
+import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.log.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.sc.registry.ClientRegistry;
@@ -45,7 +46,7 @@ public abstract class CommandAdapter implements ICommand {
 	 * Instantiates a new command adapter.
 	 */
 	public CommandAdapter() {
-		commandValidator = NullCommandValidator.newInstance(); // www.refactoring.com Introduce NULL Object
+		this.commandValidator = NullCommandValidator.newInstance(); // www.refactoring.com Introduce NULL Object
 	}
 
 	/**
@@ -123,5 +124,11 @@ public abstract class CommandAdapter implements ICommand {
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return commandValidator;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public IFactoryable newInstance() {
+		return this;
 	}
 }

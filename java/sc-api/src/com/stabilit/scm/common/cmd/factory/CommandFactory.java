@@ -78,7 +78,7 @@ public class CommandFactory extends Factory {
 	}
 
 	/**
-	 * New command.
+	 * Get command.
 	 * 
 	 * @param request
 	 *            the request
@@ -86,8 +86,21 @@ public class CommandFactory extends Factory {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public ICommand newCommand(IRequest request) throws Exception {
+	public ICommand getCommand(IRequest request) throws Exception {
 		SCMPMsgType key = request.getKey();
+		return this.getCommand(key);
+	}
+
+	/**
+	 * Get command.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the command
+	 * @throws Exception
+	 *             the exception
+	 */
+	public ICommand getCommand(SCMPMsgType key) {
 		IFactoryable factoryInstance = this.newInstance(key.getName());
 		return (ICommand) factoryInstance;
 	}
