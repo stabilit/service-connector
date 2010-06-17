@@ -28,11 +28,11 @@ import com.stabilit.scm.common.net.res.Responder;
 /**
  * @author JTraber
  */
-public class ServerResponder extends Responder {
+public class SessionServerResponder extends Responder {
 
 	private IRequester req;
 
-	public ServerResponder() {
+	public SessionServerResponder() {
 		req = null;
 	}
 
@@ -70,6 +70,6 @@ public class ServerResponder extends Responder {
 
 	@Override
 	public IFactoryable newInstance() {
-		return new ServerResponder();
+		return new SessionServerResponder();
 	}
 }

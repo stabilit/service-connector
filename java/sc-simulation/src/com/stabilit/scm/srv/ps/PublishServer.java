@@ -21,28 +21,29 @@
  */
 package com.stabilit.scm.srv.ps;
 
-import com.stabilit.scm.cln.service.IServiceConnector;
-import com.stabilit.scm.cln.service.ServiceConnector;
+import com.stabilit.scm.service.ServiceConnectorFactory;
+import com.stabilit.scm.srv.service.IServerServiceConnector;
+
 
 public class PublishServer {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		PublishServer.runExample();
 	}
-
+	
 	public static void runExample() {
-		IServiceConnector sc = null;
+		IServerServiceConnector sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = ServiceConnectorFactory.newServerInstance("localhost", 8080);
+			sc.setConnectionKey("netty.tcp");
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 
 			// connects to SC, starts observing connection
 			sc.connect();
-			Object data;
+			Object data = null;
 			String mask = "AVSD-----";
-			//sc.publish("simulation", mask, data);
-			
+			sc.publish("simulation", mask, data);			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

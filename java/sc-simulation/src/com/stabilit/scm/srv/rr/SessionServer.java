@@ -26,7 +26,7 @@ import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
 import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.srv.ServerResponder;
+import com.stabilit.scm.srv.SessionServerResponder;
 import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 public class SessionServer {
@@ -48,7 +48,7 @@ public class SessionServer {
 		List<ResponderConfigItem> respConfigList = srvConfig.getResponderConfigList();
 
 		for (IResponderConfigItem respConfigItem : respConfigList) {
-			IResponder resp = new ServerResponder();
+			IResponder resp = new SessionServerResponder();
 			resp.setResponderConfig(respConfigItem);
 			IResponderContext respContext = resp.getResponderContext();
 			respContext.setAttribute(RequesterConfig.class.getName(), clientConfig);
