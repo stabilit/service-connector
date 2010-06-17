@@ -19,12 +19,13 @@ package com.stabilit.scm.common.service;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.cln.service.ISCActionListener;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
-import com.stabilit.scm.srv.service.IPublishServiceConnector;
+import com.stabilit.scm.srv.service.ISessionServiceConnector;
 
 /**
  * The Class ServiceConnector. Represents the service connector on client side. Provides functions to create sessions to
@@ -33,7 +34,7 @@ import com.stabilit.scm.srv.service.IPublishServiceConnector;
  * 
  * @author JTraber
  */
-class PublishServerServiceConnector implements IPublishServiceConnector {
+class SessionServerServiceConnector implements ISessionServiceConnector {
 
 	/** The host of the SC. */
 	public String host;
@@ -56,12 +57,12 @@ class PublishServerServiceConnector implements IPublishServiceConnector {
 	 * @param port
 	 *            the port
 	 */
-	public PublishServerServiceConnector(String host, int port) {
+	public SessionServerServiceConnector(String host, int port) {
 		this.host = host;
 		this.port = port;
 		this.connectionKey = "netty.tcp"; // default is netty tcp
 		this.numberOfThreads = 16; // default is 16 threads
-		attributes = new MapBean<Object>();
+		this.attributes = new MapBean<Object>();
 	}
 
 	/**
@@ -72,6 +73,7 @@ class PublishServerServiceConnector implements IPublishServiceConnector {
 	 */
 	@Override
 	public void connect() throws Exception {
+		//TODO start server
 		requester = new Requester();
 		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.port,
 				this.connectionKey, this.numberOfThreads);
@@ -140,7 +142,7 @@ class PublishServerServiceConnector implements IPublishServiceConnector {
 	}
 
 	@Override
-	public void publish(String mask, Object data) {
+	public void addSCActionListener(ISCActionListener listener) {
 		throw new UnsupportedOperationException();
 	}
 }

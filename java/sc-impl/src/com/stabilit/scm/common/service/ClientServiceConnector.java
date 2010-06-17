@@ -25,7 +25,7 @@ import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.ISCSubscription;
-import com.stabilit.scm.cln.service.SCMessageHandler;
+import com.stabilit.scm.cln.service.SCPublishMessageHandler;
 import com.stabilit.scm.common.conf.IRequesterConfigItem;
 import com.stabilit.scm.common.conf.RequesterConfig;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -171,7 +171,7 @@ class ClientServiceConnector implements IClientServiceConnector {
 	}
 
 	@Override
-	public ISCSubscription newSubscription(String string, SCMessageHandler messageHandler, String mask) {
+	public ISCSubscription newSubscription(String string, SCPublishMessageHandler messageHandler, String mask) {
 		throw new UnsupportedOperationException();
 	}
 }

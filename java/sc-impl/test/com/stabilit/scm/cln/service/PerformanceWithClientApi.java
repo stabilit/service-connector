@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.service.ServiceConnectorFactory;
+import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 /**
  * The Class PerformanceWithClientApi. Test the performance on client API Layer.
@@ -58,7 +58,7 @@ public class PerformanceWithClientApi {
 			double startTime = System.currentTimeMillis();
 			for (int i = 0; i < anzMsg; i++) {
 				byte[] data = new byte[128];
-				SCMessage message = new SCMessage(data);
+				SCPublishMessage message = new SCPublishMessage(data);
 				Object resp = dataSessionA.execute(message);
 			}
 			double endTime = System.currentTimeMillis();
