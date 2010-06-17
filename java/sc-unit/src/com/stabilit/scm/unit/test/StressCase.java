@@ -23,7 +23,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.service.SCDataSession;
+import com.stabilit.scm.common.service.SCDataSession;
 
 /**
  * The Class StressTest.

@@ -42,7 +42,7 @@ import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.log.listener.SessionPoint;
 import com.stabilit.scm.sc.SC;
-import com.stabilit.scm.srv.rr.SessionServer;
+import com.stabilit.scm.srv.rr.Old_SessionServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**
@@ -98,7 +98,7 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
-				SessionServer.main(null);
+				Old_SessionServer.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

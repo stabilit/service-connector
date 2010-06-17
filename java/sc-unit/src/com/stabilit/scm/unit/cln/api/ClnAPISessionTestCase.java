@@ -21,8 +21,8 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.service.ServiceConnectorFactory;
+import com.stabilit.scm.cln.service.SCPublishMessage;
+import com.stabilit.scm.common.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPISessionTestCase {
@@ -50,13 +50,13 @@ public class ClnAPISessionTestCase {
 			// creates a session
 			dataSessionA.createSession();
 
-			SCMessage message = new SCMessage();
+			SCPublishMessage message = new SCPublishMessage();
 			
 			byte[] buffer = new byte[1024];
 			message.setData(buffer);
 			message.setCompression(false);
 			
-			SCMessage resp = dataSessionA.execute(message);
+			SCPublishMessage resp = dataSessionA.execute(message);
 			System.out.println(resp);
 
 			// deletes the session

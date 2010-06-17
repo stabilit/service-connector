@@ -22,7 +22,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.SCExampleMessageHandler;
 import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSubscription;
-import com.stabilit.scm.service.ServiceConnectorFactory;
+import com.stabilit.scm.common.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIPublishTestCase {
