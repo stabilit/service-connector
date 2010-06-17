@@ -38,12 +38,13 @@ public class PublishServer {
 			sc.setConnectionKey("netty.tcp");
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
+			sc.setAttribute("serviceName", "simulation");
 
 			// connects to SC, starts observing connection
 			sc.connect();
 			Object data = null;
 			String mask = "AVSD-----";
-			sc.publish("simulation", mask, data);			
+			sc.publish(mask, data);			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
