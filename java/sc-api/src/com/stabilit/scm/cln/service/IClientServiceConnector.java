@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,7 +14,11 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.scm.cln.service;
 
 import java.io.InputStream;
@@ -21,12 +26,11 @@ import java.io.OutputStream;
 
 
 /**
- * The Interface IServiceConnector. Reveals functionality of a ServiceConnector instance.
- * 
  * @author JTraber
+ *
  */
-public interface IServiceConnector {
-
+public interface IClientServiceConnector {
+	
 	/**
 	 * Connects to SC.
 	 * 
@@ -53,7 +57,13 @@ public interface IServiceConnector {
 	 *             the exception
 	 */
 	public ISCSession newDataSession(String serviceName) throws Exception;
+	
+	public ISCSubscription newSubscription(String string, SCMessageHandler messageHandler, String mask);
 
+	void uploadFile(String string, String targetFileName, InputStream inStream);
+
+	void downloadFile(String string, String sourceFileName, OutputStream outStream);
+	
 	/**
 	 * Sets the attribute. Attributes for ServiceConnector.
 	 * 
@@ -64,9 +74,15 @@ public interface IServiceConnector {
 	 */
 	public void setAttribute(String name, Object value);
 
-	public ISCSubscription newSubscription(String serviceName, SCMessageHandler messageHandler, String mask);
+	public int getNumberOfThreads();
 
-	public void uploadFile(String string, String targetFileName, InputStream inStream);
+	public void setNumberOfThreads(int numberOfThreads);
 
-	public void downloadFile(String string, String sourceFileName, OutputStream outStream);
+	public String getConnectionKey();
+
+	public void setConnectionKey(String connectionKey);
+
+	public String getHost();
+	
+	public int getPort();
 }
