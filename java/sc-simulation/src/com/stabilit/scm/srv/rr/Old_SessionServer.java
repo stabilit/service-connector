@@ -16,42 +16,36 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.conf.ResponderConfig;
-import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
-import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
+import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.srv.SessionServerResponder;
 import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 public class Old_SessionServer {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		run();
 	}
 
-	private static void run() throws IOException {
-		ResponderConfig srvConfig = new ResponderConfig();
+	private static void run() throws Exception {
+		ResponderConfigPool srvConfig = new ResponderConfigPool();
 		srvConfig.load("session-server.properties");
-		RequesterConfig clientConfig = new RequesterConfig();
+		RequesterConfigPool clientConfig = new RequesterConfigPool();
 		clientConfig.load("session-server.properties");
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new SessionServerCommandFactory());
 		}
-		List<ResponderConfigItem> respConfigList = srvConfig.getResponderConfigList();
+		List<ICommunicatorConfig> respConfigList = srvConfig.getResponderConfigList();
 
-		for (IResponderConfigItem respConfigItem : respConfigList) {
-			IResponder resp = new SessionServerResponder();
-			resp.setResponderConfig(respConfigItem);
-			IResponderContext respContext = resp.getResponderContext();
-			respContext.setAttribute(RequesterConfig.class.getName(), clientConfig);
+		for (ICommunicatorConfig respConfig : respConfigList) {
+			IResponder resp = new SessionServerResponder(respConfig);
 			try {
 				resp.create();
 				resp.runAsync();

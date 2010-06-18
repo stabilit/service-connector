@@ -26,8 +26,8 @@ import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.ISCSubscription;
 import com.stabilit.scm.cln.service.SCPublishMessageHandler;
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
@@ -79,8 +79,8 @@ class ClientServiceConnector implements IClientServiceConnector {
 	@Override
 	public void connect() throws Exception {
 		requester = new Requester();
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.port,
-				this.connectionKey, this.numberOfThreads);
+		ICommunicatorConfig config = new CommunicatorConfig("name", this.host, this.port, this.connectionKey,
+				this.numberOfThreads);
 		requester.setRequesterConfig(config);
 		requester.connect();
 		// sets up the attach call

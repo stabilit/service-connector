@@ -25,6 +25,12 @@ import com.stabilit.scm.cln.service.ISCActionListener;
 import com.stabilit.scm.common.service.IServiceConnector;
 
 public interface ISessionServiceConnector extends IServiceConnector {
-	
-	public void addSCActionListener(ISCActionListener listener);
+
+	public void addActionListener(ISCActionListener listener);
+
+	public void createServer(int portSessionServer) throws Exception;
+
+	public void createServer(int portSessionServer, String connectionKeySessionServer) throws Exception;
+
+	public void createServer(int portSessionServer, String connectionKeySessionServer, int numberOfThreadsSessionServer) throws Exception;
 }

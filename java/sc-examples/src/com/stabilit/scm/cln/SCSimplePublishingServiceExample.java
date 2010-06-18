@@ -27,37 +27,37 @@ import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 public class SCSimplePublishingServiceExample {
 
-	public static void main(String[] args) {
-		SCSimplePublishingServiceExample.runExample();
-	}
-
-	public static void runExample() {
-		IClientServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("compression", false);
-
-			// connects to SC, starts observing connection
-			sc.connect();
-
-			String mask = "ABC-------"; // must not contain % sign
-			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
-			ISCSubscription subscriptionA = sc.newSubscription("publish", messageHandler, mask);
-
-			subscriptionA.changeSubscription(mask);
-			// deletes the session
-			subscriptionA.unsubscribe();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.disconnect();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
-	}
+//	public static void main(String[] args) {
+//		SCSimplePublishingServiceExample.runExample();
+//	}
+//
+//	public static void runExample() {
+//		IClientServiceConnector sc = null;
+//		try {
+//			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+//			sc.setAttribute("keepAliveInterval", 60);
+//			sc.setAttribute("keepAliveTimeout", 10);
+//			sc.setAttribute("compression", false);
+//
+//			// connects to SC, starts observing connection
+//			sc.connect();
+//
+//			String mask = "ABC-------"; // must not contain % sign
+//			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
+//			ISCSubscription subscriptionA = sc.newSubscription("publish", messageHandler, mask);
+//
+//			subscriptionA.changeSubscription(mask);
+//			// deletes the session
+//			subscriptionA.unsubscribe();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				// disconnects from SC
+//				sc.disconnect();
+//			} catch (Exception e) {
+//				sc = null;
+//			}
+//		}
+//	}
 }

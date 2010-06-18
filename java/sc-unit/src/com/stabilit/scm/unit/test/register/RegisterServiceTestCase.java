@@ -25,8 +25,8 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
@@ -62,7 +62,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
 
-
 		try {
 			registerServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
@@ -91,9 +90,9 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	@Test
 	public void registerServiceCall() throws Exception {
 		IRequester req = new Requester();
-		IRequesterConfigItem requesterConfigItem = new RequesterConfig().new RequesterConfigItem("localhost", 9000,
+		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
 				"netty.tcp", 16);
-		req.setRequesterConfig(config.getRequesterConfig());
+		req.setRequesterConfig(config);
 		req.connect();
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

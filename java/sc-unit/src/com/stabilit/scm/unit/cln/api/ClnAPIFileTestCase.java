@@ -14,72 +14,51 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.conf;
+package com.stabilit.scm.unit.cln.api;
 
-/**
- * The Interface IRequesterConfigItem.
- * 
- * @author JTraber
- */
-public interface IRequesterConfigItem {
+import java.io.InputStream;
+import java.io.OutputStream;
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public int getPort();
+import org.junit.Before;
+import org.junit.Test;
 
-	/**
-	 * Sets the port.
-	 * 
-	 * @param port
-	 *            the new port
-	 */
-	public void setPort(int port);
+import com.stabilit.scm.cln.service.IClientServiceConnector;
+import com.stabilit.scm.common.service.ServiceConnectorFactory;
+import com.stabilit.scm.unit.test.SetupTestCases;
 
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public String getHost();
+public class ClnAPIFileTestCase {
 
-	/**
-	 * Sets the host.
-	 * 
-	 * @param host
-	 *            the new host
-	 */
-	public void setHost(String host);
+	@Before
+	public void setUp() {
+		SetupTestCases.setupAll();
+	}
 
-	/**
-	 * Gets the connection. Connection identifies concrete implementation of a client.
-	 * 
-	 * @return the connection
-	 */
-	public String getConnection();
+	@Test
+	public void testClnAPI() throws Exception {
 
-	/**
-	 * Sets the connection.
-	 * 
-	 * @param connection
-	 *            the new connection
-	 */
-	public void setConnection(String connection);
+		IClientServiceConnector sc = null;
+		try {
+			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
 
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads
-	 *            the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads);
+			// connects to SC, starts observing connection
+			sc.connect();
+			String targetFileName = "";
+			InputStream inStream = null;
+			sc.uploadFile("serviceName", targetFileName, inStream);
 
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
+			String sourceFileName = "";
+			OutputStream outStream = null;
+			sc.downloadFile("serviceName", sourceFileName, outStream);
+			// List<String> fileNames = sc.listFiles("serviceName");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// disconnects from SC
+				sc.disconnect();
+			} catch (Exception e) {
+				sc = null;
+			}
+		}
+	}
 }

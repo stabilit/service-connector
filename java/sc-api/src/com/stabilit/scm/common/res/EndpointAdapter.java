@@ -43,4 +43,6 @@ public abstract class EndpointAdapter implements IEndpoint {
 	public void setResponder(IResponder resp) {
 		this.resp = resp;
 	}
+	
+	
 }

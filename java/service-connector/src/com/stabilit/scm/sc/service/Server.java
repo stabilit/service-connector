@@ -31,18 +31,16 @@ import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.ctx.IResponderContext;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.sc.req.SCRequester;
 
 /**
@@ -86,21 +84,20 @@ public class Server {
 		this.portNr = portNr;
 		this.maxSessions = maxSessions;
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
-		IResponderContext respContext = responderRegistry.getCurrentContext();
-		IResponderConfigItem serverConfig = respContext.getResponder().getResponderConfig();
-		// The connection key, identifies low level component to use (netty, nio)
-		String connectionKey = serverConfig.getConnection();
-		int numberOfThreads = serverConfig.getNumberOfThreads();
+		IResponder responder = responderRegistry.getCurrentResponder();
+		ICommunicatorConfig respConfig = responder.getResponderConfig();
+		String connectionKey = respConfig.getConnectionKey();
+		int numberOfThreads = respConfig.getNumberOfThreads();
 		this.host = socketAddress.getHostName();
 		this.freeReqList = new ArrayList<IRequester>();
 		this.occupiedReqList = new HashMap<String, IRequester>();
 
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.portNr,
-				connectionKey, numberOfThreads);
+		ICommunicatorConfig reqConfig = new CommunicatorConfig("SC-Server", this.host, this.portNr, connectionKey,
+				numberOfThreads);
 		// init list of requesters
 		for (int i = 0; i < maxSessions; i++) {
 			IRequester req = new SCRequester();
-			req.setRequesterConfig(config);
+			req.setRequesterConfig(reqConfig);
 			freeReqList.add(req);
 		}
 	}

@@ -28,47 +28,47 @@ import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 public class SCSimpleSessionServiceExample {
 
-	public static void main(String[] args) {
-		SCSimpleSessionServiceExample.runExample();
-	}
-
-	public static void runExample() {
-		IClientServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-
-			// connects to SC, starts observing connection
-			sc.connect();
-
-			ISCSession dataSessionA = sc.newDataSession("simulation");
-			dataSessionA.setMessageInfo("sessionInfo");
-			dataSessionA.setSessionInfo("messageInfo");
-			// creates a session
-			dataSessionA.createSession();
-
-			SCPublishMessage message = new SCPublishMessage();
-			
-			byte[] buffer = new byte[1024];
-			message.setData(buffer);
-			message.setCompression(false);
-			
-			SCPublishMessage resp = dataSessionA.execute(message);
-			System.out.println(resp);
-
-			// deletes the session
-			dataSessionA.deleteSession();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.disconnect();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
-	}
+//	public static void main(String[] args) {
+//		SCSimpleSessionServiceExample.runExample();
+//	}
+//
+//	public static void runExample() {
+//		IClientServiceConnector sc = null;
+//		try {
+//			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+//			sc.setAttribute("keepAliveInterval", 60);
+//			sc.setAttribute("keepAliveTimeout", 10);
+//
+//			// connects to SC, starts observing connection
+//			sc.connect();
+//
+//			ISCSession dataSessionA = sc.newDataSession("simulation");
+//			dataSessionA.setMessageInfo("sessionInfo");
+//			dataSessionA.setSessionInfo("messageInfo");
+//			// creates a session
+//			dataSessionA.createSession();
+//
+//			SCPublishMessage message = new SCPublishMessage();
+//			
+//			byte[] buffer = new byte[1024];
+//			message.setData(buffer);
+//			message.setCompression(false);
+//			
+//			SCPublishMessage resp = dataSessionA.execute(message);
+//			System.out.println(resp);
+//
+//			// deletes the session
+//			dataSessionA.deleteSession();
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				// disconnects from SC
+//				sc.disconnect();
+//			} catch (Exception e) {
+//				sc = null;
+//			}
+//		}
+//	}
 }

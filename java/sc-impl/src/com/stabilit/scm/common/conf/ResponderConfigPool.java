@@ -14,37 +14,37 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.ctx;
+package com.stabilit.scm.common.conf;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.IOException;
+import java.util.List;
 
 /**
- * The Class ContextAdapter. Provides basic functionality for Contexts.
+ * The Class ResponderConfigPool. ResponderConfigPool configuration may hold more than one configuration for a
+ * responder, is represented by <code>ResponderConfig</code>.
  * 
  * @author JTraber
  */
-public class ContextAdapter implements IContext {
-
-	/** The attr map to store data. */
-	protected Map<String, Object> attrMap;
+public class ResponderConfigPool extends CommunicatorConfigPool {
 
 	/**
-	 * Instantiates a new context adapter.
+	 * Load.
+	 * 
+	 * @param fileName
+	 *            the file name
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public ContextAdapter() {
-		attrMap = new ConcurrentHashMap<String, Object>();
+	public void load(String fileName) throws Exception {
+		this.loadResponderConfig(fileName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Object getAttribute(String name) {
-		return this.attrMap.get(name);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setAttribute(String name, Object value) {
-		this.attrMap.put(name, value);
+	/**
+	 * Gets the responder configuration list.
+	 * 
+	 * @return the responder configuration list
+	 */
+	public List<ICommunicatorConfig> getResponderConfigList() {
+		return this.getCommunicatorConfigList();
 	}
 }

@@ -19,8 +19,8 @@ package com.stabilit.scm.common.service;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
@@ -73,8 +73,8 @@ class PublishServerServiceConnector implements IPublishServiceConnector {
 	@Override
 	public void connect() throws Exception {
 		requester = new Requester();
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.port,
-				this.connectionKey, this.numberOfThreads);
+		ICommunicatorConfig config = new CommunicatorConfig("name", this.host, this.port, this.connectionKey,
+				this.numberOfThreads);
 		requester.setRequesterConfig(config);
 		requester.connect();
 		// sets up the attach call

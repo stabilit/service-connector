@@ -17,10 +17,9 @@
 package com.stabilit.scm.unit.test;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.ResponderConfig;
+import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.log.Level;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
@@ -53,8 +52,8 @@ public class SetupTestCases {
 	private SetupTestCases() {
 	}
 
-	public static void init() throws IOException {
-		ResponderConfig config = new ResponderConfig();
+	public static void init() throws Exception {
+		ResponderConfigPool config = new ResponderConfigPool();
 		config.load("sc.properties");
 
 		deleteLog();

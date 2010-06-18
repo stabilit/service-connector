@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.log.listener.PerformancePoint;
 import com.stabilit.scm.common.log.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -33,12 +33,10 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  */
 public class Requester implements IRequester {
 
-	/** The requester config. */
-	private IRequesterConfigItem reqConfig;
-
+	/** The requester configuration. */
+	private ICommunicatorConfig reqConfig;
 	/** The req connection. */
 	protected IConnection connection;
-
 	/** The msg id for the next request. */
 	private SCMPMessageID msgID;
 
@@ -51,34 +49,15 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setRequesterConfig(IRequesterConfigItem clientConfig) {
-		this.reqConfig = clientConfig;
-		ConnectionFactory clientConnectionFactory = new ConnectionFactory();
-		this.connection = clientConnectionFactory.newInstance(this.reqConfig.getConnection());
-		connection.setHost(clientConfig.getHost());
-		connection.setPort(clientConfig.getPort());
-		connection.setNumberOfThreads(clientConfig.getNumberOfThreads());
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void connect() throws Exception {
-		connection.connect();
+		ConnectionFactory reqConnectionFactory = new ConnectionFactory();
+		this.connection = reqConnectionFactory.newInstance(this.reqConfig.getConnectionKey());
+		this.connection.setHost(reqConfig.getHost());
+		this.connection.setPort(reqConfig.getPort());
+		this.connection.setNumberOfThreads(reqConfig.getNumberOfThreads());
+		this.connection.connect();
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void destroy() throws Exception {
-		connection.destroy();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void disconnect() throws Exception {
-		connection.disconnect();
-	}
-
-	/** {@inheritDoc} */
+	
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 
@@ -95,12 +74,6 @@ public class Requester implements IRequester {
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized String toHashCodeString() {
-		return " [" + this.hashCode() + "]";
 	}
 
 	/**
@@ -237,9 +210,40 @@ public class Requester implements IRequester {
 		}
 		return scmpComposite;
 	}
-
+	
+	/** {@inheritDoc} */
+	@Override
+	public void destroy() throws Exception {
+		this.connection.destroy();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void disconnect() throws Exception {
+		this.connection.disconnect();
+	}
+	
+	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
 		return this.connection.isConnected();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void setRequesterConfig(ICommunicatorConfig reqConfig) {
+		this.reqConfig = reqConfig;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public ICommunicatorConfig getRequesterConfig() {
+		return this.reqConfig;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public synchronized String toHashCodeString() {
+		return " [" + this.hashCode() + "]";
 	}
 }

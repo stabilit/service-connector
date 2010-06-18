@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,43 +14,30 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.res;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.unit.cln.api;
 
-import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.net.res.Responder;
+import com.stabilit.scm.cln.service.SCPublishMessageHandler;
+import com.stabilit.scm.cln.service.SCPublishMessage;
 
 /**
- * The Class SCResponder. Defines behavior of responder in context of Service Connector.
- * 
  * @author JTraber
  */
-public class SCResponder extends Responder {
-
-	/**
-	 * Instantiates a new SCResponder.
-	 */
-	public SCResponder() {
-	}
-
-	/**
-	 * Creates an SCResponder.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+public class SCExampleMessageHandler extends SCPublishMessageHandler {
+	
 	@Override
-	public void create() throws Exception {
-		super.create();
+	public void messageReceived(SCPublishMessage publishedMessage) {
+		//message received, process data
 	}
 
-	/**
-	 * New instance.
-	 * 
-	 * @return the factoryable
-	 */
 	@Override
-	public IFactoryable newInstance() {
-		return new SCResponder();
-	}
+	public void exceptionCaught(Exception e) {
+		// communication failed
+	}	
+
+	//TODO completed / started callback methods
 }

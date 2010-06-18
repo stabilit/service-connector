@@ -19,7 +19,6 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.SCExampleMessageHandler;
 import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSubscription;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;

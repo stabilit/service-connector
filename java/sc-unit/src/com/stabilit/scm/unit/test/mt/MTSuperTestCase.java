@@ -33,7 +33,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
@@ -48,7 +48,7 @@ public abstract class MTSuperTestCase {
 
 	protected String fileName;
 	protected int maxRequesters;
-	protected RequesterConfig config = null;
+	protected RequesterConfigPool config = null;
 	protected List<IRequester> reqList = null;
 	private IRequester registerReq = null;
 
@@ -73,7 +73,7 @@ public abstract class MTSuperTestCase {
 	@Before
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
-		RequesterConfig config = new RequesterConfig();
+		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("sc-sim.properties");
 		registerReq = new Requester();
 		registerReq.setRequesterConfig(config.getRequesterConfig());
@@ -91,7 +91,7 @@ public abstract class MTSuperTestCase {
 
 	public IRequester newReq() {
 		try {
-			config = new RequesterConfig();
+			config = new RequesterConfigPool();
 			config.load(fileName);
 			IRequester req = new Requester();
 			req.setRequesterConfig(config.getRequesterConfig());

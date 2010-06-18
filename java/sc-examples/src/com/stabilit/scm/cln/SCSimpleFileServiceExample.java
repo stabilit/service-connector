@@ -28,35 +28,35 @@ import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 public class SCSimpleFileServiceExample {
-
-	public static void main(String[] args) {
-		SCSimpleFileServiceExample.runExample();
-	}
-
-	public static void runExample() {
-		IClientServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
-
-			// connects to SC, starts observing connection
-			sc.connect();
-			String targetFileName = "";
-			InputStream inStream = null;
-			sc.uploadFile("serviceName", targetFileName, inStream);
-
-			String sourceFileName = "";
-			OutputStream outStream = null;
-			sc.downloadFile("serviceName", sourceFileName, outStream);
-			// List<String> fileNames = sc.listFiles("serviceName");
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.disconnect();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
-	}
+//
+//	public static void main(String[] args) {
+//		SCSimpleFileServiceExample.runExample();
+//	}
+//
+//	public static void runExample() {
+//		IClientServiceConnector sc = null;
+//		try {
+//			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+//
+//			// connects to SC, starts observing connection
+//			sc.connect();
+//			String targetFileName = "";
+//			InputStream inStream = null;
+//			sc.uploadFile("serviceName", targetFileName, inStream);
+//
+//			String sourceFileName = "";
+//			OutputStream outStream = null;
+//			sc.downloadFile("serviceName", sourceFileName, outStream);
+//			// List<String> fileNames = sc.listFiles("serviceName");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				// disconnects from SC
+//				sc.disconnect();
+//			} catch (Exception e) {
+//				sc = null;
+//			}
+//		}
+//	}
 }

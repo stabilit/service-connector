@@ -24,7 +24,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -60,7 +60,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 			CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 			SC.main(null);
 			Old_SessionServer.main(null);
-			config = new RequesterConfig();
+			config = new RequesterConfigPool();
 			config.load(fileName);
 			this.req = new Requester();
 			req.setRequesterConfig(config.getRequesterConfig());
@@ -96,7 +96,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 	}
 
 	private void tearDownSCServerToService() throws Exception {
-		RequesterConfig config = new RequesterConfig();
+		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("session-server.properties");
 		IRequester tearDownClient = new Requester();
 		tearDownClient.setRequesterConfig(config.getRequesterConfig());

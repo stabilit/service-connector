@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -62,12 +62,19 @@ public interface IRequester {
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
 
 	/**
-	 * Sets the requester config.
+	 * Sets the requester configuration.
 	 * 
 	 * @param requesterConfig
-	 *            the new requester config
+	 *            the new requester configuration
 	 */
-	public void setRequesterConfig(IRequesterConfigItem requesterConfig);
+	public void setRequesterConfig(ICommunicatorConfig requesterConfig);
+
+	/**
+	 * Gets the requester configuration.
+	 * 
+	 * @return the requester configuration
+	 */
+	public ICommunicatorConfig getRequesterConfig();
 
 	/**
 	 * Returns a hash code which identifies client connection.

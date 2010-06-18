@@ -23,17 +23,16 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.conf.ResponderConfig;
-import com.stabilit.scm.common.conf.ResponderConfig.ResponderConfigItem;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.res.SCResponder;
 import com.stabilit.scm.sc.service.ServiceLoader;
 
 /**
@@ -68,7 +67,7 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void run() throws Exception {
-		ResponderConfig config = new ResponderConfig();
+		ResponderConfigPool config = new ResponderConfigPool();
 		config.load("sc.properties");
 
 		// load services
@@ -81,11 +80,10 @@ public final class SC {
 
 		SC.initializeJMXStuff();
 
-		List<ResponderConfigItem> respConfigList = config.getResponderConfigList();
+		List<ICommunicatorConfig> respConfigList = config.getResponderConfigList();
 		
-		for (IResponderConfigItem respConfig : respConfigList) {
-			IResponder resp = new SCResponder();
-			resp.setResponderConfig(respConfig);
+		for (ICommunicatorConfig respConfig : respConfigList) {
+			IResponder resp = new Responder(respConfig);
 			try {
 				resp.create();
 				resp.runAsync();

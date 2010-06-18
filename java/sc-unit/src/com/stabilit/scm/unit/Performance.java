@@ -25,8 +25,8 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.conf.RequesterConfig.RequesterConfigItem;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
@@ -71,10 +71,10 @@ public class Performance {
 		con.setPort(8080);
 
 		IRequester req = new Requester();
-		RequesterConfigItem config = new RequesterConfig().new RequesterConfigItem("localhost", 8080, "netty.http", 16);
+		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16);
 		req.setRequesterConfig(config);
 		req.connect();
-		
+
 		SCMPMessage request = null;
 		SCMPMessage resp = null;
 
@@ -82,7 +82,7 @@ public class Performance {
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		SCMPMessage result = attachCall.invoke();
-		
+
 		ISCSession session = new SCDataSession("simulation", req);
 		session.setMessageInfo("message info");
 		session.setSessionInfo("session info");

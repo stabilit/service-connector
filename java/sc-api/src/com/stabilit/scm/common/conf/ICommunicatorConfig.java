@@ -14,21 +14,47 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.ctx;
-
-import com.stabilit.scm.common.res.IResponder;
+package com.stabilit.scm.common.conf;
 
 /**
- * The Interface IResponderContext.
+ * The Interface ICommunicatorConfig.
  * 
  * @author JTraber
  */
-public interface IResponderContext extends IContext {
+public interface ICommunicatorConfig {
 
 	/**
-	 * Gets the responder.
+	 * Gets the communicator name.
 	 * 
-	 * @return the responder
+	 * @return the communicator name
 	 */
-	public IResponder getResponder();
+	public abstract String getCommunicatorName();
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public abstract int getPort();
+
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
+	public abstract String getHost();
+
+	/**
+	 * Gets the number of threads.
+	 * 
+	 * @return the number of threads
+	 */
+	public int getNumberOfThreads();
+
+	/**
+	 * Gets the connection key.
+	 * 
+	 * @return the connection key
+	 */
+	public String getConnectionKey();
 }

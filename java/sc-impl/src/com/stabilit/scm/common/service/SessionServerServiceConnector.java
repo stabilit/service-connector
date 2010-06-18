@@ -16,14 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
+import java.net.InetAddress;
+
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISCActionListener;
-import com.stabilit.scm.common.conf.IRequesterConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.res.Responder;
+import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.srv.service.ISessionServiceConnector;
 
@@ -36,14 +40,20 @@ import com.stabilit.scm.srv.service.ISessionServiceConnector;
  */
 class SessionServerServiceConnector implements ISessionServiceConnector {
 
-	/** The host of the SC. */
-	public String host;
-	/** The port of the SC. */
-	public int port;
-	/** The number of threads to use on client side. */
-	public int numberOfThreads;
+	/** The port of the local session server. */
+	public int sessionServerPort;
+	/** The number of threads to use on session server side. */
+	public int numberOfThreadsSessionServer;
 	/** The connection key, identifies low level component to use for communication (netty, nio). */
-	public String connectionKey;
+	public String connectionKeySessionServer;
+	/** The host of the SC. */
+	public String scHost;
+	/** The port of the SC. */
+	public int scPort;
+	/** The number of threads to use on client side. */
+	public int numberOfThreadsClientToSC;
+	/** The connection key, identifies low level component to use for communication (netty, nio). */
+	public String connectionKeyClientToSC;
 	/** The requester. */
 	private IRequester requester; // becomes a pool later
 	/** The attributes. */
@@ -58,11 +68,15 @@ class SessionServerServiceConnector implements ISessionServiceConnector {
 	 *            the port
 	 */
 	public SessionServerServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.connectionKey = "netty.tcp"; // default is netty tcp
-		this.numberOfThreads = 16; // default is 16 threads
+		this.scHost = host;
+		this.scPort = port;
+		this.connectionKeyClientToSC = "netty.tcp"; // default is netty tcp
+		this.numberOfThreadsClientToSC = 16; // default is 16 threads
 		this.attributes = new MapBean<Object>();
+
+		this.connectionKeySessionServer = "netty.tcp";
+		this.numberOfThreadsSessionServer = 16;
+		this.sessionServerPort = 0;
 	}
 
 	/**
@@ -73,10 +87,10 @@ class SessionServerServiceConnector implements ISessionServiceConnector {
 	 */
 	@Override
 	public void connect() throws Exception {
-		//TODO start server
+		// TODO start server
 		requester = new Requester();
-		IRequesterConfigItem config = new RequesterConfig().new RequesterConfigItem(this.host, this.port,
-				this.connectionKey, this.numberOfThreads);
+		ICommunicatorConfig config = new CommunicatorConfig("Session-Server", this.scHost, this.scPort,
+				this.connectionKeyClientToSC, this.numberOfThreadsClientToSC);
 		requester.setRequesterConfig(config);
 		requester.connect();
 		// sets up the attach call
@@ -118,31 +132,52 @@ class SessionServerServiceConnector implements ISessionServiceConnector {
 	}
 
 	public int getNumberOfThreads() {
-		return numberOfThreads;
+		return numberOfThreadsClientToSC;
 	}
 
 	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
+		this.numberOfThreadsClientToSC = numberOfThreads;
 	}
 
 	public String getConnectionKey() {
-		return connectionKey;
+		return connectionKeyClientToSC;
 	}
 
 	public void setConnectionKey(String connectionKey) {
-		this.connectionKey = connectionKey;
+		this.connectionKeyClientToSC = connectionKey;
 	}
 
 	public String getHost() {
-		return host;
+		return scHost;
 	}
 
 	public int getPort() {
-		return port;
+		return scPort;
 	}
 
 	@Override
-	public void addSCActionListener(ISCActionListener listener) {
+	public void addActionListener(ISCActionListener listener) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void createServer(int portSessionServer) throws Exception {
+		this.createServer(portSessionServer, this.connectionKeySessionServer);
+	}
+
+	@Override
+	public void createServer(int portSessionServer, String connectionKeySessionServer) throws Exception {
+		this.createServer(portSessionServer, connectionKeySessionServer, this.numberOfThreadsSessionServer);
+	}
+
+	@Override
+	public void createServer(int portSessionServer, String connectionKeySessionServer, int numberOfThreadsSessionServer)
+			throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		ICommunicatorConfig respConfig = new CommunicatorConfig("Session-Server", localHost.getHostAddress(),
+				portSessionServer, connectionKeySessionServer, numberOfThreadsSessionServer);
+		IResponder responder = new Responder(respConfig);
+		responder.create();
+		responder.runAsync();
 	}
 }

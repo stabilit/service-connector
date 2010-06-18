@@ -63,8 +63,8 @@ public class NioHttpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void create() {
 		try {
-			this.pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, IConstants.MAX_KEEP_ALIVE_OF_THREADS, TimeUnit.MICROSECONDS,
-					new LinkedBlockingQueue<Runnable>());
+			this.pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, IConstants.MAX_KEEP_ALIVE_OF_THREADS,
+					TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>());
 			// Create a new blocking server socket channel
 			this.serverChannel = ServerSocketChannel.open();
 			serverChannel.configureBlocking(true);

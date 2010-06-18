@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPEchoSCCall;
-import com.stabilit.scm.common.conf.RequesterConfig;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -52,7 +52,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupSC();
 		try {
-			config = new RequesterConfig();
+			config = new RequesterConfigPool();
 			config.load(fileName);
 			req = new Requester();
 			req.setRequesterConfig(config.getRequesterConfig());

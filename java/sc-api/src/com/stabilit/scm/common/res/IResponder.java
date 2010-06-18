@@ -16,31 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.res;
 
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.ctx.IResponderContext;
-import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 
 /**
  * The Interface IRequester.
  * 
  * @author JTraber
  */
-public interface IResponder extends IFactoryable {
-
-	/**
-	 * Gets the requester context.
-	 * 
-	 * @return the responder context
-	 */
-	public IResponderContext getResponderContext();
-
-	/**
-	 * Sets the responder configuration.
-	 * 
-	 * @param respConfig
-	 *            the new responder configuration
-	 */
-	public void setResponderConfig(IResponderConfigItem respConfig);
+public interface IResponder {
 
 	/**
 	 * Creates the responder.
@@ -67,17 +50,25 @@ public interface IResponder extends IFactoryable {
 	public void runSync() throws Exception;
 
 	/**
-	 * Gets the responder configuration.
-	 * 
-	 * @return the responder configuration
-	 */
-	public IResponderConfigItem getResponderConfig();
-
-	/**
 	 * Destroys responder.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	public void destroy() throws Exception;
+
+	/**
+	 * Sets the responder configuration.
+	 * 
+	 * @param respConfig
+	 *            the new responder configuration
+	 */
+	public void setResponderConfig(ICommunicatorConfig respConfig);
+
+	/**
+	 * Gets the responder configuration.
+	 * 
+	 * @return the responder configuration
+	 */
+	public ICommunicatorConfig getResponderConfig();
 }

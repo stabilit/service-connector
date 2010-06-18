@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.registry;
 
-import com.stabilit.scm.common.ctx.IResponderContext;
 import com.stabilit.scm.common.res.IResponder;
 
 /**
@@ -39,8 +38,8 @@ public final class ResponderRegistry extends Registry {
 	}
 
 	/**
-	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same
-	 * thread. Other threads can not access earlier set object.
+	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same thread.
+	 * Other threads can not access earlier set object.
 	 * 
 	 * @param obj
 	 *            the new thread local
@@ -75,15 +74,15 @@ public final class ResponderRegistry extends Registry {
 	}
 
 	/**
-	 * Gets the current context.
+	 * Gets the current responder.
 	 * 
-	 * @return the current context
+	 * @return the current responder
 	 */
-	public IResponderContext getCurrentContext() {
+	public IResponder getCurrentResponder() {
 		// gets the key from thread local, key has been set before of the same thread by calling method
-		// setThreadLocal(object obj), very useful to identify current context
+		// setThreadLocal(object obj), very useful to identify current responder
 		Object key = this.threadLocal.get();
 		IResponder responder = this.getResponder(key);
-		return responder.getResponderContext();
+		return responder;
 	}
 }

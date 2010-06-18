@@ -16,44 +16,40 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.ctx.IResponderContext;
-import com.stabilit.scm.common.ctx.ResponderContext;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.res.IEndpoint;
 import com.stabilit.scm.common.res.IResponder;
 
 /**
- * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation
- * of a responder connection.
+ * The Class Responder. Abstracts responder functionality from a application view. It is not the technical
+ * representation of a responder connection.
  * 
  * @author JTraber
  */
-public abstract class Responder implements IResponder {
+public class Responder implements IResponder {
 
 	/** The responder configuration. */
-	private IResponderConfigItem respConfig;
+	private ICommunicatorConfig respConfig;
 	/** The endpoint connection. */
 	private IEndpoint endpoint;
-	/** The responder context. */
-	protected IResponderContext respContext;
 
-	/** {@inheritDoc} */
-	@Override
-	public void setResponderConfig(IResponderConfigItem respConfig) {
+	public Responder() {
+	}
+
+	public Responder(ICommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
-		this.respContext = new ResponderContext(this);
-		EndpointFactory endpointFactory = new EndpointFactory();
-		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnection());
-		this.endpoint.setResponder(this);
-		this.endpoint.setHost(this.respConfig.getHost());
-		this.endpoint.setPort(this.respConfig.getPort());
-		this.endpoint.setNumberOfThreads(this.respConfig.getNumberOfThreads());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		endpoint.create();
+		EndpointFactory endpointFactory = new EndpointFactory();
+		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnectionKey());
+		this.endpoint.setResponder(this);
+		this.endpoint.setHost(this.respConfig.getHost());
+		this.endpoint.setPort(this.respConfig.getPort());
+		this.endpoint.setNumberOfThreads(this.respConfig.getNumberOfThreads());
+		this.endpoint.create();
 	}
 
 	/** {@inheritDoc} */
@@ -74,15 +70,13 @@ public abstract class Responder implements IResponder {
 		endpoint.destroy();
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public IResponderContext getResponderContext() {
-		return respContext;
+	public ICommunicatorConfig getResponderConfig() {
+		return this.respConfig;
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public IResponderConfigItem getResponderConfig() {
-		return respConfig;
+	public void setResponderConfig(ICommunicatorConfig respConfig) {
+		this.respConfig = respConfig;
 	}
 }

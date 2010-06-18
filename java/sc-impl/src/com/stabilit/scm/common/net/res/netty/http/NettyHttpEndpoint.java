@@ -64,8 +64,8 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void create() {
 		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads),
-				Executors.newFixedThreadPool(numberOfThreads / 4));
+		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
+				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyHttpResponderPipelineFactory());

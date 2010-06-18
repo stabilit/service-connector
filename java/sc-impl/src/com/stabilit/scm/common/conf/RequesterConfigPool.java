@@ -14,42 +14,47 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.ctx;
+package com.stabilit.scm.common.conf;
 
-import com.stabilit.scm.common.registry.ResponderRegistry;
-import com.stabilit.scm.common.res.IResponder;
-
+import java.io.IOException;
+import java.util.List;
 
 /**
- * The Class ResponderContext.
+ * The Class RequesterConfigPool. RequesterConfigPool may hold more than one configuration for a requester, is
+ * represented by <code>RequesterConfig</code>.
+ * 
+ * @author JTraber
  */
-public class ResponderContext extends ContextAdapter implements IResponderContext {
-		
-	/** The responder. */
-	private IResponder responder;
-	
-	/**
-	 * Instantiates a new ResponderContext.
-	 * 
-	 * @param resp the responder
-	 */
-	public ResponderContext(IResponder resp) {
-		this.responder = resp;
-	}
+public class RequesterConfigPool extends CommunicatorConfigPool {
 
-	/** {@inheritDoc} */
-	@Override
-	public IResponder getResponder() {
-		return responder;
+	/**
+	 * Loads configuration from a file.
+	 * 
+	 * @param fileName
+	 *            the file name
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void load(String fileName) throws Exception {
+		this.loadRequesterConfig(fileName);
 	}
 
 	/**
-	 * Gets the current instance.
+	 * Gets the requester configuration list.
 	 * 
-	 * @return the current instance
+	 * @return the requester configuration list
 	 */
-	public static IResponderContext getCurrentInstance() {
-		ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
-		return (IResponderContext) respRegistry.getCurrentContext();
+	public List<ICommunicatorConfig> getRequesterConfigList() {
+		return this.getCommunicatorConfigList();
+	}
+
+	/**
+	 * Gets the requester configuration. Returns the requester configuration of first requester in configuration file.
+	 * Usually only one requester is configured.
+	 * 
+	 * @return the requester configuration
+	 */
+	public ICommunicatorConfig getRequesterConfig() {
+		return this.getCommunicatorConfigList().get(0);
 	}
 }

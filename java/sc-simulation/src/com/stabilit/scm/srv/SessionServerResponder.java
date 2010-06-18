@@ -18,9 +18,8 @@ package com.stabilit.scm.srv;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.common.conf.IResponderConfigItem;
-import com.stabilit.scm.common.conf.RequesterConfig;
-import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.conf.CommunicatorConfig;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
@@ -32,8 +31,11 @@ public class SessionServerResponder extends Responder {
 
 	private IRequester req;
 
-	public SessionServerResponder() {
-		req = null;
+	/**
+	 * @param respConfig
+	 */
+	public SessionServerResponder(ICommunicatorConfig respConfig) {
+		super(respConfig);
 	}
 
 	@Override
@@ -50,26 +52,19 @@ public class SessionServerResponder extends Responder {
 
 	private void makeRegisterService() throws Exception {
 		// needs to register service in SC
-		RequesterConfig clientConfig = (RequesterConfig) this.getResponderContext().getAttribute(
-				RequesterConfig.class.getName());
-		IResponderConfigItem serverConfigItem = (IResponderConfigItem) this.getResponderContext().getResponder()
-				.getResponderConfig();
 		req = new Requester();
-		req.setRequesterConfig(clientConfig.getRequesterConfig());
+		ICommunicatorConfig reqConfig = new CommunicatorConfig("Session-Server Responder", "localhost", 9000,
+				"netty.tcp", 16);
+		req.setRequesterConfig(reqConfig);
 		req.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation");
 		registerService.setMaxSessions(1);
-		registerService.setPortNumber(serverConfigItem.getPort());
+		registerService.setPortNumber(this.getResponderConfig().getPort());
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveTimeout(30);
 		registerService.setKeepAliveInterval(360);
 		registerService.invoke();
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new SessionServerResponder();
 	}
 }

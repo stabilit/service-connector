@@ -42,8 +42,9 @@ public class SessionServer {
 			sc.setAttribute("serviceName", "simulation");
 
 			SCSessionServerActionListener listener = new SCSessionServerActionListener();
-			sc.addSCActionListener(listener);
-			
+			sc.addActionListener(listener);
+		
+			sc.createServer(7000);
 			// connects to SC, starts observing connection
 			sc.connect();	
 			

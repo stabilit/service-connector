@@ -186,13 +186,15 @@ public class NettyHttpConnection implements IConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs inside
+		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
+		// inside
 		// gets response message synchronous
 		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
 		ChannelBuffer content = handler.getMessageSync().getContent();
 		buffer = new byte[content.readableBytes()];
 		content.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs inside
+		ConnectionPoint.getInstance().fireRead(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
+		// inside
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
