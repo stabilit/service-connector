@@ -97,7 +97,7 @@ public class WorseSCServerToClientTestCase extends SuperSessionRegisterTestCase 
 
 	private void tearDownSCServerToService() throws Exception {
 		RequesterConfig config = new RequesterConfig();
-		config.load("sc-sim.properties");
+		config.load("session-server.properties");
 		IRequester tearDownClient = new Requester();
 		tearDownClient.setRequesterConfig(config.getRequesterConfig());
 		tearDownClient.connect(); // physical connect
