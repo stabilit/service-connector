@@ -32,9 +32,9 @@ public interface IConstants {
 	public final int DEFAULT_NR_OF_THREADS = 10;
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
 	public final int MAX_KEEP_ALIVE_OF_THREADS = 10;
-	/** The read timout in seconds. */
+	/** The read timeout in seconds. */
 	public final int READ_TIMEOUT = 200;
-	/** The write timout in seconds. */
+	/** The write timeout in seconds. */
 	public final int WRITE_TIMEOUT = 200;
 
 	/** The REGEX. */
@@ -70,4 +70,9 @@ public interface IConstants {
 
 	/** The ACCEPT_PARAMS. */
 	public final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
+
+	/** The DEFAULT_CLIENT_CON. */
+	public final String DEFAULT_CLIENT_CON = "netty.http";
+	/** The DEFAULT_SERVER_CON. */
+	public final String DEFAULT_SERVER_CON = "netty.tcp";
 }

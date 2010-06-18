@@ -16,127 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.common.conf.CommunicatorConfig;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.srv.service.IPublishServiceConnector;
 
 /**
- * The Class ServiceConnector. Represents the service connector on client side. Provides functions to create sessions to
- * a server and to connect/disconnect to an SC. This component is responsible to observe the availability of the SC. If
- * the SC gets unreachable every open session has to be deleted.
+ * The Class PublishServerServiceConnector.
  * 
  * @author JTraber
  */
-class PublishServerServiceConnector implements IPublishServiceConnector {
+class PublishServerServiceConnector extends ServiceConnector implements IPublishServiceConnector {
 
-	/** The host of the SC. */
-	public String host;
-	/** The port of the SC. */
-	public int port;
-	/** The number of threads to use on client side. */
-	public int numberOfThreads;
-	/** The connection key, identifies low level component to use for communication (netty, nio). */
-	public String connectionKey;
-	/** The requester. */
-	private IRequester requester; // becomes a pool later
-	/** The attributes. */
-	private MapBean<Object> attributes;
-
-	/**
-	 * Instantiates a new service connector.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 */
 	public PublishServerServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.connectionKey = "netty.tcp"; // default is netty tcp
-		this.numberOfThreads = 16; // default is 16 threads
-		attributes = new MapBean<Object>();
-	}
-
-	/**
-	 * Connect to SC. With this connect observing the SC starts.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Override
-	public void connect() throws Exception {
-		requester = new Requester();
-		ICommunicatorConfig config = new CommunicatorConfig("name", this.host, this.port, this.connectionKey,
-				this.numberOfThreads);
-		requester.setRequesterConfig(config);
-		requester.connect();
-		// sets up the attach call
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
-
-		attachCall.setKeepAliveTimeout(30);
-		attachCall.setKeepAliveInterval(360);
-		// attaches client
-		attachCall.invoke();
-	}
-
-	/**
-	 * Disconnect from SC. Every open session needs to be closed.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Override
-	public void disconnect() throws Exception {
-		// detach
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(requester);
-		detachCall.invoke();
-
-		this.requester.disconnect(); // physical disconnect
-		this.requester.destroy();
-	}
-
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
-	@Override
-	public void setAttribute(String name, Object value) {
-		this.attributes.setAttribute(name, value);
-	}
-
-	public int getNumberOfThreads() {
-		return numberOfThreads;
-	}
-
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
-	}
-
-	public String getConnectionKey() {
-		return connectionKey;
-	}
-
-	public void setConnectionKey(String connectionKey) {
-		this.connectionKey = connectionKey;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public int getPort() {
-		return port;
+		super(host, port, IConstants.DEFAULT_SERVER_CON, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
 	@Override

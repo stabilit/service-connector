@@ -32,7 +32,6 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ServerRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 
@@ -66,6 +65,34 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
 
+		// validate server is registered - otherwise deregister not possible
+		this.validateServer(server);
+
+		// release all resources used by server, disconnects requesters
+		server.destroy();
+		serverRegistry.removeServer(server);
+
+		// validate service not null - otherwise deregister not possible
+		Service service = this.validateService(serviceName);
+		// remove server in service
+		service.removeServer(server);
+
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
+		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		response.setSCMP(scmpReply);
+	}
+
+	/**
+	 * Validate server. Checks if server is registered. If not an exception will be thrown.
+	 * 
+	 * @param server
+	 *            the server
+	 * @throws SCMPCommandException
+	 *             the SCMP command exception
+	 */
+	private void validateServer(Server server) throws SCMPCommandException {
 		if (server == null) {
 			// server not registered - deregister not possible
 			if (LoggerPoint.getInstance().isWarn()) {
@@ -75,32 +102,6 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-
-		// release all resources used by server, disconnects requesters
-		server.destroy();
-		serverRegistry.removeServer(server);
-
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		Service service = serviceRegistry.getService(serviceName);
-
-		if (service == null) {
-			// service not registered - deregister not possible
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: service not registered");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-
-		// remove server in service
-		service.removeServer(server);
-
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		response.setSCMP(scmpReply);
 	}
 
 	/**

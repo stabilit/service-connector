@@ -26,36 +26,17 @@ import com.stabilit.scm.cln.service.IClientServiceConnector;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.ISCSubscription;
 import com.stabilit.scm.cln.service.SCPublishMessageHandler;
-import com.stabilit.scm.common.conf.CommunicatorConfig;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.conf.IConstants;
 
 /**
- * The Class ServiceConnector. Represents the service connector on client side. Provides functions to create sessions to
- * a server and to connect/disconnect to an SC. This component is responsible to observe the availability of the SC. If
- * the SC gets unreachable every open session has to be deleted.
+ * The Class ClientServiceConnector.
  * 
  * @author JTraber
  */
-class ClientServiceConnector implements IClientServiceConnector {
-
-	/** The host of the SC. */
-	public String host;
-	/** The port of the SC. */
-	public int port;
-	/** The number of threads to use on client side. */
-	public int numberOfThreads;
-	/** The connection key, identifies low level component to use for communication (netty, nio). */
-	public String connectionKey;
-	/** The requester. */
-	private IRequester requester; // becomes a pool later
-	/** The attributes. */
-	private MapBean<Object> attributes;
+class ClientServiceConnector extends ServiceConnector implements IClientServiceConnector {
 
 	/**
-	 * Instantiates a new service connector.
+	 * Instantiates a new client service connector.
 	 * 
 	 * @param host
 	 *            the host
@@ -63,28 +44,14 @@ class ClientServiceConnector implements IClientServiceConnector {
 	 *            the port
 	 */
 	public ClientServiceConnector(String host, int port) {
-		this.host = host;
-		this.port = port;
-		this.connectionKey = "netty.http"; // default is netty http
-		this.numberOfThreads = 16; // default is 16 threads
-		attributes = new MapBean<Object>();
+		super(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
-	/**
-	 * Connect to SC. With this connect observing the SC starts.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
 	@Override
 	public void connect() throws Exception {
-		requester = new Requester();
-		ICommunicatorConfig config = new CommunicatorConfig("name", this.host, this.port, this.connectionKey,
-				this.numberOfThreads);
-		requester.setRequesterConfig(config);
-		requester.connect();
+		super.connect();
 		// sets up the attach call
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 
 		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
@@ -92,84 +59,34 @@ class ClientServiceConnector implements IClientServiceConnector {
 		attachCall.invoke();
 	}
 
-	/**
-	 * New data session. Data session allows using a service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return the iSC session
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Override
-	public ISCSession newDataSession(String serviceName) throws Exception {
-		SCDataSession scDataSession = new SCDataSession(serviceName, requester);
-		return scDataSession;
-	}
-
-	/**
-	 * Disconnect from SC. Every open session needs to be closed.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
 	@Override
 	public void disconnect() throws Exception {
 		// detach
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(requester);
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke();
-
-		this.requester.disconnect(); // physical disconnect
-		this.requester.destroy();
+		super.disconnect();
 	}
 
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public void setAttribute(String name, Object value) {
-		this.attributes.setAttribute(name, value);
+	public ISCSession newDataSession(String serviceName) throws Exception {
+		SCDataSession scDataSession = new SCDataSession(serviceName, this.requester);
+		return scDataSession;
 	}
 
-	public int getNumberOfThreads() {
-		return numberOfThreads;
-	}
-
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
-	}
-
-	public String getConnectionKey() {
-		return connectionKey;
-	}
-
-	public void setConnectionKey(String connectionKey) {
-		this.connectionKey = connectionKey;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public void downloadFile(String string, String sourceFileName, OutputStream outStream) {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void uploadFile(String string, String targetFileName, InputStream inStream) {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCSubscription newSubscription(String string, SCPublishMessageHandler messageHandler, String mask) {
 		throw new UnsupportedOperationException();
