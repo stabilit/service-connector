@@ -29,7 +29,6 @@ import com.stabilit.scm.common.conf.ResponderConfig;
 import com.stabilit.scm.common.log.Level;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.log.impl.GeneralLogger;
 import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.RuntimeLogger;
@@ -38,7 +37,6 @@ import com.stabilit.scm.common.log.listener.ConnectionPoint;
 import com.stabilit.scm.common.log.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.listener.IConnectionListener;
 import com.stabilit.scm.common.log.listener.IExceptionListener;
-import com.stabilit.scm.common.log.listener.ILoggerListener;
 import com.stabilit.scm.common.log.listener.IPerformanceListener;
 import com.stabilit.scm.common.log.listener.IRuntimeListener;
 import com.stabilit.scm.common.log.listener.ISessionListener;
@@ -76,7 +74,6 @@ public class TestEnvironmentStarter {
 			ExceptionPoint.getInstance().addListener(
 					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
 			RuntimePoint.getInstance().addListener((IRuntimeListener) loggerFactory.newInstance(RuntimeLogger.class));
-			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(GeneralLogger.class));
 			LoggerPoint.getInstance().setLevel(Level.DEBUG);
 			PerformancePoint.getInstance().addListener(
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));

@@ -52,7 +52,7 @@ public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
 	public void fireException(Object source, Throwable th) {
 		if (getInstance().isEmpty() == false) {
 			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			ExceptionPoint.getInstance().fireException(exceptionEvent);
+			this.fireException(exceptionEvent);
 		}
 	}
 

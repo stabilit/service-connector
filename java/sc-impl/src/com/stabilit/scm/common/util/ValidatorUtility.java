@@ -54,6 +54,7 @@ public final class ValidatorUtility {
 	 *            the local date time string
 	 * @return the date
 	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
 	 */
 	public static Date validateLocalDateTime(String localDateTimeString) throws SCMPValidatorException {
 		if (localDateTimeString == null) {
@@ -79,8 +80,7 @@ public final class ValidatorUtility {
 	 *            the keep alive interval
 	 * @return the keep alive
 	 * @throws SCMPValidatorException
-	 * @throws ValidatorException
-	 *             the validator exception
+	 *             the SCMP validator exception
 	 */
 	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
 			throws SCMPValidatorException {
@@ -117,8 +117,8 @@ public final class ValidatorUtility {
 	 * 
 	 * @param ipAddressListString
 	 *            the ip address list string
-	 * @throws ValidatorException
-	 *             the validator exception
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
 	 */
 	public static void validateIpAddressList(String ipAddressListString) throws SCMPValidatorException {
 		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
@@ -134,8 +134,9 @@ public final class ValidatorUtility {
 	 *            the lower limit
 	 * @param intStringValue
 	 *            the int string value
-	 * @throws ValidatorException
-	 *             the validator exception
+	 * @return the int
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
 	 */
 	public static int validateInt(int lowerLimit, String intStringValue) throws SCMPValidatorException {
 		if (intStringValue == null) {
@@ -164,8 +165,9 @@ public final class ValidatorUtility {
 	 *            the int string value
 	 * @param upperLimit
 	 *            the upper limit
-	 * @throws ValidatorException
-	 *             the validator exception
+	 * @return the int
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
 	 */
 	public static int validateInt(int lowerLimit, String intStringValue, int upperLimit) throws SCMPValidatorException {
 		if (intStringValue == null) {
@@ -189,13 +191,13 @@ public final class ValidatorUtility {
 	 * Validate string.
 	 * 
 	 * @param minSize
-	 *            the min size
+	 *            the minimum size
 	 * @param stringValue
 	 *            the string value
 	 * @param maxSize
 	 *            the max size
-	 * @throws ValidatorException
-	 *             the validator exception
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
 	 */
 	public static void validateString(int minSize, String stringValue, int maxSize) throws SCMPValidatorException {
 
