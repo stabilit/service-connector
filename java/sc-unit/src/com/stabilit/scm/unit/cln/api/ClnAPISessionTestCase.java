@@ -44,17 +44,17 @@ public class ClnAPISessionTestCase {
 			// connects to SC, starts observing connection
 			sc.connect();
 			
-			/* TODO (trn)
-			 Bitte umbauen auf:
+			/* TODO (trn) Bitte umbauen auf:
 		
 			ISCService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.setMessageInfo("sessionInfo");
+			sessionServiceA.setSessionInfo("sessionInfo");
 			sessionServiceA.createSession();
 			
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
 			requestMsg.setCompression(false);
+			requestMsg.setMessageInfo("test");
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg);

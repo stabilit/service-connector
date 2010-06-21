@@ -39,9 +39,21 @@ public class ClnAPIFileTestCase {
 		IClientServiceConnector sc = null;
 		try {
 			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+			sc.connect();	// connects to SC, starts observing connection
 
-			// connects to SC, starts observing connection
-			sc.connect();
+			/* TODO (trn) Bitte umbauen auf:
+			
+			ISCService fileServiceA = sc.newFileService("logs");
+			
+			String targetFileName = "";
+			InputStream inStream = null;
+			fileServiceA.uploadFile(targetFileName, inStream);
+			
+			String sourceFileName = "";
+			OutputStream outStream = null;
+			fileServiceA.downloadFile(sourceFileName, outStream);
+			*/
+			
 			String targetFileName = "";
 			InputStream inStream = null;
 			sc.uploadFile("serviceName", targetFileName, inStream);
