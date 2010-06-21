@@ -19,25 +19,19 @@
 /**
  * 
  */
-package com.stabilit.scm.cln;
+package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.service.SCPublishMessageHandler;
-import com.stabilit.scm.cln.service.SCPublishMessage;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author JTraber
+ *
  */
-public class SCExampleMessageHandler extends SCPublishMessageHandler {
-	
-	@Override
-	public void messageReceived(SCPublishMessage publishedMessage) {
-		//message received, process data
-	}
+public interface IFileService {
 
-	@Override
-	public void exceptionCaught(Exception e) {
-		// communication failed
-	}	
+	void uploadFile(String targetFileName, InputStream inStream);
 
-	//TODO completed / started callback methods
+	void downloadFile(String sourceFileName, OutputStream outStream);
+
 }

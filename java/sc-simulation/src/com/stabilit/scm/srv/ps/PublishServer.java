@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.srv.ps;
 
+import com.stabilit.scm.common.service.IServiceConnector;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;
-import com.stabilit.scm.srv.service.IPublishServiceConnector;
 
 
 public class PublishServer {
@@ -32,9 +32,9 @@ public class PublishServer {
 	}
 	
 	public static void runExample() {
-		IPublishServiceConnector sc = null;
+		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newPublishServerInstance("localhost", 8080);
+			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
 			sc.setConnectionKey("netty.tcp");
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
@@ -44,7 +44,7 @@ public class PublishServer {
 			sc.connect();
 			Object data = null;
 			String mask = "AVSD-----";
-			sc.publish(mask, data);			
+//			sc.publish(mask, data);			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

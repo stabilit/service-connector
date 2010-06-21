@@ -21,10 +21,6 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.SCPublishMessage;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 public class SCSimpleSessionServiceExample {
 

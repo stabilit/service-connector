@@ -32,7 +32,7 @@ public interface ISCSession {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCPublishMessage execute(SCPublishMessage message) throws Exception;
+	public SCMessage execute(SCMessage message) throws Exception;
 
 	/**
 	 * Delete session.

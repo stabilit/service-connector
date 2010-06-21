@@ -19,9 +19,9 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.service.ISCSession;
-import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.cln.service.SCPublishMessage;
+import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.cln.service.SCMessage;
+import com.stabilit.scm.common.service.IServiceConnector;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -35,18 +35,16 @@ public class ClnAPISessionTestCase {
 	@Test
 	public void testClnAPI() throws Exception {
 		
-		IClientServiceConnector sc = null;
+		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 
 			// connects to SC, starts observing connection
 			sc.connect();
-			
-			/* TODO (trn) Bitte umbauen auf:
-		
-			ISCService sessionServiceA = sc.newSessionService("simulation");
+					
+			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.setSessionInfo("sessionInfo");
 			sessionServiceA.createSession();
 			
@@ -61,27 +59,6 @@ public class ClnAPISessionTestCase {
 
 			// deletes the session
 			sessionServiceA.deleteSession();
-
-			*/
-			
-			
-			ISCSession dataSessionA = sc.newDataSession("simulation");
-			dataSessionA.setMessageInfo("sessionInfo");
-			dataSessionA.setSessionInfo("messageInfo");
-			// creates a session
-			dataSessionA.createSession();
-
-			SCPublishMessage message = new SCPublishMessage();
-			
-			byte[] buffer = new byte[1024];
-			message.setData(buffer);
-			message.setCompression(false);
-			
-			SCPublishMessage resp = dataSessionA.execute(message);
-			System.out.println(resp);
-
-			// deletes the session
-			dataSessionA.deleteSession();
 
 		} catch (Exception e) {
 			e.printStackTrace();

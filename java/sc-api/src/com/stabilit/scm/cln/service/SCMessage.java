@@ -26,4 +26,35 @@ package com.stabilit.scm.cln.service;
  *
  */
 public class SCMessage {
+
+	/**
+	 * @param object
+	 */
+	public SCMessage(Object object) {
+	}
+
+	/**
+	 * 
+	 */
+	public SCMessage() {
+	}
+
+	public void setData(byte[] buffer) {
+	}
+
+	public void setMessageInfo(String string) {
+	}
+
+	public void setCompression(boolean b) {
+	}
+
+	public boolean isCompression() {
+		
+		return false;
+	}
+
+	public Object getData() {
+		
+		return null;
+	}
 }

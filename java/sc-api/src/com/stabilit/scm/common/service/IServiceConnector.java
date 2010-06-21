@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
+import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.cln.service.SCMessageHandler;
+
+
 /**
  * The Interface IServiceConnector.
  * 
@@ -92,4 +96,10 @@ public interface IServiceConnector {
 	 * @return the port
 	 */
 	public int getPort();
+
+	public IFileService newFileService(String string);
+
+	public IPublishService newPublishingService(SCMessageHandler messageHandler, String string);
+
+	public ISessionService newSessionService(String string);
 }

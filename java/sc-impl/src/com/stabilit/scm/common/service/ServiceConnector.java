@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.common.service;
 
+import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.cln.service.SCMessageHandler;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -30,7 +32,7 @@ import com.stabilit.scm.common.util.MapBean;
 /**
  * @author JTraber
  */
-public abstract class ServiceConnector implements IServiceConnector {
+public class ServiceConnector implements IServiceConnector {
 
 	/** The host of the SC. */
 	private String host;
@@ -108,5 +110,23 @@ public abstract class ServiceConnector implements IServiceConnector {
 
 	public int getPort() {
 		return port;
+	}
+
+	@Override
+	public IFileService newFileService(String string) {
+		
+		return null;
+	}
+
+	@Override
+	public IPublishService newPublishingService(SCMessageHandler messageHandler, String string) {
+		
+		return null;
+	}
+
+	@Override
+	public ISessionService newSessionService(String string) {
+		
+		return null;
 	}
 }

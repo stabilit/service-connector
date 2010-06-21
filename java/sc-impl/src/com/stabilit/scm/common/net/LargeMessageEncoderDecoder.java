@@ -59,8 +59,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object decode(InputStream is) throws EncodingDecodingException {
-		InputStreamReader isr = new InputStreamReader(is);
+	public Object decode(InputStream is) throws Exception {
+		InputStreamReader isr = new InputStreamReader(is, CHARSET);
 		BufferedReader br = new BufferedReader(isr);
 		Map<String, String> metaMap = new HashMap<String, String>();
 		// read heading line
@@ -132,8 +132,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void encode(OutputStream os, Object obj) throws EncodingDecodingException {
-		OutputStreamWriter osw = new OutputStreamWriter(os);
+	public void encode(OutputStream os, Object obj) throws Exception {
+		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
 

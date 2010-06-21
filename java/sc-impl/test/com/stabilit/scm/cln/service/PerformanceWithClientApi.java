@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.common.service.IServiceConnector;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 /**
@@ -37,9 +38,9 @@ public class PerformanceWithClientApi {
 	 * Run example.
 	 */
 	public static void runExample() {
-		IClientServiceConnector sc = null;
+		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 			sc.setAttribute("compression", false);
@@ -47,8 +48,7 @@ public class PerformanceWithClientApi {
 			// connects to SC, starts observing connection
 			sc.connect();
 
-			ISCSession dataSessionA = sc.newDataSession("simulation");
-			dataSessionA.setMessageInfo("messageInfo");
+			ISessionService dataSessionA = sc.newSessionService("simulation");
 			dataSessionA.setSessionInfo("sessionInfo");
 			dataSessionA.createSession();
 
@@ -58,7 +58,7 @@ public class PerformanceWithClientApi {
 			double startTime = System.currentTimeMillis();
 			for (int i = 0; i < anzMsg; i++) {
 				byte[] data = new byte[128];
-				SCPublishMessage message = new SCPublishMessage(data);
+				SCMessage message = new SCMessage(data);
 				Object resp = dataSessionA.execute(message);
 			}
 			double endTime = System.currentTimeMillis();

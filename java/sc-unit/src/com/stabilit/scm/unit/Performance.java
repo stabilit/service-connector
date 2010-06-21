@@ -23,7 +23,7 @@ package com.stabilit.scm.unit;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.service.ISCSession;
+import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
@@ -83,10 +83,10 @@ public class Performance {
 		attachCall.setKeepAliveInterval(360);
 		SCMPMessage result = attachCall.invoke();
 
-		ISCSession session = new SCDataSession("simulation", req);
-		session.setMessageInfo("message info");
-		session.setSessionInfo("session info");
-		session.createSession();
+//		ISessionService session = new SCDataSession("simulation", req);
+//		session.setMessageInfo("message info");
+//		session.setSessionInfo("session info");
+//		session.createSession();
 
 		con.connect();
 		double anzMsg = 100000;
@@ -96,7 +96,7 @@ public class Performance {
 		for (int i = 0; i < anzMsg; i++) {
 			request = new SCMPMessage(buffer);
 			request.setMessageType(SCMPMsgType.ECHO_SC.getName());
-			request.setSessionId(session.getSessionId());
+			//request.setSessionId(session.getSessionId());
 			request.setHeader(SCMPHeaderAttributeKey.MAX_NODES, 2);
 			resp = con.sendAndReceive(request);
 		}

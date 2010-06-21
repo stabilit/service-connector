@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,25 +14,27 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.service;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.srv.service.IPublishServiceConnector;
+import com.stabilit.scm.cln.service.SCMessage;
 
 /**
- * The Class PublishServerServiceConnector.
- * 
  * @author JTraber
+ *
  */
-class PublishServerServiceConnector extends ServiceConnector implements IPublishServiceConnector {
+public interface ISessionService {
 
-	public PublishServerServiceConnector(String host, int port) {
-		super(host, port, IConstants.DEFAULT_SERVER_CON, IConstants.DEFAULT_NR_OF_THREADS);
-	}
+	void setSessionInfo(String string);
 
-	@Override
-	public void publish(String mask, Object data) {
-		throw new UnsupportedOperationException();
-	}
+	void createSession();
+
+	SCMessage execute(SCMessage requestMsg);
+
+	void deleteSession();
+
 }

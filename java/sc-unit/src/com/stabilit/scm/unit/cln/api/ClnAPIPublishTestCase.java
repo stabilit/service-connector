@@ -19,8 +19,8 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.cln.service.ISCSubscription;
+import com.stabilit.scm.common.service.IPublishService;
+import com.stabilit.scm.common.service.IServiceConnector;
 import com.stabilit.scm.common.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -33,9 +33,9 @@ public class ClnAPIPublishTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		IClientServiceConnector sc = null;
+		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newClientInstance("localhost", 8080);
+			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 			sc.setAttribute("compression", false);
@@ -43,26 +43,14 @@ public class ClnAPIPublishTestCase {
 			// connects to SC, starts observing connection
 			sc.connect();
 
-			/* TODO (trn) Bitte umbauen auf:
-			
-			ISCService publServiceA = sc.newPublishingService("broadcast");
 			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
+			IPublishService publServiceA = sc.newPublishingService(messageHandler, "broadcast");
 			String mask = "ABC-------"; // must not contain % sign
-			publServiceA.subscribe(messageHandler,mask);
-			
+			publServiceA.subscribe(mask);
+
 			mask = "AAA-------";
 			publServiceA.changeSubscription(mask);
-
 			publServiceA.unsubscribe();
-			*/
-			
-			String mask = "ABC-------"; // must not contain % sign
-			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
-			ISCSubscription subscriptionA = sc.newSubscription("publish", messageHandler, mask);
-
-			subscriptionA.changeSubscription(mask);
-			// deletes the session
-			subscriptionA.unsubscribe();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -19,15 +19,18 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.common.service;
 
 /**
  * @author JTraber
  *
  */
-public interface ISCSubscription {
+public interface IPublishService {
 
-	public void changeSubscription(String mask);
+	void subscribe(String mask);
 
-	public void unsubscribe();
+	void changeSubscription(String mask);
+
+	void unsubscribe();
+
 }

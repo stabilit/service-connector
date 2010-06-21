@@ -21,11 +21,6 @@
  */
 package com.stabilit.scm.cln;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 public class SCSimpleFileServiceExample {
 //

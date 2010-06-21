@@ -21,21 +21,13 @@
  */
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.service.IClientServiceConnector;
-import com.stabilit.scm.srv.service.IPublishServiceConnector;
-import com.stabilit.scm.srv.service.ISessionServiceConnector;
 
 public class ServiceConnectorFactory {
 
-	public static IClientServiceConnector newClientInstance(String host, int port) {
-		return new ClientServiceConnector(host, port);
-	}
-
-	public static IPublishServiceConnector newPublishServerInstance(String host, int port) {
-		return new PublishServerServiceConnector(host, port);
+	public static IServiceConnector newInstance(String string, int i) {
+		
+		return null;
 	}
 	
-	public static ISessionServiceConnector newSessionServerInstance(String host, int port) {
-		return new SessionServerServiceConnector(host, port);
-	}
+	
 }
