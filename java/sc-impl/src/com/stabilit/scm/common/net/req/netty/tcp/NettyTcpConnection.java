@@ -34,12 +34,13 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.listener.ConnectionPoint;
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -72,6 +73,7 @@ public class NettyTcpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** state of connection. */
 	private boolean isConnected;
+	private ConnectionKey key;
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
@@ -88,6 +90,7 @@ public class NettyTcpConnection implements IConnection {
 		this.localSocketAddress = null;
 		this.isConnected = false;
 		this.pipelineFactory = new NettyTcpRequesterPipelineFactory();
+		this.key = null;
 	}
 
 	/** {@inheritDoc} */
@@ -112,6 +115,7 @@ public class NettyTcpConnection implements IConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
+		this.key = new ConnectionKey(this.host, this.port, "netty.tcp");
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 	}
 
@@ -199,7 +203,7 @@ public class NettyTcpConnection implements IConnection {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
+
 	/**
 	 * Release external resources.
 	 */
@@ -214,10 +218,19 @@ public class NettyTcpConnection implements IConnection {
 		// release resources in client connection
 		this.bootstrap.releaseExternalResources();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
 		return this.isConnected;
+	}
+
+	@Override
+	public Object getKey() {
+		return this.key;
+	}
+
+	@Override
+	public void setKeepAlive(boolean keepAlive) {
 	}
 }

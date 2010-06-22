@@ -54,7 +54,7 @@ public class SessionServerResponder extends Responder {
 		// needs to register service in SC
 		req = new Requester();
 		ICommunicatorConfig reqConfig = new CommunicatorConfig("Session-Server Responder", "localhost", 9000,
-				"netty.tcp", 16);
+				"netty.tcp", 16, 1000);
 		req.setRequesterConfig(reqConfig);
 		req.connect(); // physical connect
 		// scmp registerService

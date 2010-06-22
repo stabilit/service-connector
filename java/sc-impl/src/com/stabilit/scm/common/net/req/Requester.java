@@ -17,8 +17,8 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.log.listener.PerformancePoint;
-import com.stabilit.scm.common.log.listener.RuntimePoint;
+import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
@@ -50,19 +50,15 @@ public class Requester implements IRequester {
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		ConnectionFactory reqConnectionFactory = new ConnectionFactory();
-		this.connection = reqConnectionFactory.newInstance(this.reqConfig.getConnectionKey());
-		this.connection.setHost(reqConfig.getHost());
-		this.connection.setPort(reqConfig.getPort());
-		this.connection.setNumberOfThreads(reqConfig.getNumberOfThreads());
-		this.connection.connect();
+		this.connection = ConnectionPool.useConnection(this.reqConfig);  // return an already connected live instance		
 	}
-	
+
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
+			this.connect(); // from pool
 			SCMPMessage ret = null;
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
@@ -72,6 +68,7 @@ public class Requester implements IRequester {
 			}
 			return ret;
 		} finally {
+			this.disconnect(); // give back to pool
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
 		}
 	}
@@ -210,31 +207,31 @@ public class Requester implements IRequester {
 		}
 		return scmpComposite;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() throws Exception {
 		this.connection.destroy();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
-		this.connection.disconnect();
+		ConnectionPool.freeConnection(this.connection);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
 		return this.connection.isConnected();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setRequesterConfig(ICommunicatorConfig reqConfig) {
 		this.reqConfig = reqConfig;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ICommunicatorConfig getRequesterConfig() {

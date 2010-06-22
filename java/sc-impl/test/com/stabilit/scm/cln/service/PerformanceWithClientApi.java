@@ -46,11 +46,11 @@ public class PerformanceWithClientApi {
 			sc.setAttribute("compression", false);
 
 			// connects to SC, starts observing connection
-			sc.connect();
+			sc.attach();
 
 			ISessionService dataSessionA = sc.newSessionService("simulation");
 			dataSessionA.setSessionInfo("sessionInfo");
-			dataSessionA.createSession();
+			//dataSessionA.createSession();
 
 			double anzMsg = 100000;
 			byte[] buffer = new byte[128];
@@ -73,7 +73,7 @@ public class PerformanceWithClientApi {
 			e.printStackTrace();
 		} finally {
 			try {
-				sc.disconnect();
+				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}

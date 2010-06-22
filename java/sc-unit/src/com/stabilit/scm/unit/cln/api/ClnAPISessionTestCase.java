@@ -41,12 +41,11 @@ public class ClnAPISessionTestCase {
 			sc.setAttribute("keepAliveInterval", 60);
 			sc.setAttribute("keepAliveTimeout", 10);
 
-			// connects to SC, starts observing connection
-			sc.connect();
+			// connects to SC, checks connection to SC
+			sc.attach();
 					
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession();
+			sessionServiceA.createSession("sessionInfo");
 			
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
@@ -65,7 +64,7 @@ public class ClnAPISessionTestCase {
 		} finally {
 			try {
 				// disconnects from SC
-				sc.disconnect();
+				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}

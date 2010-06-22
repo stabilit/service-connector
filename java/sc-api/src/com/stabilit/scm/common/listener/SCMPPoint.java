@@ -14,61 +14,81 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+import com.stabilit.scm.common.scmp.SCMPMessage;
+
 /**
- * The Class RuntimePoint. Allows logging general runtime information.
+ * The Class SCMPPoint. Allows scmp package information.
  */
-public final class RuntimePoint extends ListenerSupport<IRuntimeListener> {
+public final class SCMPPoint extends ListenerSupport<ISCMPListener> {
 
-	/** The runtime point. */
-	private static RuntimePoint runtimePoint = new RuntimePoint();
+	/** The scmp point. */
+	private static SCMPPoint scmpPoint = new SCMPPoint();
 
 	/**
-	 * Instantiates a new RuntimePoint.
+	 * Instantiates a new SCMPPoint.
 	 */
-	private RuntimePoint() {
+	private SCMPPoint() {
 	}
 
 	/**
-	 * Gets the single instance of RuntimePoint.
+	 * Gets the single instance of SCMPPoint.
 	 * 
-	 * @return single instance of RuntimePoint
+	 * @return single instance of SCMPPoint
 	 */
-	public static RuntimePoint getInstance() {
-		return runtimePoint;
+	public static SCMPPoint getInstance() {
+		return scmpPoint;
 	}
 
-	/**
-	 * Fire runtime.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param text
-	 *            the text
-	 */
-	public void fireRuntime(Object source, String text) {
+	public void fireEncode(Object source, SCMPMessage scmp) {
 		if (getInstance().isEmpty() == false) {
-			RuntimeEvent runtimeEvent = new RuntimeEvent(source, text);
-			RuntimePoint.getInstance().fireRuntime(runtimeEvent);
+			SCMPEvent scmpEvent = new SCMPEvent(source, scmp);
+			SCMPPoint.getInstance().fireEncode(scmpEvent);
 		}
 	}
 
 	/**
-	 * Fire runtime.
+	 * Fire scmp encode event.
 	 * 
-	 * @param runtimeEvent
-	 *            the runtime event
+	 * @param scmpEvent
+	 *            the scmp event
 	 */
-	public void fireRuntime(RuntimeEvent runtimeEvent) {
+	public void fireEncode(SCMPEvent scmpEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
 			try {
-				IRuntimeListener runtimeListener = (IRuntimeListener) localArray[i];
-				runtimeListener.runtimeEvent(runtimeEvent);
+				ISCMPListener scmpListener = (ISCMPListener) localArray[i];
+				scmpListener.encodeEvent(scmpEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void fireDecode(Object source, SCMPMessage scmp) {
+		if (getInstance().isEmpty() == false) {
+			SCMPEvent scmpEvent = new SCMPEvent(source, scmp);
+			SCMPPoint.getInstance().fireDecode(scmpEvent);
+		}
+	}
+
+	/**
+	 * Fire scmp encode event.
+	 * 
+	 * @param scmpEvent
+	 *            the scmp event
+	 */
+	public void fireDecode(SCMPEvent scmpEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISCMPListener scmpListener = (ISCMPListener) localArray[i];
+				scmpListener.decodeEvent(scmpEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

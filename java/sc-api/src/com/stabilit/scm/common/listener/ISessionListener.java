@@ -14,33 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
-public class StatisticsEvent extends EventObject {
+public interface ISessionListener extends EventListener {
 
-	private static final long serialVersionUID = -8925639053404385202L;
-	
-	private EventObject eventObject;
-	
-	private StatisticsEnum eventType;
+	public void createSessionEvent(SessionEvent sessionEvent) throws Exception;
 
-	public StatisticsEvent(Object source, EventObject eventObject) {
-		super(source);
-		this.eventObject = eventObject;
-	}
-
-	public EventObject getEventObject() {
-		return eventObject;
-	}
-
-	public StatisticsEnum getEventType() {
-		return eventType;
-	}
-	
-	public void setEventType(StatisticsEnum eventType) {
-		this.eventType = eventType;
-	}
+	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception;
 
 }

@@ -14,58 +14,64 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IConnection events. The class that is interested in processing a
- * IConnection event implements this interface, and the object created with that class is registered with a
- * component using the component's <code>addIConnectionListener</code> method. When
- * the IConnection event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see ConnectionEvent
+ * The Class RuntimePoint. Allows logging general runtime information.
  */
-public interface IConnectionListener extends EventListener {
+public final class RuntimePoint extends ListenerSupport<IRuntimeListener> {
+
+	/** The runtime point. */
+	private static RuntimePoint runtimePoint = new RuntimePoint();
 
 	/**
-	 * Write event.
-	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * Instantiates a new RuntimePoint.
 	 */
-	public void writeEvent(ConnectionEvent connectionEvent) throws Exception;
+	private RuntimePoint() {
+	}
 
 	/**
-	 * Read event.
+	 * Gets the single instance of RuntimePoint.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @return single instance of RuntimePoint
 	 */
-	public void readEvent(ConnectionEvent connectionEvent) throws Exception;
+	public static RuntimePoint getInstance() {
+		return runtimePoint;
+	}
 
 	/**
-	 * Connect event.
+	 * Fire runtime.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
 	 */
-	public void connectEvent(ConnectionEvent connectionEvent) throws Exception;
+	public void fireRuntime(Object source, String text) {
+		if (getInstance().isEmpty() == false) {
+			RuntimeEvent runtimeEvent = new RuntimeEvent(source, text);
+			RuntimePoint.getInstance().fireRuntime(runtimeEvent);
+		}
+	}
 
 	/**
-	 * Disconnect event.
+	 * Fire runtime.
 	 * 
-	 * @param connectionEvent
-	 *            the connection event
-	 * @throws Exception
-	 *             the exception
+	 * @param runtimeEvent
+	 *            the runtime event
 	 */
-	public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception;
+	public void fireRuntime(RuntimeEvent runtimeEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				IRuntimeListener runtimeListener = (IRuntimeListener) localArray[i];
+				runtimeListener.runtimeEvent(runtimeEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

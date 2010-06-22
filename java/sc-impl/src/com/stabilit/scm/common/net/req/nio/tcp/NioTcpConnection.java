@@ -23,12 +23,13 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -50,6 +51,7 @@ public class NioTcpConnection implements IConnection {
 	private IEncoderDecoder encoderDecoder;
 	/** state of connection. */
 	private boolean isConnected;
+	private ConnectionKey key;
 
 	/**
 	 * Instantiates a new NioTcpConnection.
@@ -61,6 +63,7 @@ public class NioTcpConnection implements IConnection {
 		this.numberOfThreads = 10;
 		this.encoderDecoder = null;
 		this.isConnected = false;
+		this.key = null;
 	}
 
 	/** {@inheritDoc} */
@@ -68,8 +71,9 @@ public class NioTcpConnection implements IConnection {
 	public void connect() throws Exception {
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
-		ConnectionPoint.getInstance().fireConnect(this, this.socketChannel.socket().getLocalPort());
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
+		this.key = new ConnectionKey(this.host, this.port, "nio.tcp");
+		ConnectionPoint.getInstance().fireConnect(this, this.socketChannel.socket().getLocalPort());
 	}
 
 	/** {@inheritDoc} */
@@ -78,7 +82,7 @@ public class NioTcpConnection implements IConnection {
 		ConnectionPoint.getInstance().fireDisconnect(this, this.socketChannel.socket().getLocalPort());
 		socketChannel.close();
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
@@ -108,8 +112,8 @@ public class NioTcpConnection implements IConnection {
 		// parse headline
 		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), byteReadBuffer,
-				0, bytesRead);
+		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), byteReadBuffer, 0,
+				bytesRead);
 
 		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
@@ -160,10 +164,19 @@ public class NioTcpConnection implements IConnection {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
 		return this.isConnected;
+	}
+
+	@Override
+	public Object getKey() {
+		return this.key;
+	}
+
+	@Override
+	public void setKeepAlive(boolean keepAlive) {
 	}
 }

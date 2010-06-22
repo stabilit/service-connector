@@ -14,67 +14,58 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.net.req;
+package com.stabilit.scm.common.listener;
 
-import com.stabilit.scm.common.net.ICommunicationPoint;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import java.util.EventListener;
 
 /**
- * The Interface IConnection abstracts any connection to a responder.
+ * The listener interface for receiving IConnection events. The class that is interested in processing a
+ * IConnection event implements this interface, and the object created with that class is registered with a
+ * component using the component's <code>addIConnectionListener</code> method. When
+ * the IConnection event occurs, that object's appropriate
+ * method is invoked.
  * 
- * @author JTraber
+ * @see ConnectionEvent
  */
-public interface IConnection extends ICommunicationPoint {
+public interface IConnectionListener extends EventListener {
 
 	/**
-	 * Connect.
+	 * Write event.
 	 * 
+	 * @param connectionEvent
+	 *            the connection event
 	 * @throws Exception
 	 *             the exception
 	 */
-	void connect() throws Exception;
+	public void writeEvent(ConnectionEvent connectionEvent) throws Exception;
 
 	/**
-	 * Send and receive synchronous operation.
+	 * Read event.
 	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
+	 * @param connectionEvent
+	 *            the connection event
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+	public void readEvent(ConnectionEvent connectionEvent) throws Exception;
 
 	/**
-	 * Disconnect.
+	 * Connect event.
 	 * 
+	 * @param connectionEvent
+	 *            the connection event
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void disconnect() throws Exception;
+	public void connectEvent(ConnectionEvent connectionEvent) throws Exception;
 
 	/**
-	 * Destroys connection.
+	 * Disconnect event.
 	 * 
+	 * @param connectionEvent
+	 *            the connection event
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void destroy() throws Exception;
-
-	/**
-	 * Checks if is connected.
-	 * 
-	 * @return true, if is connected
-	 */
-	boolean isConnected();
-
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
-	public Object getKey();
-
-	void setKeepAlive(boolean keepAlive);
-
+	public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception;
 }

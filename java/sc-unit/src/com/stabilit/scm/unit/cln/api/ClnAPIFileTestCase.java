@@ -40,7 +40,7 @@ public class ClnAPIFileTestCase {
 		IServiceConnector sc = null;
 		try {
 			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			sc.connect();	// connects to SC, starts observing connection
+			sc.attach();	// connects to SC, starts observing connection
 			
 			IFileService fileServiceA = sc.newFileService("logs");
 			
@@ -65,7 +65,7 @@ public class ClnAPIFileTestCase {
 		} finally {
 			try {
 				// disconnects from SC
-				sc.disconnect();
+				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}

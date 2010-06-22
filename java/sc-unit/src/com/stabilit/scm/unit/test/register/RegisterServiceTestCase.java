@@ -91,7 +91,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	public void registerServiceCall() throws Exception {
 		IRequester req = new Requester();
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
-				"netty.tcp", 16);
+				"netty.tcp", 16, 1000);
 		req.setRequesterConfig(config);
 		req.connect();
 

@@ -14,39 +14,39 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventObject;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
-
 /**
- * The Class SCMPEvent. Event for logging scmp message purpose.
+ * The Class RuntimeEvent. Event for logging runtime message purpose.
  */
-public class SCMPEvent extends EventObject {
+public class RuntimeEvent extends EventObject {
 
-	private static final long serialVersionUID = -7902182048824790108L;
-	private SCMPMessage scmp;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -3539710122841864955L;
+	/** The text. */
+	private String text;
 
 	/**
-	 * Instantiates a new scmp event.
+	 * Instantiates a new runtime event.
 	 * 
 	 * @param source
 	 *            the source
-	 * @param scmp
-	 *            the scmp message instance
+	 * @param text
+	 *            the text
 	 */
-	public SCMPEvent(Object source, SCMPMessage scmp) {
+	public RuntimeEvent(Object source, String text) {
 		super(source);
-		this.scmp = scmp;
+		this.text = text;
 	}
 
 	/**
-	 * Gets the scmp instance.
+	 * Gets the text.
 	 * 
-	 * @return the scmp instance
+	 * @return the text
 	 */
-	public SCMPMessage getSCMP() {
-		return scmp;
+	public String getText() {
+		return text;
 	}
 }

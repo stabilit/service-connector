@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.scm.common.SCVersion;
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**

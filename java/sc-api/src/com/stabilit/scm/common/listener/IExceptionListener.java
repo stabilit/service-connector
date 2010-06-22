@@ -14,53 +14,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
 /**
- * The Class PerformanceEvent. Event for logging performance purpose.
+ * The listener interface for receiving IException events. The class that is interested in processing an IException
+ * event implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIExceptionListener</code> method. When
+ * the IException event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see ExceptionEvent
  */
-public class PerformanceEvent extends EventObject {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -2561926364455371080L;
-
-	/** The method name where performance event fired. */
-	private String methodName;
-
-	/** The time. */
-	private long time;
+public interface IExceptionListener extends EventListener {
 
 	/**
-	 * Instantiates a new performance event.
+	 * Exception event.
 	 * 
-	 * @param source
-	 *            the source
-	 * @param methodName
-	 *            the method name
+	 * @param exception
+	 *            the exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	public PerformanceEvent(Object source, String methodName) {
-		super(source);
-		this.time = System.nanoTime();
-		this.methodName = methodName;
-	}
-
-	/**
-	 * Gets the time.
-	 * 
-	 * @return the time
-	 */
-	public long getTime() {
-		return time;
-	}
-
-	/**
-	 * Gets the method name.
-	 * 
-	 * @return the methodName
-	 */
-	public String getMethodName() {
-		return methodName;
-	}
+	public void exceptionEvent(ExceptionEvent exception) throws Exception;
 }

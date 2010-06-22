@@ -14,52 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.cln.api;
+package com.stabilit.scm.common.listener;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.EventObject;
 
-import com.stabilit.scm.common.service.IPublishService;
-import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
-import com.stabilit.scm.unit.test.SetupTestCases;
+public class StatisticsEvent extends EventObject {
 
-public class ClnAPIPublishTestCase {
+	private static final long serialVersionUID = -8925639053404385202L;
+	
+	private EventObject eventObject;
+	
+	private StatisticsEnum eventType;
 
-	@Before
-	public void setUp() {
-		SetupTestCases.setupAll();
+	public StatisticsEvent(Object source, EventObject eventObject) {
+		super(source);
+		this.eventObject = eventObject;
 	}
 
-	@Test
-	public void testClnAPI() throws Exception {
-		IServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("compression", false);
-
-			// connects to SC, starts observing connection
-			sc.attach();
-
-			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
-			IPublishService publServiceA = sc.newPublishingService(messageHandler, "broadcast");
-			String mask = "ABC-------"; // must not contain % sign
-			publServiceA.subscribe(mask);
-
-			mask = "AAA-------";
-			publServiceA.changeSubscription(mask);
-			publServiceA.unsubscribe();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.detach();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	public EventObject getEventObject() {
+		return eventObject;
 	}
+
+	public StatisticsEnum getEventType() {
+		return eventType;
+	}
+	
+	public void setEventType(StatisticsEnum eventType) {
+		this.eventType = eventType;
+	}
+
 }

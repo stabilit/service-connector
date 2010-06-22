@@ -33,7 +33,7 @@ public interface IServiceConnector {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void connect() throws Exception;
+	public void attach() throws Exception;
 
 	/**
 	 * Disconnects from SC.
@@ -41,7 +41,7 @@ public interface IServiceConnector {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void disconnect() throws Exception;
+	public void detach() throws Exception;
 
 	/**
 	 * Sets the attribute. Attributes for ServiceConnector.

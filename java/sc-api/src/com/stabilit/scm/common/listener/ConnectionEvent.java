@@ -14,54 +14,82 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.conf;
+package com.stabilit.scm.common.listener;
+
+import java.util.EventObject;
 
 /**
- * The Interface ICommunicatorConfig.
- * 
- * @author JTraber
+ * The Class ConnectionEvent. Event for logging connection purpose.
  */
-public interface ICommunicatorConfig {
+public class ConnectionEvent extends EventObject {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -8265225164155917995L;
+
+	/** The offset. */
+	private int offset;
+	/** The length. */
+	private int length;
+	/** The data. */
+	private Object data;
+	/** The port. */
+	private int port;
 
 	/**
-	 * Gets the communicator name.
+	 * Instantiates a new connection event.
 	 * 
-	 * @return the communicator name
+	 * @param source
+	 *            the source
+	 * @param data
+	 *            the data
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
+	 * @param port
+	 *            the port
 	 */
-	public abstract String getCommunicatorName();
+	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
+		super(source);
+		this.offset = offset;
+		this.length = length;
+		this.data = data;
+		this.port = port;		
+	}
+
+	/**
+	 * Gets the data.
+	 * 
+	 * @return the data
+	 */
+	public Object getData() {
+		return data;
+	}
+
+	/**
+	 * Gets the offset.
+	 * 
+	 * @return the offset
+	 */
+	public int getOffset() {
+		return offset;
+	}
+
+	/**
+	 * Gets the length.
+	 * 
+	 * @return the length
+	 */
+	public int getLength() {
+		return length;
+	}
 
 	/**
 	 * Gets the port.
 	 * 
 	 * @return the port
 	 */
-	public abstract int getPort();
-
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public abstract String getHost();
-
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
-
-	/**
-	 * Gets the connection key.
-	 * 
-	 * @return the connection key
-	 */
-	public String getConnectionKey();
-
-	/**
-	 * Gets the max pool size.
-	 * 
-	 * @return the max pool size
-	 */
-	public int getMaxPoolSize();
+	public int getPort() {
+		return port;
+	}
 }

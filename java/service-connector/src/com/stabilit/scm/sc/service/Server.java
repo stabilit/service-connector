@@ -33,8 +33,8 @@ import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
-import com.stabilit.scm.common.log.listener.RuntimePoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
@@ -93,7 +93,7 @@ public class Server {
 		this.occupiedReqList = new HashMap<String, IRequester>();
 
 		ICommunicatorConfig reqConfig = new CommunicatorConfig("SC-Server", this.host, this.portNr, connectionKey,
-				numberOfThreads);
+				numberOfThreads, 1000);
 		// init list of requesters
 		for (int i = 0; i < maxSessions; i++) {
 			IRequester req = new SCRequester();

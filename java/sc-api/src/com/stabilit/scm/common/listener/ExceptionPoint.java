@@ -14,38 +14,64 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IPerformance events. The class that is interested in processing a
- * IPerformance event implements this interface, and the object created with that class is registered with a
- * component using the component's <code>addIPerformanceListener</code> method. When
- * the IPerformance event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see PerformanceEvent
+ * The Class ExceptionPoint. Allows logging on exception level - fire exception.
  */
-public interface IPerformanceListener extends EventListener {
+public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
+
+	/** The exception point. */
+	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
 
 	/**
-	 * Begin.
-	 * 
-	 * @param event
-	 *            the event
-	 * @throws Exception
-	 *             the exception
+	 * Instantiates a new ExceptionPoint.
 	 */
-	public void begin(PerformanceEvent event) throws Exception;
+	private ExceptionPoint() {
+	}
 
 	/**
-	 * End.
+	 * Gets the single instance of ExceptionPoint.
 	 * 
-	 * @param event
-	 *            the event
-	 * @throws Exception
-	 *             the exception
+	 * @return single instance of ExceptionPoint
 	 */
-	public void end(PerformanceEvent event) throws Exception;
+	public static ExceptionPoint getInstance() {
+		return exceptionPoint;
+	}
+
+	/**
+	 * Fire exception.
+	 * 
+	 * @param source
+	 *            the source
+	 * @param th
+	 *            the th
+	 */
+	public void fireException(Object source, Throwable th) {
+		if (getInstance().isEmpty() == false) {
+			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
+			this.fireException(exceptionEvent);
+		}
+	}
+
+	/**
+	 * Fire exception.
+	 * 
+	 * @param exceptionEvent
+	 *            the exception event
+	 */
+	public void fireException(ExceptionEvent exceptionEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				IExceptionListener exceptionListener = (IExceptionListener) localArray[i];
+				exceptionListener.exceptionEvent(exceptionEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

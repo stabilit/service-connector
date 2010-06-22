@@ -31,7 +31,7 @@ public interface ISessionService {
 
 	void setSessionInfo(String string);
 
-	void createSession();
+	void createSession(String string);
 
 	SCMessage execute(SCMessage requestMsg);
 

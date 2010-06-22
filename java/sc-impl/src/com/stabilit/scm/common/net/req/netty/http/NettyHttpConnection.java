@@ -41,12 +41,13 @@ import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.listener.ConnectionPoint;
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -82,7 +83,10 @@ public class NettyHttpConnection implements IConnection {
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
 	/** state of connection. */
-	private boolean isConnected;
+	private boolean connected;
+	private ConnectionKey key;
+	private int keepAliveInterval;
+	private boolean keepAlive;
 
 	/**
 	 * Instantiates a new netty http connection.
@@ -98,8 +102,11 @@ public class NettyHttpConnection implements IConnection {
 		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
-		this.isConnected = false;
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory();
+		this.connected = false;
+		this.keepAliveInterval = 2;
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.keepAliveInterval);
+		this.key = null;
+		this.keepAlive = false;
 	}
 
 	/** {@inheritDoc} */
@@ -127,7 +134,8 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
-		this.isConnected = true;
+		this.connected = true;
+		this.key = new ConnectionKey(this.host, this.port, "netty.http");
 	}
 
 	/** {@inheritDoc} */
@@ -213,6 +221,10 @@ public class NettyHttpConnection implements IConnection {
 		this.host = host;
 	}
 
+	public void setKeepAliveInterval(int keepAliveInterval) {
+
+	}
+
 	/** {@inheritDoc} */
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
@@ -242,6 +254,16 @@ public class NettyHttpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
-		return this.isConnected;
+		return this.connected;
 	}
+
+	@Override
+	public Object getKey() {
+		return this.key;
+	}
+
+	@Override
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+    }
 }

@@ -33,6 +33,8 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	private String connectionKey;
 	/** The number of threads. */
 	private int numberOfThreads;
+	/** The max pool size. */
+	public int maxPoolSize;
 
 	/**
 	 * Instantiates a new communicator configuration.
@@ -53,9 +55,13 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	 *            the connectionKey
 	 * @param numberOfThreads
 	 *            the number of threads
+	 * @param maxPoolSize
+	 *            the max pool size
 	 */
-	public CommunicatorConfig(String communicatorName, String host, int port, String connectionKey, int numberOfThreads) {
+	public CommunicatorConfig(String communicatorName, String host, int port, String connectionKey,
+			int numberOfThreads, int maxPoolSize) {
 		this.communicatorName = communicatorName;
+		this.maxPoolSize = maxPoolSize;
 		this.port = port;
 		this.host = host;
 		this.connectionKey = connectionKey;
@@ -150,5 +156,24 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	 */
 	public void setConnectionKey(String connectionKey) {
 		this.connectionKey = connectionKey;
+	}
+
+	/**
+	 * Gets the max pool size.
+	 * 
+	 * @return the max pool size
+	 */
+	public int getMaxPoolSize() {
+		return maxPoolSize;
+	}
+
+	/**
+	 * Sets the max pool size.
+	 * 
+	 * @param maxPoolSize
+	 *            the new max pool size
+	 */
+	public void setMaxPoolSize(int maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
 	}
 }

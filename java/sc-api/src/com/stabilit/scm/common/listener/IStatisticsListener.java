@@ -14,27 +14,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
-/**
- * The listener interface for receiving IRuntime events. The class that is interested in processing a IRuntime event
- * implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addIRuntimeListener</code> method. When the IRuntime event occurs, that object's appropriate method
- * is invoked.
- * 
- * @see RuntimeEvent
- */
-public interface IRuntimeListener extends EventListener {
+public interface IStatisticsListener extends EventListener {
 
-	/**
-	 * Runtime event.
-	 * 
-	 * @param warning
-	 *            the warning
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void runtimeEvent(RuntimeEvent warning) throws Exception;
+	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
+
 }

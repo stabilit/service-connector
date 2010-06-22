@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.listener.IPerformanceListener;
+import com.stabilit.scm.common.listener.PerformanceEvent;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
-import com.stabilit.scm.common.log.listener.IPerformanceListener;
-import com.stabilit.scm.common.log.listener.PerformanceEvent;
 
 /**
  * The Class PerformanceLogger. Provides functionality of logging an <code>PerformanceEvent</code>.

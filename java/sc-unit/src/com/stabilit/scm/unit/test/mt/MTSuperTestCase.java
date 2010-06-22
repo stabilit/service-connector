@@ -34,7 +34,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.log.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.ReflectionUtil;
@@ -74,7 +74,7 @@ public abstract class MTSuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		RequesterConfigPool config = new RequesterConfigPool();
-		config.load("sc-sim.properties");
+		config.load("session-server.properties");
 		registerReq = new Requester();
 		registerReq.setRequesterConfig(config.getRequesterConfig());
 		registerReq.connect(); // physical connect

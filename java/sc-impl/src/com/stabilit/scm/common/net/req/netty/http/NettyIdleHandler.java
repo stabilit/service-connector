@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,55 +14,39 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.conf;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.common.net.req.netty.http;
+
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.handler.timeout.IdleState;
+import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.jboss.netty.util.Timer;
 
 /**
- * The Interface ICommunicatorConfig.
- * 
  * @author JTraber
+ *
  */
-public interface ICommunicatorConfig {
+public class NettyIdleHandler extends IdleStateHandler {
 
 	/**
-	 * Gets the communicator name.
-	 * 
-	 * @return the communicator name
+	 * @param timer
+	 * @param readerIdleTimeSeconds
+	 * @param writerIdleTimeSeconds
+	 * @param allIdleTimeSeconds
 	 */
-	public abstract String getCommunicatorName();
+	public NettyIdleHandler(Timer timer, int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
+		super(timer, readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
+	}
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public abstract int getPort();
-
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public abstract String getHost();
-
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
-
-	/**
-	 * Gets the connection key.
-	 * 
-	 * @return the connection key
-	 */
-	public String getConnectionKey();
-
-	/**
-	 * Gets the max pool size.
-	 * 
-	 * @return the max pool size
-	 */
-	public int getMaxPoolSize();
+	@Override
+	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
+			throws Exception {
+		System.out.println("NettyIdleHandler.channelIdle()");
+		super.channelIdle(ctx, state, lastActivityTimeMillis);
+		//KeepAlivePoint.getInstance().fireKeepAlive(this, connection);
+	}
 }

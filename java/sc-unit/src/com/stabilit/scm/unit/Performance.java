@@ -23,18 +23,16 @@ package com.stabilit.scm.unit;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
-import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
+import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCDataSession;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 
 /**
@@ -47,21 +45,26 @@ public class Performance {
 		ServiceConnectorCommandFactory serviceCommandFactory = new ServiceConnectorCommandFactory();
 		CommandFactory.setCurrentCommandFactory(serviceCommandFactory);
 		try {
-			// test.startListening();
+			test.startListening();
 			test.startSending();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void startListening() {
-		NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
-		endpoint.setHost("localhost");
-		endpoint.setPort(8080);
-		endpoint.setNumberOfThreads(16);
-
-		endpoint.create();
-		endpoint.runAsync();
+	public void startListening() throws Exception {
+		Responder resp = new Responder();
+		resp.setResponderConfig(new CommunicatorConfig("", "localhost", 8080, "netty.http", 16, 100));
+		resp.create();
+		resp.runAsync();
+		
+//		NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
+//		endpoint.setHost("localhost");
+//		endpoint.setPort(8080);
+//		endpoint.setNumberOfThreads(16);
+//
+//		endpoint.create();
+//		endpoint.runAsync();
 	}
 
 	public void startSending() throws Exception {
@@ -71,7 +74,7 @@ public class Performance {
 		con.setPort(8080);
 
 		IRequester req = new Requester();
-		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16);
+		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16, 1000);
 		req.setRequesterConfig(config);
 		req.connect();
 
@@ -83,10 +86,10 @@ public class Performance {
 		attachCall.setKeepAliveInterval(360);
 		SCMPMessage result = attachCall.invoke();
 
-//		ISessionService session = new SCDataSession("simulation", req);
-//		session.setMessageInfo("message info");
-//		session.setSessionInfo("session info");
-//		session.createSession();
+		// ISessionService session = new SCDataSession("simulation", req);
+		// session.setMessageInfo("message info");
+		// session.setSessionInfo("session info");
+		// session.createSession();
 
 		con.connect();
 		double anzMsg = 100000;
@@ -96,7 +99,7 @@ public class Performance {
 		for (int i = 0; i < anzMsg; i++) {
 			request = new SCMPMessage(buffer);
 			request.setMessageType(SCMPMsgType.ECHO_SC.getName());
-			//request.setSessionId(session.getSessionId());
+			// request.setSessionId(session.getSessionId());
 			request.setHeader(SCMPHeaderAttributeKey.MAX_NODES, 2);
 			resp = con.sendAndReceive(request);
 		}

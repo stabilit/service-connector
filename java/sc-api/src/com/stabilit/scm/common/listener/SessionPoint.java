@@ -14,61 +14,55 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
-/**
- * The Class ExceptionPoint. Allows logging on exception level - fire exception.
- */
-public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
+public final class SessionPoint extends ListenerSupport<ISessionListener> {
 
-	/** The exception point. */
-	private static ExceptionPoint exceptionPoint = new ExceptionPoint();
+	private static SessionPoint sessionPoint = new SessionPoint();
 
-	/**
-	 * Instantiates a new ExceptionPoint.
-	 */
-	private ExceptionPoint() {
+	private SessionPoint() {
 	}
 
-	/**
-	 * Gets the single instance of ExceptionPoint.
-	 * 
-	 * @return single instance of ExceptionPoint
-	 */
-	public static ExceptionPoint getInstance() {
-		return exceptionPoint;
+	public static SessionPoint getInstance() {
+		return sessionPoint;
 	}
 
-	/**
-	 * Fire exception.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param th
-	 *            the th
-	 */
-	public void fireException(Object source, Throwable th) {
+	public void fireCreate(Object source, String sessionId) {
 		if (getInstance().isEmpty() == false) {
-			ExceptionEvent exceptionEvent = new ExceptionEvent(source, th);
-			this.fireException(exceptionEvent);
+			SessionEvent sessionEvent = new SessionEvent(source, sessionId);
+			SessionPoint.getInstance().fireCreate(sessionEvent);
 		}
 	}
 
-	/**
-	 * Fire exception.
-	 * 
-	 * @param exceptionEvent
-	 *            the exception event
-	 */
-	public void fireException(ExceptionEvent exceptionEvent) {
+	public void fireDelete(Object source, String sessionId) {
+		if (getInstance().isEmpty() == false) {
+			SessionEvent sessionEvent = new SessionEvent(source, sessionId);
+			SessionPoint.getInstance().fireDelete(sessionEvent);
+		}
+	}
+
+	public void fireCreate(SessionEvent sessionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
 			try {
-				IExceptionListener exceptionListener = (IExceptionListener) localArray[i];
-				exceptionListener.exceptionEvent(exceptionEvent);
+				ISessionListener sessionListener = (ISessionListener) localArray[i];
+				sessionListener.createSessionEvent(sessionEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void fireDelete(SessionEvent sessionEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISessionListener sessionListener = (ISessionListener) localArray[i];
+				sessionListener.deleteSessionEvent(sessionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

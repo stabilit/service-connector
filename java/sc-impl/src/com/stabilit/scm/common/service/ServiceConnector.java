@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.common.service;
 
+import com.stabilit.scm.cln.call.SCMPAttachCall;
+import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessageHandler;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
@@ -64,16 +66,20 @@ public class ServiceConnector implements IServiceConnector {
 	}
 
 	@Override
-	public void connect() throws Exception {
+	public void attach() throws Exception {
 		this.requester = new Requester();
 		ICommunicatorConfig config = new CommunicatorConfig("server-requester", this.host, this.port,
-				this.connectionKey, this.numberOfThreads);
+				this.connectionKey, this.numberOfThreads, 1000);
 		this.requester.setRequesterConfig(config);
-		this.requester.connect();
+		// TODO attach call
+		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
+		attachCall.invoke();
 	}
 
 	@Override
-	public void disconnect() throws Exception {
+	public void detach() throws Exception {
+
+		// TODO detach
 		try {
 			// physical disconnect
 			this.requester.disconnect();
@@ -113,20 +119,20 @@ public class ServiceConnector implements IServiceConnector {
 	}
 
 	@Override
-	public IFileService newFileService(String string) {
-		
+	public IFileService newFileService(String serviceName) {
+
 		return null;
 	}
 
 	@Override
-	public IPublishService newPublishingService(SCMessageHandler messageHandler, String string) {
-		
+	public IPublishService newPublishingService(SCMessageHandler messageHandler, String serviceName) {
+
 		return null;
 	}
 
 	@Override
-	public ISessionService newSessionService(String string) {
-		
+	public ISessionService newSessionService(String serviceName) {
+
 		return null;
 	}
 }

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.nio.NioHttpRequestThread;
 import com.stabilit.scm.common.res.EndpointAdapter;
 

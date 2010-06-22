@@ -53,6 +53,7 @@ public interface IConstants {
 	public final String SERVER_NAMES = "serverNames";
 	/** The services Names. */
 	public final String SERVICE_NAMES = "serviceNames";
+	public final String MAX_POOL_SIZE = "maxPoolSize";
 
 	/** The logging directory. */
 	public final String LOG_DIR = "log/";

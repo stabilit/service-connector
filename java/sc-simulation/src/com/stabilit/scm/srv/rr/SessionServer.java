@@ -46,14 +46,14 @@ public class SessionServer {
 		
 //			sc.createServer(7000);
 			// connects to SC, starts observing connection
-			sc.connect();	
+			sc.attach();	
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// disconnects from SC
-				sc.disconnect();
+				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}

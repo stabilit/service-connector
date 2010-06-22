@@ -1,4 +1,4 @@
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
 

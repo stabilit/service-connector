@@ -14,28 +14,55 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.log.listener;
+package com.stabilit.scm.common.listener;
 
-import java.util.EventListener;
+import java.util.EventObject;
+
+import com.stabilit.scm.common.log.Level;
 
 /**
- * The listener interface for receiving ILogger events. The class that is interested in processing a ILogger event
- * implements this interface, and the object created with that class is registered with a component using the
- * component's <code>addILoggerListener</code> method. When
- * the ILogger event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see LoggerEvent
+ * The Class LoggerEvent. Event for logging purpose.
  */
-public interface ILoggerListener extends EventListener {
+public class LoggerEvent extends EventObject {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 8286024613410908732L;
+	/** The text. */
+	private String text;
+	/** The level. */
+	private Level level;
 
 	/**
-	 * Log event.
+	 * Instantiates a new logger event.
 	 * 
-	 * @param loggerEvent
-	 *            the logger event
-	 * @throws Exception
-	 *             the exception
+	 * @param source
+	 *            the source
+	 * @param text
+	 *            the text
+	 * @param level
+	 *            the level
 	 */
-	public void logEvent(LoggerEvent loggerEvent) throws Exception;
+	public LoggerEvent(Object source, String text, Level level) {
+		super(source);
+		this.text = text;
+		this.level = level;
+	}
+
+	/**
+	 * Gets the text.
+	 * 
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * Gets the level of logging.
+	 * 
+	 * @return the level
+	 */
+	public Level getLevel() {
+		return level;
+	}
 }

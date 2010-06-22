@@ -41,7 +41,7 @@ public class PublishServer {
 			sc.setAttribute("serviceName", "simulation");
 
 			// connects to SC, starts observing connection
-			sc.connect();
+			sc.attach();
 			Object data = null;
 			String mask = "AVSD-----";
 //			sc.publish(mask, data);			
@@ -51,7 +51,7 @@ public class PublishServer {
 		} finally {
 			try {
 				// disconnects from SC
-				sc.disconnect();
+				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}
