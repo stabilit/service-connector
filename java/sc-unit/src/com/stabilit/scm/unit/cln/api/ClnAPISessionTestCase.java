@@ -50,7 +50,7 @@ public class ClnAPISessionTestCase {
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
-			requestMsg.setCompression(false);
+			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 

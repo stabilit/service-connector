@@ -78,13 +78,11 @@ public abstract class SuperTestCase {
 	@After
 	public void tearDown() throws Exception {
 		req.disconnect();
-		req.destroy();
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		req.disconnect(); // physical disconnect
-		req.destroy();
 		ConnectionPoint.getInstance().clearAll();
 		req = null;
 	}

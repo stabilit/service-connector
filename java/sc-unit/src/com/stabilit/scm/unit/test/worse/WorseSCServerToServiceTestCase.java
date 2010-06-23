@@ -121,6 +121,5 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 	@Override
 	public void tearDown() throws Exception {
 		req.disconnect();
-		req.destroy();
 	}
 }

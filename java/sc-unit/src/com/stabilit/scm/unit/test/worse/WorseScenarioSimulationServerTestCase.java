@@ -176,6 +176,5 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 		this.deRegisterServiceAfter();
 		this.clnDetachAfter();
 		req.disconnect();
-		req.destroy();
 	}
 }

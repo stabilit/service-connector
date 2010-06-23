@@ -108,25 +108,21 @@ public abstract class MTSuperTestCase {
 	public void tearDown() throws Exception {
 		for (IRequester client : this.reqList) {
 			client.disconnect();
-			client.destroy();
 		}
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 
 		deRegisterServiceCall.invoke();
 		registerReq.disconnect();
-		registerReq.destroy();
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		for (IRequester client : this.reqList) {
 			client.disconnect();
-			client.destroy();
 		}
 		if(registerReq != null) {
 			registerReq.disconnect();
-			registerReq.destroy();
 		}		
 		ConnectionPoint.getInstance().clearAll();
 		reqList = null;
