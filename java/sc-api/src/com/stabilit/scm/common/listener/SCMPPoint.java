@@ -21,7 +21,7 @@ import java.util.EventListener;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class SCMPPoint. Allows scmp package information.
+ * The Class SCMPPoint. Allows notifying scmp information.
  */
 public final class SCMPPoint extends ListenerSupport<ISCMPListener> {
 

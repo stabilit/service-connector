@@ -19,7 +19,7 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 /**
- * The Class PerformancePoint. Allows logging performance - fire begin/end.
+ * The Class PerformancePoint. Allows notifying performance - fire begin/end.
  */
 public final class PerformancePoint extends ListenerSupport<IPerformanceListener> {
 

@@ -19,7 +19,7 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 /**
- * The Class ExceptionPoint. Allows logging on exception level - fire exception.
+ * The Class ExceptionPoint. Allows notifying exception - fire exception.
  */
 public final class ExceptionPoint extends ListenerSupport<IExceptionListener> {
 

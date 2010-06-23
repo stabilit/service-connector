@@ -23,7 +23,7 @@ enum StatisticsEnum {
 , CREATE_SESSION, DELETE_SESSION, DECODE_SCMP, ENCODE_SCMP}
 
 /**
- * The Class ConnectionPoint. Allows logging on connection level - fire
+ * The Class ConnectionPoint. Allows collecting statistic information - fire
  * read/write, connect/disconnect.
  */
 public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> {
