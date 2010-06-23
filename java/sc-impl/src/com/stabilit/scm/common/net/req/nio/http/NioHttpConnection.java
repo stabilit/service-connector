@@ -52,6 +52,7 @@ public class NioHttpConnection implements IConnection {
 	/** state of connection. */
 	private boolean isConnected;
 	private ConnectionKey key;
+	private boolean keepAlive;
 
 	/**
 	 * Instantiates a new nio NioHttpConnection.
@@ -176,5 +177,11 @@ public class NioHttpConnection implements IConnection {
 
 	@Override
 	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+	}
+
+	@Override
+	public boolean getKeepAlive() {
+		return keepAlive;
 	}
 }

@@ -52,6 +52,7 @@ public class NioTcpConnection implements IConnection {
 	/** state of connection. */
 	private boolean isConnected;
 	private ConnectionKey key;
+	private boolean keepAlive;
 
 	/**
 	 * Instantiates a new NioTcpConnection.
@@ -178,5 +179,11 @@ public class NioTcpConnection implements IConnection {
 
 	@Override
 	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+	}
+
+	@Override
+	public boolean getKeepAlive() {
+		return keepAlive;
 	}
 }

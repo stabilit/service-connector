@@ -266,4 +266,9 @@ public class NettyHttpConnection implements IConnection {
 	public void setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
     }
+
+	@Override
+	public boolean getKeepAlive() {
+		return keepAlive;
+	}
 }
