@@ -29,12 +29,10 @@ import com.stabilit.scm.cln.service.SCMessage;
  */
 public interface ISessionService {
 
-	void setSessionInfo(String string);
+	void createSession(String sessionInfo) throws Exception;
 
-	void createSession(String string);
+	SCMessage execute(SCMessage requestMsg)  throws Exception;
 
-	SCMessage execute(SCMessage requestMsg);
-
-	void deleteSession();
+	void deleteSession() throws Exception;
 
 }

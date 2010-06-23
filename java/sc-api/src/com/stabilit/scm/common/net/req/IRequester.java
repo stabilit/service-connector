@@ -35,14 +35,6 @@ public interface IRequester {
 	public void disconnect() throws Exception;
 
 	/**
-	 * Destroy.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void destroy() throws Exception;
-
-	/**
 	 * Connect.
 	 * 
 	 * @throws Exception

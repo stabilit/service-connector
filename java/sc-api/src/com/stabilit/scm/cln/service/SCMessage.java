@@ -23,38 +23,46 @@ package com.stabilit.scm.cln.service;
 
 /**
  * @author JTraber
- *
  */
 public class SCMessage {
 
-	/**
-	 * @param object
-	 */
-	public SCMessage(Object object) {
-	}
+	private String messageInfo;
+	private Boolean compressed;
+	private Object data;
 
-	/**
-	 * 
-	 */
 	public SCMessage() {
+		this.messageInfo = null;
+		this.compressed = null;
+		this.data = null;
 	}
 
-	public void setData(byte[] buffer) {
+	public SCMessage(Object data) {
+		this();
+		this.data = data;
 	}
 
-	public void setMessageInfo(String string) {
+	public void setMessageInfo(String messageInfo) {
+
+		this.messageInfo = messageInfo;
 	}
 
-	public void setCompression(boolean b) {
+	public String getMessageInfo() {
+		return messageInfo;
 	}
 
-	public boolean isCompression() {
-		
-		return false;
+	public Boolean isCompressed() {
+		return compressed;
 	}
 
+	public void setCompressed(Boolean compressed) {
+		this.compressed = compressed;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+	
 	public Object getData() {
-		
-		return null;
+		return this.data;
 	}
 }
