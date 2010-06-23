@@ -175,13 +175,4 @@ public class NioHttpConnection implements IConnection {
 		return this.key;
 	}
 
-	@Override
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-	}
-
-	@Override
-	public boolean getKeepAlive() {
-		return keepAlive;
-	}
 }

@@ -75,8 +75,4 @@ public interface IConnection extends ICommunicationPoint {
 	 */
 	public Object getKey();
 
-	void setKeepAlive(boolean keepAlive);
-	
-	boolean getKeepAlive();
-
 }

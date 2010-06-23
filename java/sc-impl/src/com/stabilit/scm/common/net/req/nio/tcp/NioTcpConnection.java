@@ -35,7 +35,8 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NioTcpConnection. Concrete connection implementation on Nio base for Tcp.
+ * The Class NioTcpConnection. Concrete connection implementation on Nio base
+ * for Tcp.
  */
 public class NioTcpConnection implements IConnection {
 
@@ -74,16 +75,18 @@ public class NioTcpConnection implements IConnection {
 		socketChannel.configureBlocking(true);
 		socketChannel.connect(new InetSocketAddress(this.host, this.port));
 		this.key = new ConnectionKey(this.host, this.port, "nio.tcp");
-		ConnectionPoint.getInstance().fireConnect(this, this.socketChannel.socket().getLocalPort());
+		ConnectionPoint.getInstance().fireConnect(this,
+				this.socketChannel.socket().getLocalPort());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionPoint.getInstance().fireDisconnect(this, this.socketChannel.socket().getLocalPort());
+		ConnectionPoint.getInstance().fireDisconnect(this,
+				this.socketChannel.socket().getLocalPort());
 		socketChannel.close();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
@@ -93,11 +96,13 @@ public class NioTcpConnection implements IConnection {
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
+		encoderDecoder = EncoderDecoderFactory
+				.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 		byte[] byteWriteBuffer = baos.toByteArray();
 		ByteBuffer writeBuffer = ByteBuffer.wrap(byteWriteBuffer);
-		ConnectionPoint.getInstance().fireWrite(this, this.socketChannel.socket().getLocalPort(), byteWriteBuffer);
+		ConnectionPoint.getInstance().fireWrite(this,
+				this.socketChannel.socket().getLocalPort(), byteWriteBuffer);
 		socketChannel.write(writeBuffer);
 		// read response
 		ByteBuffer byteBuffer = ByteBuffer.allocate(1 << 12); // 8kb buffer
@@ -111,12 +116,15 @@ public class NioTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		// parse headline
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory
+				.getDefaultFrameDecoder();
 		byte[] byteReadBuffer = byteBuffer.array();
-		ConnectionPoint.getInstance().fireRead(this, this.socketChannel.socket().getLocalPort(), byteReadBuffer, 0,
+		ConnectionPoint.getInstance().fireRead(this,
+				this.socketChannel.socket().getLocalPort(), byteReadBuffer, 0,
 				bytesRead);
 
-		int scmpLengthHeadlineInc = scmpFrameDecoder.parseFrameSize(byteReadBuffer);
+		int scmpLengthHeadlineInc = scmpFrameDecoder
+				.parseFrameSize(byteReadBuffer);
 		baos = new ByteArrayOutputStream();
 		baos.write(byteBuffer.array(), 0, bytesRead);
 		// continues reading until http frame is complete
@@ -136,7 +144,8 @@ public class NioTcpConnection implements IConnection {
 		}
 		baos.close();
 		byte[] buffer = baos.toByteArray();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
+		encoderDecoder = EncoderDecoderFactory
+				.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
 		bais.close();
@@ -175,15 +184,5 @@ public class NioTcpConnection implements IConnection {
 	@Override
 	public Object getKey() {
 		return this.key;
-	}
-
-	@Override
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-	}
-
-	@Override
-	public boolean getKeepAlive() {
-		return keepAlive;
 	}
 }

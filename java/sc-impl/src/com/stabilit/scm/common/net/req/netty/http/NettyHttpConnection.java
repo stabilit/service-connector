@@ -86,7 +86,6 @@ public class NettyHttpConnection implements IConnection {
 	private boolean connected;
 	private ConnectionKey key;
 	private int keepAliveInterval;
-	private boolean keepAlive;
 
 	/**
 	 * Instantiates a new netty http connection.
@@ -104,9 +103,8 @@ public class NettyHttpConnection implements IConnection {
 		this.localSocketAddress = null;
 		this.connected = false;
 		this.keepAliveInterval = 2;
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.keepAliveInterval);
+		this.pipelineFactory = null;
 		this.key = null;
-		this.keepAlive = false;
 	}
 
 	/** {@inheritDoc} */
@@ -120,7 +118,10 @@ public class NettyHttpConnection implements IConnection {
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		// this.bootstrap.setOption("connectTimeoutMillis", 1000000);
-		this.bootstrap.setPipelineFactory(pipelineFactory);
+		if (this.pipelineFactory == null) {
+			this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.keepAliveInterval);
+		}
+		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 		this.operationListener = new NettyOperationListener();
@@ -222,7 +223,7 @@ public class NettyHttpConnection implements IConnection {
 	}
 
 	public void setKeepAliveInterval(int keepAliveInterval) {
-
+        this.keepAliveInterval = keepAliveInterval;
 	}
 
 	/** {@inheritDoc} */
@@ -262,13 +263,4 @@ public class NettyHttpConnection implements IConnection {
 		return this.key;
 	}
 
-	@Override
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-    }
-
-	@Override
-	public boolean getKeepAlive() {
-		return keepAlive;
-	}
 }

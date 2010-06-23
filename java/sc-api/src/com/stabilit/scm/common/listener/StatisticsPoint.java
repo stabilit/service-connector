@@ -20,7 +20,7 @@ import java.util.EventListener;
 
 enum StatisticsEnum {
 	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME
-, CREATE_SESSION, DELETE_SESSION, DECODE_SCMP, ENCODE_SCMP}
+, CREATE_SESSION, DELETE_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE}
 
 /**
  * The Class ConnectionPoint. Allows collecting statistic information - fire
@@ -37,6 +37,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	private IRuntimeListener runtimeListener;
 	private ISessionListener sessionListener;
 	private ISCMPListener scmpListener;
+	private IKeepAliveListener keepAliveListener;
 
 	/**
 	 * Instantiates a new connection point.
@@ -48,6 +49,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		this.runtimeListener = new StatisticsRuntimeListener();
 		this.sessionListener = new StatisticsSessionListener();
 		this.scmpListener = new StatisticsSCMPListener();
+		this.keepAliveListener = new StatisticsKeepAliveListener();
 	}
 
 	/**
@@ -68,6 +70,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			RuntimePoint.getInstance().addListener(runtimeListener);
 			SessionPoint.getInstance().addListener(sessionListener);
 			SCMPPoint.getInstance().addListener(scmpListener);
+			KeepAlivePoint.getInstance().addListener(keepAliveListener);
 		}
 		super.addListener(listener);
 	}
@@ -82,6 +85,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			RuntimePoint.getInstance().removeListener(runtimeListener);
 			SessionPoint.getInstance().removeListener(sessionListener);
 			SCMPPoint.getInstance().removeListener(scmpListener);
+			KeepAlivePoint.getInstance().removeListener(keepAliveListener);
 		}
 	}
 
@@ -217,6 +221,18 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 					scmpEvent.getSource(), scmpEvent);
 			statisticsEvent.setEventType(StatisticsEnum.ENCODE_SCMP);
 			fireStatistics(statisticsEvent);									
+		}
+	}
+	// member class
+	class StatisticsKeepAliveListener implements IKeepAliveListener {
+
+		@Override
+		public void keepAliveEvent(KeepAliveEvent keepAliveEvent)
+				throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					keepAliveEvent.getSource(), keepAliveEvent);
+			statisticsEvent.setEventType(StatisticsEnum.KEEP_ALIVE);
+			fireStatistics(statisticsEvent);					
 		}
 	}
 }

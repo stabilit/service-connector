@@ -22,40 +22,75 @@
 package com.stabilit.scm.common.net.req;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.IKeepAliveListener;
+import com.stabilit.scm.common.listener.KeepAliveEvent;
+import com.stabilit.scm.common.listener.KeepAlivePoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.listener.RuntimePoint;
 
 /**
  * @author JTraber
  */
 public class ConnectionPool implements IConnectionPool, IFactoryable {
-
 	private int maxConnections;
-	private List<IConnection> freePoolItemList;
-	private List<IConnection> usedPoolItemList; // TODO change to a better collection - remove is slow and happens very often
-	private ConnectionKey key;
+	private Lock lock;
+	private PoolArray freePoolArray;
+	private PoolArray usedPoolArray;
+	private PoolArray keepAlivePoolArray;
 
-	public static IConnection useConnection(ICommunicatorConfig communicatorConfig) throws Exception {
-		IConnectionPool connectionPool = ConnectionPoolFactory.newInstance(communicatorConfig);
-		return connectionPool.getConnection(); // return an already connected live instance
+	private ConnectionKey key;
+	private static IKeepAliveListener keepAliveListener = new ConnectionPoolKeepAliveListener();
+
+	static {
+		KeepAlivePoint.getInstance().addListener(keepAliveListener);
+	}
+
+	public static IConnection useConnection(
+			ICommunicatorConfig communicatorConfig) throws Exception {
+		IConnectionPool connectionPool = ConnectionPoolFactory
+				.newInstance(communicatorConfig);
+		return connectionPool.getConnection(); // return an already connected
+		// live instance
 	}
 
 	public static void freeConnection(IConnection connection) throws Exception {
 		ConnectionKey connectionKey = (ConnectionKey) connection.getKey();
-		IConnectionPool connectionPool = (IConnectionPool) ConnectionPoolFactory.newInstance(connectionKey);
+		IConnectionPool connectionPool = (IConnectionPool) ConnectionPoolFactory
+				.newInstance(connectionKey);
 		connectionPool.giveBackConnection(connection);
 	}
 
 	protected ConnectionPool(ICommunicatorConfig reqConfig) {
-		this.key = new ConnectionKey(reqConfig.getHost(), reqConfig.getPort(), reqConfig.getConnectionKey());
+		this.key = new ConnectionKey(reqConfig.getHost(), reqConfig.getPort(),
+				reqConfig.getConnectionKey());
+		this.lock = new ReentrantLock();
 		this.maxConnections = reqConfig.getMaxPoolSize();
-		this.freePoolItemList = Collections.synchronizedList(new ArrayList<IConnection>());
-		this.usedPoolItemList = Collections.synchronizedList(new ArrayList<IConnection>());	
+		this.freePoolArray = new PoolArray();
+		this.usedPoolArray = new PoolArray();
+		this.keepAlivePoolArray = new PoolArray();
+	}
+
+	public void keepAliveConnection(IConnection connection) throws Exception {
+		try {
+			lock.lock();
+			if (this.freePoolArray.remove(connection) == null) {
+				// this connection is no more free
+				RuntimePoint
+						.getInstance()
+						.fireRuntime(this,
+								"keep alive failed for connection, not found in free list");
+				return;
+			}
+			this.keepAlivePoolArray.add(connection);
+			// send keep alive
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -66,41 +101,137 @@ public class ConnectionPool implements IConnectionPool, IFactoryable {
 
 	@Override
 	public void giveBackConnection(IConnection connection) throws Exception {
-		if (this.usedPoolItemList.remove(connection) == false) {
-			LoggerPoint.getInstance().fireInfo(this, "connection does not exist - not possible to free");
-			throw new InvalidParameterException();
+		try {
+			lock.lock();
+			if (this.usedPoolArray.remove(connection) == null) {
+				LoggerPoint.getInstance().fireInfo(this,
+						"connection does not exist - not possible to free");
+				throw new InvalidParameterException();
+			}
+			this.freePoolArray.add(connection);
+		} finally {
+			lock.unlock();
 		}
-		connection.setKeepAlive(true);
-		this.freePoolItemList.add(connection);
 	}
 
-	private synchronized IConnection getFreeConnection() throws Exception {
-		IConnection connection = null;
-		if (freePoolItemList.size() <= 0) {			
-			// no free connection available, can we create a one?
-			if (usedPoolItemList.size() >= maxConnections) {
-				// no we can't
-				throw new ConnectionPoolException();			
+	private IConnection getFreeConnection() throws Exception {
+		try {
+			lock.lock();
+			IConnection connection = null;
+			if (freePoolArray.getSize() <= 0) {
+				// no free connection available, can we create a one?
+				if (usedPoolArray.getSize() >= maxConnections) {
+					// no we can't
+					throw new ConnectionPoolException();
+				}
+				// we create a new one
+				ConnectionFactory connectionFactory = new ConnectionFactory();
+				connection = connectionFactory.newInstance(this.key.getCon());
+				connection.setHost(this.key.getHost());
+				connection.setPort(this.key.getPort());
+				connection.connect(); // can throw an exception
+				usedPoolArray.add(connection);
+				return connection;
 			}
-			// we create a new one
-			ConnectionFactory connectionFactory = new ConnectionFactory();
-			connection = connectionFactory.newInstance(this.key.getCon());
-			connection.setHost(this.key.getHost());
-			connection.setPort(this.key.getPort());
-			connection.connect();  // can throw an exception
-			connection.setKeepAlive(false);
-			usedPoolItemList.add(connection);
+			// we have a connection left
+			connection = freePoolArray.removeFirst();
+			usedPoolArray.add(connection);
 			return connection;
-		} 
-		// we have a connection left
-	    connection = freePoolItemList.remove(0);
-		connection.setKeepAlive(false);
-		usedPoolItemList.add(connection);
-		return connection;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public IFactoryable newInstance() {
 		return this; // a singleton
+	}
+
+	class PoolArray {
+		private IConnection[] poolArray;
+		private int size;
+
+		public PoolArray() {
+			this.poolArray = new IConnection[maxConnections];
+			this.size = 0;
+		}
+
+		public int getSize() {
+			return size;
+		}
+
+		public void add(IConnection connection) {
+			this.poolArray[this.size - 1] = connection;
+			this.size++;
+		}
+
+		public IConnection removeFirst() {
+			if (this.size <= 0) {
+				return null;
+			}
+			for (int i = 0; i < this.size; i++) {
+				if (this.poolArray[i] != null) {
+					// we found one
+					IConnection connection = this.poolArray[i];
+					if (i == this.size - 1) {
+						this.poolArray[i] = null;
+					} else {
+						this.poolArray[i] = this.poolArray[this.size - 1];
+						this.poolArray[this.size - 1] = null;
+					}
+					this.size--;
+					return connection;
+				}
+			}
+			return null;
+		}
+
+		public IConnection remove(IConnection connection) {
+			if (this.size <= 0) {
+				return null;
+			}
+			for (int i = 0; i < this.size; i++) {
+				if (this.poolArray[i] == connection) {
+					// we found it
+					if (i == this.size - 1) {
+						this.poolArray[i] = null;
+					} else {
+						this.poolArray[i] = this.poolArray[this.size - 1];
+						this.poolArray[this.size - 1] = null;
+					}
+					this.size--;
+					return connection;
+				}
+			}
+			return null;
+		}
+	}
+
+	private static class ConnectionPoolKeepAliveListener implements
+			IKeepAliveListener {
+
+		@Override
+		public void keepAliveEvent(KeepAliveEvent keepAliveEvent)
+				throws Exception {
+			IConnection connection = keepAliveEvent.getConnection();
+			if (connection == null) {
+				RuntimePoint.getInstance().fireRuntime(this,
+						"keep alive event for null connection received");
+				return;
+			}
+			ConnectionKey connectionKey = (ConnectionKey) connection.getKey();
+			ConnectionPool connectionPool = (ConnectionPool) ConnectionPoolFactory
+					.newInstance(connectionKey);
+			if (connectionPool == null) {
+				RuntimePoint
+						.getInstance()
+						.fireRuntime(
+								this,
+								"keep alive event connection received which has no connection pool for given key = "
+										+ connectionKey);
+				return;
+			}
+			connectionPool.keepAliveConnection(connection);
+		}
 	}
 }
