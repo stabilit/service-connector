@@ -19,7 +19,7 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 /**
- * The Class ConnectionPoint. Allows notifying on connection level - fire read/write, connect/disconnect.
+ * The Class ConnectionPoint. Allows listening for connection events - fire read/write, connect/disconnect.
  */
 public final class ConnectionPoint extends ListenerSupport<IConnectionListener> {
 
