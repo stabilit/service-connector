@@ -316,13 +316,6 @@ public class Server {
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				continue;
-			} finally {
-				try {
-					req.destroy();
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
-					continue;
-				}
 			}
 		}
 	}

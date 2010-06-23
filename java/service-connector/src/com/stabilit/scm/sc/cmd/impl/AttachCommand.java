@@ -121,11 +121,12 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 
-				// KeepAliveTimeout && KeepAliveInterval
-				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
-						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
-						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
-				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
+				//TODO verify that
+//				// KeepAliveTimeout && KeepAliveInterval
+//				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
+//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
+//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
+//				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
