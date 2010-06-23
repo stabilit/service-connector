@@ -23,6 +23,7 @@ package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessageHandler;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
@@ -40,6 +41,7 @@ public class ServiceConnector implements IServiceConnector {
 	private String host;
 	/** The port of the SC. */
 	private int port;
+	private int maxPoolSize;
 	/** The number of threads to use on client side. */
 	private int numberOfThreads;
 	/** The connection key, identifies low level component to use for communication (netty, nio). */
@@ -57,11 +59,21 @@ public class ServiceConnector implements IServiceConnector {
 	 * @param port
 	 *            the port
 	 */
-	public ServiceConnector(String host, int port, String connectionKey, int numberOfThreads) {
+	public ServiceConnector(String host, int port, String connectionKey, int numberOfThreads, int maxPoolSize) {
 		this.host = host;
 		this.port = port;
 		this.connectionKey = connectionKey;
 		this.numberOfThreads = numberOfThreads;
+		this.maxPoolSize = maxPoolSize;
+		this.attributes = new MapBean<Object>();
+	}
+
+	public ServiceConnector(String host, int port) {
+		this.host = host;
+		this.port = port;
+		this.connectionKey = "netty.http";
+		this.numberOfThreads = 16;
+		this.maxPoolSize = 1000;
 		this.attributes = new MapBean<Object>();
 	}
 
@@ -69,24 +81,18 @@ public class ServiceConnector implements IServiceConnector {
 	public void attach() throws Exception {
 		this.requester = new Requester();
 		ICommunicatorConfig config = new CommunicatorConfig("server-requester", this.host, this.port,
-				this.connectionKey, this.numberOfThreads, 1000);
+				this.connectionKey, this.numberOfThreads, this.maxPoolSize);
 		this.requester.setRequesterConfig(config);
-		// TODO attach call
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		attachCall.invoke();
 	}
 
 	@Override
 	public void detach() throws Exception {
-
-		// TODO detach
-		try {
-			// physical disconnect
-			this.requester.disconnect();
-		} finally {
-			// clean up in any case
-			this.requester.destroy();
-		}
+		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
+		detachCall.invoke();
+		// physical disconnect
+		this.requester.disconnect();
 	}
 
 	@Override
@@ -108,6 +114,14 @@ public class ServiceConnector implements IServiceConnector {
 
 	public void setConnectionKey(String connectionKey) {
 		this.connectionKey = connectionKey;
+	}
+
+	public int getMaxPoolSize() {
+		return maxPoolSize;
+	}
+
+	public void setMaxPoolSize(int maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
 	}
 
 	public String getHost() {
@@ -132,7 +146,6 @@ public class ServiceConnector implements IServiceConnector {
 
 	@Override
 	public ISessionService newSessionService(String serviceName) {
-
-		return null;
+		return new SessionService(serviceName, this.requester);
 	}
 }

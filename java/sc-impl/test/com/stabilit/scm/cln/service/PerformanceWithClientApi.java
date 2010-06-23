@@ -49,8 +49,7 @@ public class PerformanceWithClientApi {
 			sc.attach();
 
 			ISessionService dataSessionA = sc.newSessionService("simulation");
-			dataSessionA.setSessionInfo("sessionInfo");
-			//dataSessionA.createSession();
+			dataSessionA.createSession("sessionInfo");
 
 			double anzMsg = 100000;
 			byte[] buffer = new byte[128];

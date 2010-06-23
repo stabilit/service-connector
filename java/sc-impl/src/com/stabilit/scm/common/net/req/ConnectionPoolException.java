@@ -26,5 +26,6 @@ package com.stabilit.scm.common.net.req;
  *
  */
 public class ConnectionPoolException extends Exception {
-	//TODO
+
+	private static final long serialVersionUID = 7588774571549772003L;
 }

@@ -117,7 +117,7 @@ public class NettyHttpConnection implements IConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		// this.bootstrap.setOption("connectTimeoutMillis", 1000000);
+		// this.bootstrap.setOption("connectTimeoutMillis", 1000000); TODO
 		if (this.pipelineFactory == null) {
 			this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.keepAliveInterval);
 		}

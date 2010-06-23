@@ -110,7 +110,7 @@ public class SCDataSession implements ISCSession {
 		SCMPMessage scmpReply = null;
 
 		this.clnDataCall.setMessagInfo(this.messageInfo);
-		this.clnDataCall.setCompression(message.isCompression());
+		this.clnDataCall.setCompressed(message.isCompressed());
 		this.clnDataCall.setRequestBody(message.getData());
 
 		// if group call is requested - invoke group call

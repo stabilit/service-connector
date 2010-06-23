@@ -21,13 +21,9 @@
  */
 package com.stabilit.scm.common.service;
 
-
 public class ServiceConnectorFactory {
 
-	public static IServiceConnector newInstance(String string, int i) {
-		
-		return null;
+	public static IServiceConnector newInstance(String host, int port) {
+		return new ServiceConnector(host, port);
 	}
-	
-	
 }

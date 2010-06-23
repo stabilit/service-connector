@@ -210,12 +210,6 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void destroy() throws Exception {
-		this.connection.destroy();
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void disconnect() throws Exception {
 		ConnectionPool.freeConnection(this.connection);
 	}

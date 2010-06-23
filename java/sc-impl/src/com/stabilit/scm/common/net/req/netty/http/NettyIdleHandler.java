@@ -48,5 +48,5 @@ public class NettyIdleHandler extends IdleStateHandler {
 		System.out.println("NettyIdleHandler.channelIdle()");
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		//KeepAlivePoint.getInstance().fireKeepAlive(this, connection);
-	}
+	}	
 }

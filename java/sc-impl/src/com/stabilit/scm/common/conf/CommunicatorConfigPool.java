@@ -77,13 +77,18 @@ public abstract class CommunicatorConfigPool {
 			comConfigList.add(reqConfig);
 
 			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
-			int maxPoolSize = Integer.parseInt((String) props.get(respName + IConstants.MAX_POOL_SIZE));
+			String maxPoolSizeValue = (String) props.get(respName + IConstants.MAX_POOL_SIZE);
+			
+			if (maxPoolSizeValue != null) {
+				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
+				reqConfig.setMaxPoolSize(maxPoolSize);
+			}
 
 			reqConfig.setPort(port);
 			reqConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
 			reqConfig.setConnectionKey((String) props.get(respName + IConstants.CON_QUALIFIER));
 			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName + IConstants.THREAD_QUALIFIER)));
-			reqConfig.setMaxPoolSize(maxPoolSize);
+
 		}
 		this.loggerKey = props.getProperty("root.logger");
 	}
