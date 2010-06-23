@@ -1,4 +1,4 @@
-package com.stabilit.scm.sc.log;
+package com.stabilit.scm.sc.listener;
 
 import java.util.EventObject;
 
