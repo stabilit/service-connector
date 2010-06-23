@@ -18,78 +18,35 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventObject;
 
+import com.stabilit.scm.common.net.req.IConnection;
+
 /**
- * The Class ConnectionEvent. Event for connection lifecycle.
+ * The Class KeepAliveEvent. Event telling that given connection did run in idle timeout.
  */
-public class ConnectionEvent extends EventObject {
+public class KeepAliveEvent extends EventObject {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -8265225164155917995L;
-
-	/** The offset. */
-	private int offset;
-	/** The length. */
-	private int length;
-	/** The data. */
-	private Object data;
-	/** The port. */
-	private int port;
+	private static final long serialVersionUID = 4103386157728170188L;
+	/** The connection. */
+	private IConnection connection;
 
 	/**
-	 * Instantiates a new connection event.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param data
-	 *            the data
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
-	 * @param port
-	 *            the port
+	 * Instantiates a new keep alive event.
+	 *
+	 * @param source the source
+	 * @param connection the connection
 	 */
-	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
+	public KeepAliveEvent(Object source, IConnection connection) {
 		super(source);
-		this.offset = offset;
-		this.length = length;
-		this.data = data;
-		this.port = port;		
+		this.connection = connection;
 	}
 
 	/**
-	 * Gets the data.
-	 * 
-	 * @return the data
+	 * Gets the connection.
+	 *
+	 * @return the connection
 	 */
-	public Object getData() {
-		return data;
-	}
-
-	/**
-	 * Gets the offset.
-	 * 
-	 * @return the offset
-	 */
-	public int getOffset() {
-		return offset;
-	}
-
-	/**
-	 * Gets the length.
-	 * 
-	 * @return the length
-	 */
-	public int getLength() {
-		return length;
-	}
-
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
+	public IConnection getConnection() {
+		return connection;
 	}
 }

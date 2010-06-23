@@ -16,80 +16,22 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.listener;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
 /**
- * The Class ConnectionEvent. Event for connection lifecycle.
+ * The listener interface for receiving keep alive events. Each keep alive event points to a connection
+ * for type IConnection and tells, that given connection has no activity for given idle timeout
+ * 
+ * @see KeepAliveEvent
  */
-public class ConnectionEvent extends EventObject {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -8265225164155917995L;
-
-	/** The offset. */
-	private int offset;
-	/** The length. */
-	private int length;
-	/** The data. */
-	private Object data;
-	/** The port. */
-	private int port;
+public interface IKeepAliveListener extends EventListener {
 
 	/**
-	 * Instantiates a new connection event.
-	 * 
-	 * @param source
-	 *            the source
-	 * @param data
-	 *            the data
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
-	 * @param port
-	 *            the port
+	 * Keep alive event.
+	 *
+	 * @param keepAliveEvent the keep alive event
+	 * @throws Exception the exception
 	 */
-	public ConnectionEvent(Object source, int port, Object data, int offset, int length) {
-		super(source);
-		this.offset = offset;
-		this.length = length;
-		this.data = data;
-		this.port = port;		
-	}
+	public void keepAliveEvent(KeepAliveEvent keepAliveEvent) throws Exception;
 
-	/**
-	 * Gets the data.
-	 * 
-	 * @return the data
-	 */
-	public Object getData() {
-		return data;
-	}
-
-	/**
-	 * Gets the offset.
-	 * 
-	 * @return the offset
-	 */
-	public int getOffset() {
-		return offset;
-	}
-
-	/**
-	 * Gets the length.
-	 * 
-	 * @return the length
-	 */
-	public int getLength() {
-		return length;
-	}
-
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
-	}
 }
