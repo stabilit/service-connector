@@ -33,6 +33,7 @@ import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -67,6 +68,7 @@ public class Server {
 	private List<IRequester> freeReqList;
 	/** The occupied requester list. */
 	private Map<String, IRequester> occupiedReqList;
+	private IContext serverContext;
 
 	/**
 	 * Instantiates a new server.
@@ -87,18 +89,19 @@ public class Server {
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		IResponder responder = responderRegistry.getCurrentResponder();
 		ICommunicatorConfig respConfig = responder.getResponderConfig();
-		String connectionKey = respConfig.getConnectionKey();
+		String connectionKey = respConfig.getConnectionType();
 		int numberOfThreads = respConfig.getNumberOfThreads();
 		this.host = socketAddress.getHostName();
 		this.freeReqList = new ArrayList<IRequester>();
 		this.occupiedReqList = new HashMap<String, IRequester>();
 
 		ICommunicatorConfig reqConfig = new CommunicatorConfig("SC-Server", this.host, this.portNr, connectionKey,
-				numberOfThreads, 1000);
+				numberOfThreads, 1000, 60, 10);
+
+		this.serverContext = new ServerContext(this.host, this.portNr, connectionKey);
 		// init list of requesters
 		for (int i = 0; i < maxSessions; i++) {
-			IRequester req = new SCRequester();
-			req.setRequesterConfig(reqConfig);
+			IRequester req = new SCRequester(this.serverContext);
 			freeReqList.add(req);
 		}
 	}

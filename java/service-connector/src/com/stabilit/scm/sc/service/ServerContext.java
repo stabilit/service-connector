@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,44 +14,35 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.sc.service;
 
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.net.req.ConnectionPool;
+import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
- * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
- * 
  * @author JTraber
  */
-public class SCRequester extends Requester {
+public class ServerContext implements IContext {
+
+	private IConnectionPool connectionPool;
 
 	/**
-	 * @param context
+	 * @param host
+	 * @param portNr
+	 * @param connectionKey
 	 */
-	public SCRequester(IContext context) {
-		super(context);
+	public ServerContext(String host, int portNr, String connectionKey) {
+		this.connectionPool = new ConnectionPool(host, portNr, connectionKey);
 	}
 
-	/**
-	 * Send and receive.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the sCMP
-	 * @throws Exception
-	 *             the exception
-	 */
 	@Override
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		try {
-			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
-			return connection.sendAndReceive(scmp);
-		} finally {
-			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-		}
+	public IConnectionPool getConnectionPool() {
+		return this.connectionPool;
 	}
 }
