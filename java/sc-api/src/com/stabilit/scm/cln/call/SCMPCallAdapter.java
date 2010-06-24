@@ -17,6 +17,7 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -132,6 +133,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		return this.responseMessage;
 	}
 
+	@Override
+	public void invoke(ISCMPCallback callback) throws Exception {
+		this.requestMessage.setMessageType(getMessageType().getName());
+		requester.send(this.requestMessage, callback);
+		return;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getRequest() {
@@ -201,6 +209,11 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			return message;
 		}
 
+		@Override
+		public void invoke(ISCMPCallback callback) throws Exception {
+		   throw new UnsupportedOperationException();	
+		}
+		
 		/** {@inheritDoc} */
 		@Override
 		public void setRequestBody(Object body) {

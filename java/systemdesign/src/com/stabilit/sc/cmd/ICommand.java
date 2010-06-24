@@ -10,6 +10,5 @@ public interface ICommand {
 	public ICommand newCommand();
 	
 	public void run(IRequest request, IResponse response) throws CommandException;
-
-
+	
 }

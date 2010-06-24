@@ -26,7 +26,9 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
+import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.ICommandCallback;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
@@ -61,6 +63,9 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	private SCMPCompositeSender compositeSender = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
+	
+	private ICommandCallback commandCallback = null;
+
 
 	/**
 	 * Instantiates a new NettyHttpResponderRequestHandler.
@@ -145,6 +150,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
 				PerformancePoint.getInstance().fireBegin(command, "run");
+				if (command.isAsynchronous() && command instanceof IAsyncCommand) {
+					if (commandCallback == null) {
+					    commandCallback = new NettyHttpCommandCallback(ctx, command, request, response);
+					}
+					((IAsyncCommand)command).run(request, response, commandCallback);
+					commandRequest = null;
+					return;
+				}
 				command.run(request, response);
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (HasFaultResponseException ex) {
@@ -199,4 +212,5 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			response.write();
 		}
 	}
+	
 }

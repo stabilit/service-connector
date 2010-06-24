@@ -14,77 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.net.req;
+package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.common.net.ICommunicationPoint;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
 
 /**
- * The Interface IConnection abstracts any connection to a responder.
- * 
- * @author JTraber
+ * The Interface ICommand.
  */
-public interface IConnection extends ICommunicationPoint {
+public interface IAsyncCommand extends ICommand {
 
 	/**
-	 * Connect.
+	 * Run command.
 	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @throws Exception
 	 *             the exception
 	 */
-	void connect() throws Exception;
-
+	public void run(IRequest request, IResponse response, ICommandCallback callback) throws Exception;
+	
 	/**
-	 * Send and receive synchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
-	 * @throws Exception
-	 *             the exception
+	 * Checks if is asynchronous.
+	 *
+	 * @return true, if is asynchronous
 	 */
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
-
-	/**
-	 * Send and receive asynchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
-
-	/**
-	 * Disconnect.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void disconnect() throws Exception;
-
-	/**
-	 * Destroys connection.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void destroy() throws Exception;
-
-	/**
-	 * Checks if is connected.
-	 * 
-	 * @return true, if is connected
-	 */
-	boolean isConnected();
-
-	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
-	public Object getKey();
-
+	public boolean isAsynchronous();
 }

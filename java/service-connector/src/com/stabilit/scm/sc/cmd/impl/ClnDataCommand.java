@@ -18,6 +18,7 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import javax.xml.bind.ValidationException;
 
+import com.stabilit.scm.common.cmd.ICommandCallback;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -42,7 +43,7 @@ import com.stabilit.scm.sc.service.Session;
  * 
  * @author JTraber
  */
-public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnDataCommand extends AsyncCommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new ClnDataCommand.
@@ -70,6 +71,29 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			SCMPMessage scmpReply = server.sendData(message);
 			scmpReply.setMessageType(getKey().getName());
 			response.setSCMP(scmpReply);
+		} catch (SCServiceException e) {
+			// clnDatat failed, connection to backend server disturbed - clean up
+			// TODO clean up??
+			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
+			ExceptionPoint.getInstance().fireException(this, e);
+			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
+			communicationException.setMessageType(getKey());
+			throw communicationException;
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void run(IRequest request, IResponse response, ICommandCallback callback) throws Exception {
+		SCMPMessage message = request.getMessage();
+		String sessionId = message.getSessionId();
+		Session session = getSessionById(sessionId);
+
+		Server server = session.getServer();
+		try {
+			// try sending to backend server
+			server.sendData(message, callback);
+			return;
 		} catch (SCServiceException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
 			// TODO clean up??

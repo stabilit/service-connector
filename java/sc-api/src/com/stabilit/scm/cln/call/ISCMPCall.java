@@ -18,6 +18,7 @@
 package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
@@ -80,6 +81,15 @@ public interface ISCMPCall {
 	 *             the exception
 	 */
 	public SCMPMessage invoke() throws Exception;
+	
+	/**
+	 * Invoke asynchronous.
+	 * 
+	 * @return the scmp message
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void invoke(ISCMPCallback callback) throws Exception;
 
 	/**
 	 * Sets the body.

@@ -26,13 +26,14 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.scm.common.cmd.ICallback;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
 
 /**
- * The Class NettyHttpRequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
+ * The Class NettyHttpROequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
  * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
  * operation fails.
  * 
@@ -44,6 +45,19 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	/** Queue to store the answer. */
 	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
 
+	private ICallback callback;
+
+	public NettyHttpRequesterResponseHandler() {
+		 this.callback = null;
+	}
+	
+	public ICallback getCallback() {
+		return callback;
+	}
+	
+	public void setCallback(ICallback callback) {
+		this.callback = callback;
+	}
 	/**
 	 * Gets the message synchronously.
 	 * 
@@ -52,6 +66,9 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	 *             the communication exception
 	 */
 	HttpResponse getMessageSync() throws CommunicationException {
+		if (this.callback != null) {
+			throw new CommunicationException("asynchronous mode");
+		}
 		NettyEvent eventMessage;
 		boolean interrupted = false;
 		for (;;) {
@@ -79,6 +96,10 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
+		if (this.callback != null) {
+			this.callback.callback(nettyEvent);
+			this.callback = null;
+		}
 		answer.offer(nettyEvent);
 	}
 

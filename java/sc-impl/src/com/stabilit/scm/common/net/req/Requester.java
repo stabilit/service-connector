@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.req;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
@@ -73,6 +74,23 @@ public class Requester implements IRequester {
 		}
 	}
 
+	@Override
+	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
+		try {
+			this.connect(); // from pool
+			SCMPMessage ret = null;
+			// differ if message is large or not, sending procedure is different
+			if (message.isLargeMessage()) {
+				sendLargeSCMP(message, callback);
+			} else {
+				sendSmallSCMP(message, callback);
+			}
+			return;
+		} finally {
+			this.disconnect(); // give back to pool
+		}
+	}
+
 	/**
 	 * request is small but response could be small or large.
 	 * 
@@ -101,6 +119,25 @@ public class Requester implements IRequester {
 		}
 		msgID.incrementMsgSequenceNr();
 		return ret;
+	}
+
+	/**
+	 * request is small but response could be small or large.
+	 * 
+	 * @param message
+	 *            the scmp
+	 * @return the SCMP
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void sendSmallSCMP(SCMPMessage message, ISCMPCallback callback) throws Exception {
+		if (message.isGroup()) {
+			msgID.incrementPartSequenceNr();
+		}
+		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+		// process send and receive
+		connection.send(message, callback);
+		return;
 	}
 
 	/**
@@ -166,6 +203,37 @@ public class Requester implements IRequester {
 			msgID.incrementPartSequenceNr();
 		}
 		return null;
+	}
+
+	/**
+	 * Sends large scmp.
+	 * 
+	 * @param scmp
+	 *            the scmp message
+	 * @return the scmp message
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void sendLargeSCMP(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
+		// SCMPLargeRequest handles splitting, works like an iterator
+		SCMPCompositeSender scmpLargeRequest = new SCMPCompositeSender(scmp);
+		SCMPMessage part = scmpLargeRequest.getFirst();
+		msgID.incrementPartSequenceNr();
+		while (part != null) {
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			connection.send(part, callback);
+			if (scmpLargeRequest.hasNext() == false) {
+				if (scmp.isGroup()) {
+					return;
+				}
+				RuntimePoint.getInstance().fireRuntime(this,
+						"sendLargeRequest.hasNext() == false but part request not done");
+				return;
+			}
+			part = scmpLargeRequest.getNext();
+			msgID.incrementPartSequenceNr();
+		}
+		return;
 	}
 
 	/**

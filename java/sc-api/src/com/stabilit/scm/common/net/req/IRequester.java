@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -52,6 +53,17 @@ public interface IRequester {
 	 *             exception in sending/receiving process
 	 */
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+
+	/**
+	 * Send and receive response asynchronous
+	 * 
+	 * @param scmp
+	 *            the scmp
+	 * @return the scmp
+	 * @throws Exception
+	 *             exception in sending/receiving process
+	 */
+	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
 
 	/**
 	 * Sets the requester configuration.

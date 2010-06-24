@@ -31,6 +31,7 @@ import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -141,6 +142,12 @@ public class NioHttpConnection implements IConnection {
 		return ret;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {

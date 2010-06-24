@@ -131,4 +131,9 @@ public abstract class CommandAdapter implements ICommand {
 	public IFactoryable newInstance() {
 		return this;
 	}
+	
+	@Override
+	public boolean isAsynchronous() {
+		return false;
+	}
 }

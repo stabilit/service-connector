@@ -44,6 +44,7 @@ import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpRequesterPipelineFactory;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -183,6 +184,28 @@ public class NettyTcpConnection implements IConnection {
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
 		return ret;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
+		encoderDecoder.encode(baos, scmp);
+
+		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
+		chBuffer.writeBytes(baos.toByteArray());
+		ChannelFuture future = channel.write(chBuffer);
+		future.addListener(operationListener);
+		try {
+			operationListener.awaitUninterruptibly();
+		} catch (CommunicationException ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+		}
+		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(),
+				chBuffer.toByteBuffer().array());
+		return;
 	}
 
 	/** {@inheritDoc} */

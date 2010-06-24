@@ -51,4 +51,11 @@ public interface ICommand extends IFactoryable {
 	 *             the exception
 	 */
 	public void run(IRequest request, IResponse response) throws Exception;
+	
+	/**
+	 * Checks if is asynchronous.
+	 *
+	 * @return true, if is asynchronous
+	 */
+	public boolean isAsynchronous();
 }
