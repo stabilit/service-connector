@@ -19,41 +19,26 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.srv;
 
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.net.req.ConnectionPool;
+import com.stabilit.scm.common.net.req.IConnectionPool;
 
+/**
+ * @author JTraber
+ */
+public class ServerContext implements IContext {
 
-public class PublishServer {
+	private IConnectionPool connectionPool;
 
-	public static void main(String[] args) throws Exception {
-		PublishServer.runExample();
+	public ServerContext(ICommunicatorConfig config) {
+		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
 	}
 	
-	public static void runExample() {
-		IServiceConnector sc = null;
-		try {
-//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-//			sc.setConnectionKey("netty.tcp");
-//			sc.setAttribute("keepAliveInterval", 60);
-//			sc.setAttribute("keepAliveTimeout", 10);
-//			sc.setAttribute("serviceName", "simulation");
-//
-//			// connects to SC, starts observing connection
-//			sc.attach();
-//			Object data = null;
-//			String mask = "AVSD-----";
-//			sc.publish(mask, data);			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.detach();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	@Override
+	public IConnectionPool getConnectionPool() {
+		return connectionPool;
 	}
 }

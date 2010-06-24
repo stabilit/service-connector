@@ -20,6 +20,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
@@ -52,10 +53,10 @@ public class SessionServerResponder extends Responder {
 
 	private void makeRegisterService() throws Exception {
 		// needs to register service in SC
-		req = new Requester();
 		ICommunicatorConfig reqConfig = new CommunicatorConfig("Session-Server Responder", "localhost", 9000,
-				"netty.tcp", 16, 1000);
-		req.setRequesterConfig(reqConfig);
+				"netty.tcp", 16, 1000, 60, 10);
+		IContext context = new ServerContext(reqConfig);
+		req = new Requester(context);
 		req.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

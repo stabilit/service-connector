@@ -22,7 +22,6 @@
 package com.stabilit.scm.srv.rr;
 
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 
 public class SessionServer {
@@ -34,19 +33,19 @@ public class SessionServer {
 	public static void runExample() {
 		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			
-			sc.setConnectionKey("netty.tcp"); //default netty.tcp
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("serviceName", "simulation");
-
-			SCSessionServerActionListener listener = new SCSessionServerActionListener();
+//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
+//			
+//			sc.setConnectionKey("netty.tcp"); //default netty.tcp
+//			sc.setAttribute("keepAliveInterval", 60);
+//			sc.setAttribute("keepAliveTimeout", 10);
+//			sc.setAttribute("serviceName", "simulation");
+//
+//			SCSessionServerActionListener listener = new SCSessionServerActionListener();
 //			sc.addActionListener(listener);
 		
 //			sc.createServer(7000);
 			// connects to SC, starts observing connection
-			sc.attach();	
+//			sc.attach();	
 			
 		} catch (Exception e) {
 			e.printStackTrace();
