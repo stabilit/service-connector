@@ -18,6 +18,8 @@ package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessageHandler;
+import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.factory.IFactoryable;
 
 
 /**
@@ -25,8 +27,10 @@ import com.stabilit.scm.cln.service.SCMessageHandler;
  * 
  * @author JTraber
  */
-public interface IServiceConnector {
+public interface IServiceConnector extends IFactoryable {
 
+	public IContext getContext();
+	
 	/**
 	 * Connects to SC.
 	 * 
@@ -81,7 +85,7 @@ public interface IServiceConnector {
 	 * @param connectionKey
 	 *            the new connection key
 	 */
-	public void setConnectionKey(String connectionKey);
+	public void setConnectionType(String connectionKey);
 
 	/**
 	 * Gets the host.
@@ -102,4 +106,9 @@ public interface IServiceConnector {
 	public IPublishService newPublishingService(SCMessageHandler messageHandler, String string);
 
 	public ISessionService newSessionService(String string);
+
+	public void setKeepAliveInterval(int keepAliveInterval);
+
+	public void setMaxConnections(int maxConnections);
+	
 }

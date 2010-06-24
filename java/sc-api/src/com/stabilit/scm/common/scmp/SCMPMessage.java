@@ -49,6 +49,7 @@ public class SCMPMessage {
 	public SCMPMessage() {
 		this.internalStatus = SCMPInternalStatus.NONE;
 		header = new HashMap<String, String>();
+		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		isReply = false;
 	}
 
@@ -98,6 +99,10 @@ public class SCMPMessage {
 	 */
 	public boolean isPart() {
 		return false; // this is the default value!
+	}
+	
+	public boolean isKeepAlive() {
+		return false;
 	}
 
 	/**

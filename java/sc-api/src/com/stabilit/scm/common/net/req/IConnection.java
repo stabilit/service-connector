@@ -87,4 +87,11 @@ public interface IConnection extends ICommunicationPoint {
 	 */
 	public Object getKey();
 
+	/**
+	 * Sets the keep alive interval.
+	 *
+	 * @param keepAliveInterval the new keep alive interval
+	 */
+	void setKeepAliveInterval(int keepAliveInterval);
+
 }

@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,31 +13,24 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.common.net.req;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.scmp;
+
 
 /**
- * @author JTraber
+ * Service Connector Message Protocol. Data container for one message.
  */
-public interface IConnectionPool {
+public class SCMPKeepAlive extends SCMPMessage {
 
-	public abstract IConnection getConnection() throws Exception;
+	/**
+	 * Instantiates a new SCMP.
+	 */
+	public SCMPKeepAlive() {
+		super();
+	}
 
-	public abstract void freeConnection(IConnection connection) throws Exception;
+	public boolean isKeepAlive() {
+		return true;
+	}
 
-	public abstract void setKeepAliveInterval(int keepAliveInterval);
-
-	public abstract void setMaxConnections(int maxConnections);
-
-	public abstract void setMinConnections(int minConnections);
-
-	public abstract void setCloseOnFree(boolean closeOnFree);
-
-	public abstract void start();
-
-	public abstract void destroy();
 }

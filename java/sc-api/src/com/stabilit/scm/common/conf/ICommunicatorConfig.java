@@ -56,7 +56,7 @@ public interface ICommunicatorConfig {
 	 * 
 	 * @return the connection key
 	 */
-	public String getConnectionKey();
+	public String getConnectionType();
 
 	/**
 	 * Gets the max pool size.
@@ -64,4 +64,11 @@ public interface ICommunicatorConfig {
 	 * @return the max pool size
 	 */
 	public int getMaxPoolSize();
+	
+	/**
+	 * Gets the keep alive interval.
+	 *
+	 * @return the keep alive interval
+	 */
+	public int getKeepAliveInterval();
 }

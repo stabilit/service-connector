@@ -19,26 +19,15 @@
 /**
  * 
  */
-package com.stabilit.scm.common.net.req;
+package com.stabilit.scm.common.ctx;
+
+import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
  * @author JTraber
+ *
  */
-public interface IConnectionPool {
+public interface IContext {
 
-	public abstract IConnection getConnection() throws Exception;
-
-	public abstract void freeConnection(IConnection connection) throws Exception;
-
-	public abstract void setKeepAliveInterval(int keepAliveInterval);
-
-	public abstract void setMaxConnections(int maxConnections);
-
-	public abstract void setMinConnections(int minConnections);
-
-	public abstract void setCloseOnFree(boolean closeOnFree);
-
-	public abstract void start();
-
-	public abstract void destroy();
+	public IConnectionPool getConnectionPool();
 }

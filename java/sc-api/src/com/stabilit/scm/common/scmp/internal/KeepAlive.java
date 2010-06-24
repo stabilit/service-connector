@@ -19,7 +19,7 @@ package com.stabilit.scm.common.scmp.internal;
 /**
  * The Class KeepAlive. Holds a concrete keep alive configuration of a connection.
  * 
- * @author JTraber
+ * @author JTraber //TODO
  */
 public class KeepAlive {
 

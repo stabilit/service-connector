@@ -34,7 +34,11 @@ public enum SCMPHeadlineKey {
 	/** The PRQ, PART REQUEST. */
 	PRQ,
 	/** The PRS, PART RESPONSE. */
-	PRS;
+	PRS,	
+	/** The KRQ. */
+	KRQ,	
+	/** The KRS. */
+	KRS;
 
 	/**
 	 * Gets the msg header key by string.
@@ -81,6 +85,15 @@ public enum SCMPHeadlineKey {
 		}
 		if (b[0] == 'E' && b[1] == 'X' && b[2] == 'C') {
 			return EXC;
+		}
+		if (b[0] == 'K' && b[1] == 'R') {
+			if (b[2] == 'Q') {
+				return KRQ;
+			}
+			if (b[2] == 'S') {
+				return KRS;
+			}
+			return UNDEF;
 		}
 		return UNDEF;
 	}
