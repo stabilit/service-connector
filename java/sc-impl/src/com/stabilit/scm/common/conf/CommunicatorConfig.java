@@ -34,38 +34,30 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	/** The number of threads. */
 	private int numberOfThreads;
 	/** The max pool size. */
-	public int maxPoolSize;
+	private int maxPoolSize;
 
+	private int keepAliveInterval;
+	private int keepAliveTimeout;
+	
 	/**
 	 * Instantiates a new communicator configuration.
 	 */
 	CommunicatorConfig() {
 	}
 
-	/**
-	 * Instantiates a new communicator configuration.
-	 * 
-	 * @param communicatorName
-	 *            the communicator name
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param connectionKey
-	 *            the connectionKey
-	 * @param numberOfThreads
-	 *            the number of threads
-	 * @param maxPoolSize
-	 *            the max pool size
-	 */
+	
+
 	public CommunicatorConfig(String communicatorName, String host, int port, String connectionKey,
-			int numberOfThreads, int maxPoolSize) {
+			int numberOfThreads, int maxPoolSize, int keepAliveInterval, int keepAliveTimeout) {
+		super();
 		this.communicatorName = communicatorName;
-		this.maxPoolSize = maxPoolSize;
 		this.port = port;
 		this.host = host;
 		this.connectionKey = connectionKey;
 		this.numberOfThreads = numberOfThreads;
+		this.maxPoolSize = maxPoolSize;
+		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
 	/**
@@ -144,7 +136,7 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getConnectionKey() {
+	public String getConnectionType() {
 		return this.connectionKey;
 	}
 
@@ -175,5 +167,21 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	 */
 	public void setMaxPoolSize(int maxPoolSize) {
 		this.maxPoolSize = maxPoolSize;
+	}
+
+	public int getKeepAliveInterval() {
+		return keepAliveInterval;
+	}
+
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
+
+	public int getKeepAliveTimeout() {
+		return keepAliveTimeout;
+	}
+
+	public void setKeepAliveTimeout(int keepAliveTimeout) {
+		this.keepAliveTimeout = keepAliveTimeout;
 	}
 }

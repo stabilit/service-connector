@@ -78,11 +78,25 @@ public abstract class CommunicatorConfigPool {
 
 			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
 			String maxPoolSizeValue = (String) props.get(respName + IConstants.MAX_POOL_SIZE);
-			
+
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 				reqConfig.setMaxPoolSize(maxPoolSize);
 			}
+
+			String keepAliveIntervalValue = (String) props.get(respName + IConstants.KEEP_ALIVE_INTERVAL);
+			int keepAliveInterval = 0;
+			if (keepAliveIntervalValue != null) {
+				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
+			}
+			reqConfig.setKeepAliveInterval(keepAliveInterval);
+			
+			String keepAliveTimeoutValue = (String) props.get(respName + IConstants.KEEP_ALIVE_TIMEOUT);
+			int keepAliveTimeout = 0;
+			if (keepAliveTimeoutValue != null) {
+				keepAliveTimeout = Integer.parseInt(keepAliveTimeoutValue);
+			}
+			reqConfig.setKeepAliveTimeout(keepAliveTimeout);
 
 			reqConfig.setPort(port);
 			reqConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));

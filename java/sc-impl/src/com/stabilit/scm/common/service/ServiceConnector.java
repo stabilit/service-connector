@@ -26,8 +26,9 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessageHandler;
-import com.stabilit.scm.common.conf.CommunicatorConfig;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.net.req.ConnectionPool;
+import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
@@ -41,48 +42,46 @@ public class ServiceConnector implements IServiceConnector {
 	private String host;
 	/** The port of the SC. */
 	private int port;
-	private int maxPoolSize;
+	
+	/** The connection pool. */
+	private IConnectionPool connectionPool;
 	/** The number of threads to use on client side. */
 	private int numberOfThreads;
-	/** The connection key, identifies low level component to use for communication (netty, nio). */
-	private String connectionKey;
+	/** The connection type, identifies low level component to use for communication (netty, nio). */
+	private String conType;	
 	/** The requester. */
 	protected IRequester requester; // becomes a pool later
 	/** The attributes. */
 	private MapBean<Object> attributes;
-
-	/**
-	 * Instantiates a new service connector.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 */
-	public ServiceConnector(String host, int port, String connectionKey, int numberOfThreads, int maxPoolSize) {
-		this.host = host;
-		this.port = port;
-		this.connectionKey = connectionKey;
-		this.numberOfThreads = numberOfThreads;
-		this.maxPoolSize = maxPoolSize;
-		this.attributes = new MapBean<Object>();
-	}
+	
+	private ServiceConnectorContext context;
 
 	public ServiceConnector(String host, int port) {
+		this(host, port, "netty.http");
+	}
+
+	public ServiceConnector(String host, int port, String conType) {
 		this.host = host;
 		this.port = port;
-		this.connectionKey = "netty.http";
+		this.conType = conType;
 		this.numberOfThreads = 16;
-		this.maxPoolSize = 1000;
 		this.attributes = new MapBean<Object>();
+		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType);
+		this.context = new ServiceConnectorContext();
+	}
+
+	@Override
+	public IServiceConnectorContext getContext() {
+		return context;
+	}
+	@Override
+	public IFactoryable newInstance() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void attach() throws Exception {
-		this.requester = new Requester();
-		ICommunicatorConfig config = new CommunicatorConfig("server-requester", this.host, this.port,
-				this.connectionKey, this.numberOfThreads, this.maxPoolSize);
-		this.requester.setRequesterConfig(config);
+		this.requester = new Requester(this.context);
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		attachCall.invoke();
 	}
@@ -109,19 +108,11 @@ public class ServiceConnector implements IServiceConnector {
 	}
 
 	public String getConnectionKey() {
-		return connectionKey;
+		return conType;
 	}
 
-	public void setConnectionKey(String connectionKey) {
-		this.connectionKey = connectionKey;
-	}
-
-	public int getMaxPoolSize() {
-		return maxPoolSize;
-	}
-
-	public void setMaxPoolSize(int maxPoolSize) {
-		this.maxPoolSize = maxPoolSize;
+	public void setConnectionType(String conType) {
+		this.conType = conType;
 	}
 
 	public String getHost() {
@@ -146,6 +137,25 @@ public class ServiceConnector implements IServiceConnector {
 
 	@Override
 	public ISessionService newSessionService(String serviceName) {
-		return new SessionService(serviceName, this.requester);
+		return new SessionService(serviceName, this.context);
+	}
+
+	@Override
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.connectionPool.setKeepAliveInterval(keepAliveInterval);
+	}
+
+	@Override
+	public void setMaxConnections(int maxConnections) {
+		this.connectionPool.setMaxConnections(maxConnections);
+	}
+	
+	class ServiceConnectorContext implements IServiceConnectorContext {
+
+		@Override
+		public IConnectionPool getConnectionPool() {
+			return connectionPool;
+		}
+		
 	}
 }

@@ -54,6 +54,8 @@ public interface IConstants {
 	/** The services Names. */
 	public final String SERVICE_NAMES = "serviceNames";
 	public final String MAX_POOL_SIZE = "maxPoolSize";
+	public final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
+	public final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
 
 	/** The logging directory. */
 	public final String LOG_DIR = "log/";

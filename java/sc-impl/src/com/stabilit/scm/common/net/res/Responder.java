@@ -44,7 +44,7 @@ public class Responder implements IResponder {
 	@Override
 	public void create() throws Exception {
 		EndpointFactory endpointFactory = new EndpointFactory();
-		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnectionKey());
+		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnectionType());
 		this.endpoint.setResponder(this);
 		this.endpoint.setHost(this.respConfig.getHost());
 		this.endpoint.setPort(this.respConfig.getPort());

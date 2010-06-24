@@ -43,7 +43,7 @@ public class ConnectionKey {
 		super();
 		this.host = communicatorConfig.getHost();
 		this.port = communicatorConfig.getPort();
-		this.con = communicatorConfig.getConnectionKey();
+		this.con = communicatorConfig.getConnectionType();
 	}
 
 	public String getHost() {

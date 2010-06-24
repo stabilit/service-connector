@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -34,8 +34,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  */
 public class Requester implements IRequester {
 
-	/** The requester configuration. */
-	private ICommunicatorConfig reqConfig;
+	/** The context. */
+	private IContext context;
 	/** The req connection. */
 	protected IConnection connection;
 	/** The msg id for the next request. */
@@ -43,17 +43,35 @@ public class Requester implements IRequester {
 
 	/**
 	 * Instantiates a new requester.
+	 * 
+	 * @param context
+	 *            the context
 	 */
-	public Requester() {
+	public Requester(IContext context) {
+		this.context = context;
 		msgID = new SCMPMessageID();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Connect.
+	 * 
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void connect() throws Exception {
-		this.connection = ConnectionPool.useConnection(this.reqConfig);  // return an already connected live instance		
+		this.connection = this.context.getConnectionPool().getConnection(); // return an already connected live instance
 	}
 
+	/**
+	 * Send and receive.
+	 * 
+	 * @param message
+	 *            the message
+	 * @return the sCMP message
+	 * @throws Exception
+	 *             the exception
+	 */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 
@@ -276,33 +294,53 @@ public class Requester implements IRequester {
 		return scmpComposite;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Disconnect.
+	 * 
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void disconnect() throws Exception {
-		ConnectionPool.freeConnection(this.connection);
+		this.context.getConnectionPool().freeConnection(this.connection);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks if is connected.
+	 * 
+	 * @return true, if is connected {@inheritDoc}
+	 */
 	@Override
 	public boolean isConnected() {
 		return this.connection.isConnected();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setRequesterConfig(ICommunicatorConfig reqConfig) {
-		this.reqConfig = reqConfig;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ICommunicatorConfig getRequesterConfig() {
-		return this.reqConfig;
-	}
-
-	/** {@inheritDoc} */
+	/**
+	 * To hash code string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
 	@Override
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";
+	}
+
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the connectionPool
+	 */
+	public IContext getContext() {
+		return context;
+	}
+
+	/**
+	 * Sets the connection.
+	 * 
+	 * @param connection
+	 *            the connection to set
+	 */
+	public void setConnection(IConnection connection) {
+		this.connection = connection;
 	}
 }

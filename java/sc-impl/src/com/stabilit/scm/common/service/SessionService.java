@@ -27,7 +27,9 @@ import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -40,10 +42,10 @@ public class SessionService implements ISessionService {
 	private String sessionId;
 	private IRequester requester;
 
-	public SessionService(String serviceName, IRequester requester) {
+	public SessionService(String serviceName, IContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
-		this.requester = requester;
+		this.requester = new Requester(context);
 	}
 
 	@Override

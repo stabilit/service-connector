@@ -39,14 +39,14 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 
 	/** The timer to observe timeouts. */
 	private Timer timer;
-	private int keepAliveInterval;
+	private NettyHttpConnection connection;
 
 	/**
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
 	 */
-	public NettyHttpRequesterPipelineFactory(int keepAliveInterval) {
+	public NettyHttpRequesterPipelineFactory(NettyHttpConnection connection) {
 		this.timer = new HashedWheelTimer();
-		this.keepAliveInterval = keepAliveInterval;
+		this.connection = connection;
 	}
 
 	/** {@inheritDoc} */
@@ -63,8 +63,8 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		// responsible for observing write timeout - Netty
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handle responses - Stabilit
-		// TODO verify Timer
-		pipeline.addLast("idleHandler", new NettyIdleHandler(this.timer, 0, 0, this.keepAliveInterval));
+		// TODO verify Timer can be the same for every thing
+		pipeline.addLast("idleHandler", new NettyIdleHandler(this.connection, this.timer, 0, 0, this.connection.keepAliveInterval));
 		pipeline.addLast("handler", new NettyHttpRequesterResponseHandler());
 		return pipeline;
 	}

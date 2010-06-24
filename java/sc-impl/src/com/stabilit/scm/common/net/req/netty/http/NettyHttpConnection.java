@@ -89,8 +89,10 @@ public class NettyHttpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** state of connection. */
 	private boolean connected;
+	
+	/** The key. */
 	private ConnectionKey key;
-	private int keepAliveInterval;
+	protected int keepAliveInterval;
 
 	/**
 	 * Instantiates a new netty http connection.
@@ -107,7 +109,7 @@ public class NettyHttpConnection implements IConnection {
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
 		this.connected = false;
-		this.keepAliveInterval = 2;
+		this.keepAliveInterval = 10;  // TODO IConstants
 		this.pipelineFactory = null;
 		this.key = null;
 	}
@@ -125,10 +127,7 @@ public class NettyHttpConnection implements IConnection {
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		// this.bootstrap.setOption("connectTimeoutMillis", 1000000); TODO
-		if (this.pipelineFactory == null) {
-			this.pipelineFactory = new NettyHttpRequesterPipelineFactory(
-					this.keepAliveInterval);
-		}
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,

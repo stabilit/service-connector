@@ -40,7 +40,10 @@ public final class ValidatorUtility {
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
 	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
-
+//TODO 
+//	if (port < 0 || port > 0xFFFF) {
+//	    throw new IllegalArgumentException("port out of range:" + port);
+//	}
 	/**
 	 * Instantiates a new validator utility.
 	 */

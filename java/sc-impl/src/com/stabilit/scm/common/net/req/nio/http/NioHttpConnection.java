@@ -53,7 +53,7 @@ public class NioHttpConnection implements IConnection {
 	/** state of connection. */
 	private boolean isConnected;
 	private ConnectionKey key;
-	private boolean keepAlive;
+	private int keepAliveInterval;
 
 	/**
 	 * Instantiates a new nio NioHttpConnection.
@@ -66,6 +66,7 @@ public class NioHttpConnection implements IConnection {
 		this.isConnected = false;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 		this.key = null;
+		this.keepAliveInterval = 10;  // TODO IConstants
 	}
 
 	/** {@inheritDoc} */
@@ -182,4 +183,8 @@ public class NioHttpConnection implements IConnection {
 		return this.key;
 	}
 
+	@Override
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
 }

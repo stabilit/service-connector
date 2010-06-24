@@ -29,6 +29,7 @@ public final class EncoderDecoderFactory extends Factory {
 
 	/** The Constant LARGE, key for large encoder decoder. */
 	private static final String LARGE = "large";
+	private static final String  KEEP_ALIVE = "keepAlive";
 	/** The encoder decoder factory. */
 	private static EncoderDecoderFactory encoderDecoderFactory = new EncoderDecoderFactory();
 
@@ -51,6 +52,9 @@ public final class EncoderDecoderFactory extends Factory {
 		encoderDecoder = new LargeMessageEncoderDecoder();
 		this.add(LargeMessageEncoderDecoder.class.getName(), encoderDecoder);
 		this.add(LARGE, encoderDecoder);
+		encoderDecoder = new KeepAliveMessageEncoderDecoder();
+		this.add(KeepAliveMessageEncoderDecoder.class.getName(), encoderDecoder);
+		this.add(KEEP_ALIVE, encoderDecoder);
 	}
 
 	/** {@inheritDoc} */
@@ -66,7 +70,7 @@ public final class EncoderDecoderFactory extends Factory {
 	 * @return true, if is large
 	 */
 	public boolean isLarge(SCMPMessage message) {
-
+		
 		if (message.isPart() || message.isBodyOffset()) {
 			// message is a part or has offset for reading body - message is part of large message
 			return true;
@@ -86,6 +90,9 @@ public final class EncoderDecoderFactory extends Factory {
 	 * @return the i encoder decoder
 	 */
 	public IEncoderDecoder newInstance(SCMPMessage message) {
+		if (message.isKeepAlive()) {
+			return newInstance(KEEP_ALIVE);
+		}
 		if (message.isPart() || message.isBodyOffset()) {
 			// message is a part or has offset for reading body - message is part of large message take large instance
 			return newInstance(LARGE);
@@ -108,6 +115,10 @@ public final class EncoderDecoderFactory extends Factory {
 		if (scmpBuffer[0] == 'P') {
 			// headline key start with 'P' means message must be of type part - take large instance
 			return newInstance(LARGE);
+		}
+		if (scmpBuffer[0] == 'K') {
+			// headline key start with 'K' means message must be of type keep alive
+			return newInstance(KEEP_ALIVE);
 		}
 		return newInstance(DEFAULT);
 	}

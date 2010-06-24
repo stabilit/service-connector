@@ -17,7 +17,6 @@
 package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
 
 /**
  * The Class PerformanceWithClientApi. Test the performance on client API Layer.
@@ -40,33 +39,33 @@ public class PerformanceWithClientApi {
 	public static void runExample() {
 		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-			sc.setAttribute("compression", false);
-
-			// connects to SC, starts observing connection
-			sc.attach();
-
-			ISessionService dataSessionA = sc.newSessionService("simulation");
-			dataSessionA.createSession("sessionInfo");
-
-			double anzMsg = 100000;
-			byte[] buffer = new byte[128];
-
-			double startTime = System.currentTimeMillis();
-			for (int i = 0; i < anzMsg; i++) {
-				byte[] data = new byte[128];
-				SCMessage message = new SCMessage(data);
-				Object resp = dataSessionA.execute(message);
-			}
-			double endTime = System.currentTimeMillis();
-
-			double neededTime = endTime - startTime;
-			System.out.println("Performance Test");
-			System.out.println("Anz msg pro sec: " + anzMsg / ((neededTime / 1000)));
-
-			dataSessionA.deleteSession();
+//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
+//			sc.setAttribute("keepAliveInterval", 60);
+//			sc.setAttribute("keepAliveTimeout", 10);
+//			sc.setAttribute("compression", false);
+//
+//			// connects to SC, starts observing connection
+//			sc.attach();
+//
+//			ISessionService dataSessionA = sc.newSessionService("simulation");
+//			dataSessionA.createSession("sessionInfo");
+//
+//			double anzMsg = 100000;
+//			byte[] buffer = new byte[128];
+//
+//			double startTime = System.currentTimeMillis();
+//			for (int i = 0; i < anzMsg; i++) {
+//				byte[] data = new byte[128];
+//				SCMessage message = new SCMessage(data);
+//				Object resp = dataSessionA.execute(message);
+//			}
+//			double endTime = System.currentTimeMillis();
+//
+//			double neededTime = endTime - startTime;
+//			System.out.println("Performance Test");
+//			System.out.println("Anz msg pro sec: " + anzMsg / ((neededTime / 1000)));
+//
+//			dataSessionA.deleteSession();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -26,11 +26,15 @@ import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
+import com.stabilit.scm.common.listener.KeepAlivePoint;
+import com.stabilit.scm.common.net.req.IConnection;
+
 /**
  * @author JTraber
- *
  */
 public class NettyIdleHandler extends IdleStateHandler {
+
+	private IConnection connection;
 
 	/**
 	 * @param timer
@@ -38,8 +42,10 @@ public class NettyIdleHandler extends IdleStateHandler {
 	 * @param writerIdleTimeSeconds
 	 * @param allIdleTimeSeconds
 	 */
-	public NettyIdleHandler(Timer timer, int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
+	public NettyIdleHandler(IConnection connection, Timer timer, int readerIdleTimeSeconds, int writerIdleTimeSeconds,
+			int allIdleTimeSeconds) {
 		super(timer, readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
+		this.connection = connection;
 	}
 
 	@Override
@@ -47,6 +53,6 @@ public class NettyIdleHandler extends IdleStateHandler {
 			throws Exception {
 		System.out.println("NettyIdleHandler.channelIdle()");
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
-		//KeepAlivePoint.getInstance().fireKeepAlive(this, connection);
-	}	
+		KeepAlivePoint.getInstance().fireKeepAlive(this, this.connection);
+	}
 }

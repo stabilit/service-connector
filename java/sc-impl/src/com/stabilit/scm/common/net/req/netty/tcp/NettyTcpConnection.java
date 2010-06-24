@@ -43,7 +43,6 @@ import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
-import com.stabilit.scm.common.net.req.netty.http.NettyHttpRequesterPipelineFactory;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -91,7 +90,7 @@ public class NettyTcpConnection implements IConnection {
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
 		this.isConnected = false;
-		this.pipelineFactory = new NettyTcpRequesterPipelineFactory();
+		this.pipelineFactory = null;
 		this.key = null;
 	}
 
@@ -105,9 +104,7 @@ public class NettyTcpConnection implements IConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		if (this.pipelineFactory == null) {
-			this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.keepAliveInterval);
-		}
+		this.pipelineFactory = new NettyTcpRequesterPipelineFactory();
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Start the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -257,4 +254,8 @@ public class NettyTcpConnection implements IConnection {
 		return this.key;
 	}
 
+	@Override
+	public void setKeepAliveInterval(int keepAliveInterval) {
+		this.keepAliveInterval = keepAliveInterval;
+	}
 }
