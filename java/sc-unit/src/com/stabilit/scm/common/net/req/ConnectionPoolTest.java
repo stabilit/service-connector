@@ -14,50 +14,49 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.cln.api;
+package com.stabilit.scm.common.net.req;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.IServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
-public class ClnAPIPublishTestCase {
+/**
+ * @author JTraber
+ */
+public class ConnectionPoolTest {
 
 	@Before
 	public void setUp() {
-		SetupTestCases.setupAll();
+		SetupTestCases.setupSC();
 	}
 
 	@Test
-	public void testClnAPI() throws Exception {
-		IServiceConnector sc = null;
-		try {
-//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-//			sc.setAttribute("keepAliveInterval", 60);
-//			sc.setAttribute("keepAliveTimeout", 10);
-//			sc.setAttribute("compression", false);
-//
-//			// connects to SC, starts observing connection
-//			sc.attach();
-//
-//			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
-//			IPublishService publServiceA = sc.newPublishingService(messageHandler, "broadcast");
-//			String mask = "ABC-------"; // must not contain % sign
-//			publServiceA.subscribe(mask);
-//
-//			mask = "AAA-------";
-//			publServiceA.changeSubscription(mask);
-//			publServiceA.unsubscribe();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.detach();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	public void testSuccesfulPool() {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http");
+		cp.setMaxConnections(10);
+		cp.setMinConnections(1);
+		cp.setKeepAliveInterval(60);
+
+		cp.setCloseOnFree(true); // default = false
+		cp.start();
+		cp.destroy();
 	}
+
+	@Test
+	public void test2() {
+
+		// IConnectionPool cp = new ConnectionPool("localhost", 8080, "xyt");
+		// cp1 == null
+	}
+
+	@Test
+	public void test3() {
+
+		// IConnectionPool cp = new ConnectionPool("localhost", 8080, "xyt");
+		// IConnection connection = cp.getConnection();
+		//		
+		// cp.freeConnection(connection);
+	}
+
 }

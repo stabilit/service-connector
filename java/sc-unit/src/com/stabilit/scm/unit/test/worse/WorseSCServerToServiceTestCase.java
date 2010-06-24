@@ -32,6 +32,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.rr.Old_SessionServer;
+import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -66,8 +67,8 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 			Old_SessionServer.main(null);
 			config = new RequesterConfigPool();
 			config.load(fileName);
-			this.req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			this.testContext = new TestContext(config.getRequesterConfig());
+			this.req = new Requester(this.testContext);
 			req.connect(); // physical connect
 			clnAttachBefore();
 			registerServiceBefore();
@@ -100,8 +101,8 @@ public class WorseSCServerToServiceTestCase extends SuperSessionRegisterTestCase
 	private void tearDownSCServerToService() throws Exception {
 		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("session-server.properties");
-		IRequester tearDownClient = new Requester();
-		tearDownClient.setRequesterConfig(config.getRequesterConfig());
+		this.testContext = new TestContext(config.getRequesterConfig());
+		IRequester tearDownClient = new Requester(this.testContext);
 		tearDownClient.connect(); // physical connect
 
 		// disconnects server on SC to SimulatonServer

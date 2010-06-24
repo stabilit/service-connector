@@ -34,10 +34,12 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.ReflectionUtil;
+import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 /**
@@ -51,10 +53,12 @@ public abstract class MTSuperTestCase {
 	protected RequesterConfigPool config = null;
 	protected List<IRequester> reqList = null;
 	private IRequester registerReq = null;
+	protected IContext testContext = null;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
 		this.reqList = new ArrayList<IRequester>();
+		this.testContext = new TestContext(this.config.getRequesterConfig());
 	}
 
 	// @Parameters
@@ -75,8 +79,7 @@ public abstract class MTSuperTestCase {
 		SetupTestCases.setupAll();
 		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("session-server.properties");
-		registerReq = new Requester();
-		registerReq.setRequesterConfig(config.getRequesterConfig());
+		registerReq = new Requester(this.testContext);
 		registerReq.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
@@ -93,8 +96,7 @@ public abstract class MTSuperTestCase {
 		try {
 			config = new RequesterConfigPool();
 			config.load(fileName);
-			IRequester req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			IRequester req = new Requester(this.testContext);
 			req.connect(); // physical connect
 			this.reqList.add(req);
 			return req;

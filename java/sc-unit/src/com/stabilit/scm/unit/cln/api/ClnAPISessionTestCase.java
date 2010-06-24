@@ -22,7 +22,7 @@ import org.junit.Test;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
+import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPISessionTestCase {
@@ -33,17 +33,21 @@ public class ClnAPISessionTestCase {
 	}
 	
 	@Test
-	public void testClnAPI() throws Exception {
-		
+	public void testClnAPI() throws Exception {		
 		IServiceConnector sc = null;
-		try {
-			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			sc.setAttribute("keepAliveInterval", 60);
-			sc.setAttribute("keepAliveTimeout", 10);
-
+		try {			
+			sc = new ServiceConnector("localhost", 8080);
+			sc.setKeepAliveInterval(0);			
+			sc.setMaxConnections(100);
+//			IServiceConnector sc2 = new ServiceConnector("localhost", 8081);
+//			IServiceConnector sc3 = new ServiceConnector("localhost", 8080);
+			// set environment, e.g. keepAliveInterval
+			
 			// connects to SC, checks connection to SC
 			sc.attach();
-					
+
+			Thread.sleep(2);
+			
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo");
 			

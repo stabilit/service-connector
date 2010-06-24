@@ -40,8 +40,9 @@ public class EchoSCTestCase extends SuperTestCase {
 	 * The Constructor.
 	 * 
 	 * @param fileName the file name
+	 * @throws Exception 
 	 */	
-	public EchoSCTestCase(String fileName) {
+	public EchoSCTestCase(String fileName) throws Exception {
 		super(fileName);
 	}
 
@@ -52,8 +53,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		try {
 			config = new RequesterConfigPool();
 			config.load(fileName);
-			req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			req = new Requester(this.testContext);
 			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();

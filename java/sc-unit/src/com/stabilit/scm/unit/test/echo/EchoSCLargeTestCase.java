@@ -42,8 +42,9 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 	 * 
 	 * @param fileName
 	 *            the file name
+	 * @throws Exception 
 	 */
-	public EchoSCLargeTestCase(String fileName) {
+	public EchoSCLargeTestCase(String fileName) throws Exception {
 		super(fileName);
 	}
 
@@ -54,8 +55,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		try {
 			config = new RequesterConfigPool();
 			config.load(fileName);
-			req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			req = new Requester(this.testContext);
 			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();

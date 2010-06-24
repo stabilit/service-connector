@@ -26,6 +26,7 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
@@ -54,17 +55,17 @@ public class Performance {
 
 	public void startListening() throws Exception {
 		Responder resp = new Responder();
-		resp.setResponderConfig(new CommunicatorConfig("", "localhost", 8080, "netty.http", 16, 100));
+		resp.setResponderConfig(new CommunicatorConfig("", "localhost", 8080, "netty.http", 16, 100, 60, 10));
 		resp.create();
 		resp.runAsync();
-		
-//		NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
-//		endpoint.setHost("localhost");
-//		endpoint.setPort(8080);
-//		endpoint.setNumberOfThreads(16);
-//
-//		endpoint.create();
-//		endpoint.runAsync();
+
+		// NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
+		// endpoint.setHost("localhost");
+		// endpoint.setPort(8080);
+		// endpoint.setNumberOfThreads(16);
+		//
+		// endpoint.create();
+		// endpoint.runAsync();
 	}
 
 	public void startSending() throws Exception {
@@ -73,9 +74,11 @@ public class Performance {
 		con.setNumberOfThreads(10);
 		con.setPort(8080);
 
-		IRequester req = new Requester();
-		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16, 1000);
-		req.setRequesterConfig(config);
+		IContext testContext = new TestContext("localhost", 8080, "netty.http");
+
+		IRequester req = new Requester(testContext);
+		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16, 1000,
+				60, 10);
 		req.connect();
 
 		SCMPMessage request = null;

@@ -16,15 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.cln.api;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.IFileService;
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnectorFactory;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIFileTestCase {
@@ -39,19 +34,19 @@ public class ClnAPIFileTestCase {
 
 		IServiceConnector sc = null;
 		try {
-			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-			sc.attach();	// connects to SC, starts observing connection
-			
-			IFileService fileServiceA = sc.newFileService("logs");
-			
-			String targetFileName = "";
-			InputStream inStream = null;
-			fileServiceA.uploadFile(targetFileName, inStream);
-			
-			String sourceFileName = "";
-			OutputStream outStream = null;
-			fileServiceA.downloadFile(sourceFileName, outStream);
-			
+//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
+//			sc.attach();	// connects to SC, starts observing connection
+//			
+//			IFileService fileServiceA = sc.newFileService("logs");
+//			
+//			String targetFileName = "";
+//			InputStream inStream = null;
+//			fileServiceA.uploadFile(targetFileName, inStream);
+//			
+//			String sourceFileName = "";
+//			OutputStream outStream = null;
+//			fileServiceA.downloadFile(sourceFileName, outStream);
+//			
 //			targetFileName = "";
 //			inStream = null;
 //			sc.uploadFile("serviceName", targetFileName, inStream);

@@ -40,6 +40,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.rr.Old_SessionServer;
+import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.UnitCommandFactory;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -70,8 +71,8 @@ public class WorseScenarioSimulationServerTestCase extends SuperSessionRegisterT
 			Old_SessionServer.main(null);
 			config = new RequesterConfigPool();
 			config.load(fileName);
-			this.req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			this.testContext = new TestContext(config.getRequesterConfig());
+			this.req = new Requester(this.testContext);
 			req.connect(); // physical connect
 			clnAttachBefore();
 			registerServiceBefore();

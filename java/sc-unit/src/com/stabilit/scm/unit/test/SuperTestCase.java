@@ -26,9 +26,11 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.stabilit.scm.common.conf.RequesterConfigPool;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.unit.TestContext;
 
 /**
  * @author JTraber
@@ -39,9 +41,10 @@ public abstract class SuperTestCase {
 	protected String fileName;
 	protected RequesterConfigPool config = null;
 	protected IRequester req = null;
+	protected IContext testContext;
 
 	public SuperTestCase(final String fileName) {
-		this.fileName = fileName;
+		this.fileName = fileName;		
 	}
 
 	// @Parameters
@@ -65,10 +68,10 @@ public abstract class SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
-			config = new RequesterConfigPool();
-			config.load(fileName);
-			req = new Requester();
-			req.setRequesterConfig(config.getRequesterConfig());
+			this.config = new RequesterConfigPool();
+			this.config.load(fileName);
+			this.testContext = new TestContext(this.config.getRequesterConfig());
+			req = new Requester(this.testContext);
 			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
