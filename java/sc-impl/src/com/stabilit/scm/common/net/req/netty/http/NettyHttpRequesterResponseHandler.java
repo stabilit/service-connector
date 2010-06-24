@@ -16,9 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty.http;
 
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -29,8 +31,12 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import com.stabilit.scm.common.cmd.ICallback;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
+import com.stabilit.scm.common.net.EncoderDecoderFactory;
+import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpROequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
@@ -40,23 +46,23 @@ import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
  * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler implements ICallback {
 
 	/** Queue to store the answer. */
 	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
 
-	private ICallback callback;
+	private ISCMPCallback scmpCallback;
 
 	public NettyHttpRequesterResponseHandler() {
-		 this.callback = null;
+		 this.scmpCallback = null;
 	}
 	
-	public ICallback getCallback() {
-		return callback;
+	public ISCMPCallback getCallback() {
+		return scmpCallback;
 	}
 	
-	public void setCallback(ICallback callback) {
-		this.callback = callback;
+	public void setCallback(ISCMPCallback scmpCallback) {
+		this.scmpCallback = scmpCallback;
 	}
 	/**
 	 * Gets the message synchronously.
@@ -66,7 +72,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	 *             the communication exception
 	 */
 	HttpResponse getMessageSync() throws CommunicationException {
-		if (this.callback != null) {
+		if (this.scmpCallback != null) {
 			throw new CommunicationException("asynchronous mode");
 		}
 		NettyEvent eventMessage;
@@ -96,9 +102,9 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
-		if (this.callback != null) {
-			this.callback.callback(nettyEvent);
-			this.callback = null;
+		if (this.scmpCallback != null) {
+			this.callback(nettyEvent);
+			return;
 		}
 		answer.offer(nettyEvent);
 	}
@@ -108,6 +114,30 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
 		NettyEvent nettyEvent = new NettyExceptionEvent(th);
+		if (this.scmpCallback != null) {
+			this.callback(e);
+		}
 		answer.offer(nettyEvent);
 	}
+	@Override
+	public void callback(Object obj) {
+		try {
+			NettyEvent eventMessage = (NettyEvent) obj;
+			HttpResponse httpResponse = (HttpResponse) eventMessage
+					.getResponse();
+			ChannelBuffer content = httpResponse.getContent();
+			byte[] buffer = new byte[content.readableBytes()];
+			content.readBytes(buffer);
+			// inside
+			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+			IEncoderDecoder encoderDecoder = EncoderDecoderFactory
+					.getCurrentEncoderDecoderFactory().newInstance(buffer);
+			SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
+			this.scmpCallback.callback(ret);
+		} catch (Exception e) {
+			ExceptionPoint.getInstance().fireException(this, e);
+			this.scmpCallback.callback(e);
+		}
+	}
+	
 }

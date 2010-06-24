@@ -38,7 +38,7 @@ public class PublishServer {
 //			sc.setAttribute("keepAliveInterval", 60);
 //			sc.setAttribute("keepAliveTimeout", 10);
 //			sc.setAttribute("serviceName", "simulation");
-//
+//			
 //			// connects to SC, starts observing connection
 //			sc.attach();
 //			Object data = null;

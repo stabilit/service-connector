@@ -45,7 +45,6 @@ public class SessionServer {
 		
 //			sc.createServer(7000);
 			// connects to SC, starts observing connection
-//			sc.attach();	
 			
 		} catch (Exception e) {
 			e.printStackTrace();

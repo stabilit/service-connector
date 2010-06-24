@@ -157,7 +157,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				PerformancePoint.getInstance().fireBegin(command, "run");
 				if (command.isAsynchronous() && command instanceof IAsyncCommand) {
 					if (commandCallback == null) {
-					    commandCallback = new NettyHttpCommandCallback(ctx, command, request, response);
+					    commandCallback = new NettyCommandCallback(ctx, command, request, response);
 					}
 					((IAsyncCommand)command).run(request, response, commandCallback);
 					commandRequest = null;

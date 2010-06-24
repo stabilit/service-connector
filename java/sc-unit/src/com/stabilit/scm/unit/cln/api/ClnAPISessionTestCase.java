@@ -45,8 +45,6 @@ public class ClnAPISessionTestCase {
 			
 			// connects to SC, checks connection to SC
 			sc.attach();
-
-			Thread.sleep(2);
 			
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo");

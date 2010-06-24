@@ -255,11 +255,9 @@ public class NettyHttpConnection implements IConnection {
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String
 				.valueOf(buffer.length));
 
-		// gets response message synchronous
 		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(
 				NettyHttpRequesterResponseHandler.class);
-		ICallback nettyHttpCallback = new NettyHttpCallback(callback);
-		handler.setCallback(nettyHttpCallback);
+		handler.setCallback(callback);
 
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
@@ -330,32 +328,4 @@ public class NettyHttpConnection implements IConnection {
 		return this.key;
 	}
 
-	class NettyHttpCallback implements ICallback {
-		private ISCMPCallback callback;
-
-		public NettyHttpCallback(ISCMPCallback callback) {
-			this.callback = callback;
-		}
-
-		@Override
-		public void callback(Object obj) {
-			try {
-				NettyEvent eventMessage = (NettyEvent) obj;
-				HttpResponse httpResponse = (HttpResponse) eventMessage
-						.getResponse();
-				ChannelBuffer content = httpResponse.getContent();
-				byte[] buffer = new byte[content.readableBytes()];
-				content.readBytes(buffer);
-				// inside
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-				IEncoderDecoder encoderDecoder = EncoderDecoderFactory
-						.getCurrentEncoderDecoderFactory().newInstance(buffer);
-				SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
-				this.callback.callback(ret);
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				this.callback.callback(e);
-			}
-		}
-	}
 }

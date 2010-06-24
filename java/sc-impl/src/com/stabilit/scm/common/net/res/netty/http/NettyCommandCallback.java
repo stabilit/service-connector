@@ -12,7 +12,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
-public class NettyHttpCommandCallback implements ICommandCallback, ISCMPCallback {
+public class NettyCommandCallback implements ICommandCallback, ISCMPCallback {
 	private ICommand command;
 	private IRequest request;
 	private IResponse response;
@@ -21,7 +21,7 @@ public class NettyHttpCommandCallback implements ICommandCallback, ISCMPCallback
 	private SCMPMessageID msgID;
 
 
-	public NettyHttpCommandCallback(ChannelHandlerContext ctx, ICommand command, IRequest request, IResponse response) {
+	public NettyCommandCallback(ChannelHandlerContext ctx, ICommand command, IRequest request, IResponse response) {
 		this.command = command;
 		this.request = request;
 		this.response = response;

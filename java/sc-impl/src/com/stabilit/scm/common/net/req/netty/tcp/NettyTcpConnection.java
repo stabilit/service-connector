@@ -29,10 +29,12 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
+import com.stabilit.scm.common.cmd.ICallback;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -42,6 +44,7 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -190,6 +193,9 @@ public class NettyTcpConnection implements IConnection {
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 
+		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
+		handler.setCallback(callback);
+
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
 		chBuffer.writeBytes(baos.toByteArray());
 		ChannelFuture future = channel.write(chBuffer);
@@ -258,4 +264,5 @@ public class NettyTcpConnection implements IConnection {
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
 	}
+	
 }
