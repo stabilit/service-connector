@@ -66,21 +66,6 @@ public interface IRequester {
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
 
 	/**
-	 * Sets the requester configuration.
-	 * 
-	 * @param requesterConfig
-	 *            the new requester configuration
-	 */
-	public void setRequesterConfig(ICommunicatorConfig requesterConfig);
-
-	/**
-	 * Gets the requester configuration.
-	 * 
-	 * @return the requester configuration
-	 */
-	public ICommunicatorConfig getRequesterConfig();
-
-	/**
 	 * Returns a hash code which identifies client connection.
 	 * 
 	 * @return the string

@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+
 import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandCallback;
