@@ -29,13 +29,10 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
-import com.stabilit.scm.common.cmd.ICallback;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
@@ -44,7 +41,6 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
-import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -78,7 +74,8 @@ public class NettyTcpConnection implements IConnection {
 	/** state of connection. */
 	private boolean isConnected;
 	private ConnectionKey key;
-	private int keepAliveInterval;
+	protected int idleTimeout;
+	private int nrOfIdles;
 	/**
 	 * Instantiates a new NettyTcpConnection.
 	 */
@@ -141,14 +138,13 @@ public class NettyTcpConnection implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public void destroy() throws Exception {
+	public void destroy() {
 		ChannelFuture future = this.channel.close();
 		future.addListener(operationListener);
 		try {
 			operationListener.awaitUninterruptibly();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		this.releaseExternalResources();
 	}
@@ -213,7 +209,7 @@ public class NettyTcpConnection implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public IFactoryable newInstance() {
+	public IConnection newInstance() {
 		return new NettyTcpConnection();
 	}
 
@@ -261,8 +257,22 @@ public class NettyTcpConnection implements IConnection {
 	}
 
 	@Override
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.keepAliveInterval = keepAliveInterval;
+	public void setIdleTimeout(int idleTimeout) {
+		this.idleTimeout = idleTimeout;
 	}
 	
+	@Override
+	public int getNrOfIdlesInSequence() {
+		return nrOfIdles;
+	}
+
+	@Override
+	public void incrementNrOfIdles() {
+		this.nrOfIdles++;
+	}
+
+	@Override
+	public void resetNrOfIdles() {
+		this.nrOfIdles = 0;
+	}
 }

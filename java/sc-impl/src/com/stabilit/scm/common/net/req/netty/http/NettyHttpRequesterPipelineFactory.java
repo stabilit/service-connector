@@ -64,7 +64,7 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for handle responses - Stabilit
 		// TODO verify Timer can be the same for every thing
-		pipeline.addLast("idleHandler", new NettyIdleHandler(this.connection, this.timer, 0, 0, this.connection.keepAliveInterval));
+		pipeline.addLast("idleHandler", new NettyIdleHandler(this.connection, this.timer, 0, 0, this.connection.idleTimeout));
 		pipeline.addLast("handler", new NettyHttpRequesterResponseHandler());
 		return pipeline;
 	}

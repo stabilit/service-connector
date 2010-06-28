@@ -23,20 +23,17 @@ package com.stabilit.scm.common.net.req;
 
 /**
  * @author JTraber
+ *
  */
-public interface IConnectionPool {
+public class ConnectionPoolException extends Exception {
 
-	public abstract IConnection getConnection() throws Exception;
+	private static final long serialVersionUID = -4611941547421470420L;
 
-	public abstract void freeConnection(IConnection connection) throws Exception;
+	public ConnectionPoolException(String message) {
+		super(message);
+	}
 
-	public abstract void setMaxConnections(int maxConnections);
-
-	public abstract void setMinConnections(int minConnections);
-
-	public abstract void setCloseOnFree(boolean closeOnFree);
-
-	public abstract void initMinConnections();
-
-	public abstract void destroy();
+	public ConnectionPoolException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

@@ -54,6 +54,7 @@ public class NioHttpConnection implements IConnection {
 	private boolean isConnected;
 	private ConnectionKey key;
 	private int keepAliveInterval;
+	private int nrOfIdles;
 
 	/**
 	 * Instantiates a new nio NioHttpConnection.
@@ -184,7 +185,22 @@ public class NioHttpConnection implements IConnection {
 	}
 
 	@Override
-	public void setKeepAliveInterval(int keepAliveInterval) {
+	public void setIdleTimeout(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
+	}
+	
+	@Override
+	public int getNrOfIdlesInSequence() {
+		return nrOfIdles;
+	}
+
+	@Override
+	public void incrementNrOfIdles() {
+		this.nrOfIdles++;
+	}
+
+	@Override
+	public void resetNrOfIdles() {
+		this.nrOfIdles = 0;
 	}
 }

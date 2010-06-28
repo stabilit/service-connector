@@ -78,4 +78,11 @@ public interface IConstants {
 	public final String DEFAULT_CLIENT_CON = "netty.http";
 	/** The DEFAULT_SERVER_CON. */
 	public final String DEFAULT_SERVER_CON = "netty.tcp";
+
+	/** The DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE, after keep alive occurs 10 times connection gets disconnected. */
+	public final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
+	/** The DEFAULT_MAX_CONNECTIONS, 100 connections in the pool. */
+	public final int DEFAULT_MAX_CONNECTIONS = 100;
+	/** The DEFAULT_KEEP_ALIVE_INTERVAL, 0 = not active. */
+	public final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
 }

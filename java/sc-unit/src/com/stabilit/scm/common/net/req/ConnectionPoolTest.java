@@ -16,6 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,31 +37,109 @@ public class ConnectionPoolTest {
 	}
 
 	@Test
-	public void testSuccesfulPool() {
-		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http");
+	public void testPoolSuccesful() {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 60);
 		cp.setMaxConnections(10);
 		cp.setMinConnections(1);
-		cp.setKeepAliveInterval(60);
 
-		cp.setCloseOnFree(true); // default = false
-		cp.start();
+		cp.setCloseOnFree(true);
+		cp.initMinConnections();
 		cp.destroy();
 	}
 
 	@Test
-	public void test2() {
-
-		// IConnectionPool cp = new ConnectionPool("localhost", 8080, "xyt");
-		// cp1 == null
+	public void testMinMaxWrong() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080);
+		cp.setMaxConnections(2);
+		cp.setMinConnections(3);
+		for (int i = 0; i < 2; i++) {
+			cp.getConnection();
+		}
+		try {
+			// only two connections should be created, third connection fails
+			cp.getConnection();
+			Assert.fail("Should throw exception");
+		} catch (ConnectionPoolException es) {
+		}
+		cp.destroy();
 	}
 
 	@Test
-	public void test3() {
-
-		// IConnectionPool cp = new ConnectionPool("localhost", 8080, "xyt");
-		// IConnection connection = cp.getConnection();
-		//		
-		// cp.freeConnection(connection);
+	public void testGetAndFreeConnection() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080);
+		IConnection connection = cp.getConnection();
+		cp.freeConnection(connection);
+		cp.destroy();
 	}
 
+	@Test
+	public void testReachConnectionLimit() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080);
+		cp.setMaxConnections(2);
+		cp.getConnection();
+		cp.getConnection();
+
+		try {
+			// only two connections should be created, third connection fails
+			cp.getConnection();
+			Assert.fail("Should throw exception");
+		} catch (ConnectionPoolException es) {
+		}
+		cp.destroy();
+	}
+
+	@Test
+	public void testKeepAliveInactive() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, 0);
+		cp.setMaxConnections(2);
+		cp.setMinConnections(2);
+		IConnection connection = cp.getConnection();
+		// check log if no keep alive has been sent
+		cp.freeConnection(connection);
+		cp.destroy();
+	}
+
+	@Test
+	public void testKeepAliveActive() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, 5);
+		cp.setMaxConnections(1);
+		cp.setMinConnections(1);
+		cp.initMinConnections();
+		// check log if keep alive has been sent for connection
+		IConnection connection = cp.getConnection();
+		// check log if no keep alive has been sent for connection
+		cp.freeConnection(connection);
+		cp.destroy();
+	}
+
+	@Test
+	public void testConnectionCloseAfterTenKeepAlive() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, 1);
+		cp.setMaxConnections(2);
+		cp.setMinConnections(2);
+		cp.initMinConnections();
+		cp.destroy();
+	}
+
+	@Test
+	public void testCloseAfterFreeConnection() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080);
+		cp.setCloseOnFree(true);
+		IConnection connection = cp.getConnection();
+		cp.freeConnection(connection);
+	}
+
+	@Test
+	public void testHundredConnectionsInUse() throws Exception {
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, 5);
+		List<IConnection> connections = new ArrayList<IConnection>();
+		for (int i = 0; i < 100; i++) {
+			connections.add(cp.getConnection());
+		}
+		Thread.sleep(8000);
+		for (int i = 0; i < 100; i++) {
+			cp.freeConnection(connections.remove(0));
+		}
+		cp.destroy();
+	}
 }

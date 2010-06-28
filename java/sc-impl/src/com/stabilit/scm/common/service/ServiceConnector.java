@@ -42,22 +42,27 @@ public class ServiceConnector implements IServiceConnector {
 	private String host;
 	/** The port of the SC. */
 	private int port;
-	
+
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
 	/** The number of threads to use on client side. */
 	private int numberOfThreads;
 	/** The connection type, identifies low level component to use for communication (netty, nio). */
-	private String conType;	
+	private String conType;
 	/** The requester. */
 	protected IRequester requester; // becomes a pool later
 	/** The attributes. */
 	private MapBean<Object> attributes;
-	
+
 	private ServiceConnectorContext context;
 
 	public ServiceConnector(String host, int port) {
-		this(host, port, "netty.http");
+		this.host = host;
+		this.port = port;
+		this.numberOfThreads = 16;
+		this.attributes = new MapBean<Object>();
+		this.connectionPool = new ConnectionPool(this.host, this.port);
+		this.context = new ServiceConnectorContext();
 	}
 
 	public ServiceConnector(String host, int port, String conType) {
@@ -70,10 +75,21 @@ public class ServiceConnector implements IServiceConnector {
 		this.context = new ServiceConnectorContext();
 	}
 
+	public ServiceConnector(String host, int port, String conType, int keepAliveInterval) {
+		this.host = host;
+		this.port = port;
+		this.conType = conType;
+		this.numberOfThreads = 16;
+		this.attributes = new MapBean<Object>();
+		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval);
+		this.context = new ServiceConnectorContext();
+	}
+
 	@Override
 	public IServiceConnectorContext getContext() {
 		return context;
 	}
+
 	@Override
 	public IFactoryable newInstance() {
 		throw new UnsupportedOperationException();
@@ -141,21 +157,16 @@ public class ServiceConnector implements IServiceConnector {
 	}
 
 	@Override
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.connectionPool.setKeepAliveInterval(keepAliveInterval);
-	}
-
-	@Override
 	public void setMaxConnections(int maxConnections) {
 		this.connectionPool.setMaxConnections(maxConnections);
 	}
-	
+
 	class ServiceConnectorContext implements IServiceConnectorContext {
 
 		@Override
 		public IConnectionPool getConnectionPool() {
 			return connectionPool;
 		}
-		
+
 	}
 }

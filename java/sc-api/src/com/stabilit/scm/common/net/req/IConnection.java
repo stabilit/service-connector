@@ -67,11 +67,8 @@ public interface IConnection extends ICommunicationPoint {
 
 	/**
 	 * Destroys connection.
-	 * 
-	 * @throws Exception
-	 *             the exception
 	 */
-	public void destroy() throws Exception;
+	public void destroy();
 
 	/**
 	 * Checks if is connected.
@@ -88,10 +85,16 @@ public interface IConnection extends ICommunicationPoint {
 	public Object getKey();
 
 	/**
-	 * Sets the keep alive interval.
-	 *
-	 * @param keepAliveInterval the new keep alive interval
+	 * Sets the idle timeout.
+	 * 
+	 * @param idleTimeout
+	 *            the new idle timeout
 	 */
-	void setKeepAliveInterval(int keepAliveInterval);
-
+	void setIdleTimeout(int idleTimeout);
+	
+	public void incrementNrOfIdles();
+	
+	public void resetNrOfIdles();
+	
+	public int getNrOfIdlesInSequence();
 }

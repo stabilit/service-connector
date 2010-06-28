@@ -19,17 +19,14 @@ package com.stabilit.scm.common.factory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.stabilit.scm.common.listener.RuntimePoint;
+
 /**
- * The Class Factory. SuperClass for factories. 
- * 
- * *** ATTENTION *** 
- * Subclasses must not have any properties other then
- * private static. Otherwise these properties will not be thread-safe! 
- * 
- * This construct is an extended factory pattern. The factory stores base instances of classes in a map. 
- * To create an other instance the factory takes the base instance and calls there newInstance method. 
- * So only the base instance knows how to create himself and factory does not to know more details. 
- * The base instance need to be created by concrete subclasses of the <code>Factory</code>
+ * The Class Factory. SuperClass for factories. *** ATTENTION *** Subclasses must not have any properties other then
+ * private static. Otherwise these properties will not be thread-safe! This construct is an extended factory pattern.
+ * The factory stores base instances of classes in a map. To create an other instance the factory takes the base
+ * instance and calls there newInstance method. So only the base instance knows how to create himself and factory does
+ * not to know more details. The base instance need to be created by concrete subclasses of the <code>Factory</code>
  * 
  * @author JTraber
  */
@@ -102,7 +99,9 @@ public abstract class Factory {
 	public IFactoryable newInstance(Object key) {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
-			return null;
+			// if key is not found return default
+			RuntimePoint.getInstance().fireRuntime(this, "key : " + key + "not found in baseInstances of factory");
+			return this.getInstance(DEFAULT);
 		}
 		return factoryInstance.newInstance(); // invoke the base instance constructor
 	}

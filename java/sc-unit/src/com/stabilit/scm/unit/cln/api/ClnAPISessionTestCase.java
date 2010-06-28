@@ -36,8 +36,7 @@ public class ClnAPISessionTestCase {
 	public void testClnAPI() throws Exception {		
 		IServiceConnector sc = null;
 		try {			
-			sc = new ServiceConnector("localhost", 8080);
-			sc.setKeepAliveInterval(0);			
+			sc = new ServiceConnector("localhost", 8080);		
 			sc.setMaxConnections(100);
 //			IServiceConnector sc2 = new ServiceConnector("localhost", 8081);
 //			IServiceConnector sc3 = new ServiceConnector("localhost", 8080);
