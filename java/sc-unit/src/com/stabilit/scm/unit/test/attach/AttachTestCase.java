@@ -48,18 +48,8 @@ public class AttachTestCase extends SuperTestCase {
 		super(parameter);
 	}
 
-	@Test
 	public void failAttach() throws Exception {
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		/******************* incompatible scmp version ******************/
-		attachCall.getRequest().setHeader(SCMPHeaderAttributeKey.SC_VERSION, "2.0-00");
-		try {
-			attachCall.invoke();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException ex) {
-			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.ATTACH);
-			Assert.assertEquals("1", attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		}
+		//TODO
 	}
 
 	@Test
@@ -85,11 +75,10 @@ public class AttachTestCase extends SuperTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
-		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={messageID=1, msgType=ATTACH, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
+		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={messageID=1, bodyLength=0, msgType=ATTACH, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
 				+ localDateTimeString
 				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
-				+ localDateTime
-				+ ";keepAliveTimeout=30,360;|";
+				+ localDateTime + ";|";
 		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");

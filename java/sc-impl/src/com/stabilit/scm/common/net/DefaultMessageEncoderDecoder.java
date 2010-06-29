@@ -114,8 +114,12 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		// reading body - depends on body type
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
-		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		scmpMsg.setHeader(metaMap);
+		if("0".equals(scmpBodyLength)) {
+			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
+			return scmpMsg;
+		}
+		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
 			switch (scmpBodyType) {
 			case binary:
