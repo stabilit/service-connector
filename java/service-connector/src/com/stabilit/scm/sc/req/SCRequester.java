@@ -18,7 +18,9 @@ package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.ISCMPCallback;
+import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -26,31 +28,43 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public class SCRequester extends Requester {
+public class SCRequester implements IRequester {
 
-	/**
-	 * @param context
-	 */
+	/** The context. */
+	private IContext context;
+
 	public SCRequester(IContext context) {
-		super(context);
+		this.context = context;
 	}
 
-	/**
-	 * Send and receive.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the sCMP
-	 * @throws Exception
-	 *             the exception
-	 */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
+		// return an already connected live instance
+		IConnection connection = this.context.getConnectionPool().getConnection();
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
 			return connection.sendAndReceive(scmp);
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
+			this.context.getConnectionPool().freeConnection(connection);// give back to pool
 		}
+	}
+
+	@Override
+	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
+		// return an already connected live instance
+		IConnection connection = this.context.getConnectionPool().getConnection();
+		try {
+			PerformancePoint.getInstance().fireBegin(this, "send");
+			connection.send(message, callback);
+		} finally {
+			PerformancePoint.getInstance().fireEnd(this, "send");
+			this.context.getConnectionPool().freeConnection(connection);// give back to pool
+		}
+	}
+	
+	@Override
+	public synchronized String toHashCodeString() {
+		return " [" + this.hashCode() + "]";
 	}
 }

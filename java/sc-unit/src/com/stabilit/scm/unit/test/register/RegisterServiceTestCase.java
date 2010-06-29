@@ -95,7 +95,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 				"netty.tcp", 16, 1000, 60 ,10);
 		IContext context = new TestContext(config);
 		IRequester req = new Requester(context);
-		req.connect();
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "P01_RTXS_RPRWS1");

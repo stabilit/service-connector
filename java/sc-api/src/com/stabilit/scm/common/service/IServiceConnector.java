@@ -108,5 +108,7 @@ public interface IServiceConnector extends IFactoryable {
 	public ISessionService newSessionService(String string);
 
 	public void setMaxConnections(int maxConnections);
+
+	void destroy();
 	
 }

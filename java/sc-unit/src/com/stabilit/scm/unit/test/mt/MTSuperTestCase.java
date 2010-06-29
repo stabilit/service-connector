@@ -80,7 +80,6 @@ public abstract class MTSuperTestCase {
 		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("session-server.properties");
 		registerReq = new Requester(this.testContext);
-		registerReq.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
@@ -97,7 +96,6 @@ public abstract class MTSuperTestCase {
 			config = new RequesterConfigPool();
 			config.load(fileName);
 			IRequester req = new Requester(this.testContext);
-			req.connect(); // physical connect
 			this.reqList.add(req);
 			return req;
 		} catch (Throwable e) {
@@ -107,25 +105,17 @@ public abstract class MTSuperTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		for (IRequester client : this.reqList) {
-			client.disconnect();
-		}
+	public void tearDown() throws Exception {		
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 
 		deRegisterServiceCall.invoke();
-		registerReq.disconnect();
+		this.testContext.getConnectionPool().destroy();
 	}
 
 	@Override
-	protected void finalize() throws Throwable {
-		for (IRequester client : this.reqList) {
-			client.disconnect();
-		}
-		if(registerReq != null) {
-			registerReq.disconnect();
-		}		
+	protected void finalize() throws Throwable {	
+		this.testContext.getConnectionPool().destroy();
 		ConnectionPoint.getInstance().clearAll();
 		reqList = null;
 	}

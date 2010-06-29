@@ -79,8 +79,6 @@ public class Performance {
 		IRequester req = new Requester(testContext);
 		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16, 1000,
 				60, 10);
-		req.connect();
-
 		SCMPMessage request = null;
 		SCMPMessage resp = null;
 

@@ -106,8 +106,6 @@ public class ServiceConnector implements IServiceConnector {
 	public void detach() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke();
-		// physical disconnect
-		this.requester.disconnect();
 	}
 
 	@Override
@@ -159,6 +157,11 @@ public class ServiceConnector implements IServiceConnector {
 	@Override
 	public void setMaxConnections(int maxConnections) {
 		this.connectionPool.setMaxConnections(maxConnections);
+	}
+	
+	@Override
+	public void destroy() {
+		this.connectionPool.destroy();
 	}
 
 	class ServiceConnectorContext implements IServiceConnectorContext {

@@ -56,7 +56,6 @@ public class EchoSCTestCase extends SuperTestCase {
 			config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig());
 			req = new Requester(this.testContext);
-			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

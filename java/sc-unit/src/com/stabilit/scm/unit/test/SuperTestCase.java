@@ -72,7 +72,6 @@ public abstract class SuperTestCase {
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig());
 			req = new Requester(this.testContext);
-			req.connect(); // physical connect
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -80,12 +79,12 @@ public abstract class SuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		req.disconnect();
+		this.testContext.getConnectionPool().destroy();
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		req.disconnect(); // physical disconnect
+		this.testContext.getConnectionPool().destroy();
 		ConnectionPoint.getInstance().clearAll();
 		req = null;
 	}

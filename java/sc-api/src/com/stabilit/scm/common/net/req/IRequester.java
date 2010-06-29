@@ -27,22 +27,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public interface IRequester {
 
 	/**
-	 * Disconnect.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void disconnect() throws Exception;
-
-	/**
-	 * Connect.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void connect() throws Exception;
-
-	/**
 	 * Send and receive, synchronous operation.
 	 * 
 	 * @param scmp
@@ -70,12 +54,4 @@ public interface IRequester {
 	 * @return the string
 	 */
 	public String toHashCodeString();
-
-	/**
-	 * Checks if is connected.
-	 * 
-	 * @return true, if is connected
-	 */
-	public boolean isConnected();
-
 }
