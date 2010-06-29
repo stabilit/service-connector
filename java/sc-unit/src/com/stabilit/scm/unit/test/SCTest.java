@@ -43,9 +43,6 @@ import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.scm.unit.test.srvData.SrvDataLargeTestCase;
 import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
-import com.stabilit.scm.unit.test.worse.WorseSCServerToClientTestCase;
-import com.stabilit.scm.unit.test.worse.WorseSCServerToServiceTestCase;
-import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 /**
  * @author JTraber
@@ -53,7 +50,6 @@ import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 
 @RunWith(Suite.class)
 @SuiteClasses( { 
-	WorseScenarioSimulationServerTestCase.class, 
 	AttachTestCase.class, 
 	DetachTestCase.class,
 	ClnCreateSessionTestCase.class, 
@@ -66,9 +62,7 @@ import com.stabilit.scm.unit.test.worse.WorseScenarioSimulationServerTestCase;
 	SrvEchoLargeTestCase.class, 
 	EchoSCTestCase.class, 
 	EchoSCLargeTestCase.class, 
-	SCImplTest.class,
-	WorseSCServerToServiceTestCase.class, 
-	WorseSCServerToClientTestCase.class })
+	SCImplTest.class})
 public class SCTest {
 
 	private SCTest() {

@@ -31,6 +31,7 @@ import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
@@ -53,6 +54,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		try {
 			config = new RequesterConfigPool();
 			config.load(fileName);
+			this.testContext = new TestContext(this.config.getRequesterConfig());
 			req = new Requester(this.testContext);
 			req.connect(); // physical connect
 		} catch (Throwable e) {

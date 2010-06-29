@@ -401,12 +401,11 @@ public class SCMPMessage {
 	 */
 	public void setBody(Object body) {
 		this.body = body;
+		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		if (this.body == null) {
-			this.removeHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
 			this.removeHeader(SCMPHeaderAttributeKey.BODY_TYPE);
 			return;
 		}
-		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, this.getBodyTypeAsString());
 	}
 

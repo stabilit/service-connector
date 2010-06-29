@@ -16,14 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-
 import javax.xml.bind.ValidationException;
 
-import com.stabilit.scm.common.cmd.ICommandCallback;
+import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.ICommunicatorCallback;
+import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -44,7 +45,7 @@ import com.stabilit.scm.sc.service.Session;
  * 
  * @author JTraber
  */
-public class ClnDataCommand extends AsyncCommandAdapter implements IPassThroughPartMsg {
+public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
 	/**
 	 * Instantiates a new ClnDataCommand.
@@ -83,34 +84,34 @@ public class ClnDataCommand extends AsyncCommandAdapter implements IPassThroughP
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
 	@Override
-	public void run(IRequest request, IResponse response, ICommandCallback callback) throws Exception {
+	public void run(IRequest request, IResponse response, ICommunicatorCallback scmpCallback) throws Exception {
+		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, scmpCallback);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
 
 		Server server = session.getServer();
-		try {
-			// try sending to backend server
-			server.sendData(message, callback);
-			return;
-		} catch (SCServiceException e) {
-			// clnDatat failed, connection to backend server disturbed - clean up
-			// TODO clean up??
-			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			ExceptionPoint.getInstance().fireException(this, e);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
-		}
+		// try sending to backend server
+		server.sendData(message, callback);
+		return;
+	}
+
+	@Override
+	public boolean isAsynchronous() {
+		return true;
 	}
 
 	/**
 	 * The Class ClnDataCommandValidator.
 	 */
-	public class ClnDataCommandValidator implements ICommandValidator {
-		
+	private class ClnDataCommandValidator implements ICommandValidator {
+
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
@@ -152,6 +153,32 @@ public class ClnDataCommand extends AsyncCommandAdapter implements IPassThroughP
 				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
+		}
+	}
+
+	private class ClnDataCommandCallback implements ISCMPCallback {
+
+		private ICommunicatorCallback callback;
+		private IRequest request;
+		private IResponse response;
+
+		public ClnDataCommandCallback(IRequest request, IResponse response, ICommunicatorCallback callback) {
+			this.callback = callback;
+			this.request = request;
+			this.response = response;
+		}
+
+		@Override
+		public void callback(SCMPMessage scmpReply) {
+			scmpReply.setMessageType(getKey().getName());
+			this.response.setSCMP(scmpReply);
+			this.callback.callback(request, response);
+		}
+
+		@Override
+		public void callback(Throwable th) {
+			// TODO clean up!!! if th is SCServiceException
+			this.callback.callback(response, th);
 		}
 	}
 }

@@ -28,17 +28,18 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommand;
-import com.stabilit.scm.common.cmd.ICommandCallback;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.net.ICommunicatorCallback;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -55,7 +56,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler implements ICommunicatorCallback {
 
 	/** The command request. */
 	private NettyCommandRequest commandRequest = null;
@@ -63,9 +64,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	private SCMPCompositeSender compositeSender = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
-	
-	private ICommandCallback commandCallback = null;
-
 
 	/**
 	 * Instantiates a new NettyHttpResponderRequestHandler.
@@ -88,7 +86,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
 			return;
-		}		
+		}
 		if (scmpReq.isKeepAlive()) {
 			scmpReq.setIsReply(true);
 			response.setSCMP(scmpReq);
@@ -132,6 +130,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				response.write();
 				return;
 			}
+			// sets the command request null - request is complete don't need to know about preceding messages any more
+			commandRequest = null;
 			scmpReq = request.getMessage();
 			if (command == null) {
 				if (LoggerPoint.getInstance().isDebug()) {
@@ -155,12 +155,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
 				PerformancePoint.getInstance().fireBegin(command, "run");
-				if (command.isAsynchronous() && command instanceof IAsyncCommand) {
-					if (commandCallback == null) {
-					    commandCallback = new NettyCommandCallback(ctx, command, request, response);
-					}
-					((IAsyncCommand)command).run(request, response, commandCallback);
-					commandRequest = null;
+				if (command.isAsynchronous()) {
+					((IAsyncCommand) command).run(request, response, this);
 					return;
 				}
 				command.run(request, response);
@@ -197,14 +193,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 		}
 		response.write();
-		// sets the command request null - request is complete don't need to know about preceding messages any more
-		commandRequest = null;
-
-		// needed for testing TODO
-		if ("true".equals(response.getSCMP().getHeader("kill"))) {
-			ctx.getChannel().disconnect();
-			return;
-		}
 	}
 
 	/** {@inheritDoc} */
@@ -217,5 +205,50 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			response.write();
 		}
 	}
-	
+
+	@Override
+	public void callback(IRequest request, IResponse response) {
+		try {
+			SCMPMessage scmpRequest = request.getMessage();
+			if (response.isLarge()) {
+				// response is large, create a large response for reply
+				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
+				SCMPMessage firstSCMP = compositeSender.getFirst();
+				response.setSCMP(firstSCMP);
+				msgID.incrementMsgSequenceNr();
+				msgID.incrementPartSequenceNr();
+				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			} else {
+				SCMPMessage message = response.getSCMP();
+				if (message.isPart() || scmpRequest.isPart()) {
+					msgID.incrementPartSequenceNr();
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+				} else {
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+					msgID.incrementMsgSequenceNr();
+				}
+			}
+
+			response.write();
+		} catch (Throwable th) {
+			this.callback(response, th);
+		}
+	}
+
+	@Override
+	public void callback(IResponse response, Throwable th) {
+		ExceptionPoint.getInstance().fireException(this, th);
+		if (th instanceof HasFaultResponseException) {
+			((HasFaultResponseException) th).setFaultResponse(response);
+		} else {
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
+			scmpFault.setLocalDateTime();
+			response.setSCMP(scmpFault);
+		}
+		try {
+			response.write();
+		} catch (Throwable thr) {
+		}
+	}
 }

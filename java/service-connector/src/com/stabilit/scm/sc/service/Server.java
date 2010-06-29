@@ -36,10 +36,10 @@ import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.registry.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -220,6 +220,7 @@ public class Server {
 		}
 		return serverReply;
 	}
+
 	/**
 	 * Send data. Tries sending data to server asynchronous.
 	 * 
@@ -229,21 +230,24 @@ public class Server {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public void sendData(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
+	public void sendData(SCMPMessage message, ISCMPCallback callback) {
 		String sessionId = message.getSessionId();
 
 		IRequester req = occupiedReqList.get(sessionId);
 		if (req == null) {
 			RuntimePoint.getInstance().fireRuntime(this,
 					"sendData not possible - req is null for sessionid: " + sessionId);
-			throw new SCServiceException("sendData not possible - req is null for sessionid:");
+			Exception e = new SCServiceException("sendData not possible - req is null for sessionid:");
+			callback.callback(e);
+			return;
 		}
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(req, message);
 		try {
 			srvDataCall.invoke(callback);
 		} catch (Exception e) {
 			// TODO what to do with current requester
-			throw new SCServiceException("sendData failed", e);
+			Exception ex = new SCServiceException("sendData failed", e);
+			callback.callback(ex);
 		}
 		return;
 	}

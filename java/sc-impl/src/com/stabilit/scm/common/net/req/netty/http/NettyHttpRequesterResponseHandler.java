@@ -28,25 +28,24 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
-import com.stabilit.scm.common.cmd.ICallback;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpROequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
- * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
- * operation fails.
+ * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when operation
+ * fails.
  * 
  * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler implements ICallback {
+public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	/** Queue to store the answer. */
 	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
@@ -54,16 +53,17 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	private ISCMPCallback scmpCallback;
 
 	public NettyHttpRequesterResponseHandler() {
-		 this.scmpCallback = null;
+		this.scmpCallback = null;
 	}
-	
+
 	public ISCMPCallback getCallback() {
 		return scmpCallback;
 	}
-	
+
 	public void setCallback(ISCMPCallback scmpCallback) {
 		this.scmpCallback = scmpCallback;
 	}
+
 	/**
 	 * Gets the message synchronously.
 	 * 
@@ -104,6 +104,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
 		if (this.scmpCallback != null) {
 			this.callback(nettyEvent);
+			this.scmpCallback = null;
 			return;
 		}
 		answer.offer(nettyEvent);
@@ -113,31 +114,32 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
-		NettyEvent nettyEvent = new NettyExceptionEvent(th);
 		if (this.scmpCallback != null) {
-			this.callback(e);
+			this.scmpCallback.callback(th);
+			this.scmpCallback = null;
 		}
+		NettyEvent nettyEvent = new NettyExceptionEvent(th);
 		answer.offer(nettyEvent);
 	}
-	@Override
-	public void callback(Object obj) {
+
+	private void callback(NettyEvent event) {
+		SCMPMessage ret = null;
 		try {
-			NettyEvent eventMessage = (NettyEvent) obj;
-			HttpResponse httpResponse = (HttpResponse) eventMessage
-					.getResponse();
+			NettyEvent eventMessage = event;
+			HttpResponse httpResponse = (HttpResponse) eventMessage.getResponse();
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
 			// inside
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = EncoderDecoderFactory
-					.getCurrentEncoderDecoderFactory().newInstance(buffer);
-			SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
-			this.scmpCallback.callback(ret);
+			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
+					.newInstance(buffer);
+			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			this.scmpCallback.callback(e);
+			return;
 		}
+		this.scmpCallback.callback(ret);
 	}
-	
 }

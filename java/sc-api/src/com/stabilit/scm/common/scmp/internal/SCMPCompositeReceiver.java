@@ -29,8 +29,8 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to
- * complete request/response.
+ * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together
+ * to complete request/response.
  * 
  * @author JTraber
  */
@@ -39,7 +39,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
-	private SCMPMessage currentPart;			// TODO currentPart should be SCMPPart?
+	private SCMPMessage currentPart; // TODO currentPart should be SCMPPart?
 	/** The scmp fault. */
 	private SCMPFault scmpFault;
 	/** The scmp offset. */
@@ -152,11 +152,11 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		if (this.scmpFault != null) {
 			return scmpFault.getBody();
 		}
-		// put all parts together to get complete body
-		SCMPMessage firstScmp = this.scmpList.get(0);
-		if (firstScmp == null) {
+		if(this.scmpList == null || this.scmpList.size() <= 0) {
 			return 0;
 		}
+		// put all parts together to get complete body
+		SCMPMessage firstScmp = scmpList.get(0);
 		if (firstScmp.isByteArray()) {
 			this.outputStream = new ByteArrayOutputStream();
 			try {

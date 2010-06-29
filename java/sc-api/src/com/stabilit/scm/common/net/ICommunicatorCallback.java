@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,14 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.cmd;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.common.net.ICommunicatorCallback;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 
-public interface IAsyncCommand extends ICommand {
+/**
+ * @author JTraber
+ */
+public interface ICommunicatorCallback {
 
-	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception;
+	public abstract void callback(IRequest request, IResponse response);
+
+	public abstract void callback(IResponse response, Throwable th);
 }
