@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
@@ -24,11 +25,6 @@ import com.stabilit.scm.common.factory.IFactoryable;
  * @author JTraber
  */
 public class HttpFrameDecoder extends DefaultFrameDecoder {
-
-	/** The Constant CR. */
-	private static final byte CR = 13;
-	/** The Constant LF. */
-	private static final byte LF = 10;
 
 	/**
 	 * Instantiates a new http frame decoder.
@@ -56,11 +52,11 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 		int bytesRead = buffer.length;
 
 		// watch out for Content-Length attribute in http header to evaluate frame size
-		// (bytesRead - 3) avoids IndexOutOfBoundException
+		// (bytesRead - 3) avoids IndexOutOfBoundException because inner while looks ahead
 		label: for (int i = 0; i < (bytesRead - 3); i++) {
-			if (buffer[i] == CR && buffer[i + 1] == LF) {
+			if (buffer[i] == IConstants.CR && buffer[i + 1] == IConstants.LF) {
 				i += 2;
-				if (buffer[i] == CR && buffer[i + 1] == LF) {
+				if (buffer[i] == IConstants.CR && buffer[i + 1] == IConstants.LF) {
 					headerEnd = i + 2;
 					break label;
 				}
@@ -68,7 +64,7 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 					sizeStart = i + 16;
 					sizeEnd = sizeStart + 1;
 					while (sizeEnd < bytesRead) {
-						if (buffer[sizeEnd + 1] == CR && buffer[sizeEnd + 2] == LF) {
+						if (buffer[sizeEnd + 1] == IConstants.CR && buffer[sizeEnd + 2] == IConstants.LF) {
 							break;
 						}
 						sizeEnd++;

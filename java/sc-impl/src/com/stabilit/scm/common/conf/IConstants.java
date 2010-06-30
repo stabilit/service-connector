@@ -24,65 +24,82 @@ package com.stabilit.scm.common.conf;
 public interface IConstants {
 
 	/** Protocol literal. */
-	public final String HTTP = "http";
+	public static final String HTTP = "http";
 	/** File qualifier for Http requests. */
-	public final String HTTP_FILE = "/";
+	public static final String HTTP_FILE = "/";
 
 	/** The DEFAULT_NR_OF_THREADS. */
-	public final int DEFAULT_NR_OF_THREADS = 10;
+	public static final int DEFAULT_NR_OF_THREADS = 10;
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
-	public final int MAX_KEEP_ALIVE_OF_THREADS = 10;
+	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 	/** The read timeout in seconds. */
-	public final int READ_TIMEOUT = 200;
+	public static final int READ_TIMEOUT = 200;
 	/** The write timeout in seconds. */
-	public final int WRITE_TIMEOUT = 200;
+	public static final int WRITE_TIMEOUT = 200;
 
 	/** The REGEX. */
-	public final String COMMA_OR_SEMICOLON = ",|;";
+	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The CON. */
-	public final String CON_QUALIFIER = ".con";
+	public static final String CON_QUALIFIER = ".con";
 	/** The HOST. */
-	public final String HOST_QUALIFIER = ".host";
+	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
-	public final String PORT_QUALIFIER = ".port";
+	public static final String PORT_QUALIFIER = ".port";
 	/** The THREAD. */
-	public final String THREAD_QUALIFIER = ".thread";
+	public static final String THREAD_QUALIFIER = ".thread";
 	/** The connection names. */
-	public final String CONNECTION_NAMES = "connectionNames";
+	public static final String CONNECTION_NAMES = "connectionNames";
 	/** The server names. */
-	public final String SERVER_NAMES = "serverNames";
+	public static final String SERVER_NAMES = "serverNames";
 	/** The services Names. */
-	public final String SERVICE_NAMES = "serviceNames";
-	public final String MAX_POOL_SIZE = "maxPoolSize";
-	public final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
-	public final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
+	public static final String SERVICE_NAMES = "serviceNames";
+	public static final String MAX_POOL_SIZE = "maxPoolSize";
+	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
+	public static final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
 
 	/** The logging directory. */
-	public final String LOG_DIR = "log/";
+	public static final String LOG_DIR = "log/";
 	/** The file name of connection log file. */
-	public final String CONNECTION_LOG_FILE_NAME = "con.log";
+	public static final String CONNECTION_LOG_FILE_NAME = "con.log";
 	/** The file name of exception log file. */
-	public final String EXCEPTION_LOG_FILE_NAME = "exc.log";
+	public static final String EXCEPTION_LOG_FILE_NAME = "exc.log";
 	/** The file name of general log file. */
-	public final String GENERAL_LOG_FILE_NAME = "gen.log";
+	public static final String GENERAL_LOG_FILE_NAME = "gen.log";
 	/** The file name of performance log file. */
-	public final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
+	public static final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
 	/** The file name of warning log file. */
-	public final String RUNTIME_LOG_FILE_NAME = "rtm.log";
-	public final String SESSION_LOG_FILE_NAME = "ses.log";
+	public static final String RUNTIME_LOG_FILE_NAME = "rtm.log";
+	public static final String SESSION_LOG_FILE_NAME = "ses.log";
 
 	/** The ACCEPT_PARAMS. */
-	public final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
+	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 
 	/** The DEFAULT_CLIENT_CON. */
-	public final String DEFAULT_CLIENT_CON = "netty.http";
+	public static final String DEFAULT_CLIENT_CON = "netty.http";
 	/** The DEFAULT_SERVER_CON. */
-	public final String DEFAULT_SERVER_CON = "netty.tcp";
+	public static final String DEFAULT_SERVER_CON = "netty.tcp";
 
 	/** The DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE, after keep alive occurs 10 times connection gets disconnected. */
-	public final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
+	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 	/** The DEFAULT_MAX_CONNECTIONS, 100 connections in the pool. */
-	public final int DEFAULT_MAX_CONNECTIONS = 100;
+	public static final int DEFAULT_MAX_CONNECTIONS = 100;
 	/** The DEFAULT_KEEP_ALIVE_INTERVAL, 0 = not active. */
-	public final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
+	public static final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
+
+	/** Carriage return character */
+	public static final byte CR = 0x0D;
+	/** Line feed character */
+	public static final byte LF = 0x0A;
+	/** The Constant FIX_HEADLINE_SIZE. */
+	public static final int FIX_HEADLINE_SIZE = 20;
+	/** The Constant FORMAT_OF_MSG_LENGTH. */
+	public static final String FORMAT_OF_MSG_LENGTH = " 00000";	
+	/** The Constant FIX_MSG_SIZE_START. */
+	public static final int FIX_MSG_SIZE_START = 4;	
+	/** The Constant FIX_MSG_SIZE_END. */
+	public static final int FIX_MSG_SIZE_END = 8;	
+	/** The Constant FIX_HEADER_SIZE_START. */
+	public static final int FIX_HEADER_SIZE_START = 10;
+	/** The Constant FIX_HEADER_SIZE_END. */
+	public static final int FIX_HEADER_SIZE_END = 14;	
 }

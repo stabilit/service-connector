@@ -35,4 +35,8 @@ public interface IFrameDecoder extends IFactoryable {
 	 *             the exception
 	 */
 	public int parseFrameSize(byte[] buffer) throws Exception;
+
+	public int parseMessageSize(byte[] buffer) throws Exception;
+	
+	public int parseHeaderSize(byte[] buffer) throws Exception;
 }

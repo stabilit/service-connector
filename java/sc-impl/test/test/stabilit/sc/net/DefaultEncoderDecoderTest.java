@@ -52,7 +52,7 @@ public class DefaultEncoderDecoderTest {
 	/** The body length. */
 	private String bodyLength;
 	/** The body. */
-	private String body;	
+	private String body;
 	/** The encode scmp. */
 	private SCMPMessage encodeScmp;
 
@@ -80,9 +80,9 @@ public class DefaultEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeREQTest() {
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		String requestString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -103,9 +103,9 @@ public class DefaultEncoderDecoderTest {
 	@Test
 	public void decodeRESTest() {
 		headKey = SCMPHeadlineKey.RES;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		String requestString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -126,9 +126,9 @@ public class DefaultEncoderDecoderTest {
 	@Test
 	public void decodeEXCTest() {
 		headKey = SCMPHeadlineKey.EXC;
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		String requestString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -151,9 +151,9 @@ public class DefaultEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeUNDEFTest() {
-		String requestString = "garbage /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		String requestString = "garbage /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n" + "messageID="
+				+ msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName() + "\n\n" + body
+				+ "\n";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -172,9 +172,9 @@ public class DefaultEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeBodyTypesTest() {
-		String requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		String requestString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -189,9 +189,8 @@ public class DefaultEncoderDecoderTest {
 		verifySCMP(message);
 
 		bodyType = SCMPBodyType.text;
-		requestString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body + "\n";
+		requestString = headKey.name() + " 00068 00056 1.0\n" + "bodyType=" + bodyType.getName() + "\n" + "messageID="
+				+ msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName() + "\n" + body;
 
 		buffer = requestString.getBytes();
 		is = new ByteArrayInputStream(buffer);
@@ -213,9 +212,9 @@ public class DefaultEncoderDecoderTest {
 	public void encodeREQTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body;
+		String expectedString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -234,9 +233,9 @@ public class DefaultEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.RES;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body;
+		String expectedString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		SCMPMessage encodeRes = new SCMPMessage();
 		encodeRes.setIsReply(true);
@@ -260,9 +259,9 @@ public class DefaultEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.EXC;
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body;
+		String expectedString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		SCMPMessage encodeExc = new SCMPFault();
 		encodeExc.setHeader(encodeScmp);
@@ -284,9 +283,9 @@ public class DefaultEncoderDecoderTest {
 	public void encodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
 
-		String expectedString = headKey.name() + " /s=71& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body;
+		String expectedString = headKey.name() + " 00070 00058 1.0\n" + "bodyType=" + bodyType.getName() + "\n"
+				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName()
+				+ "\n" + body;
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -300,9 +299,8 @@ public class DefaultEncoderDecoderTest {
 		bodyType = SCMPBodyType.text;
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
 
-		expectedString = headKey.name() + " /s=69& SCMP/1.0\n" + "bodyType=" + bodyType.getName() + "\n"
-				+ "messageID=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType="
-				+ msgType.getName() + "\n\n" + body;
+		expectedString = headKey.name() + " 00068 00056 1.0\n" + "bodyType=" + bodyType.getName() + "\n" + "messageID="
+				+ msgID + "\n" + "bodyLength=" + bodyLength + "\n" + "msgType=" + msgType.getName() + "\n" + body;
 
 		os = new ByteArrayOutputStream();
 		try {

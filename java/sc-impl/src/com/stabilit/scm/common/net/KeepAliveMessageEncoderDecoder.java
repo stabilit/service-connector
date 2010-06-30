@@ -35,7 +35,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public class KeepAliveMessageEncoderDecoder implements IEncoderDecoder {
+public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/**
 	 * Instantiates a new default encoder decoder.
@@ -87,36 +87,14 @@ public class KeepAliveMessageEncoderDecoder implements IEncoderDecoder {
 	public void encode(OutputStream os, Object obj) throws Exception {
 		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
-		SCMPKeepAlive keepAlive = (SCMPKeepAlive)obj;
+		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {
-		    SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRS;
-		    writeHeadLine(bw, headerKey, 0);
+			SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRS;
+			writeHeadLine(bw, headerKey, 0, 0);
 		} else {
-		    SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRQ;
-		    writeHeadLine(bw, headerKey, 0);		
+			SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRQ;
+			writeHeadLine(bw, headerKey, 0, 0);
 		}
-	    return;
-	}
-
-	/**
-	 * Write head line.
-	 * 
-	 * @param bw
-	 *            the bw
-	 * @param headerKey
-	 *            the header key
-	 * @param messageLength
-	 *            the message length
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageLength) throws IOException {
-		bw.write(headerKey.toString());
-		bw.write(" /s=");
-		bw.write(String.valueOf(messageLength));
-		bw.write("& SCMP/");
-		bw.append(SCMPMessage.SCMP_VERSION.toString());
-		bw.append("\n");
-		bw.flush();
+		return;
 	}
 }

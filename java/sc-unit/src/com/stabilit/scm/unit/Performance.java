@@ -31,6 +31,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.res.Responder;
+import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -59,13 +60,13 @@ public class Performance {
 		resp.create();
 		resp.runAsync();
 
-		// NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
-		// endpoint.setHost("localhost");
-		// endpoint.setPort(8080);
-		// endpoint.setNumberOfThreads(16);
-		//
-		// endpoint.create();
-		// endpoint.runAsync();
+		NettyHttpEndpoint endpoint = new NettyHttpEndpoint();
+		endpoint.setHost("localhost");
+		endpoint.setPort(8080);
+		endpoint.setNumberOfThreads(16);
+
+		endpoint.create();
+		endpoint.runAsync();
 	}
 
 	public void startSending() throws Exception {

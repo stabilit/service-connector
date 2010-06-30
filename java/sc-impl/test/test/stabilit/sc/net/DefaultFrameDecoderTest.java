@@ -58,15 +58,6 @@ public class DefaultFrameDecoderTest {
 		} catch (FrameDecoderException e) {
 			Assert.fail("Should not throw Exception!");
 		}
-
-		String headline = "REQ /=87& SCMP/1.0";
-		try {
-			byte[] b = headline.getBytes();
-			decoder.parseFrameSize(b);
-			Assert.fail("Should throw Exception!");
-		} catch (FrameDecoderException e) {
-			Assert.assertEquals("invalid scmp header line", e.getMessage());
-		}
 	}
 
 	/**
@@ -74,22 +65,22 @@ public class DefaultFrameDecoderTest {
 	 */
 	@Test
 	public void parseFrameSizeTest() {
-		byte[] b = new byte[0];
+		byte[] b = null;
 		int frameSize = 0;
-		String headline = "REQ /s=87& SCMP/1.0\n";
+		String headline = "REQ 00078 00043 1.0\n";
 		try {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
-			Assert.assertEquals("107", frameSize + "");
+			Assert.assertEquals("98", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
 
-		headline = "REQ /s=01& SCMP/1.0\n";
+		headline = "REQ 11178 00043 1.0\n";
 		try {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
-			Assert.assertEquals("21", frameSize + "");
+			Assert.assertEquals("11198", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
@@ -100,26 +91,8 @@ public class DefaultFrameDecoderTest {
 	 */
 	@Test
 	public void readIntFailTest() {
-		byte[] b = new byte[0];
-		String headline = "REQ /=87& SCMP/1.0\n";
-		try {
-			b = headline.getBytes();
-			decoder.parseFrameSize(b);
-			Assert.fail("Should throw Exception!");
-		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp message length", e.getMessage());
-		}
-
-		headline = "REQ /s=& SCMP/1.0\n";
-		try {
-			b = headline.getBytes();
-			decoder.parseFrameSize(b);
-			Assert.fail("Should throw Exception!");
-		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp message length", e.getMessage());
-		}
-
-		headline = "REQ /s=0& SCMP/1.0\n";
+		byte[] b = null;
+		String headline = "REQ  8700 00000 1.0\n";
 		try {
 			b = headline.getBytes();
 			decoder.parseFrameSize(b);

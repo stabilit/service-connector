@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 
@@ -25,7 +26,7 @@ import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
  * @author JTraber
  */
 public class DefaultFrameDecoder implements IFrameDecoder {
-
+	
 	/**
 	 * Instantiates a new default frame decoder.
 	 */
@@ -42,50 +43,28 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
-		if (buffer == null || buffer.length <= 0) {
+		if (buffer == null || buffer.length < IConstants.FIX_HEADLINE_SIZE) {
 			return 0; // don't throw exception it is the case if client disconnects
 		}
-		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
-		int scmpHeadlineLength = 0;
-		int scmpLength = 0;
-		int readableBytes = buffer.length;
 
-		for (int i = 0; i < readableBytes; i++) {
-			byte b = buffer[i];
-			if (b == '\n') {
-				if (i <= 2) {
-					throw new FrameDecoderException("invalid scmp header line");
-				}
-				headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
-				if (headerKey == SCMPHeadlineKey.UNDEF) {
-					throw new FrameDecoderException("invalid scmp header line");
-				}
-
-				// watch out for size ( /128& )
-				int startIndex = 0;
-				int endIndex = 0;
-				label: for (startIndex = 0; startIndex < buffer.length; startIndex++) {
-
-					if (buffer[startIndex] == '/' || buffer[startIndex] == '&') {
-
-						if (buffer[startIndex + 1] == 's' && buffer[startIndex + 2] == '=') {
-
-							startIndex += 3;
-							for (endIndex = startIndex; endIndex < buffer.length; endIndex++) {
-								if (buffer[endIndex] == '&' || buffer[endIndex] == ' ') {
-									break label;
-								}
-							}
-						}
-					}
-				}
-				// parse scmpLength
-				scmpLength = readInt(buffer, startIndex, endIndex - 1);
-				scmpHeadlineLength = i + 1;
-				return scmpLength + scmpHeadlineLength;
-			}
+		// check headerKey
+		SCMPHeadlineKey headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
+		if (headerKey == SCMPHeadlineKey.UNDEF) {
+			throw new FrameDecoderException("invalid scmp header line");
 		}
-		throw new FrameDecoderException("invalid scmp header line");
+		// parse frame size
+		int scmpLength = this.parseMessageSize(buffer);
+		return IConstants.FIX_HEADLINE_SIZE + scmpLength;
+	}
+	
+	@Override
+	public int parseMessageSize(byte[] buffer) throws FrameDecoderException {
+		return this.readInt(buffer, IConstants.FIX_MSG_SIZE_START, IConstants.FIX_MSG_SIZE_END);
+	}
+	
+	@Override
+	public int parseHeaderSize(byte[] buffer) throws Exception {
+		return this.readInt(buffer, IConstants.FIX_HEADER_SIZE_START, IConstants.FIX_HEADER_SIZE_END);
 	}
 
 	/**
