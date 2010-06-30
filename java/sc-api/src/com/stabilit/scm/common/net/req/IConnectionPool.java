@@ -39,4 +39,8 @@ public interface IConnectionPool {
 	public abstract void initMinConnections();
 
 	public abstract void destroy();
+
+	public abstract int getMaxConnections();
+
+	public abstract boolean hasFreeConnections();
 }

@@ -57,7 +57,6 @@ public class SessionServerResponder extends Responder {
 				"netty.tcp", 16, 1000, 60, 10);
 		IContext context = new ServerContext(reqConfig);
 		req = new Requester(context);
-		req.connect(); // physical connect
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation");

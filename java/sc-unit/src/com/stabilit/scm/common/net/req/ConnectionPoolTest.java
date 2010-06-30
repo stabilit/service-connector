@@ -38,7 +38,7 @@ public class ConnectionPoolTest {
 
 	@Test
 	public void testPoolSuccesful() {
-		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 60);
+		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 60, 16);
 		cp.setMaxConnections(10);
 		cp.setMinConnections(1);
 

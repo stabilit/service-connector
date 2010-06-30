@@ -51,11 +51,6 @@ public interface ICommunicatorConfig {
 	 */
 	public int getNumberOfThreads();
 
-	/**
-	 * Gets the connection key.
-	 * 
-	 * @return the connection key
-	 */
 	public String getConnectionType();
 
 	/**

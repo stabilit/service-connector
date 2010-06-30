@@ -24,12 +24,13 @@ public class ConnectionPool implements IConnectionPool {
 	private int minConnections;
 	private boolean closeOnFree;
 	private int keepAliveInterval;
+	private int numberOfThreads;
 	private List<IConnection> freeConnections;
 	private List<IConnection> usedConnections;
 	private ConnectionFactory connectionFactory;
 	private IKeepAliveListener keepAliveListener;
 
-	public ConnectionPool(String host, int port, String conType, int keepAliveInterval) {
+	public ConnectionPool(String host, int port, String conType, int keepAliveInterval, int numberOfThreads) {
 		this.host = host;
 		this.port = port;
 		this.conType = conType;
@@ -40,6 +41,7 @@ public class ConnectionPool implements IConnectionPool {
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.connectionFactory = new ConnectionFactory();
 		this.keepAliveInterval = keepAliveInterval;
+		this.numberOfThreads = numberOfThreads;
 
 		if (this.keepAliveInterval != 0) {
 			this.keepAliveListener = new ConnectionPoolKeepAliveListener();
@@ -48,15 +50,16 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	public ConnectionPool(String host, int port, String conType) {
-		this(host, port, conType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, conType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, IConstants.DEFAULT_CLIENT_CON, keepAliveInterval);
+		this(host, port, IConstants.DEFAULT_CLIENT_CON, keepAliveInterval, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public ConnectionPool(String host, int port) {
-		this(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
+				IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
 	@Override
@@ -90,6 +93,7 @@ public class ConnectionPool implements IConnectionPool {
 		connection.setHost(this.host);
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
+		connection.setNumberOfThreads(this.numberOfThreads);
 		try {
 			connection.connect(); // can throw an exception
 		} catch (Throwable th) {
@@ -172,6 +176,11 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	@Override
+	public int getMaxConnections() {
+		return maxConnections;
+	}
+
 	private void keepAliveConnection(IConnection connection) throws Exception {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
@@ -194,5 +203,18 @@ public class ConnectionPool implements IConnectionPool {
 			IConnection connection = keepAliveEvent.getConnection();
 			ConnectionPool.this.keepAliveConnection(connection);
 		}
+	}
+
+	@Override
+	public boolean hasFreeConnections() {
+		if (freeConnections.size() >= 0) {
+			// we have free connections left
+			return true;
+		}
+		if (usedConnections.size() < maxConnections) {
+			// we can create new connections if necessary
+			return true;
+		}
+		return false;
 	}
 }

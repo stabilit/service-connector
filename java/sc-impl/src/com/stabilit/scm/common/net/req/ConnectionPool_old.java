@@ -292,4 +292,14 @@ public class ConnectionPool_old implements IConnectionPool {
 			ConnectionPool_old.this.keepAliveConnection(connection);
 		}
 	}
+
+	@Override
+	public int getMaxConnections() {
+		return 0;
+	}
+
+	@Override
+	public boolean hasFreeConnections() {
+		return false;
+	}
 }

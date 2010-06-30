@@ -23,6 +23,7 @@ import java.util.Date;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -79,7 +80,8 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		// create new server
-		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions);
+		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions,
+				IConstants.DEFAULT_NR_OF_THREADS);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately
@@ -158,11 +160,11 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 
-//				// KeepAliveTimeout && KeepAliveInterval
-//				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
-//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
-//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
-//				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
+				// // KeepAliveTimeout && KeepAliveInterval
+				// KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
+				// .getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
+				// .getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
+				// request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
