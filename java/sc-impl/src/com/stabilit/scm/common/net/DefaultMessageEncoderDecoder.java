@@ -115,7 +115,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		scmpMsg.setHeader(metaMap);
-		if("0".equals(scmpBodyLength)) {
+		if(scmpBodyLength == null || "0".equals(scmpBodyLength)) {
 			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
 			return scmpMsg;
 		}

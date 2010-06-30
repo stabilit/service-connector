@@ -47,7 +47,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req, "P01_RTXS_RPRWS1");
+				.newInstance(this.registerRequester, "P01_RTXS_RPRWS1");
 
 		deRegisterServiceCall.invoke();
 
@@ -60,7 +60,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		String expectedEntry = "P01_RTXS_RPRWS1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
-		Assert.assertEquals("4", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.registerServiceBefore();
 	}
 
@@ -68,14 +68,14 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServiceCall() throws Exception {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req, "P01_RTXS_RPRWS1");
+				.newInstance(this.registerRequester, "P01_RTXS_RPRWS1");
 
 		try {
 			deRegisterServiceCall.invoke();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
-			Assert.assertEquals("4", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 			SCTest.verifyError(e.getFault(), SCMPError.NOT_REGISTERED, SCMPMsgType.DEREGISTER_SERVICE);
 		}
 		super.registerServiceBefore();

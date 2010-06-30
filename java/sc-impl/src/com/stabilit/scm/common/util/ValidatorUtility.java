@@ -40,10 +40,11 @@ public final class ValidatorUtility {
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
 	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
-//TODO 
-//	if (port < 0 || port > 0xFFFF) {
-//	    throw new IllegalArgumentException("port out of range:" + port);
-//	}
+
+	// TODO
+	// if (port < 0 || port > 0xFFFF) {
+	// throw new IllegalArgumentException("port out of range:" + port);
+	// }
 	/**
 	 * Instantiates a new validator utility.
 	 */
@@ -68,7 +69,6 @@ public final class ValidatorUtility {
 		try {
 			localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
 		} catch (ParseException ex) {
-			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new SCMPValidatorException("ParseException when parsing localDateTime: " + localDateTimeString);
 		}
 		return localDateTime;
@@ -94,7 +94,6 @@ public final class ValidatorUtility {
 			keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
 			keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
 		} catch (NumberFormatException ex) {
-			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new SCMPValidatorException("NumberFormatException when parsing keep alive parameters : "
 					+ keepAliveTimeout + " - " + keepAliveInterval);
 		}
@@ -149,7 +148,6 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 
@@ -180,7 +178,6 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			ExceptionPoint.getInstance().fireException(ValidatorUtility.class, ex);
 			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 

@@ -23,17 +23,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
 import com.stabilit.scm.common.msg.impl.InspectMessage;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class AttachTestCase extends SuperTestCase {

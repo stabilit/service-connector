@@ -28,6 +28,7 @@ import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**

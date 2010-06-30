@@ -27,6 +27,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.stabilit.sc.test.SCImplTest;
 
+import com.stabilit.scm.common.net.req.ConnectionPool;
+import com.stabilit.scm.common.net.req.ConnectionPoolTest;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -62,7 +64,8 @@ import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
 	SrvEchoLargeTestCase.class, 
 	EchoSCTestCase.class, 
 	EchoSCLargeTestCase.class, 
-	SCImplTest.class})
+	SCImplTest.class, 
+	ConnectionPoolTest.class})
 public class SCTest {
 
 	private SCTest() {

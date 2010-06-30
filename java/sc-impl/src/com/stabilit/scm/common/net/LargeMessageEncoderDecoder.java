@@ -113,6 +113,10 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		SCMPBodyType scmpBodyTyp = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		String scmpBodyLength = metaMap.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
 		scmpMsg.setHeader(metaMap);
+		if(scmpBodyLength == null || "0".equals(scmpBodyLength)) {
+			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
+			return scmpMsg;
+		}
 		try {
 			switch (scmpBodyTyp) {
 			case binary:

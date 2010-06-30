@@ -22,6 +22,12 @@ import org.junit.Before;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
+import com.stabilit.scm.common.conf.ResponderConfigPool;
+import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
 /**
@@ -29,11 +35,18 @@ import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
  */
 public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
+	protected IRequester registerRequester;
+	private IContext registerContext;
+	private String registerFileName = "session-server.properties";
+	private RequesterConfigPool registerConfig = null;
+	private ResponderConfigPool responderConfig = null;
+
 	/**
 	 * The Constructor.
 	 * 
 	 * @param fileName
 	 *            the file name
+	 * @throws Exception
 	 */
 	public SuperRegisterTestCase(String fileName) {
 		super(fileName);
@@ -42,6 +55,12 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
+		this.registerConfig = new RequesterConfigPool();
+		this.responderConfig = new ResponderConfigPool();
+		this.registerConfig.load(registerFileName);
+		this.responderConfig.load(registerFileName);
+		this.registerContext = new TestContext(registerConfig.getRequesterConfig());
+		this.registerRequester = new Requester(registerContext);
 		registerServiceBefore();
 	}
 
@@ -53,9 +72,9 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	public void registerServiceBefore() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req, "P01_RTXS_RPRWS1");
+				.newInstance(registerRequester, "P01_RTXS_RPRWS1");
 		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setPortNumber(9000);
+		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
@@ -65,10 +84,10 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	public void deRegisterServiceAfter() throws Exception {
 		this.deRegisterServiceAfter("P01_RTXS_RPRWS1");
 	}
-	
+
 	public void deRegisterServiceAfter(String serviceName) throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req, serviceName);
+				.newInstance(registerRequester, serviceName);
 		deRegisterServiceCall.invoke();
 	}
 }

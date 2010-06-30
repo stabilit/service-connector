@@ -53,6 +53,7 @@ public class ListenerSupport<T extends EventListener> {
 	 * Clear all.
 	 */
 	public synchronized void clearAll() {
+		this.listenerArray = null;
 		this.size = 0;
 	}
 

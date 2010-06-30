@@ -181,7 +181,20 @@ public class ConnectionPool implements IConnectionPool {
 		return maxConnections;
 	}
 
-	private void keepAliveConnection(IConnection connection) throws Exception {
+	@Override
+	public boolean hasFreeConnections() {
+		if (freeConnections.size() > 0) {
+			// we have free connections left
+			return true;
+		}
+		if (usedConnections.size() < maxConnections) {
+			// we can create new connections if necessary
+			return true;
+		}
+		return false;
+	}
+
+	private synchronized void keepAliveConnection(IConnection connection) throws Exception {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;
@@ -203,18 +216,5 @@ public class ConnectionPool implements IConnectionPool {
 			IConnection connection = keepAliveEvent.getConnection();
 			ConnectionPool.this.keepAliveConnection(connection);
 		}
-	}
-
-	@Override
-	public boolean hasFreeConnections() {
-		if (freeConnections.size() >= 0) {
-			// we have free connections left
-			return true;
-		}
-		if (usedConnections.size() < maxConnections) {
-			// we can create new connections if necessary
-			return true;
-		}
-		return false;
 	}
 }

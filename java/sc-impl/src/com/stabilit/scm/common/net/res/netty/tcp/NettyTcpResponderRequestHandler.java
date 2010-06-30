@@ -85,7 +85,12 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			// no scmp protocol used - nothing to return
 			return;
 		}
-
+		if (scmpReq.isKeepAlive()) {
+			scmpReq.setIsReply(true);
+			response.setSCMP(scmpReq);
+			response.write();
+			return;
+		}
 		if (this.compositeSender != null && scmpReq.isPart()) {
 			// sending of a large response has already been started and incoming scmp is a pull request
 			if (this.compositeSender.hasNext()) {

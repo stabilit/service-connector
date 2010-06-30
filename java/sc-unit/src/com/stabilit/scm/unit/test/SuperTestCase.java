@@ -85,7 +85,6 @@ public abstract class SuperTestCase {
 	@Override
 	protected void finalize() throws Throwable {
 		this.testContext.getConnectionPool().destroy();
-		ConnectionPoint.getInstance().clearAll();
 		req = null;
 	}
 }
