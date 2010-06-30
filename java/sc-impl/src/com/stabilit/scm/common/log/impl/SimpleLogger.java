@@ -151,13 +151,13 @@ public class SimpleLogger implements ILogger {
 			if (logFile.exists() == false) {
 				closeAndOpen();
 			}
-			pw.print(this.getLogHead(Level.EXCEPTION));
+			pw.print(this.getLogHead(Level.ERROR));
 			pw.print(t.toString());
 			pw.print(LINE_BREAK);
 			pw.flush();
 		} catch (Exception e) {
 			closeAndOpen();
-			pw.print(this.getLogHead(Level.EXCEPTION));
+			pw.print(this.getLogHead(Level.ERROR));
 			pw.print(t.toString());
 			pw.flush();
 		}
@@ -189,7 +189,7 @@ public class SimpleLogger implements ILogger {
 	/** {@inheritDoc} */
 	@Override
 	public void logError(String msg) throws IOException {
-		this.log(Level.ERROR, msg);
+		this.log(Level.FATAL, msg);
 	}
 
 	/** {@inheritDoc} */
@@ -208,12 +208,6 @@ public class SimpleLogger implements ILogger {
 	@Override
 	public void logDebug(String msg) throws IOException {
 		this.log(Level.DEBUG, msg);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void logTrace(String msg) throws IOException {
-		this.log(Level.TRACE, msg);
 	}
 
 	/**

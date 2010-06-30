@@ -40,8 +40,8 @@ import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
-import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -73,9 +73,9 @@ public class NettyTcpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** state of connection. */
 	private boolean isConnected;
-	private ConnectionKey key;
 	protected int idleTimeout;
 	private int nrOfIdles;
+
 	/**
 	 * Instantiates a new NettyTcpConnection.
 	 */
@@ -91,7 +91,6 @@ public class NettyTcpConnection implements IConnection {
 		this.localSocketAddress = null;
 		this.isConnected = false;
 		this.pipelineFactory = null;
-		this.key = null;
 	}
 
 	/** {@inheritDoc} */
@@ -104,7 +103,7 @@ public class NettyTcpConnection implements IConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.pipelineFactory = new NettyTcpRequesterPipelineFactory();
+		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Start the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -117,7 +116,6 @@ public class NettyTcpConnection implements IConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		this.key = new ConnectionKey(this.host, this.port, "netty.tcp");
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 	}
 
@@ -235,8 +233,11 @@ public class NettyTcpConnection implements IConnection {
 	 */
 	private void releaseExternalResources() {
 		ChannelPipeline pipeline = this.channel.getPipeline();
+		// release resources in idle timeout handler
+		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
+		externalResourceReleasable.releaseExternalResources();
 		// release resources in write timeout handler
-		ExternalResourceReleasable externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
+		externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
 		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);
@@ -252,15 +253,10 @@ public class NettyTcpConnection implements IConnection {
 	}
 
 	@Override
-	public Object getKey() {
-		return this.key;
-	}
-
-	@Override
 	public void setIdleTimeout(int idleTimeout) {
 		this.idleTimeout = idleTimeout;
 	}
-	
+
 	@Override
 	public int getNrOfIdlesInSequence() {
 		return nrOfIdles;

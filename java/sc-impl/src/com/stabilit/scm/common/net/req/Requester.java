@@ -17,8 +17,8 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -200,7 +200,7 @@ public class Requester implements IRequester {
 					 */
 					return ret;
 				}
-				RuntimePoint.getInstance().fireRuntime(this,
+				LoggerPoint.getInstance().fireWarn(this,
 						"sendLargeRequest.hasNext() == false but part request not done");
 				return null;
 			}
@@ -231,7 +231,7 @@ public class Requester implements IRequester {
 				if (scmp.isGroup()) {
 					return;
 				}
-				RuntimePoint.getInstance().fireRuntime(this,
+				LoggerPoint.getInstance().fireWarn(this,
 						"sendLargeRequest.hasNext() == false but part request not done");
 				return;
 			}

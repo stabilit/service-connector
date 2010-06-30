@@ -63,7 +63,8 @@ public final class LoggerFactory extends Factory {
 	/**
 	 * Initialize the factory.
 	 * 
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 */
 	private void init(String key) {
 		if (key == null) {
@@ -93,8 +94,8 @@ public final class LoggerFactory extends Factory {
 			loggerDecorator = new SessionLogger((ILogger) this.getInstance(key));
 			this.add(SessionLogger.class, loggerDecorator);
 			// Runtime logger
-			loggerDecorator = new RuntimeLogger((ILogger) this.getInstance(key));
-			this.add(RuntimeLogger.class, loggerDecorator);
+			loggerDecorator = new TopLogger((ILogger) this.getInstance(key));
+			this.add(TopLogger.class, loggerDecorator);
 			this.add(DEFAULT, loggerDecorator);
 		} catch (Exception e) {
 			e.printStackTrace();

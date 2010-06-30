@@ -9,7 +9,6 @@ import com.stabilit.scm.common.listener.IKeepAliveListener;
 import com.stabilit.scm.common.listener.KeepAliveEvent;
 import com.stabilit.scm.common.listener.KeepAlivePoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 
 /**
@@ -105,7 +104,7 @@ public class ConnectionPool implements IConnectionPool {
 	@Override
 	public void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
-			LoggerPoint.getInstance().fireInfo(this, "connection does not exist - not possible to free");
+			LoggerPoint.getInstance().fireWarn(this, "connection does not exist - not possible to free");
 		}
 		if (closeOnFree) {
 			// do not add the connection to free pool array - just close it immediate!
@@ -139,7 +138,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			RuntimePoint.getInstance().fireRuntime(this,
+			LoggerPoint.getInstance().fireException(this,
 					"Exception when connection pool destroys - connection destroy failed");
 		} finally {
 			connection.destroy();
@@ -168,7 +167,7 @@ public class ConnectionPool implements IConnectionPool {
 					return;
 				}
 			} catch (Exception e) {
-				RuntimePoint.getInstance().fireRuntime(this,
+				LoggerPoint.getInstance().fireException(this,
 						"Exception when starting connection pool - create, connect connection failed");
 				return;
 			}
@@ -194,7 +193,7 @@ public class ConnectionPool implements IConnectionPool {
 		return false;
 	}
 
-	private synchronized void keepAliveConnection(IConnection connection) throws Exception {
+	private void keepAliveConnection(IConnection connection) throws Exception {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;

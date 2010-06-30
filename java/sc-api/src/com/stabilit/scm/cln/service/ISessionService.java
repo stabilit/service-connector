@@ -21,7 +21,6 @@
  */
 package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.service.SCMessage;
 
 /**
  * @author JTraber

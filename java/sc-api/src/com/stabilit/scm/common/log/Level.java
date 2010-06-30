@@ -22,17 +22,15 @@ package com.stabilit.scm.common.log;
 public enum Level {
 
 	/** The ERROR. */
-	ERROR("ERR", 1),
+	FATAL("FAT", 1),
 	/** The EXCEPTION. */
-	EXCEPTION("EXC", 2),
+	ERROR("ERR", 2),
 	/** The WARN. */
 	WARN("WRN", 3),
 	/** The INFO. */
 	INFO("INF", 4),
 	/** The DEBUG. */
-	DEBUG("DBG", 5),
-	/** The TRACE. */
-	TRACE("TRC", 6);
+	DEBUG("DBG", 5);
 
 	/** The name. */
 	private String name;

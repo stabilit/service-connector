@@ -63,10 +63,11 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
 		// responsible for observing write timeout - Netty
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
+		// responsible for observing idle timeout - Netty
+		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.connection, this.timer, 0, 0,
+				this.connection.idleTimeout));
 		// responsible for handle responses - Stabilit
-		// TODO verify Timer can be the same for every thing
-		pipeline.addLast("idleHandler", new NettyIdleHandler(this.connection, this.timer, 0, 0, this.connection.idleTimeout));
-		pipeline.addLast("handler", new NettyHttpRequesterResponseHandler());
+		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 		return pipeline;
 	}
 }

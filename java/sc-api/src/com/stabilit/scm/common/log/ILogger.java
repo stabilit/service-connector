@@ -107,16 +107,6 @@ public interface ILogger extends IFactoryable {
 	public void logDebug(String msg) throws IOException;
 
 	/**
-	 * Log trace.
-	 * 
-	 * @param msg
-	 *            the msg
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void logTrace(String msg) throws IOException;
-
-	/**
 	 * New instance.
 	 * 
 	 * @param loggerDecorator

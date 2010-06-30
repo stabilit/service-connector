@@ -78,13 +78,6 @@ public interface IConnection extends ICommunicationPoint {
 	boolean isConnected();
 
 	/**
-	 * Gets the key.
-	 * 
-	 * @return the key
-	 */
-	public Object getKey();
-
-	/**
 	 * Sets the idle timeout.
 	 * 
 	 * @param idleTimeout

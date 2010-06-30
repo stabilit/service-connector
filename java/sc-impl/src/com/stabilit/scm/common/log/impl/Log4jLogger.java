@@ -99,12 +99,6 @@ public class Log4jLogger implements ILogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public void logTrace(String msg) throws IOException {
-		this.log.trace(msg);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public ILogger newInstance() {
 		// careful in use - is always the same instance
 		return this;

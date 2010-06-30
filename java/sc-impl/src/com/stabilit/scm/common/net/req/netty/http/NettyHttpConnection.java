@@ -47,8 +47,8 @@ import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
-import com.stabilit.scm.common.net.req.ConnectionKey;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -84,9 +84,6 @@ public class NettyHttpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** state of connection. */
 	private boolean connected;
-
-	/** The key. */
-	private ConnectionKey key;
 	protected int idleTimeout;
 	private int nrOfIdles;
 
@@ -98,16 +95,15 @@ public class NettyHttpConnection implements IConnection {
 		this.bootstrap = null;
 		this.channel = null;
 		this.port = 0;
-		this.numberOfThreads = 10;
+		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
 		this.connected = false;
-		this.idleTimeout = 0;
+		this.idleTimeout = 0; // default 0 -> inactive
 		this.pipelineFactory = null;
-		this.key = null;
 	}
 
 	/** {@inheritDoc} */
@@ -137,7 +133,6 @@ public class NettyHttpConnection implements IConnection {
 		}
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 		this.connected = true;
-		this.key = new ConnectionKey(this.host, this.port, "netty.http");
 	}
 
 	/** {@inheritDoc} */
@@ -276,8 +271,11 @@ public class NettyHttpConnection implements IConnection {
 	 */
 	private void releaseExternalResources() {
 		ChannelPipeline pipeline = this.channel.getPipeline();
+		// release resources in idle timeout handler
+		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
+		externalResourceReleasable.releaseExternalResources();
 		// release resources in write timeout handler
-		ExternalResourceReleasable externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
+		externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
 		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);
@@ -290,11 +288,6 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public boolean isConnected() {
 		return this.connected;
-	}
-
-	@Override
-	public Object getKey() {
-		return this.key;
 	}
 
 	@Override

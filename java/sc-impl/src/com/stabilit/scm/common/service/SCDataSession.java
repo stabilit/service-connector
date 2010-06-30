@@ -23,7 +23,7 @@ import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -79,8 +79,7 @@ public class SCDataSession implements ISCSession {
 	@Override
 	public void createSession() throws Exception {
 		if (this.responseMessage != null) {
-			RuntimePoint.getInstance().fireRuntime(this,
-					"responseMessage already set - create session inoked two times!");
+			LoggerPoint.getInstance().fireWarn(this, "responseMessage already set - create session inoked two times!");
 			return;
 		}
 		// sets up a create session call

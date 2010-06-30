@@ -24,20 +24,19 @@ import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IConnectionListener;
 import com.stabilit.scm.common.listener.IExceptionListener;
+import com.stabilit.scm.common.listener.ILoggerListener;
 import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.IRuntimeListener;
 import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.RuntimePoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.log.Level;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
-import com.stabilit.scm.common.log.impl.RuntimeLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
+import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.rr.Old_SessionServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
@@ -64,7 +63,7 @@ public class SetupTestCases {
 					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
 			ExceptionPoint.getInstance().addListener(
 					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-			RuntimePoint.getInstance().addListener((IRuntimeListener) loggerFactory.newInstance(RuntimeLogger.class));
+			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
 			LoggerPoint.getInstance().setLevel(Level.DEBUG);
 			PerformancePoint.getInstance().addListener(
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));

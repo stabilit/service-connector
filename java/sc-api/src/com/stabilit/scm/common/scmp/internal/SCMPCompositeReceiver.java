@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -152,7 +152,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		if (this.scmpFault != null) {
 			return scmpFault.getBody();
 		}
-		if(this.scmpList == null || this.scmpList.size() <= 0) {
+		if (this.scmpList == null || this.scmpList.size() <= 0) {
 			return 0;
 		}
 		// put all parts together to get complete body
@@ -165,8 +165,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					if (bodyLength > 0) {
 						Object body = message.getBody();
 						if (body == null) {
-							RuntimePoint.getInstance().fireRuntime(this,
-									"bodyLength > 0 but body == null");
+							LoggerPoint.getInstance().fireWarn(this, "bodyLength > 0 but body == null");
 						}
 						this.outputStream.write((byte[]) body);
 					}

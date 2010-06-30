@@ -34,7 +34,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	private IConnectionListener connectionListener;
 	private IExceptionListener exceptionListener;
 	private ILoggerListener loggerListener;
-	private IRuntimeListener runtimeListener;
 	private ISessionListener sessionListener;
 	private ISCMPListener scmpListener;
 	private IKeepAliveListener keepAliveListener;
@@ -46,7 +45,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		this.connectionListener = new StatisticsConnectionListener();
 		this.exceptionListener = new StatisticsExceptionListener();
 		this.loggerListener = new StatisticsLoggerListener();
-		this.runtimeListener = new StatisticsRuntimeListener();
 		this.sessionListener = new StatisticsSessionListener();
 		this.scmpListener = new StatisticsSCMPListener();
 		this.keepAliveListener = new StatisticsKeepAliveListener();
@@ -67,7 +65,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			ConnectionPoint.getInstance().addListener(connectionListener);
 			ExceptionPoint.getInstance().addListener(exceptionListener);
 			LoggerPoint.getInstance().addListener(loggerListener);
-			RuntimePoint.getInstance().addListener(runtimeListener);
 			SessionPoint.getInstance().addListener(sessionListener);
 			SCMPPoint.getInstance().addListener(scmpListener);
 			KeepAlivePoint.getInstance().addListener(keepAliveListener);
@@ -82,7 +79,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			ConnectionPoint.getInstance().removeListener(connectionListener);
 			ExceptionPoint.getInstance().removeListener(exceptionListener);
 			LoggerPoint.getInstance().removeListener(loggerListener);
-			RuntimePoint.getInstance().removeListener(runtimeListener);
 			SessionPoint.getInstance().removeListener(sessionListener);
 			SCMPPoint.getInstance().removeListener(scmpListener);
 			KeepAlivePoint.getInstance().removeListener(keepAliveListener);
@@ -168,18 +164,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			StatisticsEvent statisticsEvent = new StatisticsEvent(
 					loggerEvent.getSource(), loggerEvent);
 			statisticsEvent.setEventType(StatisticsEnum.LOGGER);
-			fireStatistics(statisticsEvent);
-		}
-	}
-	
-	// member class
-	class StatisticsRuntimeListener implements IRuntimeListener {
-
-		@Override
-		public void runtimeEvent(RuntimeEvent runtimeEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					runtimeEvent.getSource(), runtimeEvent);
-			statisticsEvent.setEventType(StatisticsEnum.RUNTIME);
 			fireStatistics(statisticsEvent);
 		}
 	}

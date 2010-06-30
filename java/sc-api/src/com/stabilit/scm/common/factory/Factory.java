@@ -19,7 +19,7 @@ package com.stabilit.scm.common.factory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.stabilit.scm.common.listener.RuntimePoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
 
 /**
  * The Class Factory. SuperClass for factories. *** ATTENTION *** Subclasses must not have any properties other then
@@ -100,7 +100,8 @@ public abstract class Factory {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
 			// if key is not found return default
-			RuntimePoint.getInstance().fireRuntime(this, "key : " + key + "not found in baseInstances of factory");
+			LoggerPoint.getInstance().fireWarn(this,
+					"key : " + key + "not found in baseInstances of factory, returned default instance");
 			return this.getInstance(DEFAULT);
 		}
 		return factoryInstance.newInstance(); // invoke the base instance constructor

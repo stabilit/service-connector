@@ -35,7 +35,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	 * Instantiates a new logger point.
 	 */
 	private LoggerPoint() {
-		this.level = Level.EXCEPTION;
+		this.level = Level.ERROR;
 	}
 	
 	/**
@@ -56,15 +56,9 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 		this.level = level;
 	}
 
-	/**
-	 * Fire error.
-	 * 
-	 * @param source the source
-	 * @param text the text
-	 */
-	public void fireError(Object source, String text) {
+	public void fireFatal(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
-			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.ERROR);
+			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.FATAL);
 			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
@@ -77,7 +71,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	 */
 	public void fireException(Object source, String text) {
 		if (getInstance().isEmpty() == false) {
-			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.EXCEPTION);
+			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.ERROR);
 			LoggerPoint.getInstance().fireLog(loggerEvent);
 		}
 	}
@@ -122,24 +116,11 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	}
 
 	/**
-	 * Fire trace.
-	 * 
-	 * @param source the source
-	 * @param text the text
-	 */
-	public void fireTrace(Object source, String text) {
-		if (getInstance().isEmpty() == false) {
-			LoggerEvent loggerEvent = new LoggerEvent(source, text, Level.TRACE);
-			LoggerPoint.getInstance().fireLog(loggerEvent);
-		}
-	}
-
-	/**
 	 * Fire log.
 	 * 
 	 * @param loggerEvent the logger event
 	 */
-	public void fireLog(LoggerEvent loggerEvent) {
+	private void fireLog(LoggerEvent loggerEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
@@ -158,7 +139,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	 * @return true, if is error
 	 */
 	public boolean isError() {
-		return this.level.supportsLevel(Level.ERROR);
+		return this.level.supportsLevel(Level.FATAL);
 	}
 
 	/**
@@ -167,7 +148,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	 * @return true, if is exception
 	 */
 	public boolean isException() {
-		return this.level.supportsLevel(Level.EXCEPTION);
+		return this.level.supportsLevel(Level.ERROR);
 	}
 
 	/**
@@ -195,14 +176,5 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 	 */
 	public boolean isDebug() {
 		return this.level.supportsLevel(Level.DEBUG);
-	}
-
-	/**
-	 * Checks if is trace.
-	 * 
-	 * @return true, if is trace
-	 */
-	public boolean isTrace() {
-		return this.level.supportsLevel(Level.TRACE);
 	}
 }

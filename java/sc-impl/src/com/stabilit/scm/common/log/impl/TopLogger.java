@@ -16,18 +16,16 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import java.io.IOException;
-
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.IRuntimeListener;
-import com.stabilit.scm.common.listener.RuntimeEvent;
+import com.stabilit.scm.common.listener.ILoggerListener;
+import com.stabilit.scm.common.listener.LoggerEvent;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
 
 /**
  * The Class RuntimeLogger. Provides functionality of logging an <code>WarningEvent</code>.
  */
-public class RuntimeLogger implements IRuntimeListener, ILoggerDecorator {
+public class TopLogger implements ILoggerListener, ILoggerDecorator {
 
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
@@ -38,17 +36,33 @@ public class RuntimeLogger implements IRuntimeListener, ILoggerDecorator {
 	 * @param logger
 	 *            the logger
 	 */
-	RuntimeLogger(ILogger logger) {
+	TopLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public synchronized void runtimeEvent(RuntimeEvent runtimeEvent) {
-		try {
-			this.logger.log(runtimeEvent.getText());
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void logEvent(LoggerEvent loggerEvent) throws Exception {
+
+		String text = loggerEvent.getText();
+
+		switch (loggerEvent.getLevel()) {
+		case INFO:
+			this.logger.logInfo(text);
+			break;
+		case WARN:
+			this.logger.logWarn(text);
+			break;
+		case ERROR:
+			this.logger.logError(text);
+			break;
+		case DEBUG:
+			this.logger.logDebug(text);
+			break;
+		case FATAL:
+			this.logger.logError(text);
+			break;
+		default:
+			this.logger.logInfo(text);
 		}
 	}
 
