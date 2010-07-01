@@ -23,7 +23,7 @@ public abstract class SCMessageCallbackAdapter implements ISCMessageCallback {
 	public synchronized void setOpen(boolean open) {
         this.open = open;
         if (this.open == false) {
-        	this.notify();
+        	this.notifyAll();
         }
 	}
 	

@@ -19,18 +19,16 @@ package com.stabilit.scm.common.service;
 import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.factory.IFactoryable;
-
 
 /**
  * The Interface IServiceConnector.
  * 
  * @author JTraber
  */
-public interface IServiceConnector extends IFactoryable {
+public interface IServiceConnector {
 
 	public IContext getContext();
-	
+
 	/**
 	 * Connects to SC.
 	 * 
@@ -110,5 +108,5 @@ public interface IServiceConnector extends IFactoryable {
 	public void setMaxConnections(int maxConnections);
 
 	void destroy();
-	
+
 }

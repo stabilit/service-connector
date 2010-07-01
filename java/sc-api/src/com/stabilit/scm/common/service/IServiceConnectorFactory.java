@@ -21,13 +21,12 @@
  */
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.common.factory.IFactoryable;
 
 /**
  * @author JTraber
  *
  */
-public interface IServiceConnectorFactory  extends IFactoryable {
+public interface IServiceConnectorFactory {
 
 	public abstract void setKeepAliveInterval(int keepAliveInterval);
 
