@@ -22,6 +22,7 @@ import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.ICommunicatorCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
@@ -158,11 +159,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 	private class ClnDataCommandCallback implements ISCMPCallback {
 
+		private IContext context;
 		private ICommunicatorCallback callback;
 		private IRequest request;
 		private IResponse response;
 
 		public ClnDataCommandCallback(IRequest request, IResponse response, ICommunicatorCallback callback) {
+			this.context = null;
 			this.callback = callback;
 			this.request = request;
 			this.response = response;
@@ -179,6 +182,11 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		public void callback(Throwable th) {
 			// TODO clean up!!! if th is SCServiceException
 			this.callback.callback(response, th);
+		}
+		
+		@Override
+		public void setContext(IContext context) {
+            this.context = context;			
 		}
 	}
 }

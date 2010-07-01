@@ -140,6 +140,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			this.scmpCallback.callback(e);
 			return;
 		}
-		this.scmpCallback.callback(ret);
+		this.scmpCallback.callback(ret);		
 	}
 }

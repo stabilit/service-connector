@@ -35,7 +35,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 public class Requester implements IRequester {
 
 	/** The context. */
-	protected IContext context;
+	protected IContext outerContext;
 	/** The msg id for the next request. */
 	private SCMPMessageID msgID;
 
@@ -45,8 +45,8 @@ public class Requester implements IRequester {
 	 * @param context
 	 *            the context
 	 */
-	public Requester(IContext context) {
-		this.context = context;
+	public Requester(IContext outerContext) {
+		this.outerContext = outerContext;
 		msgID = new SCMPMessageID();
 	}
 
@@ -62,7 +62,8 @@ public class Requester implements IRequester {
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.context.getConnectionPool().getConnection();
+		IConnection connection = this.outerContext.getConnectionPool().getConnection();
+		IConnectionContext connectionContext = new ConnectionContext( this.outerContext.getConnectionPool(), connection);
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
 			SCMPMessage ret = null;
@@ -75,14 +76,17 @@ public class Requester implements IRequester {
 			return ret;
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			this.context.getConnectionPool().freeConnection(connection);// give back to pool
+			connectionContext.getConnectionPool().freeConnection(connectionContext.getConnection());// give back to pool
+			connectionContext = null;
 		}
 	}
 
 	@Override
 	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.context.getConnectionPool().getConnection();
+		IConnection connection = this.outerContext.getConnectionPool().getConnection();
+		IConnectionContext connectionContext = new ConnectionContext( this.outerContext.getConnectionPool(), connection);
+		callback.setContext(connectionContext);
 		try {
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
@@ -92,7 +96,7 @@ public class Requester implements IRequester {
 			}
 			return;
 		} finally {
-			this.context.getConnectionPool().freeConnection(connection);// give back to pool
+			// don't free it here, free them after call message received, this.outerContext.getConnectionPool().freeConnection(connection);// give back to pool
 		}
 	}
 
@@ -298,6 +302,7 @@ public class Requester implements IRequester {
 	 * @return the connectionPool
 	 */
 	public IContext getContext() {
-		return context;
+		return outerContext;
 	}
+	
 }

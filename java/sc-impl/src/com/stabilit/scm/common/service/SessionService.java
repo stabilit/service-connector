@@ -50,7 +50,8 @@ public class SessionService implements ISessionService {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);
-		this.sessionContext = new SessionServiceContext((IServiceConnectorContext) context, this);
+		this.sessionContext = new SessionServiceContext(
+				(IServiceConnectorContext) context, this);
 	}
 
 	@Override
@@ -71,24 +72,27 @@ public class SessionService implements ISessionService {
 
 	@Override
 	public SCMessage execute(SCMessage requestMsg) throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL
+				.newInstance(this.requester, this.serviceName, this.sessionId);
 		clnDataCall.setMessagInfo(requestMsg.getMessageInfo());
 		clnDataCall.setRequestBody(requestMsg.getData());
 		SCMPMessage reply = clnDataCall.invoke();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
-		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setCompressed(reply
+				.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
 		return replyToClient;
 	}
 
 	@Override
-	public void execute(SCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+	public void execute(SCMessage requestMsg, ISCMessageCallback messageCallback)
+			throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL
+				.newInstance(this.requester, this.serviceName, this.sessionId);
 		clnDataCall.setMessagInfo(requestMsg.getMessageInfo());
 		clnDataCall.setRequestBody(requestMsg.getData());
-		ISCMPCallback scmpCallback = new SessionServiceSCMPCallback(messageCallback);
+		ISCMPCallback scmpCallback = new SessionServiceSCMPCallback(
+				messageCallback);
 		if (messageCallback instanceof IActiveState) {
 			((IActiveState) messageCallback).setActive(true);
 		}
@@ -99,17 +103,20 @@ public class SessionService implements ISessionService {
 	// member class
 	private class SessionServiceSCMPCallback implements ISCMPCallback {
 
+		private IContext context;
 		private ISCMessageCallback messageCallback;
 
 		public SessionServiceSCMPCallback(ISCMessageCallback messageCallback) {
 			this.messageCallback = messageCallback;
+			this.context = null;
 		}
 
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			SCMessage messageReply = new SCMessage();
 			messageReply.setData(scmpReply.getBody());
-			messageReply.setCompressed(scmpReply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+			messageReply.setCompressed(scmpReply
+					.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
 			this.messageCallback.callback(messageReply);
 			if (messageCallback instanceof IActiveState) {
 				((IActiveState) this.messageCallback).setActive(false);
@@ -122,6 +129,11 @@ public class SessionService implements ISessionService {
 			if (messageCallback instanceof IActiveState) {
 				((IActiveState) this.messageCallback).setActive(false);
 			}
+		}
+
+		@Override
+		public void setContext(IContext context) {
+			this.context = context;
 		}
 	}
 

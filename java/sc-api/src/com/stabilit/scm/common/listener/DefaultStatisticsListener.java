@@ -116,7 +116,6 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 		builder.append("]");
 		return builder.toString();
 	}
-
 	@Override
 	public void clearAll() {
 		this.openConnections = 0;
