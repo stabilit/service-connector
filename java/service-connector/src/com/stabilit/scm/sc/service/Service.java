@@ -56,6 +56,7 @@ public class Service {
 	}
 
 	public void removeServer(Server server) {
+		server.destroy();
 		listOfServers.remove(server);
 	}
 

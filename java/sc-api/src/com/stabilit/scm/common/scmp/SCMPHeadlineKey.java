@@ -34,10 +34,10 @@ public enum SCMPHeadlineKey {
 	/** The PRQ, PART REQUEST. */
 	PRQ,
 	/** The PRS, PART RESPONSE. */
-	PRS,	
-	/** The KRQ. */
-	KRQ,	
-	/** The KRS. */
+	PRS,
+	/** The KRQ. KEEP ALIVE REQUEST. */
+	KRQ,
+	/** The KRS. KEEP ALIVE RESPONSE. */
 	KRS;
 
 	/**
