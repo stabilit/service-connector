@@ -22,4 +22,6 @@ public interface IStatisticsListener extends EventListener {
 
 	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
 
+	public void clearAll();
+
 }

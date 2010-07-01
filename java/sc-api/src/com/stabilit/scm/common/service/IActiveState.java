@@ -19,19 +19,14 @@
 /**
  * 
  */
-package com.stabilit.scm.cln.service;
+package com.stabilit.scm.common.service;
 
 /**
  * @author JTraber
+ *
  */
-public interface ISCMessageCallback {
+public interface IActiveState {
 
-	public abstract void callback(SCMessage reply) throws Exception;
-
-	public abstract void callback(Throwable th);
-
-	public abstract boolean isActive();
-
-	public abstract void join() throws Exception;
+	void setActive(boolean active);
 
 }
