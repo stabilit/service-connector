@@ -58,7 +58,6 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent.getEventObject();
 			this.logs++; 
 			break;
-			break;
 		case KEEP_ALIVE:
 			this.keepAlives++;
 			break;
