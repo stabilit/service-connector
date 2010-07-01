@@ -1,6 +1,5 @@
-package com.stabilit.scm.common.net;
+package com.stabilit.scm.common.scmp;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
 
 
 public interface ISCMPCallback {

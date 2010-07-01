@@ -17,8 +17,8 @@
 
 package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 

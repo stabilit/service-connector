@@ -29,9 +29,9 @@ import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.IFrameDecoder;
-import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 

@@ -18,9 +18,9 @@ package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**

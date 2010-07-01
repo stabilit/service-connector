@@ -31,9 +31,9 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
-import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.netty.NettyEvent;
 import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**

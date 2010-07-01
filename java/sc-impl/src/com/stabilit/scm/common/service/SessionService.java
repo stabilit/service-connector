@@ -29,9 +29,9 @@ import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.net.ISCMPCallback;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 

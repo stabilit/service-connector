@@ -19,7 +19,7 @@ package com.stabilit.scm.common.net.req;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.net.ISCMPCallback;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageID;
