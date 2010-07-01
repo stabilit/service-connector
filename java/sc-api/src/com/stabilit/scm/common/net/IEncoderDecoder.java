@@ -34,7 +34,7 @@ public interface IEncoderDecoder extends IFactoryable {
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 	/** The Constant CHARSET. */
-	public static final String CHARSET = "ISO-8859-1"; // TODO ISO 8859-1 (Latin 1) gemäss doc
+	public static final String CHARSET = "ISO-8859-1";
 	/** The Constant DECODE_REG. */
 	public static final Pattern DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
 
