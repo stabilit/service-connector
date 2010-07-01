@@ -2,7 +2,7 @@ package com.stabilit.scm.cln.service;
 
 public abstract class SCSessionServiceCallbackAdapter extends SCMessageCallbackAdapter {
 
-	private ISessionService sessionService;
+	protected ISessionService sessionService;
 	
 	public SCSessionServiceCallbackAdapter(ISessionService sessionService) {
 		super();

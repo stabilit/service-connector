@@ -165,6 +165,11 @@ public class ServiceConnector implements IServiceConnector {
 		public IConnectionPool getConnectionPool() {
 			return connectionPool;
 		}
+		
+		@Override
+		public IServiceConnector getServiceConnector() {
+			return ServiceConnector.this;
+		}
 
 	}
 }

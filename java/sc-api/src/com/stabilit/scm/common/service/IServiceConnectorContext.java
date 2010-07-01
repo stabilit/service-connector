@@ -32,4 +32,6 @@ public interface IServiceConnectorContext extends IContext {
 
 	public IConnectionPool getConnectionPool();
 	
+	public IServiceConnector getServiceConnector();
+	
 }
