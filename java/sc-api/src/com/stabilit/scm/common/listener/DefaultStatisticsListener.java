@@ -20,20 +20,7 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 	private int decodedSCMPMessageParts;
 
 	public DefaultStatisticsListener() {
-		this.openConnections = 0;
-		this.maxConnections = 0;
-		this.openSessions = 0;
-		this.maxSessions = 0;
-		this.bytesRead = 0;
-		this.bytesWritten = 0;
-		this.exceptions = 0;
-		this.keepAlives = 0;
-		this.logs = 0;
-		this.runtimeWarnings = 0;
-		this.encodedSCMPMessage = 0;
-		this.encodedSCMPMessageParts = 0;
-		this.decodedSCMPMessage = 0;
-		this.decodedSCMPMessageParts = 0;
+		this.clearAll();
 	}
 
 	@Override
@@ -54,13 +41,11 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			this.openSessions--;
 			break;
 		case READ:
-			ConnectionEvent connectionEvent = (ConnectionEvent) statisticsEvent
-					.getEventObject();
+			ConnectionEvent connectionEvent = (ConnectionEvent) statisticsEvent.getEventObject();
 			this.bytesRead += connectionEvent.getLength();
 			break;
 		case WRITE:
-			connectionEvent = (ConnectionEvent) statisticsEvent
-					.getEventObject();
+			connectionEvent = (ConnectionEvent) statisticsEvent.getEventObject();
 			this.bytesWritten += connectionEvent.getLength();
 			break;
 		case EXCEPTION:
@@ -70,9 +55,9 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			this.runtimeWarnings++;
 			break;
 		case LOGGER:
-			LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent
-					.getEventObject();
-			this.logs++;
+			LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent.getEventObject();
+			this.logs++; 
+			break;
 			break;
 		case KEEP_ALIVE:
 			this.keepAlives++;
@@ -133,4 +118,20 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 		return builder.toString();
 	}
 
+	@Override
+	public void clearAll() {
+		this.openConnections = 0;
+		this.maxConnections = 0;
+		this.openSessions = 0;
+		this.maxSessions = 0;
+		this.bytesRead = 0;
+		this.bytesWritten = 0;
+		this.exceptions = 0;
+		this.logs = 0;
+		this.runtimeWarnings = 0;
+		this.encodedSCMPMessage = 0;
+		this.encodedSCMPMessageParts = 0;
+		this.decodedSCMPMessage = 0;
+		this.decodedSCMPMessageParts = 0;
+	}
 }
