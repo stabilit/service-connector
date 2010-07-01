@@ -11,6 +11,7 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 	private int bytesRead;
 	private int bytesWritten;
 	private int exceptions;
+	private int keepAlives;
 	private int logs;
 	private int runtimeWarnings;
 	private int encodedSCMPMessage;
@@ -26,6 +27,7 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 		this.bytesRead = 0;
 		this.bytesWritten = 0;
 		this.exceptions = 0;
+		this.keepAlives = 0;
 		this.logs = 0;
 		this.runtimeWarnings = 0;
 		this.encodedSCMPMessage = 0;
@@ -71,6 +73,10 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent
 					.getEventObject();
 			this.logs++;
+			break;
+		case KEEP_ALIVE:
+			this.keepAlives++;
+			break;
 		case ENCODE_SCMP:
 			SCMPEvent scmpEvent = (SCMPEvent) statisticsEvent.getEventObject();
 			SCMPMessage scmp = scmpEvent.getSCMP();
@@ -111,6 +117,8 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 		builder.append(exceptions);
 		builder.append(", logs=");
 		builder.append(logs);
+		builder.append(", keepAlives=");
+		builder.append(keepAlives);
 		builder.append(", maxConnections=");
 		builder.append(maxConnections);
 		builder.append(", maxSessions=");
