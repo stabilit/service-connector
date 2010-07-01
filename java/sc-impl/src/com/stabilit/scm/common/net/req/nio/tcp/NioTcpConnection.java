@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -64,7 +65,7 @@ public class NioTcpConnection implements IConnection {
 		this.numberOfThreads = 10;
 		this.encoderDecoder = null;
 		this.isConnected = false;
-		this.keepAliveInterval = 10; // TODO IConstants
+		this.keepAliveInterval = IConstants.DEFAULT_KEEP_ALIVE_INTERVAL;
 	}
 
 	/** {@inheritDoc} */

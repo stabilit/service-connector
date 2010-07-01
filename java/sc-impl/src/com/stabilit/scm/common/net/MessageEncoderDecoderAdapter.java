@@ -39,6 +39,7 @@ import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
+import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
@@ -57,13 +58,17 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		BufferedReader br = new BufferedReader(isr);
 
 		// read headline
-		 byte[] headline = new byte[IConstants.FIX_HEADLINE_SIZE];
+		byte[] headline = new byte[IConstants.FIX_HEADLINE_SIZE];
 		is.read(headline);
 
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type
 		SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(headline);
 		switch (headlineKey) {
+		case KRS:
+		case KRQ:
+			scmpMsg = new SCMPKeepAlive();
+			return scmpMsg;
 		case PRQ:
 		case PRS:
 			scmpMsg = new SCMPPart();

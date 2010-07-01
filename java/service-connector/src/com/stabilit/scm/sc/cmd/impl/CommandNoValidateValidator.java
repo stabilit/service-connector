@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,13 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.scm.sc.cmd.impl;
 
+import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.scmp.IRequest;
 
-public class AttachCommandNoValidate extends AttachCommand {
+/**
+ * @author JTraber
+ */
+public class CommandNoValidateValidator implements ICommandValidator {
 
-	public AttachCommandNoValidate() {
-		this.commandValidator = new CommandNoValidateValidator();
+	@Override
+	public void validate(IRequest request) throws Exception {
 	}
 }

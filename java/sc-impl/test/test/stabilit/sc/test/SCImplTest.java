@@ -27,6 +27,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.stabilit.sc.net.DefaultFrameDecoderTest;
 import test.stabilit.sc.net.HttpFrameDecoderTest;
+import test.stabilit.sc.net.KeepAliveMessageEncoderDecoderTest;
 import test.stabilit.sc.net.LargeMessageEncoderDecoderTest;
 import test.stabilit.sc.scmp.internal.SCMPCompositeTest;
 import test.stabilit.sc.scmp.internal.SCMPLargeRequestTest;
@@ -47,6 +48,7 @@ import test.stabilit.sc.util.ValidatorUtilityTest;
 				SCMPLargeResponseTest.class,
 				DefaultFrameDecoderTest.class,
 				LargeMessageEncoderDecoderTest.class,
+				KeepAliveMessageEncoderDecoderTest.class,
 				ValidatorUtilityTest.class })
 public final class SCImplTest {
 	

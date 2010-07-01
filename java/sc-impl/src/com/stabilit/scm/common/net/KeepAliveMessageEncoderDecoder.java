@@ -16,19 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
@@ -47,39 +41,6 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 	@Override
 	public IFactoryable newInstance() {
 		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Object decode(InputStream is) throws Exception {
-		InputStreamReader isr = new InputStreamReader(is, CHARSET);
-		BufferedReader br = new BufferedReader(isr);
-		// read heading line
-		String line;
-		SCMPMessage scmpMsg = null;
-		int readBytes = 0;
-		try {
-			line = br.readLine(); // TODO performance
-			readBytes += line.getBytes().length;
-			readBytes += 1; // read LF
-			if (line == null || line.length() <= 0) {
-				return null;
-			}
-			// evaluating headline key and creating corresponding SCMP type
-			SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(line);
-			switch (headlineKey) {
-			case KRS:
-			case KRQ:
-				scmpMsg = new SCMPKeepAlive();
-				break;
-			default:
-				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
-			}
-		} catch (IOException e1) {
-			ExceptionPoint.getInstance().fireException(this, e1);
-			throw new EncodingDecodingException("io error when decoding message", e1);
-		}
-		return scmpMsg;
 	}
 
 	/** {@inheritDoc} */

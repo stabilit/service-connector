@@ -64,7 +64,7 @@ public class NioHttpConnection implements IConnection {
 		this.numberOfThreads = 10;
 		this.isConnected = false;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
-		this.keepAliveInterval = 10;  // TODO IConstants
+		this.keepAliveInterval = IConstants.DEFAULT_KEEP_ALIVE_INTERVAL;
 	}
 
 	/** {@inheritDoc} */

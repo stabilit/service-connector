@@ -90,8 +90,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	 * @throws Exception
 	 */
 	@Override
-	public void run(IRequest request, IResponse response, ICommunicatorCallback scmpCallback) throws Exception {
-		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, scmpCallback);
+	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
+		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, communicatorCallback);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
