@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.cln.api;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,9 +24,9 @@ import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.ISessionContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.cln.service.SCSessionServiceCallbackAdapter;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.SCSessionServiceCallbackAdapter;
 import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -35,14 +36,14 @@ public class ClnAPIAsyncSessionTestCase {
 	public void setUp() {
 		SetupTestCases.setupAll();
 	}
-	
+
 	@Test
-	public void testClnAPI() throws Exception {		
+	public void testClnAPI() throws Exception {
 		IServiceConnector sc = null;
-		try {			
-			sc = new ServiceConnector("localhost", 8080);		
+		try {
+			sc = new ServiceConnector("localhost", 8080);
 			sc.setMaxConnections(100);
-			// set environment, e.g. keepAliveInterval			
+			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
 			sc.attach();
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
@@ -53,8 +54,8 @@ public class ClnAPIAsyncSessionTestCase {
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 			ISCMessageCallback callback = new TestCallback(sessionServiceA);
-			sessionServiceA.execute(requestMsg, callback);			
-			callback.join();  // wait until
+			sessionServiceA.execute(requestMsg, callback);
+			callback.join(); // wait until
 			// deletes the session
 			sessionServiceA.deleteSession();
 		} catch (Exception e) {
@@ -68,12 +69,13 @@ public class ClnAPIAsyncSessionTestCase {
 			}
 		}
 	}
+
 	class TestCallback extends SCSessionServiceCallbackAdapter {
-		
+
 		public TestCallback(ISessionService sessionService) {
 			super(sessionService);
 		}
-		
+
 		@Override
 		public void callback(SCMessage msg) {
 			try {
@@ -88,6 +90,11 @@ public class ClnAPIAsyncSessionTestCase {
 		@Override
 		public void callback(Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
-		}		
+		}
+	}
+
+	@After
+	public void tearDown() {
+		System.out.println(SetupTestCases.statisticsListener);
 	}
 }

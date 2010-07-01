@@ -22,7 +22,7 @@
 package com.stabilit.scm.unit.cln.api;
 
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.cln.service.SCMessageCallbackAdapter;
+import com.stabilit.scm.common.service.SCMessageCallbackAdapter;
 
 /**
  * @author JTraber
@@ -40,5 +40,6 @@ public class SCExampleMessageCallback extends SCMessageCallbackAdapter {
 		// TODO Auto-generated method stub
 		
 	}
+
 	
 }

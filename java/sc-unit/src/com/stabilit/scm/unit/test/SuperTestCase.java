@@ -43,7 +43,7 @@ public abstract class SuperTestCase {
 	protected IContext testContext;
 
 	public SuperTestCase(final String fileName) {
-		this.fileName = fileName;		
+		this.fileName = fileName;
 	}
 
 	// @Parameters
@@ -78,6 +78,8 @@ public abstract class SuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		System.out.println(SetupTestCases.statisticsListener);
+		SetupTestCases.statisticsListener.clearAll();
 		this.testContext.getConnectionPool().destroy();
 	}
 

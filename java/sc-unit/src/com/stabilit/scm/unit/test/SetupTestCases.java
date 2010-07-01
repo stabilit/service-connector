@@ -21,15 +21,18 @@ import java.io.File;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IConnectionListener;
 import com.stabilit.scm.common.listener.IExceptionListener;
 import com.stabilit.scm.common.listener.ILoggerListener;
 import com.stabilit.scm.common.listener.IPerformanceListener;
 import com.stabilit.scm.common.listener.ISessionListener;
+import com.stabilit.scm.common.listener.IStatisticsListener;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.listener.SessionPoint;
+import com.stabilit.scm.common.listener.StatisticsPoint;
 import com.stabilit.scm.common.log.Level;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
@@ -47,6 +50,7 @@ import com.stabilit.scm.unit.UnitCommandFactory;
 public class SetupTestCases {
 
 	private static SetupTestCases setupTestCases = null;
+	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 
 	private SetupTestCases() {
 	}
@@ -69,6 +73,7 @@ public class SetupTestCases {
 					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
 			PerformancePoint.getInstance().setOn(true);
 			SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
+			StatisticsPoint.getInstance().addListener(statisticsListener);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
