@@ -28,10 +28,12 @@ package com.stabilit.scm.cln.service;
  */
 public interface ISessionService {
 
-	void createSession(String sessionInfo) throws Exception;
+	public abstract void createSession(String sessionInfo) throws Exception;
 
-	SCMessage execute(SCMessage requestMsg)  throws Exception;
+	public abstract SCMessage execute(SCMessage requestMsg)  throws Exception;
+	
+	public abstract void execute(SCMessage requestMsg, ISCMessageCallback callback)  throws Exception;
 
-	void deleteSession() throws Exception;
+	public abstract void deleteSession() throws Exception;
 
 }

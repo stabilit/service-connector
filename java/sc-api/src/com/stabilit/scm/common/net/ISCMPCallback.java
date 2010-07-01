@@ -5,7 +5,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 
 public interface ISCMPCallback {
 
-	public abstract void callback(SCMPMessage scmpReply);
+	public abstract void callback(SCMPMessage scmpReply) throws Exception;
 	
 	public abstract void callback(Throwable th);
 	

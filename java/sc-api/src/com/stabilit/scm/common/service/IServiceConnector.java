@@ -17,7 +17,7 @@
 package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessageHandler;
+import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 
@@ -103,7 +103,7 @@ public interface IServiceConnector extends IFactoryable {
 
 	public IFileService newFileService(String string);
 
-	public IPublishService newPublishingService(SCMessageHandler messageHandler, String string);
+	public IPublishService newPublishingService(ISCMessageCallback messageHandler, String string);
 
 	public ISessionService newSessionService(String string);
 

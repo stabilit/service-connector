@@ -25,7 +25,7 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessageHandler;
+import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.ConnectionPool;
@@ -139,7 +139,7 @@ public class ServiceConnector implements IServiceConnector {
 	}
 
 	@Override
-	public IPublishService newPublishingService(SCMessageHandler messageHandler, String serviceName) {
+	public IPublishService newPublishingService(ISCMessageCallback messageHandler, String serviceName) {
 
 		return null;
 	}

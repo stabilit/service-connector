@@ -122,7 +122,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		answer.offer(nettyEvent);
 	}
 
-	private void callback(NettyEvent event) {
+	private void callback(NettyEvent event) throws Exception {
 		SCMPMessage ret = null;
 		try {
 			NettyEvent eventMessage = event;
