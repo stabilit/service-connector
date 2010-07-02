@@ -72,7 +72,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	public void registerServiceBefore() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(registerRequester, "P01_RTXS_RPRWS1");
+				.newInstance(registerRequester, "simulation2");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
 		registerServiceCall.setImmediateConnect(true);
@@ -82,7 +82,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	public void deRegisterServiceAfter() throws Exception {
-		this.deRegisterServiceAfter("P01_RTXS_RPRWS1");
+		this.deRegisterServiceAfter("simulation2");
 	}
 
 	public void deRegisterServiceAfter(String serviceName) throws Exception {

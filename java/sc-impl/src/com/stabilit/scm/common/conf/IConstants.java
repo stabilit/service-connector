@@ -40,20 +40,20 @@ public interface IConstants {
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The CON. */
-	public static final String CON_QUALIFIER = ".con";
+	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The HOST. */
 	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
 	public static final String PORT_QUALIFIER = ".port";
 	/** The THREAD. */
-	public static final String THREAD_QUALIFIER = ".thread";
+	public static final String THREAD_POOL_SIZE_QUALIFIER = ".threadPoolSize";
 	/** The connection names. */
-	public static final String CONNECTION_NAMES = "connectionNames";
+	public static final String CONNECTIONS = "connections";
 	/** The server names. */
-	public static final String SERVER_NAMES = "serverNames";
+	public static final String SERVER_LISTENER = "serverListener";
 	/** The services Names. */
 	public static final String SERVICE_NAMES = "serviceNames";
-	public static final String MAX_POOL_SIZE = "maxPoolSize";
+	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
 	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
 	public static final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
 

@@ -105,5 +105,4 @@ public class SCTest {
 		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
-
 }

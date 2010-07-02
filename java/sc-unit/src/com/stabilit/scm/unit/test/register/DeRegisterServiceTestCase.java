@@ -47,7 +47,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(this.registerRequester, "P01_RTXS_RPRWS1");
+				.newInstance(this.registerRequester, "simulation2");
 
 		deRegisterServiceCall.invoke();
 
@@ -58,7 +58,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
-		String expectedEntry = "P01_RTXS_RPRWS1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|";
+		String expectedEntry = "P01_logging:0|simulation2:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|P01_BCST_CH_sc1:0|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.registerServiceBefore();
@@ -68,7 +68,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServiceCall() throws Exception {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(this.registerRequester, "P01_RTXS_RPRWS1");
+				.newInstance(this.registerRequester, "simulation2");
 
 		try {
 			deRegisterServiceCall.invoke();

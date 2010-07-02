@@ -77,7 +77,7 @@ public abstract class CommunicatorConfigPool {
 			comConfigList.add(reqConfig);
 
 			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) props.get(respName + IConstants.MAX_POOL_SIZE);
+			String maxPoolSizeValue = (String) props.get(respName + IConstants.MAX_CONNECTION_POOL_SIZE);
 
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
@@ -100,8 +100,8 @@ public abstract class CommunicatorConfigPool {
 
 			reqConfig.setPort(port);
 			reqConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
-			reqConfig.setConnectionKey((String) props.get(respName + IConstants.CON_QUALIFIER));
-			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName + IConstants.THREAD_QUALIFIER)));
+			reqConfig.setConnectionKey((String) props.get(respName + IConstants.CONNECTION_TYPE_QUALIFIER));
+			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName + IConstants.THREAD_POOL_SIZE_QUALIFIER)));
 
 		}
 		this.loggerKey = props.getProperty("root.logger");
@@ -115,7 +115,7 @@ public abstract class CommunicatorConfigPool {
 	 * @throws IOException
 	 */
 	public void loadResponderConfig(String fileName) throws Exception {
-		this.load(fileName, IConstants.SERVER_NAMES);
+		this.load(fileName, IConstants.SERVER_LISTENER);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public abstract class CommunicatorConfigPool {
 	 * @throws IOException
 	 */
 	public void loadRequesterConfig(String fileName) throws Exception {
-		this.load(fileName, IConstants.CONNECTION_NAMES);
+		this.load(fileName, IConstants.CONNECTIONS);
 	}
 
 	/**
