@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -27,8 +28,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
- * has to process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester. Defines
+ * how to connect/disconnect, send/receive has to process. Handling of large
+ * request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -62,8 +64,9 @@ public class Requester implements IRequester {
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool().getConnection();
-		IConnectionContext connectionContext = new ConnectionContext( this.outerContext.getConnectionPool(), connection);
+		IConnection connection = this.outerContext.getConnectionPool()
+				.getConnection();
+		IConnectionContext connectionContext = new ConnectionContext(this.outerContext, connection);
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
 			SCMPMessage ret = null;
@@ -76,27 +79,34 @@ public class Requester implements IRequester {
 			return ret;
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			connectionContext.getConnectionPool().freeConnection(connectionContext.getConnection());// give back to pool
+			connectionContext.getConnectionPool().freeConnection(
+					connectionContext.getConnection());// give back to pool
 			connectionContext = null;
 		}
 	}
 
 	@Override
-	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
+	public void send(SCMPMessage message, ISCMPCallback scmpCallback)
+			throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool().getConnection();
-		IConnectionContext connectionContext = new ConnectionContext( this.outerContext.getConnectionPool(), connection);
-		callback.setContext(connectionContext);
+		IConnection connection = this.outerContext.getConnectionPool()
+				.getConnection();
+		IConnectionContext connectionContext = new ConnectionContext(this.outerContext, connection);
+		ISCMPCallback requesterCallback = new RequesterSCMPCallback(
+				scmpCallback);
+		requesterCallback.setContext(connectionContext);
 		try {
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
-				sendLargeSCMP(message, connection, callback);
+				sendLargeSCMP(message, connection, requesterCallback);
 			} else {
-				sendSmallSCMP(message, connection, callback);
+				sendSmallSCMP(message, connection, requesterCallback);
 			}
 			return;
 		} finally {
-			// don't free it here, free them after call message received, this.outerContext.getConnectionPool().freeConnection(connection);// give back to pool
+			// don't free it here, free them after call message received,
+			// this.outerContext.getConnectionPool().freeConnection(connection);//
+			// give back to pool
 		}
 	}
 
@@ -109,16 +119,19 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMPMessage sendSmallSCMPAndReceive(SCMPMessage message, IConnection connection) throws Exception {
+	private SCMPMessage sendSmallSCMPAndReceive(SCMPMessage message,
+			IConnection connection) throws Exception {
 		if (message.isGroup()) {
 			msgID.incrementPartSequenceNr();
 		}
-		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
+				.getNextMessageID());
 		// process send and receive
 		SCMPMessage ret = connection.sendAndReceive(message);
 
 		if (message.isPart()) {
-			// incoming message is a part groupCall is made by client - part response can be ignored
+			// incoming message is a part groupCall is made by client - part
+			// response can be ignored
 			return ret;
 		}
 
@@ -139,11 +152,13 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void sendSmallSCMP(SCMPMessage message, IConnection connection, ISCMPCallback callback) throws Exception {
+	private void sendSmallSCMP(SCMPMessage message, IConnection connection,
+			ISCMPCallback callback) throws Exception {
 		if (message.isGroup()) {
 			msgID.incrementPartSequenceNr();
 		}
-		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
+				.getNextMessageID());
 		// process send and receive
 		connection.send(message, callback);
 		return;
@@ -158,8 +173,10 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMPMessage sendLargeSCMPAndReceive(SCMPMessage scmp, IConnection connection) throws Exception {
-		SCMPMessage ret = this.sendLargeSCMP(scmp, connection); // send large request scmp
+	private SCMPMessage sendLargeSCMPAndReceive(SCMPMessage scmp,
+			IConnection connection) throws Exception {
+		SCMPMessage ret = this.sendLargeSCMP(scmp, connection); // send large
+		// request scmp
 
 		if (ret.isPart() && scmp.isGroup() == false) {
 			// response is a part - response is large, continue pulling
@@ -180,32 +197,38 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMPMessage sendLargeSCMP(SCMPMessage scmp, IConnection connection) throws Exception {
+	private SCMPMessage sendLargeSCMP(SCMPMessage scmp, IConnection connection)
+			throws Exception {
 		// SCMPLargeRequest handles splitting, works like an iterator
 		SCMPCompositeSender scmpLargeRequest = new SCMPCompositeSender(scmp);
 		SCMPMessage part = scmpLargeRequest.getFirst();
 		msgID.incrementPartSequenceNr();
 		while (part != null) {
-			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
+					.getNextMessageID());
 			SCMPMessage ret = connection.sendAndReceive(part);
 
 			if (part.isRequest()) {
 				/*
-				 * request has been sent completely. The response can be small or large, this doesn't matter, we
-				 * continue reading any large response later
+				 * request has been sent completely. The response can be small
+				 * or large, this doesn't matter, we continue reading any large
+				 * response later
 				 */
 				return ret;
 			}
 			if (scmpLargeRequest.hasNext() == false) {
 				if (scmp.isGroup()) {
 					/*
-					 * client processes group call, he needs to get the response - happens in special case: client sends
-					 * a single part of a group but content is to large and we need to split
+					 * client processes group call, he needs to get the response
+					 * - happens in special case: client sends a single part of
+					 * a group but content is to large and we need to split
 					 */
 					return ret;
 				}
-				LoggerPoint.getInstance().fireWarn(this,
-						"sendLargeRequest.hasNext() == false but part request not done");
+				LoggerPoint
+						.getInstance()
+						.fireWarn(this,
+								"sendLargeRequest.hasNext() == false but part request not done");
 				return null;
 			}
 			part = scmpLargeRequest.getNext();
@@ -223,20 +246,24 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void sendLargeSCMP(SCMPMessage scmp, IConnection connection, ISCMPCallback callback) throws Exception {
+	private void sendLargeSCMP(SCMPMessage scmp, IConnection connection,
+			ISCMPCallback callback) throws Exception {
 		// SCMPLargeRequest handles splitting, works like an iterator
 		SCMPCompositeSender scmpLargeRequest = new SCMPCompositeSender(scmp);
 		SCMPMessage part = scmpLargeRequest.getFirst();
 		msgID.incrementPartSequenceNr();
 		while (part != null) {
-			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
+					.getNextMessageID());
 			connection.send(part, callback);
 			if (scmpLargeRequest.hasNext() == false) {
 				if (scmp.isGroup()) {
 					return;
 				}
-				LoggerPoint.getInstance().fireWarn(this,
-						"sendLargeRequest.hasNext() == false but part request not done");
+				LoggerPoint
+						.getInstance()
+						.fireWarn(this,
+								"sendLargeRequest.hasNext() == false but part request not done");
 				return;
 			}
 			part = scmpLargeRequest.getNext();
@@ -256,16 +283,18 @@ public class Requester implements IRequester {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMPMessage receiveLargeResponse(SCMPMessage request, SCMPMessage response, IConnection connection)
-			throws Exception {
+	private SCMPMessage receiveLargeResponse(SCMPMessage request,
+			SCMPMessage response, IConnection connection) throws Exception {
 		// SCMPComposite handles parts of large requests, putting all together
-		SCMPCompositeReceiver scmpComposite = new SCMPCompositeReceiver(request, response);
+		SCMPCompositeReceiver scmpComposite = new SCMPCompositeReceiver(
+				request, response);
 		SCMPMessage ret = null;
 		msgID.incrementMsgSequenceNr();
 		msgID.incrementPartSequenceNr();
 		while (true) {
 			SCMPMessage message = scmpComposite.getPart();
-			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
+					.getNextMessageID());
 			ret = connection.sendAndReceive(message); // pull
 
 			if (ret == null) {
@@ -304,5 +333,46 @@ public class Requester implements IRequester {
 	public IContext getContext() {
 		return outerContext;
 	}
-	
+
+	// member class
+	private class RequesterSCMPCallback implements ISCMPCallback {
+		private ISCMPCallback scmpCallback;
+
+		public RequesterSCMPCallback(ISCMPCallback scmpCallback) {
+			this.scmpCallback = scmpCallback;
+		}
+
+		@Override
+		public void callback(SCMPMessage scmpReply) throws Exception {
+			this.scmpCallback.callback(scmpReply);
+			freeConnection();
+		}
+
+		@Override
+		public void callback(Throwable th) {
+			this.scmpCallback.callback(th);
+			freeConnection();
+		}
+
+		@Override
+		public IContext getContext() {
+			return scmpCallback.getContext();
+		}
+
+		@Override
+		public void setContext(IContext context) {
+			this.scmpCallback.setContext(context);
+		}
+
+		private void freeConnection() {
+			try {
+				IConnectionContext connectionContext = (IConnectionContext) this.scmpCallback
+						.getContext();
+				connectionContext.getConnectionPool().freeConnection(
+						connectionContext.getConnection());
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+	}
 }

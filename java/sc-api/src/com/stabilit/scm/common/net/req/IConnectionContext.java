@@ -7,4 +7,5 @@ public interface IConnectionContext extends IContext {
 	@Override
 	public abstract IConnectionPool getConnectionPool();
 	public abstract IConnection getConnection();
+	public abstract IContext getOuterContext();
 }

@@ -56,6 +56,7 @@ public class ClnAPIAsyncSessionTestCase {
 			ISCMessageCallback callback = new TestCallback(sessionServiceA);
 			sessionServiceA.execute(requestMsg, callback);
 			callback.join(); // wait until
+			Thread.sleep(100000);
 			// deletes the session
 			sessionServiceA.deleteSession();
 		} catch (Exception e) {

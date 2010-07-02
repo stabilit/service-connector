@@ -1,16 +1,23 @@
 package com.stabilit.scm.common.net.req;
 
+import com.stabilit.scm.common.ctx.IContext;
+
 public class ConnectionContext implements IConnectionContext {
 
-	private IConnectionPool connectionPool;
+	private IContext outerContext;
 	private IConnection connection;
 
-	public ConnectionContext(IConnectionPool connectionPool,
+	public ConnectionContext(IContext outerContext,
 			IConnection connection) {
 		this.connection = connection;
-		this.connectionPool = connectionPool;
+		this.outerContext = outerContext;
 	}
 
+	@Override
+	public IContext getOuterContext() {
+		return outerContext;
+	}
+	
 	@Override
 	public IConnection getConnection() {
 		return this.connection;
@@ -18,7 +25,7 @@ public class ConnectionContext implements IConnectionContext {
 
 	@Override
 	public IConnectionPool getConnectionPool() {
-		return this.connectionPool;
+		return this.outerContext.getConnectionPool();
 	}
 
 }

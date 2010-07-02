@@ -172,6 +172,12 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		}
 
 		@Override
+		public IContext getContext() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
 		public void callback(SCMPMessage scmpReply) {
 			scmpReply.setMessageType(getKey().getName());
 			this.response.setSCMP(scmpReply);

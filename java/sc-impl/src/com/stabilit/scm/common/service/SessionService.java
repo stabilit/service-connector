@@ -112,6 +112,11 @@ public class SessionService implements ISessionService {
 		}
 
 		@Override
+		public IContext getContext() {
+			return this.context;
+		}
+		
+		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			SCMessage messageReply = new SCMessage();
 			messageReply.setData(scmpReply.getBody());
