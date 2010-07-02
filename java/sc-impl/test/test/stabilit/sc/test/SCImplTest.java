@@ -21,6 +21,8 @@
  */
 package test.stabilit.sc.test;
 
+import java.text.DecimalFormat;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -34,6 +36,8 @@ import test.stabilit.sc.scmp.internal.SCMPLargeRequestTest;
 import test.stabilit.sc.scmp.internal.SCMPLargeResponseTest;
 import test.stabilit.sc.util.ValidatorUtilityTest;
 
+import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 
 /**
  * The Class SCImplTest.
@@ -41,20 +45,42 @@ import test.stabilit.sc.util.ValidatorUtilityTest;
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses({ DefaultFrameDecoderTest.class,
-				HttpFrameDecoderTest.class,
-				SCMPCompositeTest.class,
-				SCMPLargeRequestTest.class,
-				SCMPLargeResponseTest.class,
-				DefaultFrameDecoderTest.class,
-				LargeMessageEncoderDecoderTest.class,
-				KeepAliveMessageEncoderDecoderTest.class,
-				ValidatorUtilityTest.class })
+@SuiteClasses( { DefaultFrameDecoderTest.class,
+				 HttpFrameDecoderTest.class, 
+				 SCMPCompositeTest.class,
+				 SCMPLargeRequestTest.class, 
+				 SCMPLargeResponseTest.class, 
+				 DefaultFrameDecoderTest.class,
+				 LargeMessageEncoderDecoderTest.class, 
+				 KeepAliveMessageEncoderDecoderTest.class, 
+				 ValidatorUtilityTest.class })
 public final class SCImplTest {
-	
+
+	private static DecimalFormat dfMsg = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
+	private static DecimalFormat dfHeader = new DecimalFormat(IConstants.FORMAT_OF_HEADER_SIZE);
+
 	/**
 	 * Instantiates a new sC impl test.
 	 */
 	private SCImplTest() {
+	}
+
+	public static String getSCMPString(SCMPHeadlineKey headKey, String header, String body) {
+		int headerSize = 0;
+		int bodySize = 0;
+		String msgString = "";
+
+		if (header != null) {
+			headerSize = header.length();
+			msgString += header;
+		}
+		if (body != null) {
+			bodySize = body.length();
+			msgString += body;
+		}
+		int messageSize = headerSize + bodySize;
+
+		String scmpString = headKey.name() + dfMsg.format(messageSize) + dfHeader.format(headerSize) + " 1.0\n" + msgString;
+		return scmpString;
 	}
 }

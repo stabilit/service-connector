@@ -48,7 +48,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
-	private DecimalFormat df = new DecimalFormat(IConstants.FORMAT_OF_MSG_LENGTH);
+	private DecimalFormat df = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
 	/** {@inheritDoc} */

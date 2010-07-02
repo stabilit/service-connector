@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import test.stabilit.sc.test.SCImplTest;
+
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
@@ -45,8 +47,9 @@ public class KeepAliveMessageEncoderDecoderTest {
 	@Test
 	public void decodeKRQTest() {
 		this.headKey = SCMPHeadlineKey.KRQ;
-		String requestString = headKey.name() + " 00000 00000 1.0\n";
 
+		String requestString = SCImplTest.getSCMPString(headKey, null, null);
+		
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
