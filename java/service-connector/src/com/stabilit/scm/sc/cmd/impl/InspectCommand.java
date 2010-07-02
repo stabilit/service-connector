@@ -64,7 +64,7 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		InspectMessage inspectMsg = new InspectMessage();
-
+		//TODO remove.. message put it in body!!
 		// dump internal registries
 		inspectMsg.setAttribute("clientRegistry", clientRegistry);
 		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);

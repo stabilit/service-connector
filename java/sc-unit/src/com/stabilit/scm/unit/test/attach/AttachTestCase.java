@@ -72,7 +72,7 @@ public class AttachTestCase extends SuperTestCase {
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
 		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
-		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={messageID=1, bodyLength=0, msgType=ATTACH, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
+		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={messageID=1, bodyLength=0, msgType=ATT, keepAliveInterval=360, scVersion=1.0-000, localDateTime="
 				+ localDateTimeString
 				+ ", keepAliveTimeout=30}] MapBean: localDateTime="
 				+ localDateTime + ";|";

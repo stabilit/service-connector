@@ -16,66 +16,75 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import com.stabilit.scm.common.util.ReverseEnumMap;
+import com.stabilit.scm.common.util.ReversibleEnum;
+
 /**
  * The Enum SCMPMsgType. Defines possible message types in SCMP.
  * 
  * @author JTraber
  */
-public enum SCMPMsgType {
+public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 
 	/** The ATTACH. */
-	ATTACH("ATTACH"),
+	ATTACH("ATT"),
 	/** The DETACH. */
-	DETACH("DETACH"),
-	/** The KEEP_ALIVE. */
-	KEEP_ALIVE("KEEP_ALIVE"),
+	DETACH("DET"),
 	/** The ECHO_SC. */
 	ECHO_SC("ECHO_SC"),
 	/** The INSPECT. */
-	INSPECT("INSPECT"),
+	INSPECT("INS"),
 
 	/** The CLN_CREATE_SESSION. */
-	CLN_CREATE_SESSION("CLN_CREATE_SESSION"),
+	CLN_CREATE_SESSION("CCS"),
 	/** The SRV_CREATE_SESSION. */
-	SRV_CREATE_SESSION("SRV_CREATE_SESSION"),
+	SRV_CREATE_SESSION("SCS"),
 	/** The CLN_DELETE_SESSION. */
-	CLN_DELETE_SESSION("CLN_DELETE_SESSION"),
+	CLN_DELETE_SESSION("CDS"),
 	/** The SRV_DELETE_SESSION. */
-	SRV_DELETE_SESSION("SRV_DELETE_SESSION"),
+	SRV_DELETE_SESSION("SDS"),
 	/** The SRV_ABORT_SESSION. */
-	SRV_ABORT_SESSION("SRV_ABORT_SESSION"),
+	SRV_ABORT_SESSION("SAS"),
 	/** The CLN_DATA. */
-	CLN_DATA("CLN_DATA"),
+	CLN_DATA("CDA"),
 	/** The SRV_DATA. */
-	SRV_DATA("SRV_DATA"),
+	SRV_DATA("SDA"),
 	/** The CLN_ECHO. */
-	CLN_ECHO("CLN_ECHO"),
+	CLN_ECHO("CEC"),
 	/** The SRV_ECHO. */
-	SRV_ECHO("SRV_ECHO"),
+	SRV_ECHO("SEC"),
 	/** The CLN_SYSTEM. */
 	CLN_SYSTEM("CLN_SYSTEM"),
 	/** The SRV_SYSTEM. */
 	SRV_SYSTEM("SRV_SYSTEM"),
 
-	/** The SUBSCRIBE. */
-	SUBSCRIBE("SUBSCRIBE"),
-	/** The UNSUBSCRIBE. */
-	UNSUBSCRIBE("UNSUBSCRIBE"),
-	/** The CHANGE_SUBSCRIPTION. */
-	CHANGE_SUBSCRIPTION("CHANGE_SUBSCRIPTION"),
+	/** The CLN_SUBSCRIBE. */
+	CLN_SUBSCRIBE("CSU"),
+	/** The SRV_SUBSCRIBE. */
+	SRV_SUBSCRIBE("SSU"),
+	/** The CLN_UNSUBSCRIBE. */
+	CLN_UNSUBSCRIBE("CUN"),
+	/** The SRV_UNSUBSCRIBE. */
+	SRV_UNSUBSCRIBE("SUN"),
+	/** The CLN_CHANGE_SUBSCRIPTION. */
+	CLN_CHANGE_SUBSCRIPTION("CHS"),
+	/** The SRV_CHANGE_SUBSCRIPTION. */
+	SRV_CHANGE_SUBSCRIPTION("SHS"),
 	/** The RECEIVE_PUBLICATION. */
-	RECEIVE_PUBLICATION("RECEIVE_PUBLICATION"),
+	RECEIVE_PUBLICATION("CRP"),
 	/** The PUBLISH. */
-	PUBLISH("PUBLISH"),
+	PUBLISH("SPU"),
 	/** The REGISTER_SERVICE. */
-	REGISTER_SERVICE("REGISTER_SERVICE"),
+	REGISTER_SERVICE("REG"),
 	/** The DEREGISTER_SERVICE. */
-	DEREGISTER_SERVICE("DEREGISTER_SERVICE"),
+	DEREGISTER_SERVICE("DRG"),
 	/** The UNDEFINED. */
-	UNDEFINED("UNDEFINED");
+	UNDEFINED("UND");
 
 	/** The name. */
 	private String name;
+	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(
+			SCMPMsgType.class);
 
 	/**
 	 * Instantiates a SCMPMsgType.
@@ -109,6 +118,16 @@ public enum SCMPMsgType {
 	 * @return the msg type
 	 */
 	public static SCMPMsgType getMsgType(String messageId) {
-		return SCMPMsgType.valueOf(messageId);
+		return reverseMap.get(messageId);
+	}
+
+	@Override
+	public String getValue() {
+		return this.getName();
+	}
+
+	@Override
+	public SCMPMsgType reverse(String messageId) {
+		return reverseMap.get(messageId);
 	}
 }
