@@ -28,8 +28,9 @@ public class Session extends MapBean<Object>{
 
 	/** The id. */
 	private String id;
-
 	private Server server;
+	private int echoTimeout;
+	private int echoInterval;
 
 	/**
 	 * Instantiates a new session.
@@ -60,5 +61,21 @@ public class Session extends MapBean<Object>{
 	@Override
 	public String toString() {
 		return id + ":" + server;
+	}
+
+	public void setEchoTimeout(int echoTimeout) {
+		this.echoTimeout = echoTimeout;
+	}
+
+	public void setEchoInterval(int echoInterval) {
+		this.echoInterval = echoInterval;
+	}
+
+	public int getEchoTimeout() {
+		return echoTimeout;
+	}
+
+	public int getEchoInterval() {
+		return echoInterval;
 	}
 }

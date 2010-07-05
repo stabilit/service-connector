@@ -73,6 +73,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
+		
+		session.setEchoTimeout(reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
+		session.setEchoInterval(reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 
 		// tries allocating a server for this session if server rejects session exception will be thrown
 		// error codes and error text from server in reject case are inside the exception
@@ -133,6 +136,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
+				
+				//TODO validate echo stuff
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

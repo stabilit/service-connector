@@ -88,7 +88,11 @@ public enum SCMPHeaderAttributeKey {
 	/** The SRV_RES_ID. */
 	SRV_RES_ID("srvResId"),
 	/** The IMMEDIAT_CONNECT. */
-	IMMEDIATE_CONNECT("immediateConnect"); 
+	IMMEDIATE_CONNECT("immediateConnect"), 
+	/** The ECHO_TIMEOUT. */
+	ECHO_TIMEOUT("echoTimeout"), 
+	/** The ECHO_INTERVAL. */
+	ECHO_INTERVAL("echoInterval"); 
 
 	/** The name. */
 	private String name;
