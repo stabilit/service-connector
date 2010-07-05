@@ -1,5 +1,6 @@
 package com.stabilit.scm.common.net.req;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.ctx.IContext;
 
 public class ConnectionContext implements IConnectionContext {
@@ -37,5 +38,15 @@ public class ConnectionContext implements IConnectionContext {
 	@Override
 	public int getIdleTimeout() {
 		return this.connectionPool.getKeepAliveInterval();
+	}
+	
+	@Override
+	public int getReadTimeout() {
+		return IConstants.READ_TIMEOUT;
+	}
+	
+	@Override
+	public int getWriteTimeout() {
+		return IConstants.WRITE_TIMEOUT;
 	}
 }

@@ -61,9 +61,9 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMPMessage.LARGE_MESSAGE_LIMIT + 4 << 10));
 		// responsible for observing read timeout - Netty
-		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, IConstants.READ_TIMEOUT));
+		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, this.context.getReadTimeout()));
 		// responsible for observing write timeout - Netty
-		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
+		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, this.context.getWriteTimeout()));
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0,
 				this.context.getIdleTimeout()));
