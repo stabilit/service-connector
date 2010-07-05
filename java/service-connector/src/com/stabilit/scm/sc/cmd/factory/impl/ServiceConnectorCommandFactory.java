@@ -19,15 +19,20 @@ package com.stabilit.scm.sc.cmd.factory.impl;
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.sc.cmd.impl.AttachCommand;
+import com.stabilit.scm.sc.cmd.impl.ClnChangeSubscriptionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnCreateSessionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnDataCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnDeleteSessionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnEchoCommand;
+import com.stabilit.scm.sc.cmd.impl.ClnSubscribeCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnSystemCommand;
+import com.stabilit.scm.sc.cmd.impl.ClnUnsubscribeCommand;
 import com.stabilit.scm.sc.cmd.impl.DeRegisterServiceCommand;
 import com.stabilit.scm.sc.cmd.impl.DetachCommand;
 import com.stabilit.scm.sc.cmd.impl.EchoSCCommand;
 import com.stabilit.scm.sc.cmd.impl.InspectCommand;
+import com.stabilit.scm.sc.cmd.impl.PublishCommand;
+import com.stabilit.scm.sc.cmd.impl.ReceivePublicationCommand;
 import com.stabilit.scm.sc.cmd.impl.RegisterServiceCommand;
 
 /**
@@ -84,5 +89,16 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.addCommand(clnDataCommand.getKey(), clnDataCommand);
 		ICommand clnSystemCommand = new ClnSystemCommand();
 		commandFactory.addCommand(clnSystemCommand.getKey(), clnSystemCommand);
+		// publish subscribe commands
+		ICommand clnSubscribeCommand = new ClnSubscribeCommand();
+		commandFactory.addCommand(clnSubscribeCommand.getKey(), clnSubscribeCommand);
+		ICommand clnUnsubscribeCommand = new ClnUnsubscribeCommand();
+		commandFactory.addCommand(clnUnsubscribeCommand.getKey(), clnUnsubscribeCommand);
+		ICommand clnChangeSubscriptionCommand = new ClnChangeSubscriptionCommand();
+		commandFactory.addCommand(clnChangeSubscriptionCommand.getKey(), clnChangeSubscriptionCommand);
+		ICommand receivePublicationCommand = new ReceivePublicationCommand();
+		commandFactory.addCommand(receivePublicationCommand.getKey(), receivePublicationCommand);
+		ICommand publishCommand = new PublishCommand();
+		commandFactory.addCommand(publishCommand.getKey(), publishCommand);
 	}
 }

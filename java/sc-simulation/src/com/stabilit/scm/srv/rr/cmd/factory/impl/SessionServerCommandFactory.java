@@ -18,11 +18,14 @@ package com.stabilit.scm.srv.rr.cmd.factory.impl;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvChangeSubscriptionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDataCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvSubscribeCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvSystemCommand;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvUnsubscribeCommand;
 
 public class SessionServerCommandFactory extends CommandFactory {
 
@@ -45,5 +48,12 @@ public class SessionServerCommandFactory extends CommandFactory {
 		commandFactory.addCommand(srvDataCommand.getKey(), srvDataCommand);
 		ICommand srvSystemCommand = new SrvSystemCommand();
 		commandFactory.addCommand(srvSystemCommand.getKey(), srvSystemCommand);
+		// publish subscribe commands
+		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
+		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
+		ICommand srvUnsubscribeCommand = new SrvUnsubscribeCommand();
+		commandFactory.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
+		ICommand srvChangeSubscriptionCommand = new SrvChangeSubscriptionCommand();
+		commandFactory.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
 	}
 }

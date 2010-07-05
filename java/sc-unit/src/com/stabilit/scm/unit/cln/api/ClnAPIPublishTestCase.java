@@ -19,7 +19,8 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.ISCPublishServer;
+import com.stabilit.scm.common.service.SCPublishServer;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIPublishTestCase {
@@ -31,33 +32,26 @@ public class ClnAPIPublishTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		IServiceConnector sc = null;
+		ISCPublishServer sc = null;
 		try {
-//			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
-//			sc.setAttribute("keepAliveInterval", 60);
-//			sc.setAttribute("keepAliveTimeout", 10);
-//			sc.setAttribute("compression", false);
-//
-//			// connects to SC, starts observing connection
-//			sc.attach();
-//
-//			SCExampleMessageHandler messageHandler = new SCExampleMessageHandler();
-//			IPublishService publServiceA = sc.newPublishingService(messageHandler, "broadcast");
-//			String mask = "ABC-------"; // must not contain % sign
-//			publServiceA.subscribe(mask);
-//
-//			mask = "AAA-------";
-//			publServiceA.changeSubscription(mask);
-//			publServiceA.unsubscribe();
+
+			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
+
+			// connects to SC, starts observing connection
+			sc.register();
+			Object data = null;
+			String mask = "AVSD-----";
+			sc.publish(mask, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// disconnects from SC
-				sc.detach();
+				sc.deregister();
 			} catch (Exception e) {
 				sc = null;
 			}
 		}
+
 	}
 }

@@ -32,6 +32,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.registry.SubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionPlaceException;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.SCServiceException;
 import com.stabilit.scm.sc.service.Session;

@@ -19,36 +19,18 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.SCPublishServer;
+/**
+ * @author JTraber
+ *
+ */
+public interface ISCPublishServer {
 
-public class PublishServer {
+	void register() throws Exception;
 
-	public static void main(String[] args) throws Exception {
-		PublishServer.runExample();
-	}
+	void publish(String mask, Object data) throws Exception;
 
-	public static void runExample() {
-		ISCPublishServer sc = null;
-		try {
-			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
-
-			// connects to SC, starts observing connection
-			sc.register();
-			Object data = null;
-			String mask = "AVSD-----";
-			sc.publish(mask, data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.deregister();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
-	}
+	void deregister() throws Exception;
+	
 }

@@ -19,25 +19,17 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.cmd.impl;
+package com.stabilit.scm.common.service;
+
+import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
  * @author JTraber
- *
  */
-public class SubscriptionPlaceException extends Exception {
+public interface ISCPublishServerContext extends IContext {
 
-	/**
-	 * 
-	 */
-	public SubscriptionPlaceException() {
-	}
+	public IConnectionPool getConnectionPool();
 
-	/**
-	 * @param message
-	 */
-	public SubscriptionPlaceException(String message) {
-		super(message);
-	}
-
+	public ISCPublishServer getSCPublishServer();
 }

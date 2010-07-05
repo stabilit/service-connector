@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +13,30 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.srv.ps;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.cln.call;
 
-import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.SCPublishServer;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
-public class PublishServer {
+public class SCMPPublishCall extends SCMPCallAdapter {
 
-	public static void main(String[] args) throws Exception {
-		PublishServer.runExample();
+	public SCMPPublishCall() {
+		this(null, null);
 	}
 
-	public static void runExample() {
-		ISCPublishServer sc = null;
-		try {
-			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
+	public SCMPPublishCall(IRequester req, String serviceName) {
+		super(req, serviceName);
+	}
 
-			// connects to SC, starts observing connection
-			sc.register();
-			Object data = null;
-			String mask = "AVSD-----";
-			sc.publish(mask, data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.deregister();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	@Override
+	public ISCMPCall newInstance(IRequester requester, String serviceName) {
+		return new SCMPPublishCall(requester, serviceName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.PUBLISH;
 	}
 }

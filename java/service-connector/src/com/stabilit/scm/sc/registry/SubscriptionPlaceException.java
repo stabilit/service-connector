@@ -19,36 +19,25 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.SCPublishServer;
+/**
+ * @author JTraber
+ *
+ */
+public class SubscriptionPlaceException extends Exception {
 
-public class PublishServer {
-
-	public static void main(String[] args) throws Exception {
-		PublishServer.runExample();
+	/**
+	 * 
+	 */
+	public SubscriptionPlaceException() {
 	}
 
-	public static void runExample() {
-		ISCPublishServer sc = null;
-		try {
-			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
-
-			// connects to SC, starts observing connection
-			sc.register();
-			Object data = null;
-			String mask = "AVSD-----";
-			sc.publish(mask, data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.deregister();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	/**
+	 * @param message
+	 */
+	public SubscriptionPlaceException(String message) {
+		super(message);
 	}
+
 }
