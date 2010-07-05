@@ -34,6 +34,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@Before
 	public void setUp() {
+		// test setup
 		SetupTestCases.setupAll();
 	}
 
