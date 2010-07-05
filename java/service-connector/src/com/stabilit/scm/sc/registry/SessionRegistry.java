@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Session;
@@ -29,11 +33,13 @@ public class SessionRegistry extends Registry {
 
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
+	private Timer timer;
 
 	/**
 	 * Instantiates a new session registry.
 	 */
 	public SessionRegistry() {
+		this.timer = new Timer("SessionRegistry");
 	}
 
 	/**
@@ -48,6 +54,7 @@ public class SessionRegistry extends Registry {
 	public void addSession(Object key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
+		this.scheduleTask(session);
 	}
 
 	public void removeSession(Session session) {
@@ -55,11 +62,46 @@ public class SessionRegistry extends Registry {
 	}
 
 	public void removeSession(Object key) {
+		Session session = (Session) super.get(key);
+		this.cancelTask(session);
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
 	public Session getSession(Object key) {
-		return (Session) super.get(key);
+		Session session = (Session) super.get(key);
+		this.cancelTask(session);
+		this.scheduleTask(session);
+		return session;
 	}
+	
+	private void scheduleTask(Session session) {
+		TimerTask timerTask = session.getTimerTask();
+		if (timerTask == null) {
+			timerTask = new SessionTimerTask(session);  // sets timer task inside session too			
+		}
+		this.timer.schedule(timerTask, session.getEchoInterval());
+	}
+	
+	private void cancelTask(Session session) {
+		session.getTimerTask().cancel();		
+	}
+	
+	class SessionTimerTask extends TimerTask {
+
+		private Session session;
+		public SessionTimerTask(Session session) {
+			this.session = session;
+			this.session.setTimerTask(this);
+		}
+		
+		@Override
+		public void run() {
+             // we assume that this session is dead
+			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
+			SessionPoint.getInstance().fireAbort(session, session.getId());
+		}
+		
+	}
+	
 }

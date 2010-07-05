@@ -33,6 +33,7 @@ public class SessionLogger implements ISessionListener, ILoggerDecorator {
 	private Formatter deleteSessionFormat;
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
+	private String ABORT_SESSION_STR = "abort session:%s";
 
 	SessionLogger(ILogger logger) {
 		this.createSessionFormat = null;
@@ -43,7 +44,8 @@ public class SessionLogger implements ISessionListener, ILoggerDecorator {
 	@Override
 	public void createSessionEvent(SessionEvent sessionEvent) throws Exception {
 		createSessionFormat = new Formatter();
-		createSessionFormat.format(CREATE_SESSION_STR, sessionEvent.getSessionId());
+		createSessionFormat.format(CREATE_SESSION_STR, sessionEvent
+				.getSessionId());
 		this.logger.log(createSessionFormat.toString());
 	}
 
@@ -51,8 +53,18 @@ public class SessionLogger implements ISessionListener, ILoggerDecorator {
 	@Override
 	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
 		deleteSessionFormat = new Formatter();
-		deleteSessionFormat.format(DELETE_SESSION_STR, sessionEvent.getSessionId());
+		deleteSessionFormat.format(DELETE_SESSION_STR, sessionEvent
+				.getSessionId());
 		this.logger.log(deleteSessionFormat.toString());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void abortSessionEvent(SessionEvent sessionEvent) throws Exception {
+		createSessionFormat = new Formatter();
+		createSessionFormat.format(ABORT_SESSION_STR, sessionEvent
+				.getSessionId());
+		this.logger.log(createSessionFormat.toString());
 	}
 
 	/** {@inheritDoc} */

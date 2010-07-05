@@ -43,6 +43,13 @@ public final class SessionPoint extends ListenerSupport<ISessionListener> {
 		}
 	}
 
+	public void fireAbort(Object source, String sessionId) {
+		if (getInstance().isEmpty() == false) {
+			SessionEvent sessionEvent = new SessionEvent(source, sessionId);
+			SessionPoint.getInstance().fireAbort(sessionEvent);
+		}
+	}
+
 	public void fireCreate(SessionEvent sessionEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
@@ -63,6 +70,19 @@ public final class SessionPoint extends ListenerSupport<ISessionListener> {
 			try {
 				ISessionListener sessionListener = (ISessionListener) localArray[i];
 				sessionListener.deleteSessionEvent(sessionEvent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void fireAbort(SessionEvent sessionEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISessionListener sessionListener = (ISessionListener) localArray[i];
+				sessionListener.abortSessionEvent(sessionEvent);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

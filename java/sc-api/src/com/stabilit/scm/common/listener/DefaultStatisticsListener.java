@@ -38,6 +38,7 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			this.maxSessions++;
 			break;
 		case DELETE_SESSION:
+		case ABORT_SESSION:
 			this.openSessions--;
 			break;
 		case READ:

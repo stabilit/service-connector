@@ -20,7 +20,7 @@ import java.util.EventListener;
 
 enum StatisticsEnum {
 	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME
-, CREATE_SESSION, DELETE_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE}
+, CREATE_SESSION, DELETE_SESSION, ABORT_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE}
 
 /**
  * The Class ConnectionPoint. Allows collecting statistic information - fire
@@ -186,6 +186,14 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 					sessionEvent.getSource(), sessionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.DELETE_SESSION);
 			fireStatistics(statisticsEvent);			
+		}
+		
+		@Override
+		public void abortSessionEvent(SessionEvent sessionEvent) {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(
+					sessionEvent.getSource(), sessionEvent);
+			statisticsEvent.setEventType(StatisticsEnum.ABORT_SESSION);
+			fireStatistics(statisticsEvent);
 		}
 	}
 	// member class

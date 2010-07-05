@@ -24,4 +24,5 @@ public interface ISessionListener extends EventListener {
 
 	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception;
 
+	public void abortSessionEvent(SessionEvent sessionEvent) throws Exception;
 }
