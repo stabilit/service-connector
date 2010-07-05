@@ -66,4 +66,7 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
 	/** The Constant SRV_SYSTEM_CALL. */
 	public static final ISCMPCall SRV_SYSTEM_CALL = new SCMPSrvSystemCall();
+
+	public static final ISCMPCall SRV_SUBSCRIBE_CALL = new SCMPSrvSubscribeCall();
+	public static final ISCMPCall SRV_UNSUBSCRIBE_CALL = new SCMPSrvUnsubscribeCall();;
 }

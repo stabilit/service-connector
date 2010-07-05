@@ -30,6 +30,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
@@ -49,39 +50,25 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
+		SCMPMessage message = request.getMessage();
+		String sessionId = message.getSessionId();
+		// lookup session and checks properness
+		Session session = this.getSessionById(sessionId);
 
-		// lookup if client is correctly attached
-		this.validateClientAttached(socketAddress);
+		Server server = session.getServer();
+		try {
+			server.unsubscribe(message);
+		} catch (Exception e) {
+			ExceptionPoint.getInstance().fireException(this, e);
+			// TODO verify with jan
+		}
+		// delete session on server successful - delete entry from session registry
+		SubscriptionSessionRegistry.getCurrentInstance().removeSession(session);
 
-		// check service is present
-		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
-		Service service = this.validateService(serviceName);
-
-		// create session
-		Session session = new Session();
-		reqMessage.setSessionId(session.getId());
-
-		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-
-		// tries allocating a server for this session if server rejects session exception will be thrown
-		// error codes and error text from server in reject case are inside the exception
-		Server server = service.allocateServerAndCreateSession(reqMessage);
-
-		// add server to session
-		session.setServer(server);
-		// finally add session to the registry
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		sessionRegistry.addSession(session.getId(), session);
-
-		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getName());
-		scmpReply.setSessionId(session.getId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		response.setSCMP(scmpReply);
 	}
 

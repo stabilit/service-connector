@@ -29,7 +29,8 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.registry.SubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
@@ -58,7 +59,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		Service service = this.validateService(serviceName);
-
+		
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
@@ -66,15 +67,13 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
 		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 
-		// tries allocating a server for this session if server rejects session exception will be thrown
-		// error codes and error text from server in reject case are inside the exception
-		Server server = service.allocateServerAndCreateSession(reqMessage);
+		Server server = service.allocateServerAndSubscribe(reqMessage);
 
 		// add server to session
 		session.setServer(server);
 		// finally add session to the registry
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		sessionRegistry.addSession(session.getId(), session);
+		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
+		subscriptionSessionRegistry.addSession(session.getId(), session);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();

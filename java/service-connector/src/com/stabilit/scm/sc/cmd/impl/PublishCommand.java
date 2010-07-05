@@ -34,7 +34,6 @@ import com.stabilit.scm.sc.service.Session;
 
 public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
 
-
 	public PublishCommand() {
 		this.commandValidator = new PublishCommandValidator();
 	}

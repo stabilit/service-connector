@@ -26,7 +26,9 @@ import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
+import com.stabilit.scm.cln.call.SCMPSrvSubscribeCall;
 import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
+import com.stabilit.scm.cln.call.SCMPSrvUnsubscribeCall;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.ConnectionPool;
@@ -143,6 +145,20 @@ public class Server {
 		}
 	}
 
+	public void subscribe(SCMPMessage msgToForward) throws Exception {
+		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
+				requester, msgToForward);
+		SCMPMessage serverReply = null;
+		try {
+			serverReply = subscribeCall.invoke();
+		} catch (Throwable e) {
+			// subscribe failed
+			throw new SCServiceException("subscribe failed", e);
+		}
+
+		// TODO reject flag throw exception
+	}
+
 	/**
 	 * Delete session.
 	 * 
@@ -160,6 +176,18 @@ public class Server {
 		} catch (Exception e) {
 			// delete session failed
 			throw new SCServiceException("deleteSession failed", e);
+		}
+	}
+
+	public void unsubscribe(SCMPMessage message) throws SCServiceException {
+		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
+				.newInstance(requester, message);
+
+		try {
+			unsubscribeCall.invoke();
+		} catch (Exception e) {
+			// unsubscribe failed
+			throw new SCServiceException("unsubscribe failed", e);
 		}
 	}
 

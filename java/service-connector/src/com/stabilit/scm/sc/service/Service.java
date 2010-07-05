@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionPlace;
 
 /**
  * @author JTraber
@@ -37,6 +39,7 @@ public class Service {
 	private String location;
 	private int serverIndex;
 	private List<Server> listOfServers;
+	private ISubscriptionPlace subscriptionPlace;
 
 	public Service(String name) {
 		this.name = name;
@@ -95,11 +98,31 @@ public class Service {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(serverIndex);		
+		sb.append(serverIndex);
 		for (Server server : listOfServers) {
 			sb.append(" - ");
-			sb.append(server);			
+			sb.append(server);
 		}
 		return sb.toString();
+	}
+
+	public Server allocateServerAndSubscribe(SCMPMessage msgToForward) throws Exception {
+		for (int i = 0; i < listOfServers.size(); i++) {
+			serverIndex++;
+			if (serverIndex >= listOfServers.size()) {
+				// serverIndex reached the end of list no more servers
+				serverIndex = 0;
+			}
+			Server server = listOfServers.get(serverIndex);
+			if (server.hasFreeSession()) {
+				server.subscribe(msgToForward);
+				return server;
+			}
+		}
+		return null;
+	}
+
+	public ISubscriptionPlace getSubscriptionPlace() {
+		return this.subscriptionPlace;
 	}
 }
