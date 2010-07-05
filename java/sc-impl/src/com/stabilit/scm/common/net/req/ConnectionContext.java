@@ -34,4 +34,8 @@ public class ConnectionContext implements IConnectionContext {
 		return this.connectionPool;
 	}
 
+	@Override
+	public int getIdleTimeout() {
+		return this.connectionPool.getKeepAliveInterval();
+	}
 }

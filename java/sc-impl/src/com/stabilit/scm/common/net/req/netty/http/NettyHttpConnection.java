@@ -131,7 +131,7 @@ public class NettyHttpConnection implements IConnection {
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		// this.bootstrap.setOption("connectTimeoutMillis", 1000000); TODO
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this);
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));

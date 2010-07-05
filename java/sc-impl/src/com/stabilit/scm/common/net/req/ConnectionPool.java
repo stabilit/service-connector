@@ -206,4 +206,8 @@ public class ConnectionPool implements IConnectionPool {
 		this.freeConnections.add(connection);
 	}
 
+	@Override
+	public int getKeepAliveInterval() {
+		return this.keepAliveInterval;
+	}
 }

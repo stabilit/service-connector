@@ -25,6 +25,7 @@ import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.res.netty.tcp.SCMPBasedFrameDecoder;
 
@@ -37,14 +38,14 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 
 	/** The timer to observe timeouts. */
 	private Timer timer;
-	private NettyTcpConnection connection;
+	private IConnectionContext context;
 
 	/**
 	 * Instantiates a new NettyTcpRequesterPipelineFactory.
 	 */
-	public NettyTcpRequesterPipelineFactory(NettyTcpConnection connection) {
+	public NettyTcpRequesterPipelineFactory(IConnectionContext context) {
 		this.timer = new HashedWheelTimer();
-		this.connection = connection;
+		this.context = context;
 	}
 
 	/** {@inheritDoc} */
@@ -57,8 +58,8 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 		// responsible for observing write timeout - Netty
 		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, IConstants.WRITE_TIMEOUT));
 		// responsible for observing idle timeout - Netty
-		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.connection, this.timer, 0, 0,
-				this.connection.idleTimeout));
+		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
+				.getIdleTimeout()));
 		// responsible for handling response
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;

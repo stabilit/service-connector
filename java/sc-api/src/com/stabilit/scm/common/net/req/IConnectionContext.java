@@ -9,4 +9,5 @@ public interface IConnectionContext extends IContext {
 	public abstract IConnection getConnection();
 	public abstract void setOuterContext(IContext outerContext);
 	public abstract IContext getOuterContext();
+	public abstract int getIdleTimeout();
 }

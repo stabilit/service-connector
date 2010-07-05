@@ -35,7 +35,7 @@ import com.stabilit.scm.common.net.req.IConnectionContext;
  */
 public class NettyIdleHandler extends IdleStateHandler {
 
-	private IConnection connection;
+	private IConnectionContext connectionContext;
 
 	/**
 	 * @param timer
@@ -43,10 +43,10 @@ public class NettyIdleHandler extends IdleStateHandler {
 	 * @param writerIdleTimeSeconds
 	 * @param allIdleTimeSeconds
 	 */
-	public NettyIdleHandler(IConnection connection, Timer timer, int readerIdleTimeSeconds, int writerIdleTimeSeconds,
-			int allIdleTimeSeconds) {
+	public NettyIdleHandler(IConnectionContext connectionContext, Timer timer, int readerIdleTimeSeconds,
+			int writerIdleTimeSeconds, int allIdleTimeSeconds) {
 		super(timer, readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
-		this.connection = connection;
+		this.connectionContext = connectionContext;
 	}
 
 	@Override
@@ -54,9 +54,8 @@ public class NettyIdleHandler extends IdleStateHandler {
 			throws Exception {
 		System.out.println("NettyIdleHandler.channelIdle()");
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
-		KeepAlivePoint.getInstance().fireKeepAlive(this, this.connection);
-		IConnectionContext connectionContext = this.connection.getContext();
-		connectionContext.getConnectionPool().keepAliveConnection(this.connection);
-		
+		IConnection connection = this.connectionContext.getConnection();
+		KeepAlivePoint.getInstance().fireKeepAlive(this, this.connectionContext.getConnection());
+		connectionContext.getConnectionPool().keepAliveConnection(connection);
 	}
 }
