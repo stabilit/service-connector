@@ -48,7 +48,7 @@ public class ClnAPIAsyncSessionTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach();
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo");
+			sessionServiceA.createSession("sessionInfo", 360 , 60);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);

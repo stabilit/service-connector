@@ -30,7 +30,7 @@ public interface ISessionService {
 
 	public abstract ISessionContext getSessionContext();
 	
-	public abstract void createSession(String sessionInfo) throws Exception;
+	public abstract void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception;
 
 	public abstract SCMessage execute(SCMessage requestMsg)  throws Exception;
 	

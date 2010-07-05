@@ -63,7 +63,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
 		return new SCMPClnCreateSessionCall(requester, serviceName);
 	}
-	
+
 	/**
 	 * Sets the session info.
 	 * 
@@ -78,5 +78,13 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_CREATE_SESSION;
+	}
+
+	public void setEchoTimeout(int echoTimeout) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
+	}
+
+	public void setEchoInterval(int echoInterval) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
 	}
 }

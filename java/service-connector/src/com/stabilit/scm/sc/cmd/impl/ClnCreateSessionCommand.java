@@ -73,9 +73,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
-		
-		session.setEchoTimeout(reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoInterval(reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL));
+
+		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
+		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 
 		// tries allocating a server for this session if server rejects session exception will be thrown
 		// error codes and error text from server in reject case are inside the exception
@@ -125,6 +125,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
 			try {
+				
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
@@ -136,8 +137,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
+				// echoTimeout
+				String echoTimeoutValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getName());
+				int echoTimeout = ValidatorUtility.validateInt(0, echoTimeoutValue, 3601);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getName(), echoTimeout);
+				// echoInterval
+				String echoIntervalValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_INTERVAL.getName());
+				int echoInterval = ValidatorUtility.validateInt(0, echoIntervalValue, 3601);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL.getName(), echoInterval);
 				
-				//TODO validate echo stuff
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

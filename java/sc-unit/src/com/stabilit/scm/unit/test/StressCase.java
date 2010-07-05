@@ -23,7 +23,6 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.service.ISCSession;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.service.SCDataSession;
 
 /**
  * The Class StressTest.
@@ -77,11 +76,11 @@ public class StressCase extends SuperTestCase {
 		}
 		try {
 			for (int i = 0; i < 10000; i++) {
-				ISCSession localSession = new SCDataSession("simulation", req);
-				localSession.setMessageInfo("messageInfo");
-				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-				localSession.createSession();
-				localSession.deleteSession();
+//				ISCSession localSession = new SCDataSession("simulation", req);
+//				localSession.setMessageInfo("messageInfo");
+//				localSession.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+//				localSession.createSession();
+//				localSession.deleteSession();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

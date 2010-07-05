@@ -62,6 +62,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simluation");
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		createSessionCall.setEchoInterval(300);
+		createSessionCall.setEchoTimeout(10);
 		try {
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
@@ -86,7 +88,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 		/*********************** serviceName not set *******************/
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-
+		createSessionCall.setEchoInterval(300);
+		createSessionCall.setEchoTimeout(10);
 		try {
 			createSessionCall.invoke();
 			Assert.fail("Should throw Exception!");
@@ -109,6 +112,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoInterval(300);
+		createSessionCall.setEchoTimeout(10);
 		SCMPMessage responseMessage = createSessionCall.invoke();
 		String sessId = responseMessage.getSessionId();
 		/*************************** verify create session **********************************/

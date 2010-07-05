@@ -111,6 +111,8 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
+		createSessionCall.setEchoInterval(300);
+		createSessionCall.setEchoTimeout(10);
 		createSessionCall.setSessionInfo("sessionInfo");
 		try {
 			createSessionCall.invoke();

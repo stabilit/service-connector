@@ -72,6 +72,8 @@ public class CreateSessionConccurrent extends MTSuperTestCase{
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(requester, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoInterval(300);
+		createSessionCall.setEchoTimeout(10);
 		// create session and keep sessionId
 		SCMPMessage resp = createSessionCall.invoke();
 	}
