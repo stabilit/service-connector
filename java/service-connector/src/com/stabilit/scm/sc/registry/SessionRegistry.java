@@ -74,34 +74,42 @@ public class SessionRegistry extends Registry {
 		this.scheduleTask(session);
 		return session;
 	}
-	
+
 	private void scheduleTask(Session session) {
+		if (session == null || session.getEchoInterval() == 0) {
+			return;
+		}
 		TimerTask timerTask = session.getTimerTask();
 		if (timerTask == null) {
-			timerTask = new SessionTimerTask(session);  // sets timer task inside session too			
+			timerTask = new SessionTimerTask(session); // sets timer task inside session too
 		}
-		this.timer.schedule(timerTask, session.getEchoInterval());
+		this.timer.schedule(timerTask, session.getEchoInterval() * 1000);
 	}
-	
+
 	private void cancelTask(Session session) {
-		session.getTimerTask().cancel();		
+		if (session == null) {
+			return;
+		}
+		session.getTimerTask().cancel();
 	}
-	
+
 	class SessionTimerTask extends TimerTask {
 
 		private Session session;
+
 		public SessionTimerTask(Session session) {
 			this.session = session;
 			this.session.setTimerTask(this);
 		}
-		
+
 		@Override
 		public void run() {
-             // we assume that this session is dead
+			// cancel timer
+			SessionRegistry.this.cancelTask(session);
+			//TODO abort session
+			// we assume that this session is dead
 			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
 			SessionPoint.getInstance().fireAbort(session, session.getId());
 		}
-		
 	}
-	
 }

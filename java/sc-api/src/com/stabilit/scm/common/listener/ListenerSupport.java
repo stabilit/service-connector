@@ -65,8 +65,7 @@ public class ListenerSupport<T extends EventListener> {
 	 */
 	public synchronized void addListener(T listener) {
 		if (size >= this.listenerArray.length) {
-			size <<= 1; // multiply by 2
-			EventListener[] newArray = new EventListener[size];
+			EventListener[] newArray = new EventListener[size << 1];   // multiply by 2
 			System.arraycopy(this.listenerArray, 0, newArray, 0, this.listenerArray.length);
 			this.listenerArray = newArray;
 		}
@@ -79,23 +78,18 @@ public class ListenerSupport<T extends EventListener> {
 	 *            the listener
 	 */
 	public synchronized void removeListener(T listener) {
-		int newSize = this.listenerArray.length;
-		if (newSize > 16) {
-		   if (newSize >> 1 <= size) {
-			   newSize >>= 1;
-		   }
-		}
-		EventListener[] newArray = new EventListener[newSize];
-		int newIndex = 0;
-		for (int i = 0; i < this.listenerArray.length; i++) {
-			if (this.listenerArray[i] == null) {
-				break;
-			}
-			if (this.listenerArray[i] != listener) {
-				newArray[newIndex++] = this.listenerArray[i];
+		for (int i = 0; i < this.size; i++) {
+			if (this.listenerArray[i] == listener) {
+                if (i < this.size-1) {
+                	this.listenerArray[i] = this.listenerArray[this.size-1];
+                	this.listenerArray[this.size-1] = null;
+                	this.size--;
+                	break;
+                } else {
+                	this.listenerArray[i] = null;                
+                	this.size--;
+                }
 			}
 		}
-		this.size = newIndex;
-		this.listenerArray = newArray;
 	}
 }

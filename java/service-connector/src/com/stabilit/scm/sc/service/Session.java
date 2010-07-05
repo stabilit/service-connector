@@ -19,8 +19,6 @@ package com.stabilit.scm.sc.service;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
