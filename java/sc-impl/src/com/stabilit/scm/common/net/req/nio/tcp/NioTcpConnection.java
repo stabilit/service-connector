@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -31,6 +32,7 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -50,6 +52,7 @@ public class NioTcpConnection implements IConnection {
 	private int numberOfThreads;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
+	private IConnectionContext connectionContext;
 	/** state of connection. */
 	private boolean isConnected;
 	private int keepAliveInterval;
@@ -66,6 +69,18 @@ public class NioTcpConnection implements IConnection {
 		this.encoderDecoder = null;
 		this.isConnected = false;
 		this.keepAliveInterval = IConstants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.connectionContext = null;
+	}
+
+	
+	@Override
+	public IConnectionContext getContext() {
+		return this.connectionContext;
+	}
+	
+	@Override
+	public void setContext(IConnectionContext connectionContext) {
+		this.connectionContext = connectionContext;
 	}
 
 	/** {@inheritDoc} */

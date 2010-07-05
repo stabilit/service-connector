@@ -64,9 +64,9 @@ public class Requester implements IRequester {
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage message) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool()
-				.getConnection();
-		IConnectionContext connectionContext = new ConnectionContext(this.outerContext, connection);
+		IConnection connection = this.outerContext.getConnectionPool().getConnection();		
+		IConnectionContext connectionContext = connection.getContext();
+		connectionContext.setOuterContext(this.outerContext);
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
 			SCMPMessage ret = null;
@@ -79,9 +79,8 @@ public class Requester implements IRequester {
 			return ret;
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			connectionContext.getConnectionPool().freeConnection(
-					connectionContext.getConnection());// give back to pool
-			connectionContext = null;
+			connectionContext.getConnectionPool().freeConnection(connection);
+			connectionContext.setOuterContext(null);
 		}
 	}
 
@@ -89,9 +88,9 @@ public class Requester implements IRequester {
 	public void send(SCMPMessage message, ISCMPCallback scmpCallback)
 			throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool()
-				.getConnection();
-		IConnectionContext connectionContext = new ConnectionContext(this.outerContext, connection);
+		IConnection connection = this.outerContext.getConnectionPool().getConnection();
+		IConnectionContext connectionContext = connection.getContext();
+		connectionContext.setOuterContext(this.outerContext);
 		ISCMPCallback requesterCallback = new RequesterSCMPCallback(
 				scmpCallback);
 		requesterCallback.setContext(connectionContext);
@@ -124,8 +123,7 @@ public class Requester implements IRequester {
 		if (message.isGroup()) {
 			msgID.incrementPartSequenceNr();
 		}
-		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID
-				.getNextMessageID());
+		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
 		// process send and receive
 		SCMPMessage ret = connection.sendAndReceive(message);
 
@@ -366,10 +364,9 @@ public class Requester implements IRequester {
 
 		private void freeConnection() {
 			try {
-				IConnectionContext connectionContext = (IConnectionContext) this.scmpCallback
-						.getContext();
-				connectionContext.getConnectionPool().freeConnection(
-						connectionContext.getConnection());
+				IConnectionContext connectionContext = (IConnectionContext) this.scmpCallback.getContext();
+				connectionContext.getConnectionPool().freeConnection(connectionContext.getConnection());
+				connectionContext.setOuterContext(null);
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

@@ -41,11 +41,6 @@ public class ConnectionPool implements IConnectionPool {
 		this.connectionFactory = new ConnectionFactory();
 		this.keepAliveInterval = keepAliveInterval;
 		this.numberOfThreads = numberOfThreads;
-
-		if (this.keepAliveInterval != 0) {
-			this.keepAliveListener = new ConnectionPoolKeepAliveListener();
-			KeepAlivePoint.getInstance().addListener(keepAliveListener);
-		}
 	}
 
 	public ConnectionPool(String host, int port, String conType) {
@@ -81,7 +76,7 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	private IConnection createNewConnection() throws Exception {
-		IConnection connection;
+		IConnection connection = null;
 		if (usedConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
 			throw new ConnectionPoolException("Unable to create new connection - limit of : " + maxConnections
@@ -93,6 +88,8 @@ public class ConnectionPool implements IConnectionPool {
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
 		connection.setNumberOfThreads(this.numberOfThreads);
+		IConnectionContext connectionContext = new ConnectionContext(connection, this);
+		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
 		} catch (Throwable th) {
@@ -193,7 +190,8 @@ public class ConnectionPool implements IConnectionPool {
 		return false;
 	}
 
-	private void keepAliveConnection(IConnection connection) throws Exception {
+	@Override
+	public void keepAliveConnection(IConnection connection) throws Exception {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;
@@ -208,12 +206,4 @@ public class ConnectionPool implements IConnectionPool {
 		this.freeConnections.add(connection);
 	}
 
-	private class ConnectionPoolKeepAliveListener implements IKeepAliveListener {
-
-		@Override
-		public void keepAliveEvent(KeepAliveEvent keepAliveEvent) throws Exception {
-			IConnection connection = keepAliveEvent.getConnection();
-			ConnectionPool.this.keepAliveConnection(connection);
-		}
-	}
 }

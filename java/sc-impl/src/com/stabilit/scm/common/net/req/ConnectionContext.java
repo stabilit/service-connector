@@ -5,17 +5,23 @@ import com.stabilit.scm.common.ctx.IContext;
 public class ConnectionContext implements IConnectionContext {
 
 	private IContext outerContext;
+	private IConnectionPool connectionPool;
 	private IConnection connection;
 
-	public ConnectionContext(IContext outerContext,
-			IConnection connection) {
+	public ConnectionContext(IConnection connection, IConnectionPool connectionPool) {
 		this.connection = connection;
-		this.outerContext = outerContext;
+		this.connectionPool = connectionPool;
+		this.outerContext = null;
 	}
 
 	@Override
 	public IContext getOuterContext() {
 		return outerContext;
+	}
+	
+	@Override
+	public void setOuterContext(IContext outerContext) {
+	   this.outerContext = outerContext;	
 	}
 	
 	@Override
@@ -25,7 +31,7 @@ public class ConnectionContext implements IConnectionContext {
 
 	@Override
 	public IConnectionPool getConnectionPool() {
-		return this.outerContext.getConnectionPool();
+		return this.connectionPool;
 	}
 
 }

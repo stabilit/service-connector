@@ -28,6 +28,7 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.listener.KeepAlivePoint;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IConnectionContext;
 
 /**
  * @author JTraber
@@ -54,5 +55,8 @@ public class NettyIdleHandler extends IdleStateHandler {
 		System.out.println("NettyIdleHandler.channelIdle()");
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		KeepAlivePoint.getInstance().fireKeepAlive(this, this.connection);
+		IConnectionContext connectionContext = this.connection.getContext();
+		connectionContext.getConnectionPool().keepAliveConnection(this.connection);
+		
 	}
 }

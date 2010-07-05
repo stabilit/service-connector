@@ -43,4 +43,6 @@ public interface IConnectionPool {
 	public abstract int getMaxConnections();
 
 	public abstract boolean hasFreeConnections();
+
+	public abstract void keepAliveConnection(IConnection connection) throws Exception;
 }

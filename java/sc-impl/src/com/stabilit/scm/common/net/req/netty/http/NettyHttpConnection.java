@@ -40,6 +40,7 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
@@ -47,6 +48,7 @@ import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -82,6 +84,7 @@ public class NettyHttpConnection implements IConnection {
 	private InetSocketAddress localSocketAddress;
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
+	private IConnectionContext connectionContext;
 	/** state of connection. */
 	private boolean connected;
 	protected int idleTimeout;
@@ -104,8 +107,19 @@ public class NettyHttpConnection implements IConnection {
 		this.connected = false;
 		this.idleTimeout = 0; // default 0 -> inactive
 		this.pipelineFactory = null;
+		this.connectionContext = null;
 	}
 
+	@Override
+	public IConnectionContext getContext() {
+		return this.connectionContext;
+	}
+	
+	@Override
+	public void setContext(IConnectionContext connectionContext) {
+		this.connectionContext = connectionContext;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {

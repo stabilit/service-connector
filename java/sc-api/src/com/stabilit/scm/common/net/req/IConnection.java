@@ -27,6 +27,10 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public interface IConnection extends ICommunicationPoint {
 
+	IConnectionContext getContext();
+	
+	void setContext(IConnectionContext connectionContext);
+	
 	/**
 	 * Connect.
 	 * 
@@ -90,4 +94,5 @@ public interface IConnection extends ICommunicationPoint {
 	public void resetNrOfIdles();
 	
 	public int getNrOfIdlesInSequence();
+
 }

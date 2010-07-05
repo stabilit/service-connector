@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
@@ -30,6 +31,7 @@ import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.SCMPStreamHttpUtil;
 import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -49,6 +51,7 @@ public class NioHttpConnection implements IConnection {
 	private int numberOfThreads;
 	/** The stream Http util. */
 	private SCMPStreamHttpUtil streamHttpUtil;
+	private IConnectionContext connectionContext;
 	/** state of connection. */
 	private boolean isConnected;
 	private int keepAliveInterval;
@@ -65,8 +68,20 @@ public class NioHttpConnection implements IConnection {
 		this.isConnected = false;
 		this.streamHttpUtil = new SCMPStreamHttpUtil();
 		this.keepAliveInterval = IConstants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.connectionContext = null;
 	}
 
+	
+	@Override
+	public IConnectionContext getContext() {
+		return this.connectionContext;
+	}
+	
+	@Override
+	public void setContext(IConnectionContext connectionContext) {
+		this.connectionContext = connectionContext;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
