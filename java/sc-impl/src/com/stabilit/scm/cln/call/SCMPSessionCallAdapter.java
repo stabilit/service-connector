@@ -50,5 +50,5 @@ public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract ISCMPCall newInstance(IRequester req, String sessionId, String serviceName);
+	public abstract ISCMPCall newInstance(IRequester req, String serviceName, String sessionId);
 }

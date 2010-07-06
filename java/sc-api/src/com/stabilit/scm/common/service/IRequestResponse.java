@@ -19,57 +19,23 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.registry;
-
-import java.util.Timer;
-import java.util.TimerTask;
+package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * @author JTraber
+ *
  */
-public class SubscriptionPlace implements ISubscriptionPlace {
-	private SubscriptionQueue subscriptionQueue;
-	
-	public SubscriptionPlace() {
-		this.subscriptionQueue = new SubscriptionQueue();
-	}
+public interface IRequestResponse {
 
-	@Override
-	public void add(SCMPMessage message) {
-		subscriptionQueue.add(message);        		
-	}
-	
-	@Override
-	public Object poll(SCMPMessage message) {
-		// check if data for me is available
-		String mask = null; // TODO
-		String sessionId = message.getSessionId();
-        if (subscriptionQueue.hasNext(sessionId,  mask) == false) {
-        	// nothing to poll, maybe later
-        	return null;
-        }
-		Object data = subscriptionQueue.poll(sessionId, mask);
-		return data;
-	}
+	public abstract void setRequest(IRequest request);
 
-	@Override
-	public void listen(String sessionId, IRequest request, IResponse response) {
-		this.subscriptionQueue.listen(sessionId, request, response);
-	}
+	public abstract IRequest getRequest();
 
-	@Override
-	public void subscribe(String sessionId, TimerTask timerTask) {
-		this.subscriptionQueue.subscribe(sessionId, timerTask);
-	}
+	public abstract void setResponse(IResponse response);
 
-	@Override
-	public void unsubscribe(String sessionId) {
-		this.subscriptionQueue.unsubscribe(sessionId);
-		
-	}
+	public abstract IResponse getResponse();
 
 }

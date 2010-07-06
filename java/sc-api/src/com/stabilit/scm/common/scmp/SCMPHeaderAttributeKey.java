@@ -92,7 +92,8 @@ public enum SCMPHeaderAttributeKey {
 	/** The ECHO_TIMEOUT. */
 	ECHO_TIMEOUT("echoTimeout"), 
 	/** The ECHO_INTERVAL. */
-	ECHO_INTERVAL("echoInterval"); 
+	ECHO_INTERVAL("echoInterval"),
+	NO_DATA_INTERVAL("noDataInterval"); 
 
 	/** The name. */
 	private String name;

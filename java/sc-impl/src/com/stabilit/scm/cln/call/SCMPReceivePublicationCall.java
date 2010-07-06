@@ -19,57 +19,41 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.registry;
+package com.stabilit.scm.cln.call;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber
  */
-public class SubscriptionPlace implements ISubscriptionPlace {
-	private SubscriptionQueue subscriptionQueue;
-	
-	public SubscriptionPlace() {
-		this.subscriptionQueue = new SubscriptionQueue();
+public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
+
+	public SCMPReceivePublicationCall() {
+		this(null, null, null);
+	}
+
+	public SCMPReceivePublicationCall(IRequester requester, String serviceName, String sessionId) {
+		super(requester, serviceName, sessionId);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.RECEIVE_PUBLICATION;
 	}
 
 	@Override
-	public void add(SCMPMessage message) {
-		subscriptionQueue.add(message);        		
-	}
-	
-	@Override
-	public Object poll(SCMPMessage message) {
-		// check if data for me is available
-		String mask = null; // TODO
-		String sessionId = message.getSessionId();
-        if (subscriptionQueue.hasNext(sessionId,  mask) == false) {
-        	// nothing to poll, maybe later
-        	return null;
-        }
-		Object data = subscriptionQueue.poll(sessionId, mask);
-		return data;
+	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
+		return new SCMPReceivePublicationCall(req, serviceName, sessionId);
 	}
 
-	@Override
-	public void listen(String sessionId, IRequest request, IResponse response) {
-		this.subscriptionQueue.listen(sessionId, request, response);
+	public void setNoDataInterval(int noDataInterval) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
 	}
 
-	@Override
-	public void subscribe(String sessionId, TimerTask timerTask) {
-		this.subscriptionQueue.subscribe(sessionId, timerTask);
+	public void setMask(String mask) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
-
-	@Override
-	public void unsubscribe(String sessionId) {
-		this.subscriptionQueue.unsubscribe(sessionId);
-		
-	}
-
 }

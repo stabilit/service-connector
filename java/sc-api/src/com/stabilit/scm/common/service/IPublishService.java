@@ -34,7 +34,7 @@ public interface IPublishService {
 
 	void unsubscribe() throws Exception;
 
-	void subscribe(String string, ISCMessageCallback callback) throws Exception;
+	void subscribe(String mask, ISCMessageCallback callback) throws Exception;
 
 	IPublishContext getPublishContext();
 

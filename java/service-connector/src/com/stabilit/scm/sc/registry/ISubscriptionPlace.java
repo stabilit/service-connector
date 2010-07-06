@@ -21,6 +21,10 @@
  */
 package com.stabilit.scm.sc.registry;
 
+import java.util.TimerTask;
+
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -33,5 +37,10 @@ public interface ISubscriptionPlace {
 
 	public abstract Object poll(SCMPMessage message);
 
+	public abstract void subscribe(String sessionId, TimerTask timerTask);
+
+	public abstract void unsubscribe(String sessionId);
+
+	public abstract void listen(String sessionId, IRequest request, IResponse response);
 
 }

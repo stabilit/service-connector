@@ -40,6 +40,8 @@ import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.sc.req.SCRequester;
 
 /**

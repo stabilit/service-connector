@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.service;
+package com.stabilit.scm.common.service;
 
 /**
  * @author JTraber

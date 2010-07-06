@@ -16,28 +16,31 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.net.ICommunicatorCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.registry.SubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionPlaceException;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
-import com.stabilit.scm.sc.service.SCServiceException;
 import com.stabilit.scm.sc.service.Session;
 
-public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
 	public ReceivePublicationCommand() {
 		this.commandValidator = new ClnReceivePublicationCommandValidator();
@@ -49,9 +52,18 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		return SCMPMsgType.RECEIVE_PUBLICATION;
 	}
 
-	/** {@inheritDoc} */
+	@Override
+	public boolean isAsynchronous() {
+		return true;
+	}
+
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
+		throw new UnsupportedOperationException("not allowed");
+	}
+	/** {@inheritDoc} */
+	@Override
+	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		try {
@@ -59,8 +71,16 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			if (subscriptionPlace == null) {
 				throw new SubscriptionPlaceException("no place found for session id = " + sessionId);
 			}
-			subscriptionPlace.poll(message); // no callback necessary, returns immediately if data is ready otherwise a
-												// future publish will check this poll
+			Object data = subscriptionPlace.poll(message); // no callback necessary, returns immediately if data is
+			// ready otherwise a
+			// future publish will check this poll
+			if (data != null) {
+				SCMPMessage replyMessage = (SCMPMessage) data;
+				response.setSCMP(replyMessage);
+				return;
+			}
+			// no data available, start listening for new data			
+			subscriptionPlace.listen(sessionId, request, response);
 		} catch (SCServiceException e) {
 			// failed, connection to backend server disturbed - clean up
 			// TODO clean up??
@@ -100,6 +120,16 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
+
+				// noDataInterval
+				// TODO integer validierung
+				String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+				if (noDataIntervalValue == null) {
+					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, 360);
+				} else {
+					int noDataInterval = ValidatorUtility.validateInt(1, noDataIntervalValue, 3601);
+					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
+				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
@@ -112,4 +142,5 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			}
 		}
 	}
+	
 }

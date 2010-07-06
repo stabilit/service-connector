@@ -18,6 +18,7 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Map;
+import java.util.TimerTask;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -29,6 +30,8 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.IRequestResponse;
+import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
@@ -58,7 +61,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		Service service = this.validateService(serviceName);
-		
+
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
@@ -70,6 +73,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		// finally add session to the registry
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
+		ISubscriptionPlace subscriptionPlace = service.getSubscriptionPlace();
+		TimerTask timerTask = new PublishTimerTask();
+		subscriptionPlace.subscribe(session.getId(), timerTask);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -87,7 +93,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
-			try {                  				
+			try {
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
@@ -105,4 +111,60 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			}
 		}
 	}
+
+	private class PublishTimerTask extends TimerTask implements IRequestResponse {
+
+		private IRequest request;
+		private IResponse response;
+
+		public PublishTimerTask() {
+			this.request = null;
+			this.response = null;
+		}
+
+		/**
+		 * @param request
+		 *            the request to set
+		 */
+		@Override
+		public void setRequest(IRequest request) {
+			this.request = request;
+		}
+
+		/**
+		 * @return the request
+		 */
+		@Override
+		public IRequest getRequest() {
+			return request;
+		}
+
+		/**
+		 * @param response
+		 *            the response to set
+		 */
+		@Override
+		public void setResponse(IResponse response) {
+			this.response = response;
+		}
+
+		/**
+		 * @return the response
+		 */
+		@Override
+		public IResponse getResponse() {
+			return response;
+		}
+
+		@Override
+		public void run() {
+			System.out.println("ReceivePublicationCommand.ReceivePublicationTimerTask.run()");
+			SCMPMessage reply = new SCMPMessage();
+			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
+			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+
+		}
+
+	}
+
 }

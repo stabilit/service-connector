@@ -90,7 +90,10 @@ public class SubscriptionSessionRegistry extends Registry {
 		if (session == null) {
 			return;
 		}
-		session.getTimerTask().cancel();
+		TimerTask timerTask = session.getTimerTask();
+		if (timerTask != null) {
+		    timerTask.cancel();
+		}
 	}
 
 	class SubscriptionTimerTask extends TimerTask {

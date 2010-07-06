@@ -27,9 +27,9 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionPlace;
-import com.stabilit.scm.sc.service.SCServiceException;
 import com.stabilit.scm.sc.service.Service;
 
 public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
