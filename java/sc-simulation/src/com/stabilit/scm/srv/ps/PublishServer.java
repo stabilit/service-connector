@@ -28,7 +28,7 @@ public class PublishServer {
 
 	private static ISCPublishServer sc = null;
 	private static boolean killed = false;
-	
+
 	public static void main(String[] args) throws Exception {
 		PublishServer.runExample();
 	}
@@ -38,36 +38,22 @@ public class PublishServer {
 		Thread thread = new Thread(new PublishRun());
 		thread.run();
 	}
-	
-	public static void endPublish() {
-		killed = true;		
-	}
-	
-	public static void runExample() {
-		try {
-			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
 
+	public static void endPublish() {
+		killed = true;
+	}
+
+	public static void runExample() {
+		sc = new SCPublishServer("localhost", 9000, "netty.tcp");
+
+		try {
 			sc.startServer("publish-server.properties");
-			// connects to SC, starts observing connection
 			sc.register();
-			Object data = null;
-			String mask = "AVSD-----";
-//			while (true) {
-//				Thread.sleep(10000);
-//				sc.publish(mask, data);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-//				sc.deregister();
-			} catch (Exception e) {
-				sc = null;
-			}
 		}
 	}
-	
+
 	private static class PublishRun implements Runnable {
 		@Override
 		public void run() {
@@ -82,7 +68,7 @@ public class PublishServer {
 					ExceptionPoint.getInstance().fireException(this, e);
 				}
 				System.out.println("publish");
-				
+
 			}
 		}
 	}

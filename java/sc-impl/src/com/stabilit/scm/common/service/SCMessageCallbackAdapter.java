@@ -37,5 +37,4 @@ public abstract class SCMessageCallbackAdapter implements ISCMessageCallback, IA
 		}
 		return;
 	}
-
 }

@@ -1,12 +1,13 @@
 package com.stabilit.scm.common.service;
 
+import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.SCMessage;
 
-public abstract class SCPublishServiceCallbackAdapter extends SCMessageCallbackAdapter {
+public abstract class SCServiceCallbackAdapter extends SCMessageCallbackAdapter {
 
-	protected IPublishService service;
+	protected IService service;
 	
-	public SCPublishServiceCallbackAdapter(IPublishService service) {
+	public SCServiceCallbackAdapter(IService service) {
 		super();
 		this.service = service;
 	}

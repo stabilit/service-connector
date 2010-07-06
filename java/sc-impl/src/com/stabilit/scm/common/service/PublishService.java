@@ -25,8 +25,8 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.cln.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.cln.call.SCMPReceivePublicationCall;
-import com.stabilit.scm.cln.service.IPublishContext;
 import com.stabilit.scm.cln.service.ISCMessageCallback;
+import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -42,7 +42,7 @@ public class PublishService implements IPublishService {
 
 	private String serviceName;
 	private String sessionId;
-	private IPublishContext publishContext;
+	private IServiceContext publishContext;
 	private IRequester requester;
 	private ISCMPCallback scmpCallback;
 	private ISCMessageCallback messageCallback;
@@ -51,13 +51,13 @@ public class PublishService implements IPublishService {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);
-		this.publishContext = new PublishServiceContext((IServiceConnectorContext) context, this);
+		this.publishContext = new ServiceContext((IServiceConnectorContext) context, this);
 		this.scmpCallback = null;
 		this.messageCallback = null;
 	}
 
 	@Override
-	public IPublishContext getPublishContext() {
+	public IServiceContext getContext() {
 		return this.publishContext;
 	}
 

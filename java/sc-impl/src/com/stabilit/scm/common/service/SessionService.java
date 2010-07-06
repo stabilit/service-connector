@@ -26,7 +26,7 @@ import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDataCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.service.ISCMessageCallback;
-import com.stabilit.scm.cln.service.ISessionContext;
+import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.ctx.IContext;
@@ -43,14 +43,14 @@ public class SessionService implements ISessionService {
 
 	private String serviceName;
 	private String sessionId;
-	private ISessionContext sessionContext;
+	private IServiceContext sessionContext;
 	private IRequester requester;
 
 	public SessionService(String serviceName, IContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);
-		this.sessionContext = new SessionServiceContext(
+		this.sessionContext = new ServiceContext(
 				(IServiceConnectorContext) context, this);
 	}
 
@@ -145,7 +145,7 @@ public class SessionService implements ISessionService {
 	}
 
 	@Override
-	public ISessionContext getSessionContext() {
+	public IServiceContext getContext() {
 		return this.sessionContext;
 	}
 }

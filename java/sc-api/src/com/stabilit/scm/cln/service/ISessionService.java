@@ -21,14 +21,7 @@
  */
 package com.stabilit.scm.cln.service;
 
-
-/**
- * @author JTraber
- *
- */
-public interface ISessionService {
-
-	public abstract ISessionContext getSessionContext();
+public interface ISessionService extends IService {
 	
 	public abstract void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception;
 
@@ -37,5 +30,7 @@ public interface ISessionService {
 	public abstract void execute(SCMessage requestMsg, ISCMessageCallback callback)  throws Exception;
 
 	public abstract void deleteSession() throws Exception;
-
+	
+	@Override
+	public IServiceContext getContext();
 }

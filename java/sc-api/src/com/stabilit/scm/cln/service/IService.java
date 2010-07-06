@@ -21,15 +21,13 @@
  */
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.common.ctx.IContext;
+
 /**
  * @author JTraber
  *
  */
-public abstract class SCMessageHandler {
-
-	public void messageReceived(SCMessage publishedMessage) {
-	}
+public interface IService {
 	
-	public void exceptionCaught(Exception exception) { 
-	}	
+	IContext getContext();
 }

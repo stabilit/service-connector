@@ -1,18 +1,17 @@
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.service.IPublishContext;
+import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 
-public class PublishServiceContext implements IPublishContext {
+public class ServiceContext implements IServiceContext {
 
 	private IServiceConnectorContext serviceConnectorContext;
-	private IPublishService publishService;
+	private IService service;
 
-	public PublishServiceContext(
-			IServiceConnectorContext serviceConnectorContext,
-			IPublishService publishService) {
+	public ServiceContext(IServiceConnectorContext serviceConnectorContext, IService service) {
 		this.serviceConnectorContext = serviceConnectorContext;
-		this.publishService = publishService;
+		this.service = service;
 	}
 
 	@Override
@@ -26,7 +25,7 @@ public class PublishServiceContext implements IPublishContext {
 	}
 
 	@Override
-	public IPublishService getPublishService() {
-		return publishService;
+	public IService getService() {
+		return service;
 	}
 }
