@@ -16,10 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Session;
@@ -33,14 +29,6 @@ public class SubscriptionSessionRegistry extends Registry {
 
 	/** The instance. */
 	private static SubscriptionSessionRegistry instance = new SubscriptionSessionRegistry();
-	private Timer timer;
-
-	/**
-	 * Instantiates a new session registry.
-	 */
-	public SubscriptionSessionRegistry() {
-		this.timer = new Timer("SubscriptionRegistry");
-	}
 
 	/**
 	 * Gets the current instance.
@@ -54,7 +42,6 @@ public class SubscriptionSessionRegistry extends Registry {
 	public void addSession(Object key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
-		this.scheduleTask(session);
 	}
 
 	public void removeSession(Session session) {
@@ -62,61 +49,12 @@ public class SubscriptionSessionRegistry extends Registry {
 	}
 
 	public void removeSession(Object key) {
-		Session session = (Session) super.get(key);
-		this.cancelTask(session);
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
 	public Session getSession(Object key) {
 		Session session = (Session) super.get(key);
-		this.cancelTask(session);
-		this.scheduleTask(session);
 		return session;
-	}
-
-	private void scheduleTask(Session session) {
-		if (session == null || session.getEchoInterval() == 0) {
-			return;
-		}
-		TimerTask timerTask = session.getTimerTask();
-		if (timerTask == null) {
-			timerTask = new SubscriptionTimerTask(session); // sets timer task inside session too
-		}
-		this.timer.schedule(timerTask, session.getEchoInterval() * 1000);
-	}
-
-	private void cancelTask(Session session) {
-		if (session == null) {
-			return;
-		}
-		TimerTask timerTask = session.getTimerTask();
-		if (timerTask != null) {
-		    timerTask.cancel();
-		}
-	}
-
-	class SubscriptionTimerTask extends TimerTask {
-
-		private Session session;
-
-		public SubscriptionTimerTask(Session session) {
-			this.session = session;
-			this.session.setTimerTask(this);
-		}
-
-		@Override
-		public void run() {
-			// cancel timer
-			SubscriptionSessionRegistry.this.cancelTask(session);
-			//TODO abort session
-			// we assume that this session is dead
-			LoggerPoint.getInstance().fireWarn(session, "subscription [" + session.getId() + "] aborted");
-			SessionPoint.getInstance().fireAbort(session, session.getId());
-		}
-	}
-
-	public SubscriptionPlace getSubscriptionPlace(String sessionId) {
-		return null;
 	}
 }

@@ -124,8 +124,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
-			try {
-				
+			try {				
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
