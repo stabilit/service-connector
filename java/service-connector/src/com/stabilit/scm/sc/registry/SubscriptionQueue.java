@@ -21,9 +21,6 @@
  */
 package com.stabilit.scm.sc.registry;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +32,8 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IRequestResponse;
+import com.stabilit.scm.common.util.LinkedQueue;
+import com.stabilit.scm.common.util.LinkedQueue.LinkedNode;
 
 /**
  * @author JTraber
@@ -42,58 +41,74 @@ import com.stabilit.scm.common.service.IRequestResponse;
 public class SubscriptionQueue {
 
 	private Timer timer;
-	private List<DataItem> dataQueue;
-	private Map<String, DataPointer> dataPointerMap;
+	private LinkedQueue<DataEntry> dataQueue; // the queue
+	private Map<String, DataPointer> nodeMap; // maps session id to data pointer and its node in queue
 
 	public SubscriptionQueue() {
-		this.dataQueue = Collections.synchronizedList(new LinkedList<DataItem>());
-		this.dataPointerMap = new ConcurrentHashMap<String, DataPointer>();
+		this.dataQueue = new LinkedQueue<DataEntry>();
+		this.nodeMap = new ConcurrentHashMap<String, DataPointer>();
 		this.timer = new Timer("SubscriptionQueue");
 	}
 
 	public void add(SCMPMessage message) {
-		DataItem dataItem = new DataItem(message);
-		dataQueue.add(dataItem);
-		fireNewDataArrived(dataQueue.size() - 1);
+		DataEntry dataEntry = new DataEntry(message);
+		try {
+			dataQueue.put(dataEntry);
+			fireNewDataArrived();
+			removeNonreferencedNodes();
+		} catch (InterruptedException e) {
+			ExceptionPoint.getInstance().fireException(this, e);
+		}
 	}
 
 	public boolean hasNext(String sessionId, String mask) {
-		DataPointer item = this.dataPointerMap.get(sessionId);
-		if (item == null) {
+		DataPointer ptr = this.nodeMap.get(sessionId);
+		if (ptr == null) {
 			return false;
 		}
-		if (item.hasNext() == false) {
-			return false;
-		}
-		return true;
+		return ptr.getNext() != null;
 	}
 
 	public Object poll(String sessionId, String mask) {
-		DataPointer item = this.dataPointerMap.get(sessionId);
-		if (item == null) {
+		DataPointer ptr = this.nodeMap.get(sessionId);
+		if (ptr == null) {
 			return null;
 		}
-		Object obj = item.getNext(); // cancel timer inside
+		Object obj = ptr.getNode().getValue();
+		ptr.moveNext();
 		return obj;
 	}
 
-	private void fireNewDataArrived(int pointerIndex) {
-		Object[] dataPointerArray = null;
-		synchronized (this.dataPointerMap) {
-			dataPointerArray = this.dataPointerMap.entrySet().toArray();
+	private void fireNewDataArrived() {
+		Object[] nodeArray = null;
+		LinkedNode lastNode = (LinkedNode) dataQueue.getLast(); // TODO, can be improved, separate set of null pointer
+		// nodes
+		synchronized (this.nodeMap) {
+			nodeArray = this.nodeMap.entrySet().toArray();
 		}
-		for (int i = 0; i < dataPointerArray.length; i++) {
-			Entry entry = (Entry) dataPointerArray[i];
-			DataPointer dataPointer = (DataPointer) entry.getValue();
-			if (dataPointer.index == pointerIndex) {
-				dataPointer.taskItem.schedule(0);
+		for (int i = 0; i < nodeArray.length; i++) {
+			Entry entry = (Entry) nodeArray[i];
+			DataPointer ptr = (DataPointer) entry.getValue();
+			if (ptr.getNode() == null) {
+				ptr.setNode(lastNode);
+				ptr.taskItem.schedule(0);
 			}
+		}
+	}
 
+	private void removeNonreferencedNodes() throws InterruptedException {
+		LinkedNode node = dataQueue.getHead();
+		while (node != null) {
+			if (((DataEntry) node.getValue()).isReferenced()) {
+				break;
+			}
+			dataQueue.take();
+			node = dataQueue.getHead();
 		}
 	}
 
 	class DataPointer {
-		private int index;
+		private LinkedNode node;
 		private TaskItem taskItem;
 
 		public DataPointer() {
@@ -101,32 +116,45 @@ public class SubscriptionQueue {
 		}
 
 		public DataPointer(TimerTask timerTask) {
-			this.index = 0;
 			this.taskItem = new TaskItem(timerTask);
 		}
 
+		public void moveNext() {
+			if (this.node == null) {
+				return;
+			}
+			this.node = this.node.getNext();
+		}
+
 		public boolean hasNext() {
-			return index >= 0 && index < SubscriptionQueue.this.dataQueue.size();
+			return node.getNext() != null;
+		}
+
+		public LinkedNode getNode() {
+			return node;
+		}
+
+		public void setNode(LinkedNode node) {
+			this.node = node;
 		}
 
 		public Object getNext() {
-			DataItem dataItem = SubscriptionQueue.this.dataQueue.get(index++);
-			if (index >= SubscriptionQueue.this.dataQueue.size()) {
-				index = -1;
-			}
-			taskItem.cancel();
-			dataItem.referenced--;
-			return dataItem.obj;
+			// TODO
+			return null;
 		}
 	}
 
-	class DataItem {
+	class DataEntry {
 		private int referenced;
 		private Object obj;
 
-		public DataItem(Object obj) {
+		public DataEntry(Object obj) {
 			this.referenced = 0;
 			this.obj = obj;
+		}
+
+		public boolean isReferenced() {
+			return referenced > 0;
 		}
 	}
 
@@ -164,24 +192,24 @@ public class SubscriptionQueue {
 	}
 
 	public void listen(String sessionId, IRequest request, IResponse response) {
-		DataPointer dataPointer = dataPointerMap.get(sessionId);
+		DataPointer dataPointer = nodeMap.get(sessionId);
 		if (dataPointer != null) {
-			((IRequestResponse)dataPointer.taskItem.task).setRequest(request);
-			((IRequestResponse)dataPointer.taskItem.task).setResponse(response);
+			((IRequestResponse) dataPointer.taskItem.task).setRequest(request);
+			((IRequestResponse) dataPointer.taskItem.task).setResponse(response);
 		}
-		
+
 	}
 
 	public void subscribe(String sessionId, TimerTask timerTask) {
 		DataPointer dataPointer = new DataPointer(timerTask);
-		dataPointerMap.put(sessionId, dataPointer);
+		nodeMap.put(sessionId, dataPointer);
 	}
 
 	public void unsubscribe(String sessionId) {
-		DataPointer dataPointer = dataPointerMap.get(sessionId);
+		DataPointer dataPointer = nodeMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.taskItem.cancel();
-			dataPointerMap.remove(sessionId);
+			nodeMap.remove(sessionId);
 		}
 	}
 }

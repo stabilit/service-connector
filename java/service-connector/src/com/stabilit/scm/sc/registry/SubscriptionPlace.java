@@ -21,7 +21,6 @@
  */
 package com.stabilit.scm.sc.registry;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import com.stabilit.scm.common.scmp.IRequest;
