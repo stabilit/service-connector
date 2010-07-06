@@ -21,12 +21,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.service.ISCMessageCallback;
-import com.stabilit.scm.cln.service.ISessionContext;
+import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.SCSessionServiceCallbackAdapter;
+import com.stabilit.scm.common.service.SCServiceCallbackAdapter;
 import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -34,7 +35,6 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@Before
 	public void setUp() {
-		// test setup
 		SetupTestCases.setupAll();
 	}
 
@@ -72,16 +72,16 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 	}
 
-	class TestCallback extends SCSessionServiceCallbackAdapter {
+	class TestCallback extends SCServiceCallbackAdapter {
 
-		public TestCallback(ISessionService sessionService) {
-			super(sessionService);
+		public TestCallback(IService service) {
+			super(service);
 		}
 
 		@Override
 		public void callback(SCMessage msg) {
 			try {
-				ISessionContext sessionContext = this.sessionService.getSessionContext();
+				IServiceContext sessionContext = (IServiceContext) this.service.getContext();
 				IServiceConnector serviceConnector = sessionContext.getServiceConnector();
 				System.out.println(msg);
 			} catch (Exception e) {

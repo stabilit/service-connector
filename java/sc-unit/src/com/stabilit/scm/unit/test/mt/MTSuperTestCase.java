@@ -76,7 +76,7 @@ public abstract class MTSuperTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setupAll();
+		SetupTestCases.setupSCSessionServer();
 		RequesterConfigPool config = new RequesterConfigPool();
 		config.load("session-server.properties");
 		registerReq = new Requester(this.testContext);

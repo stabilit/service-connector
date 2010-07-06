@@ -92,6 +92,20 @@ public class SetupTestCases {
 		}
 	}
 
+	public static void setupSCSessionServer() {
+		if (setupTestCases == null) {
+			try {
+				init();
+				setupTestCases = new SetupTestCases();
+				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				SC.main(null);
+				Old_SessionServer.main(null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static void setupAll() {
 		if (setupTestCases == null) {
 			try {
