@@ -14,25 +14,43 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit;
+package com.stabilit.scm.unit.srv.api;
 
-import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- * @author JTraber
- * 
- */
-public class UnitCommandFactory extends CommandFactory {
-	@SuppressWarnings("unused")
-	public UnitCommandFactory() {		
-		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(
-				this);
-		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(
-				this);
-		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(
-				this);
+import com.stabilit.scm.common.service.ISCPublishServer;
+import com.stabilit.scm.srv.ps.SCPublishServer;
+import com.stabilit.scm.unit.test.SetupTestCases;
+
+public class SrvAPIPublishTestCase {
+
+	@Before
+	public void setUp() {
+		SetupTestCases.setupAll();
+	}
+
+	@Test
+	public void testClnAPI() throws Exception {
+		ISCPublishServer sc = null;
+		try {
+			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
+
+			sc.startServer("publish-server.properties");
+			// connects to SC, starts observing connection
+			sc.register();
+			Object data = null;
+			String mask = "AVSD-----";
+			sc.publish(mask, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// disconnects from SC
+				sc.deregister();
+			} catch (Exception e) {
+				sc = null;
+			}
+		}
 	}
 }

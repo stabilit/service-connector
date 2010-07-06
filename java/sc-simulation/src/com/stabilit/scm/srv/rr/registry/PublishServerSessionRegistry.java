@@ -14,25 +14,19 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit;
+package com.stabilit.scm.srv.rr.registry;
 
-import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
+import com.stabilit.scm.sc.registry.SessionRegistry;
 
 /**
  * @author JTraber
- * 
+ *
  */
-public class UnitCommandFactory extends CommandFactory {
-	@SuppressWarnings("unused")
-	public UnitCommandFactory() {		
-		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(
-				this);
-		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(
-				this);
-		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(
-				this);
+public class PublishServerSessionRegistry extends SessionRegistry {
+	
+	private static PublishServerSessionRegistry instance = new PublishServerSessionRegistry();
+
+	public static PublishServerSessionRegistry getCurrentInstance() {
+		return instance;
 	}
 }

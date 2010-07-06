@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.impl;
 
-import java.net.SocketAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
@@ -30,10 +29,8 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
-import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.srv.rr.registry.PublishServerSessionRegistry;
 
 public class SrvSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -50,39 +47,29 @@ public class SrvSubscribeCommand extends CommandAdapter implements IPassThroughP
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
+		SCMPMessage message = request.getMessage();
+		PublishServerSessionRegistry publishReg = PublishServerSessionRegistry.getCurrentInstance();
 
-		// lookup if client is correctly attached
-		this.validateClientAttached(socketAddress);
-
-		// check service is present
-		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
-		Service service = this.validateService(serviceName);
-
-		// create session
-		Session session = new Session();
-		reqMessage.setSessionId(session.getId());
-
-		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-
-		// tries allocating a server for this session if server rejects session exception will be thrown
-		// error codes and error text from server in reject case are inside the exception
-		Server server = service.allocateServerAndCreateSession(reqMessage);
-
-		// add server to session
-		session.setServer(server);
-		// finally add session to the registry
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		sessionRegistry.addSession(session.getId(), session);
-
-		// creating reply
+		String sessionId = message.getSessionId();
+		Session session = publishReg.getSession(sessionId);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
+
+		if (session == null) {
+			session = new Session();
+			session.setAttribute("available", false);
+			publishReg.addSession(sessionId, (Session) session);
+		} else if ((Boolean) session.getAttribute("available")) {
+			session.setAttribute("available", false);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
+		} else {
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
+					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
+		}
 		scmpReply.setMessageType(getKey().getName());
-		scmpReply.setSessionId(session.getId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
 	}
 

@@ -19,20 +19,50 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.cln.call;
+
+import java.net.InetAddress;
+
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber
- *
  */
-public interface ISCPublishServer {
+public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
-	void register() throws Exception;
+	public SCMPClnSubscribeCall() {
+		this(null, null);
+	}
 
-	void publish(String mask, Object data) throws Exception;
+	public SCMPClnSubscribeCall(IRequester requester, String serviceName) {
+		super(requester, serviceName);
+	}
 
-	void deregister() throws Exception;
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMessage invoke() throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		super.invoke();
+		return this.responseMessage;
+	}
 
-	void startServer(String fileName) throws Exception;
-	
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IRequester requester, String serviceName) {
+		return new SCMPClnSubscribeCall(requester, serviceName);
+	}
+
+	public void setSessionInfo(String sessionInfo) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_SUBSCRIBE;
+	}
 }

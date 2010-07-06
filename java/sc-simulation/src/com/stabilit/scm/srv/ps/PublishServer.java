@@ -21,33 +21,68 @@
  */
 package com.stabilit.scm.srv.ps;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.SCPublishServer;
 
 public class PublishServer {
 
+	private static ISCPublishServer sc = null;
+	private static boolean killed = false;
+	
 	public static void main(String[] args) throws Exception {
 		PublishServer.runExample();
 	}
 
+	public static void beginPublish() {
+		killed = false;
+		Thread thread = new Thread(new PublishRun());
+		thread.run();
+	}
+	
+	public static void endPublish() {
+		killed = true;		
+	}
+	
 	public static void runExample() {
-		ISCPublishServer sc = null;
 		try {
 			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
 
+			sc.startServer("publish-server.properties");
 			// connects to SC, starts observing connection
 			sc.register();
 			Object data = null;
 			String mask = "AVSD-----";
-			sc.publish(mask, data);
+//			while (true) {
+//				Thread.sleep(10000);
+//				sc.publish(mask, data);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// disconnects from SC
-				sc.deregister();
+//				sc.deregister();
 			} catch (Exception e) {
 				sc = null;
+			}
+		}
+	}
+	
+	private static class PublishRun implements Runnable {
+		@Override
+		public void run() {
+			int index = 0;
+			while (!PublishServer.killed) {
+				try {
+					Thread.sleep(2000);
+					Object data = "publish message nr " + ++index;
+					String mask = "AVSD-----";
+					PublishServer.sc.publish(mask, data);
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+				}
+				System.out.println("publish");
+				
 			}
 		}
 	}

@@ -21,16 +21,21 @@
  */
 package com.stabilit.scm.common.service;
 
+import com.stabilit.scm.cln.service.IPublishContext;
+import com.stabilit.scm.cln.service.ISCMessageCallback;
+
 /**
  * @author JTraber
  *
  */
 public interface IPublishService {
 
-	void subscribe(String mask);
-
 	void changeSubscription(String mask);
 
-	void unsubscribe();
+	void unsubscribe() throws Exception;
+
+	void subscribe(String string, ISCMessageCallback callback) throws Exception;
+
+	IPublishContext getPublishContext();
 
 }

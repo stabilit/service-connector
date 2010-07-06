@@ -19,7 +19,6 @@ package com.stabilit.scm.common.service;
 import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.net.req.ConnectionPool;
@@ -239,15 +238,13 @@ public class ServiceConnector implements IServiceConnector {
 
 	/** {@inheritDoc} */
 	@Override
-	public IPublishService newPublishingService(ISCMessageCallback messageHandler, String serviceName) {
-
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public ISessionService newSessionService(String serviceName) {
 		return new SessionService(serviceName, this.context);
+	}
+	
+	@Override
+	public IPublishService newPublishService(String serviceName) {
+		return new PublishService(serviceName, this.context);
 	}
 
 	/** {@inheritDoc} */

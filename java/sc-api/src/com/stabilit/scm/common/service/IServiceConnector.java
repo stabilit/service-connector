@@ -99,11 +99,11 @@ public interface IServiceConnector {
 	 */
 	public int getPort();
 
-	public IFileService newFileService(String string);
+	public IFileService newFileService(String serviceName);
 
-	public IPublishService newPublishingService(ISCMessageCallback messageHandler, String string);
+	public IPublishService newPublishService(String serviceName);
 
-	public ISessionService newSessionService(String string);
+	public ISessionService newSessionService(String serviceName);
 
 	public void setMaxConnections(int maxConnections);
 

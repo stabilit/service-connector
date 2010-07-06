@@ -31,14 +31,14 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 /**
  * @author JTraber
  */
-public class SCMPSrvSubscribeCall extends SCMPCallAdapter {
+public class SCMPSrvSubscribeCall extends SCMPServerCallAdapter {
 
 	public SCMPSrvSubscribeCall() {
 		this(null, null);
 	}
 
-	public SCMPSrvSubscribeCall(IRequester requester, String serviceName) {
-		super(requester, serviceName);
+	public SCMPSrvSubscribeCall(IRequester requester, SCMPMessage receivedMessage) {
+		super(requester, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
@@ -50,14 +50,9 @@ public class SCMPSrvSubscribeCall extends SCMPCallAdapter {
 		return this.responseMessage;
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPSrvSubscribeCall(requester, serviceName);
-	}
-
-	public void setSessionInfo(String sessionInfo) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage) {
+		return new SCMPSrvSubscribeCall(requester, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

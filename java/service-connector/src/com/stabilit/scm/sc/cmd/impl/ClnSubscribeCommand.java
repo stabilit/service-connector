@@ -63,9 +63,6 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 
-		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-
 		Server server = service.allocateServerAndSubscribe(reqMessage);
 
 		// add server to session

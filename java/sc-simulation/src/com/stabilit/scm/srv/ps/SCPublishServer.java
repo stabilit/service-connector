@@ -19,17 +19,28 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.srv.ps;
+
+import java.util.List;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.cln.call.SCMPPublishCall;
 import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.RequesterConfigPool;
+import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.res.Responder;
+import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.service.ISCPublishServer;
+import com.stabilit.scm.common.service.ISCPublishServerContext;
+import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 
 public class SCPublishServer implements ISCPublishServer {
 
@@ -78,7 +89,7 @@ public class SCPublishServer implements ISCPublishServer {
 	@Override
 	public void deregister() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(this.requester, "simulation2");
+				.newInstance(this.requester, "publish-simulation");
 
 		deRegisterServiceCall.invoke();
 	}
@@ -86,21 +97,45 @@ public class SCPublishServer implements ISCPublishServer {
 	@Override
 	public void publish(String mask, Object data) throws Exception {
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
-				"simulation2");
+				"publish-simulation");
 		publishCall.invoke();
 	}
 
 	@Override
 	public void register() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(this.requester, "simulation2");
+				.newInstance(this.requester, "publish-simulation");
 
-		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setPortNumber(7000);
+		registerServiceCall.setMaxSessions(2);
+		registerServiceCall.setPortNumber(14000);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveInterval(360);
+		registerServiceCall.setKeepAliveInterval(0);
 
 		registerServiceCall.invoke();
+	}
+
+	@Override
+	public void startServer(String fileName) throws Exception {
+		ResponderConfigPool srvConfig = new ResponderConfigPool();
+		srvConfig.load(fileName);
+		RequesterConfigPool clientConfig = new RequesterConfigPool();
+		clientConfig.load(fileName);
+
+		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
+		if (commandFactory == null) {
+			CommandFactory.setCurrentCommandFactory(new PublishServerCommandFactory());
+		}
+		List<ICommunicatorConfig> respConfigList = srvConfig.getResponderConfigList();
+
+		for (ICommunicatorConfig respConfig : respConfigList) {
+			IResponder resp = new Responder(respConfig);
+			try {
+				resp.create();
+				resp.runAsync();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	class SCPublishServerContext implements ISCPublishServerContext {

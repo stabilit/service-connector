@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.stabilit.scm.common.scmp.SCMPMessage;
+
 /**
  * @author JTraber
  */
@@ -38,9 +40,13 @@ public class SubscriptionQueue {
 	public SubscriptionQueue() {
 		this.dataQueue = Collections.synchronizedList(new LinkedList<DataItem>());
 		this.sessionQueueMap = new ConcurrentHashMap<String, SessionItem>();
-
 	}
 
+	public void add(SCMPMessage message) {
+	    DataItem dataItem = new DataItem(message);
+	    dataQueue.add(dataItem);
+	}
+	
 	public boolean hasNext(String sessionId, String mask) {
 		SessionItem item = this.sessionQueueMap.get(sessionId);
 		if (item == null) {
@@ -85,9 +91,9 @@ public class SubscriptionQueue {
 		private int referenced;
 		private Object obj;
 		
-		public DataItem() {
+		public DataItem(Object obj) {
 			this.referenced = 0;
-			this.obj = null;
+			this.obj = obj;
 		}
 	}
 

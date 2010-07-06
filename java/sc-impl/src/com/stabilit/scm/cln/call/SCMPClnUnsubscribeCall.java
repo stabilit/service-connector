@@ -14,44 +14,34 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.cln.api;
+package com.stabilit.scm.cln.call;
 
-import org.junit.Before;
-import org.junit.Test;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 
-import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.SCPublishServer;
-import com.stabilit.scm.unit.test.SetupTestCases;
+public class SCMPClnUnsubscribeCall extends SCMPServerCallAdapter {
 
-public class ClnAPIPublishTestCase {
-
-	@Before
-	public void setUp() {
-		SetupTestCases.setupAll();
+	public SCMPClnUnsubscribeCall() {
+		this(null, null);
 	}
 
-	@Test
-	public void testClnAPI() throws Exception {
-		ISCPublishServer sc = null;
-		try {
+	public SCMPClnUnsubscribeCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
+	}
 
-			sc = new SCPublishServer("localhost", 9000, "netty.tcp");
+	@Override
+	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
+		return new SCMPClnUnsubscribeCall(req, receivedMessage);
+	}
 
-			// connects to SC, starts observing connection
-			sc.register();
-			Object data = null;
-			String mask = "AVSD-----";
-			sc.publish(mask, data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				sc.deregister();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
+	public void setSessionId(String sessionId) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+	}
 
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_SUBSCRIBE;
 	}
 }

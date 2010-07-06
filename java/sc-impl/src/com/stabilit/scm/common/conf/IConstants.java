@@ -48,6 +48,7 @@ public interface IConstants {
 	/** The THREAD. */
 	public static final String THREAD_POOL_SIZE_QUALIFIER = ".threadPoolSize";
 	/** The connection names. */
+	public static final String TYPE_QUALIFIER = ".type";
 	public static final String CONNECTIONS = "connections";
 	/** The server names. */
 	public static final String SERVER_LISTENER = "serverListener";

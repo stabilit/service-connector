@@ -51,15 +51,16 @@ public class ServiceLoader {
 
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		for (String serviceName : serviceNames) {
-			Service service = new Service(serviceName);
-			
-			
+
+			String serviceType = (String) props.get(serviceName + IConstants.TYPE_QUALIFIER);
+			Service service = new Service(serviceName, serviceType);
+
 			// TODO verify with jan
 			// service.setLocation(props.get(serviceName + IConstants.LOCATION_QUALIFIER));
 			// service.setType(props.get(serviceName + IConstants.TYPEs_QUALIFIER));
-			
+
 			serviceRegistry.addService(service.getServiceName(), service);
-			
+
 		}
 	}
 }

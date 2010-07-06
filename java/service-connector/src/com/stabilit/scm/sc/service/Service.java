@@ -41,13 +41,17 @@ public class Service {
 	private List<Server> listOfServers;
 	private ISubscriptionPlace subscriptionPlace;
 
-	public Service(String name) {
+	public Service(String name, String type) {
 		this.name = name;
-		this.type = null;
+		this.type = type;
 		this.location = null;
 		this.serverIndex = 0;
 		// synchronize the sever list
 		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
+		
+		if("publish".equals(this.type)) {
+			this.subscriptionPlace = new SubscriptionPlace();
+		}
 	}
 
 	public String getServiceName() {

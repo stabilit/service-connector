@@ -59,7 +59,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			if (subscriptionPlace == null) {
 				throw new SubscriptionPlaceException("no place found for session id = " + sessionId);
 			}
-			subscriptionPlace.poll(request, response); // no callback necessary, returns immediately if data is ready otherwise a
+			subscriptionPlace.poll(message); // no callback necessary, returns immediately if data is ready otherwise a
 												// future publish will check this poll
 		} catch (SCServiceException e) {
 			// failed, connection to backend server disturbed - clean up

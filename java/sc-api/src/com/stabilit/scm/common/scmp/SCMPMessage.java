@@ -360,6 +360,15 @@ public class SCMPMessage {
 	public String getServiceName() {
 		return this.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 	}
+	
+	/**
+	 * Sets the service name.
+	 *
+	 * @param serviceName the new service name
+	 */
+	public void setServiceName(String serviceName) {
+		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
 
 	/**
 	 * Sets the session id.

@@ -41,6 +41,7 @@ import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.sc.SC;
+import com.stabilit.scm.srv.ps.PublishServer;
 import com.stabilit.scm.srv.rr.Old_SessionServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
@@ -99,6 +100,7 @@ public class SetupTestCases {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
 				Old_SessionServer.main(null);
+				PublishServer.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

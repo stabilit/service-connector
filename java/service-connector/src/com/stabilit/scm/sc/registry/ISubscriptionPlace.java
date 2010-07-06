@@ -21,15 +21,17 @@
  */
 package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
  * @author JTraber
  *
  */
 public interface ISubscriptionPlace {
+	
+	public abstract void add(SCMPMessage message);
 
-	public abstract void poll(IRequest request, IResponse response);
+	public abstract Object poll(SCMPMessage message);
+
 
 }

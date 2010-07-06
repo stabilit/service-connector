@@ -21,8 +21,6 @@
  */
 package com.stabilit.scm.sc.registry;
 
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -36,17 +34,21 @@ public class SubscriptionPlace implements ISubscriptionPlace {
 	}
 
 	@Override
-	public void poll(IRequest request, IResponse response) {
+	public void add(SCMPMessage message) {
+		subscriptionQueue.add(message);        		
+	}
+	
+	@Override
+	public Object poll(SCMPMessage message) {
 		// check if data for me is available
-		SCMPMessage message = request.getMessage();
 		String mask = null; // TODO
 		String sessionId = message.getSessionId();
         if (subscriptionQueue.hasNext(sessionId,  mask) == false) {
         	// nothing to poll, maybe later
-        	return;
+        	return null;
         }
 		Object data = subscriptionQueue.poll(sessionId, mask);
-		// TODO, return data as a reply
+		return data;
 	}
 
 }
