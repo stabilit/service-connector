@@ -155,8 +155,7 @@ public class Server {
 			// subscribe failed
 			throw new SCServiceException("subscribe failed", e);
 		}
-
-		// TODO reject flag throw exception
+		// TODO reject flag throw exception sc error text
 	}
 
 	/**

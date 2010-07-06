@@ -29,7 +29,6 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.SubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
@@ -91,8 +90,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		public void validate(IRequest request) throws Exception {
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
-			try {
-				
+			try {                  				
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
 				if (serviceName == null || serviceName.equals("")) {
