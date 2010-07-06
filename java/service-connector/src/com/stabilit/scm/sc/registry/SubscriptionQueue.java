@@ -96,5 +96,4 @@ public class SubscriptionQueue {
 			this.obj = obj;
 		}
 	}
-
 }
