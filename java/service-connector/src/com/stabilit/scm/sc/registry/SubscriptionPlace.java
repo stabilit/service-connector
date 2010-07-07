@@ -21,11 +21,10 @@
  */
 package com.stabilit.scm.sc.registry;
 
-import java.util.TimerTask;
-
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.ITimerRun;
 
 /**
  * @author JTraber
@@ -50,7 +49,7 @@ public class SubscriptionPlace implements ISubscriptionPlace {
         if (subscriptionQueue.hasNext(sessionId,  mask) == false) {
         	// nothing to poll, maybe later
         	return null;
-        }
+        }        
 		Object data = subscriptionQueue.poll(sessionId, mask);
 		return data;
 	}
@@ -61,8 +60,8 @@ public class SubscriptionPlace implements ISubscriptionPlace {
 	}
 
 	@Override
-	public void subscribe(String sessionId, TimerTask timerTask) {
-		this.subscriptionQueue.subscribe(sessionId, timerTask);
+	public void subscribe(String sessionId, ITimerRun timerRun) {
+		this.subscriptionQueue.subscribe(sessionId, timerRun);
 	}
 
 	@Override

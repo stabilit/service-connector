@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
-import java.util.TimerTask;
 import java.util.UUID;
 
+import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
@@ -32,7 +32,7 @@ public class Session extends MapBean<Object>{
 	private Server server;
 	private int echoTimeout;
 	private int echoInterval;
-	private TimerTask timerTask;
+	private ITimerRun timerRun;
 
 	/**
 	 * Instantiates a new session.
@@ -41,7 +41,7 @@ public class Session extends MapBean<Object>{
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.server = null;
-		this.timerTask = null;
+		this.timerRun = null;
 	}
 
 	/**
@@ -82,12 +82,12 @@ public class Session extends MapBean<Object>{
 		return echoInterval;
 	}
 
-	public TimerTask getTimerTask() {
-		return this.timerTask;
+	public ITimerRun getTimerRun() {
+		return this.timerRun;
 	}
 	
-	public void setTimerTask(TimerTask timerTask) {
-		this.timerTask = timerTask;
+	public void setTimerRun(ITimerRun timerRun) {
+		this.timerRun = timerRun;
 	}
 	
 }

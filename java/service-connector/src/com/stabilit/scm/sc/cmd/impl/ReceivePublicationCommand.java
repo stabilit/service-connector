@@ -61,6 +61,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
@@ -75,11 +76,25 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			// ready otherwise a
 			// future publish will check this poll
 			if (data != null) {
-				SCMPMessage replyMessage = (SCMPMessage) data;
-				response.setSCMP(replyMessage);
-				return;
+				SCMPMessage reply = new SCMPMessage();
+				reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
+				reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+				reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+				reply.setIsReply(true);
+				if (data instanceof SCMPMessage) {
+					reply.setBody(((SCMPMessage) data).getBody());
+				}
+				response.setSCMP(reply);
+				try {
+					response.write();
+					return;
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+					return;
+				} finally {
+				}
 			}
-			// no data available, start listening for new data			
+			// no data available, start listening for new data
 			subscriptionPlace.listen(sessionId, request, response);
 		} catch (SCServiceException e) {
 			// failed, connection to backend server disturbed - clean up
@@ -142,5 +157,5 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			}
 		}
 	}
-	
+
 }

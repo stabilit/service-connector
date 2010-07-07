@@ -81,6 +81,7 @@ public class ClnAPIPublishSubscribeTestCase {
 			publishServiceA = sc.newPublishService("publish-simulation");		
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("AEC----", callback);
+
 			PublishServer.beginPublish();
 			
 			while(publishedMessageCounter < 10) {

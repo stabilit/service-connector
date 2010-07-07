@@ -22,6 +22,8 @@ import java.util.TimerTask;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.util.ITimerRun;
+import com.stabilit.scm.common.util.TimerTaskWrapper;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -70,8 +72,7 @@ public class SessionRegistry extends Registry {
 
 	public Session getSession(Object key) {
 		Session session = (Session) super.get(key);
-		this.cancelTask(session);
-		this.scheduleTask(session);
+		this.rescheduleTask(session);
 		return session;
 	}
 
@@ -79,37 +80,66 @@ public class SessionRegistry extends Registry {
 		if (session == null || session.getEchoInterval() == 0) {
 			return;
 		}
-		TimerTask timerTask = session.getTimerTask();
-		if (timerTask == null) {
-			timerTask = new SessionTimerTask(session); // sets timer task inside session too
+		ITimerRun timerRun = session.getTimerRun();
+		if (timerRun == null) {
+			timerRun = new SessionTimerRun(session); // sets timer task inside session too
 		}
-		this.timer.schedule(timerTask, session.getEchoInterval() * 1000);
+		this.timer.schedule(new TimerTaskWrapper(timerRun), session.getEchoInterval() * 1000);
+	}
+
+	private void rescheduleTask(Session session) {
+		this.cancelTask(session);
+		this.scheduleTask(session);
 	}
 
 	private void cancelTask(Session session) {
 		if (session == null) {
 			return;
 		}
-		session.getTimerTask().cancel();
+		ITimerRun timerRun = session.getTimerRun();
+		if (timerRun != null) {
+			if (timerRun.getTimerTask() != null) {
+				timerRun.getTimerTask().cancel();
+				timerRun.setTimerTask(null);
+			}
+		}
 	}
 
-	class SessionTimerTask extends TimerTask {
+	class SessionTimerRun implements ITimerRun {
 
 		private Session session;
+		private TimerTask timerTask;
 
-		public SessionTimerTask(Session session) {
+		public SessionTimerRun(Session session) {
 			this.session = session;
-			this.session.setTimerTask(this);
+			this.session.setTimerRun(this);
+			this.timerTask = null;
 		}
 
 		@Override
 		public void run() {
 			// cancel timer
 			SessionRegistry.this.cancelTask(session);
-			//TODO abort session
+			// TODO abort session
 			// we assume that this session is dead
 			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
 			SessionPoint.getInstance().fireAbort(session, session.getId());
 		}
+
+		@Override
+		public TimerTask getTimerTask() {
+			return this.timerTask;
+		}
+
+		@Override
+		public void setTimerTask(TimerTask timerTask) {
+			this.timerTask = timerTask;
+		}
+		
+		@Override
+		public int getTimeout() {
+			return 0;
+		}
+
 	}
 }

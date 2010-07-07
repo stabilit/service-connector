@@ -31,6 +31,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.IRequestResponse;
+import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
@@ -74,8 +75,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 		ISubscriptionPlace subscriptionPlace = service.getSubscriptionPlace();
-		TimerTask timerTask = new PublishTimerTask();
-		subscriptionPlace.subscribe(session.getId(), timerTask);
+		ITimerRun timerRun = new PublishTimerRun(subscriptionPlace, 30);
+		subscriptionPlace.subscribe(session.getId(), timerRun);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -112,14 +113,43 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		}
 	}
 
-	private class PublishTimerTask extends TimerTask implements IRequestResponse {
+	private class PublishTimerRun implements ITimerRun, IRequestResponse {
 
+		private int timeout;
+		private TimerTask timerTask;
+		private ISubscriptionPlace subscriptionPlace;
 		private IRequest request;
 		private IResponse response;
 
-		public PublishTimerTask() {
+		public PublishTimerRun(ISubscriptionPlace subscriptionPlace, int timeout) {
 			this.request = null;
 			this.response = null;
+			this.timerTask = null;
+			this.timeout = timeout;
+			this.subscriptionPlace = subscriptionPlace;
+		}
+
+		@Override
+		public TimerTask getTimerTask() {
+			return timerTask;
+		}
+
+		@Override
+		public int getTimeout() {
+			return this.timeout;
+		}
+
+		/**
+		 * @param timeout
+		 *            the timeout to set
+		 */
+		public void setTimeout(int timeout) {
+			this.timeout = timeout;
+		}
+
+		@Override
+		public void setTimerTask(TimerTask timerTask) {
+			this.timerTask = timerTask;
 		}
 
 		/**
@@ -162,9 +192,20 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			SCMPMessage reply = new SCMPMessage();
 			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
 			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+			reply.setIsReply(true);
+			Object data = this.subscriptionPlace.poll(request.getMessage());
+			if (data instanceof SCMPMessage) {
+				reply.setBody(((SCMPMessage) data).getBody());
+			}
+			response.setSCMP(reply);
+			try {
+				response.write();
 
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+			// send this message back to client
 		}
-
 	}
-
 }

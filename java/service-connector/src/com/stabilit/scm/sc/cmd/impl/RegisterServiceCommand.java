@@ -80,7 +80,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		// create new server
 		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions,
-				IConstants.DEFAULT_NR_OF_THREADS);
+				IConstants.DEFAULT_KEEP_ALIVE_INTERVAL);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

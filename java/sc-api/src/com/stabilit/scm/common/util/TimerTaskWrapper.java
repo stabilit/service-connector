@@ -19,57 +19,28 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.common.util;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.service.ISCPublishServer;
+import java.util.TimerTask;
 
-public class PublishServer {
+/**
+ * @author JTraber
+ *
+ */
+public class TimerTaskWrapper extends TimerTask 
+{
+	private ITimerRun target;
 
-	private static ISCPublishServer sc = null;
-	private static boolean killed = false;
-
-	public static void main(String[] args) throws Exception {
-		PublishServer.runExample();
+	public TimerTaskWrapper(ITimerRun target) {
+		this.target = target;
+		this.target.setTimerTask(this);
 	}
 
-	public static void beginPublish() {
-		killed = false;
-		Thread thread = new Thread(new PublishRun());
-		thread.start();
-	}
-
-	public static void endPublish() {
-		killed = true;
-	}
-
-	public static void runExample() {
-		sc = new SCPublishServer("localhost", 9000, "netty.tcp");
-
-		try {
-			sc.startServer("publish-server.properties");
-			sc.register();
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void run() {
+		if (target != null) {
+			target.run();
+			return;
 		}
-	}
-
-	private static class PublishRun implements Runnable {
-		@Override
-		public void run() {
-			int index = 0;
-			while (!PublishServer.killed) {
-				try {
-					Thread.sleep(60000);
-					Object data = "publish message nr " + ++index;
-					String mask = "AVSD-----";
-					PublishServer.sc.publish(mask, data);
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
-				}
-				System.out.println("publish");
-
-			}
-		}
+		throw new UnsupportedOperationException("no target specified");
 	}
 }

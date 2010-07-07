@@ -46,6 +46,7 @@ public class PublishService implements IPublishService {
 	private IRequester requester;
 	private ISCMPCallback scmpCallback;
 	private ISCMessageCallback messageCallback;
+	private String mask;
 
 	public PublishService(String serviceName, IContext context) {
 		this.serviceName = serviceName;
@@ -54,6 +55,7 @@ public class PublishService implements IPublishService {
 		this.publishContext = new ServiceContext((IServiceConnectorContext) context, this);
 		this.scmpCallback = null;
 		this.messageCallback = null;
+		this.mask = null;
 	}
 
 	@Override
@@ -67,6 +69,7 @@ public class PublishService implements IPublishService {
 
 	@Override
 	public void subscribe(String mask, ISCMessageCallback callback) throws Exception {
+		this.mask = mask;
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		SCMPMessage reply = subscribeCall.invoke();
@@ -75,6 +78,10 @@ public class PublishService implements IPublishService {
 			throw new SCServiceException("already subscribed");
 		}
 		this.scmpCallback = new PublishServiceSCMPCallback(callback);
+		this.receivePublication();
+	}
+
+	private void receivePublication() throws Exception {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		receivePublicationCall.setMask(mask);
@@ -114,6 +121,7 @@ public class PublishService implements IPublishService {
 			if (messageCallback instanceof IActiveState) {
 				((IActiveState) this.messageCallback).setActive(false);
 			}
+			PublishService.this.receivePublication();
 		}
 
 		@Override

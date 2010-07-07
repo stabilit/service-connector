@@ -98,6 +98,7 @@ public class SCPublishServer implements ISCPublishServer {
 	public void publish(String mask, Object data) throws Exception {
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
 				"publish-simulation");
+		publishCall.setRequestBody(data);
 		publishCall.invoke();
 	}
 

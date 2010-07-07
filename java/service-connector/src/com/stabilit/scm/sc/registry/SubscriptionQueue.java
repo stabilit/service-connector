@@ -32,7 +32,9 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IRequestResponse;
+import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.LinkedQueue;
+import com.stabilit.scm.common.util.TimerTaskWrapper;
 import com.stabilit.scm.common.util.LinkedQueue.LinkedNode;
 
 /**
@@ -66,7 +68,7 @@ public class SubscriptionQueue {
 		if (ptr == null) {
 			return false;
 		}
-		return ptr.getNext() != null;
+		return ptr.node != null;
 	}
 
 	public Object poll(String sessionId, String mask) {
@@ -74,8 +76,10 @@ public class SubscriptionQueue {
 		if (ptr == null) {
 			return null;
 		}
-		Object obj = ptr.getNode().getValue();
+		DataEntry dataEntry = (DataEntry) ptr.getNode().getValue();
+		dataEntry.dereference();
 		ptr.moveNext();
+		Object obj = dataEntry.getValue();
 		return obj;
 	}
 
@@ -91,32 +95,38 @@ public class SubscriptionQueue {
 			DataPointer ptr = (DataPointer) entry.getValue();
 			if (ptr.getNode() == null) {
 				ptr.setNode(lastNode);
-				ptr.taskItem.schedule(0);
+			}
+			if (ptr.isListen()) {
+				ptr.schedule(timer, 0);
 			}
 		}
 	}
 
 	private void removeNonreferencedNodes() throws InterruptedException {
-		LinkedNode node = dataQueue.getHead();
+		LinkedNode node = dataQueue.getFirst();
 		while (node != null) {
 			if (((DataEntry) node.getValue()).isReferenced()) {
 				break;
 			}
 			dataQueue.take();
-			node = dataQueue.getHead();
+			node = dataQueue.getFirst();
 		}
 	}
 
 	class DataPointer {
 		private LinkedNode node;
+		private ITimerRun timerRun;
 		private TaskItem taskItem;
+		private boolean listen;
 
 		public DataPointer() {
 			this(null);
 		}
 
-		public DataPointer(TimerTask timerTask) {
-			this.taskItem = new TaskItem(timerTask);
+		public DataPointer(ITimerRun timerRun) {
+			this.timerRun = timerRun;
+			this.taskItem = null;
+			this.listen = false;
 		}
 
 		public void moveNext() {
@@ -134,57 +144,89 @@ public class SubscriptionQueue {
 			return node;
 		}
 
-		public void setNode(LinkedNode node) {
-			this.node = node;
+		public void setListen(boolean listen) {
+			this.listen = listen;
 		}
 
-		public Object getNext() {
-			// TODO
-			return null;
+		public boolean isListen() {
+			return listen;
+		}
+
+		public void setNode(LinkedNode node) {
+			if (node.getValue() == null) {
+				return;
+			}
+			this.node = node;
+			DataEntry dataEntry = (DataEntry) this.node.getValue();
+			dataEntry.reference();
+
+		}
+
+		public LinkedNode getNext() {
+			return this.node;
+		}
+
+		public void schedule(Timer timer) {
+			this.schedule(timer, this.timerRun.getTimeout());
+		}
+		public void schedule(Timer timer, int timeout) {
+			if (this.taskItem != null) {
+				this.taskItem.cancel();
+			}
+			this.taskItem = new TaskItem(this.timerRun);
+			this.taskItem.schedule(this, timeout);
 		}
 	}
 
 	class DataEntry {
 		private int referenced;
-		private Object obj;
+		private Object value;
 
-		public DataEntry(Object obj) {
+		public DataEntry(Object value) {
 			this.referenced = 0;
-			this.obj = obj;
+			this.value = value;
+		}
+
+		public Object getValue() {
+			return value;
 		}
 
 		public boolean isReferenced() {
 			return referenced > 0;
 		}
+
+		public void reference() {
+			this.referenced++;
+		}
+
+		public void dereference() {
+			this.referenced--;
+		}
 	}
 
 	class TaskItem {
-		private TimerTask task;
-		private boolean cancelled = true;
+		private ITimerRun timerRun;
 
-		public TaskItem(TimerTask task) {
-			this.task = task;
+		public TaskItem(ITimerRun timerRun) {
+			this.timerRun = timerRun;
 		}
 
 		public void cancel() {
 			try {
-				if (this.cancelled == false) {
-					return;
+				TimerTask timerTask = this.timerRun.getTimerTask();
+				if (timerTask != null) {
+					timerTask.cancel();
 				}
-				this.cancelled = true;
-				this.task.cancel();
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 
-		public void schedule(int time) {
+		public void schedule(DataPointer dataPointer, int time) {
 			try {
-				if (this.cancelled == false) {
-					this.cancel();
-				}
-				this.cancelled = false;
-				timer.schedule(this.task, time);
+				this.cancel();
+				TimerTask timerTask = new SubscriptionTaskWrapper(dataPointer, this.timerRun);
+				timer.schedule(timerTask, time * 1000); // TODO constant
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
@@ -194,14 +236,16 @@ public class SubscriptionQueue {
 	public void listen(String sessionId, IRequest request, IResponse response) {
 		DataPointer dataPointer = nodeMap.get(sessionId);
 		if (dataPointer != null) {
-			((IRequestResponse) dataPointer.taskItem.task).setRequest(request);
-			((IRequestResponse) dataPointer.taskItem.task).setResponse(response);
+			((IRequestResponse) dataPointer.timerRun).setRequest(request);
+			((IRequestResponse) dataPointer.timerRun).setResponse(response);
 		}
-
+		// schedule
+		dataPointer.setListen(true);
+		dataPointer.schedule(timer);
 	}
 
-	public void subscribe(String sessionId, TimerTask timerTask) {
-		DataPointer dataPointer = new DataPointer(timerTask);
+	public void subscribe(String sessionId, ITimerRun timerRun) {
+		DataPointer dataPointer = new DataPointer(timerRun);
 		nodeMap.put(sessionId, dataPointer);
 	}
 
@@ -210,6 +254,21 @@ public class SubscriptionQueue {
 		if (dataPointer != null) {
 			dataPointer.taskItem.cancel();
 			nodeMap.remove(sessionId);
+		}
+	}
+	
+	class SubscriptionTaskWrapper extends TimerTaskWrapper {
+
+		private DataPointer dataPointer;
+		public SubscriptionTaskWrapper(DataPointer dataPointer, ITimerRun target) {
+			super(target);
+			this.dataPointer = dataPointer;
+		}
+
+		@Override
+		public void run() {
+			dataPointer.setListen(false);
+		    super.run();
 		}
 	}
 }

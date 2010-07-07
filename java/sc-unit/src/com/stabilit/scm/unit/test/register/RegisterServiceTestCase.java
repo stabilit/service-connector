@@ -97,7 +97,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		IRequester req = new Requester(context);
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req, "simulation2");
+				.newInstance(req, "publish-simulation");
 
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(7000);
@@ -112,17 +112,17 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		/*********************************** Verify registry entries in SC ********************************/
 		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String expectedScEntry = "P01_logging:0|simulation2:0 - simulation2_localhost/127.0.0.1: : 7000 : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/127.0.0.1: : 7000 : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|P01_BCST_CH_sc1:0|";
 		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
-		expectedScEntry = "simulation2_localhost/127.0.0.1::simulation2_localhost/127.0.0.1: : 7000 : 10|simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 1|";
+		expectedScEntry = "publish-simulation_localhost/127.0.0.1::publish-simulation_localhost/127.0.0.1: : 7000 : 10|simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 1|";
 		scEntry = (String) inspectMsg.getAttribute("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req, "simulation2");
+				.newInstance(req, "publish-simulation");
 		deRegisterServiceCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
