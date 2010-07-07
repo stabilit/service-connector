@@ -32,8 +32,8 @@ public class TimerTaskDemo {
 		
 		// nach 0 Sek geht’s los und dann alle 5 Sekunden
 		timer.schedule(new Task("claudia"), 1000, 10000);
-		Timer timer2 = new Timer();
 
+		Timer timer2 = new Timer();
 		// nach 2 Sek geht’s los
 		timer2.schedule(new Task("hans"), 0, 2000);
 

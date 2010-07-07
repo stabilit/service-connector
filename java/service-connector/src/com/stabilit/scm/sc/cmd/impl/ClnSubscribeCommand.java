@@ -75,7 +75,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 		ISubscriptionPlace subscriptionPlace = service.getSubscriptionPlace();
-		ITimerRun timerRun = new PublishTimerRun(subscriptionPlace, 30);
+		ITimerRun timerRun = new PublishTimerRun(subscriptionPlace, 300);
 		subscriptionPlace.subscribe(session.getId(), timerRun);
 
 		// creating reply

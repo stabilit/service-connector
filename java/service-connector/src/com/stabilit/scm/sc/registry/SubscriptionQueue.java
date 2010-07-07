@@ -76,7 +76,11 @@ public class SubscriptionQueue {
 		if (ptr == null) {
 			return null;
 		}
-		DataEntry dataEntry = (DataEntry) ptr.getNode().getValue();
+		LinkedNode node = ptr.getNode();
+		if (node == null) {
+			return null;
+		}
+		DataEntry dataEntry = (DataEntry) node.getValue();
 		dataEntry.dereference();
 		ptr.moveNext();
 		Object obj = dataEntry.getValue();
