@@ -31,6 +31,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.IRequestResponse;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.LinkedQueue;
@@ -124,23 +125,34 @@ public class SubscriptionQueue {
 		private LinkedNode node;
 		private ITimerRun timerRun;
 		private TaskItem taskItem;
+		private IFilterMask filterMask;
 		private boolean listen;
 
 		public DataPointer() {
-			this(null);
+			this(null, null);
 		}
 
-		public DataPointer(ITimerRun timerRun) {
+		public DataPointer(IFilterMask filterMask, ITimerRun timerRun) {
 			this.timerRun = timerRun;
 			this.taskItem = null;
 			this.listen = false;
+			this.filterMask = filterMask;
 		}
 
 		public void moveNext() {
 			if (this.node == null) {
 				return;
 			}
-			this.node = this.node.getNext();
+			while(true) {
+			    this.node = this.node.getNext();
+			    if (this.node == null) {
+			    	break;
+			    }
+			    if (this.filterMask.matches(this.node.getValue())) {
+			    	return;
+			    }
+			}
+			this.node = null; // no match			    
 		}
 
 		public boolean hasNext() {
@@ -161,6 +173,9 @@ public class SubscriptionQueue {
 
 		public void setNode(LinkedNode node) {
 			if (node.getValue() == null) {
+				return;
+			}
+			if (this.filterMask.matches(node.getValue()) == false) {
 				return;
 			}
 			this.node = node;
@@ -251,8 +266,8 @@ public class SubscriptionQueue {
 		dataPointer.schedule(timer);
 	}
 
-	public void subscribe(String sessionId, ITimerRun timerRun) {
-		DataPointer dataPointer = new DataPointer(timerRun);
+	public void subscribe(String sessionId, IFilterMask filterMask, ITimerRun timerRun) {
+		DataPointer dataPointer = new DataPointer(filterMask, timerRun);
 		nodeMap.put(sessionId, dataPointer);
 	}
 

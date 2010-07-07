@@ -19,28 +19,14 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.registry;
-
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.util.ITimerRun;
+package com.stabilit.scm.common.service;
 
 /**
  * @author JTraber
  *
  */
-public interface ISubscriptionPlace {
-	
-	public abstract void add(SCMPMessage message);
+public interface IFilterMask {
 
-	public abstract Object poll(SCMPMessage message);
-
-	public abstract void subscribe(String sessionId, IFilterMask filterMask, ITimerRun timerRun);
-
-	public abstract void unsubscribe(String sessionId);
-
-	public abstract void listen(String sessionId, IRequest request, IResponse response);
+	boolean matches(Object obj);
 
 }

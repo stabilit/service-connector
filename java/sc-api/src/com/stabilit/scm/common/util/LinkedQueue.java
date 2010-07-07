@@ -171,27 +171,27 @@ public class LinkedQueue<E> {
 		}
 	}
 
-	public class LinkedNode<E> {
-		public E value;
-		public LinkedNode<E> next;
+	public class LinkedNode<T> {
+		public T value;
+		public LinkedNode<T> next;
 
 		public LinkedNode() {
 		}
 
-		public LinkedNode(E x) {
+		public LinkedNode(T x) {
 			value = x;
 		}
 
-		public LinkedNode(E x, LinkedNode<E> n) {
+		public LinkedNode(T x, LinkedNode<T> n) {
 			value = x;
 			next = n;
 		}
 
-		public LinkedNode<E> getNext() {
+		public LinkedNode<T> getNext() {
 			return next;
 		}
 
-		public E getValue() {
+		public T getValue() {
 			return value;
 		}
 	}

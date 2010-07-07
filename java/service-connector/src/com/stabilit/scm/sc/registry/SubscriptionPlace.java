@@ -24,6 +24,7 @@ package com.stabilit.scm.sc.registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.util.ITimerRun;
 
 /**
@@ -60,8 +61,8 @@ public class SubscriptionPlace implements ISubscriptionPlace {
 	}
 
 	@Override
-	public void subscribe(String sessionId, ITimerRun timerRun) {
-		this.subscriptionQueue.subscribe(sessionId, timerRun);
+	public void subscribe(String sessionId, IFilterMask filterMask, ITimerRun timerRun) {
+		this.subscriptionQueue.subscribe(sessionId, filterMask, timerRun);
 	}
 
 	@Override

@@ -30,6 +30,8 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.FilterMask;
+import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.IRequestResponse;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
@@ -61,6 +63,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
+		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 		Service service = this.validateService(serviceName);
 
 		// create session
@@ -76,7 +79,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 		ISubscriptionPlace subscriptionPlace = service.getSubscriptionPlace();
 		ITimerRun timerRun = new PublishTimerRun(subscriptionPlace, 300);
-		subscriptionPlace.subscribe(session.getId(), timerRun);
+		IFilterMask filterMask = new FilterMask(mask);
+		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
 
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
