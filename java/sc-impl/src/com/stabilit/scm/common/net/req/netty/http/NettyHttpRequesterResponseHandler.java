@@ -104,7 +104,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
 		if (this.scmpCallback != null) {
 			this.callback(nettyEvent);
-			this.scmpCallback = null;
 			return;
 		}
 		answer.offer(nettyEvent);
@@ -116,7 +115,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		Throwable th = (Throwable) e.getCause();
 		if (this.scmpCallback != null) {
 			this.scmpCallback.callback(th);
-			this.scmpCallback = null;
 		}
 		NettyEvent nettyEvent = new NettyExceptionEvent(th);
 		answer.offer(nettyEvent);

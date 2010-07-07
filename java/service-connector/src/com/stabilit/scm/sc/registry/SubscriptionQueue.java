@@ -81,6 +81,9 @@ public class SubscriptionQueue {
 			return null;
 		}
 		DataEntry dataEntry = (DataEntry) node.getValue();
+		if (dataEntry == null) {
+			return null;
+		}
 		dataEntry.dereference();
 		ptr.moveNext();
 		Object obj = dataEntry.getValue();

@@ -195,17 +195,23 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
 			reply.setIsReply(true);
 			Object data = this.subscriptionPlace.poll(request.getMessage());
-			if (data instanceof SCMPMessage) {
-				reply.setBody(((SCMPMessage) data).getBody());
+			if (data == null) {
+				reply.setHeader(SCMPHeaderAttributeKey.NO_DATA, true);
+			} else {
+				if (data instanceof SCMPMessage) {
+					reply.setBody(((SCMPMessage) data).getBody());
+				}
+				reply
+						.setHeader(SCMPHeaderAttributeKey.MASK, (String) request
+								.getAttribute(SCMPHeaderAttributeKey.MASK));
 			}
 			response.setSCMP(reply);
 			try {
+				// send message back to client
 				response.write();
-
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
-			// send this message back to client
 		}
 	}
 }

@@ -16,11 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty.http;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -114,12 +115,12 @@ public class NettyHttpConnection implements IConnection {
 	public IConnectionContext getContext() {
 		return this.connectionContext;
 	}
-	
+
 	@Override
 	public void setContext(IConnectionContext connectionContext) {
 		this.connectionContext = connectionContext;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
@@ -180,42 +181,9 @@ public class NettyHttpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		encoderDecoder.encode(baos, scmp);
-		url = new URL(IConstants.HTTP, host, port, IConstants.HTTP_FILE);
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
-		byte[] buffer = baos.toByteArray();
-		// Http header fields
-		request.addHeader(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
-		request.addHeader(HttpHeaders.Names.HOST, host);
-		request.addHeader(HttpHeaders.Names.ACCEPT, IConstants.ACCEPT_PARAMS);
-		request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
-
-		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		request.setContent(channelBuffer);
-		ChannelFuture future = channel.write(request);
-		future.addListener(operationListener);
-		try {
-			operationListener.awaitUninterruptibly();
-		} catch (CommunicationException ex) {
-			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
-		}
-		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
-		// inside
-		// gets response message synchronous
-		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
-		ChannelBuffer content = handler.getMessageSync().getContent();
-		buffer = new byte[content.readableBytes()];
-		content.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
-		// inside
-		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
-		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
+		NettyHttpSCMPCallback callback = new NettyHttpSCMPCallback();
+		this.send(scmp, callback);
+		SCMPMessage ret = callback.join();
 		return ret;
 	}
 
@@ -317,5 +285,40 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void resetNrOfIdles() {
 		this.nrOfIdles = 0;
+	}
+
+	class NettyHttpSCMPCallback implements ISCMPCallback {
+		private SCMPMessage reply;
+		private Throwable th;
+		/** Queue to store the answer. */
+		private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
+
+		public NettyHttpSCMPCallback() {
+			this.reply = null;
+		}
+
+		@Override
+		public void callback(SCMPMessage scmpReply) throws Exception {
+			answer.offer(scmpReply);
+		}
+
+		@Override
+		public void callback(Throwable th) {
+			this.th = th;
+		}
+
+		@Override
+		public IContext getContext() {
+			return null;
+		}
+
+		@Override
+		public void setContext(IContext context) {
+		}
+
+		public SCMPMessage join() throws Exception {
+			this.reply = answer.take();
+			return this.reply;
+		}
 	}
 }
