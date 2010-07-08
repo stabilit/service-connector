@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.util.TimerTaskWrapper;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
@@ -33,6 +34,7 @@ public class Session extends MapBean<Object>{
 	private int echoTimeout;
 	private int echoInterval;
 	private ITimerRun timerRun;
+	private TimerTaskWrapper sessionTimouter;
 
 	/**
 	 * Instantiates a new session.
@@ -89,5 +91,12 @@ public class Session extends MapBean<Object>{
 	public void setTimerRun(ITimerRun timerRun) {
 		this.timerRun = timerRun;
 	}
-	
+
+	public TimerTaskWrapper getSessionTimeouter() {
+		return sessionTimouter;
+	}
+
+	public void setSessionTimouter(TimerTaskWrapper sessionTimouter) {
+		this.sessionTimouter = sessionTimouter;
+	}
 }

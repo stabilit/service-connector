@@ -60,7 +60,7 @@ public class PublishServer {
 			int index = 0;
 			while (!PublishServer.killed) {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 					Object data = "publish message nr " + ++index;
 					String mask = "AVSD-----";
 					PublishServer.sc.publish(mask, data);

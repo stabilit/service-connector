@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,42 +14,47 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.scm.common.util;
 
-import java.util.TimerTask;
+public class LinkedNode<T> {
+	public T value;
+	public LinkedNode<T> next;
+	private int referenced;
 
-/**
- * The Interface ITimerRun.
- * 
- * @author JTraber
- */
-public interface ITimerRun {
+	public LinkedNode() {
+	}
 
-	/**
-	 * Timeout. Runs when time is out.
-	 */
-	public void timeout();
+	public LinkedNode(T value) {
+		this.value = value;
+	}
 
-	/**
-	 * Gets the timer task.
-	 * 
-	 * @return the timer task
-	 */
-	public abstract TimerTask getTimerTask();
+	public LinkedNode(T value, LinkedNode<T> next) {
+		this.value = value;
+		this.next = next;
+	}
 
-	/**
-	 * Sets the timer task.
-	 * 
-	 * @param timerTask
-	 *            the new timer task
-	 */
-	public abstract void setTimerTask(TimerTask timerTask);
+	public LinkedNode<T> getNext() {
+		return next;
+	}
 
-	/**
-	 * Gets the timeout.
-	 * 
-	 * @return the timeout
-	 */
-	public abstract int getTimeout();
+	public T getValue() {
+		return value;
+	}
+	
+	public boolean isReferenced() {
+		return referenced > 0;
+	}
+
+	public void reference() {
+		this.referenced++;
+	}
+
+	public void dereference() {
+		this.referenced--;
+	}
 }

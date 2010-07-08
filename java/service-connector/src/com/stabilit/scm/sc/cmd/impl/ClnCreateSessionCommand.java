@@ -77,6 +77,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
 		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT);
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 		// tries allocating a server for this session if server rejects session exception will be thrown
 		// error codes and error text from server in reject case are inside the exception
 		Server server = service.allocateServerAndCreateSession(reqMessage);

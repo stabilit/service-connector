@@ -132,7 +132,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			this.timeout = timeout;
 			this.subscriptionPlace = subscriptionPlace;
 		}
-
+		
+		/** {@inheritDoc} */
 		@Override
 		public TimerTask getTimerTask() {
 			return timerTask;
@@ -141,14 +142,6 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		@Override
 		public int getTimeout() {
 			return this.timeout;
-		}
-
-		/**
-		 * @param timeout
-		 *            the timeout to set
-		 */
-		public void setTimeout(int timeout) {
-			this.timeout = timeout;
 		}
 
 		@Override
@@ -191,7 +184,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		}
 
 		@Override
-		public void run() {
+		public void timeout() {
 			System.out.println("ReceivePublicationCommand.ReceivePublicationTimerTask.run()");
 			SCMPMessage reply = new SCMPMessage();
 			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));

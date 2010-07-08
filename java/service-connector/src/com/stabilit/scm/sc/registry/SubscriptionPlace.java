@@ -31,10 +31,10 @@ import com.stabilit.scm.common.util.ITimerRun;
  * @author JTraber
  */
 public class SubscriptionPlace implements ISubscriptionPlace {
-	private SubscriptionQueue subscriptionQueue;
+	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 	
 	public SubscriptionPlace() {
-		this.subscriptionQueue = new SubscriptionQueue();
+		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
 	}
 
 	@Override
@@ -68,7 +68,5 @@ public class SubscriptionPlace implements ISubscriptionPlace {
 	@Override
 	public void unsubscribe(String sessionId) {
 		this.subscriptionQueue.unsubscribe(sessionId);
-		
 	}
-
 }

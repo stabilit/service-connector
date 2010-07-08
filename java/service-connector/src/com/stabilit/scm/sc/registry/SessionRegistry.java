@@ -19,6 +19,7 @@ package com.stabilit.scm.sc.registry;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
@@ -35,13 +36,14 @@ public class SessionRegistry extends Registry {
 
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
+	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private Timer timer;
 
 	/**
-	 * Instantiates a new session registry.
+	 * Instantiates a SessionRegistry.
 	 */
 	public SessionRegistry() {
-		this.timer = new Timer("SessionRegistry");
+		this.timer = new Timer("SessionRegistryTimer");
 	}
 
 	/**
@@ -56,7 +58,10 @@ public class SessionRegistry extends Registry {
 	public void addSession(Object key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
-		this.scheduleTask(session);
+		if (session.getEchoInterval() != 0) {
+			// session timeout necessary needs to be set up
+			this.scheduleSessionTimeout(session);
+		}
 	}
 
 	public void removeSession(Session session) {
@@ -65,47 +70,55 @@ public class SessionRegistry extends Registry {
 
 	public void removeSession(Object key) {
 		Session session = (Session) super.get(key);
-		this.cancelTask(session);
+		this.cancelSessionTimeout(session);
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
+	/**
+	 * Gets the session. Session timeout resets if session is requested.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the session
+	 */
+	// TODO verify rescheduling timeout at this point
 	public Session getSession(Object key) {
 		Session session = (Session) super.get(key);
-		this.rescheduleTask(session);
+		if (session != null && session.getEchoInterval() != 0) {
+			// rescheduling session timeout
+			this.cancelSessionTimeout(session);
+			this.scheduleSessionTimeout(session);
+		}
 		return session;
 	}
 
-	private void scheduleTask(Session session) {
-		if (session == null || session.getEchoInterval() == 0) {
-			return;
+	private void scheduleSessionTimeout(Session session) {
+		TimerTaskWrapper sessionTimeouter = session.getSessionTimeouter();
+		if (sessionTimeouter == null) {
+			// sets up session timeout
+			sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
+			session.setSessionTimouter(sessionTimeouter);
 		}
-		ITimerRun timerRun = session.getTimerRun();
-		if (timerRun == null) {
-			timerRun = new SessionTimerRun(session); // sets timer task inside session too
-		}
-		this.timer.schedule(new TimerTaskWrapper(timerRun), session.getEchoInterval() * 1000);
+		// schedule sessionTimeouter in registry timer
+		this.timer.schedule(sessionTimeouter, session.getEchoInterval() * IConstants.SEC_TO_MILISEC_FACTOR);
 	}
 
-	private void rescheduleTask(Session session) {
-		this.cancelTask(session);
-		this.scheduleTask(session);
-	}
-
-	private void cancelTask(Session session) {
+	private void cancelSessionTimeout(Session session) {
 		if (session == null) {
 			return;
 		}
-		ITimerRun timerRun = session.getTimerRun();
-		if (timerRun != null) {
-			if (timerRun.getTimerTask() != null) {
-				timerRun.getTimerTask().cancel();
-				timerRun.setTimerTask(null);
-			}
+		TimerTask sessionTimeouter = session.getSessionTimeouter();
+		if (sessionTimeouter == null) {
+			// no session timeout has been set up for this session
+			return;
 		}
+		sessionTimeouter.cancel();
+		// very important to set timeouter null - rescheduling of same instance not possible
+		session.setSessionTimouter(null);
 	}
 
-	class SessionTimerRun implements ITimerRun {
+	private class SessionTimerRun implements ITimerRun {
 
 		private Session session;
 		private TimerTask timerTask;
@@ -117,10 +130,10 @@ public class SessionRegistry extends Registry {
 		}
 
 		@Override
-		public void run() {
+		public void timeout() {
 			// cancel timer
-			SessionRegistry.this.cancelTask(session);
-			// TODO abort session
+			SessionRegistry.this.cancelSessionTimeout(session);
+			// TODO abort session clean up
 			// we assume that this session is dead
 			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
 			SessionPoint.getInstance().fireAbort(session, session.getId());
@@ -135,11 +148,10 @@ public class SessionRegistry extends Registry {
 		public void setTimerTask(TimerTask timerTask) {
 			this.timerTask = timerTask;
 		}
-		
+
 		@Override
 		public int getTimeout() {
 			return 0;
 		}
-
 	}
 }

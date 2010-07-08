@@ -46,7 +46,7 @@ public class ClnAPISessionTestCase {
 			sc.attach();
 			
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 60, 360);
+			sessionServiceA.createSession("sessionInfo", 60, 10);
 			
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];

@@ -36,6 +36,8 @@ public interface IConstants {
 	public static final int READ_TIMEOUT = 200;
 	/** The write timeout in seconds. */
 	public static final int WRITE_TIMEOUT = 200;
+	/** The Constant SEC_TO_MILISEC_FACTOR. */
+	public static final int SEC_TO_MILISEC_FACTOR = 1000;
 
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
@@ -94,13 +96,13 @@ public interface IConstants {
 	/** The Constant FIX_HEADLINE_SIZE. */
 	public static final int FIX_HEADLINE_SIZE = 20;
 	/** The Constant FORMAT_OF_MSG_SIZE. */
-	public static final String FORMAT_OF_MSG_SIZE = " 00000";		
+	public static final String FORMAT_OF_MSG_SIZE = " 00000";
 	/** The Constant FORMAT_OF_HEADER_SIZE. */
-	public static final String FORMAT_OF_HEADER_SIZE = " 00000";	
+	public static final String FORMAT_OF_HEADER_SIZE = " 00000";
 	/** The Constant FIX_MSG_SIZE_START. */
-	public static final int FIX_MSG_SIZE_START = 4;	
+	public static final int FIX_MSG_SIZE_START = 4;
 	/** The Constant FIX_MSG_SIZE_END. */
-	public static final int FIX_MSG_SIZE_END = 8;	
+	public static final int FIX_MSG_SIZE_END = 8;
 	/** The Constant FIX_HEADER_SIZE_START. */
 	public static final int FIX_HEADER_SIZE_START = 10;
 	/** The Constant FIX_HEADER_SIZE_END. */

@@ -6,7 +6,7 @@ public class LinkedQueue<E> {
 	 * Dummy header node of list. The first actual node, if it exists, is always at head_.next. After each take, the old
 	 * first node becomes the head.
 	 **/
-		
+
 	protected LinkedNode<E> head;
 
 	/**
@@ -19,9 +19,8 @@ public class LinkedQueue<E> {
 	 **/
 	protected LinkedNode<E> last;
 
-	
 	protected int size;
-	
+
 	/**
 	 * The number of threads waiting for a take. Notifications are provided in put only if greater than zero. The
 	 * bookkeeping is worth it here since in reasonably balanced usages, the notifications will hardly ever be
@@ -46,7 +45,7 @@ public class LinkedQueue<E> {
 	public int getSize() {
 		return size;
 	}
-	
+
 	/** Main mechanics for put/offer **/
 	protected LinkedNode<E> insert(E x) {
 		synchronized (putLock) {
@@ -168,31 +167,6 @@ public class LinkedQueue<E> {
 					throw ex;
 				}
 			}
-		}
-	}
-
-	public class LinkedNode<T> {
-		public T value;
-		public LinkedNode<T> next;
-
-		public LinkedNode() {
-		}
-
-		public LinkedNode(T x) {
-			value = x;
-		}
-
-		public LinkedNode(T x, LinkedNode<T> n) {
-			value = x;
-			next = n;
-		}
-
-		public LinkedNode<T> getNext() {
-			return next;
-		}
-
-		public T getValue() {
-			return value;
 		}
 	}
 }

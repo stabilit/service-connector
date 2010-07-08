@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,31 +13,36 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
 import java.util.TimerTask;
 
 /**
- * @author JTraber
- *
+ * The Class TimerTaskWrapper. Wraps TimerTaks from JDK. Is used to time a process. TimerTaks times out and calls the
+ * target ITimerRun.
  */
-public class TimerTaskWrapper extends TimerTask 
-{
+public class TimerTaskWrapper extends TimerTask {
+
+	/** The target to run when time is out. */
 	private ITimerRun target;
 
+	/**
+	 * Instantiates a TimerTaskWrapper.
+	 * 
+	 * @param target
+	 *            the target
+	 */
 	public TimerTaskWrapper(ITimerRun target) {
 		this.target = target;
 		this.target.setTimerTask(this);
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void run() {
 		if (target != null) {
-			target.run();
+			target.timeout();
 			return;
 		}
 		throw new UnsupportedOperationException("no target specified");
