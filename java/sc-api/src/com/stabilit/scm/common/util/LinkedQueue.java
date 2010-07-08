@@ -71,13 +71,17 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Main mechanics to insert in queue.
+	 * Main mechanics to insert in queue. Null value not allowed.
 	 * 
 	 * @param value
 	 *            the value for new node
 	 * @return the linked node
 	 */
 	public LinkedNode<E> insert(E value) {
+		if (value == null) {
+			// inserting null value not allowed
+			return null;
+		}
 		LinkedNode<E> newNode = new LinkedNode<E>(value);
 		synchronized (this.last) {
 			this.last.next = newNode;
