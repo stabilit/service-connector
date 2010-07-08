@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package test.stabilit.sc.net;
+package test.stabilit.scm.common.net;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,14 +25,14 @@ import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
 
 /**
- * The Class HttpFrameDecoderTest.
+ * The Class DefaultFrameDecoderTest.
  * 
  * @author JTraber
  */
-public class HttpFrameDecoderTest {
+public class DefaultFrameDecoderTest {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder("http");
+	private IFrameDecoder decoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
 	/**
 	 * Singelton test.
@@ -44,23 +44,61 @@ public class HttpFrameDecoderTest {
 	}
 
 	/**
-	 * Parses the frame size test.
+	 * Parses the frame size fail test.
 	 * 
 	 * @throws Exception the exception
 	 */
 	@Test
-	public void parseFrameSizeTest() throws Exception {
-		String httpHeader = "POST / HTTP/1.1\r\n" + "Host: www.google.com\r\n" + "Connection: close\r\n"
-				+ "User-Agent: Web-sniffer/1.0.31 (+http://web-sniffer.net/)\r\n"
-				+ "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n" + "Cache-Control: no\r\n"
-				+ "Accept-Language: de,en;q=0.7,en-us;q=0.3\r\n" + "Referer: http://web-sniffer.net/\r\n"
-				+ "Content-type: application/x-www-form-urlencoded\r\n" + "Content-Length: 122\r\n";
-
+	public void parseFrameSizeFailTest() throws Exception {
 		try {
-			int frameSize = decoder.parseFrameSize(httpHeader.getBytes());
-			Assert.assertEquals("122", frameSize + "");
+			int frameSize = decoder.parseFrameSize(null);
+			Assert.assertEquals("0", frameSize + "");
+			frameSize = decoder.parseFrameSize(new byte[0]);
+			Assert.assertEquals("0", frameSize + "");
 		} catch (FrameDecoderException e) {
-			Assert.fail("Should not throw Exception");
+			Assert.fail("Should not throw Exception!");
+		}
+	}
+
+	/**
+	 * Parses the frame size test.
+	 */
+	@Test
+	public void parseFrameSizeTest() {
+		byte[] b = null;
+		int frameSize = 0;
+		String headline = "REQ 00078 00043 1.0\n";
+		try {
+			b = headline.getBytes();
+			frameSize = decoder.parseFrameSize(b);
+			Assert.assertEquals("98", frameSize + "");
+		} catch (Exception e) {
+			Assert.fail("Should not throw Exception!");
+		}
+
+		headline = "REQ 11178 00043 1.0\n";
+		try {
+			b = headline.getBytes();
+			frameSize = decoder.parseFrameSize(b);
+			Assert.assertEquals("11198", frameSize + "");
+		} catch (Exception e) {
+			Assert.fail("Should not throw Exception!");
+		}
+	}
+
+	/**
+	 * Read int fail test.
+	 */
+	@Test
+	public void readIntFailTest() {
+		byte[] b = null;
+		String headline = "REQ  8700 00000 1.0\n";
+		try {
+			b = headline.getBytes();
+			decoder.parseFrameSize(b);
+			Assert.fail("Should throw Exception!");
+		} catch (Exception e) {
+			Assert.assertEquals("invalid scmp message length", e.getMessage());
 		}
 	}
 }

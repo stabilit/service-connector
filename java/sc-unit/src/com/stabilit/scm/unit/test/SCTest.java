@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.sc.test.SCImplTest;
+import test.stabilit.scm.test.SCImplTest;
 
 import com.stabilit.scm.common.net.req.ConnectionPoolTest;
 import com.stabilit.scm.common.scmp.SCMPError;

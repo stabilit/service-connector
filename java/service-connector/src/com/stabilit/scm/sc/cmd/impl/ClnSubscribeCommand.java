@@ -176,16 +176,21 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		/** {@inheritDoc} */
 		@Override
 		public void timeout() {
+			// set up reply
 			SCMPMessage reply = new SCMPMessage();
 			String sessionId = (String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID);
 			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
 			reply.setSessionId(sessionId);
 			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
 			reply.setIsReply(true);
+
+			// tries polling from queue
 			SCMPMessage message = this.subscriptionPlace.poll(sessionId);
 			if (message == null) {
+				// no message found on queue - subscription timeout set up no data message
 				reply.setHeader(SCMPHeaderAttributeKey.NO_DATA, true);
 			} else {
+				// message received
 				reply.setBody(message.getBody());
 				reply
 						.setHeader(SCMPHeaderAttributeKey.MASK, (String) request

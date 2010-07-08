@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,46 +13,84 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
+/**
+ * The Class LinkedNode. Represents a node of the LinkedQueue construct.
+ * 
+ * @param <T>
+ *            the generic type
+ */
 public class LinkedNode<T> {
+
+	/** The value of the node. */
 	public T value;
+	/** The next node in queue. */
 	public LinkedNode<T> next;
+	/** The referenced - counts nodes referencing components. */
 	private int referenced;
 
-	public LinkedNode() {
-	}
-
-	public LinkedNode(T value) {
+	/**
+	 * Instantiates a LinkedNode.
+	 * 
+	 * @param value
+	 *            the value
+	 */
+	LinkedNode(T value) {
 		this.value = value;
 	}
 
+	/**
+	 * Instantiates a LinkedNode.
+	 * 
+	 * @param value
+	 *            the value
+	 * @param next
+	 *            the next
+	 */
 	public LinkedNode(T value, LinkedNode<T> next) {
 		this.value = value;
 		this.next = next;
 	}
 
+	/**
+	 * Gets the next node.
+	 * 
+	 * @return the next node
+	 */
 	public LinkedNode<T> getNext() {
 		return next;
 	}
 
+	/**
+	 * Gets the value of the node.
+	 * 
+	 * @return the value of the node
+	 */
 	public T getValue() {
 		return value;
 	}
-	
+
+	/**
+	 * Checks if is referenced.
+	 * 
+	 * @return true, if is referenced
+	 */
 	public boolean isReferenced() {
 		return referenced > 0;
 	}
 
+	/**
+	 * Increment reference counter.
+	 */
 	public void reference() {
 		this.referenced++;
 	}
 
+	/**
+	 * Decrement reference counter.
+	 */
 	public void dereference() {
 		this.referenced--;
 	}

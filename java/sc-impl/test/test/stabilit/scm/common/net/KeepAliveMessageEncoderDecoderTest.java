@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package test.stabilit.sc.net;
+package test.stabilit.scm.common.net;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import test.stabilit.sc.test.SCImplTest;
+import test.stabilit.scm.test.SCImplTest;
 
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;

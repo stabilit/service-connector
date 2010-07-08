@@ -81,14 +81,6 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			response.setSCMP(reply);
 			// message already gotten from queue no asynchronous process necessary call callback right away
 			communicatorCallback.callback(request, response);
-			// try {
-			// response.write();
-			// return;
-			// } catch (Exception e) {
-			// ExceptionPoint.getInstance().fireException(this, e);
-			// return;
-			// } finally {
-			// }
 		}
 		// no message available, start listening for new message
 		subscriptionPlace.listen(sessionId, request, response);

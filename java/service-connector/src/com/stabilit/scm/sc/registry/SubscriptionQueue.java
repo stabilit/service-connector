@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
 import java.util.Map;
@@ -72,15 +67,11 @@ public class SubscriptionQueue<E> {
 	 *            the message
 	 */
 	public void add(E message) {
-		try {
-			this.dataQueue.put(message);
-			// inform new message arrived
-			this.fireNewDataArrived();
-			// delete unreferenced nodes in queue
-			this.removeNonreferencedNodes();
-		} catch (InterruptedException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-		}
+		this.dataQueue.insert(message);
+		// inform new message arrived
+		this.fireNewDataArrived();
+		// delete unreferenced nodes in queue
+		this.removeNonreferencedNodes();
 	}
 
 	/**
@@ -96,7 +87,7 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Poll.
+	 * Poll. Tries polling a message. If no message available null will be returned.
 	 * 
 	 * @param sessionId
 	 *            the session id
@@ -104,17 +95,16 @@ public class SubscriptionQueue<E> {
 	 */
 	public E poll(String sessionId) {
 		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
-		if (ptr == null) {
-			return null;
-		}
 		LinkedNode<E> node = ptr.getNode();
 		if (node == null) {
+			// nothing to poll data pointer points to null - return null
 			return null;
 		}
 		E message = node.getValue();
 		if (message == null) {
 			return null;
 		}
+		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
 		return message;
@@ -159,7 +149,7 @@ public class SubscriptionQueue<E> {
 				break;
 			}
 			// remove node
-			this.dataQueue.take();
+			this.dataQueue.extract();
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}
@@ -384,6 +374,9 @@ public class SubscriptionQueue<E> {
 			this.dataPointer = dataPointer;
 		}
 
+		/**
+		 * Run. {@inheritDoc}
+		 */
 		@Override
 		public void run() {
 			// stops listening - ITimerRun gets executed

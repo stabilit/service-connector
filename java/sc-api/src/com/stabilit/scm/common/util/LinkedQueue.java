@@ -1,170 +1,135 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
+/**
+ * The Class LinkedQueue. Base Queue to implement consumer/producer modules.
+ * 
+ * @param <E>
+ *            the element type
+ */
 public class LinkedQueue<E> {
+	/**
+	 * The first actual node, if it exists, is always at this.head.next. After each take, the old first node becomes the
+	 * this.head.
+	 */
+	private LinkedNode<E> head;
+	/** The this.last node of list. Put() appends to list, so modifies this.last */
+	private LinkedNode<E> last;
+	/** The current this.size of the queue. */
+	private int size;
 
 	/**
-	 * Dummy header node of list. The first actual node, if it exists, is always at head_.next. After each take, the old
-	 * first node becomes the head.
-	 **/
-
-	protected LinkedNode<E> head;
-
-	/**
-	 * Helper monitor for managing access to last node.
-	 **/
-	protected final Object putLock = new Object();
-
-	/**
-	 * The last node of list. Put() appends to list, so modifies last
-	 **/
-	protected LinkedNode<E> last;
-
-	protected int size;
-
-	/**
-	 * The number of threads waiting for a take. Notifications are provided in put only if greater than zero. The
-	 * bookkeeping is worth it here since in reasonably balanced usages, the notifications will hardly ever be
-	 * necessary, so the call overhead to notify can be eliminated.
-	 **/
-	protected int waitingForTake = 0;
-
+	 * Instantiates a LinkedQueue.
+	 */
 	public LinkedQueue() {
-		head = new LinkedNode<E>(null);
-		last = head;
+		// this.head element is a LinkedNode with null value
+		this.head = new LinkedNode<E>(null);
+		this.last = this.head;
 		this.size = 0;
 	}
 
+	/**
+	 * Gets the first node.
+	 * 
+	 * @return the first
+	 */
 	public LinkedNode<E> getFirst() {
-		return head.next;
+		return this.head.next;
 	}
 
+	/**
+	 * Gets the this.last.
+	 * 
+	 * @return the this.last
+	 */
 	public LinkedNode<E> getLast() {
-		return last;
+		return this.last;
 	}
 
+	/**
+	 * Gets the this.size.
+	 * 
+	 * @return the this.size
+	 */
 	public int getSize() {
-		return size;
+		return this.size;
 	}
 
-	/** Main mechanics for put/offer **/
-	protected LinkedNode<E> insert(E x) {
-		synchronized (putLock) {
-			LinkedNode<E> p = new LinkedNode<E>(x);
-			synchronized (last) {
-				last.next = p;
-				last = p;
-				size++;
-			}
-			if (waitingForTake > 0) {
-				putLock.notify();
-			}
-			return p;
+	/**
+	 * Main mechanics to insert in queue.
+	 * 
+	 * @param value
+	 *            the value for new node
+	 * @return the linked node
+	 */
+	public LinkedNode<E> insert(E value) {
+		LinkedNode<E> newNode = new LinkedNode<E>(value);
+		synchronized (this.last) {
+			this.last.next = newNode;
+			this.last = newNode;
+			this.size++;
 		}
+		return newNode;
 	}
 
-	/** Main mechanics for take/poll **/
-	protected synchronized Object extract() {
-		synchronized (head) {
-			Object x = null;
-			LinkedNode<E> first = head.next;
+	/**
+	 * Main mechanics for extract from queue. If no message in queue null will be returned.
+	 * 
+	 * @return the object
+	 */
+	public synchronized E extract() {
+		synchronized (this.head) {
+			E value = null;
+			LinkedNode<E> first = this.head.next;
 			if (first != null) {
-				x = first.value;
+				value = first.value;
 				first.value = null;
-				head = first;
+				this.head = first;
+				this.size--;
 			}
-			size--;
-			return x;
+			return value;
 		}
 	}
 
-	public void put(E x) throws InterruptedException {
-		if (x == null)
-			throw new IllegalArgumentException();
-		if (Thread.interrupted())
-			throw new InterruptedException();
-		insert(x);
-	}
-
-	public boolean offer(E x, long msecs) throws InterruptedException {
-		if (x == null)
-			throw new IllegalArgumentException();
-		if (Thread.interrupted())
-			throw new InterruptedException();
-		insert(x);
-		return true;
-	}
-
-	public Object take() {
-		// try to extract. If fail, then enter wait-based retry loop
-		Object x = extract();
-		if (x != null)
-			return x;
-		else {
-			synchronized (putLock) {
-				try {
-					++waitingForTake;
-					for (;;) {
-						x = extract();
-						if (x != null) {
-							--waitingForTake;
-							return x;
-						} else {
-							putLock.wait();
-						}
-					}
-				} catch (InterruptedException ex) {
-					--waitingForTake;
-					putLock.notify();
-					return null;
-				}
-			}
-		}
-	}
-
-	public Object peek() {
-		synchronized (head) {
-			LinkedNode<E> first = head.next;
-			if (first != null)
+	/**
+	 * Peek. Returns first value - if there is no first node null will be returned.
+	 * 
+	 * @return the object
+	 */
+	public E peek() {
+		synchronized (this.head) {
+			LinkedNode<E> first = this.head.next;
+			if (first != null) {
 				return first.value;
-			else
+			} else {
 				return null;
-		}
-	}
-
-	public boolean isEmpty() {
-		synchronized (head) {
-			return head.next == null;
-		}
-	}
-
-	public Object poll(long msecs) throws InterruptedException {
-		if (Thread.interrupted())
-			throw new InterruptedException();
-		Object x = extract();
-		if (x != null)
-			return x;
-		else {
-			synchronized (putLock) {
-				try {
-					long waitTime = msecs;
-					long start = (msecs <= 0) ? 0 : System.currentTimeMillis();
-					++waitingForTake;
-					for (;;) {
-						x = extract();
-						if (x != null || waitTime <= 0) {
-							--waitingForTake;
-							return x;
-						} else {
-							putLock.wait(waitTime);
-							waitTime = msecs - (System.currentTimeMillis() - start);
-						}
-					}
-				} catch (InterruptedException ex) {
-					--waitingForTake;
-					putLock.notify();
-					throw ex;
-				}
 			}
+		}
+	}
+
+	/**
+	 * Checks if is empty.
+	 * 
+	 * @return true, if is empty
+	 */
+	public boolean isEmpty() {
+		synchronized (this.head) {
+			return this.head.next == null;
 		}
 	}
 }

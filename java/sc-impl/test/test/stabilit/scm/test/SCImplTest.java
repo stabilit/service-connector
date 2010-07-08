@@ -19,7 +19,7 @@
 /**
  * 
  */
-package test.stabilit.sc.test;
+package test.stabilit.scm.test;
 
 import java.text.DecimalFormat;
 
@@ -27,14 +27,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.sc.net.DefaultFrameDecoderTest;
-import test.stabilit.sc.net.HttpFrameDecoderTest;
-import test.stabilit.sc.net.KeepAliveMessageEncoderDecoderTest;
-import test.stabilit.sc.net.LargeMessageEncoderDecoderTest;
-import test.stabilit.sc.scmp.internal.SCMPCompositeTest;
-import test.stabilit.sc.scmp.internal.SCMPLargeRequestTest;
-import test.stabilit.sc.scmp.internal.SCMPLargeResponseTest;
-import test.stabilit.sc.util.ValidatorUtilityTest;
+import test.stabilit.scm.common.net.DefaultFrameDecoderTest;
+import test.stabilit.scm.common.net.HttpFrameDecoderTest;
+import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTest;
+import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTest;
+import test.stabilit.scm.common.scmp.internal.SCMPCompositeTest;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTest;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTest;
+import test.stabilit.scm.common.util.ValidatorUtilityTest;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;

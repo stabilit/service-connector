@@ -43,14 +43,16 @@ public class SubscriptionPlace<E> implements ISubscriptionPlace<E> {
 		this.subscriptionQueue = new SubscriptionQueue<E>();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void add(E message) {
 		subscriptionQueue.add(message);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public E poll(String sessionId) {
-		// check if data for me is available
+		// check if data is available
 		if (subscriptionQueue.hasNext(sessionId) == false) {
 			// nothing to poll at this time
 			return null;
@@ -59,16 +61,19 @@ public class SubscriptionPlace<E> implements ISubscriptionPlace<E> {
 		return data;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void listen(String sessionId, IRequest request, IResponse response) {
 		this.subscriptionQueue.listen(sessionId, request, response);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun) {
 		this.subscriptionQueue.subscribe(sessionId, filterMask, timerRun);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void unsubscribe(String sessionId) {
 		this.subscriptionQueue.unsubscribe(sessionId);
