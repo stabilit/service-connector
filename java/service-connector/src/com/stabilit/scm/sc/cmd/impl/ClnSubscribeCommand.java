@@ -18,7 +18,6 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Map;
-import java.util.TimerTask;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -30,18 +29,23 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.FilterMask;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.service.IRequestResponse;
-import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
+import com.stabilit.scm.sc.service.FilterMask;
+import com.stabilit.scm.sc.service.IPublishTimerRun;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
 
+/**
+ * The Class ClnSubscribeCommand. Subscribes client to a subscription place.
+ */
 public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/**
+	 * Instantiates a ClnSubscribeCommand.
+	 */
 	public ClnSubscribeCommand() {
 		this.commandValidator = new ClnSubscribeCommandValidator();
 	}
@@ -55,15 +59,15 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
-
+		// IP and port
+		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		// lookup if client is correctly attached
 		this.validateClientAttached(socketAddress);
 
-		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+		// check service is present
 		Service service = this.validateService(serviceName);
 
 		// create session
@@ -74,11 +78,13 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		// add server to session
 		session.setServer(server);
-		// finally add session to the registry
+		// finally add subscription to the registry
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
-		ISubscriptionPlace subscriptionPlace = service.getSubscriptionPlace();
-		ITimerRun timerRun = new PublishTimerRun(subscriptionPlace, 300);
+
+		ISubscriptionPlace<SCMPMessage> subscriptionPlace = service.getSubscriptionPlace();
+		// TODO verify with jan - timeout arrives with cln_subscribe
+		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, 300);
 		IFilterMask filterMask = new FilterMask(mask);
 		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
 
@@ -91,6 +97,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * The Class ClnSubscribeCommandValidator.
+	 */
 	private class ClnSubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
@@ -117,87 +126,67 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		}
 	}
 
-	private class PublishTimerRun implements ITimerRun, IRequestResponse {
+	/**
+	 * The Class PublishTimerRun. PublishTimerRun defines action to get in place when subscription times out.
+	 */
+	private class PublishTimerRun implements IPublishTimerRun {
 
+		/** The timeout. */
 		private int timeout;
-		private TimerTask timerTask;
-		private ISubscriptionPlace subscriptionPlace;
+		/** The subscription place. */
+		private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
+		/** The request. */
 		private IRequest request;
+		/** The response. */
 		private IResponse response;
 
-		public PublishTimerRun(ISubscriptionPlace subscriptionPlace, int timeout) {
+		/**
+		 * Instantiates a new publish timer run.
+		 * 
+		 * @param subscriptionPlace
+		 *            the subscription place
+		 * @param timeout
+		 *            the timeout
+		 */
+		public PublishTimerRun(ISubscriptionPlace<SCMPMessage> subscriptionPlace, int timeout) {
 			this.request = null;
 			this.response = null;
-			this.timerTask = null;
 			this.timeout = timeout;
 			this.subscriptionPlace = subscriptionPlace;
 		}
-		
-		/** {@inheritDoc} */
-		@Override
-		public TimerTask getTimerTask() {
-			return timerTask;
-		}
 
+		/** {@inheritDoc} */
 		@Override
 		public int getTimeout() {
 			return this.timeout;
 		}
 
-		@Override
-		public void setTimerTask(TimerTask timerTask) {
-			this.timerTask = timerTask;
-		}
-
-		/**
-		 * @param request
-		 *            the request to set
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void setRequest(IRequest request) {
 			this.request = request;
 		}
 
-		/**
-		 * @return the request
-		 */
-		@Override
-		public IRequest getRequest() {
-			return request;
-		}
-
-		/**
-		 * @param response
-		 *            the response to set
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void setResponse(IResponse response) {
 			this.response = response;
 		}
 
-		/**
-		 * @return the response
-		 */
-		@Override
-		public IResponse getResponse() {
-			return response;
-		}
-
+		/** {@inheritDoc} */
 		@Override
 		public void timeout() {
-			System.out.println("ReceivePublicationCommand.ReceivePublicationTimerTask.run()");
 			SCMPMessage reply = new SCMPMessage();
+			String sessionId = (String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID);
 			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
-			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+			reply.setSessionId(sessionId);
 			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
 			reply.setIsReply(true);
-			Object data = this.subscriptionPlace.poll(request.getMessage());
-			if (data == null) {
+			SCMPMessage message = this.subscriptionPlace.poll(sessionId);
+			if (message == null) {
 				reply.setHeader(SCMPHeaderAttributeKey.NO_DATA, true);
 			} else {
-				if (data instanceof SCMPMessage) {
-					reply.setBody(((SCMPMessage) data).getBody());
-				}
+				reply.setBody(message.getBody());
 				reply
 						.setHeader(SCMPHeaderAttributeKey.MASK, (String) request
 								.getAttribute(SCMPHeaderAttributeKey.MASK));

@@ -94,9 +94,7 @@ public class LinkedQueue<E> {
 		return true;
 	}
 
-	public Object take() throws InterruptedException {
-		if (Thread.interrupted())
-			throw new InterruptedException();
+	public Object take() {
 		// try to extract. If fail, then enter wait-based retry loop
 		Object x = extract();
 		if (x != null)
@@ -117,7 +115,7 @@ public class LinkedQueue<E> {
 				} catch (InterruptedException ex) {
 					--waitingForTake;
 					putLock.notify();
-					throw ex;
+					return null;
 				}
 			}
 		}

@@ -24,6 +24,8 @@ import com.stabilit.scm.common.cmd.NullCommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
@@ -119,6 +121,12 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void run(IRequest request, IResponse response) throws Exception {
+		throw new UnsupportedOperationException("not allowed");
+	}	
 
 	/** {@inheritDoc} */
 	@Override
@@ -132,6 +140,7 @@ public abstract class CommandAdapter implements ICommand {
 		return this;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {
 		return false;

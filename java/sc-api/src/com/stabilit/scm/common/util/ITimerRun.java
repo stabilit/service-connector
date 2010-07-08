@@ -16,10 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
-import java.util.TimerTask;
-
 /**
- * The Interface ITimerRun.
+ * The Interface ITimerRun. Instances of type ITimerRun can be hand over to a TimerTaskWrapper which takes
+ * responsibility of timing stuff. If time runs out TimerTaskWrapper informs ITimerRun by calling timeout() method.
  * 
  * @author JTraber
  */
@@ -29,21 +28,6 @@ public interface ITimerRun {
 	 * Timeout. Runs when time is out.
 	 */
 	public void timeout();
-
-	/**
-	 * Gets the timer task.
-	 * 
-	 * @return the timer task
-	 */
-	public abstract TimerTask getTimerTask();
-
-	/**
-	 * Sets the timer task.
-	 * 
-	 * @param timerTask
-	 *            the new timer task
-	 */
-	public abstract void setTimerTask(TimerTask timerTask);
 
 	/**
 	 * Gets the timeout.

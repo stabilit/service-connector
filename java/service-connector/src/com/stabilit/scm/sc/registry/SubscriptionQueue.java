@@ -31,50 +31,53 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.service.IRequestResponse;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.LinkedNode;
 import com.stabilit.scm.common.util.LinkedQueue;
 import com.stabilit.scm.common.util.TimerTaskWrapper;
+import com.stabilit.scm.sc.service.IPublishTimerRun;
 
 /**
- * The Class SubscriptionQueue.
+ * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform
+ * subscriptions about new arrived messages, to observe there timeouts and to know there current position in queue
+ * (TimeAwareDataPointer). The queue needs also to handle the deleting of consumed messages and to assure queue does not
+ * overflow.
  * 
  * @param <E>
- *            the element type
+ *            the element type to handle in the queue
  * @author JTraber
  */
 public class SubscriptionQueue<E> {
 
-	/** The timer. */
+	/** The timer instance to observe all timeouts in relation to this queue. */
 	private Timer timer;
-
 	/** The data queue. */
-	private LinkedQueue<E> dataQueue; // the queue
-
-	/** The pointer map. */
-	private Map<String, DataPointer> pointerMap; // maps session id to data pointer and its node in queue
+	private LinkedQueue<E> dataQueue;
+	/** The pointer map - maps session id to data pointer and its node in queue. */
+	private Map<String, TimeAwareDataPointer> pointerMap;
 
 	/**
-	 * Instantiates a new subscription queue.
+	 * Instantiates a new SubscriptionQueue.
 	 */
 	public SubscriptionQueue() {
 		this.dataQueue = new LinkedQueue<E>();
-		this.pointerMap = new ConcurrentHashMap<String, DataPointer>();
-		this.timer = new Timer("SubscriptionQueue");
+		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
+		this.timer = new Timer("SubscriptionQueueTimer");
 	}
 
 	/**
-	 * Adds the.
+	 * Adds a new message to the queue.
 	 * 
 	 * @param message
 	 *            the message
 	 */
 	public void add(E message) {
 		try {
-			dataQueue.put(message);
-			fireNewDataArrived();
-			removeNonreferencedNodes();
+			this.dataQueue.put(message);
+			// inform new message arrived
+			this.fireNewDataArrived();
+			// delete unreferenced nodes in queue
+			this.removeNonreferencedNodes();
 		} catch (InterruptedException e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
@@ -85,15 +88,10 @@ public class SubscriptionQueue<E> {
 	 * 
 	 * @param sessionId
 	 *            the session id
-	 * @param mask
-	 *            the mask
 	 * @return true, if successful
 	 */
-	public boolean hasNext(String sessionId, String mask) {
-		DataPointer ptr = this.pointerMap.get(sessionId);
-		if (ptr == null) {
-			return false;
-		}
+	public boolean hasNext(String sessionId) {
+		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
 		return ptr.node != null;
 	}
 
@@ -102,12 +100,10 @@ public class SubscriptionQueue<E> {
 	 * 
 	 * @param sessionId
 	 *            the session id
-	 * @param mask
-	 *            the mask
 	 * @return the e
 	 */
-	public E poll(String sessionId, String mask) {
-		DataPointer ptr = this.pointerMap.get(sessionId);
+	public E poll(String sessionId) {
+		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
 		if (ptr == null) {
 			return null;
 		}
@@ -125,70 +121,127 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Fire new data arrived.
+	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements
+	 * to new element if necessary (mask matches & listening mode).
 	 */
 	private void fireNewDataArrived() {
 		Object[] nodeArray = null;
-		LinkedNode<E> lastNode = dataQueue.getLast();
 		// TODO, can be improved, separate set of null pointer nodes
 		synchronized (this.pointerMap) {
 			nodeArray = this.pointerMap.values().toArray();
 		}
+		// looping through every data pointer - looking for null pointing elements
+		LinkedNode<E> newNode = dataQueue.getLast();
 		for (int i = 0; i < nodeArray.length; i++) {
-			DataPointer ptr = (DataPointer) nodeArray[i];
+			TimeAwareDataPointer ptr = (TimeAwareDataPointer) nodeArray[i];
 			if (ptr.getNode() == null) {
-				ptr.setNode(lastNode);
-			}
-			if (ptr.isListen()) {
-				ptr.schedule(timer, 0);
+				// data pointer points to null - try pointing to new element
+				if (ptr.setNode(newNode) == true) {
+					// setNode successful - data pointer interested in new node
+					if (ptr.listening()) {
+						// data pointer in listen mode needs to be informed about new data
+						ptr.schedule(0);
+					}
+				}
 			}
 		}
 	}
 
 	/**
-	 * Removes the non referenced nodes.
-	 * 
-	 * @throws InterruptedException
-	 *             the interrupted exception
+	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node
+	 * is referenced.
 	 */
-	private void removeNonreferencedNodes() throws InterruptedException {
-		LinkedNode<E> node = dataQueue.getFirst();
+	private void removeNonreferencedNodes() {
+		LinkedNode<E> node = this.dataQueue.getFirst();
 		while (node != null) {
 			if (node.isReferenced()) {
+				// stop removing nodes at the position you get a referenced node
 				break;
 			}
-			dataQueue.take();
-			node = dataQueue.getFirst();
+			// remove node
+			this.dataQueue.take();
+			// reads next node
+			node = this.dataQueue.getFirst();
 		}
 	}
 
 	/**
-	 * The Class DataPointer. Points to a queue node. Knows mask for matching messages and state if subscription is
-	 * listening or not. Each subscription has his data pointer - its created when client subscribes.
+	 * Listen. Indicates that client is ready for messages. Data pointer changes to listen mode and schedules timeout.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 */
-	private class DataPointer {
+	public void listen(String sessionId, IRequest request, IResponse response) {
+		TimeAwareDataPointer dataPointer = pointerMap.get(sessionId);
+		// stores request/response in timer run - to answer client correctly at timeout
+		dataPointer.timerRun.setRequest(request);
+		dataPointer.timerRun.setResponse(response);
+		// starts listening and schedules subscription timeout
+		dataPointer.startListen();
+		dataPointer.schedule();
+	}
+
+	/**
+	 * Subscribe. Sets up subscription, create data pointer.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @param filterMask
+	 *            the filter mask
+	 * @param timerRun
+	 *            the timer run
+	 */
+	public void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun) {
+		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(filterMask, timerRun);
+		// Stores sessionId and dataPointer in map
+		pointerMap.put(sessionId, dataPointer);
+	}
+
+	/**
+	 * Unsubscribe. Deletes subscription, remove data pointer.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	public void unsubscribe(String sessionId) {
+		TimeAwareDataPointer dataPointer = pointerMap.get(sessionId);
+		if (dataPointer != null) {
+			dataPointer.cancel();
+			pointerMap.remove(sessionId);
+		}
+	}
+
+	/**
+	 * The Class TimeAwareDataPointer. Points to a queue node. Knows mask for matching messages and state if
+	 * subscription is listening or not. Each subscription has his data pointer - its created when client subscribes.
+	 */
+	private class TimeAwareDataPointer {
 		/** The current node in queue. */
 		private LinkedNode<E> node;
 		/** The timer run. */
-		private ITimerRun timerRun;
+		private IPublishTimerRun timerRun;
 		/** The filter mask. */
 		private IFilterMask filterMask;
 		/** The listen state. */
-		private boolean listen;
+		private boolean listening;
 		/** The subscription timeouter. */
 		private TimerTask subscriptionTimeouter;
 
 		/**
-		 * Instantiates a new DataPointer.
+		 * Instantiates a new TimeAwareDataPointer.
 		 * 
 		 * @param filterMask
 		 *            the filter mask
 		 * @param timerRun
 		 *            the timer run
 		 */
-		public DataPointer(IFilterMask filterMask, ITimerRun timerRun) {
+		public TimeAwareDataPointer(IFilterMask filterMask, IPublishTimerRun timerRun) {
 			this.timerRun = timerRun;
-			this.listen = false;
+			this.listening = false;
 			this.filterMask = filterMask;
 			this.subscriptionTimeouter = null;
 		}
@@ -233,13 +286,17 @@ public class SubscriptionQueue<E> {
 		}
 
 		/**
-		 * Sets the listen. If subscription is ready to receive messages listen is true.
-		 * 
-		 * @param listen
-		 *            the new listen
+		 * Start listen. If subscription is ready to receive messages listen is true.
 		 */
-		public void setListen(boolean listen) {
-			this.listen = listen;
+		public void startListen() {
+			this.listening = true;
+		}
+
+		/**
+		 * Stop listen. If subscription is not ready to receive messages listen is false.
+		 */
+		public void stopListen() {
+			this.listening = false;
 		}
 
 		/**
@@ -247,8 +304,8 @@ public class SubscriptionQueue<E> {
 		 * 
 		 * @return true, if is listen
 		 */
-		public boolean isListen() {
-			return listen;
+		public boolean listening() {
+			return listening;
 		}
 
 		/**
@@ -256,108 +313,51 @@ public class SubscriptionQueue<E> {
 		 * 
 		 * @param node
 		 *            the new node
+		 * @return true, if successful
 		 */
-		public void setNode(LinkedNode<E> node) {
-			if (node.getValue() == null) {
-				return;
-			}
+		public boolean setNode(LinkedNode<E> node) {
 			if (this.filterMask.matches(node.getValue()) == false) {
 				// mask doesn't match - don't set the node
-				return;
+				return false;
 			}
+			// set the node
 			this.node = node;
-			// node is referenced by this data pointer
+			// node needs to be referenced by this data pointer
 			this.node.reference();
+			return true;
 		}
 
 		/**
 		 * Schedule. Activate timeout for no data message.
-		 * 
-		 * @param timer
-		 *            the timer
 		 */
-		public void schedule(Timer timer) {
-			this.schedule(timer, this.timerRun.getTimeout());
+		public void schedule() {
+			this.schedule(this.timerRun.getTimeout());
 		}
 
 		/**
-		 * Schedule. Activate timeout with a given time.
+		 * Schedule. Activate subscription timeout with a given time.
 		 * 
-		 * @param timer
-		 *            the timer
 		 * @param timeout
 		 *            the timeout
 		 */
-		public void schedule(Timer timer, int timeout) {
-			try {
-				this.cancel();
-				TimerTask timerTask = new SubscriptionTaskWrapper(this, this.timerRun);
-				timer.schedule(timerTask, timeout * IConstants.SEC_TO_MILISEC_FACTOR);
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-			}
+		public void schedule(int timeout) {
+			// always cancel old timeouter when schedule of an new timeout is necessary
+			this.cancel();
+			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
+			// schedules subscriptionTimeouter on subscription queue timer
+			SubscriptionQueue.this.timer.schedule(this.subscriptionTimeouter, timeout
+					* IConstants.SEC_TO_MILISEC_FACTOR);
 		}
 
+		/**
+		 * Cancel. Deactivate subscription timeout.
+		 */
 		public void cancel() {
-			try {
-				TimerTask timerTask = this.timerRun.getTimerTask();
-				if (timerTask != null) {
-					timerTask.cancel();
-				}
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			if (this.subscriptionTimeouter != null) {
+				this.subscriptionTimeouter.cancel();
+				// important to set timeouter null - rescheduling of same instance not possible
+				this.subscriptionTimeouter = null;
 			}
-		}
-	}
-
-	/**
-	 * Listen.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 */
-	public void listen(String sessionId, IRequest request, IResponse response) {
-		DataPointer dataPointer = pointerMap.get(sessionId);
-		if (dataPointer != null) {
-			((IRequestResponse) dataPointer.timerRun).setRequest(request);
-			((IRequestResponse) dataPointer.timerRun).setResponse(response);
-		}
-		// schedule
-		dataPointer.setListen(true);
-		dataPointer.schedule(timer);
-	}
-
-	/**
-	 * Subscribe.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param filterMask
-	 *            the filter mask
-	 * @param timerRun
-	 *            the timer run
-	 */
-	public void subscribe(String sessionId, IFilterMask filterMask, ITimerRun timerRun) {
-		DataPointer dataPointer = new DataPointer(filterMask, timerRun);
-		// Stores sessionId and dataPointer in map
-		pointerMap.put(sessionId, dataPointer);
-	}
-
-	/**
-	 * Unsubscribe.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 */
-	public void unsubscribe(String sessionId) {
-		DataPointer dataPointer = pointerMap.get(sessionId);
-		if (dataPointer != null) {
-			dataPointer.cancel();
-			pointerMap.remove(sessionId);
 		}
 	}
 
@@ -369,25 +369,25 @@ public class SubscriptionQueue<E> {
 	private class SubscriptionTaskWrapper extends TimerTaskWrapper {
 
 		/** The data pointer. */
-		private DataPointer dataPointer;
+		private TimeAwareDataPointer dataPointer;
 
 		/**
-		 * Instantiates a new subscription task wrapper.
+		 * Instantiates a SubscriptionTaskWrapper.
 		 * 
 		 * @param dataPointer
 		 *            the data pointer
 		 * @param target
 		 *            the target
 		 */
-		public SubscriptionTaskWrapper(DataPointer dataPointer, ITimerRun target) {
+		public SubscriptionTaskWrapper(TimeAwareDataPointer dataPointer, ITimerRun target) {
 			super(target);
 			this.dataPointer = dataPointer;
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			dataPointer.setListen(false);
+			// stops listening - ITimerRun gets executed
+			dataPointer.stopListen();
 			super.run();
 		}
 	}

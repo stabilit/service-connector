@@ -19,23 +19,26 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.sc.service;
 
-import com.stabilit.scm.common.scmp.IRequest;
-import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.service.IFilterMask;
 
 /**
  * @author JTraber
  *
  */
-public interface IRequestResponse {
+public class FilterMask implements IFilterMask {
 
-	public abstract void setRequest(IRequest request);
+	private String mask;
+	/**
+	 * @param mask
+	 */
+	public FilterMask(String mask) {
+		this.mask = mask;
+	}
 
-	public abstract IRequest getRequest();
-
-	public abstract void setResponse(IResponse response);
-
-	public abstract IResponse getResponse();
-
+	@Override
+	public boolean matches(Object obj) {
+		return true;
+	}
 }

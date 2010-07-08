@@ -228,7 +228,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					msgID.incrementMsgSequenceNr();
 				}
 			}
-
 			response.write();
 		} catch (Throwable th) {
 			this.callback(response, th);

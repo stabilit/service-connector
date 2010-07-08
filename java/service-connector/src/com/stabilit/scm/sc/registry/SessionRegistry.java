@@ -86,20 +86,20 @@ public class SessionRegistry extends Registry {
 	public Session getSession(Object key) {
 		Session session = (Session) super.get(key);
 		if (session != null && session.getEchoInterval() != 0) {
-			// rescheduling session timeout
-			this.cancelSessionTimeout(session);
+			// rescheduling session timeout - cancel an old timeouter is done inside
 			this.scheduleSessionTimeout(session);
 		}
 		return session;
 	}
 
 	private void scheduleSessionTimeout(Session session) {
+		// always cancel old timeouter before setting up a new one
+		this.cancelSessionTimeout(session);
 		TimerTaskWrapper sessionTimeouter = session.getSessionTimeouter();
-		if (sessionTimeouter == null) {
-			// sets up session timeout
-			sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
-			session.setSessionTimouter(sessionTimeouter);
-		}
+
+		// sets up session timeout
+		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
+		session.setSessionTimeouter(sessionTimeouter);
 		// schedule sessionTimeouter in registry timer
 		this.timer.schedule(sessionTimeouter, session.getEchoInterval() * IConstants.SEC_TO_MILISEC_FACTOR);
 	}
@@ -114,44 +114,33 @@ public class SessionRegistry extends Registry {
 			return;
 		}
 		sessionTimeouter.cancel();
-		// very important to set timeouter null - rescheduling of same instance not possible
-		session.setSessionTimouter(null);
+		// important to set timeouter null - rescheduling of same instance not possible
+		session.setSessionTimeouter(null);
 	}
 
 	private class SessionTimerRun implements ITimerRun {
 
 		private Session session;
-		private TimerTask timerTask;
+		private int timeout;
 
 		public SessionTimerRun(Session session) {
 			this.session = session;
-			this.session.setTimerRun(this);
-			this.timerTask = null;
+			this.timeout = session.getEchoInterval();
 		}
 
 		@Override
 		public void timeout() {
 			// cancel timer
 			SessionRegistry.this.cancelSessionTimeout(session);
-			// TODO abort session clean up
+			// TODO abort session clean up - cancel necessary and possible here?
 			// we assume that this session is dead
 			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
 			SessionPoint.getInstance().fireAbort(session, session.getId());
 		}
 
 		@Override
-		public TimerTask getTimerTask() {
-			return this.timerTask;
-		}
-
-		@Override
-		public void setTimerTask(TimerTask timerTask) {
-			this.timerTask = timerTask;
-		}
-
-		@Override
 		public int getTimeout() {
-			return 0;
+			return this.timeout;
 		}
 	}
 }

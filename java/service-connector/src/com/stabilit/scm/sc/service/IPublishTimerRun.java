@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,30 +13,34 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.sc.service;
+
+import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.util.ITimerRun;
+
 /**
+ * The Interface IPublishTimerRun. The interfaces allows setting current request/response on a publish timer run. the
+ * publish timer run needs to know to handle client response correctly at a timeout.
  * 
- */
-package com.stabilit.scm.sc.registry;
-
-/**
  * @author JTraber
- *
  */
-public class SubscriptionPlaceException extends Exception {
+public interface IPublishTimerRun extends ITimerRun {
 
 	/**
+	 * Sets the request.
 	 * 
+	 * @param request
+	 *            the new request
 	 */
-	public SubscriptionPlaceException() {
-	}
+	public abstract void setRequest(IRequest request);
 
 	/**
-	 * @param message
+	 * Sets the response.
+	 * 
+	 * @param response
+	 *            the new response
 	 */
-	public SubscriptionPlaceException(String message) {
-		super(message);
-	}
-
+	public abstract void setResponse(IResponse response);
 }

@@ -23,35 +23,39 @@ package com.stabilit.scm.sc.registry;
 
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.util.ITimerRun;
+import com.stabilit.scm.sc.service.IPublishTimerRun;
 
 /**
+ * The Class SubscriptionPlace. SubscriptionPlace gives access to a subscriptionQueue. Encapsulates subscription queue
+ * construct.
+ * 
+ * @param <E>
+ *            the element type to handle in queue
  * @author JTraber
  */
-public class SubscriptionPlace implements ISubscriptionPlace {
-	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
-	
+public class SubscriptionPlace<E> implements ISubscriptionPlace<E> {
+
+	/** The subscription queue for this subscription place. */
+	private SubscriptionQueue<E> subscriptionQueue;
+
 	public SubscriptionPlace() {
-		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
+		this.subscriptionQueue = new SubscriptionQueue<E>();
 	}
 
 	@Override
-	public void add(SCMPMessage message) {
-		subscriptionQueue.add(message);        		
+	public void add(E message) {
+		subscriptionQueue.add(message);
 	}
-	
+
 	@Override
-	public Object poll(SCMPMessage message) {
+	public E poll(String sessionId) {
 		// check if data for me is available
-		String mask = null; // TODO
-		String sessionId = message.getSessionId();
-        if (subscriptionQueue.hasNext(sessionId,  mask) == false) {
-        	// nothing to poll, maybe later
-        	return null;
-        }        
-		Object data = subscriptionQueue.poll(sessionId, mask);
+		if (subscriptionQueue.hasNext(sessionId) == false) {
+			// nothing to poll at this time
+			return null;
+		}
+		E data = subscriptionQueue.poll(sessionId);
 		return data;
 	}
 
@@ -61,7 +65,7 @@ public class SubscriptionPlace implements ISubscriptionPlace {
 	}
 
 	@Override
-	public void subscribe(String sessionId, IFilterMask filterMask, ITimerRun timerRun) {
+	public void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun) {
 		this.subscriptionQueue.subscribe(sessionId, filterMask, timerRun);
 	}
 

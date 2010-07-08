@@ -35,7 +35,6 @@ public class TimerTaskWrapper extends TimerTask {
 	 */
 	public TimerTaskWrapper(ITimerRun target) {
 		this.target = target;
-		this.target.setTimerTask(this);
 	}
 
 	/** {@inheritDoc} */

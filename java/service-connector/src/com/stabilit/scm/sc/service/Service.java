@@ -39,7 +39,7 @@ public class Service {
 	private String location;
 	private int serverIndex;
 	private List<Server> listOfServers;
-	private ISubscriptionPlace subscriptionPlace;
+	private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
 
 	public Service(String name, String type) {
 		this.name = name;
@@ -48,9 +48,9 @@ public class Service {
 		this.serverIndex = 0;
 		// synchronize the sever list
 		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
-		
-		if("publish".equals(this.type)) {
-			this.subscriptionPlace = new SubscriptionPlace();
+
+		if ("publish".equals(this.type)) {
+			this.subscriptionPlace = new SubscriptionPlace<SCMPMessage>();
 		}
 	}
 
@@ -99,17 +99,6 @@ public class Service {
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(serverIndex);
-		for (Server server : listOfServers) {
-			sb.append(" - ");
-			sb.append(server);
-		}
-		return sb.toString();
-	}
-
 	public Server allocateServerAndSubscribe(SCMPMessage msgToForward) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
@@ -126,7 +115,18 @@ public class Service {
 		return null;
 	}
 
-	public ISubscriptionPlace getSubscriptionPlace() {
+	public ISubscriptionPlace<SCMPMessage> getSubscriptionPlace() {
 		return this.subscriptionPlace;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(serverIndex);
+		for (Server server : listOfServers) {
+			sb.append(" - ");
+			sb.append(server);
+		}
+		return sb.toString();
 	}
 }

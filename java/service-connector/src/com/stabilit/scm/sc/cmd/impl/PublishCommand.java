@@ -29,7 +29,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
-import com.stabilit.scm.sc.registry.SubscriptionPlace;
 import com.stabilit.scm.sc.service.Service;
 
 public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
@@ -55,7 +54,7 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		Service service = this.validateService(serviceName);
-		ISubscriptionPlace place = service.getSubscriptionPlace();
+		ISubscriptionPlace<SCMPMessage> place = service.getSubscriptionPlace();
 		if (place == null) {
 			throw new SCServiceException("no subscriptionPlace for serviceName : " + serviceName);
 		}		

@@ -24,7 +24,6 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.ICommunicatorCallback;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -32,14 +31,17 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
-import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.registry.SubscriptionPlaceException;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Session;
 
+/**
+ * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
+ * listen is set up.
+ * 
+ * @author JTraber
+ */
 public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
 	public ReceivePublicationCommand() {
@@ -52,62 +54,56 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		return SCMPMsgType.RECEIVE_PUBLICATION;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {
 		return true;
 	}
 
-	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		throw new UnsupportedOperationException("not allowed");
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		try {
-			ISubscriptionPlace subscriptionPlace = this.getSubscriptionPlace(sessionId);
-			if (subscriptionPlace == null) {
-				throw new SubscriptionPlaceException("no place found for session id = " + sessionId);
-			}
-			Object data = subscriptionPlace.poll(message); // no callback necessary, returns immediately if data is
-			// ready otherwise a
-			// future publish will check this poll
-			if (data != null) {
-				SCMPMessage reply = new SCMPMessage();
-				reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
-				reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
-				reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
-				reply.setIsReply(true);
-				if (data instanceof SCMPMessage) {
-					reply.setBody(((SCMPMessage) data).getBody());
-				}
-				response.setSCMP(reply);
-				try {
-					response.write();
-					return;
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
-					return;
-				} finally {
-				}
-			}
-			// no data available, start listening for new data
-			subscriptionPlace.listen(sessionId, request, response);
-		} catch (SCServiceException e) {
-			// failed, connection to backend server disturbed - clean up
-			// TODO clean up??
-			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			ExceptionPoint.getInstance().fireException(this, e);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
+		SCMPMessage reqMessage = request.getMessage();
+		String sessionId = reqMessage.getSessionId();
+
+		// looks up subscription place
+		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
+		// tries polling messages
+		SCMPMessage message = subscriptionPlace.poll(sessionId);
+		if (message != null) {
+			// message found in subscription queue set up reply
+			SCMPMessage reply = new SCMPMessage();
+			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
+			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+			reply.setIsReply(true);
+			reply.setBody(message.getBody());
+			response.setSCMP(reply);
+			// message already gotten from queue no asynchronous process necessary call callback right away
+			communicatorCallback.callback(request, response);
+			// try {
+			// response.write();
+			// return;
+			// } catch (Exception e) {
+			// ExceptionPoint.getInstance().fireException(this, e);
+			// return;
+			// } finally {
+			// }
 		}
+		// no message available, start listening for new message
+		subscriptionPlace.listen(sessionId, request, response);
 	}
 
-	private ISubscriptionPlace getSubscriptionPlace(String sessionId) throws Exception {
+	/**
+	 * Gets the subscription place by id. Looks up the subscription place by session id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @return the subscription place by id
+	 * @throws Exception
+	 *             the exception thrown if no session is found
+	 */
+	private ISubscriptionPlace<SCMPMessage> getSubscriptionPlaceById(String sessionId) throws Exception {
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		Session session = subscriptionSessionRegistry.getSession(sessionId);
 
@@ -157,5 +153,4 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			}
 		}
 	}
-
 }
