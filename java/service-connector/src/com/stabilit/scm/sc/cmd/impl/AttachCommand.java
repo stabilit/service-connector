@@ -63,7 +63,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 	public void run(IRequest request, IResponse response) throws Exception {
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-
+		// TODO verify with jan - wrong ... doesn't work anymore.. because of connection pool
 		// check if client has been attached already
 		Client client = clientRegistry.getClient(socketAddress);
 		this.validateClientNotAttached(client);
@@ -99,7 +99,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 			throw scmpCommandException;
 		}
 	}
-	
+
 	/**
 	 * The Class AttachCommandValidator.
 	 */
@@ -120,12 +120,12 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 
-				//TODO verify that
-//				// KeepAliveTimeout && KeepAliveInterval
-//				KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
-//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
-//						.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
-//				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
+				// TODO verify that
+				// // KeepAliveTimeout && KeepAliveInterval
+				// KeepAlive keepAlive = ValidatorUtility.validateKeepAlive(message
+				// .getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT), message
+				// .getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL));
+				// request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAlive);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

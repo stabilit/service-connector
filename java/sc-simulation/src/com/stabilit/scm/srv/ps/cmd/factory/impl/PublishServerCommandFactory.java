@@ -21,7 +21,6 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvChangeSubscriptionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvSubscribeCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvSystemCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvUnsubscribeCommand;
 
 public class PublishServerCommandFactory extends CommandFactory {
@@ -37,8 +36,6 @@ public class PublishServerCommandFactory extends CommandFactory {
 	public void init(CommandFactory commandFactory) {
 		ICommand srvEchoCommand = new SrvEchoCommand();
 		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
-		ICommand srvSystemCommand = new SrvSystemCommand();
-		commandFactory.addCommand(srvSystemCommand.getKey(), srvSystemCommand);
 		// publish subscribe commands
 		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
 		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);

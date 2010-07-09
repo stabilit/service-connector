@@ -19,12 +19,11 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 enum StatisticsEnum {
-	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME
-, CREATE_SESSION, DELETE_SESSION, ABORT_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE}
+	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME, CREATE_SESSION, DELETE_SESSION, ABORT_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE
+}
 
 /**
- * The Class ConnectionPoint. Allows collecting statistic information - fire
- * read/write, connect/disconnect.
+ * The Class ConnectionPoint. Allows collecting statistic information - fire read/write, connect/disconnect.
  */
 public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> {
 
@@ -36,7 +35,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	private ILoggerListener loggerListener;
 	private ISessionListener sessionListener;
 	private ISCMPListener scmpListener;
-	private IKeepAliveListener keepAliveListener;
 
 	/**
 	 * Instantiates a new connection point.
@@ -47,7 +45,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		this.loggerListener = new StatisticsLoggerListener();
 		this.sessionListener = new StatisticsSessionListener();
 		this.scmpListener = new StatisticsSCMPListener();
-		this.keepAliveListener = new StatisticsKeepAliveListener();
 	}
 
 	/**
@@ -67,7 +64,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			LoggerPoint.getInstance().addListener(loggerListener);
 			SessionPoint.getInstance().addListener(sessionListener);
 			SCMPPoint.getInstance().addListener(scmpListener);
-			KeepAlivePoint.getInstance().addListener(keepAliveListener);
 		}
 		super.addListener(listener);
 	}
@@ -81,7 +77,6 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			LoggerPoint.getInstance().removeListener(loggerListener);
 			SessionPoint.getInstance().removeListener(sessionListener);
 			SCMPPoint.getInstance().removeListener(scmpListener);
-			KeepAlivePoint.getInstance().removeListener(keepAliveListener);
 		}
 	}
 
@@ -101,7 +96,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 				IStatisticsListener statisticsListener = (IStatisticsListener) localArray[i];
 				statisticsListener.statistics(statisticsEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -109,37 +104,37 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	// member class
 	class StatisticsConnectionListener implements IConnectionListener {
 		@Override
-		public void connectEvent(ConnectionEvent connectionEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					connectionEvent.getSource(), connectionEvent);
+		public void connectEvent(ConnectionEvent connectionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.CONNECT);
 			fireStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void disconnectEvent(ConnectionEvent connectionEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					connectionEvent.getSource(), connectionEvent);
+		public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.DISCONNECT);
 			fireStatistics(statisticsEvent);
 		}
 
 		@Override
 		public void readEvent(ConnectionEvent connectionEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					connectionEvent.getSource(), connectionEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.READ);
 			fireStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void writeEvent(ConnectionEvent connectionEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					connectionEvent.getSource(), connectionEvent);
+		public void writeEvent(ConnectionEvent connectionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.WRITE);
+			fireStatistics(statisticsEvent);
+		}
+
+		@Override
+		public void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
+			statisticsEvent.setEventType(StatisticsEnum.KEEP_ALIVE);
 			fireStatistics(statisticsEvent);
 		}
 	}
@@ -147,10 +142,8 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 	// member class
 	class StatisticsExceptionListener implements IExceptionListener {
 		@Override
-		public void exceptionEvent(ExceptionEvent exceptionEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					exceptionEvent.getSource(), exceptionEvent);
+		public void exceptionEvent(ExceptionEvent exceptionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(exceptionEvent.getSource(), exceptionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.EXCEPTION);
 			fireStatistics(statisticsEvent);
 		}
@@ -161,70 +154,52 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 
 		@Override
 		public void logEvent(LoggerEvent loggerEvent) throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					loggerEvent.getSource(), loggerEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(loggerEvent.getSource(), loggerEvent);
 			statisticsEvent.setEventType(StatisticsEnum.LOGGER);
 			fireStatistics(statisticsEvent);
 		}
 	}
-	
+
 	// member class
 	class StatisticsSessionListener implements ISessionListener {
 
 		@Override
 		public void createSessionEvent(SessionEvent sessionEvent) {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					sessionEvent.getSource(), sessionEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.CREATE_SESSION);
 			fireStatistics(statisticsEvent);
 		}
 
 		@Override
-		public void deleteSessionEvent(SessionEvent sessionEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					sessionEvent.getSource(), sessionEvent);
+		public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
+			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.DELETE_SESSION);
-			fireStatistics(statisticsEvent);			
+			fireStatistics(statisticsEvent);
 		}
-		
+
 		@Override
 		public void abortSessionEvent(SessionEvent sessionEvent) {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					sessionEvent.getSource(), sessionEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
 			statisticsEvent.setEventType(StatisticsEnum.ABORT_SESSION);
 			fireStatistics(statisticsEvent);
 		}
 	}
+
 	// member class
 	class StatisticsSCMPListener implements ISCMPListener {
 
 		@Override
 		public void decodeEvent(SCMPEvent scmpEvent) {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					scmpEvent.getSource(), scmpEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(scmpEvent.getSource(), scmpEvent);
 			statisticsEvent.setEventType(StatisticsEnum.DECODE_SCMP);
-			fireStatistics(statisticsEvent);						
+			fireStatistics(statisticsEvent);
 		}
 
 		@Override
 		public void encodeEvent(SCMPEvent scmpEvent) {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					scmpEvent.getSource(), scmpEvent);
+			StatisticsEvent statisticsEvent = new StatisticsEvent(scmpEvent.getSource(), scmpEvent);
 			statisticsEvent.setEventType(StatisticsEnum.ENCODE_SCMP);
-			fireStatistics(statisticsEvent);									
-		}
-	}
-	// member class
-	class StatisticsKeepAliveListener implements IKeepAliveListener {
-
-		@Override
-		public void keepAliveEvent(KeepAliveEvent keepAliveEvent)
-				throws Exception {
-			StatisticsEvent statisticsEvent = new StatisticsEvent(
-					keepAliveEvent.getSource(), keepAliveEvent);
-			statisticsEvent.setEventType(StatisticsEnum.KEEP_ALIVE);
-			fireStatistics(statisticsEvent);					
+			fireStatistics(statisticsEvent);
 		}
 	}
 }

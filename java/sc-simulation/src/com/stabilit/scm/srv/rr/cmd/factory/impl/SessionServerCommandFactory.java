@@ -22,7 +22,6 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDataCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvSystemCommand;
 
 public class SessionServerCommandFactory extends CommandFactory {
 
@@ -43,7 +42,5 @@ public class SessionServerCommandFactory extends CommandFactory {
 		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
 		ICommand srvDataCommand = new SrvDataCommand();
 		commandFactory.addCommand(srvDataCommand.getKey(), srvDataCommand);
-		ICommand srvSystemCommand = new SrvSystemCommand();
-		commandFactory.addCommand(srvSystemCommand.getKey(), srvSystemCommand);
 	}
 }

@@ -21,13 +21,11 @@ import java.net.SocketAddress;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnEchoCall;
-import com.stabilit.scm.cln.call.SCMPClnSystemCall;
 import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvSubscribeCall;
-import com.stabilit.scm.cln.call.SCMPSrvSystemCall;
 import com.stabilit.scm.cln.call.SCMPSrvUnsubscribeCall;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;
@@ -153,6 +151,7 @@ public class Server {
 		SCMPMessage serverReply = null;
 		try {
 			serverReply = subscribeCall.invoke();
+			// TODO subscription rejected???
 		} catch (Throwable e) {
 			// subscribe failed
 			throw new SCServiceException("subscribe failed", e);
@@ -258,30 +257,6 @@ public class Server {
 			serverReply = clnEchoCall.invoke();
 		} catch (Exception e) {
 			throw new SCServiceException("srvEcho failed", e);
-		}
-		return serverReply;
-	}
-
-	public SCMPMessage srvSystem(SCMPMessage message) throws SCServiceException {
-		SCMPMessage serverReply = null;
-		SCMPSrvSystemCall srvSystemCall = (SCMPSrvSystemCall) SCMPCallFactory.SRV_SYSTEM_CALL.newInstance(requester,
-				message);
-		try {
-			serverReply = srvSystemCall.invoke();
-		} catch (Exception e) {
-			throw new SCServiceException("srvSystem failed", e);
-		}
-		return serverReply;
-	}
-
-	public SCMPMessage clnSystem(SCMPMessage message) throws SCServiceException {
-		SCMPMessage serverReply = null;
-		SCMPClnSystemCall clnSystemCall = (SCMPClnSystemCall) SCMPCallFactory.CLN_SYSTEM_CALL.newInstance(requester,
-				message);
-		try {
-			serverReply = clnSystemCall.invoke();
-		} catch (Exception e) {
-			throw new SCServiceException("clnSystem failed", e);
 		}
 		return serverReply;
 	}

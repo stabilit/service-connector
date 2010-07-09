@@ -110,23 +110,23 @@ public class LinkedQueueTestCase {
 	@Test
 	public void insertNullValueTest() {
 		this.queue.insert(null);
-		Assert.assertEquals("0", this.queue.getSize() + "");
-		Assert.assertTrue(this.queue.isEmpty());
+		Assert.assertEquals("1", this.queue.getSize() + "");
+		Assert.assertFalse(this.queue.isEmpty());
 	}
 
 	@Test
 	public void manyConsumersOneProducerTest() {
-
+		// TODO
 	}
 
 	@Test
 	public void oneConsumerManyProducerTest() {
-
+		// TODO
 	}
 
 	@Test
 	public void manyConsumerManyProducerTest() {
-
+		// TODO
 	}
 
 	private void insertIntoQueue(int numberOfMsg, String bodyString) {

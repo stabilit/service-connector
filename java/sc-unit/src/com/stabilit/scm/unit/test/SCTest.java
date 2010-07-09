@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import test.stabilit.scm.test.SCAPITest;
 import test.stabilit.scm.test.SCImplTest;
 
 import com.stabilit.scm.common.net.req.ConnectionPoolTest;
@@ -34,8 +35,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
-import com.stabilit.scm.unit.test.echo.EchoSCLargeTestCase;
-import com.stabilit.scm.unit.test.echo.EchoSCTestCase;
 import com.stabilit.scm.unit.test.echo.SrvEchoLargeTestCase;
 import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
@@ -50,10 +49,20 @@ import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { AttachTestCase.class, DetachTestCase.class, ClnCreateSessionTestCase.class,
-		ClnDeleteSessionTestCase.class, RegisterServiceTestCase.class, DeRegisterServiceTestCase.class,
-		SrvDataTestCase.class, SrvDataLargeTestCase.class, SrvEchoTestCase.class, SrvEchoLargeTestCase.class,
-		EchoSCTestCase.class, EchoSCLargeTestCase.class, SCImplTest.class, ConnectionPoolTest.class })
+@SuiteClasses( { 
+	AttachTestCase.class, 
+	DetachTestCase.class, 
+	ClnCreateSessionTestCase.class,
+	ClnDeleteSessionTestCase.class, 
+	RegisterServiceTestCase.class, 
+	DeRegisterServiceTestCase.class,
+	SrvDataTestCase.class, 
+	SrvDataLargeTestCase.class, 
+	SrvEchoTestCase.class, 
+	SrvEchoLargeTestCase.class,
+	SCImplTest.class,
+	SCAPITest.class,
+	ConnectionPoolTest.class })
 public class SCTest {
 
 	private SCTest() {

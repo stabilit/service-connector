@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
 import com.stabilit.scm.common.log.Level;
@@ -87,7 +88,7 @@ public class SimpleLogger implements ILogger {
 		try {
 			fos = new FileOutputStream(fullPath, true);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		pw = new PrintWriter(new OutputStreamWriter(fos));
 	}
@@ -103,7 +104,7 @@ public class SimpleLogger implements ILogger {
 			pw.close();
 			fos.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		this.date = Calendar.getInstance().getTime();
 		String dateFormat = this.dateFormatter.format(date);

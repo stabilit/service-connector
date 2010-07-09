@@ -18,6 +18,7 @@ package com.stabilit.scm.common.log.impl;
 
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
 
@@ -98,7 +99,7 @@ public final class LoggerFactory extends Factory {
 			this.add(TopLogger.class, loggerDecorator);
 			this.add(DEFAULT, loggerDecorator);
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 

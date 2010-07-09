@@ -58,7 +58,7 @@ public final class SessionPoint extends ListenerSupport<ISessionListener> {
 				ISessionListener sessionListener = (ISessionListener) localArray[i];
 				sessionListener.createSessionEvent(sessionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public final class SessionPoint extends ListenerSupport<ISessionListener> {
 				ISessionListener sessionListener = (ISessionListener) localArray[i];
 				sessionListener.deleteSessionEvent(sessionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ public final class SessionPoint extends ListenerSupport<ISessionListener> {
 				ISessionListener sessionListener = (ISessionListener) localArray[i];
 				sessionListener.abortSessionEvent(sessionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

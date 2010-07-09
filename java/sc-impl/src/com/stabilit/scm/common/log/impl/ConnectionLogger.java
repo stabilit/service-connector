@@ -22,6 +22,7 @@ import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.ConnectionEvent;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IConnectionListener;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
@@ -39,6 +40,7 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	private String DISCONNECT_EVENT_STR = "disconnect by class %s - %s:%s";
 	private String READ_EVENT_STR = "read by class %s - %s:%s : %s";
 	private String WRITE_EVENT_STR = "write by class %s - %s:%s : %s";
+	private String KEEP_ALIVE_STR = "keep alive by class %s - number of keep alive: %s";
 
 	/**
 	 * Instantiates a new connection logger. Only visible in package for Factory.
@@ -61,7 +63,7 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 
@@ -75,7 +77,7 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 
@@ -98,7 +100,7 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 
@@ -121,7 +123,23 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
+		try {
+			format = new Formatter();
+
+			format.format(KEEP_ALIVE_STR, connectionEvent.getSource().getClass().getName(), connectionEvent
+					.getConnection().getNrOfIdlesInSequence());
+
+			this.logger.log(format.toString());
+			format.close();
+		} catch (IOException e) {
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 

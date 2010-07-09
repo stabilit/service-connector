@@ -128,7 +128,7 @@ public final class LoggerPoint extends ListenerSupport<ILoggerListener> {
 				ILoggerListener loggerListener = (ILoggerListener) localArray[i];
 				loggerListener.logEvent(loggerEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

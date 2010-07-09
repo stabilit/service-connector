@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.IKeepAliveListener;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 
@@ -25,7 +24,6 @@ public class ConnectionPool implements IConnectionPool {
 	private List<IConnection> freeConnections;
 	private List<IConnection> usedConnections;
 	private ConnectionFactory connectionFactory;
-	private IKeepAliveListener keepAliveListener;
 
 	public ConnectionPool(String host, int port, String conType, int keepAliveInterval, int numberOfThreads) {
 		this.host = host;
@@ -189,14 +187,18 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	@Override
-	public void keepAliveConnection(IConnection connection) throws Exception {
+	public void connectionIdle(IConnection connection) throws Exception {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;
 		}
 		if (connection.getNrOfIdlesInSequence() > IConstants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
-			this.destroyConnection(connection);
-			return;
+			// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
+			if (this.freeConnections.size() > 1) {
+				// there is still more than one connection free - destroy this one
+				this.destroyConnection(connection);
+				return;
+			}
 		}
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
 		connection.sendAndReceive(keepAliveMessage);

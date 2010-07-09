@@ -64,7 +64,7 @@ public final class SCMPPoint extends ListenerSupport<ISCMPListener> {
 				ISCMPListener scmpListener = (ISCMPListener) localArray[i];
 				scmpListener.encodeEvent(scmpEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public final class SCMPPoint extends ListenerSupport<ISCMPListener> {
 				ISCMPListener scmpListener = (ISCMPListener) localArray[i];
 				scmpListener.decodeEvent(scmpEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

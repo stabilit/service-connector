@@ -18,6 +18,8 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventObject;
 
+import com.stabilit.scm.common.net.req.IConnection;
+
 /**
  * The Class ConnectionEvent. Event for connection lifecycle.
  */
@@ -34,6 +36,8 @@ public class ConnectionEvent extends EventObject {
 	private Object data;
 	/** The port. */
 	private int port;
+	/** The connection. */
+	private IConnection connection;
 
 	/**
 	 * Instantiates a new connection event.
@@ -54,7 +58,13 @@ public class ConnectionEvent extends EventObject {
 		this.offset = offset;
 		this.length = length;
 		this.data = data;
-		this.port = port;		
+		this.port = port;
+		this.connection = null;
+	}
+
+	public ConnectionEvent(Object source, IConnection connnection) {
+		this(source, 0, null, 0, 0);
+		this.connection = connnection;
 	}
 
 	/**
@@ -91,5 +101,9 @@ public class ConnectionEvent extends EventObject {
 	 */
 	public int getPort() {
 		return port;
+	}
+
+	public IConnection getConnection() {
+		return connection;
 	}
 }

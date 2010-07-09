@@ -31,23 +31,23 @@ public class ClnAPISessionTestCase {
 	public void setUp() {
 		SetupTestCases.setupAll();
 	}
-	
+
 	@Test
-	public void testClnAPI() throws Exception {		
+	public void testClnAPI() throws Exception {
 		IServiceConnector sc = null;
-		try {			
-			sc = new ServiceConnector("localhost", 8080);		
+		try {
+			sc = new ServiceConnector("localhost", 8080, "netty.http", 10);
 			sc.setMaxConnections(100);
-//			IServiceConnector sc2 = new ServiceConnector("localhost", 8081);
-//			IServiceConnector sc3 = new ServiceConnector("localhost", 8080);
+			// IServiceConnector sc2 = new ServiceConnector("localhost", 8081);
+			// IServiceConnector sc3 = new ServiceConnector("localhost", 8080);
 			// set environment, e.g. keepAliveInterval
-			
+
 			// connects to SC, checks connection to SC
 			sc.attach();
-			
+
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 10);
-			
+
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
@@ -57,8 +57,8 @@ public class ClnAPISessionTestCase {
 
 			System.out.println(responseMsg);
 
-			//sessionServiceA.echo();
-			
+			// sessionServiceA.echo();
+
 			// deletes the session
 			sessionServiceA.deleteSession();
 

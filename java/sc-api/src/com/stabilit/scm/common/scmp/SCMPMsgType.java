@@ -30,11 +30,10 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	ATTACH("ATT"),
 	/** The DETACH. */
 	DETACH("DET"),
-	/** The ECHO_SC. */
-	ECHO_SC("ECHO_SC"),
 	/** The INSPECT. */
 	INSPECT("INS"),
-
+	/** The MANAGE. */
+	MANAGE("MGT"),
 	/** The CLN_CREATE_SESSION. */
 	CLN_CREATE_SESSION("CCS"),
 	/** The SRV_CREATE_SESSION. */
@@ -45,6 +44,10 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	SRV_DELETE_SESSION("SDS"),
 	/** The SRV_ABORT_SESSION. */
 	SRV_ABORT_SESSION("SAS"),
+	/** The REGISTER_SERVICE. */
+	REGISTER_SERVICE("REG"),
+	/** The DEREGISTER_SERVICE. */
+	DEREGISTER_SERVICE("DRG"),
 	/** The CLN_DATA. */
 	CLN_DATA("CDA"),
 	/** The SRV_DATA. */
@@ -53,31 +56,29 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	CLN_ECHO("CEC"),
 	/** The SRV_ECHO. */
 	SRV_ECHO("SEC"),
-	/** The CLN_SYSTEM. */
-	CLN_SYSTEM("CLN_SYSTEM"),
-	/** The SRV_SYSTEM. */
-	SRV_SYSTEM("SRV_SYSTEM"),
 
 	/** The CLN_SUBSCRIBE. */
 	CLN_SUBSCRIBE("CSU"),
 	/** The SRV_SUBSCRIBE. */
 	SRV_SUBSCRIBE("SSU"),
-	/** The CLN_UNSUBSCRIBE. */
-	CLN_UNSUBSCRIBE("CUN"),
-	/** The SRV_UNSUBSCRIBE. */
-	SRV_UNSUBSCRIBE("SUN"),
 	/** The CLN_CHANGE_SUBSCRIPTION. */
 	CLN_CHANGE_SUBSCRIPTION("CHS"),
 	/** The SRV_CHANGE_SUBSCRIPTION. */
 	SRV_CHANGE_SUBSCRIPTION("SHS"),
+	/** The CLN_UNSUBSCRIBE. */
+	CLN_UNSUBSCRIBE("CUN"),
+	/** The SRV_UNSUBSCRIBE. */
+	SRV_UNSUBSCRIBE("SUN"),
 	/** The RECEIVE_PUBLICATION. */
 	RECEIVE_PUBLICATION("CRP"),
 	/** The PUBLISH. */
 	PUBLISH("SPU"),
-	/** The REGISTER_SERVICE. */
-	REGISTER_SERVICE("REG"),
-	/** The DEREGISTER_SERVICE. */
-	DEREGISTER_SERVICE("DRG"),
+	/** The FILE_DOWNLOAD. */
+	FILE_DOWNLOAD("FDO"),
+	/** The FILE_UPLOAD. */
+	FILE_UPLOAD("FUP"),
+	/** The FILE_LIST. */
+	FILE_LIST("FLI"),
 	/** The UNDEFINED. */
 	UNDEFINED("UND");
 
@@ -106,7 +107,11 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 		return name;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
 	public String toString() {
 		return name;
 	}
@@ -122,11 +127,23 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 		return reverseMap.get(messageId);
 	}
 
+	/**
+	 * Gets the value.
+	 * 
+	 * @return the value
+	 */
 	@Override
 	public String getValue() {
 		return this.getName();
 	}
 
+	/**
+	 * Reverse.
+	 * 
+	 * @param messageId
+	 *            the message id
+	 * @return the sCMP msg type
+	 */
 	@Override
 	public SCMPMsgType reverse(String messageId) {
 		return reverseMap.get(messageId);

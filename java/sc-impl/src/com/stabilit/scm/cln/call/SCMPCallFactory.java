@@ -49,10 +49,6 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
 	/** The CLN_ECHO_CALL. */
 	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
-	/** The ECHO_SC_CALL. */
-	public static final ISCMPCall ECHO_SC_CALL = new SCMPEchoSCCall();
-	/** The CLN_SYSTEM_CALL. */
-	public static final ISCMPCall CLN_SYSTEM_CALL = new SCMPClnSystemCall();
 
 	/********************** Calls from SC **********************/
 
@@ -64,8 +60,6 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
 	/** The Constant SRV_DATA_CALL. */
 	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
-	/** The Constant SRV_SYSTEM_CALL. */
-	public static final ISCMPCall SRV_SYSTEM_CALL = new SCMPSrvSystemCall();
 
 	public static final ISCMPCall CLN_SUBSCRIBE_CALL = new SCMPClnSubscribeCall();
 	public static final ISCMPCall CLN_UNSUBSCRIBE_CALL = new SCMPClnUnsubscribeCall();

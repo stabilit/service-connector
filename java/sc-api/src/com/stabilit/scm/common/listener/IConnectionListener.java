@@ -19,10 +19,9 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving IConnection events. The class that is interested in processing a
- * IConnection event implements this interface, and the object created with that class is registered with a
- * component using the component's <code>addIConnectionListener</code> method. When
- * the IConnection event occurs, that object's appropriate
+ * The listener interface for receiving IConnection events. The class that is interested in processing a IConnection
+ * event implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIConnectionListener</code> method. When the IConnection event occurs, that object's appropriate
  * method is invoked.
  * 
  * @see ConnectionEvent
@@ -68,4 +67,6 @@ public interface IConnectionListener extends EventListener {
 	 *             the exception
 	 */
 	public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception;
+
+	public void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception;
 }

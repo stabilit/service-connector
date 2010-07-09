@@ -26,7 +26,6 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.unit.test.echo.mt.MTEchoSCTestCase;
 import com.stabilit.scm.unit.test.echo.mt.MTSrvEchoTestCase;
 
 /**
@@ -38,7 +37,7 @@ import com.stabilit.scm.unit.test.echo.mt.MTSrvEchoTestCase;
 @SuiteClasses( {
 // multiple clients test
 		// StressTest.class,
-		MTEchoSCTestCase.class, MTSrvEchoTestCase.class })
+		MTSrvEchoTestCase.class })
 public final class SCMultipleClientAndStressTestCases {
 
 	/**

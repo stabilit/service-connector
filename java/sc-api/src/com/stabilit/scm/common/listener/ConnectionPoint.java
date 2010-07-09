@@ -18,6 +18,8 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+import com.stabilit.scm.common.net.req.IConnection;
+
 /**
  * The Class ConnectionPoint. Allows listening for connection events - fire read/write, connect/disconnect.
  */
@@ -147,6 +149,32 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 		}
 	}
 
+	public void fireKeepAlive(Object source, IConnection connection) {
+		if (getInstance().isEmpty() == false) {
+			ConnectionEvent connectionEvent = new ConnectionEvent(source, connection);
+			ConnectionPoint.getInstance().fireKeepAlive(connectionEvent);
+		}
+	}
+
+	/**
+	 * Fire keep alive.
+	 * 
+	 * @param connectionEvent
+	 *            the connection event
+	 */
+	public void fireKeepAlive(ConnectionEvent connectionEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
+				connectionListener.keepAliveEvent(connectionEvent);
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+	}
+
 	/**
 	 * Fire connect.
 	 * 
@@ -161,7 +189,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.connectEvent(connectionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -180,7 +208,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.disconnectEvent(connectionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -199,7 +227,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.writeEvent(connectionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -218,7 +246,7 @@ public final class ConnectionPoint extends ListenerSupport<IConnectionListener> 
 				IConnectionListener connectionListener = (IConnectionListener) localArray[i];
 				connectionListener.readEvent(connectionEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

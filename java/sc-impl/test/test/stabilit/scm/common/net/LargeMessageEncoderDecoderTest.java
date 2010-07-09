@@ -65,7 +65,7 @@ public class LargeMessageEncoderDecoderTest {
 	@Before
 	public void setUp() {
 		this.headKey = SCMPHeadlineKey.REQ;
-		this.msgType = SCMPMsgType.ECHO_SC;
+		this.msgType = SCMPMsgType.ATTACH;
 		this.bodyType = SCMPBodyType.BINARY;
 		this.msgID = "1";
 		this.bodyLength = "12";

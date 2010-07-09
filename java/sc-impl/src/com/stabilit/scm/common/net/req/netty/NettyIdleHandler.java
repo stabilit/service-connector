@@ -26,7 +26,7 @@ import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.scm.common.listener.KeepAlivePoint;
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 
@@ -52,10 +52,9 @@ public class NettyIdleHandler extends IdleStateHandler {
 	@Override
 	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
 			throws Exception {
-		System.out.println("NettyIdleHandler.channelIdle()");
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
-		KeepAlivePoint.getInstance().fireKeepAlive(this, this.connectionContext.getConnection());
-		connectionContext.getConnectionPool().keepAliveConnection(connection);
+		ConnectionPoint.getInstance().fireKeepAlive(this, this.connectionContext.getConnection());
+		connectionContext.getConnectionPool().connectionIdle(connection);
 	}
 }
