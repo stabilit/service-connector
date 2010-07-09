@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.attach;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -25,7 +27,6 @@ import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -84,8 +85,10 @@ public class DetachTestCase extends SuperAttachTestCase {
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ***********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
+		String inspectMsg = (String) inspect.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
+		
+		String scEntry = (String) inspectMap.get("clientRegistry");
 		Assert.assertEquals("", scEntry);
 		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.clnAttachBefore();

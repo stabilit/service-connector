@@ -17,6 +17,7 @@
 package com.stabilit.scm.unit.test.attach;
 
 import java.util.Date;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -26,11 +27,11 @@ import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPDetachCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class AttachTestCase extends SuperTestCase {
@@ -46,7 +47,7 @@ public class AttachTestCase extends SuperTestCase {
 	}
 
 	public void failAttach() throws Exception {
-		//TODO
+		// TODO
 	}
 
 	@Test
@@ -66,17 +67,16 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		SCMPMessage inspect = inspectCall.invoke();
+		SCMPMessage inspectString = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String inspectMsg = (String) inspectString.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={bodyLength=0, kpi=360, ver=1.0-000, ldt="
-				+ localDateTimeString
-				+ ", mid=1, mty=ATT, keepAliveTimeout=30}] MapBean: ldt="
-				+ localDateTime + ";|";
-		String scEntry = (String) inspectMsg.getAttribute("clientRegistry");
+				+ localDateTimeString + ", mid=1, mty=ATT, keepAliveTimeout=30}] MapBean: ldt=" + localDateTime + ";|";
+		String scEntry = inspectMap.get("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
 		Assert.assertEquals(expectedScEntry, scEntry);
@@ -85,11 +85,12 @@ public class AttachTestCase extends SuperTestCase {
 		detachCall.invoke();
 
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspect = inspectCall.invoke();
+		inspectString = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		inspectMsg = (InspectMessage) inspect.getBody();
-		scEntry = (String) inspectMsg.getAttribute("clientRegistry");
+		inspectMsg = (String) inspectString.getBody();
+		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
+		scEntry = inspectMap.get("clientRegistry");
 		Assert.assertEquals("", scEntry);
 	}
 }

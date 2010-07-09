@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.session;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -25,7 +27,6 @@ import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -123,21 +124,23 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		SCMPMessage inspect = inspectCall.invoke();
 		/*********************************** Verify registry entries in SC ********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String inspectMsg = (String) inspect.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 1|";
-		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
+		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke();
-		
+
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspect = inspectCall.invoke();
-		inspectMsg = (InspectMessage) inspect.getBody();
-		scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
+		inspectMsg = (String) inspect.getBody();
+		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
+		scEntry = (String) inspectMap.get("sessionRegistry");
 		Assert.assertEquals("", scEntry);
 	}
 }

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.session;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -23,10 +25,10 @@ import org.junit.Test;
 import com.stabilit.scm.cln.call.SCMPCallFactory;
 import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.unit.test.SCTest;
 
 public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 
@@ -57,8 +59,9 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
-		String scEntry = (String) inspectMsg.getAttribute("sessionRegistry");
+		String inspectMsg = (String) inspect.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);		
+		String scEntry = (String) inspectMap.get("sessionRegistry");
 		Assert.assertEquals("", scEntry);
 		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.clnCreateSessionBefore();

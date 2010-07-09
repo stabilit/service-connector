@@ -50,21 +50,10 @@ import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { 
-	AttachTestCase.class, 
-	DetachTestCase.class,
-	ClnCreateSessionTestCase.class, 
-	ClnDeleteSessionTestCase.class, 
-	RegisterServiceTestCase.class,		
-	DeRegisterServiceTestCase.class, 
-	SrvDataTestCase.class, 
-	SrvDataLargeTestCase.class, 
-	SrvEchoTestCase.class,
-	SrvEchoLargeTestCase.class, 
-	EchoSCTestCase.class, 
-	EchoSCLargeTestCase.class, 
-	SCImplTest.class,
-	ConnectionPoolTest.class})
+@SuiteClasses( { AttachTestCase.class, DetachTestCase.class, ClnCreateSessionTestCase.class,
+		ClnDeleteSessionTestCase.class, RegisterServiceTestCase.class, DeRegisterServiceTestCase.class,
+		SrvDataTestCase.class, SrvDataLargeTestCase.class, SrvEchoTestCase.class, SrvEchoLargeTestCase.class,
+		EchoSCTestCase.class, EchoSCLargeTestCase.class, SCImplTest.class, ConnectionPoolTest.class })
 public class SCTest {
 
 	private SCTest() {
@@ -104,5 +93,15 @@ public class SCTest {
 			System.out.println("unlgleich");
 		}
 		Assert.assertEquals(expectedMap, actualMap);
+	}
+
+	public static Map<String, String> convertInspectStringToMap(String string) {
+		Map<String, String> map = new HashMap<String, String>();
+
+		String[] values = string.split("@|&");
+		for (int i = 0; i < values.length / 2; i++) {
+			map.put(values[i*2], values[i*2 + 1]);
+		}
+		return map;
 	}
 }

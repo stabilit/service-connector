@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.register;
 
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -28,7 +30,6 @@ import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -92,7 +93,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	@Test
 	public void registerServiceCall() throws Exception {
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
-				"netty.tcp", 16, 1000, 60 ,10);
+				"netty.tcp", 16, 1000, 60, 10);
 		IContext context = new TestContext(config);
 		IRequester req = new Requester(context);
 
@@ -111,14 +112,16 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		SCMPMessage inspect = inspectCall.invoke();
 
 		/*********************************** Verify registry entries in SC ********************************/
-		InspectMessage inspectMsg = (InspectMessage) inspect.getBody();
+		String inspectMsg = (String) inspect.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
+
 		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/127.0.0.1: : 7000 : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 1|P01_BCST_CH_sc1:0|";
-		String scEntry = (String) inspectMsg.getAttribute("serviceRegistry");
+		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		expectedScEntry = "publish-simulation_localhost/127.0.0.1::publish-simulation_localhost/127.0.0.1: : 7000 : 10|simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 1|";
-		scEntry = (String) inspectMsg.getAttribute("serverRegistry");
+		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
@@ -128,9 +131,10 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspect = inspectCall.invoke();
-		inspectMsg = (InspectMessage) inspect.getBody();
+		inspectMsg = (String) inspect.getBody();
+		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		expectedScEntry = "simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 1|";
-		scEntry = (String) inspectMsg.getAttribute("serverRegistry");
+		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
 
