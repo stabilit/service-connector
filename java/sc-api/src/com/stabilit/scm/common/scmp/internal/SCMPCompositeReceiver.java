@@ -75,7 +75,6 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** {@inheritDoc} */
 	@Override
 	public Map<String, String> getHeader() {
-		currentPart.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		return currentPart.getHeader();
 	}
 
@@ -99,9 +98,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		this.offest += bodyLength;
 		this.scmpList.add(message);
 		if (message.isPart() == false) {
-			// last message arrived, correct body length and store header
+			// last message arrived
 			this.setHeader(message.getHeader());
-			this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, getBodyLength());
 		}
 	}
 

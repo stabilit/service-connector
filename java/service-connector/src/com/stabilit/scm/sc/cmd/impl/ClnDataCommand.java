@@ -128,10 +128,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
-				// bodyLength
-				String bodyLength = message.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
-				ValidatorUtility.validateInt(0, bodyLength);
-				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getValue(), bodyLength);
 
 				// TODO messageId
 

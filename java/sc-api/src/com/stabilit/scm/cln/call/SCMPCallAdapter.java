@@ -54,7 +54,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this.requester = requester;
 		this.requestMessage = new SCMPMessage();
 	}
-	
+
 	/**
 	 * Instantiates a new scmp call adapter.
 	 * 
@@ -83,7 +83,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this.sessionId = sessionId;
 		this.requestMessage.setSessionId(sessionId);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester) {
@@ -211,9 +211,9 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		@Override
 		public void invoke(ISCMPCallback callback) throws Exception {
-		   throw new UnsupportedOperationException();	
+			throw new UnsupportedOperationException();
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public void setRequestBody(Object body) {
@@ -228,7 +228,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			SCMPMessage message = new SCMPMessage();
 			message.setHeader(SCMPCallAdapter.this.requestMessage);
 			message.setBody(null);
-			message.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, 0);
 			message.setInternalStatus(SCMPInternalStatus.GROUP);
 			SCMPCallAdapter.this.requestMessage = message;
 			SCMPMessage result = this.parentCall.invoke();

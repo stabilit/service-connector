@@ -59,7 +59,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 
 		/*********************************** Verify attach response msg **********************************/
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
-		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), scmpReply.getMessageType());
@@ -84,7 +84,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/1", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());
-		Assert.assertEquals("16", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals("16", scmpReply.getBodyLength() + "");
 		Assert.assertEquals("Session info", scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals("Message number 0", scmpReply.getBody());
@@ -108,7 +108,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());
-		Assert.assertEquals(sb.length() + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
 		Assert.assertEquals("Session info", scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());

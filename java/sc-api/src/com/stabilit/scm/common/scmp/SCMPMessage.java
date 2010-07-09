@@ -48,9 +48,8 @@ public class SCMPMessage {
 	 */
 	public SCMPMessage() {
 		this.internalStatus = SCMPInternalStatus.NONE;
-		header = new HashMap<String, String>();
-		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
-		isReply = false;
+		this.header = new HashMap<String, String>();
+		this.isReply = false;
 	}
 
 	/**
@@ -100,7 +99,7 @@ public class SCMPMessage {
 	public boolean isPart() {
 		return false; // this is the default value!
 	}
-	
+
 	public boolean isKeepAlive() {
 		return false;
 	}
@@ -357,11 +356,12 @@ public class SCMPMessage {
 	public String getServiceName() {
 		return this.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 	}
-	
+
 	/**
 	 * Sets the service name.
-	 *
-	 * @param serviceName the new service name
+	 * 
+	 * @param serviceName
+	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
 		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
@@ -407,8 +407,8 @@ public class SCMPMessage {
 	 */
 	public void setBody(Object body) {
 		this.body = body;
-		this.setHeader(SCMPHeaderAttributeKey.BODY_LENGTH, this.getBodyLength());
 		if (this.body == null) {
+			// TODO makes that sense clarify
 			this.removeHeader(SCMPHeaderAttributeKey.BODY_TYPE);
 			return;
 		}

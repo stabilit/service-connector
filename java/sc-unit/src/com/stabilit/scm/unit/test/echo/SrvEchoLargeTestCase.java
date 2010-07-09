@@ -46,7 +46,8 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 	@Test
 	public void invokeTwoPartsTest() throws Exception {
 
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation",
+				this.sessionId);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 19000; i++) {
@@ -58,14 +59,15 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals(sb.length() + "", result.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
 	@Test
 	public void invokeMorePartsTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation",
+				this.sessionId);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 89840; i++) {
 			sb.append(i);
@@ -76,14 +78,15 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/15", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+		Assert.assertEquals(sb.length() + "", result.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
 	@Test
 	public void groupCallTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation",
+				this.sessionId);
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
@@ -95,14 +98,15 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getValue()));
+		Assert.assertEquals(sb.length() + "", res.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), res.getMessageType());
 		Assert.assertNotNull(res.getSessionId());
 	}
 
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
-		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
+		SCMPClnEchoCall echoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation",
+				this.sessionId);
 
 		ISCMPCall groupCall = echoCall.openGroup();
 		StringBuilder sb = new StringBuilder();
@@ -120,7 +124,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(expected.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/4", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getValue()));
+		Assert.assertEquals(expected.length() + "", res.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), res.getMessageType());
 		Assert.assertNotNull(res.getSessionId());
 	}

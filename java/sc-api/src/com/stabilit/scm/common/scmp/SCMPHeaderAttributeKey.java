@@ -92,10 +92,7 @@ public enum SCMPHeaderAttributeKey {
 	/** The SESSION_ID. */
 	SESSION_ID("sid"),
 	/** The SESSION_INFO. */
-	SESSION_INFO("sin"),
-	// TODO this header fields need to be removed - first eliminate references
-	/** The BODY_LENGTH. */
-	BODY_LENGTH("bodyLength");
+	SESSION_INFO("sin");
 
 	/** The value. */
 	private String value;

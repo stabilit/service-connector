@@ -47,8 +47,8 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 	public void multipleSrvDataTest() throws Exception {
 
 		for (int i = 0; i < 100; i++) {
-			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
-					this.sessionId);
+			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req,
+					"simulation", this.sessionId);
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
 			SCMPMessage scmpReply = clnDataCall.invoke();
@@ -56,7 +56,7 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 			Assert.assertEquals("Message number " + i, scmpReply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			int bodyLength = (i + "").length() + 15;
-			Assert.assertEquals(bodyLength + "", scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
+			Assert.assertEquals(bodyLength + "", scmpReply.getBodyLength() + "");
 			Assert.assertNotNull(scmpReply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 			Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), scmpReply.getMessageType());
 			String serviceName = clnDataCall.getRequest().getServiceName();
