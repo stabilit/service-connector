@@ -18,7 +18,7 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.msg.impl.InspectMessage;
+import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -31,8 +31,8 @@ import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 
 /**
- * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used
- * for testing/maintaining reasons. Returns dumps of internal stuff to requester.
+ * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
+ * testing/maintaining reasons. Returns dumps of internal stuff to requester.
  * 
  * @author JTraber
  */
@@ -58,20 +58,27 @@ public class InspectCommand extends CommandAdapter {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		
+
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getName());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-		InspectMessage inspectMsg = new InspectMessage();
-		//TODO remove.. message put it in body!!
+
 		// dump internal registries
-		inspectMsg.setAttribute("clientRegistry", clientRegistry);
-		inspectMsg.setAttribute("serviceRegistry", serviceRegistry);
-		inspectMsg.setAttribute("sessionRegistry", sessionRegistry);
-		inspectMsg.setAttribute("serverRegistry", serverRegistry);
-		scmpReply.setBody(inspectMsg);
+		String inspectString = "clientRegistry&" + this.getRegistryInspectString(clientRegistry);
+		inspectString += "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
+		inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
+		inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
+		scmpReply.setBody(inspectString);
 		response.setSCMP(scmpReply);
+	}
+
+	private String getRegistryInspectString(Registry registry) {
+		String string = registry.toString();
+		if (registry.getSize() == 0) {
+			string += "@";
+		}
+		return string;
 	}
 
 	/**
