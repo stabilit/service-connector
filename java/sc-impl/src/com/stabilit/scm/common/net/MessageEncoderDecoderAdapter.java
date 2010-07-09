@@ -34,7 +34,6 @@ import java.util.regex.Matcher;
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
-import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -119,33 +118,11 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodySize);
 			case text:
 				return this.decodeTextData(br, scmpMsg, scmpBodySize);
-			case internalMessage:
-				return this.decodeInternalMessage(br, scmpMsg);
 			}
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		SCMPPoint.getInstance().fireDecode(this, scmpMsg);
-		return scmpMsg;
-	}
-
-	protected Object decodeInternalMessage(BufferedReader br, SCMPMessage scmpMsg) throws IOException,
-			ClassNotFoundException, InstantiationException, IllegalAccessException {
-		String classLine = br.readLine();
-		if (classLine == null) {
-			return null;
-		}
-		String[] t = classLine.split(EQUAL_SIGN);
-		if (IInternalMessage.class.getName().equals(t[0]) == false) {
-			return null;
-		}
-		if (t.length != 2) {
-			return null;
-		}
-		Class<?> messageClass = Class.forName(t[1]);
-		IInternalMessage message = (IInternalMessage) messageClass.newInstance();
-		message.decode(br);
-		scmpMsg.setBody(message);
 		return scmpMsg;
 	}
 

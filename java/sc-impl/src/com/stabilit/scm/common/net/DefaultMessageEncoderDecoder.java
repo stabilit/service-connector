@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
-import com.stabilit.scm.common.scmp.IInternalMessage;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
@@ -97,6 +96,18 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		Object body = scmpMsg.getBody();
 		try {
 			if (body != null) {
+				if (body instanceof byte[]) {
+					byte[] ba = (byte[]) body;
+					int messageLength = sb.length() + ba.length;
+					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					bw.write(sb.toString());
+					bw.flush();
+					os.write((byte[]) ba);
+					os.flush();
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
+					return;
+				}
 				if (String.class == body.getClass()) {
 					String t = (String) body;
 					int messageLength = sb.length() + t.length();
@@ -109,33 +120,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
 					return;
 				}
-				if (body instanceof IInternalMessage) {
-					IInternalMessage message = (IInternalMessage) body;
-					int messageLength = sb.length() + message.getLength();
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
-					bw.write(sb.toString());
-					bw.flush();
-					message.encode(bw);
-					bw.flush();
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
-					return;
-				}
-				if (body instanceof byte[]) {
-					byte[] ba = (byte[]) body;
-					int messageLength = sb.length() + ba.length;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
-					bw.write(sb.toString());
-					bw.flush();
-					os.write((byte[]) ba);
-					os.flush();
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
-					return;
-				} else {
-					scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
-					throw new EncodingDecodingException("unsupported body type");
-				}
+				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
+				throw new EncodingDecodingException("unsupported body type");
 			} else {
 				writeHeadLine(bw, headerKey, headerSize, headerSize);
 				bw.write(sb.toString());
