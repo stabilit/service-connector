@@ -78,10 +78,6 @@ public class LinkedQueue<E> {
 	 * @return the linked node
 	 */
 	public LinkedNode<E> insert(E value) {
-		if (value == null) {
-			// inserting null value not allowed
-			return null;
-		}
 		LinkedNode<E> newNode = new LinkedNode<E>(value);
 		synchronized (this.last) {
 			this.last.next = newNode;

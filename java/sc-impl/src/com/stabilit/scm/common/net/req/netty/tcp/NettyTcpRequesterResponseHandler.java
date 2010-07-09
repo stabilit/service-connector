@@ -27,6 +27,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -128,7 +129,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			ChannelBuffer content = (ChannelBuffer) eventMessage.getResponse();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
-			// inside
+			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
 					.newInstance(buffer);

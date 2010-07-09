@@ -28,6 +28,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
+import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -128,7 +129,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
-			// inside
+			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
 					.newInstance(buffer);
@@ -138,6 +139,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			this.scmpCallback.callback(e);
 			return;
 		}
-		this.scmpCallback.callback(ret);		
+		this.scmpCallback.callback(ret);
 	}
 }

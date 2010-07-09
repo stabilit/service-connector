@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Formatter;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IPerformanceListener;
 import com.stabilit.scm.common.listener.PerformanceEvent;
 import com.stabilit.scm.common.log.ILogger;
@@ -73,7 +74,7 @@ public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator
 			format.close();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}
 

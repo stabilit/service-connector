@@ -173,8 +173,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 		@Override
 		public IContext getContext() {
-			// TODO Auto-generated method stub
-			return null;
+			return context;
 		}
 		
 		@Override

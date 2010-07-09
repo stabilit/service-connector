@@ -19,7 +19,9 @@ package com.stabilit.scm.common.listener;
 import java.util.EventListener;
 
 /**
- * The Class PerformancePoint. Allows notifying performance - fire begin/end.
+ * The Class PerformancePoint. Allows notifying performance - fire begin/end. Pay Attention: PerformancePoint works with
+ * ThreadLocal to find the begin event when a end event is fired. So if begin and end event is fired by different
+ * threads performancePoint doesn't work.
  */
 public final class PerformancePoint extends ListenerSupport<IPerformanceListener> {
 
@@ -113,7 +115,7 @@ public final class PerformancePoint extends ListenerSupport<IPerformanceListener
 				IPerformanceListener performanceListener = (IPerformanceListener) localArray[i];
 				performanceListener.begin(performanceEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}
@@ -132,7 +134,7 @@ public final class PerformancePoint extends ListenerSupport<IPerformanceListener
 				IPerformanceListener performanceListener = (IPerformanceListener) localArray[i];
 				performanceListener.end(performanceEvent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
 	}

@@ -67,6 +67,10 @@ public class SubscriptionQueue<E> {
 	 *            the message
 	 */
 	public void add(E message) {
+		if (message == null) {
+			// inserting null value not allowed
+			return;
+		}
 		this.dataQueue.insert(message);
 		// inform new message arrived
 		this.fireNewDataArrived();
