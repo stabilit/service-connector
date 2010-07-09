@@ -1,61 +1,81 @@
 package com.stabilit.queue.linked;
 
+
+
 public class LinkedQueue<E> {
 
 	/**
-	 * Dummy header node of list. The first actual node, if it exists, is always
-	 * at head_.next. After each take, the old first node becomes the head.
+	 * Dummy header node of list. The first actual node, if it exists, is always at head_.next. After each take, the old
+	 * first node becomes the head.
 	 **/
-	protected LinkedNode<E> head_;
+		
+	protected LinkedNode<E> head;
 
 	/**
 	 * Helper monitor for managing access to last node.
 	 **/
-	protected final Object putLock_ = new Object();
+	protected final Object putLock = new Object();
 
 	/**
-	 * The last node of list. Put() appends to list, so modifies last_
+	 * The last node of list. Put() appends to list, so modifies last
 	 **/
-	protected LinkedNode<E> last_;
+	protected LinkedNode<E> last;
 
+	
+	protected int size;
+	
 	/**
-	 * The number of threads waiting for a take. Notifications are provided in
-	 * put only if greater than zero. The bookkeeping is worth it here since in
-	 * reasonably balanced usages, the notifications will hardly ever be
+	 * The number of threads waiting for a take. Notifications are provided in put only if greater than zero. The
+	 * bookkeeping is worth it here since in reasonably balanced usages, the notifications will hardly ever be
 	 * necessary, so the call overhead to notify can be eliminated.
 	 **/
-	protected int waitingForTake_ = 0;
+	protected int waitingForTake = 0;
 
 	public LinkedQueue() {
-		head_ = new LinkedNode<E>(null);
-		last_ = head_;
+		head = new LinkedNode<E>(null);
+		last = head;
+		this.size = 0;
 	}
 
+	public LinkedNode<E> getHead() {
+		return head;
+	}
+
+	public LinkedNode<E> getLast() {
+		return last;
+	}
+
+	public int getSize() {
+		return size;
+	}
+	
 	/** Main mechanics for put/offer **/
-	protected INode<E> insert(E x) {
-		synchronized (putLock_) {
+	protected LinkedNode<E> insert(E x) {
+		synchronized (putLock) {
 			LinkedNode<E> p = new LinkedNode<E>(x);
-			synchronized (last_) {
-				last_.next = p;
-				last_ = p;
+			synchronized (last) {
+				last.next = p;
+				last = p;
+				size++;
 			}
-			if (waitingForTake_ > 0) {
-				putLock_.notify();
+			if (waitingForTake > 0) {
+				putLock.notify();
 			}
-			return p;				
+			return p;
 		}
 	}
 
 	/** Main mechanics for take/poll **/
 	protected synchronized Object extract() {
-		synchronized (head_) {
+		synchronized (head) {
 			Object x = null;
-			LinkedNode<E> first = head_.next;
+			LinkedNode<E> first = head.next;
 			if (first != null) {
 				x = first.value;
 				first.value = null;
-				head_ = first;
+				head = first;
 			}
+			size--;
 			return x;
 		}
 	}
@@ -85,21 +105,21 @@ public class LinkedQueue<E> {
 		if (x != null)
 			return x;
 		else {
-			synchronized (putLock_) {
+			synchronized (putLock) {
 				try {
-					++waitingForTake_;
+					++waitingForTake;
 					for (;;) {
 						x = extract();
 						if (x != null) {
-							--waitingForTake_;
+							--waitingForTake;
 							return x;
 						} else {
-							putLock_.wait();
+							putLock.wait();
 						}
 					}
 				} catch (InterruptedException ex) {
-					--waitingForTake_;
-					putLock_.notify();
+					--waitingForTake;
+					putLock.notify();
 					throw ex;
 				}
 			}
@@ -107,8 +127,8 @@ public class LinkedQueue<E> {
 	}
 
 	public Object peek() {
-		synchronized (head_) {
-			LinkedNode<E> first = head_.next;
+		synchronized (head) {
+			LinkedNode<E> first = head.next;
 			if (first != null)
 				return first.value;
 			else
@@ -117,8 +137,8 @@ public class LinkedQueue<E> {
 	}
 
 	public boolean isEmpty() {
-		synchronized (head_) {
-			return head_.next == null;
+		synchronized (head) {
+			return head.next == null;
 		}
 	}
 
@@ -129,39 +149,33 @@ public class LinkedQueue<E> {
 		if (x != null)
 			return x;
 		else {
-			synchronized (putLock_) {
+			synchronized (putLock) {
 				try {
 					long waitTime = msecs;
 					long start = (msecs <= 0) ? 0 : System.currentTimeMillis();
-					++waitingForTake_;
+					++waitingForTake;
 					for (;;) {
 						x = extract();
 						if (x != null || waitTime <= 0) {
-							--waitingForTake_;
+							--waitingForTake;
 							return x;
 						} else {
-							putLock_.wait(waitTime);
-							waitTime = msecs
-									- (System.currentTimeMillis() - start);
+							putLock.wait(waitTime);
+							waitTime = msecs - (System.currentTimeMillis() - start);
 						}
 					}
 				} catch (InterruptedException ex) {
-					--waitingForTake_;
-					putLock_.notify();
+					--waitingForTake;
+					putLock.notify();
 					throw ex;
 				}
 			}
 		}
 	}
-	
-	interface INode<E> {
-        public abstract INode<E> getNext();
-        public abstract E getValue();
-	}
-	
-	class LinkedNode<E> implements INode<E>{
+
+	public class LinkedNode<E> {
 		public E value;
-		public LinkedNode next;
+		public LinkedNode<E> next;
 
 		public LinkedNode() {
 		}
@@ -174,15 +188,13 @@ public class LinkedQueue<E> {
 			value = x;
 			next = n;
 		}
-		
-		@Override
-		public INode<E> getNext() {
+
+		public LinkedNode<E> getNext() {
 			return next;
 		}
-		
+
 		public E getValue() {
 			return value;
 		}
 	}
 }
-
