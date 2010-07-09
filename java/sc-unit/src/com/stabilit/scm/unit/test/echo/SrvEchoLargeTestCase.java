@@ -57,10 +57,10 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
-		Assert.assertEquals(SCMPBodyType.TEXT.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
@@ -76,10 +76,10 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
-		Assert.assertEquals(SCMPBodyType.TEXT.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/15", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", result.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
 	}
 
@@ -96,10 +96,10 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(sb.toString(), res.getBody());
-		Assert.assertEquals(SCMPBodyType.TEXT.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getName(), res.getMessageType());
+		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getValue()));
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), res.getMessageType());
 		Assert.assertNotNull(res.getSessionId());
 	}
 
@@ -122,10 +122,10 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(expected.toString(), res.getBody());
-		Assert.assertEquals(SCMPBodyType.TEXT.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/4", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
-		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getName(), res.getMessageType());
+		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getValue()));
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), res.getMessageType());
 		Assert.assertNotNull(res.getSessionId());
 	}
 }

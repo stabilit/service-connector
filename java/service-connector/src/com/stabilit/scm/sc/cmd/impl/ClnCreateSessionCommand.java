@@ -93,7 +93,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
@@ -128,24 +128,24 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 			try {				
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 				// echoTimeout
-				String echoTimeoutValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getName());
+				String echoTimeoutValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
 				int echoTimeout = ValidatorUtility.validateInt(0, echoTimeoutValue, 3601);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getName(), echoTimeout);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue(), echoTimeout);
 				// echoInterval
-				String echoIntervalValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_INTERVAL.getName());
+				String echoIntervalValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 				int echoInterval = ValidatorUtility.validateInt(0, echoIntervalValue, 3601);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL.getName(), echoInterval);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue(), echoInterval);
 				
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

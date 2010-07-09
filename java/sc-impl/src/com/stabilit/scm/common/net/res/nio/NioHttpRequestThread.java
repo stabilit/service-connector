@@ -140,7 +140,7 @@ public class NioHttpRequestThread implements Runnable {
 						throw ex;
 					}
 					SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-					scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
+					scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getValue());
 					scmpFault.setLocalDateTime();
 					response.setSCMP(scmpFault);
 				}

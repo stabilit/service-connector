@@ -44,7 +44,7 @@ public class SCMPCompositeTest {
 
 		SCMPMessage request = new SCMPMessage();
 		request.setBody("request");
-		request.setMessageType(SCMPMsgType.CLN_DATA.getName());
+		request.setMessageType(SCMPMsgType.CLN_DATA.getValue());
 
 		SCMPPart firstPart = new SCMPPart();
 		String bodyString = "first part request";
@@ -68,7 +68,7 @@ public class SCMPCompositeTest {
 		// body of the requestPart is null because body is split into several parts
 		// bodyType is text because split parts hold text bodies
 		request.setBody(null);
-		request.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getName());
+		request.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
 
 		Assert.assertEquals(bodyLength, composite.getBodyLength());
 		Assert.assertEquals(body.toString(), composite.getBody() + "");

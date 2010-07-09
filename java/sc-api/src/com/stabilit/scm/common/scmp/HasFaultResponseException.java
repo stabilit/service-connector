@@ -59,8 +59,8 @@ public abstract class HasFaultResponseException extends Exception {
 	}
 
 	public void setErrorCode(SCMPError errorCode) {
-		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode.getErrorCode());
-		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorCode.getErrorText());
+		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), errorCode.getErrorCode());
+		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), errorCode.getErrorText());
 	}
 	
 	public void setAttribute(String name, String value) {
@@ -83,6 +83,6 @@ public abstract class HasFaultResponseException extends Exception {
 	 *            the new message type
 	 */
 	public void setMessageType(SCMPMsgType messageType) {
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), messageType.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), messageType.getValue());
 	}
 }

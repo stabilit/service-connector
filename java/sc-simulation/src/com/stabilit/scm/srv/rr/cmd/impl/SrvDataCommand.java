@@ -63,15 +63,15 @@ public class SrvDataCommand extends CommandAdapter {
 				LoggerPoint.getInstance().fireWarn(this, "command error: session not found");
 			}
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, request.getAttribute(
-					SCMPHeaderAttributeKey.SERVICE_NAME.getName()).toString());
+					SCMPHeaderAttributeKey.SERVICE_NAME.getValue()).toString());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SERVER_ERROR.getErrorCode());
 			scmpReply.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SERVER_ERROR.getErrorText());
-			scmpReply.setMessageType(getKey().getName());
+			scmpReply.setMessageType(getKey().getValue());
 			response.setSCMP(scmpReply);
 			return;
 		}
 
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setSessionId(sessionId);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName().toString());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
@@ -93,7 +93,7 @@ public class SrvDataCommand extends CommandAdapter {
 				response.setSCMP(scmpReply);
 			} else {
 				scmpReply = new SCMPPart();
-				scmpReply.setMessageType(getKey().getName());
+				scmpReply.setMessageType(getKey().getValue());
 				scmpReply.setSessionId(sessionId);
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName().toString());
 				scmpReply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, "Session info");
@@ -145,7 +145,7 @@ public class SrvDataCommand extends CommandAdapter {
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.SERVICE_NAME.getName(), serviceName);
+				request.setAttribute(SCMPHeaderAttributeKey.SERVICE_NAME.getValue(), serviceName);
 
 				// bodyLength
 
@@ -154,12 +154,12 @@ public class SrvDataCommand extends CommandAdapter {
 				if (compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
 
 				// messageInfo
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
-				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getName(), messageInfo);
+				request.setAttribute(SCMPHeaderAttributeKey.MSG_INFO.getValue(), messageInfo);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

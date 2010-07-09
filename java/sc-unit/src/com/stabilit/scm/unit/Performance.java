@@ -100,7 +100,7 @@ public class Performance {
 		double startTime = System.currentTimeMillis();
 		for (int i = 0; i < anzMsg; i++) {
 			request = new SCMPMessage(buffer);
-			request.setMessageType(SCMPMsgType.ATTACH.getName());
+			request.setMessageType(SCMPMsgType.ATTACH.getValue());
 			// request.setSessionId(session.getSessionId());
 			request.setHeader(SCMPHeaderAttributeKey.MAX_NODES, 2);
 			resp = con.sendAndReceive(request);

@@ -36,13 +36,13 @@ public enum SCMPHeaderAttributeKey {
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
 	/** The REQ_ID. */
-	CLN_REQ_ID("clnReqId"), 
+	CLN_REQ_ID("clnReqId"),
 	/** The SC_REQ_ID. */
-	SC_REQ_ID("scReqId"), 
+	SC_REQ_ID("scReqId"),
 	/** The SC_RES_ID. */
-	SC_RES_ID("scResId"), 
+	SC_RES_ID("scResId"),
 	/** The SRV_REQ_ID. */
-	SRV_REQ_ID("srvReqId"), 
+	SRV_REQ_ID("srvReqId"),
 	/** The SRV_RES_ID. */
 	SRV_RES_ID("srvResId"),
 	/** The COMPRESSION. */
@@ -50,9 +50,9 @@ public enum SCMPHeaderAttributeKey {
 	/** The ECHO_INTERVAL. */
 	ECHO_INTERVAL("eci"),
 	/** The ECHO_TIMEOUT. */
-	ECHO_TIMEOUT("ect"), 
+	ECHO_TIMEOUT("ect"),
 	/** The IMMEDIAT_CONNECT. */
-	IMMEDIATE_CONNECT("imc"), 
+	IMMEDIATE_CONNECT("imc"),
 	/** The IP_ADDRESS_LIST. */
 	IP_ADDRESS_LIST("ipl"),
 	/** The KEEP_ALIVE_INTERVAL. */
@@ -72,7 +72,7 @@ public enum SCMPHeaderAttributeKey {
 	/** The NO_DATA. */
 	NO_DATA("nod"),
 	/** The NO_DATA_INTERVAL. */
-	NO_DATA_INTERVAL("noi"),	
+	NO_DATA_INTERVAL("noi"),
 	/** The ORIGINAL_MSG_ID. */
 	ORIGINAL_MSG_ID("omi"),
 	/** The PORT_NR. */
@@ -93,7 +93,7 @@ public enum SCMPHeaderAttributeKey {
 	SESSION_ID("sid"),
 	/** The SESSION_INFO. */
 	SESSION_INFO("sin"),
-	//TODO this header fields need to be removed - first eliminate references
+	// TODO this header fields need to be removed - first eliminate references
 	/** The BODY_LENGTH. */
 	BODY_LENGTH("bodyLength"),
 	/** The CLIENT_ID. */
@@ -101,28 +101,27 @@ public enum SCMPHeaderAttributeKey {
 	/** The KEEP_ALIVE_TIMEOUT. */
 	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
 	/** The MAX_NODES. */
-	MAX_NODES("maxNodes"),
-	;
+	MAX_NODES("maxNodes"), ;
 
-	/** The name. */
-	private String name;
+	/** The value. */
+	private String value;
 
 	/**
-	 * Instantiates a new sCMP header attribute key.
+	 * Instantiates a new SCMPHeaderAttributeKey.
 	 * 
-	 * @param name
-	 *            the name
+	 * @param value
+	 *            the value
 	 */
-	private SCMPHeaderAttributeKey(String name) {
-		this.name = name;
+	private SCMPHeaderAttributeKey(String value) {
+		this.value = value;
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the value.
 	 * 
-	 * @return the name
+	 * @return the value
 	 */
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 }

@@ -71,7 +71,7 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		clientRegistry.removeClient(socketAddress);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		response.setSCMP(scmpReply);
 	}
 

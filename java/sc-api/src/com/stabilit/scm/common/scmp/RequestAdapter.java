@@ -79,7 +79,7 @@ public abstract class RequestAdapter implements IRequest {
 
 	@Override
 	public Object getAttribute(SCMPHeaderAttributeKey key) {
-		return this.getAttribute(key.getName());
+		return this.getAttribute(key.getValue());
 	}
 
 	/** {@inheritDoc} */
@@ -91,7 +91,7 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(SCMPHeaderAttributeKey key, Object value) {
-		this.setAttribute(key.getName(), value);
+		this.setAttribute(key.getValue(), value);
 	}
 
 	/** {@inheritDoc} */

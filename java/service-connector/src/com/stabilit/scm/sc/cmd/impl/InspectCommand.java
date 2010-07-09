@@ -61,7 +61,7 @@ public class InspectCommand extends CommandAdapter {
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 
 		// dump internal registries

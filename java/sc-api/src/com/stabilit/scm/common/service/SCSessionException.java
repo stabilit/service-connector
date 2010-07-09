@@ -53,7 +53,7 @@ public class SCSessionException extends HasFaultResponseException {
 	 */
 	public SCSessionException(SCMPError errorCode) {
 		super(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class SCSessionException extends HasFaultResponseException {
 	 */
 	public SCSessionException(Throwable cause) {
 		super(cause);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
 	}
 
 	/**
@@ -78,6 +78,6 @@ public class SCSessionException extends HasFaultResponseException {
 	public SCSessionException(SCMPError errorCode, Map<String, String> map) {
 		this.faultAttr = map;
 		this.setErrorCode(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
 	}
 }

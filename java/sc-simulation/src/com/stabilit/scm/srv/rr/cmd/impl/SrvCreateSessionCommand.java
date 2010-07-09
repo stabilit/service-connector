@@ -67,7 +67,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
 					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		response.setSCMP(scmpReply);
 	}
 
@@ -79,7 +79,7 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
@@ -89,11 +89,11 @@ public class SrvCreateSessionCommand extends CommandAdapter {
 					throw new SCMPValidatorException("sessonId must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getName());
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

@@ -79,7 +79,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		// creating reply
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
@@ -95,7 +95,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 			try {
 				
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}

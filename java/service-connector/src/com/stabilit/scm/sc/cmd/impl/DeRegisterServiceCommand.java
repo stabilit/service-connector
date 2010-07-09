@@ -79,7 +79,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
 	}

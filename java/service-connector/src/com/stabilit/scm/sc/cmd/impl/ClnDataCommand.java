@@ -72,7 +72,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		try {
 			// try sending to backend server
 			SCMPMessage scmpReply = server.sendData(message);
-			scmpReply.setMessageType(getKey().getName());
+			scmpReply.setMessageType(getKey().getValue());
 			response.setSCMP(scmpReply);
 		} catch (SCServiceException e) {
 			// clnDatat failed, connection to backend server disturbed - clean up
@@ -131,7 +131,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// bodyLength
 				String bodyLength = message.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH);
 				ValidatorUtility.validateInt(0, bodyLength);
-				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getName(), bodyLength);
+				request.setAttribute(SCMPHeaderAttributeKey.BODY_LENGTH.getValue(), bodyLength);
 
 				// TODO messageId
 
@@ -140,7 +140,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				if (compression == null) {
 					compression = true;
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getName(), compression);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
 				// messageInfo
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				ValidatorUtility.validateString(0, messageInfo, 256);
@@ -178,7 +178,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		
 		@Override
 		public void callback(SCMPMessage scmpReply) {
-			scmpReply.setMessageType(getKey().getName());
+			scmpReply.setMessageType(getKey().getValue());
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
 		}

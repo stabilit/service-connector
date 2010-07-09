@@ -74,7 +74,7 @@ public class CommandFactory extends Factory {
 	 *            the factory instance
 	 */
 	public void addCommand(SCMPMsgType messageType, IFactoryable factoryInstance) {
-		super.add(messageType.getName(), factoryInstance);
+		super.add(messageType.getValue(), factoryInstance);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class CommandFactory extends Factory {
 	 *             the exception
 	 */
 	public ICommand getCommand(SCMPMsgType key) {
-		IFactoryable factoryInstance = this.newInstance(key.getName());
+		IFactoryable factoryInstance = this.newInstance(key.getValue());
 		return (ICommand) factoryInstance;
 	}
 }

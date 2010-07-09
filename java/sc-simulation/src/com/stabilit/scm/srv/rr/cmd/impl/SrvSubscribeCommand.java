@@ -69,7 +69,7 @@ public class SrvSubscribeCommand extends CommandAdapter implements IPassThroughP
 			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
 					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
 		}
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		response.setSCMP(scmpReply);
 	}
 
@@ -83,7 +83,7 @@ public class SrvSubscribeCommand extends CommandAdapter implements IPassThroughP
 			try {
 				
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}

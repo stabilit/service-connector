@@ -33,8 +33,8 @@ public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 	/** undefined. */
 	UNDEFINED("undefined");
 
-	/** The name. */
-	private String name;
+	/** The value. */
+	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
 	private static final ReverseEnumMap<String, SCMPBodyType> reverseMap = new ReverseEnumMap<String, SCMPBodyType>(
 			SCMPBodyType.class);
@@ -42,20 +42,11 @@ public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 	/**
 	 * Instantiates a new SCMP body type.
 	 * 
-	 * @param name
+	 * @param value
 	 *            the name
 	 */
-	private SCMPBodyType(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Gets the name.
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
+	private SCMPBodyType(String value) {
+		this.value = value;
 	}
 
 	/**
@@ -90,7 +81,7 @@ public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 
 	@Override
 	public String getValue() {
-		return this.getName();
+		return this.value;
 	}
 
 	@Override

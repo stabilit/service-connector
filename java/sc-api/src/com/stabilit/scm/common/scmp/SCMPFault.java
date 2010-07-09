@@ -56,7 +56,7 @@ public class SCMPFault extends SCMPMessage {
 	 * Sets the local date time.
 	 */
 	public void setLocalDateTime() {
-		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getName(), DateTimeUtility.getCurrentTimeZoneMillis());
+		header.put(SCMPHeaderAttributeKey.LOCAL_DATE_TIME.getValue(), DateTimeUtility.getCurrentTimeZoneMillis());
 	}
 
 	/** {@inheritDoc} */
@@ -80,8 +80,8 @@ public class SCMPFault extends SCMPMessage {
 	 *            the error text
 	 */
 	public void setError(String errorCode, String errorText) {
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), errorCode);
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), errorText);
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), errorCode);
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), errorText);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class SCMPFault extends SCMPMessage {
 	 *            the new error code
 	 */
 	public void setError(SCMPError scmpError) {
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getName(), scmpError.getErrorCode());
-		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getName(), scmpError.getErrorText());
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
+		header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText());
 	}
 }

@@ -39,7 +39,7 @@ public class SCMPDecoderException extends HasFaultResponseException {
 	 */
 	public SCMPDecoderException(SCMPError errorCode, Throwable cause) {
 		super(errorCode, cause);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
 	}
 
 	/**
@@ -50,6 +50,6 @@ public class SCMPDecoderException extends HasFaultResponseException {
 	 */
 	public SCMPDecoderException(SCMPError errorCode) {
 		super(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getName(), SCMPMsgType.UNDEFINED.getName());
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
 	}
 }

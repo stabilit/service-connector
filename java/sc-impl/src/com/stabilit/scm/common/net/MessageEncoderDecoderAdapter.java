@@ -105,7 +105,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			}
 		}
 		// reading body - depends on body type
-		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
+		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getValue());
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding

@@ -58,7 +58,7 @@ public final class SCMultipleClientAndStressTestCases {
 	 */
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getName());
+		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), msgType.getValue());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT), error.getErrorText());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE), error.getErrorCode());
 	}

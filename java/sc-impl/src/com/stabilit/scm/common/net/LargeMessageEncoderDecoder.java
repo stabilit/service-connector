@@ -112,7 +112,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					String t = (String) body;
 					int bodyLength = scmpMsg.getBodyLength(); // returns body length of part only
 					// this is a message part, we need to redefine the body length (message part length)
-					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getValue());
 					sb.append(EQUAL_SIGN);
 					sb.append(String.valueOf(bodyLength));
 					sb.append("\n");
@@ -133,7 +133,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
-					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getName());
+					sb.append(SCMPHeaderAttributeKey.BODY_LENGTH.getValue());
 					sb.append(EQUAL_SIGN);
 					int bodyLength = scmpMsg.getBodyLength(); // returns body length of part only
 					sb.append(String.valueOf(bodyLength));
@@ -181,7 +181,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	 */
 	private boolean isIgnoreHeader(String key) {
 		// Body length has to be ignored because is dependent to large SCMP body not to part body
-		if (SCMPHeaderAttributeKey.BODY_LENGTH.getName().equals(key)) {
+		if (SCMPHeaderAttributeKey.BODY_LENGTH.getValue().equals(key)) {
 			return true;
 		}
 		return false;

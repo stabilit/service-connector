@@ -72,9 +72,9 @@ public class LargeMessageEncoderDecoderTest {
 		this.body = "hello world!";
 
 		encodeScmp = new SCMPMessage();
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getName());
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
 		encodeScmp.setBody(body.getBytes());
 	}
 
@@ -83,8 +83,8 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeREQTest() {
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -107,8 +107,8 @@ public class LargeMessageEncoderDecoderTest {
 	@Test
 	public void decodeRESTest() {
 		headKey = SCMPHeadlineKey.RES;
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -132,8 +132,8 @@ public class LargeMessageEncoderDecoderTest {
 	public void decodeEXCTest() {
 		headKey = SCMPHeadlineKey.EXC;
 
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -158,8 +158,8 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeUNDEFTest() {
-		String requestString = "garbage /s=69& SCMP/1.0\n" + "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n"
-				+ "bodyLength=" + bodyLength + "\n" + "mty=" + msgType.getName() + "\n" + body;
+		String requestString = "garbage /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n"
+				+ "bodyLength=" + bodyLength + "\n" + "mty=" + msgType.getValue() + "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -179,8 +179,8 @@ public class LargeMessageEncoderDecoderTest {
 	@Test
 	public void decodePRQTest() {
 		headKey = SCMPHeadlineKey.PRQ;
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -207,8 +207,8 @@ public class LargeMessageEncoderDecoderTest {
 	public void decodePRSTest() {
 		headKey = SCMPHeadlineKey.PRS;
 
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -233,8 +233,8 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeBodyTypesTest() {
-		String header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -251,8 +251,8 @@ public class LargeMessageEncoderDecoderTest {
 		verifySCMP(message);
 
 		bodyType = SCMPBodyType.TEXT;
-		header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		requestString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -276,7 +276,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void encodeREQTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -298,7 +298,7 @@ public class LargeMessageEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.RES;
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -325,7 +325,7 @@ public class LargeMessageEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.EXC;
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -351,7 +351,7 @@ public class LargeMessageEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.PRQ;
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -377,7 +377,7 @@ public class LargeMessageEncoderDecoderTest {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.PRS;
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -403,7 +403,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void encodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
 
-		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n" + "mty=" + msgType.getName() + "\n"
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n"
 				+ "bodyLength=" + bodyLength + "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
@@ -418,10 +418,10 @@ public class LargeMessageEncoderDecoderTest {
 
 		coder = coderFactory.newInstance(encodeScmp);
 		bodyType = SCMPBodyType.TEXT;
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 
-		header = "bodyLength=" + bodyLength + "\n" + "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n"
-				+ "mty=" + msgType.getName() + "\n";
+		header = "bodyLength=" + bodyLength + "\n" + "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n"
+				+ "mty=" + msgType.getValue() + "\n";
 
 		expectedString = SCImplTest.getSCMPString(headKey, header, body);
 
@@ -441,10 +441,10 @@ public class LargeMessageEncoderDecoderTest {
 	 *            the scmp
 	 */
 	private void verifySCMPStringBody(SCMPMessage scmp) {
-		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-		Assert.assertEquals(msgType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
+		Assert.assertEquals(msgType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, scmp.getBody());
 	}
 
@@ -455,10 +455,10 @@ public class LargeMessageEncoderDecoderTest {
 	 *            the scmp
 	 */
 	private void verifySCMP(SCMPMessage scmp) {
-		Assert.assertEquals(bodyType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-		Assert.assertEquals(msgType.getName(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
+		Assert.assertEquals(msgType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, new String((byte[]) scmp.getBody()));
 	}
 }

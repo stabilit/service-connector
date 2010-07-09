@@ -52,7 +52,7 @@ public class SrvDeleteSessionCommand extends CommandAdapter {
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		response.setSCMP(scmpReply);
 	}
 

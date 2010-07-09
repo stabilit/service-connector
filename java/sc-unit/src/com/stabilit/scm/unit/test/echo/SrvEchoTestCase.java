@@ -68,9 +68,9 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		System.out.println("Msg in sec: " + (anzMsg / ((endTime - startTime) / 1000L)));
 
 		Assert.assertEquals("hello world", result.getBody());
-		Assert.assertEquals(SCMPBodyType.TEXT.getName(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(result.getSessionId());
-		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getName(), result.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		anzMsg += 2;
 		Assert.assertEquals((int) anzMsg + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}

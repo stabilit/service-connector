@@ -92,11 +92,6 @@ public enum SCMPVersion {
 		return true;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string
-	 */
 	@Override
 	public String toString() {
 		return text;

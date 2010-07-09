@@ -64,7 +64,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		response.setSCMP(scmpReply);
 	}
@@ -79,7 +79,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 			try {
 
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getName());
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}

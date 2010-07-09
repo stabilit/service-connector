@@ -195,7 +195,7 @@ public class SCMPMessage {
 	 *            the header type
 	 */
 	public void removeHeader(SCMPHeaderAttributeKey headerType) {
-		header.remove(headerType.getName());
+		header.remove(headerType.getValue());
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class SCMPMessage {
 	 *            the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, String attributeValue) {
-		header.put(headerType.getName(), attributeValue);
+		header.put(headerType.getValue(), attributeValue);
 	}
 
 	/**
@@ -232,9 +232,9 @@ public class SCMPMessage {
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, boolean attributeValue) {
 		if (attributeValue) {
-			header.put(headerType.getName(), "1");
+			header.put(headerType.getValue(), "1");
 		} else {
-			header.put(headerType.getName(), "0");
+			header.put(headerType.getValue(), "0");
 		}
 	}
 
@@ -247,7 +247,7 @@ public class SCMPMessage {
 	 *            the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, int attributeValue) {
-		header.put(headerType.getName(), String.valueOf(attributeValue));
+		header.put(headerType.getValue(), String.valueOf(attributeValue));
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class SCMPMessage {
 	 * @return the attribute value
 	 */
 	public String getHeader(SCMPHeaderAttributeKey headerType) {
-		return header.get(headerType.getName());
+		return header.get(headerType.getValue());
 	}
 
 	/**
@@ -307,7 +307,7 @@ public class SCMPMessage {
 	 * @return the boolean attribute value
 	 */
 	public Boolean getHeaderBoolean(SCMPHeaderAttributeKey headerType) {
-		String value = header.get(headerType.getName());
+		String value = header.get(headerType.getValue());
 
 		if ("0".equals(value)) {
 			return false;
@@ -326,7 +326,7 @@ public class SCMPMessage {
 	 * @return the int attribute value
 	 */
 	public Integer getHeaderInt(SCMPHeaderAttributeKey headerType) {
-		String value = header.get(headerType.getName());
+		String value = header.get(headerType.getValue());
 		if (value == null) {
 			return null;
 		}
@@ -377,7 +377,7 @@ public class SCMPMessage {
 		if (sessionId == null) {
 			return;
 		}
-		header.put(SCMPHeaderAttributeKey.SESSION_ID.getName(), sessionId);
+		header.put(SCMPHeaderAttributeKey.SESSION_ID.getValue(), sessionId);
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class SCMPMessage {
 	 * @return the body type as string
 	 */
 	private String getBodyTypeAsString() {
-		return getBodyType().getName();
+		return getBodyType().getValue();
 	}
 
 	/**

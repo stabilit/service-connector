@@ -87,7 +87,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			} else {
 				// forward to next node where cln echo will be executed
 				--maxNodes;
-				message.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getName(), String.valueOf(maxNodes));
+				message.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getValue(), String.valueOf(maxNodes));
 				result = server.clnEcho(message);
 			}
 		} catch (SCServiceException e) {
@@ -99,7 +99,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
-		result.setMessageType(getKey().getName());
+		result.setMessageType(getKey().getValue());
 		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}

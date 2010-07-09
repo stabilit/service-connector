@@ -162,7 +162,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getValue());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
@@ -235,7 +235,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			((HasFaultResponseException) th).setFaultResponse(response);
 		} else {
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getName());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getValue());
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}

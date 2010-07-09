@@ -82,8 +82,8 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	/** The UNDEFINED. */
 	UNDEFINED("UND");
 
-	/** The name. */
-	private String name;
+	/** The value. */
+	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
 	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(
 			SCMPMsgType.class);
@@ -91,29 +91,16 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	/**
 	 * Instantiates a SCMPMsgType.
 	 * 
-	 * @param name
-	 *            the name
+	 * @param value
+	 *            the value
 	 */
-	private SCMPMsgType(String name) {
-		this.name = name;
+	private SCMPMsgType(String value) {
+		this.value = value;
 	}
 
-	/**
-	 * Gets the name.
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * To string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
-	public String toString() {
-		return name;
+	@Override
+	public String getValue() {
+		return this.value;
 	}
 
 	/**
@@ -128,16 +115,6 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	}
 
 	/**
-	 * Gets the value.
-	 * 
-	 * @return the value
-	 */
-	@Override
-	public String getValue() {
-		return this.getName();
-	}
-
-	/**
 	 * Reverse.
 	 * 
 	 * @param messageId
@@ -147,5 +124,10 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	@Override
 	public SCMPMsgType reverse(String messageId) {
 		return reverseMap.get(messageId);
+	}
+	
+	@Override
+	public String toString() {
+		return this.value;
 	}
 }

@@ -47,7 +47,7 @@ public class SrvEchoCommand extends CommandAdapter {
 
 		SCMPMessage result = null;
 
-		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getName());
+		String ipList = header.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 		SocketAddress socketAddress = request.getLocalSocketAddress();
 		if (socketAddress instanceof InetSocketAddress) {
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
@@ -71,7 +71,7 @@ public class SrvEchoCommand extends CommandAdapter {
 		result.setSessionId(message.getSessionId());
 		result.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		result.setHeader(SCMPHeaderAttributeKey.SRV_RES_ID, request.getRemoteSocketAddress().hashCode());
-		result.setMessageType(getKey().getName());
+		result.setMessageType(getKey().getValue());
 		response.setSCMP(result);
 	}
 

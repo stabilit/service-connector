@@ -73,7 +73,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getName());
+		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
 		response.setSCMP(scmpReply);
 	}
