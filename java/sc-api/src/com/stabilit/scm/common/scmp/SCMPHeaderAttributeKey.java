@@ -95,13 +95,7 @@ public enum SCMPHeaderAttributeKey {
 	SESSION_INFO("sin"),
 	// TODO this header fields need to be removed - first eliminate references
 	/** The BODY_LENGTH. */
-	BODY_LENGTH("bodyLength"),
-	/** The CLIENT_ID. */
-	CLIENT_ID("clientId"),
-	/** The KEEP_ALIVE_TIMEOUT. */
-	KEEP_ALIVE_TIMEOUT("keepAliveTimeout"),
-	/** The MAX_NODES. */
-	MAX_NODES("maxNodes"), ;
+	BODY_LENGTH("bodyLength");
 
 	/** The value. */
 	private String value;

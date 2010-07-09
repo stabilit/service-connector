@@ -20,7 +20,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnEchoCall;
 import com.stabilit.scm.cln.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.cln.call.SCMPSrvDataCall;
 import com.stabilit.scm.cln.call.SCMPSrvDeleteSessionCall;
@@ -244,17 +243,6 @@ public class Server {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
 		try {
 			serverReply = srvEchoCall.invoke();
-		} catch (Exception e) {
-			throw new SCServiceException("srvEcho failed", e);
-		}
-		return serverReply;
-	}
-
-	public SCMPMessage clnEcho(SCMPMessage message) throws SCServiceException {
-		SCMPMessage serverReply = null;
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(requester, message);
-		try {
-			serverReply = clnEchoCall.invoke();
 		} catch (Exception e) {
 			throw new SCServiceException("srvEcho failed", e);
 		}

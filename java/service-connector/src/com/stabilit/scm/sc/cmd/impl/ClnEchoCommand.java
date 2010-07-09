@@ -20,7 +20,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -69,38 +68,23 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			System.out.println("ClnEchoCommand empty body");
 		}
 
-		int maxNodes = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_NODES);
-		if (LoggerPoint.getInstance().isDebug()) {
-			LoggerPoint.getInstance().fireDebug(this,
-					"Run command " + this.getKey() + " on Node: " + maxNodes);
-		}
-		
-		Session session = getSessionById(message.getSessionId());	
+		Session session = getSessionById(message.getSessionId());
 		Server server = session.getServer();
-		
+
 		SCMPMessage result = null;
 
 		try {
-			if (maxNodes == 2) {
-				// forward to next node
-				result = server.srvEcho(message);
-			} else {
-				// forward to next node where cln echo will be executed
-				--maxNodes;
-				message.setHeader(SCMPHeaderAttributeKey.MAX_NODES.getValue(), String.valueOf(maxNodes));
-				result = server.clnEcho(message);
-			}
+			result = server.srvEcho(message);
 		} catch (SCServiceException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
 			ExceptionPoint.getInstance().fireException(this, e);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(
-					SCMPError.SERVER_ERROR);
+			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
 		result.setMessageType(getKey().getValue());
-		result.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, request.getRemoteSocketAddress().hashCode());
+		result.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 

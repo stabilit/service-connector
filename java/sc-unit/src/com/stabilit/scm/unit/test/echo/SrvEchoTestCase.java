@@ -53,7 +53,6 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 	public void invokeSingleSrvEchoTest() throws Exception {
 		SCMPMessage result = null;
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
-		clnEchoCall.setMaxNodes(2);
 		clnEchoCall.setRequestBody("hello world");
 
 		double startTime = System.currentTimeMillis();
@@ -89,7 +88,6 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		SCMPMessage result = null;
 
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
-		clnEchoCall.setMaxNodes(2);
 
 		for (int i = 0; i < anzMsg; i++) {
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
@@ -119,7 +117,6 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
 					"simulation", this.sessionId);
-			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + req.toHashCodeString(), result.getBody());
@@ -146,7 +143,6 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 			super.clnCreateSessionBefore();
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
 					"simulation", this.sessionId);
-			clnEchoCall.setMaxNodes(2);
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());
 			result = clnEchoCall.invoke();
 			Assert.assertEquals("hello world, index = " + i + req.toHashCodeString(), result.getBody());
@@ -164,7 +160,6 @@ public class SrvEchoTestCase extends SuperSessionTestCase {
 		SCMPMessage result = null;
 
 		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req, "simulation", this.sessionId);
-		clnEchoCall.setMaxNodes(2);
 
 		for (int i = 0; i < anzMsg; i++) {
 			clnEchoCall.setRequestBody("hello world, index = " + i + req.toHashCodeString());

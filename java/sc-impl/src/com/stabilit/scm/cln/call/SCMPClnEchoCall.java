@@ -58,7 +58,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	public SCMPMessage invoke() throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLIENT_ID, requester.hashCode());
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, requester.hashCode());
 		this.requestMessage.setMessageType(getMessageType().getValue());
 		this.responseMessage = requester.sendAndReceive(this.requestMessage);
 		if (this.responseMessage.isFault()) {
@@ -87,15 +87,5 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 */
 	public void setHeader(Map<String, String> header) {
 		this.requestMessage.setHeader(header);
-	}
-
-	/**
-	 * Sets the max nodes. Number defines how many nodes echo call should pass through.
-	 * 
-	 * @param maxNodes
-	 *            the new max nodes
-	 */
-	public void setMaxNodes(int maxNodes) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_NODES, String.valueOf(maxNodes));
 	}
 }

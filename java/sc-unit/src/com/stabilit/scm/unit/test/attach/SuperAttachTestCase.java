@@ -56,8 +56,6 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-
-		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
 		localDateTimeOfConnect = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);

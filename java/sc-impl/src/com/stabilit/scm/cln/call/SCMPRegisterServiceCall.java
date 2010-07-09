@@ -92,16 +92,6 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Sets the keep alive timeout.
-	 * 
-	 * @param keepAliveTimeout
-	 *            the new keep alive timeout
-	 */
-	public void setKeepAliveTimeout(int keepAliveTimeout) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_TIMEOUT, keepAliveTimeout);
-	}
-
-	/**
 	 * Sets the keep alive interval.
 	 * 
 	 * @param keepAliveInterval

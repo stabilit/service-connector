@@ -53,7 +53,6 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 		echoCall.setRequestBody(sb.toString());
-		echoCall.setMaxNodes(2);
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
@@ -72,7 +71,6 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 		echoCall.setRequestBody(sb.toString());
-		echoCall.setMaxNodes(2);
 		SCMPMessage result = echoCall.invoke();
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
@@ -91,7 +89,6 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 10; i++) {
 			sb.append(i);
 			groupCall.setRequestBody(String.valueOf(i));
-			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
@@ -117,7 +114,6 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < max; i++) {
 			expected.append(sb.toString());
 			groupCall.setRequestBody(sb.toString());
-			echoCall.setMaxNodes(2);
 			groupCall.invoke();
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)

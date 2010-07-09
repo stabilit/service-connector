@@ -86,7 +86,6 @@ public abstract class MTSuperTestCase {
 		registerService.setMaxSessions(9);
 		registerService.setPortNumber(7000);
 		registerService.setImmediateConnect(true);
-		registerService.setKeepAliveTimeout(30);
 		registerService.setKeepAliveInterval(360);
 		registerService.invoke();
 	}

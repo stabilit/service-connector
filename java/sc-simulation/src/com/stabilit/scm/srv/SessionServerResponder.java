@@ -63,7 +63,6 @@ public class SessionServerResponder extends Responder {
 		registerService.setMaxSessions(1);
 		registerService.setPortNumber(this.getResponderConfig().getPort());
 		registerService.setImmediateConnect(true);
-		registerService.setKeepAliveTimeout(0);
 		registerService.setKeepAliveInterval(0);
 		registerService.invoke();
 	}

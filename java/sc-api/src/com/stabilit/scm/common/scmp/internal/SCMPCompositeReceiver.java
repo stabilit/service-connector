@@ -68,7 +68,6 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
-		currentPart.setHeader(request, SCMPHeaderAttributeKey.MAX_NODES); // tries to set maxNodes
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
 		this.add(messagePart);
 	}

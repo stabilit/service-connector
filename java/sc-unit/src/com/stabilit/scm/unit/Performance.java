@@ -32,7 +32,6 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
@@ -84,7 +83,6 @@ public class Performance {
 		SCMPMessage resp = null;
 
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		SCMPMessage result = attachCall.invoke();
 
@@ -102,7 +100,6 @@ public class Performance {
 			request = new SCMPMessage(buffer);
 			request.setMessageType(SCMPMsgType.ATTACH.getValue());
 			// request.setSessionId(session.getSessionId());
-			request.setHeader(SCMPHeaderAttributeKey.MAX_NODES, 2);
 			resp = con.sendAndReceive(request);
 		}
 		double endTime = System.currentTimeMillis();

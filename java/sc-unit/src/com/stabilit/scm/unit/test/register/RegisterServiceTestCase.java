@@ -62,7 +62,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(0);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
@@ -77,7 +76,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
@@ -103,7 +101,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
 
 		registerServiceCall.invoke();
@@ -145,7 +142,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveTimeout(30);
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {

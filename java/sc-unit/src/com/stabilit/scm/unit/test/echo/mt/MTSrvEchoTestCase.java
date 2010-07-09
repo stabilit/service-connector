@@ -105,7 +105,6 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		IRequester req = this.newReq();
 		
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setKeepAliveTimeout(30);
 		attachCall.setKeepAliveInterval(360);
 		attachCall.invoke();
 		// sets up a create session call
