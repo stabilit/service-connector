@@ -74,7 +74,7 @@ public class AttachTestCase extends SuperTestCase {
 		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={bodyLength=0, kpi=360, ver=1.0-000, ldt="
-				+ localDateTimeString + ", mid=1, mty=ATT, keepAliveTimeout=30}] MapBean: ldt=" + localDateTime + ";|";
+				+ localDateTimeString + ", mid=1, mty=ATT}] MapBean: ldt=" + localDateTime + ";|";
 		String scEntry = inspectMap.get("clientRegistry");
 		// truncate /127.0.0.1:3640 because port may vary.
 		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
