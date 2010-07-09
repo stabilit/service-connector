@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.IKeepAliveListener;
-import com.stabilit.scm.common.listener.KeepAliveEvent;
-import com.stabilit.scm.common.listener.KeepAlivePoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 

@@ -23,7 +23,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.FrameDecoderFactory;

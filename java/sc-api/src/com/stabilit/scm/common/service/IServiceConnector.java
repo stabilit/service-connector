@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.ctx.IContext;
 

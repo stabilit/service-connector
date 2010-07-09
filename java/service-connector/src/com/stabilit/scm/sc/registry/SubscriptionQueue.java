@@ -22,7 +22,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
