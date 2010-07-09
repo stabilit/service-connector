@@ -53,9 +53,7 @@ public class AttachTestCase extends SuperTestCase {
 	@Test
 	public void attach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-
 		attachCall.setKeepAliveInterval(360);
-
 		SCMPMessage result = attachCall.invoke();
 
 		/*********************************** Verify attach response msg **********************************/
