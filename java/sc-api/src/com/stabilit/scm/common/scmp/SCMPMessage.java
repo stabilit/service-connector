@@ -174,9 +174,6 @@ public class SCMPMessage {
 		if (this.body == null) {
 			return false;
 		}
-		if (this.body instanceof IInternalMessage) {
-			return false;
-		}
 		int bodyLength = this.getBodyLength();
 		return bodyLength > LARGE_MESSAGE_LIMIT;
 	}
@@ -436,14 +433,11 @@ public class SCMPMessage {
 		if (body == null) {
 			return SCMPBodyType.undefined;
 		}
-		if (String.class == body.getClass()) {
-			return SCMPBodyType.text;
-		}
 		if (byte[].class == body.getClass()) {
 			return SCMPBodyType.binary;
 		}
-		if (body instanceof IInternalMessage) {
-			return SCMPBodyType.internalMessage;
+		if (String.class == body.getClass()) {
+			return SCMPBodyType.text;
 		}
 		return SCMPBodyType.undefined;
 	}
@@ -466,14 +460,11 @@ public class SCMPMessage {
 		if (body == null) {
 			return 0;
 		}
-		if (String.class == body.getClass()) {
-			return ((String) body).length();
-		}
 		if (byte[].class == body.getClass()) {
 			return ((byte[]) body).length;
 		}
-		if (body instanceof IInternalMessage) {
-			return ((IInternalMessage) body).getLength();
+		if (String.class == body.getClass()) {
+			return ((String) body).length();
 		}
 		return 0;
 	}

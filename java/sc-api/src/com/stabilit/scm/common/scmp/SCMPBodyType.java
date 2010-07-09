@@ -27,8 +27,6 @@ public enum SCMPBodyType {
 	binary("binary"),
 	/** text. */
 	text("text"),
-	/** internal message. */
-	internalMessage("internalMessage"),
 	/** undefined. */
 	undefined("undefined");
 
@@ -78,8 +76,6 @@ public enum SCMPBodyType {
 		case binary:
 			return "application/octet-stream";
 		case text:
-			return "text/plain";
-		case internalMessage:
 			return "text/plain";
 		default:
 			return "application/octet-stream";

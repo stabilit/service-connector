@@ -53,8 +53,9 @@ public abstract class Registry implements IRegistryMXBean {
 
 	/**
 	 * Gets an entry by key.
-	 *
-	 * @param key the key
+	 * 
+	 * @param key
+	 *            the key
 	 * @return the map bean
 	 */
 	protected Object get(Object key) {
@@ -71,16 +72,15 @@ public abstract class Registry implements IRegistryMXBean {
 		this.registryMap.remove(key);
 	}
 
-	
 	/**
 	 * Gets the size.
-	 *
+	 * 
 	 * @return the size
 	 */
 	public int getSize() {
 		return this.registryMap.size();
 	}
-	
+
 	/**
 	 * Looks up a key.
 	 * 
@@ -94,9 +94,8 @@ public abstract class Registry implements IRegistryMXBean {
 
 	/**
 	 * To string.
-	 *
-	 * @return the string
-	 * {@inheritDoc}
+	 * 
+	 * @return the string {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
@@ -107,14 +106,16 @@ public abstract class Registry implements IRegistryMXBean {
 			dump.append(registryMap.get(key).toString());
 			dump.append("|");
 		}
+		if (getSize() > 0) {
+			dump.append("@");
+		}
 		return dump.toString();
 	}
 
 	/**
 	 * Gets the entries.
-	 *
-	 * @return the entries
-	 * {@inheritDoc}
+	 * 
+	 * @return the entries {@inheritDoc}
 	 */
 	@Override
 	public RegistryEntryWrapperJMX[] getEntries() {
