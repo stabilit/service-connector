@@ -431,15 +431,15 @@ public class SCMPMessage {
 	 */
 	public SCMPBodyType getBodyType() {
 		if (body == null) {
-			return SCMPBodyType.undefined;
+			return SCMPBodyType.UNDEFINED;
 		}
 		if (byte[].class == body.getClass()) {
-			return SCMPBodyType.binary;
+			return SCMPBodyType.BINARY;
 		}
 		if (String.class == body.getClass()) {
-			return SCMPBodyType.text;
+			return SCMPBodyType.TEXT;
 		}
-		return SCMPBodyType.undefined;
+		return SCMPBodyType.UNDEFINED;
 	}
 
 	/**

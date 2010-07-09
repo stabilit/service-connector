@@ -87,7 +87,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
 
-		String expectedString = this.headKey.name() + " 00000 00000 1.0\n";
+		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -104,7 +104,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
 
-		String expectedString = this.headKey.name() + " 00000 00000 1.0\n";
+		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {

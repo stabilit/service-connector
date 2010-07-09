@@ -83,6 +83,7 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 
 	/** The name. */
 	private String name;
+	/** The reverseMap, to get access to the enum constants by string value. */
 	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(
 			SCMPMsgType.class);
 

@@ -67,20 +67,20 @@ public class DefaultFrameDecoderTest {
 	public void parseFrameSizeTest() {
 		byte[] b = null;
 		int frameSize = 0;
-		String headline = "REQ 00078 00043 1.0\n";
+		String headline = "REQ 0000078 00043 1.0\n";
 		try {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
-			Assert.assertEquals("98", frameSize + "");
+			Assert.assertEquals("100", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
 
-		headline = "REQ 11178 00043 1.0\n";
+		headline = "REQ 0011178 00043 1.0\n";
 		try {
 			b = headline.getBytes();
 			frameSize = decoder.parseFrameSize(b);
-			Assert.assertEquals("11198", frameSize + "");
+			Assert.assertEquals("11200", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
 		}
@@ -92,7 +92,7 @@ public class DefaultFrameDecoderTest {
 	@Test
 	public void readIntFailTest() {
 		byte[] b = null;
-		String headline = "REQ  8700 00000 1.0\n";
+		String headline = "REQ  008700 00000 1.0\n";
 		try {
 			b = headline.getBytes();
 			decoder.parseFrameSize(b);

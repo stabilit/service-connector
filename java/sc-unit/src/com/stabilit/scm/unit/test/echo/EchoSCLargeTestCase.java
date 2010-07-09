@@ -75,7 +75,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		/*************************** verify echo session **********************************/
 		Map<String, String> header = result.getHeader();
 		Assert.assertEquals(sb.toString(), result.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
+		Assert.assertEquals(SCMPBodyType.TEXT.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE.getName()));
 		Assert.assertEquals("2/2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getName(), result.getMessageType());
@@ -93,7 +93,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(sb.toString(), res.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("1/10", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getName(), res.getMessageType());
@@ -116,7 +116,7 @@ public class EchoSCLargeTestCase extends SuperTestCase {
 		}
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(expected.toString(), res.getBody());
-		Assert.assertEquals(SCMPBodyType.text.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPBodyType.TEXT.getName(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("2/3", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(expected.length() + "", res.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getName(), res.getMessageType());

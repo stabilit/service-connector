@@ -16,22 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import com.stabilit.scm.common.util.ReverseEnumMap;
+import com.stabilit.scm.common.util.ReversibleEnum;
+
 /**
  * The Enum SCMPBodyType. Defines possible body types in SCMP.
  * 
  * @author JTraber
  */
-public enum SCMPBodyType {
+public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 
 	/** binary. */
-	binary("binary"),
+	BINARY("bin"),
 	/** text. */
-	text("text"),
+	TEXT("txt"),
 	/** undefined. */
-	undefined("undefined");
+	UNDEFINED("undefined");
 
 	/** The name. */
 	private String name;
+	/** The reverseMap, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPBodyType> reverseMap = new ReverseEnumMap<String, SCMPBodyType>(
+			SCMPBodyType.class);
 
 	/**
 	 * Instantiates a new SCMP body type.
@@ -61,9 +67,9 @@ public enum SCMPBodyType {
 	 */
 	public static SCMPBodyType getBodyType(String bodyType) {
 		if (bodyType == null) {
-			return undefined;
+			return UNDEFINED;
 		}
-		return SCMPBodyType.valueOf(bodyType);
+		return reverseMap.get(bodyType);
 	}
 
 	/**
@@ -73,12 +79,22 @@ public enum SCMPBodyType {
 	 */
 	public String getMimeType() {
 		switch (this) {
-		case binary:
+		case BINARY:
 			return "application/octet-stream";
-		case text:
+		case TEXT:
 			return "text/plain";
 		default:
 			return "application/octet-stream";
 		}
+	}
+
+	@Override
+	public String getValue() {
+		return this.getName();
+	}
+
+	@Override
+	public SCMPBodyType reverse(String key) {
+		return reverseMap.get(key);
 	}
 }

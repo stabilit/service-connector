@@ -47,7 +47,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
-	private DecimalFormat df = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
+	private DecimalFormat dfMsgSize = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
+	private DecimalFormat dfHeaderSize = new DecimalFormat(IConstants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
 	/** {@inheritDoc} */
@@ -107,16 +108,17 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getName());
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
+			// no body found stop decoding
 			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
 			return scmpMsg;
 		}
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
 			switch (scmpBodyType) {
-			case binary:
-			case undefined:
+			case BINARY:
+			case UNDEFINED:
 				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodySize);
-			case text:
+			case TEXT:
 				return this.decodeTextData(br, scmpMsg, scmpBodySize);
 			}
 		} catch (Exception e) {
@@ -147,8 +149,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize)
 			throws IOException {
 		bw.write(headerKey.toString());
-		bw.write(df.format(messageSize));
-		bw.write(df.format(headerSize));
+		bw.write(dfMsgSize.format(messageSize));
+		bw.write(dfHeaderSize.format(headerSize));
 		bw.write(" ");
 		bw.append(SCMPMessage.SCMP_VERSION.toString());
 		bw.append("\n");

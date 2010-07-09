@@ -77,7 +77,7 @@ public class EchoSCTestCase extends SuperTestCase {
 		Assert.assertNotNull(header.get(SCMPHeaderAttributeKey.BODY_LENGTH.getName()));
 
 		/*************************** verify echo session **********************************/
-		Assert.assertEquals(SCMPBodyType.text.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE
+		Assert.assertEquals(SCMPBodyType.TEXT.getName(), header.get(SCMPHeaderAttributeKey.BODY_TYPE
 				.getName()));
 		Assert.assertEquals(SCMPMsgType.ECHO_SC.getName(), result.getMessageType());
 	}
@@ -96,7 +96,7 @@ public class EchoSCTestCase extends SuperTestCase {
 			Assert.assertEquals("hello world " + i + req.toHashCodeString(), result.getBody());
 			Assert.assertEquals(echoString.length() + "", result
 					.getHeader(SCMPHeaderAttributeKey.BODY_LENGTH));
-			Assert.assertEquals(SCMPBodyType.text.getName(), result
+			Assert.assertEquals(SCMPBodyType.TEXT.getName(), result
 					.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.ECHO_SC.getName(), result.getMessageType());
 			Assert.assertEquals(i + 1 + "", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));

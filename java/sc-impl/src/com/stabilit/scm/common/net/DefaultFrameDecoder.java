@@ -90,10 +90,6 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 			throw new FrameDecoderException("invalid scmp message length");
 		}
 
-		if ((endOffset - startOffset) > 5) {
-			throw new FrameDecoderException("invalid scmp message length");
-		}
-
 		int scmpLength = 0;
 		int factor = 1;
 		for (int i = endOffset; i >= startOffset; i--) {

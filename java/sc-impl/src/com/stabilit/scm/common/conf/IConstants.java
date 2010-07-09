@@ -94,17 +94,17 @@ public interface IConstants {
 	/** Line feed character */
 	public static final byte LF = 0x0A;
 	/** The Constant FIX_HEADLINE_SIZE. */
-	public static final int FIX_HEADLINE_SIZE = 20;
+	public static final int FIX_HEADLINE_SIZE = 22;
 	/** The Constant FORMAT_OF_MSG_SIZE. */
-	public static final String FORMAT_OF_MSG_SIZE = " 00000";
+	public static final String FORMAT_OF_MSG_SIZE = " 0000000";
 	/** The Constant FORMAT_OF_HEADER_SIZE. */
 	public static final String FORMAT_OF_HEADER_SIZE = " 00000";
 	/** The Constant FIX_MSG_SIZE_START. */
 	public static final int FIX_MSG_SIZE_START = 4;
 	/** The Constant FIX_MSG_SIZE_END. */
-	public static final int FIX_MSG_SIZE_END = 8;
+	public static final int FIX_MSG_SIZE_END = 10;
 	/** The Constant FIX_HEADER_SIZE_START. */
-	public static final int FIX_HEADER_SIZE_START = 10;
+	public static final int FIX_HEADER_SIZE_START = 12;
 	/** The Constant FIX_HEADER_SIZE_END. */
-	public static final int FIX_HEADER_SIZE_END = 14;
+	public static final int FIX_HEADER_SIZE_END = 16;
 }

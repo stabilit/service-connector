@@ -65,7 +65,7 @@ public class DefaultEncoderDecoderTest {
 	public void setUp() {
 		this.headKey = SCMPHeadlineKey.REQ;
 		this.msgType = SCMPMsgType.ECHO_SC;
-		this.bodyType = SCMPBodyType.binary;
+		this.bodyType = SCMPBodyType.BINARY;
 		this.msgID = "1";
 		this.bodyLength = "12";
 		this.body = "hello world!";
@@ -194,7 +194,7 @@ public class DefaultEncoderDecoderTest {
 		}
 		verifySCMP(message);
 
-		bodyType = SCMPBodyType.text;
+		bodyType = SCMPBodyType.TEXT;
 		header = "bty=" + bodyType.getName() + "\n" + "mid=" + msgID + "\n" + "bodyLength=" + bodyLength + "\n"
 				+ "mty=" + msgType.getName() + "\n";
 
@@ -308,7 +308,7 @@ public class DefaultEncoderDecoderTest {
 		Assert.assertEquals(expectedString, os.toString());
 
 		coder = coderFactory.newInstance(encodeScmp);
-		bodyType = SCMPBodyType.text;
+		bodyType = SCMPBodyType.TEXT;
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getName());
 
 		header = "bodyLength=" + bodyLength + "\n" + "mid=" + msgID + "\n" + "bty=" + bodyType.getName() + "\n"
