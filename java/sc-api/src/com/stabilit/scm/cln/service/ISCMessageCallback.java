@@ -30,8 +30,5 @@ public interface ISCMessageCallback {
 
 	public abstract void callback(Throwable th);
 
-	public abstract boolean isActive();
-
-	public abstract void join() throws Exception;
-
+	public abstract IService getService();
 }

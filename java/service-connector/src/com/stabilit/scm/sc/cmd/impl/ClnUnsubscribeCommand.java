@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
@@ -49,8 +50,10 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
+		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
+		
 		// lookup session and checks properness
-		Session session = this.getSessionById(sessionId);
+		Session session = this.getSubscriptionSessionById(sessionId);
 
 		Server server = session.getServer();
 		try {
@@ -59,8 +62,11 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan
 		}
+		// looks up subscription place
+		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
+		subscriptionPlace.unsubscribe(sessionId);
 		// delete session on server successful - delete entry from session registry
-		SubscriptionSessionRegistry.getCurrentInstance().removeSession(session);
+		SubscriptionSessionRegistry.getCurrentInstance().removeSession(sessionId);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);

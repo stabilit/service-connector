@@ -21,12 +21,50 @@
  */
 package com.stabilit.scm.common.service;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+
 /**
  * @author JTraber
- *
  */
-public interface IActiveState {
+public abstract class SynchronousCallback implements ISCMPCallback {
+	
+	private IContext context;
+	/** Queue to store the answer. */
+	private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
 
-	void setActive(boolean active);
+	@Override
+	public void callback(SCMPMessage scmpReply) throws Exception {
+		this.answer.offer(scmpReply);
+	}
 
+	@Override
+	public void callback(Throwable th) {
+		SCMPMessage fault = new SCMPFault(th);
+		this.answer.offer(fault);
+	}
+
+	@Override
+	public IContext getContext() {
+		return this.context;
+	}
+
+	@Override
+	public void setContext(IContext context) {
+		this.context = context;
+	}
+
+	public SCMPMessage getReplySynchronous() throws Exception {
+		SCMPMessage reply = this.answer.take();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException(fault.getCause());
+		}
+		return reply;
+	}
 }

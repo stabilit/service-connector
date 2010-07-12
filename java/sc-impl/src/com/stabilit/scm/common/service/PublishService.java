@@ -27,12 +27,9 @@ import com.stabilit.scm.cln.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.cln.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.IServiceContext;
-import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -45,16 +42,14 @@ public class PublishService implements IPublishService {
 	private IServiceContext publishContext;
 	private IRequester requester;
 	private ISCMPCallback scmpCallback;
-	private ISCMessageCallback messageCallback;
 	private String mask;
 
-	public PublishService(String serviceName, IContext context) {
+	public PublishService(String serviceName, IServiceConnectorContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);
-		this.publishContext = new ServiceContext((IServiceConnectorContext) context, this);
+		this.publishContext = new ServiceContext(context, this);
 		this.scmpCallback = null;
-		this.messageCallback = null;
 		this.mask = null;
 	}
 
@@ -77,7 +72,7 @@ public class PublishService implements IPublishService {
 		if (this.scmpCallback != null) {
 			throw new SCServiceException("already subscribed");
 		}
-		this.scmpCallback = new PublishServiceSCMPCallback(callback);
+		this.scmpCallback = new PublishServiceCallback(callback);
 		this.receivePublication();
 	}
 
@@ -92,49 +87,21 @@ public class PublishService implements IPublishService {
 	public void unsubscribe() throws Exception {
 		this.scmpCallback = null;
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(this.requester, this.serviceName);
+				.newInstance(this.requester, this.serviceName, this.sessionId);
 		unsubscribeCall.invoke();
 	}
 
-	// member class
-	private class PublishServiceSCMPCallback implements ISCMPCallback {
+	private class PublishServiceCallback extends ServiceCallback {
 
-		private IContext context;
-		private ISCMessageCallback messageCallback;
-
-		public PublishServiceSCMPCallback(ISCMessageCallback messageCallback) {
-			this.messageCallback = messageCallback;
-			this.context = null;
-		}
-
-		@Override
-		public IContext getContext() {
-			return this.context;
+		public PublishServiceCallback(ISCMessageCallback messageCallback) {
+			super(messageCallback);
 		}
 
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
-			SCMessage messageReply = new SCMessage();
-			messageReply.setData(scmpReply.getBody());
-			messageReply.setCompressed(scmpReply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
-			this.messageCallback.callback(messageReply);
-			if (messageCallback instanceof IActiveState) {
-				((IActiveState) this.messageCallback).setActive(false);
-			}
+			// TODO if no data message -> receivePublication again
+			super.callback(scmpReply);
 			PublishService.this.receivePublication();
-		}
-
-		@Override
-		public void callback(Throwable th) {
-			this.messageCallback.callback(th);
-			if (messageCallback instanceof IActiveState) {
-				((IActiveState) this.messageCallback).setActive(false);
-			}
-		}
-
-		@Override
-		public void setContext(IContext context) {
-			this.context = context;
 		}
 	}
 }

@@ -84,7 +84,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		ISubscriptionPlace<SCMPMessage> subscriptionPlace = service.getSubscriptionPlace();
 		// TODO verify with jan - timeout arrives with cln_subscribe
-		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, 300);
+		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, 15);
 		IFilterMask filterMask = new FilterMask(mask);
 		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
 

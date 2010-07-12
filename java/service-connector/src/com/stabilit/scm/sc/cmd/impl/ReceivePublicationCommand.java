@@ -23,7 +23,7 @@ import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.net.ICommunicatorCallback;
+import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -62,7 +62,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 
@@ -84,31 +84,6 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		}
 		// no message available, start listening for new message
 		subscriptionPlace.listen(sessionId, request, response);
-	}
-
-	/**
-	 * Gets the subscription place by id. Looks up the subscription place by session id.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @return the subscription place by id
-	 * @throws Exception
-	 *             the exception thrown if no session is found
-	 */
-	private ISubscriptionPlace<SCMPMessage> getSubscriptionPlaceById(String sessionId) throws Exception {
-		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
-		Session session = subscriptionSessionRegistry.getSession(sessionId);
-
-		if (session == null) {
-			// incoming session not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		return session.getServer().getService().getSubscriptionPlace();
 	}
 
 	private class ClnReceivePublicationCommandValidator implements ICommandValidator {

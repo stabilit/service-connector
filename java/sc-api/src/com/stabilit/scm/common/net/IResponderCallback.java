@@ -27,7 +27,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 /**
  * @author JTraber
  */
-public interface ICommunicatorCallback {
+public interface IResponderCallback {
 
 	public abstract void callback(IRequest request, IResponse response);
 

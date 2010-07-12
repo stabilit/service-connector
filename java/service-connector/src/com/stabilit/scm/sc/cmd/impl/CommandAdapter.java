@@ -27,9 +27,12 @@ import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.sc.registry.ClientRegistry;
+import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Client;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
@@ -77,6 +80,47 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
+	protected Session getSubscriptionSessionById(String sessionId) throws SCMPCommandException {
+		SubscriptionSessionRegistry sessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
+		Session session = sessionRegistry.getSession(sessionId);
+
+		if (session == null) {
+			// incoming session not found
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return session;
+	}
+
+	/**
+	 * Gets the subscription place by id. Looks up the subscription place by session id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @return the subscription place by id
+	 * @throws Exception
+	 *             the exception thrown if no session is found
+	 */
+	protected ISubscriptionPlace<SCMPMessage> getSubscriptionPlaceById(String sessionId) throws Exception {
+		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
+		Session session = subscriptionSessionRegistry.getSession(sessionId);
+
+		if (session == null) {
+			// incoming session not found
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return session.getServer().getService().getSubscriptionPlace();
+	}
+
 	/**
 	 * Validate service. Lookup service in service registry and verify service existence.
 	 * 
@@ -121,25 +165,25 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
-	}	
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return commandValidator;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {

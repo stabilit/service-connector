@@ -24,7 +24,7 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.ICommunicatorCallback;
+import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -85,13 +85,9 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
 		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, communicatorCallback);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
@@ -103,6 +99,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		return;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {
 		return true;
@@ -156,11 +153,11 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	private class ClnDataCommandCallback implements ISCMPCallback {
 
 		private IContext context;
-		private ICommunicatorCallback callback;
+		private IResponderCallback callback;
 		private IRequest request;
 		private IResponse response;
 
-		public ClnDataCommandCallback(IRequest request, IResponse response, ICommunicatorCallback callback) {
+		public ClnDataCommandCallback(IRequest request, IResponse response, IResponderCallback callback) {
 			this.context = null;
 			this.callback = callback;
 			this.request = request;

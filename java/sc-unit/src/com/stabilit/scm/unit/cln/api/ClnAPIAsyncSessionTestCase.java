@@ -27,7 +27,7 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.SCServiceCallbackAdapter;
+import com.stabilit.scm.common.service.SCMessageCallback;
 import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -48,7 +48,7 @@ public class ClnAPIAsyncSessionTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach();
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 360 , 60);
+			sessionServiceA.createSession("sessionInfo", 360, 60);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
@@ -56,7 +56,6 @@ public class ClnAPIAsyncSessionTestCase {
 			requestMsg.setMessageInfo("test");
 			ISCMessageCallback callback = new TestCallback(sessionServiceA);
 			sessionServiceA.execute(requestMsg, callback);
-			callback.join(); // wait until
 			Thread.sleep(100000);
 			// deletes the session
 			sessionServiceA.deleteSession();
@@ -72,7 +71,7 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 	}
 
-	class TestCallback extends SCServiceCallbackAdapter {
+	private class TestCallback extends SCMessageCallback {
 
 		public TestCallback(IService service) {
 			super(service);
@@ -81,7 +80,7 @@ public class ClnAPIAsyncSessionTestCase {
 		@Override
 		public void callback(SCMessage msg) {
 			try {
-				IServiceContext sessionContext = (IServiceContext) this.service.getContext();
+				IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
 				IServiceConnector serviceConnector = sessionContext.getServiceConnector();
 				System.out.println(msg);
 			} catch (Exception e) {

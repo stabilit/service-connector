@@ -18,22 +18,16 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
-public class SCMPClnUnsubscribeCall extends SCMPServerCallAdapter {
+public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 
 	public SCMPClnUnsubscribeCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
-	public SCMPClnUnsubscribeCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
-	}
-
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPClnUnsubscribeCall(req, receivedMessage);
+	public SCMPClnUnsubscribeCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	public void setSessionId(String sessionId) {
@@ -42,6 +36,11 @@ public class SCMPClnUnsubscribeCall extends SCMPServerCallAdapter {
 
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_SUBSCRIBE;
+		return SCMPMsgType.CLN_UNSUBSCRIBE;
+	}
+
+	@Override
+	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
+		return new SCMPClnUnsubscribeCall(req, serviceName, sessionId);
 	}
 }

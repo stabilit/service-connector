@@ -32,7 +32,7 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.net.ICommunicatorCallback;
+import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.res.netty.NettyCommandRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpRequest;
 import com.stabilit.scm.common.net.res.netty.NettyHttpResponse;
@@ -56,7 +56,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  * @author JTraber
  */
 @ChannelPipelineCoverage("one")
-public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler implements ICommunicatorCallback {
+public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler implements IResponderCallback {
 
 	/** The command request. */
 	private NettyCommandRequest commandRequest = null;

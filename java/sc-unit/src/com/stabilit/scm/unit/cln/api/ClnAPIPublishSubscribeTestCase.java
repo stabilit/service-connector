@@ -26,7 +26,7 @@ import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.SCServiceCallbackAdapter;
+import com.stabilit.scm.common.service.SCMessageCallback;
 import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.srv.ps.PublishServer;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -101,7 +101,7 @@ public class ClnAPIPublishSubscribeTestCase {
 		}
 	}
 	
-	class TestPublishCallback extends SCServiceCallbackAdapter {
+	class TestPublishCallback extends SCMessageCallback {
 
 		public TestPublishCallback(IService service) {
 			super(service);

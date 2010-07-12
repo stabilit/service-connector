@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
-import com.stabilit.scm.common.net.ICommunicatorCallback;
+import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 
 public interface IAsyncCommand extends ICommand {
 
-	public void run(IRequest request, IResponse response, ICommunicatorCallback communicatorCallback) throws Exception;
+	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception;
 }

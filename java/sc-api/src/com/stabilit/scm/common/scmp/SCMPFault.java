@@ -25,6 +25,13 @@ import com.stabilit.scm.common.util.DateTimeUtility;
  */
 public class SCMPFault extends SCMPMessage {
 
+	private Throwable th;
+
+	public SCMPFault(Throwable th) {
+		super();
+		this.th = th;
+	}
+
 	/**
 	 * Instantiates a new SCMP fault.
 	 */
@@ -50,6 +57,13 @@ public class SCMPFault extends SCMPMessage {
 	 */
 	public SCMPFault(SCMPError errorCode) {
 		setError(errorCode);
+	}
+
+	/**
+	 * @return the th
+	 */
+	public Throwable getCause() {
+		return th;
 	}
 
 	/**
@@ -85,7 +99,7 @@ public class SCMPFault extends SCMPMessage {
 	}
 
 	/**
-	 * Sets the error code and text based on scmp error.  
+	 * Sets the error code and text based on scmp error.
 	 * 
 	 * @param scmpError
 	 *            the new error code

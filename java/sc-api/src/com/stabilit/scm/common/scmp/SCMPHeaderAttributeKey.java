@@ -98,7 +98,7 @@ public enum SCMPHeaderAttributeKey {
 	private String value;
 
 	/**
-	 * Instantiates a new SCMPHeaderAttributeKey.
+	 * Instantiates a SCMPHeaderAttributeKey.
 	 * 
 	 * @param value
 	 *            the value
