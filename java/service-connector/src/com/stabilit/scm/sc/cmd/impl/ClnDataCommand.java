@@ -164,11 +164,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			this.response = response;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public IContext getContext() {
 			return context;
 		}
 		
+		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) {
 			scmpReply.setMessageType(getKey().getValue());
@@ -176,12 +178,14 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			this.callback.callback(request, response);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
 			// TODO clean up!!! if th is SCServiceException
 			this.callback.callback(response, th);
 		}
 		
+		/** {@inheritDoc} */
 		@Override
 		public void setContext(IContext context) {
             this.context = context;			
