@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
-import sun.security.validator.ValidatorException;
-
 import com.stabilit.scm.common.scmp.IRequest;
 
 /**
@@ -48,7 +46,7 @@ public final class NullCommandValidator implements ICommandValidator {
 
 	/** {@inheritDoc} */
 	@Override
-	public void validate(IRequest request) throws ValidatorException {
-		throw new ValidatorException("no validator implemented");
+	public void validate(IRequest request) throws Exception {
+		throw new SCMPValidatorException("no validator implemented");
 	}
 }
