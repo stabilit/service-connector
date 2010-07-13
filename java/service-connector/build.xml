@@ -40,7 +40,7 @@
 		<mkdir dir="dist" />
 		<jar destfile="dist/service-connector.jar" basedir="bin/classes">
 			<manifest>
-				<attribute name="Main-Class" value="com.stabilit.environment.log.EnvLogFile" />
+				<attribute name="Main-Class" value="com.stabilit.scm.sc.SC" />
 			</manifest>
 		</jar>
 		<jar destfile="dist/doc.jar" basedir="javadoc" />
