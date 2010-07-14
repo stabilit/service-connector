@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
@@ -189,4 +190,8 @@ public abstract class CommandAdapter implements ICommand {
 	public boolean isAsynchronous() {
 		return false;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract SCMPMsgType getKey();
 }
