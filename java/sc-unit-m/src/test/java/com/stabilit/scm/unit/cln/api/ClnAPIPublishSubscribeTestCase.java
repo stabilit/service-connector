@@ -25,9 +25,9 @@ import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.IPublishService;
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.ISCClient;
+import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.srv.ps.PublishServer;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -41,10 +41,10 @@ public class ClnAPIPublishSubscribeTestCase {
 	
 	@Test
 	public void testSubscribeUnsubscribe() throws Exception {		
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		IPublishService publishServiceA = null;
 		try {			
-			sc = new ServiceConnector("localhost", 8080);		
+			sc = new SCClient("localhost", 8080);		
 			sc.setMaxConnections(100);
 			
 			// connects to SC, checks connection to SC
@@ -69,10 +69,10 @@ public class ClnAPIPublishSubscribeTestCase {
 	
 	@Test
 	public void testSubscribePublishUnsubscribe() throws Exception {		
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		IPublishService publishServiceA = null;
 		try {			
-			sc = new ServiceConnector("localhost", 8080);		
+			sc = new SCClient("localhost", 8080);		
 			sc.setMaxConnections(100);
 			
 			// connects to SC, checks connection to SC

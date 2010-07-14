@@ -21,8 +21,8 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
-import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnector;
+import com.stabilit.scm.common.service.ISCClient;
+import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPISessionTestCase {
@@ -34,9 +34,9 @@ public class ClnAPISessionTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080, "netty.http", 10);
+			sc = new SCClient("localhost", 8080, "netty.http", 10);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC

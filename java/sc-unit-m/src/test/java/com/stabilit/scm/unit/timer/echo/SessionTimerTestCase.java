@@ -25,8 +25,8 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.SessionEvent;
 import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.service.IServiceConnector;
-import com.stabilit.scm.common.service.ServiceConnector;
+import com.stabilit.scm.common.service.ISCClient;
+import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class SessionTimerTestCase {
@@ -39,7 +39,7 @@ public class SessionTimerTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {		
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		ISessionListener sessionListener = new ISessionListener() {
 
 			@Override
@@ -58,7 +58,7 @@ public class SessionTimerTestCase {
 		};
 		SessionPoint.getInstance().addListener(sessionListener);
 		try {			
-			sc = new ServiceConnector("localhost", 8080);		
+			sc = new SCClient("localhost", 8080);		
 			sc.setMaxConnections(100);
 			
 			// connects to SC, checks connection to SC

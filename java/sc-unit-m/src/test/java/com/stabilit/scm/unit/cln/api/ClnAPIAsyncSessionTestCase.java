@@ -26,9 +26,10 @@ import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.ISC;
+import com.stabilit.scm.common.service.ISCClient;
+import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.common.service.ServiceConnector;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIAsyncSessionTestCase {
@@ -40,9 +41,9 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		try {
-			sc = new ServiceConnector("localhost", 8080);
+			sc = new SCClient("localhost", 8080);
 			sc.setMaxConnections(100);
 			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
@@ -81,7 +82,7 @@ public class ClnAPIAsyncSessionTestCase {
 		public void callback(SCMessage msg) {
 			try {
 				IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
-				IServiceConnector serviceConnector = sessionContext.getServiceConnector();
+				ISC serviceConnector = sessionContext.getServiceConnector();
 				System.out.println(msg);
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);

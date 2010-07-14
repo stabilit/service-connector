@@ -19,7 +19,7 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIFileTestCase {
@@ -32,7 +32,7 @@ public class ClnAPIFileTestCase {
 	@Test
 	public void testClnAPI() throws Exception {
 
-		IServiceConnector sc = null;
+		ISCClient sc = null;
 		try {
 //			sc = ServiceConnectorFactory.newInstance("localhost", 8080);
 //			sc.attach();	// connects to SC, starts observing connection
