@@ -62,4 +62,10 @@
 		<dependencies>
 		</dependencies>
 	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>stabilit.repos</id>
+			<url>http://www.stabilit.ch/svn/repos/sc/trunk/java</url>
+		</repository>
+	</repositories>
 </project>
