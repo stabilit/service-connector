@@ -6,10 +6,10 @@ import com.stabilit.scm.common.net.req.IConnectionPool;
 
 public class ServiceContext implements IServiceContext {
 
-	private IServiceConnectorContext serviceConnectorContext;
+	private ISCContext serviceConnectorContext;
 	private IService service;
 
-	public ServiceContext(IServiceConnectorContext serviceConnectorContext, IService service) {
+	public ServiceContext(ISCContext serviceConnectorContext, IService service) {
 		this.serviceConnectorContext = serviceConnectorContext;
 		this.service = service;
 	}
@@ -20,7 +20,7 @@ public class ServiceContext implements IServiceContext {
 	}
 
 	@Override
-	public IServiceConnector getServiceConnector() {
+	public ISC getServiceConnector() {
 		return this.serviceConnectorContext.getServiceConnector();
 	}
 

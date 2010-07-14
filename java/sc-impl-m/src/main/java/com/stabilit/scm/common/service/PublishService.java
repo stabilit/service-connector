@@ -44,7 +44,7 @@ public class PublishService implements IPublishService {
 	private ISCMPCallback scmpCallback;
 	private String mask;
 
-	public PublishService(String serviceName, IServiceConnectorContext context) {
+	public PublishService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);

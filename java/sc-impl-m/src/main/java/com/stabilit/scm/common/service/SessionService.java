@@ -45,7 +45,7 @@ public class SessionService implements ISessionService {
 	private IServiceContext serviceContext;
 	private IRequester requester;
 
-	public SessionService(String serviceName, IServiceConnectorContext context) {
+	public SessionService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(context);

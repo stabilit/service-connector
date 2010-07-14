@@ -28,11 +28,11 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.util.MapBean;
 
 /**
- * The Class ServiceConnector.
+ * The Class SCClient.
  * 
  * @author JTraber
  */
-public class ServiceConnector implements IServiceConnector {
+public class SCClient implements ISCClient {
 
 	/** The host of the SC. */
 	private String host;
@@ -60,7 +60,7 @@ public class ServiceConnector implements IServiceConnector {
 	 * @param port
 	 *            the port
 	 */
-	public ServiceConnector(String host, int port) {
+	public SCClient(String host, int port) {
 		this(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
 				IConstants.DEFAULT_NR_OF_THREADS);
 	}
@@ -75,7 +75,7 @@ public class ServiceConnector implements IServiceConnector {
 	 * @param connectionType
 	 *            the connection type
 	 */
-	public ServiceConnector(String host, int port, String connectionType) {
+	public SCClient(String host, int port, String connectionType) {
 		this(host, port, connectionType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
@@ -91,7 +91,7 @@ public class ServiceConnector implements IServiceConnector {
 	 * @param keepAliveInterval
 	 *            the keep alive interval
 	 */
-	public ServiceConnector(String host, int port, String connectionType, int keepAliveInterval) {
+	public SCClient(String host, int port, String connectionType, int keepAliveInterval) {
 		this(host, port, connectionType, keepAliveInterval, IConstants.DEFAULT_NR_OF_THREADS);
 	}
 
@@ -109,7 +109,7 @@ public class ServiceConnector implements IServiceConnector {
 	 * @param numberOfThreads
 	 *            the number of threads
 	 */
-	public ServiceConnector(String host, int port, String connectionType, int keepAliveInterval, int numberOfThreads) {
+	public SCClient(String host, int port, String connectionType, int keepAliveInterval, int numberOfThreads) {
 		this.host = host;
 		this.port = port;
 		this.conType = connectionType;
@@ -125,7 +125,7 @@ public class ServiceConnector implements IServiceConnector {
 	 * @return the context
 	 */
 	@Override
-	public IServiceConnectorContext getContext() {
+	public ISCContext getContext() {
 		return context;
 	}
 
@@ -152,6 +152,8 @@ public class ServiceConnector implements IServiceConnector {
 	public void detach() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke();
+		// destroy connection pool
+		this.connectionPool.destroy();
 	}
 
 	/**
@@ -241,7 +243,7 @@ public class ServiceConnector implements IServiceConnector {
 	public ISessionService newSessionService(String serviceName) {
 		return new SessionService(serviceName, this.context);
 	}
-	
+
 	@Override
 	public IPublishService newPublishService(String serviceName) {
 		return new PublishService(serviceName, this.context);
@@ -253,26 +255,20 @@ public class ServiceConnector implements IServiceConnector {
 		this.connectionPool.setMaxConnections(maxConnections);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void destroy() {
-		this.connectionPool.destroy();
-	}
-
 	/**
 	 * The Class ServiceConnectorContext.
 	 */
-	class ServiceConnectorContext implements IServiceConnectorContext {
+	class ServiceConnectorContext implements ISCContext {
 
 		/** {@inheritDoc} */
 		@Override
 		public IConnectionPool getConnectionPool() {
 			return connectionPool;
 		}
-		
+
 		@Override
-		public IServiceConnector getServiceConnector() {
-			return ServiceConnector.this;
+		public ISCClient getServiceConnector() {
+			return SCClient.this;
 		}
 
 	}
