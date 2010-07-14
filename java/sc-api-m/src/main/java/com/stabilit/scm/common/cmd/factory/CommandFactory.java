@@ -25,7 +25,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 /**
  * A factory for creating Command objects.
  */
-public class CommandFactory extends Factory {
+public abstract class CommandFactory extends Factory {
 
 	/** The command factory. */
 	protected static CommandFactory commandFactory = null;
