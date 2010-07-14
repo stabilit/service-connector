@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.rr.cmd.impl;
+package com.stabilit.scm.srv.ps.cmd.impl;
 
 import java.net.SocketAddress;
 import java.util.Map;

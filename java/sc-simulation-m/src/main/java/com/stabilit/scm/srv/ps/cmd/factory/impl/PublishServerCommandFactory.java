@@ -18,10 +18,10 @@ package com.stabilit.scm.srv.ps.cmd.factory.impl;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvChangeSubscriptionCommand;
+import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
+import com.stabilit.scm.srv.ps.cmd.impl.SrvSubscribeCommand;
+import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvSubscribeCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvUnsubscribeCommand;
 
 public class PublishServerCommandFactory extends CommandFactory {
 

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.rr.cmd.impl;
+package com.stabilit.scm.srv.ps.cmd.impl;
 
 import java.util.Map;
 
@@ -32,36 +32,48 @@ import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
 import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.srv.rr.registry.PublishServerSessionRegistry;
 
-public class SrvUnsubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class SrvSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
-	public SrvUnsubscribeCommand() {
-		this.commandValidator = new SrvUnsubscribeCommandValidator();
+	public SrvSubscribeCommand() {
+		this.commandValidator = new SrvSubscribeCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_UNSUBSCRIBE;
+		return SCMPMsgType.SRV_SUBSCRIBE;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
-		PublishServerSessionRegistry simPublishReg = PublishServerSessionRegistry.getCurrentInstance();
+		PublishServerSessionRegistry publishReg = PublishServerSessionRegistry.getCurrentInstance();
 
 		String sessionId = message.getSessionId();
-		Session session = this.getSessionById(sessionId);
-		simPublishReg.removeSession(session);
-
+		Session session = publishReg.getSession(sessionId);
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
+
+		if (session == null) {
+			session = new Session();
+			session.setAttribute("available", false);
+			publishReg.addSession(sessionId, (Session) session);
+		} else if ((Boolean) session.getAttribute("available")) {
+			session.setAttribute("available", false);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
+		} else {
+			scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
+			scmpReply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, 4334591);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT,
+					"%RTXS-E-NOPARTICIPANT, Authorization error - unknown participant");
+		}
 		scmpReply.setMessageType(getKey().getValue());
 		response.setSCMP(scmpReply);
 	}
 
-	private class SrvUnsubscribeCommandValidator implements ICommandValidator {
+	private class SrvSubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -69,7 +81,7 @@ public class SrvUnsubscribeCommand extends CommandAdapter implements IPassThroug
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
 			try {
-
+				
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
