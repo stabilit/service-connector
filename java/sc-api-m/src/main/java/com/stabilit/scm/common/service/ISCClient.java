@@ -17,16 +17,15 @@
 package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.ctx.IContext;
 
 /**
  * The Interface IServiceConnector.
  * 
  * @author JTraber
  */
-public interface IServiceConnector {
+public interface ISCClient extends ISC {
 
-	public IContext getContext();
+	public ISCContext getContext();
 
 	/**
 	 * Connects to SC.
@@ -105,7 +104,4 @@ public interface IServiceConnector {
 	public ISessionService newSessionService(String serviceName);
 
 	public void setMaxConnections(int maxConnections);
-
-	void destroy();
-
 }

@@ -1,11 +1,11 @@
 package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.service.IServiceConnector;
+import com.stabilit.scm.common.service.ISC;
 
 public interface IServiceContext extends IContext {
 
-	public abstract IServiceConnector getServiceConnector();
+	public abstract ISC getServiceConnector();
 	
 	public abstract IService getService();
 }

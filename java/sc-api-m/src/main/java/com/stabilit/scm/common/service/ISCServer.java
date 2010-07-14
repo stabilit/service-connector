@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,61 +13,23 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package com.stabilit.scm.cln.service;
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.service;
+
+import com.stabilit.scm.srv.rr.ISCServerCallback;
 
 /**
+ * The Interface ISCServer.
+ * 
  * @author JTraber
  */
-public class SCMessage {
+public interface ISCServer extends ISC {
 
-	private String messageInfo;
-	private Boolean compressed;
-	private Object data;
-	private String sessionId;
+	public abstract void registerService(String serviceName, ISCServerCallback scCallback) throws Exception;
 
-	public SCMessage() {
-		this.messageInfo = null;
-		this.compressed = null;
-		this.data = null;
-		this.sessionId = null;
-	}
+	public abstract void deregisterService(String serviceName) throws Exception;
 
-	public SCMessage(Object data) {
-		this();
-		this.data = data;
-	}
+	public abstract void setMaxSessions(int maxSessions);
 
-	public void setMessageInfo(String messageInfo) {
-
-		this.messageInfo = messageInfo;
-	}
-
-	public String getMessageInfo() {
-		return messageInfo;
-	}
-
-	public Boolean isCompressed() {
-		return compressed;
-	}
-
-	public void setCompressed(Boolean compressed) {
-		this.compressed = compressed;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
-	public Object getData() {
-		return this.data;
-	}
-
-	public String getSessionId() {
-		return this.sessionId;
-	}
+	public abstract int getMaxSessions();
 }

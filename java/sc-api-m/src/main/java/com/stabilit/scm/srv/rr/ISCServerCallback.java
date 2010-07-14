@@ -19,19 +19,20 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.srv.rr;
 
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.net.req.IConnectionPool;
+import com.stabilit.scm.cln.service.SCMessage;
 
 /**
  * @author JTraber
- *
  */
-public interface IServiceConnectorContext extends IContext {
+public interface ISCServerCallback {
 
-	public IConnectionPool getConnectionPool();
-	
-	public IServiceConnector getServiceConnector();
-	
+	SCMessage createSession(SCMessage message);
+
+	SCMessage deleteSession(SCMessage message);
+
+	SCMessage abortSession(SCMessage message);
+
+	SCMessage execute(SCMessage request);
 }
