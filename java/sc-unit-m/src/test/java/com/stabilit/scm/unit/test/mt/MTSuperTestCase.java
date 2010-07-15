@@ -30,9 +30,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;

@@ -19,9 +19,9 @@ package com.stabilit.scm.unit.test.attach;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.common.call.SCMPAttachCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDetachCall;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.unit.test.SuperTestCase;
 

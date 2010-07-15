@@ -20,15 +20,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.service.ISCMessageCallback;
+import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCClient;
-import com.stabilit.scm.common.service.SCClient;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.ISCMessageCallback;
+import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
@@ -79,7 +80,7 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 
 		@Override
-		public void callback(SCMessage msg) {
+		public void callback(ISCMessage msg) {
 			try {
 				IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
 				ISC serviceConnector = sessionContext.getServiceConnector();

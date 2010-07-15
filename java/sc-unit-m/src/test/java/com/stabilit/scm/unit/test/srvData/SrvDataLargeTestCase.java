@@ -20,8 +20,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;

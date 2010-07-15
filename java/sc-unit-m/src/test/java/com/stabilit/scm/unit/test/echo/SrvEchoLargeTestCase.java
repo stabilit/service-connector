@@ -21,8 +21,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnEchoCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnEchoCall;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;

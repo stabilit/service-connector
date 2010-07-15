@@ -23,10 +23,10 @@ package com.stabilit.scm.srv.ps;
 
 import java.util.List;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.scm.cln.call.SCMPPublishCall;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPPublishCall;
+import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.IConstants;
@@ -38,8 +38,8 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.common.service.ISCPublishServer;
-import com.stabilit.scm.common.service.ISCPublishServerContext;
+import com.stabilit.scm.srv.ISCPublishServer;
+import com.stabilit.scm.srv.ISCPublishServerContext;
 import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 
 public class SCPublishServer implements ISCPublishServer {

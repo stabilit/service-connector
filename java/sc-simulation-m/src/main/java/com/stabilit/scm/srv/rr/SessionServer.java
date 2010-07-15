@@ -21,12 +21,14 @@
  */
 package com.stabilit.scm.srv.rr;
 
+import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.ISCClient;
-import com.stabilit.scm.common.service.ISCServer;
-import com.stabilit.scm.common.service.SCClient;
-import com.stabilit.scm.common.service.SCServer;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.srv.ISCServer;
+import com.stabilit.scm.srv.ISCServerCallback;
+import com.stabilit.scm.srv.SCServer;
 
 public class SessionServer {
 	private ISCClient scCln = null;
@@ -39,7 +41,6 @@ public class SessionServer {
 	}
 
 	private void shutdown() {
-
 		try {
 			// disconnects from SC
 			scCln.detach();
@@ -53,43 +54,46 @@ public class SessionServer {
 	public void runExample() {
 
 		try {
-			scSrv = new SCServer("localhost", 8080, "netty.http", 10);
-			scCln = new SCClient("localhost", 8080, "netty.http", 10);
+			scSrv = new SCServer("localhost", 9000);
+			scCln = new SCClient("localhost", 8000);
 
 			// connects to SC as client
 			scCln.attach();
 
 			// connect to SC as server
 			scSrv.setMaxSessions(10);
-			SRVCallback srvCallback = new SRVCallback();
+			scSrv.setKeepAliveInterval(0);
+			scSrv.setRunningPortNr(7000);
+			scSrv.setImmediateConnect(true);
+			scSrv.startServer("localhost");
+			SrvCallback srvCallback = new SrvCallback();
 			scSrv.registerService(serviceName, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-
+			this.shutdown();
 		}
 	}
 
-	class SRVCallback implements ISCServerCallback {
+	class SrvCallback implements ISCServerCallback {
 
 		@Override
-		public SCMessage createSession(SCMessage message) {
+		public ISCMessage createSession(ISCMessage message) {
 			return message;
 		}
 
 		@Override
-		public SCMessage deleteSession(SCMessage message) {
+		public ISCMessage deleteSession(ISCMessage message) {
 			return message;
 
 		}
 
 		@Override
-		public SCMessage abortSession(SCMessage message) {
+		public ISCMessage abortSession(ISCMessage message) {
 			return message;
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request) {
+		public SCMessage execute(ISCMessage request) {
 			// get any message attribute
 			String sessionId = request.getSessionId();
 
@@ -103,7 +107,7 @@ public class SessionServer {
 				requestMsg.setData(buffer);
 				requestMsg.setCompressed(false);
 				requestMsg.setMessageInfo("test");
-				SCMessage responseMsg = sessionServiceA.execute(requestMsg);
+				ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
 				System.out.println(responseMsg);
 				// deletes the session
 				sessionServiceA.deleteSession();

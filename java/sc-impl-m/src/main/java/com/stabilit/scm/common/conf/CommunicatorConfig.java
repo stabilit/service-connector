@@ -30,14 +30,13 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	/** The host. */
 	private String host;
 	/** The connectionKey. */
-	private String connectionKey;
+	private String connectionType;
 	/** The number of threads. */
 	private int numberOfThreads;
 	/** The max pool size. */
 	private int maxPoolSize;
 
 	private int keepAliveInterval;
-	private int keepAliveTimeout;
 	
 	/**
 	 * Instantiates a new communicator configuration.
@@ -47,17 +46,16 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 
 	
 
-	public CommunicatorConfig(String communicatorName, String host, int port, String connectionKey,
+	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType,
 			int numberOfThreads, int maxPoolSize, int keepAliveInterval, int keepAliveTimeout) {
 		super();
 		this.communicatorName = communicatorName;
 		this.port = port;
 		this.host = host;
-		this.connectionKey = connectionKey;
+		this.connectionType = connectionType;
 		this.numberOfThreads = numberOfThreads;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
-		this.keepAliveTimeout = keepAliveTimeout;
 	}
 
 	/**
@@ -137,17 +135,17 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	/** {@inheritDoc} */
 	@Override
 	public String getConnectionType() {
-		return this.connectionKey;
+		return this.connectionType;
 	}
 
 	/**
-	 * Sets the connection key.
+	 * Sets the connection type.
 	 * 
-	 * @param connectionKey
-	 *            the new connection key
+	 * @param connectionType
+	 *            the new connection type
 	 */
-	public void setConnectionKey(String connectionKey) {
-		this.connectionKey = connectionKey;
+	public void setConnectionType(String connectionType) {
+		this.connectionType = connectionType;
 	}
 
 	/**
@@ -175,13 +173,5 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
-	}
-
-	public int getKeepAliveTimeout() {
-		return keepAliveTimeout;
-	}
-
-	public void setKeepAliveTimeout(int keepAliveTimeout) {
-		this.keepAliveTimeout = keepAliveTimeout;
 	}
 }

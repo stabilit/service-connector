@@ -19,9 +19,9 @@ package com.stabilit.scm.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.cln.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
+import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 

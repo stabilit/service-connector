@@ -21,7 +21,6 @@
  */
 package com.stabilit.scm.common.service;
 
-import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.IService;
 
 /**

@@ -22,11 +22,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
 import com.stabilit.scm.cln.call.SCMPCallException;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDetachCall;
-import com.stabilit.scm.cln.call.SCMPInspectCall;
+import com.stabilit.scm.common.call.SCMPAttachCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDetachCall;
+import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;

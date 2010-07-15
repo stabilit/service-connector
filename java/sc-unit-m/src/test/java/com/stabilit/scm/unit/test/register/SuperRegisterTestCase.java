@@ -19,9 +19,9 @@ package com.stabilit.scm.unit.test.register;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.ctx.IContext;

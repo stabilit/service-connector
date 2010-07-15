@@ -22,7 +22,7 @@
 package com.stabilit.scm.srv.ps;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.service.ISCPublishServer;
+import com.stabilit.scm.srv.ISCPublishServer;
 
 public class PublishServer {
 

@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.common.service.ISCMessage;
+
+
 /**
  * The Interface ISCSession. Reveals functionality of a sc session.
  * 
@@ -32,7 +35,7 @@ public interface ISCSession {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMessage execute(SCMessage message) throws Exception;
+	public ISCMessage execute(ISCMessage message) throws Exception;
 
 	/**
 	 * Delete session.

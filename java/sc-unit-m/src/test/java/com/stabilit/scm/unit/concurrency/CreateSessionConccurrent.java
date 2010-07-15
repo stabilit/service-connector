@@ -26,9 +26,9 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPClnCreateSessionCall;
+import com.stabilit.scm.common.call.SCMPAttachCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;

@@ -19,10 +19,11 @@ package com.stabilit.scm.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.ISCClient;
-import com.stabilit.scm.common.service.SCClient;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPISessionTestCase {
@@ -36,7 +37,7 @@ public class ClnAPISessionTestCase {
 	public void testClnAPI() throws Exception {
 		ISCClient sc = null;
 		try {
-			sc = new SCClient("localhost", 8080, "netty.http", 10);
+			sc = new SCClient("localhost", 8080);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
@@ -50,7 +51,7 @@ public class ClnAPISessionTestCase {
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
-			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg);
 

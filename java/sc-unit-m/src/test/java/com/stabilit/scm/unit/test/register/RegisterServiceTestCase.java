@@ -23,10 +23,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.call.SCMPCallException;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDeRegisterServiceCall;
-import com.stabilit.scm.cln.call.SCMPInspectCall;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPInspectCall;
+import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;

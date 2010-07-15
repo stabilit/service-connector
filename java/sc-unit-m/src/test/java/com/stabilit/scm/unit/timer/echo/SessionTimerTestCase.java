@@ -21,12 +21,12 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.SessionEvent;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.service.ISCClient;
-import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class SessionTimerTestCase {

@@ -21,13 +21,12 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.ISCMessageCallback;
 import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCClient;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.common.service.SCClient;
 import com.stabilit.scm.srv.ps.PublishServer;
 
 public class SCSimplePublishingServiceExample {
@@ -79,7 +78,7 @@ public class SCSimplePublishingServiceExample {
 		}
 
 		@Override
-		public void callback(SCMessage reply) throws Exception {
+		public void callback(ISCMessage reply) throws Exception {
 			publishedMessageCounter++;
 			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
 					+ publishedMessageCounter);

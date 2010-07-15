@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv;
 
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;

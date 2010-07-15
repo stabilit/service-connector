@@ -18,9 +18,9 @@ package com.stabilit.scm.unit.test;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
-import com.stabilit.scm.cln.call.SCMPDetachCall;
+import com.stabilit.scm.common.call.SCMPAttachCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPDetachCall;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**

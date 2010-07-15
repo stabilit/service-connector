@@ -22,9 +22,9 @@
 package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.cln.service.SCMessage;
 import com.stabilit.scm.common.service.ISCClient;
-import com.stabilit.scm.common.service.SCClient;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
 
 public class SCSimpleSessionServiceExample {
 
@@ -35,7 +35,7 @@ public class SCSimpleSessionServiceExample {
 	public static void runExample() {
 		ISCClient sc = null;
 		try {
-			sc = new SCClient("localhost", 8000, "netty.http", 10);
+			sc = new SCClient("localhost", 8000);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
@@ -49,7 +49,7 @@ public class SCSimpleSessionServiceExample {
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
-			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg);
 

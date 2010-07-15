@@ -21,16 +21,20 @@
  */
 package com.stabilit.scm.cln.service;
 
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.ISCMessageCallback;
+
+
 public interface ISessionService extends IService {
 	
 	public abstract void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception;
 
-	public abstract SCMessage execute(SCMessage requestMsg)  throws Exception;
+	public abstract ISCMessage execute(ISCMessage requestMsg)  throws Exception;
 	
-	public abstract void execute(SCMessage requestMsg, ISCMessageCallback callback)  throws Exception;
+	public abstract void execute(ISCMessage requestMsg, ISCMessageCallback callback)  throws Exception;
 
 	public abstract void deleteSession() throws Exception;
 	
 	@Override
-	public IServiceContext getContext();
+	public abstract IServiceContext getContext();
 }

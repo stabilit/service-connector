@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.unit;
 
-import com.stabilit.scm.cln.call.SCMPAttachCall;
-import com.stabilit.scm.cln.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPAttachCall;
+import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;

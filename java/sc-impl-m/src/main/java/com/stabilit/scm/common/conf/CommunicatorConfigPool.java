@@ -118,16 +118,9 @@ public abstract class CommunicatorConfigPool {
 			}
 			reqConfig.setKeepAliveInterval(keepAliveInterval);
 
-			String keepAliveTimeoutValue = (String) props.get(respName + IConstants.KEEP_ALIVE_TIMEOUT);
-			int keepAliveTimeout = 0;
-			if (keepAliveTimeoutValue != null) {
-				keepAliveTimeout = Integer.parseInt(keepAliveTimeoutValue);
-			}
-			reqConfig.setKeepAliveTimeout(keepAliveTimeout);
-
 			reqConfig.setPort(port);
 			reqConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
-			reqConfig.setConnectionKey((String) props.get(respName + IConstants.CONNECTION_TYPE_QUALIFIER));
+			reqConfig.setConnectionType((String) props.get(respName + IConstants.CONNECTION_TYPE_QUALIFIER));
 			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName
 					+ IConstants.THREAD_POOL_SIZE_QUALIFIER)));
 
