@@ -55,8 +55,6 @@ public class ClnAPISessionTestCase {
 
 			System.out.println(responseMsg);
 
-			// sessionServiceA.echo();
-
 			// deletes the session
 			sessionServiceA.deleteSession();
 

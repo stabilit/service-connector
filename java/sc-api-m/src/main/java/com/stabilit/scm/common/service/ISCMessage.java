@@ -40,6 +40,8 @@ public interface ISCMessage {
 	void setData(Object data);
 
 	String getSessionId();
+	
+	void setSessionId(String sessionId);
 
 	boolean isFault();
 }

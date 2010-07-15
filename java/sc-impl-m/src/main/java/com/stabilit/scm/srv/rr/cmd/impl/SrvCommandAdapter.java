@@ -18,54 +18,57 @@ package com.stabilit.scm.srv.rr.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.SrvServiceRegistry;
 
-public class SrvEchoCommand implements ICommand {
+/**
+ * The Class SrvCommandAdapter.
+ */
+public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The command validator. */
-	private ICommandValidator commandValidator;
+	protected ICommandValidator commandValidator;
 
-	public SrvEchoCommand() {
-		this.commandValidator = new SrvEchoCommandValidator();
+	@Override
+	public ICommandValidator getCommandValidator() {
+		return this.commandValidator;
 	}
 
 	@Override
-	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_ECHO;
-	}
+	public abstract SCMPMsgType getKey();
 
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		// echo just sends the received message back
-		SCMPMessage message = request.getMessage();
-		response.setSCMP(message);
-	}
+	public abstract void run(IRequest request, IResponse response) throws Exception;
 
-	public class SrvEchoCommandValidator implements ICommandValidator {
-		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// TODO echo validate?
+	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
+		SrvServiceRegistry srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
+		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
+
+		if (srvService == null) {
+			// incoming srvService not found
+			if (LoggerPoint.getInstance().isWarn()) {
+				LoggerPoint.getInstance().fireWarn(this,
+						"command error: no srvService found for serviceName :" + serviceName);
+			}
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		}
+		return srvService;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {
 		return false;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return this;

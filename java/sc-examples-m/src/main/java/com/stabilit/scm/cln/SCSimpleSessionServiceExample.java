@@ -42,18 +42,22 @@ public class SCSimpleSessionServiceExample {
 			sc.attach();
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 60, 10);
+			sessionServiceA.createSession("sessionInfo", 60, 300);
 
-			SCMessage requestMsg = new SCMessage();
+			ISCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
-
-			System.out.println(responseMsg);
-
-			// sessionServiceA.echo();
+			System.out.println(responseMsg.getData().toString());
+			
+			requestMsg = new SCMessage();
+			requestMsg.setData("kill server");
+			requestMsg.setCompressed(false);
+			requestMsg.setMessageInfo("test");
+			responseMsg = sessionServiceA.execute(requestMsg);
+			
 
 			// deletes the session
 			sessionServiceA.deleteSession();

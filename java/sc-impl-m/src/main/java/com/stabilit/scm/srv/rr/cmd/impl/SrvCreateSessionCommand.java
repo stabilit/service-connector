@@ -18,17 +18,12 @@ package com.stabilit.scm.srv.rr.cmd.impl;
 
 import java.util.Map;
 
-import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -37,13 +32,9 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.SrvService;
-import com.stabilit.scm.srv.SrvServiceRegistry;
 
-public class SrvCreateSessionCommand implements ICommand {
-
-	/** The command validator. */
-	private ICommandValidator commandValidator;
-
+public class SrvCreateSessionCommand extends SrvCommandAdapter {
+	
 	public SrvCreateSessionCommand() {
 		this.commandValidator = new SrvCreateSessionCommandValidator();
 	}
@@ -61,10 +52,11 @@ public class SrvCreateSessionCommand implements ICommand {
 
 		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
-		SCMessage scMessage = new SCMessage();
+		ISCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
 		ISCMessage scReply = srvService.getCallback().createSession(scMessage);
@@ -81,23 +73,6 @@ public class SrvCreateSessionCommand implements ICommand {
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}
 		response.setSCMP(reply);
-	}
-
-	private SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
-		SrvServiceRegistry srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
-		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
-
-		if (srvService == null) {
-			// incoming srvService not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this,
-						"command error: no srvService found for serviceName :" + serviceName);
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		return srvService;
 	}
 
 	public class SrvCreateSessionCommandValidator implements ICommandValidator {
@@ -135,22 +110,5 @@ public class SrvCreateSessionCommand implements ICommand {
 				throw validatorException;
 			}
 		}
-	}
-
-	@Override
-	public boolean isAsynchronous() {
-		return false;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 }

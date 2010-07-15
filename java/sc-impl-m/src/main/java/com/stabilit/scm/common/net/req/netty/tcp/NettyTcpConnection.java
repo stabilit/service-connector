@@ -130,6 +130,7 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
+		this.isConnected = true;
 	}
 
 	/** {@inheritDoc} */

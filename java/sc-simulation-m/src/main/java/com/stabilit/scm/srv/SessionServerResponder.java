@@ -24,6 +24,7 @@ import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
+import com.stabilit.scm.common.service.ISCMessage;
 
 /**
  * @author JTraber
@@ -60,10 +61,42 @@ public class SessionServerResponder extends Responder {
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation");
-		registerService.setMaxSessions(1);
+		registerService.setMaxSessions(10);
 		registerService.setPortNumber(this.getResponderConfig().getPort());
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(0);
 		registerService.invoke();
+		SrvService service = new SrvService("simulation", new ISCServerCallback() {
+
+			@Override
+			public ISCMessage execute(ISCMessage request) {
+				System.out
+						.println("SessionServerResponder.makeRegisterService().new ISCServerCallback() {...}.execute()");
+				return request;
+			}
+
+			@Override
+			public ISCMessage deleteSession(ISCMessage message) {
+				System.out
+						.println("SessionServerResponder.makeRegisterService().new ISCServerCallback() {...}.deleteSession()");
+				return message;
+			}
+
+			@Override
+			public ISCMessage createSession(ISCMessage message) {
+				System.out
+						.println("SessionServerResponder.makeRegisterService().new ISCServerCallback() {...}.createSession()");
+				return message;
+			}
+
+			@Override
+			public ISCMessage abortSession(ISCMessage message) {
+				System.out
+						.println("SessionServerResponder.makeRegisterService().new ISCServerCallback() {...}.abortSession()");
+				return message;
+			}
+		});
+		SrvServiceRegistry.getCurrentInstance().addSrvService("simulation", service);
 	}
+
 }

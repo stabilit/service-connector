@@ -29,7 +29,7 @@ public interface IConstants {
 	public static final String HTTP_FILE = "/";
 
 	/** The DEFAULT_NR_OF_THREADS. */
-	public static final int DEFAULT_NR_OF_THREADS = 10;
+	public static final int DEFAULT_NR_OF_THREADS = 16;
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 	/** The read timeout in seconds. */

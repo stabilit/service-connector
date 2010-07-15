@@ -16,22 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.impl;
 
-import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.srv.SrvService;
 
-public class SrvDeleteSessionCommand implements ICommand {
-	
-	/** The command validator. */
-	private ICommandValidator commandValidator;
-	
+public class SrvDeleteSessionCommand extends SrvCommandAdapter {
+
 	public SrvDeleteSessionCommand() {
 		this.commandValidator = new SrvDeleteSessionCommandValidator();
 	}
@@ -43,7 +42,27 @@ public class SrvDeleteSessionCommand implements ICommand {
 
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		
+		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		// look up srvService
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
+
+		SCMPMessage scmpMessage = request.getMessage();
+		// create scMessage
+		ISCMessage scMessage = new SCMessage();
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(scmpMessage.getSessionId());
+
+		// inform callback with scMessages
+		ISCMessage scReply = srvService.getCallback().deleteSession(scMessage);
+		// set up reply
+		SCMPMessage reply = new SCMPMessage();
+		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setMessageType(this.getKey().getValue());
+		reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
+		response.setSCMP(reply);
 	}
 
 	public class SrvDeleteSessionCommandValidator implements ICommandValidator {
@@ -74,22 +93,5 @@ public class SrvDeleteSessionCommand implements ICommand {
 				throw validatorException;
 			}
 		}
-	}
-
-	@Override
-	public boolean isAsynchronous() {
-		return false;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 }

@@ -81,6 +81,11 @@ public class SCMessage implements ISCMessage {
 	}
 
 	@Override
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	@Override
 	public boolean isFault() {
 		return false;
 	}
