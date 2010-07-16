@@ -134,9 +134,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 					compression = true;
 				}
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
-				// messageInfo
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				ValidatorUtility.validateString(0, messageInfo, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

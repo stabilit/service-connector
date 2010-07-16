@@ -40,6 +40,7 @@ import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.ISCServer;
@@ -176,15 +177,13 @@ public class SetupTestCases {
 				StringBuilder sb = new StringBuilder();
 				int i = 0;
 				sb.append("large:");
-				for (i = 0; i < 10000; i++) {
-					if (sb.length() > 60000) {
+				for (i = 0; i < 100000; i++) {
+					if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT) {
 						break;
 					}
 					sb.append(i);
 				}
-				if (i >= 10000) {
-					message.setData(sb.toString());
-				}
+				message.setData(sb.toString());
 				return message;
 			}
 			message.setData("message data test case");
