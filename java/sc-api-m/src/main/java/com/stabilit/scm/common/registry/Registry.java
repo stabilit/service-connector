@@ -52,13 +52,16 @@ public abstract class Registry implements IRegistryMXBean {
 	}
 
 	/**
-	 * Gets an entry by key.
+	 * Gets an entry by key. If key is null - null will be returned.
 	 * 
 	 * @param key
 	 *            the key
 	 * @return the map bean
 	 */
 	protected Object get(Object key) {
+		if (key == null) {
+			return null;
+		}
 		return registryMap.get(key);
 	}
 
@@ -69,6 +72,9 @@ public abstract class Registry implements IRegistryMXBean {
 	 *            the key
 	 */
 	protected void remove(Object key) {
+		if (key == null) {
+			return;
+		}
 		this.registryMap.remove(key);
 	}
 

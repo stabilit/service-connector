@@ -48,6 +48,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	private ByteArrayOutputStream outputStream;
 	/** The string writer. */
 	private StringWriter writer;
+	/** The complete flag. */
+	private boolean complete;
 
 	/**
 	 * Instantiates a new SCMPCompositeReceiver.
@@ -62,6 +64,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		this.writer = null;
 		this.offest = 0;
 		this.scmpFault = null;
+		// default compositeReceiver is not complete
+		this.complete = false;
 		scmpList = new ArrayList<SCMPMessage>();
 		// builds up request to pull later
 		currentPart = new SCMPPart();
@@ -216,6 +220,21 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 */
 	public int getOffset() {
 		return this.offest;
+	}
+
+	/**
+	 * @return the complete
+	 */
+	public boolean isComplete() {
+		return complete;
+	}
+
+	public void uncomplete() {
+		this.complete = false;
+	}
+
+	public void complete() {
+		this.complete = true;
 	}
 
 	/**
