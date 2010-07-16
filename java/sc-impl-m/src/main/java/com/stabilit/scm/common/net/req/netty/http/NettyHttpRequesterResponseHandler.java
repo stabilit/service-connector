@@ -17,8 +17,6 @@
 package com.stabilit.scm.common.net.req.netty.http;
 
 import java.io.ByteArrayInputStream;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -30,11 +28,8 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
-import com.stabilit.scm.common.net.req.netty.NettyEvent;
-import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -47,9 +42,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 @ChannelPipelineCoverage("one")
 public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
-
-	/** Queue to store the answer. */
-	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
 
 	private ISCMPCallback scmpCallback;
 
@@ -65,67 +57,22 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		this.scmpCallback = scmpCallback;
 	}
 
-	/**
-	 * Gets the message synchronously.
-	 * 
-	 * @return the message
-	 * @throws CommunicationException
-	 *             the communication exception
-	 */
-	HttpResponse getMessageSync() throws CommunicationException {
-		if (this.scmpCallback != null) {
-			throw new CommunicationException("asynchronous mode");
-		}
-		NettyEvent eventMessage;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() waits until message arrives in queue, locking inside queue
-				eventMessage = answer.take();
-				if (eventMessage.isFault()) {
-					throw new CommunicationException(((NettyExceptionEvent) eventMessage).getResponse().getCause());
-				}
-				break;
-			} catch (InterruptedException e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				interrupted = true;
-			}
-		}
-
-		if (interrupted) {
-			// interruption happens when waiting for response - interrupt now
-			Thread.currentThread().interrupt();
-		}
-		return (HttpResponse) eventMessage.getResponse();
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		NettyEvent nettyEvent = new NettyHttpEvent((HttpResponse) e.getMessage());
-		if (this.scmpCallback != null) {
-			this.callback(nettyEvent);
-			return;
-		}
-		answer.offer(nettyEvent);
+		this.callback((HttpResponse) e.getMessage());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
-		if (this.scmpCallback != null) {
-			this.scmpCallback.callback(th);
-		}
-		NettyEvent nettyEvent = new NettyExceptionEvent(th);
-		answer.offer(nettyEvent);
+		this.scmpCallback.callback(th);
 	}
 
-	private void callback(NettyEvent event) throws Exception {
+	private void callback(HttpResponse httpResponse) throws Exception {
 		SCMPMessage ret = null;
 		try {
-			NettyEvent eventMessage = event;
-			HttpResponse httpResponse = (HttpResponse) eventMessage.getResponse();
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);

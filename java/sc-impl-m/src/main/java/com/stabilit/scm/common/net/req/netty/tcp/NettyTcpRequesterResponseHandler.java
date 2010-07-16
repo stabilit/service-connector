@@ -113,6 +113,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
+		this.scmpCallback.callback(th);
+		
 		NettyEvent response = new NettyExceptionEvent(th);
 		if (this.scmpCallback != null) {
 			this.callback(response);

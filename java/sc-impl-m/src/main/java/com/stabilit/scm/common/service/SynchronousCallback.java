@@ -25,15 +25,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
+ * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a callback.
+ * This class is designed to be extended by various callbacks.
+ * 
  * @author JTraber
  */
-public abstract class SynchronousCallback implements ISCMPCallback {
-	
+public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
+
+	/** The context. */
 	private IContext context;
 	/** Queue to store the answer. */
 	private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
@@ -59,7 +63,9 @@ public abstract class SynchronousCallback implements ISCMPCallback {
 		this.context = context;
 	}
 
-	public SCMPMessage getReplySynchronous() throws Exception {
+	@Override
+	public SCMPMessage getMessageSync() throws Exception {
+		// the method take() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.take();
 		if (reply.isFault()) {
 			SCMPFault fault = (SCMPFault) reply;

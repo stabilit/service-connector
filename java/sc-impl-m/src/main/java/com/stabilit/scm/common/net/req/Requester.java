@@ -295,6 +295,15 @@ public class Requester implements IRequester {
 	}
 
 	/**
+	 * Gets the context.
+	 * 
+	 * @return the connectionPool
+	 */
+	public IContext getContext() {
+		return outerContext;
+	}
+
+	/**
 	 * To hash code string.
 	 * 
 	 * @return the string {@inheritDoc}
@@ -304,16 +313,6 @@ public class Requester implements IRequester {
 		return " [" + this.hashCode() + "]";
 	}
 
-	/**
-	 * Gets the context.
-	 * 
-	 * @return the connectionPool
-	 */
-	public IContext getContext() {
-		return outerContext;
-	}
-
-	// member class
 	private class RequesterSCMPCallback implements ISCMPCallback {
 		private ISCMPCallback scmpCallback;
 

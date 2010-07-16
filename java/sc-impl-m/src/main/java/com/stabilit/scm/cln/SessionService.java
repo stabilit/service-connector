@@ -30,6 +30,7 @@ import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
@@ -76,9 +77,21 @@ public class SessionService implements ISessionService {
 	public SCMessage execute(ISCMessage requestMsg) throws Exception {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		clnDataCall.setMessagInfo(requestMsg.getMessageInfo());
+		String msgInfo = requestMsg.getMessageInfo();
+		if (msgInfo != null) {
+			// message info optional
+			clnDataCall.setMessagInfo(msgInfo);
+		}
 		clnDataCall.setRequestBody(requestMsg.getData());
-		SCMPMessage reply = clnDataCall.invoke();
+		// SCMPMessage reply = clnDataCall.invoke();
+
+		// set up synchronous callback
+		ISCMPSynchronousCallback scmpCallback = new ServiceCallback();
+		scmpCallback.setContext(this.serviceContext);
+		// invoke asynchronous
+		clnDataCall.invoke(scmpCallback);
+		// wait for message in callback
+		SCMPMessage reply = scmpCallback.getMessageSync();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
@@ -89,7 +102,11 @@ public class SessionService implements ISessionService {
 	public void execute(ISCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		clnDataCall.setMessagInfo(requestMsg.getMessageInfo());
+		String msgInfo = requestMsg.getMessageInfo();
+		if (msgInfo != null) {
+			// message info optional
+			clnDataCall.setMessagInfo(msgInfo);
+		}
 		clnDataCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(messageCallback);
 		scmpCallback.setContext(this.serviceContext);

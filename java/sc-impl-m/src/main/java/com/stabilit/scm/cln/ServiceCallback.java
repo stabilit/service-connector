@@ -29,17 +29,30 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SynchronousCallback;
 
 /**
+ * The Class ServiceCallback. Base class for service callbacks.
+ * 
  * @author JTraber
  */
 public class ServiceCallback extends SynchronousCallback implements ISCMPCallback {
 
+	/** The message callback. */
 	private ISCMessageCallback messageCallback;
+	/** The synchronous, marks if somebody waits for the message. */
 	private boolean synchronous;
 
+	/**
+	 * Instantiates a new ServiceCallback.
+	 */
 	public ServiceCallback() {
 		this(null);
 	}
 
+	/**
+	 * Instantiates a new ServiceCallback.
+	 * 
+	 * @param messageCallback
+	 *            the message callback
+	 */
 	public ServiceCallback(ISCMessageCallback messageCallback) {
 		this.messageCallback = messageCallback;
 		this.synchronous = false;
@@ -48,10 +61,8 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 	@Override
 	public void callback(SCMPMessage scmpReply) throws Exception {
 		if (this.synchronous) {
+			// interested thread waits for message
 			super.callback(scmpReply);
-			return;
-		}
-		if (this.messageCallback == null) {
 			return;
 		}
 		SCMessage messageReply = new SCMessage();
@@ -63,18 +74,16 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 	@Override
 	public void callback(Throwable th) {
 		if (this.synchronous) {
+			// interested thread waits for message
 			super.callback(th);
-			return;
-		}
-		if (this.messageCallback == null) {
 			return;
 		}
 		this.messageCallback.callback(th);
 	}
 
 	@Override
-	public SCMPMessage getReplySynchronous() throws Exception {
+	public SCMPMessage getMessageSync() throws Exception {
 		this.synchronous = true;
-		return super.getReplySynchronous();
+		return super.getMessageSync();
 	}
 }

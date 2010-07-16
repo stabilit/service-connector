@@ -41,8 +41,8 @@ import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
-import com.stabilit.scm.unit.test.srvData.SrvDataLargeTestCase;
-import com.stabilit.scm.unit.test.srvData.SrvDataTestCase;
+import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeTestCase;
+import com.stabilit.scm.unit.test.srvData.sync.SrvDataTestCase;
 
 /**
  * @author JTraber

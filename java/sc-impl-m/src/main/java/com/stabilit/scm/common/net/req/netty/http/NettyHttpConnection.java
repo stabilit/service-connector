@@ -287,7 +287,7 @@ public class NettyHttpConnection implements IConnection {
 		this.nrOfIdles = 0;
 	}
 
-	class NettyHttpSCMPCallback implements ISCMPCallback {
+	private class NettyHttpSCMPCallback implements ISCMPCallback {
 		private SCMPMessage reply;
 		private Throwable th;
 		/** Queue to store the answer. */
