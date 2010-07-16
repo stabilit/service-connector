@@ -100,7 +100,7 @@ public class ConnectionPool implements IConnectionPool {
 			LoggerPoint.getInstance().fireWarn(this, "connection does not exist - not possible to free");
 		}
 		if (closeOnFree) {
-			// do not add the connection to free pool array - just close it immediate!
+			// do not add the connection to free pool array - just close it immediately!
 			this.destroyConnection(connection);
 			return;
 		}

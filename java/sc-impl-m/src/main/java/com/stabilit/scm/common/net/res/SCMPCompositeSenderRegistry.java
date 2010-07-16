@@ -17,35 +17,21 @@
 package com.stabilit.scm.common.net.res;
 
 import com.stabilit.scm.common.registry.Registry;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class SCMPCompositeRegistry.
+ * The Class SCMPCompositeSenderRegistry.
  */
-public final class SCMPCompositeRegistry extends Registry {
+public final class SCMPCompositeSenderRegistry extends Registry {
 
 	/** The instance. */
-	private final static SCMPCompositeRegistry instance = new SCMPCompositeRegistry();
+	private final static SCMPCompositeSenderRegistry instance = new SCMPCompositeSenderRegistry();
 
-	private SCMPCompositeRegistry() {
+	private SCMPCompositeSenderRegistry() {
 	}
 
-	public static SCMPCompositeRegistry getCurrentInstance() {
+	public static SCMPCompositeSenderRegistry getCurrentInstance() {
 		return instance;
-	}
-
-	public void addSCMPCompositeReceiver(Object key, SCMPCompositeReceiver compositeReceiver) {
-		this.put(key, compositeReceiver);
-	}
-
-	public SCMPCompositeReceiver getSCMPCompositeReceiver(Object key) {
-		return (SCMPCompositeReceiver) super.get(key);
-	}
-
-	public void removeSCMPCompositeReceiver(Object key) {
-		super.remove(key);
 	}
 
 	public void addSCMPCompositeSender(Object key, SCMPCompositeSender compositeSender) {
@@ -55,11 +41,7 @@ public final class SCMPCompositeRegistry extends Registry {
 	public SCMPCompositeSender getSCMPCompositeSender(Object key) {
 		return (SCMPCompositeSender) super.get(key);
 	}
-
-	public SCMPMessage getSCMPCompositeComponent(Object key) {
-		return (SCMPMessage) super.get(key);
-	}
-
+	
 	public void removeSCMPCompositeSender(Object key) {
 		super.remove(key);
 	}

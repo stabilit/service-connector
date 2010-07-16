@@ -170,7 +170,8 @@ public class SCMPMessage {
 	 * @return true, if is a large message
 	 */
 	public boolean isLargeMessage() {
-		if (this.body == null) {
+		// in case of composite message need to get body first
+		if (this.getBody() == null) {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
@@ -457,6 +458,8 @@ public class SCMPMessage {
 	 * @return the body length
 	 */
 	public int getBodyLength() {
+		// gets body in case of composite component
+		Object body = this.getBody();
 		if (body == null) {
 			return 0;
 		}

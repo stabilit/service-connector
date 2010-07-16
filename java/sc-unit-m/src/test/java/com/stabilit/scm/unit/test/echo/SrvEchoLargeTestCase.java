@@ -42,7 +42,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 	}
 
 	protected Integer index = null;
-
+	
 	@Test
 	public void invokeTwoPartsTest() throws Exception {
 
@@ -58,7 +58,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		Assert.assertEquals("4/2", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("3/3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", result.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
@@ -77,7 +77,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		/*************************** verify echo session **********************************/
 		Assert.assertEquals(sb.toString(), result.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), result.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		Assert.assertEquals("4/8", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("3/15", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(sb.length() + "", result.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getSessionId());
@@ -123,7 +123,7 @@ public class SrvEchoLargeTestCase extends SuperSessionTestCase {
 		SCMPMessage res = groupCall.closeGroup(); // send REQ (no body content)
 		Assert.assertEquals(expected.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		Assert.assertEquals("4/2", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals("3/4", res.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(expected.length() + "", res.getBodyLength() + "");
 		Assert.assertEquals(SCMPMsgType.CLN_ECHO.getValue(), res.getMessageType());
 		Assert.assertNotNull(res.getSessionId());
