@@ -65,7 +65,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	private SCMPCompositeSender compositeSender = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
-	private SCMPCompositeReceiverRegistry compositeReceiverRegistry = SCMPCompositeReceiverRegistry
+	private final static SCMPCompositeReceiverRegistry compositeReceiverRegistry = SCMPCompositeReceiverRegistry
 			.getCurrentInstance();
 
 	/**
@@ -138,7 +138,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 					return;
 				}
 				// removes compositeReceiver - request is complete don't need to know preceding messages any more
-				this.compositeReceiverRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
+				NettyTcpResponderRequestHandler.compositeReceiverRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
 			}
 
 			// validate request and run command
@@ -201,6 +201,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(IRequest request, IResponse response) {
 		try {
@@ -229,6 +230,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(IResponse response, Throwable th) {
 		ExceptionPoint.getInstance().fireException(this, th);
@@ -271,7 +273,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			// first part of a large request received - introduce composite receiver
 			compositeReceiver = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
 			// add compositeReceiver to the registry
-			this.compositeReceiverRegistry.addSCMPCompositeReceiver(sessionId, compositeReceiver);
+			NettyTcpResponderRequestHandler.compositeReceiverRegistry.addSCMPCompositeReceiver(sessionId, compositeReceiver);
 		} else {
 			// next part of a large request received - add to composite receiver
 			compositeReceiver.add(scmpReq);

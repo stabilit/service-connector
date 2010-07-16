@@ -66,7 +66,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	private SCMPCompositeSender compositeSender = null;
 	/** The msg id. */
 	private SCMPMessageID msgID;
-	private SCMPCompositeReceiverRegistry compositeReceiverRegistry = SCMPCompositeReceiverRegistry
+	private final static SCMPCompositeReceiverRegistry compositeReceiverRegistry = SCMPCompositeReceiverRegistry
 			.getCurrentInstance();
 
 	/**
@@ -142,7 +142,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					return;
 				}
 				// removes compositeReceiver - request is complete don't need to know preceding messages any more
-				this.compositeReceiverRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
+				NettyHttpResponderRequestHandler.compositeReceiverRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
 			}
 			// validate request and run command
 			ICommandValidator commandValidator = command.getCommandValidator();
@@ -261,7 +261,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	private SCMPCompositeReceiver getCompositeReceiver(IRequest request, IResponse response) throws Exception {
 		SCMPMessage scmpReq = request.getMessage();
 		String sessionId = scmpReq.getSessionId();
-		SCMPCompositeReceiver compositeReceiver = this.compositeReceiverRegistry.getSCMPCompositeReceiver(scmpReq
+		SCMPCompositeReceiver compositeReceiver = NettyHttpResponderRequestHandler.compositeReceiverRegistry.getSCMPCompositeReceiver(scmpReq
 				.getSessionId());
 
 		if (compositeReceiver == null) {
@@ -273,7 +273,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			// first part of a large request received - introduce composite receiver
 			compositeReceiver = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
 			// add compositeReceiver to the registry
-			this.compositeReceiverRegistry.addSCMPCompositeReceiver(sessionId, compositeReceiver);
+			NettyHttpResponderRequestHandler.compositeReceiverRegistry.addSCMPCompositeReceiver(sessionId, compositeReceiver);
 		} else {
 			// next part of a large request received - add to composite receiver
 			compositeReceiver.add(scmpReq);
