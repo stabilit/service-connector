@@ -25,7 +25,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**

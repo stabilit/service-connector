@@ -63,6 +63,7 @@ public class SrvDataCommand extends SrvCommandAdapter {
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
 		reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
+		reply.setBody(scReply.getData());
 		response.setSCMP(reply);
 	}
 

@@ -43,6 +43,7 @@ public class SrvEchoCommand implements ICommand {
 	public void run(IRequest request, IResponse response) throws Exception {
 		// echo just sends the received message back
 		SCMPMessage message = request.getMessage();
+		message.setIsReply(true);
 		response.setSCMP(message);
 	}
 

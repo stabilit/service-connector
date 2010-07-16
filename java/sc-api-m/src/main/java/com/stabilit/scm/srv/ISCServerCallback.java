@@ -34,5 +34,5 @@ public interface ISCServerCallback {
 
 	public abstract ISCMessage abortSession(ISCMessage message);
 
-	public abstract ISCMessage execute(ISCMessage request);
+	public abstract ISCMessage execute(ISCMessage message);
 }

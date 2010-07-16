@@ -126,7 +126,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 1|";
+		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 10|";
 		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));

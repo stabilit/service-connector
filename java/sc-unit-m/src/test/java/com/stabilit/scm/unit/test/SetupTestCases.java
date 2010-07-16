@@ -40,9 +40,12 @@ import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
+import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.sc.SC;
+import com.stabilit.scm.srv.ISCServer;
+import com.stabilit.scm.srv.ISCServerCallback;
+import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.ps.PublishServer;
-import com.stabilit.scm.srv.rr.OldSessionServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**
@@ -99,13 +102,14 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
-				OldSessionServer.main(null);
+				SetupTestCases.startSessionServer();
+				// OldSessionServer.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public static void setupAll() {
 		if (setupTestCases == null) {
 			try {
@@ -113,7 +117,8 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
-				OldSessionServer.main(null);
+				SetupTestCases.startSessionServer();
+				// OldSessionServer.main(null);
 				PublishServer.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -131,6 +136,59 @@ public class SetupTestCases {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private static void startSessionServer() throws Exception {
+		ISCServer scSrv = new SCServer("localhost", 9000);
+
+		// connect to SC as server
+		scSrv.setMaxSessions(10);
+		scSrv.setKeepAliveInterval(0);
+		scSrv.setRunningPortNr(7000);
+		scSrv.setImmediateConnect(true);
+		scSrv.startServer("localhost");
+		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSrv.registerService("simulation", srvCallback);
+	}
+
+	private static class SessionServerCallback implements ISCServerCallback {
+
+		@Override
+		public ISCMessage abortSession(ISCMessage message) {
+			return message;
+		}
+
+		@Override
+		public ISCMessage createSession(ISCMessage message) {
+			return message;
+		}
+
+		@Override
+		public ISCMessage deleteSession(ISCMessage message) {
+			return message;
+		}
+
+		@Override
+		public ISCMessage execute(ISCMessage message) {
+
+			if (message.getData().toString().startsWith("large")) {
+				StringBuilder sb = new StringBuilder();
+				int i = 0;
+				sb.append("large:");
+				for (i = 0; i < 10000; i++) {
+					if (sb.length() > 60000) {
+						break;
+					}
+					sb.append(i);
+				}
+				if (i >= 10000) {
+					message.setData(sb.toString());
+				}
+				return message;
+			}
+			message.setData("message data test case");
+			return message;
 		}
 	}
 }

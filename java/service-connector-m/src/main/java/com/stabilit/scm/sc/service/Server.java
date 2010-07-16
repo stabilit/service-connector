@@ -31,7 +31,7 @@ import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.registry.ResponderRegistry;
+import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
