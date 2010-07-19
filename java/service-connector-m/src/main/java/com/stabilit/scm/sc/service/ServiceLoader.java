@@ -28,7 +28,9 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.Properties;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.sc.registry.DisabledServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 
 /**
@@ -44,7 +46,7 @@ public class ServiceLoader {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static void load(String fileName) throws IOException {
+	public static void load(String fileName) throws Exception {
 		InputStream is = null;
 		try {
 			// try to find file outside of jar archive
@@ -64,17 +66,41 @@ public class ServiceLoader {
 		String[] serviceNames = serviceNamesString.split(IConstants.COMMA_OR_SEMICOLON);
 
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
+
 		for (String serviceName : serviceNames) {
 
-			String serviceType = (String) props.get(serviceName + IConstants.TYPE_QUALIFIER);
-			Service service = new Service(serviceName, serviceType);
+			String serviceTypeString = (String) props.get(serviceName + IConstants.TYPE_QUALIFIER);
+			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
-			// TODO verify with jan
-			// service.setLocation(props.get(serviceName + IConstants.LOCATION_QUALIFIER));
-			// service.setType(props.get(serviceName + IConstants.TYPEs_QUALIFIER));
+			// instantiate right type of service
+			Service service = null;
+			switch (serviceType) {
+			case SESSION_SERVICE:
+				service = new SessionService(serviceName);
+				break;
+			case PUBLISH_SERVICE:
+				service = new PublishService(serviceName);
+				break;
+			case FILE_SERVICE:
+				// TODO implement file services -wrong at this time
+				service = new PublishService(serviceName);
+				break;
+			case UNDEFINED:
+			default:
+				throw new SCMPValidatorException(
+						"wrong serviceType in configuration file, serviceName - serviceType : " + serviceName + " - "
+								+ serviceTypeString);
+			}
 
-			serviceRegistry.addService(service.getServiceName(), service);
-
+			String enable = props.getProperty(serviceName + IConstants.ENABLE_QUALIFIER);
+			if (enable == null || enable.equals("true")) {
+				// enable is not set - means true or true itself
+				serviceRegistry.addService(service.getServiceName(), service);
+			} else {
+				// enable is false - so add to disabledServiceRegistry
+				disabledServiceRegistry.addService(service.getServiceName(), service);
+			}
 		}
 	}
 }

@@ -14,46 +14,41 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.util;
+package com.stabilit.scm.sc.registry;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.sc.service.Service;
 
-/**
- * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum}
- * constant.
- * 
- * @author JTraber
- * @param <K>
- *            the key type
- * @param <V>
- *            the value type
- */
-public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
+public final class DisabledServiceRegistry extends Registry {
 
-	/** The reverse map. */
-	private final Map<K, V> reverseMap = new HashMap<K, V>();
+	/** The instance. */
+	private static DisabledServiceRegistry instance = new DisabledServiceRegistry();
 
-	/**
-	 * Create a new instance of ReverseEnumMap. *
-	 * 
-	 * @param valueType
-	 *            the value type
-	 */
-	public ReverseEnumMap(final Class<V> valueType) {
-		for (final V v : valueType.getEnumConstants()) {
-			reverseMap.put(v.getValue(), v);
-		}
+	private DisabledServiceRegistry() {
 	}
 
 	/**
-	 * Perform the reverse lookup for the given enum value and return the enum constant.
+	 * Gets the current instance.
 	 * 
-	 * @param enumValue
-	 *            the enum value
-	 * @return enum constant
+	 * @return the current instance
 	 */
-	public V get(final K enumValue) {
-		return reverseMap.get(enumValue);
+	public static DisabledServiceRegistry getCurrentInstance() {
+		return instance;
+	}
+
+	public void addService(Object key, Service service) {
+		super.put(key, service);
+	}
+
+	public Service getService(String serviceName) {
+		return (Service) this.get(serviceName);
+	}
+
+	public void removeService(Service service) {
+		this.removeService(service.getServiceName());
+	}
+
+	public void removeService(Object key) {
+		super.remove(key);
 	}
 }

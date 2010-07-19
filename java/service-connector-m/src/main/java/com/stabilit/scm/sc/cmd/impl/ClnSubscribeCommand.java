@@ -34,8 +34,8 @@ import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.FilterMask;
 import com.stabilit.scm.sc.service.IPublishTimerRun;
+import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -68,7 +68,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		String serviceName = reqMessage.getServiceName();
 		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 		// check service is present
-		Service service = this.validateService(serviceName);
+		PublishService service = this.validatePublishService(serviceName);
 
 		// create session
 		Session session = new Session();

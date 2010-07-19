@@ -14,46 +14,55 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.util;
+package com.stabilit.scm.sc.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionPlace;
 
 /**
- * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum}
- * constant.
- * 
- * @author JTraber
- * @param <K>
- *            the key type
- * @param <V>
- *            the value type
+ * The Class PublishService.
  */
-public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
+public class PublishService extends Service {
 
-	/** The reverse map. */
-	private final Map<K, V> reverseMap = new HashMap<K, V>();
+	/** The subscription place. */
+	private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
 
 	/**
-	 * Create a new instance of ReverseEnumMap. *
+	 * Instantiates a new publish service.
 	 * 
-	 * @param valueType
-	 *            the value type
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
 	 */
-	public ReverseEnumMap(final Class<V> valueType) {
-		for (final V v : valueType.getEnumConstants()) {
-			reverseMap.put(v.getValue(), v);
-		}
+	public PublishService(String name) {
+		super(name, ServiceType.PUBLISH_SERVICE);
+		this.subscriptionPlace = new SubscriptionPlace<SCMPMessage>();
 	}
 
 	/**
-	 * Perform the reverse lookup for the given enum value and return the enum constant.
+	 * Gets the subscription place.
 	 * 
-	 * @param enumValue
-	 *            the enum value
-	 * @return enum constant
+	 * @return the subscription place
 	 */
-	public V get(final K enumValue) {
-		return reverseMap.get(enumValue);
+	public ISubscriptionPlace<SCMPMessage> getSubscriptionPlace() {
+		return this.subscriptionPlace;
+	}
+
+	public Server allocateServerAndSubscribe(SCMPMessage msgToForward) throws Exception {
+		for (int i = 0; i < listOfServers.size(); i++) {
+			serverIndex++;
+			if (serverIndex >= listOfServers.size()) {
+				// serverIndex reached the end of list no more servers
+				serverIndex = 0;
+			}
+			Server server = listOfServers.get(serverIndex);
+			if (server.hasFreeSession()) {
+				server.subscribe(msgToForward);
+				return server;
+			}
+		}
+		return null;
 	}
 }

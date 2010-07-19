@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,34 +14,34 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-
-package com.stabilit.scm.common.util;
-
+ *-----------------------------------------------------------------------------*
+/*
 /**
- * The Interface ReversibleEnum.
  * 
- * @param <E>
- *            the element type
- * @param <V>
- *            the value type
- * @author JTraber
  */
-public interface ReversibleEnum<E, V> {
+package com.stabilit.scm.sc.service;
 
-	/**
-	 * Return the value/code of the enum constant.
-	 * 
-	 * @return value
-	 */
-	public E getValue();
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
-	/**
-	 * Get the {@link Enum} constant by looking up the code in the reverse enum map. *
-	 * 
-	 * @param E
-	 *            - code
-	 * @return V - The enum constant
-	 */
-	public V reverse(E code);
+public class SessionService extends Service {
+
+	public SessionService(String name) {
+		super(name, ServiceType.SESSION_SERVICE);
+	}
+
+	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward) throws Exception {
+		for (int i = 0; i < listOfServers.size(); i++) {
+			serverIndex++;
+			if (serverIndex >= listOfServers.size()) {
+				// serverIndex reached the end of list no more servers
+				serverIndex = 0;
+			}
+			Server server = listOfServers.get(serverIndex);
+			if (server.hasFreeSession()) {
+				server.createSession(msgToForward);
+				return server;
+			}
+		}
+		return null;
+	}
 }

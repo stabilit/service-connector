@@ -32,8 +32,8 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.sc.service.SessionService;
 
 public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -58,7 +58,7 @@ public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPas
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		Service service = this.validateService(serviceName);
+		SessionService service = this.validateSessionService(serviceName);
 
 		// create session
 		Session session = new Session();

@@ -16,15 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import com.stabilit.scm.common.util.IReversibleEnum;
 import com.stabilit.scm.common.util.ReverseEnumMap;
-import com.stabilit.scm.common.util.ReversibleEnum;
 
 /**
  * The Enum SCMPBodyType. Defines possible body types in SCMP.
  * 
  * @author JTraber
  */
-public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
+public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 
 	/** binary. */
 	BINARY("bin"),
@@ -56,11 +56,13 @@ public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 	 *            the body type
 	 * @return the body type
 	 */
-	public static SCMPBodyType getBodyType(String bodyType) {
+	public static SCMPBodyType getBodyType(String bodyTypeString) {
+		SCMPBodyType bodyType = reverseMap.get(bodyTypeString);
 		if (bodyType == null) {
-			return UNDEFINED;
+			// bodyTypeString doesn't match to a valid SCMPBodyType
+			return SCMPBodyType.UNDEFINED;
 		}
-		return reverseMap.get(bodyType);
+		return bodyType;
 	}
 
 	/**
@@ -86,6 +88,6 @@ public enum SCMPBodyType implements ReversibleEnum<String, SCMPBodyType> {
 
 	@Override
 	public SCMPBodyType reverse(String key) {
-		return reverseMap.get(key);
+		return SCMPBodyType.getBodyType(key);
 	}
 }

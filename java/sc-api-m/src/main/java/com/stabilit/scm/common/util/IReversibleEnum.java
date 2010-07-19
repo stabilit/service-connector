@@ -14,46 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
+
 package com.stabilit.scm.common.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum}
- * constant.
+ * The Interface IReversibleEnum.
  * 
- * @author JTraber
- * @param <K>
- *            the key type
+ * @param <E>
+ *            the element type
  * @param <V>
  *            the value type
+ * @author JTraber
  */
-public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
-
-	/** The reverse map. */
-	private final Map<K, V> reverseMap = new HashMap<K, V>();
+public interface IReversibleEnum<E, V> {
 
 	/**
-	 * Create a new instance of ReverseEnumMap. *
+	 * Return the value/code of the enum constant.
 	 * 
-	 * @param valueType
-	 *            the value type
+	 * @return value
 	 */
-	public ReverseEnumMap(final Class<V> valueType) {
-		for (final V v : valueType.getEnumConstants()) {
-			reverseMap.put(v.getValue(), v);
-		}
-	}
+	public E getValue();
 
 	/**
-	 * Perform the reverse lookup for the given enum value and return the enum constant.
+	 * Get the {@link Enum} constant by looking up the code in the reverse enum map. *
 	 * 
-	 * @param enumValue
-	 *            the enum value
-	 * @return enum constant
+	 * @param code
+	 *            the code
+	 * @return V - The enum constant
 	 */
-	public V get(final K enumValue) {
-		return reverseMap.get(enumValue);
-	}
+	public V reverse(E code);
 }

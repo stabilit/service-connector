@@ -16,15 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import com.stabilit.scm.common.util.IReversibleEnum;
 import com.stabilit.scm.common.util.ReverseEnumMap;
-import com.stabilit.scm.common.util.ReversibleEnum;
 
 /**
  * The Enum SCMPMsgType. Defines possible message types in SCMP.
  * 
  * @author JTraber
  */
-public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
+public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/** The ATTACH. */
 	ATTACH("ATT"),
@@ -111,21 +111,19 @@ public enum SCMPMsgType implements ReversibleEnum<String, SCMPMsgType> {
 	 * @return the msg type
 	 */
 	public static SCMPMsgType getMsgType(String messageId) {
-		return reverseMap.get(messageId);
+		SCMPMsgType msgType = reverseMap.get(messageId);
+		if (msgType == null) {
+			// messageId doesn't match to a valid SCMPMsgType
+			return SCMPMsgType.UNDEFINED;
+		}
+		return msgType;
 	}
 
-	/**
-	 * Reverse.
-	 * 
-	 * @param messageId
-	 *            the message id
-	 * @return the sCMP msg type
-	 */
 	@Override
 	public SCMPMsgType reverse(String messageId) {
-		return reverseMap.get(messageId);
+		return SCMPMsgType.getMsgType(messageId);
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.value;

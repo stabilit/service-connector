@@ -56,6 +56,8 @@ public interface IConstants {
 	public static final String THREAD_POOL_SIZE_QUALIFIER = ".threadPoolSize";
 	/** The connection names. */
 	public static final String TYPE_QUALIFIER = ".type";
+	/** The Constant ENABLE_QUALIFIER. */
+	public static final String ENABLE_QUALIFIER = ".enable";
 
 	/** The Constant CONNECTIONS. */
 	public static final String CONNECTIONS = "connections";
@@ -67,7 +69,7 @@ public interface IConstants {
 	/** The Constant MAX_CONNECTION_POOL_SIZE. */
 	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
 	/** The Constant KEEP_ALIVE_INTERVAL. */
-	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
+	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";	
 
 	/** The logging directory. */
 	public static final String LOG_DIR = "log/";

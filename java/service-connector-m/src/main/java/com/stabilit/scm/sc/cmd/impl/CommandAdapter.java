@@ -35,8 +35,11 @@ import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Client;
+import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.Service;
+import com.stabilit.scm.sc.service.ServiceType;
 import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.sc.service.SessionService;
 
 /**
  * The Class CommandAdapter.
@@ -119,7 +122,7 @@ public abstract class CommandAdapter implements ICommand {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return session.getServer().getService().getSubscriptionPlace();
+		return ((PublishService) session.getServer().getService()).getSubscriptionPlace();
 	}
 
 	/**
@@ -142,6 +145,28 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return service;
+	}
+
+	protected SessionService validateSessionService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateService(serviceName);
+		if (service.getType() != ServiceType.SESSION_SERVICE) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (SessionService) service;
+	}
+
+	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateService(serviceName);
+		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (PublishService) service;
 	}
 
 	/**

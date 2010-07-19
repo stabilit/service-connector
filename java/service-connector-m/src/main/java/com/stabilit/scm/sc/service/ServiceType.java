@@ -21,62 +21,42 @@
  */
 package com.stabilit.scm.sc.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.stabilit.scm.common.util.IReversibleEnum;
+import com.stabilit.scm.common.util.ReverseEnumMap;
 
 /**
  * @author JTraber
  */
-public abstract class Service {
-	private ServiceType type;
-	private String name;
-	private String location;
-	protected int serverIndex;
-	protected List<Server> listOfServers;
+public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
-	public Service(String name, ServiceType type) {
-		this.name = name;
-		this.location = null;
-		this.serverIndex = 0;
-		this.type = type;
-		// synchronize the sever list
-		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
+	SESSION_SERVICE("session"), PUBLISH_SERVICE("publish"), FILE_SERVICE("file"), UNDEFINED("undefined");
+
+	/** The value. */
+	private String value;
+	/** The reverseMap, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, ServiceType> reverseMap = new ReverseEnumMap<String, ServiceType>(
+			ServiceType.class);
+
+	private ServiceType(String value) {
+		this.value = value;
 	}
 
-	public String getServiceName() {
-		return name;
-	}
-
-	public void addServer(Server server) {
-		listOfServers.add(server);
-	}
-
-	public void removeServer(Server server) {
-		server.destroy();
-		listOfServers.remove(server);
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public ServiceType getType() {
+	public static ServiceType getServiceType(String typeString) {
+		ServiceType type = reverseMap.get(typeString);
+		if (type == null) {
+			// typeString doesn't match to a valid serviceType
+			return ServiceType.UNDEFINED;
+		}
 		return type;
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(serverIndex);
-		for (Server server : listOfServers) {
-			sb.append(" - ");
-			sb.append(server);
-		}
-		return sb.toString();
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public ServiceType reverse(String typeString) {
+		return ServiceType.getServiceType(typeString);
 	}
 }

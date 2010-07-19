@@ -29,7 +29,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
-import com.stabilit.scm.sc.service.Service;
+import com.stabilit.scm.sc.service.PublishService;
 
 public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -53,16 +53,16 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
-		Service service = this.validateService(serviceName);
+		PublishService service = this.validatePublishService(serviceName);
 		ISubscriptionPlace<SCMPMessage> place = service.getSubscriptionPlace();
 		if (place == null) {
 			throw new SCServiceException("no subscriptionPlace for serviceName : " + serviceName);
-		}		
-		place.add(message);  // throws an exception if failed
+		}
+		place.add(message); // throws an exception if failed
 		SCMPMessage replyMessage = new SCMPMessage();
 		replyMessage.setMessageType(message.getMessageType());
 		replyMessage.setServiceName(message.getServiceName());
-		response.setSCMP(replyMessage);		
+		response.setSCMP(replyMessage);
 	}
 
 	private class PublishCommandValidator implements ICommandValidator {

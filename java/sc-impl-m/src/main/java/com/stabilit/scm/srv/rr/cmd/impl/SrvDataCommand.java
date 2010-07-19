@@ -27,7 +27,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
-import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.SrvService;
 
 public class SrvDataCommand extends SrvCommandAdapter {
