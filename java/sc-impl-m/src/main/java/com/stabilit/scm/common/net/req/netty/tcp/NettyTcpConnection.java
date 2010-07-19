@@ -155,7 +155,7 @@ public class NettyTcpConnection implements IConnection {
 		future.addListener(operationListener);
 		try {
 			operationListener.awaitUninterruptibly();
-		} catch (CommunicationException ex) {
+		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 		this.releaseExternalResources();

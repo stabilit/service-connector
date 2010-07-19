@@ -16,54 +16,59 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 
 /**
- * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework.
- * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when
- * operation fails.
+ * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework. BlockingQueue
+ * is used for synchronization and waiting mechanism. Communication Exception is thrown when operation fails.
+ * BlockingQueue only holds newest answer.
  * 
  * @author JTraber
  */
 public class NettyOperationListener implements ChannelFutureListener {
 
 	/** Queue to store the answer. */
-	private final BlockingQueue<ChannelFuture> answer = new LinkedBlockingQueue<ChannelFuture>();
+	private final BlockingQueue<ChannelFuture> answer = new ArrayBlockingQueue<ChannelFuture>(1);
 
 	/**
-	 * Await uninterruptibly until operation is completed.
+	 * Await unInterruptibly until operation is completed.
 	 * 
 	 * @return the channel future
-	 * @throws CommunicationException
-	 *             the communication exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	public ChannelFuture awaitUninterruptibly() throws CommunicationException {
+	public ChannelFuture awaitUninterruptibly() throws Exception {
 		ChannelFuture response;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() waits until message arrives in queue, locking inside queue
-				response = answer.take();
-				if (response.isSuccess() == false) {
-					throw new CommunicationException("Operation could not be completed", response.getCause());
-				}
-				break;
-			} catch (InterruptedException e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				interrupted = true;
-			}
+		// take() waits until message arrives in queue
+		response = this.answer.take();
+		if (response.isSuccess() == false) {
+			throw new CommunicationException("Operation could not be completed", response.getCause());
 		}
+		return response;
+	}
 
-		if (interrupted) {
-			// interruption happens when waiting for response - interrupt now
-			Thread.currentThread().interrupt();
+	/**
+	 * Await unInterruptibly until operation is completed or time runs out.
+	 * 
+	 * @param timeoutMillis
+	 *            the timeout milliseconds
+	 * @return the channel future
+	 * @throws Exception
+	 *             the exception
+	 */
+	public ChannelFuture awaitUninterruptibly(long timeoutMillis) throws Exception {
+		ChannelFuture response;
+		// poll() waits until message arrives in queue or time runs out
+		response = this.answer.poll(timeoutMillis, TimeUnit.MILLISECONDS);
+		if (response == null || response.isSuccess() == false) {
+			throw new CommunicationException("Operation could not be completed", response.getCause());
 		}
 		return response;
 	}
@@ -71,6 +76,12 @@ public class NettyOperationListener implements ChannelFutureListener {
 	/** {@inheritDoc} */
 	@Override
 	public void operationComplete(ChannelFuture future) throws Exception {
-		answer.offer(future);
-	}	
+		if (this.answer.offer(future)) {
+			// queue empty object can be added
+			return;
+		}
+		// object could not be added - clear queue and offer again
+		this.answer.clear();
+		this.answer.offer(future);
+	}
 }

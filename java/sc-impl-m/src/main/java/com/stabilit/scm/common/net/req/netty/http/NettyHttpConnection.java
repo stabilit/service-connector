@@ -131,16 +131,17 @@ public class NettyHttpConnection implements IConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		// this.bootstrap.setOption("connectTimeoutMillis", 1000000); TODO
+		this.bootstrap.setOption("connectTimeoutMillis", IConstants.CONNECT_TIMEOUT_MILLIS);
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
 		this.operationListener = new NettyOperationListener();
-		future.addListener(operationListener);
+		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = operationListener.awaitUninterruptibly().getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS)
+					.getChannel();
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
@@ -154,9 +155,9 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void disconnect() throws Exception {
 		ChannelFuture future = this.channel.disconnect();
-		future.addListener(operationListener);
+		future.addListener(this.operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -169,9 +170,9 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void destroy() {
 		ChannelFuture future = this.channel.close();
-		future.addListener(operationListener);
+		future.addListener(this.operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
@@ -210,9 +211,9 @@ public class NettyHttpConnection implements IConnection {
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
 		ChannelFuture future = channel.write(request);
-		future.addListener(operationListener);
+		future.addListener(this.operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -233,6 +234,8 @@ public class NettyHttpConnection implements IConnection {
 		this.host = host;
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void setIdleTimeout(int idleTimeout) {
 		this.idleTimeout = idleTimeout;
 	}
@@ -272,16 +275,19 @@ public class NettyHttpConnection implements IConnection {
 		return this.connected;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getNrOfIdlesInSequence() {
 		return nrOfIdles;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void incrementNrOfIdles() {
 		this.nrOfIdles++;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void resetNrOfIdles() {
 		this.nrOfIdles = 0;

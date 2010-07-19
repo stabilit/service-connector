@@ -25,4 +25,6 @@ public interface ISCMPSynchronousCallback extends ISCMPCallback {
 	 */
 	public abstract SCMPMessage getMessageSync() throws Exception;
 
+	public abstract SCMPMessage getMessageSync(int timeoutInMillis) throws Exception;
+
 }

@@ -81,6 +81,6 @@ public class TopLogger implements ILoggerListener, ILoggerDecorator {
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.RUNTIME_LOG_FILE_NAME;
+		return IConstants.TOP_LOG_FILE_NAME;
 	}
 }

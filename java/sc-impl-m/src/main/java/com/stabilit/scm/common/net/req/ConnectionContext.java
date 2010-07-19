@@ -42,11 +42,11 @@ public class ConnectionContext implements IConnectionContext {
 	
 	@Override
 	public int getReadTimeout() {
-		return IConstants.READ_TIMEOUT;
+		return IConstants.READ_TIMEOUT_MILLIS;
 	}
 	
 	@Override
 	public int getWriteTimeout() {
-		return IConstants.WRITE_TIMEOUT;
+		return IConstants.WRITE_TIMEOUT_MILLIS;
 	}
 }

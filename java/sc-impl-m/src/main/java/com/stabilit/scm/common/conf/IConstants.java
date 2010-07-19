@@ -32,10 +32,15 @@ public interface IConstants {
 	public static final int DEFAULT_NR_OF_THREADS = 16;
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
-	/** The read timeout in seconds. */
-	public static final int READ_TIMEOUT = 200;
-	/** The write timeout in seconds. */
-	public static final int WRITE_TIMEOUT = 200;
+	/** The Constant READ_TIMEOUT_MILLIS. */
+	public static final int READ_TIMEOUT_MILLIS = 500;
+	/** The Constant WRITE_TIMEOUT_MILLIS. */
+	public static final int WRITE_TIMEOUT_MILLIS = 500;
+	/** The Constant CONNECT_TIMEOUT_MILLIS. */
+	public static final int CONNECT_TIMEOUT_MILLIS = 500;
+	/** The Constant OPERATION_TIMEOUT_MILLIS. */
+	public static final int OPERATION_TIMEOUT_MILLIS = 500;
+
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;
 
@@ -51,14 +56,18 @@ public interface IConstants {
 	public static final String THREAD_POOL_SIZE_QUALIFIER = ".threadPoolSize";
 	/** The connection names. */
 	public static final String TYPE_QUALIFIER = ".type";
+
+	/** The Constant CONNECTIONS. */
 	public static final String CONNECTIONS = "connections";
 	/** The server names. */
 	public static final String SERVER_LISTENER = "serverListener";
 	/** The services Names. */
 	public static final String SERVICE_NAMES = "serviceNames";
+
+	/** The Constant MAX_CONNECTION_POOL_SIZE. */
 	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
+	/** The Constant KEEP_ALIVE_INTERVAL. */
 	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
-	public static final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
 
 	/** The logging directory. */
 	public static final String LOG_DIR = "log/";
@@ -71,7 +80,8 @@ public interface IConstants {
 	/** The file name of performance log file. */
 	public static final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
 	/** The file name of warning log file. */
-	public static final String RUNTIME_LOG_FILE_NAME = "rtm.log";
+	public static final String TOP_LOG_FILE_NAME = "top.log";
+	/** The Constant SESSION_LOG_FILE_NAME. */
 	public static final String SESSION_LOG_FILE_NAME = "ses.log";
 
 	/** The ACCEPT_PARAMS. */
@@ -89,9 +99,9 @@ public interface IConstants {
 	/** The DEFAULT_KEEP_ALIVE_INTERVAL, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
 
-	/** Carriage return character */
+	/** Carriage return character. */
 	public static final byte CR = 0x0D;
-	/** Line feed character */
+	/** Line feed character. */
 	public static final byte LF = 0x0A;
 	/** The Constant FIX_HEADLINE_SIZE. */
 	public static final int FIX_HEADLINE_SIZE = 22;

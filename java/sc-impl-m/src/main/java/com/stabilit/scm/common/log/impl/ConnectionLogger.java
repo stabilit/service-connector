@@ -129,7 +129,7 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 
 	/** {@inheritDoc} */
 	@Override
-	public void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
+	public synchronized void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
 		try {
 			format = new Formatter();
 
