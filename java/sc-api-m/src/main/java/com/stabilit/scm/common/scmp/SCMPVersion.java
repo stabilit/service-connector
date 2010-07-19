@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+
 /**
  * The Enum SCMPVersion. Responsible to provide SCMPVersion and compatibility checks.
  * 
@@ -23,77 +25,57 @@ package com.stabilit.scm.common.scmp;
  */
 public enum SCMPVersion {
 
-	/** The UNDEFINED. */
-	UNDEFINED("0.0", 0, 0, 0),
-	/** The ONE. */
-	ONE("1.0", 1, 1, 1),
-	/** The TWO. */
-	TWO("2.0", 2, 1, 2);
+	/** The current version */
+	CURRENT(1, 0),
+	/** The test version - DO NOT CHANGE ! */
+	TEST(3, 2);
 
-	/** The text. */
-	private String text;
-	/** The value. */
-	private int value;
-	/** The minor. */
-	private int minor;
-	/** The major. */
-	private int major;
+	/** The release. */
+	private int release ;
+	/** The version. */
+	private int version;
 
 	/**
-	 * Instantiates a new sCMP version.
+	 * Instantiates a new SCMP version.
 	 * 
-	 * @param text
-	 *            the text
-	 * @param value
-	 *            the value
-	 * @param minor
-	 *            the minor
-	 * @param major
-	 *            the major
+	 * @param release
+	 *            the release number
+	 * @param version
+	 *            the version number
 	 */
-	private SCMPVersion(String text, int value, int minor, int major) {
-		this.text = text;
-		this.value = value;
-		this.minor = minor;
-		this.major = major;
-	}
-
-	/**
-	 * Gets the version.
-	 * 
-	 * @param text
-	 *            the text
-	 * @return the version
-	 */
-	public static SCMPVersion getVersion(String text) {
-		if (ONE.text.equals(text)) {
-			return ONE;
-		}
-		return UNDEFINED;
+	private SCMPVersion(int release, int version) {
+		this.version = version;
+		this.release = release;
 	}
 
 	/**
 	 * Checks if is supported.
-	 * 
-	 * @param scmpVersion
-	 *            the scmp version
-	 * @return true, if is supported
+	 *
+	 * @param scmpVersion the scmp version to be checked
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
-	public boolean isSupported(SCMPVersion scmpVersion) {
-		if (this == scmpVersion) {
-			return true;
+	public void isSupported(String text) throws SCMPValidatorException {
+		
+		if(text.matches("\\d\\.\\d") == false) {
+			throw new SCMPValidatorException("invalid scmp version format [" + text + "]");
 		}
-		if (this.minor > scmpVersion.value) {
-			return false;
+		String[] splitted = text.split("\\.");
+		if (splitted.length != 2) {
+			throw new SCMPValidatorException("invalid scmp version [" + text + "]");
 		}
-		if (this.major < scmpVersion.value) {
-			return false;
+		int release = Integer.parseInt(splitted[0]);
+		if (this.release != release) {
+			throw new SCMPValidatorException("invalid scmp release nr. [" + text + "]");
 		}
-		return true;
+		int version = Integer.parseInt(splitted[1]);
+		if (this.version < version) {
+			throw new SCMPValidatorException("invalid scmp version nr. [" + text + "]");
+		}
+		return;
 	}
 
 	@Override
 	public String toString() {
-		return text;
+		return release + "." + version;
 	}
 }

@@ -29,9 +29,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 public class SCMPMessage {
 
 	/** The Constant SCMP_VERSION. */
-	public static final SCMPVersion SCMP_VERSION = SCMPVersion.ONE;
+	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
 	/** The actual SC_VERSION. */
-	public static final SCVersion SC_VERSION = SCVersion.ONE;
+	public static final SCVersion SC_VERSION = SCVersion.CURRENT;
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static final int LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
 	/** The is reply. */

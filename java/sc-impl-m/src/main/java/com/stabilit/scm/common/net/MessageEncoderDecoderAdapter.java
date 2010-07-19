@@ -81,6 +81,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		default:
 			scmpMsg = new SCMPMessage();
 		}
+
+		// check scmp version 
+		// TODO check SCMP version
+		
 		// parse headerSize & bodySize
 		int scmpHeaderSize = defaultFrameDecoder.parseHeaderSize(headline);
 		int scmpBodySize = defaultFrameDecoder.parseMessageSize(headline) - scmpHeaderSize;

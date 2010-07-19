@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common;
 
+import java.text.DecimalFormat;
+
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 
 /**
@@ -25,13 +27,13 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
  */
 public enum SCVersion {
 
-	/** The UNDEFINED. */
-	UNDEFINED("0.0-000", 0, 0, 0),
-	/** The ONE. */
-	ONE("1.0-000", 1, 0, 0);
-
-	/** The text. */
-	private String text;
+	/** The current version. */
+	CURRENT(1, 0, 0),
+	/** The test version - DO NOT CHANGE ! */
+	TEST(3, 2, 5);
+	
+	private static final DecimalFormat df = new DecimalFormat("000");
+	
 	/** The release. */
 	private int release; // e.g : 1
 	/** The version. */
@@ -42,8 +44,6 @@ public enum SCVersion {
 	/**
 	 * Instantiates a new SCVersion.
 	 * 
-	 * @param text
-	 *            the text
 	 * @param release
 	 *            the release
 	 * @param version
@@ -51,8 +51,7 @@ public enum SCVersion {
 	 * @param revision
 	 *            the revision
 	 */
-	private SCVersion(String text, int release, int version, int revision) {
-		this.text = text;
+	private SCVersion(int release, int version, int revision) {
 		this.release = release;
 		this.version = version;
 		this.revision = revision;
@@ -60,33 +59,33 @@ public enum SCVersion {
 
 	/**
 	 * Checks if is supported.
-	 * 
-	 * @param text
-	 *            the text
-	 * @return true, if is supported
-	 * @throws SCMPValidatorException
+	 *
+	 * @param text the text in format 999.999-999 e.g. 1.5-003
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
-	public boolean isSupported(String text) throws SCMPValidatorException {
+	public void isSupported(String text) throws SCMPValidatorException {
+		if(text.matches("\\d*\\.\\d*-\\d{3}") == false) {
+			throw new SCMPValidatorException("invalid sc version format [" + text + "]");
+		}
 		String[] splitted = text.split("\\.|-");
 		if (splitted.length != 3) {
 			throw new SCMPValidatorException("invalid sc version [" + text + "]");
 		}
 		int release = Integer.parseInt(splitted[0]);
-
 		if (this.release != release) {
-			return false;
+			throw new SCMPValidatorException("invalid sc release nr. [" + text + "]");
 		}
 		int version = Integer.parseInt(splitted[1]);
 		if (this.version < version) {
-			return false;
+			throw new SCMPValidatorException("invalid sc version nr. [" + text + "]");
 		}
 		int revision = Integer.parseInt(splitted[2]);
-		if (this.revision < revision) {
-			return false;
+		if ((this.version == version) && (this.revision < revision)) {
+			throw new SCMPValidatorException("invalid sc revision nr. [" + text + "]");
 		}
-		return true;
+		return;
 	}
-
+	
 	/**
 	 * To string.
 	 * 
@@ -94,6 +93,6 @@ public enum SCVersion {
 	 */
 	@Override
 	public String toString() {
-		return text;
+		return release + "." + version + "-" + df.format(revision);
 	}
 }
