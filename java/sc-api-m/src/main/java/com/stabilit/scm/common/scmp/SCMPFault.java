@@ -25,11 +25,11 @@ import com.stabilit.scm.common.util.DateTimeUtility;
  */
 public class SCMPFault extends SCMPMessage {
 
-	private Throwable th;
+	private Throwable throwable;
 
-	public SCMPFault(Throwable th) {
+	public SCMPFault(Throwable throwable) {
 		super();
-		this.th = th;
+		this.throwable = throwable;
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class SCMPFault extends SCMPMessage {
 	 * @param map
 	 *            the map
 	 */
-	public SCMPFault(Map<String, String> map) {
-		this.header = map;
+	public SCMPFault(Map<String, String> header) {
+		this.header = header;
 	}
 
 	/**
@@ -60,10 +60,10 @@ public class SCMPFault extends SCMPMessage {
 	}
 
 	/**
-	 * @return the th
+	 * @return the throwable
 	 */
 	public Throwable getCause() {
-		return th;
+		return throwable;
 	}
 
 	/**
