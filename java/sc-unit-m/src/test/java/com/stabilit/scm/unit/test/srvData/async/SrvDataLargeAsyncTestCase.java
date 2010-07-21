@@ -26,7 +26,7 @@ import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SynchronousCallback;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
 
 /**
