@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.common.util;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.service.SCServiceException;
 
 /**
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a callback.

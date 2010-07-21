@@ -26,7 +26,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
-import com.stabilit.scm.common.service.SynchronousCallback;
+import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
  * The Class ServiceCallback. Base class for service callbacks.
