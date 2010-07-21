@@ -59,8 +59,8 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoInterval(3600);
+		createSessionCall.setEchoTimeout(3600);
 		// create session and keep sessionId
 		SCMPMessage resp = createSessionCall.invoke();
 		this.sessionId = resp.getSessionId();

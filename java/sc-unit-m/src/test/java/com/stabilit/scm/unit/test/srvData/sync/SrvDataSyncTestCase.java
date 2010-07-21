@@ -31,7 +31,7 @@ import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
 /**
  * @author JTraber
  */
-public class SrvDataTestCase extends SuperSessionTestCase {
+public class SrvDataSyncTestCase extends SuperSessionTestCase {
 
 	/**
 	 * The Constructor.
@@ -39,7 +39,7 @@ public class SrvDataTestCase extends SuperSessionTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public SrvDataTestCase(String fileName) {
+	public SrvDataSyncTestCase(String fileName) {
 		super(fileName);
 	}
 

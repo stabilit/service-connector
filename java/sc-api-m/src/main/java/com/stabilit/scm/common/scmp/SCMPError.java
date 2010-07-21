@@ -31,10 +31,6 @@ public enum SCMPError {
 	VALIDATION_ERROR("402", "Validation error occured."),
 	/** The not found. */
 	NOT_FOUND("404", "Not found error occured."),
-	/** The not connected. */
-	UNKNOWN_CLIENT("405", "Unknown client."),
-	/** The already attached. */
-	ALREADY_ATTACHED("406", "Already attached."),
 	/** The protocol mismatch. */
 	PROTOCOL_MISMATCH("407", "Service Connector protocol mismatches."),
 	/** The not registered. */

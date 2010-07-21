@@ -27,18 +27,19 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public class SCMPCompositeSender extends SCMPMessage {
 
 	/** The large scmp message. */
-	private SCMPMessage message;	
+	private SCMPMessage message;
 	/** The offset. */
-	private int offset;	
+	private int offset;
 	/** The large message length. */
-	private int largeMessageLength;	
+	private int largeMessageLength;
 	/** The current part. */
 	private SCMPMessage currentPart;
 
 	/**
 	 * Instantiates a new SCMPCompositeSender.
 	 * 
-	 * @param message the scmp message
+	 * @param message
+	 *            the scmp message
 	 */
 	public SCMPCompositeSender(SCMPMessage message) {
 		this.message = message;
@@ -81,5 +82,12 @@ public class SCMPCompositeSender extends SCMPMessage {
 		}
 		this.currentPart = null;
 		return this.currentPart;
+	}
+
+	/**
+	 * @return the currentPart
+	 */
+	public SCMPMessage getCurrentPart() {
+		return currentPart;
 	}
 }

@@ -16,10 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty.tcp;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -160,37 +161,13 @@ public class NettyTcpConnection implements IConnection {
 		}
 		this.releaseExternalResources();
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
-		encoderDecoder.encode(baos, scmp);
-
-		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
-		chBuffer.writeBytes(baos.toByteArray());
-		ChannelFuture future = channel.write(chBuffer);
-		future.addListener(operationListener);
-		try {
-			operationListener.awaitUninterruptibly();
-		} catch (CommunicationException ex) {
-			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
-		}
-		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(),
-				chBuffer.toByteBuffer().array());
-
-		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
-		ChannelBuffer content = (ChannelBuffer) handler.getMessageSync();
-		byte[] buffer = new byte[content.readableBytes()];
-		content.readBytes(buffer);
-		ConnectionPoint.getInstance().fireRead(this, this.localSocketAddress.getPort(), buffer); // logs inside if
-		// registered
-		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
-		SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
+		NettyTcpSCMPCallback callback = new NettyTcpSCMPCallback();
+		this.send(scmp, callback);
+		SCMPMessage ret = callback.join();
 		return ret;
 	}
 
@@ -284,5 +261,30 @@ public class NettyTcpConnection implements IConnection {
 	@Override
 	public void resetNrOfIdles() {
 		this.nrOfIdles = 0;
+	}
+	
+	private class NettyTcpSCMPCallback implements ISCMPCallback {
+		private SCMPMessage reply;
+		/** Queue to store the answer. */
+		private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
+
+		public NettyTcpSCMPCallback() {
+			this.reply = null;
+		}
+
+		@Override
+		public void callback(SCMPMessage scmpReply) throws Exception {
+			answer.offer(scmpReply);
+		}
+
+		@Override
+		public void callback(Throwable th) {
+			return;
+		}
+
+		public SCMPMessage join() throws Exception {
+			this.reply = answer.take();
+			return this.reply;
+		}
 	}
 }

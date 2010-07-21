@@ -25,7 +25,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -38,10 +37,10 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
-	/** The context. */
-	private IContext context;
 	/** Queue to store the answer. */
-	private final BlockingQueue<SCMPMessage> answer = new ArrayBlockingQueue<SCMPMessage>(1);;
+	private final BlockingQueue<SCMPMessage> answer = new ArrayBlockingQueue<SCMPMessage>(1);
+	/** The synchronous, marks if somebody waits for the message. */
+	protected boolean synchronous;
 
 	/** {@inheritDoc} */
 	@Override
@@ -71,6 +70,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync() throws Exception {
+		this.synchronous = true;
 		// the method take() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.take();
 		if (reply.isFault()) {
@@ -83,6 +83,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) throws Exception {
+		this.synchronous = true;
 		// the method poll() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.poll(timeoutInMillis, TimeUnit.MILLISECONDS);
 		if (reply.isFault()) {

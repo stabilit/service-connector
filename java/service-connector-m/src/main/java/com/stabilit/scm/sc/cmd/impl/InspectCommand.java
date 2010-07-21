@@ -25,7 +25,6 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.DateTimeUtility;
-import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
@@ -54,7 +53,6 @@ public class InspectCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
@@ -65,8 +63,7 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 
 		// dump internal registries
-		String inspectString = "clientRegistry&" + this.getRegistryInspectString(clientRegistry);
-		inspectString += "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
+		String inspectString = "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
 		inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
 		inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
 		scmpReply.setBody(inspectString);

@@ -178,7 +178,7 @@ public class SetupTestCases {
 				int i = 0;
 				sb.append("large:");
 				for (i = 0; i < 100000; i++) {
-					if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT) {
+					if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
 						break;
 					}
 					sb.append(i);

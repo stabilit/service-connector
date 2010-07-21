@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.SocketAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
@@ -59,11 +58,6 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		// IP and port
-		SocketAddress socketAddress = request.getRemoteSocketAddress();
-		// lookup if client is correctly attached
-		this.validateClientAttached(socketAddress);
-
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);

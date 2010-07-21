@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.SocketAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
@@ -34,8 +33,8 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.SessionService;
 import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.sc.service.SessionService;
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -60,11 +59,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
-
-		// lookup if client is correctly attached
-		this.validateClientAttached(socketAddress);
-
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

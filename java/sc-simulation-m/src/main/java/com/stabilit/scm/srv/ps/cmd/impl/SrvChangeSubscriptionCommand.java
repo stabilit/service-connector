@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
-import java.net.SocketAddress;
 import java.util.Map;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
@@ -50,11 +49,6 @@ public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPas
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress(); // IP and port
-
-		// lookup if client is correctly attached
-		this.validateClientAttached(socketAddress);
-
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
@@ -94,7 +88,7 @@ public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPas
 			Map<String, String> scmpHeader = request.getMessage().getHeader();
 
 			try {
-				
+
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {

@@ -161,8 +161,14 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or
 	 * small message request and response. But all of them are handled as partial messages, large calls will be split
 	 * into partial calls (PRQ). The client uses group calls if the active communication is open end. Closing the group
-	 * will send the completing request (REQ). Communication sample: openGroup... (no transport) PRQ -> <-PRS .... PRQ->
-	 * <-PRS closeGroup...(terminates group) REQ-> <-RES
+	 * will send the completing request (REQ). 
+	 * Communication sample: 
+	 * 	openGroup    (no transport) 
+	 * 	PRQ -> <-PRS 
+	 * 	.... 
+	 * 	PRQ-> <-PRS 
+	 * 	closeGroup   (terminates group) 
+	 * 	REQ-> <-RES
 	 */
 	public final class SCMPGroupCall implements ISCMPCall {
 

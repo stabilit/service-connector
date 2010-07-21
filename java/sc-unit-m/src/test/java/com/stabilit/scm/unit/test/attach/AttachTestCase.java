@@ -62,32 +62,8 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		SCMPMessage inspectString = inspectCall.invoke();
-
-		/*********************************** Verify registry entries in SC ********************************/
-		String inspectMsg = (String) inspectString.getBody();
-		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String localDateTimeString = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
-		Date localDateTime = ValidatorUtility.validateLocalDateTime(localDateTimeString);
-		String expectedScEntry = "/127.0.0.1::/127.0.0.1::SCMP [header={kpi=360, ver=1.0-000, ldt="
-				+ localDateTimeString + ", mid=1, mty=ATT}] MapBean: ldt=" + localDateTime + ";|";
-		String scEntry = inspectMap.get("clientRegistry");
-		// truncate /127.0.0.1:3640 because port may vary.
-		scEntry = scEntry.replaceAll("/127.0.0.1:\\d*", "/127.0.0.1:");
-		Assert.assertEquals(expectedScEntry, scEntry);
-
+		
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke();
-
-		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspectString = inspectCall.invoke();
-
-		/*********************************** Verify registry entries in SC ********************************/
-		inspectMsg = (String) inspectString.getBody();
-		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		scEntry = inspectMap.get("clientRegistry");
-		Assert.assertEquals("", scEntry);
 	}
 }

@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.SocketAddress;
-
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.NullCommandValidator;
@@ -29,12 +27,10 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
-import com.stabilit.scm.sc.service.Client;
 import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.ServiceType;
@@ -167,29 +163,6 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return (PublishService) service;
-	}
-
-	/**
-	 * Validate client attached. Lookup client in client registry and verify that it has been attached correctly.
-	 * 
-	 * @param socketAddress
-	 *            the socket address
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	protected void validateClientAttached(SocketAddress socketAddress) throws SCMPCommandException {
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-		Client client = clientRegistry.getClient(socketAddress);
-
-		if (client == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this,
-						"command error: unknown client - client might not be properly attached");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_CLIENT);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
 	}
 
 	/** {@inheritDoc} */

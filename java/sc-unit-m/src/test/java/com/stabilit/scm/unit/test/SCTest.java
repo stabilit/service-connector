@@ -41,8 +41,10 @@ import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
-import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeTestCase;
-import com.stabilit.scm.unit.test.srvData.sync.SrvDataTestCase;
+import com.stabilit.scm.unit.test.srvData.async.SrvDataAsyncTestCase;
+import com.stabilit.scm.unit.test.srvData.async.SrvDataLargeAsyncTestCase;
+import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeSyncTestCase;
+import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 
 /**
  * @author JTraber
@@ -56,8 +58,10 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataTestCase;
 	ClnDeleteSessionTestCase.class, 
 	RegisterServiceTestCase.class, 
 	DeRegisterServiceTestCase.class,
-	SrvDataTestCase.class, 
-	SrvDataLargeTestCase.class, 
+	SrvDataSyncTestCase.class, 
+	SrvDataLargeSyncTestCase.class, 
+	SrvDataAsyncTestCase.class, 
+	SrvDataLargeAsyncTestCase.class, 
 	SrvEchoTestCase.class, 
 	SrvEchoLargeTestCase.class,
 	SCImplTest.class,

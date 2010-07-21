@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.test.srvData.sync;
+package com.stabilit.scm.unit.test.srvData.async;
 
 import junit.framework.Assert;
 
@@ -26,12 +26,13 @@ import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.SynchronousCallback;
 import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
 
 /**
  * @author JTraber
  */
-public class SrvDataLargeTestCase extends SuperSessionTestCase {
+public class SrvDataLargeAsyncTestCase extends SuperSessionTestCase {
 
 	/**
 	 * The Constructor.
@@ -39,7 +40,7 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public SrvDataLargeTestCase(String fileName) {
+	public SrvDataLargeAsyncTestCase(String fileName) {
 		super(fileName);
 	}
 
@@ -50,25 +51,24 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 10000; i++) {
 			sb.append(i);
 		}
-		
+
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
 				this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(sb.toString());
-		SCMPMessage scmpReply = clnDataCall.invoke();
+		SynchronousCallback callback = new SrvDataTestCaseCallback();
+		clnDataCall.invoke(callback);
+		SCMPMessage scmpReply = callback.getMessageSync();
 
-		//create expected result
+		// create expected result
 		StringBuilder sbRes = new StringBuilder();
 		sbRes.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sbRes.length() > SCMPMessage.LARGE_MESSAGE_LIMIT) {
+			if (sbRes.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			sbRes.append(i);
 		}
-		
-		
-		/*********************************** Verify attach response msg **********************************/
 		Assert.assertEquals(sbRes.length() + "", scmpReply.getBodyLength() + "");
 		Assert.assertEquals(sbRes.toString(), scmpReply.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -78,6 +78,10 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(serviceName, scmpReply.getServiceName());
 		Assert.assertEquals(sessionId, scmpReply.getSessionId());
 		Assert.assertEquals("3/2", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+	}
+
+	private class SrvDataTestCaseCallback extends SynchronousCallback {
+		// necessary because SynchronousCallback is abstract
 	}
 
 	@Test
@@ -91,7 +95,10 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		}
 		String expectedBody = "message data test case";
 		clnDataCall.setRequestBody(sb.toString());
-		SCMPMessage scmpReply = clnDataCall.invoke();
+		SrvDataTestCaseCallback callback = new SrvDataTestCaseCallback();
+		clnDataCall.invoke(callback);
+		SCMPMessage scmpReply = callback.getMessageSync();
+
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/1", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());
@@ -108,13 +115,16 @@ public class SrvDataLargeTestCase extends SuperSessionTestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT) {
+			if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			sb.append(i);
 		}
 		clnDataCall.setRequestBody(sb.toString());
-		SCMPMessage scmpReply = clnDataCall.invoke();
+		SrvDataTestCaseCallback callback = new SrvDataTestCaseCallback();
+		clnDataCall.invoke(callback);
+		SCMPMessage scmpReply = callback.getMessageSync();
+		
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals("3/3", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());

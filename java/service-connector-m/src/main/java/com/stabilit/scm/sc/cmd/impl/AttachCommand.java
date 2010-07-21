@@ -21,20 +21,16 @@ import java.util.Date;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ClientRegistry;
 import com.stabilit.scm.sc.service.Client;
 
 /**
@@ -62,42 +58,15 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-		// TODO verify with jan - wrong ... doesn't work anymore.. because of connection pool
-		// check if client has been attached already
-		Client client = clientRegistry.getClient(socketAddress);
-		this.validateClientNotAttached(client);
 
-		client = new Client(socketAddress, request);
-		// attach client - add entry in client registry for current client
-		clientRegistry.addClient(client.getSocketAddress(), client);
-
+		Client client = new Client(socketAddress, request);
+		//TODO What todo verify with jan
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
-	}
-
-	/**
-	 * Validate client. Controls if requesting client has not been attached before. Attaching a client two times
-	 * violates the protocol.
-	 * 
-	 * @param client
-	 *            the client
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	private void validateClientNotAttached(Client client) throws SCMPCommandException {
-		if (client != null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: already attache");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.ALREADY_ATTACHED);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
 	}
 
 	/**

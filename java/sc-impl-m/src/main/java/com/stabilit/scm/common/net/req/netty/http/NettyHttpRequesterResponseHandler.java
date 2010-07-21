@@ -34,9 +34,7 @@ import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyHttpROequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
- * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when operation
- * fails.
+ * The Class NettyHttpROequesterResponseHandler.
  * 
  * @author JTraber
  */

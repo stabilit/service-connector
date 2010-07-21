@@ -16,20 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.SocketAddress;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ClientRegistry;
-import com.stabilit.scm.sc.service.Client;
 
 /**
  * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to
@@ -54,21 +47,8 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress();
-		ClientRegistry clientRegistry = ClientRegistry.getCurrentInstance();
-
-		Client client = clientRegistry.getClient(socketAddress);
-		if (client == null) {
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: client not connected");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_CLIENT);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		// remove client entry from connection registry
-		clientRegistry.removeClient(socketAddress);
+	public void run(IRequest request, IResponse response) throws Exception {		
+		//TODO What todo verify with jan
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getValue());

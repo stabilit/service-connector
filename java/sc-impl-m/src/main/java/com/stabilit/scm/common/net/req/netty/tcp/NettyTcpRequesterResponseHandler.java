@@ -17,8 +17,6 @@
 package com.stabilit.scm.common.net.req.netty.tcp;
 
 import java.io.ByteArrayInputStream;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -29,30 +27,21 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
-import com.stabilit.scm.common.net.req.netty.NettyEvent;
-import com.stabilit.scm.common.net.req.netty.NettyExceptionEvent;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyTcpRequesterResponseHandler. Used to wait until operation us successfully done by netty framework.
- * BlockingQueue is used for synchronization and waiting mechanism. Communication Exception is thrown when operation
- * fails.
+ * The Class NettyTcpRequesterResponseHandler.
+ * 
+ * @author JTraber
  */
 @ChannelPipelineCoverage("one")
 public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
-	/** Queue to store the answer. */
-	private final BlockingQueue<NettyEvent> answer = new LinkedBlockingQueue<NettyEvent>();
-
 	private ISCMPCallback scmpCallback;
 
-	/**
-	 * The Constructor.
-	 */
 	public NettyTcpRequesterResponseHandler() {
 		this.scmpCallback = null;
 	}
@@ -65,48 +54,10 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		this.scmpCallback = callback;
 	}
 
-	/**
-	 * Gets the message synchronously.
-	 * 
-	 * @return the message
-	 * @throws CommunicationException
-	 *             the communication exception
-	 */
-	ChannelBuffer getMessageSync() throws CommunicationException {
-		NettyEvent response;
-		boolean interrupted = false;
-		for (;;) {
-			try {
-				// take() waits until message arrives in queue, locking inside queue
-				response = answer.take();
-				if (response.isFault()) {
-					throw new CommunicationException(((NettyExceptionEvent) response).getResponse().getCause());
-				}
-				break;
-			} catch (InterruptedException e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				interrupted = true;
-			}
-		}
-
-		if (interrupted) {
-			// interruption happens when waiting for response - interrupt now
-			Thread.currentThread().interrupt();
-		}
-		return (ChannelBuffer) response.getResponse();
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		ChannelBuffer chBuffer = (ChannelBuffer) e.getMessage();
-		NettyTcpEvent response = new NettyTcpEvent(chBuffer);
-		if (this.scmpCallback != null) {
-			this.callback(response);
-			this.scmpCallback = null;
-			return;
-		}
-		answer.offer(response);
+		this.callback((ChannelBuffer) e.getMessage());
 	}
 
 	/** {@inheritDoc} */
@@ -114,23 +65,13 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
 		this.scmpCallback.callback(th);
-		
-		NettyEvent response = new NettyExceptionEvent(th);
-		if (this.scmpCallback != null) {
-			this.callback(response);
-			this.scmpCallback = null;
-			return;
-		}
-		answer.offer(response);
 	}
 
-	private void callback(NettyEvent event) throws Exception {
+	private void callback(ChannelBuffer channelBuffer) throws Exception {
 		SCMPMessage ret = null;
 		try {
-			NettyEvent eventMessage = event;
-			ChannelBuffer content = (ChannelBuffer) eventMessage.getResponse();
-			byte[] buffer = new byte[content.readableBytes()];
-			content.readBytes(buffer);
+			byte[] buffer = new byte[channelBuffer.readableBytes()];
+			channelBuffer.readBytes(buffer);
 			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()

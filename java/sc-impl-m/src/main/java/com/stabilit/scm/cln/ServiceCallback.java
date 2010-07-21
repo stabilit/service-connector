@@ -36,9 +36,7 @@ import com.stabilit.scm.common.service.SynchronousCallback;
 public class ServiceCallback extends SynchronousCallback implements ISCMPCallback {
 
 	/** The message callback. */
-	private ISCMessageCallback messageCallback;
-	/** The synchronous, marks if somebody waits for the message. */
-	private boolean synchronous;
+	private ISCMessageCallback messageCallback;	
 
 	/**
 	 * Instantiates a new ServiceCallback.
@@ -79,11 +77,5 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 			return;
 		}
 		this.messageCallback.callback(th);
-	}
-
-	@Override
-	public SCMPMessage getMessageSync() throws Exception {
-		this.synchronous = true;
-		return super.getMessageSync();
 	}
 }

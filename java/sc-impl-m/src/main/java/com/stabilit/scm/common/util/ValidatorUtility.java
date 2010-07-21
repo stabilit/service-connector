@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.scmp.internal.KeepAlive;
 
 /**
  * The Class ValidatorUtility.
@@ -30,11 +29,6 @@ import com.stabilit.scm.common.scmp.internal.KeepAlive;
  * @author JTraber
  */
 public final class ValidatorUtility {
-
-	/** The KEEP ALIVE INTERVAL MAX. */
-	private static final int KA_INTERVAL_MAX = 3600;
-	/** The KEEP ALIVE TIMEOUT MAX. */
-	private static final int KA_TIMEOUT_MAX = 3600;
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
@@ -71,46 +65,6 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException("ParseException when parsing localDateTime: " + localDateTimeString);
 		}
 		return localDateTime;
-	}
-
-	/**
-	 * Validate keep alive.
-	 * 
-	 * @param keepAliveTimeout
-	 *            the keep alive timeout
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 * @return the keep alive
-	 * @throws SCMPValidatorException
-	 *             the SCMP validator exception
-	 */
-	public static KeepAlive validateKeepAlive(String keepAliveTimeout, String keepAliveInterval)
-			throws SCMPValidatorException {
-		int keepAliveTimeoutInt = 0;
-		int keepAliveIntervalInt = 0;
-
-		try {
-			keepAliveTimeoutInt = Integer.parseInt(keepAliveTimeout);
-			keepAliveIntervalInt = Integer.parseInt(keepAliveInterval);
-		} catch (NumberFormatException ex) {
-			throw new SCMPValidatorException("NumberFormatException when parsing keep alive parameters : "
-					+ keepAliveTimeout + " - " + keepAliveInterval);
-		}
-
-		if (keepAliveInterval == null || keepAliveTimeout == null) {
-			throw new SCMPValidatorException("keepAliveTimeout/keepAliveInterval need to be set");
-		}
-
-		if (keepAliveTimeoutInt > KA_TIMEOUT_MAX || keepAliveIntervalInt > KA_INTERVAL_MAX) {
-			throw new SCMPValidatorException("keepAliveTimeout or keepAliveInterval is to high.");
-		}
-
-		if ((keepAliveTimeoutInt == 0 && keepAliveIntervalInt != 0)
-				|| (keepAliveIntervalInt == 0 && keepAliveTimeoutInt != 0)) {
-			throw new SCMPValidatorException(
-					"keepAliveTimeout and keepAliveInterval must either be both zero or both non zero!");
-		}
-		return new KeepAlive(keepAliveTimeoutInt, keepAliveIntervalInt);
 	}
 
 	/**
