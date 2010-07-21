@@ -26,8 +26,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.unit.TestContext;
 
@@ -40,7 +40,7 @@ public abstract class SuperTestCase {
 	protected String fileName;
 	protected RequesterConfigPool config = null;
 	protected IRequester req = null;
-	protected IContext testContext;
+	protected IRequesterContext testContext;
 
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;

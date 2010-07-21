@@ -25,6 +25,7 @@ import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.service.IFileService;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCClient;
@@ -122,36 +123,22 @@ public class SCClient implements ISCClient {
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
 		this.context = new ServiceConnectorContext();
 	}
-
-	/**
-	 * Gets the context.
-	 * 
-	 * @return the context
-	 */
+	
+	/** {@inheritDoc} */
 	@Override
 	public ISCContext getContext() {
 		return context;
 	}
-
-	/**
-	 * Attach.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	
+	/** {@inheritDoc} */
 	@Override
 	public void attach() throws Exception {
-		this.requester = new Requester(this.context);
+		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool()));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		attachCall.invoke();
 	}
 
-	/**
-	 * Detach.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void detach() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
@@ -160,14 +147,7 @@ public class SCClient implements ISCClient {
 		this.connectionPool.destroy();
 	}
 
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attributes.setAttribute(name, value);
@@ -229,13 +209,7 @@ public class SCClient implements ISCClient {
 		return port;
 	}
 
-	/**
-	 * New file service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return the i file service
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IFileService newFileService(String serviceName) {
 
@@ -247,7 +221,8 @@ public class SCClient implements ISCClient {
 	public ISessionService newSessionService(String serviceName) {
 		return new SessionService(serviceName, this.context);
 	}
-
+	
+	/** {@inheritDoc} */
 	@Override
 	public IPublishService newPublishService(String serviceName) {
 		return new PublishService(serviceName, this.context);
@@ -270,10 +245,10 @@ public class SCClient implements ISCClient {
 			return connectionPool;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ISCClient getServiceConnector() {
 			return SCClient.this;
 		}
-
 	}
 }

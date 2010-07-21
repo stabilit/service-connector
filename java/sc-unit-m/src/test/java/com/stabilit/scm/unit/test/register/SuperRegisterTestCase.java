@@ -24,8 +24,8 @@ import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
@@ -36,7 +36,7 @@ import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	protected IRequester registerRequester;
-	private IContext registerContext;
+	private IRequesterContext registerContext;
 	private String registerFileName = "session-server.properties";
 	private RequesterConfigPool registerConfig = null;
 	private ResponderConfigPool responderConfig = null;

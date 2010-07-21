@@ -28,6 +28,4 @@ import com.stabilit.scm.common.net.req.IConnectionPool;
  *
  */
 public interface IContext {
-
-	public IConnectionPool getConnectionPool();
 }

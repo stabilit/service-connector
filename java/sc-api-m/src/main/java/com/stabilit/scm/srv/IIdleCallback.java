@@ -19,25 +19,15 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.service;
+package com.stabilit.scm.srv;
 
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.IConnectionPool;
+import com.stabilit.scm.common.net.req.IConnection;
 
 /**
  * @author JTraber
+ *
  */
-public class ServerContext implements IContext {
-
-	private IConnectionPool connectionPool;
-
-	/**
-	 * @param host
-	 * @param portNr
-	 * @param connectionKey
-	 */
-	public ServerContext(String host, int portNr, String connectionKey) {
-		this.connectionPool = new ConnectionPool(host, portNr, connectionKey);
-	}
+public interface IIdleCallback {
+	
+	public abstract void connectionIdle(IConnection connection);
 }

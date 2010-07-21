@@ -1,43 +1,28 @@
 package com.stabilit.scm.common.net.req;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.ctx.IContext;
+import com.stabilit.scm.srv.IIdleCallback;
 
 public class ConnectionContext implements IConnectionContext {
 
-	private IContext outerContext;
-	private IConnectionPool connectionPool;
 	private IConnection connection;
+	private int idleTimeout;
+	private IIdleCallback idleCallback;
 
-	public ConnectionContext(IConnection connection, IConnectionPool connectionPool) {
+	public ConnectionContext(IConnection connection, IIdleCallback idleCallback, int idleTimeout) {
 		this.connection = connection;
-		this.connectionPool = connectionPool;
-		this.outerContext = null;
+		this.idleTimeout = idleTimeout;
+		this.idleCallback = idleCallback;
 	}
 
-	@Override
-	public IContext getOuterContext() {
-		return outerContext;
-	}
-	
-	@Override
-	public void setOuterContext(IContext outerContext) {
-	   this.outerContext = outerContext;	
-	}
-	
 	@Override
 	public IConnection getConnection() {
 		return this.connection;
 	}
 
 	@Override
-	public IConnectionPool getConnectionPool() {
-		return this.connectionPool;
-	}
-
-	@Override
 	public int getIdleTimeout() {
-		return this.connectionPool.getKeepAliveInterval();
+		return this.idleTimeout;
 	}
 	
 	@Override
@@ -48,5 +33,10 @@ public class ConnectionContext implements IConnectionContext {
 	@Override
 	public int getWriteTimeout() {
 		return IConstants.WRITE_TIMEOUT_MILLIS;
+	}
+
+	@Override
+	public IIdleCallback getIdleCallback() {
+		return this.idleCallback;
 	}
 }

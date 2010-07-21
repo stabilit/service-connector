@@ -29,8 +29,8 @@ import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -92,7 +92,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	public void registerServiceCall() throws Exception {
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
 				"netty.tcp", 16, 1000, 60, 10);
-		IContext context = new TestContext(config);
+		IRequesterContext context = new TestContext(config);
 		IRequester req = new Requester(context);
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

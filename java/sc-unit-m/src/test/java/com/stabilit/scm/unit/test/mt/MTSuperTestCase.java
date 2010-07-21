@@ -34,9 +34,9 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -53,7 +53,7 @@ public abstract class MTSuperTestCase {
 	protected RequesterConfigPool config = null;
 	protected List<IRequester> reqList = null;
 	private IRequester registerReq = null;
-	protected IContext testContext = null;
+	protected IRequesterContext testContext = null;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;

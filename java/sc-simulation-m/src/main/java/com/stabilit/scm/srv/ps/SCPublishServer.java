@@ -36,6 +36,7 @@ import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.srv.ISCPublishServer;
@@ -79,7 +80,7 @@ public class SCPublishServer implements ISCPublishServer {
 		this.numberOfThreads = numberOfThreads;
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
 		this.context = new SCPublishServerContext();
-		this.requester = new Requester(this.context);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 	}
 
 	public SCPublishServer(String host, int port, String connectionType) {

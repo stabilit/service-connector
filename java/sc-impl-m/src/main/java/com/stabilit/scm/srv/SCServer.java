@@ -27,6 +27,7 @@ import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.service.ISC;
@@ -87,7 +88,7 @@ public class SCServer implements ISCServer {
 		// register service only needs one connection
 		this.connectionPool.setMaxConnections(1);
 		this.context = new SCServerContext();
-		this.requester = new Requester(this.context);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 	}
 

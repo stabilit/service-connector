@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
+import com.stabilit.scm.srv.IIdleCallback;
 
 /**
  * @author JTraber
@@ -84,7 +86,8 @@ public class ConnectionPool implements IConnectionPool {
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
 		connection.setNumberOfThreads(this.numberOfThreads);
-		IConnectionContext connectionContext = new ConnectionContext(connection, this);
+		IIdleCallback idleCallback = new IdleCallback();
+		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
@@ -187,7 +190,7 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	@Override
-	public void connectionIdle(IConnection connection) throws Exception {
+	public void connectionIdle(IConnection connection) {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;
@@ -201,13 +204,25 @@ public class ConnectionPool implements IConnectionPool {
 			}
 		}
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
-		connection.sendAndReceive(keepAliveMessage);
-		connection.incrementNrOfIdles();
-		this.freeConnections.add(connection);
+		try {
+			connection.sendAndReceive(keepAliveMessage);
+			connection.incrementNrOfIdles();
+			this.freeConnections.add(connection);
+		} catch (Exception e) {
+			ExceptionPoint.getInstance().fireException(this, e);
+		}
 	}
 
 	@Override
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
+	}
+
+	private class IdleCallback implements IIdleCallback {
+
+		@Override
+		public void connectionIdle(IConnection connection) {
+			ConnectionPool.this.connectionIdle(connection);
+		}
 	}
 }

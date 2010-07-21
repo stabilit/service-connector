@@ -41,7 +41,6 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
@@ -295,7 +294,6 @@ public class NettyHttpConnection implements IConnection {
 
 	private class NettyHttpSCMPCallback implements ISCMPCallback {
 		private SCMPMessage reply;
-		private Throwable th;
 		/** Queue to store the answer. */
 		private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
 
@@ -310,16 +308,7 @@ public class NettyHttpConnection implements IConnection {
 
 		@Override
 		public void callback(Throwable th) {
-			this.th = th;
-		}
-
-		@Override
-		public IContext getContext() {
-			return null;
-		}
-
-		@Override
-		public void setContext(IContext context) {
+			return;
 		}
 
 		public SCMPMessage join() throws Exception {

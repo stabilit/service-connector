@@ -1,14 +1,7 @@
 package com.stabilit.scm.common.scmp;
 
-import com.stabilit.scm.common.ctx.IContext;
 
 public interface ISCMPSynchronousCallback extends ISCMPCallback {
-
-	@Override
-	public abstract IContext getContext();
-
-	@Override
-	public abstract void setContext(IContext context);
 
 	@Override
 	public abstract void callback(SCMPMessage scmpReply) throws Exception;

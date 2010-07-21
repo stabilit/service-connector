@@ -26,8 +26,8 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.res.Responder;
@@ -74,7 +74,7 @@ public class Performance {
 		con.setNumberOfThreads(10);
 		con.setPort(8080);
 
-		IContext testContext = new TestContext("localhost", 8080, "netty.http");
+		IRequesterContext testContext = new TestContext("localhost", 8080, "netty.http");
 
 		IRequester req = new Requester(testContext);
 		ICommunicatorConfig config = new CommunicatorConfig("Performance", "localhost", 8080, "netty.http", 16, 1000,

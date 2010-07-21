@@ -29,6 +29,7 @@ import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -51,7 +52,7 @@ public class SessionService implements ISessionService {
 	public SessionService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
-		this.requester = new Requester(context);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.serviceContext = new ServiceContext(context, this);
 	}
 
@@ -87,7 +88,6 @@ public class SessionService implements ISessionService {
 
 		// set up synchronous callback
 		ISCMPSynchronousCallback scmpCallback = new ServiceCallback();
-		scmpCallback.setContext(this.serviceContext);
 		// invoke asynchronous
 		clnDataCall.invoke(scmpCallback);
 		// wait for message in callback
@@ -109,7 +109,6 @@ public class SessionService implements ISessionService {
 		}
 		clnDataCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(messageCallback);
-		scmpCallback.setContext(this.serviceContext);
 		clnDataCall.invoke(scmpCallback);
 		return;
 	}

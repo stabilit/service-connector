@@ -28,6 +28,7 @@ import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IPublishService;
@@ -50,7 +51,7 @@ public class PublishService implements IPublishService {
 	public PublishService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
-		this.requester = new Requester(context);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.publishContext = new ServiceContext(context, this);
 		this.scmpCallback = null;
 		this.mask = null;

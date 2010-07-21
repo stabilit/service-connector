@@ -19,25 +19,21 @@
 /**
  * 
  */
-package com.stabilit.scm.sc.service;
-
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.IConnectionPool;
+package com.stabilit.scm.common.net.req;
 
 /**
  * @author JTraber
  */
-public class ServerContext implements IContext {
+public class RequesterContext implements IRequesterContext {
 
 	private IConnectionPool connectionPool;
 
-	/**
-	 * @param host
-	 * @param portNr
-	 * @param connectionKey
-	 */
-	public ServerContext(String host, int portNr, String connectionKey) {
-		this.connectionPool = new ConnectionPool(host, portNr, connectionKey);
+	public RequesterContext(IConnectionPool connectionPool) {
+		this.connectionPool = connectionPool;
+	}
+
+	@Override
+	public IConnectionPool getConnectionPool() {
+		return this.connectionPool;
 	}
 }

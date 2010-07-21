@@ -16,15 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.req;
 
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
@@ -34,36 +33,31 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public class SCRequester implements IRequester {
 
 	/** The context. */
-	private IContext outerContext;
+	private IRequesterContext reqContext;
 
-	public SCRequester(IContext context) {
-		this.outerContext = context;
+	public SCRequester(IRequesterContext context) {
+		this.reqContext = context;
 	}
 
 	@Override
 	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool().getConnection();
-		IConnectionContext connectionContext = connection.getContext();
-		connectionContext.setOuterContext(this.outerContext);
+		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		try {
 			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
 			return connection.sendAndReceive(scmp);
 		} finally {
 			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			connectionContext.getConnectionPool().freeConnection(connection);
-			connectionContext.setOuterContext(null);
+			this.reqContext.getConnectionPool().freeConnection(connection);
 		}
 	}
 
 	@Override
 	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.outerContext.getConnectionPool().getConnection();
+		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
-		connectionContext.setOuterContext(this.outerContext);
-		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback);
-		requesterCallback.setContext(connectionContext);
+		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
 		try {
 			connection.send(message, requesterCallback);
 		} finally {
@@ -81,9 +75,11 @@ public class SCRequester implements IRequester {
 	// member class
 	private class SCRequesterSCMPCallback implements ISCMPCallback {
 		private ISCMPCallback scmpCallback;
+		private IConnectionContext connectionContext;
 
-		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback) {
+		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionContext) {
 			this.scmpCallback = scmpCallback;
+			this.connectionContext = connectionContext;
 		}
 
 		@Override
@@ -98,21 +94,9 @@ public class SCRequester implements IRequester {
 			freeConnection();
 		}
 
-		@Override
-		public IContext getContext() {
-			return scmpCallback.getContext();
-		}
-
-		@Override
-		public void setContext(IContext context) {
-			this.scmpCallback.setContext(context);
-		}
-
 		private void freeConnection() {
 			try {
-				IConnectionContext connectionContext = (IConnectionContext) this.scmpCallback.getContext();
-				connectionContext.getConnectionPool().freeConnection(connectionContext.getConnection());
-				connectionContext.setOuterContext(null);
+				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionContext.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

@@ -22,14 +22,14 @@
 package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 
 /**
  * @author JTraber
  */
-public class ServerContext implements IContext {
+public class ServerContext implements IRequesterContext {
 
 	private IConnectionPool connectionPool;
 

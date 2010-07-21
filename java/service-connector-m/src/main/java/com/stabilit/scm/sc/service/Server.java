@@ -31,6 +31,7 @@ import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -63,7 +64,6 @@ public class Server {
 	private SocketAddress socketAddress;
 
 	private IRequester requester;
-	private IContext serverContext;
 	private IConnectionPool cp;
 
 	/**
@@ -90,11 +90,9 @@ public class Server {
 		String connectionType = respConfig.getConnectionType();
 		int numberOfThreads = respConfig.getNumberOfThreads();
 		this.host = socketAddress.getHostName();
-
-		this.serverContext = new ServerContext();
 		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval, numberOfThreads);
 		this.cp.setMaxConnections(maxSessions);
-		this.requester = new SCRequester(this.serverContext);
+		this.requester = new SCRequester(new RequesterContext(this.cp));
 	}
 
 	/**
@@ -323,9 +321,5 @@ public class Server {
 
 	public class ServerContext implements IContext {
 
-		@Override
-		public IConnectionPool getConnectionPool() {
-			return Server.this.cp;
-		}
 	}
 }

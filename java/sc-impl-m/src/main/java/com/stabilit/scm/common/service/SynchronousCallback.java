@@ -70,18 +70,6 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public IContext getContext() {
-		return this.context;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setContext(IContext context) {
-		this.context = context;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SCMPMessage getMessageSync() throws Exception {
 		// the method take() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.take();
