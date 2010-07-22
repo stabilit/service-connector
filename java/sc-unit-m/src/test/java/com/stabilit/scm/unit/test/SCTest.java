@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.scm.test.SCAPITest;
 import test.stabilit.scm.test.SCImplTest;
 
 import com.stabilit.scm.common.net.req.ConnectionPoolTest;
@@ -65,7 +64,6 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 	SrvEchoTestCase.class, 
 	SrvEchoLargeTestCase.class,
 	SCImplTest.class,
-	SCAPITest.class,
 	ConnectionPoolTest.class })
 public class SCTest {
 
