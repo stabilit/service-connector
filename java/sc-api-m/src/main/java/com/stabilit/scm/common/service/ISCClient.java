@@ -44,16 +44,6 @@ public interface ISCClient extends ISC {
 	public void detach() throws Exception;
 
 	/**
-	 * Sets the attribute. Attributes for ServiceConnector.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(String name, Object value);
-
-	/**
 	 * Gets the number of threads.
 	 * 
 	 * @return the number of threads

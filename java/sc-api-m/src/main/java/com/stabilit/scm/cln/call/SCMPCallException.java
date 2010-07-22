@@ -18,6 +18,7 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.scmp.SCMPFault;
 
+
 /**
  * The Class SCMPCallException. Exception occurs when invoking a call fails.
  * 
@@ -43,10 +44,10 @@ public class SCMPCallException extends Exception {
 	/**
 	 * Instantiates a new SCMPCallException.
 	 * 
-	 * @param string the string
+	 * @param message the string
 	 */
-	public SCMPCallException(String string) {
-		super(string);
+	public SCMPCallException(String message) {
+		super(message);
 	}
 
 	/**

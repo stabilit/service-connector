@@ -7,5 +7,5 @@ public interface IServiceContext extends IContext {
 
 	public abstract ISC getServiceConnector();
 	
-	public abstract IService getService();
+	public abstract Service getService();
 }
