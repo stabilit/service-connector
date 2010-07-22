@@ -22,6 +22,7 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -79,7 +80,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// error codes and error text from server in reject case are inside the exception
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 

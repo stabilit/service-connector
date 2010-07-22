@@ -91,12 +91,24 @@ public class SCPublishServer implements ISCPublishServer {
 	}
 
 	@Override
-	public void deregister() throws Exception {
+	public void registerService() throws Exception {
+		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+		.newInstance(this.requester, "publish-simulation");
+		registerServiceCall.setMaxSessions(2);
+		registerServiceCall.setPortNumber(14000);
+		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveInterval(0);
+		registerServiceCall.invoke(this.callback);
+		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+	}
+
+	@Override
+	public void deregisterService() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.requester, "publish-simulation");
 
 		deRegisterServiceCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 	}
 
 	@Override
@@ -105,19 +117,7 @@ public class SCPublishServer implements ISCPublishServer {
 				"publish-simulation");
 		publishCall.setRequestBody(data);
 		publishCall.invoke(this.callback);
-		this.callback.getMessageSync();
-	}
-
-	@Override
-	public void register() throws Exception {
-		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(this.requester, "publish-simulation");
-		registerServiceCall.setMaxSessions(2);
-		registerServiceCall.setPortNumber(14000);
-		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveInterval(0);
-		registerServiceCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 	}
 
 	@Override
@@ -156,6 +156,13 @@ public class SCPublishServer implements ISCPublishServer {
 		public ISCPublishServer getSCPublishServer() {
 			return SCPublishServer.this;
 		}
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		this.connectionPool.destroy();
 	}
 
 	private class SCPublishServerCallback extends SynchronousCallback {

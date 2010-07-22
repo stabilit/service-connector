@@ -55,27 +55,27 @@ public class SessionServer {
 
 	public void runExample() {
 		try {
-			scSrv = new SCServer("localhost", 9000);
+			this.scSrv = new SCServer("localhost", 9000);
 
 			// connect to SC as server
-			scSrv.setMaxSessions(10);
-			scSrv.setKeepAliveInterval(0);
-			scSrv.setRunningPortNr(7000);
-			scSrv.setImmediateConnect(true);
-			scSrv.startServer("localhost");
+			this.scSrv.setMaxSessions(10);
+			this.scSrv.setKeepAliveInterval(0);
+			this.scSrv.setRunningPortNr(7000);
+			this.scSrv.setImmediateConnect(true);
+			this.scSrv.startServer("localhost");
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			scSrv.registerService(serviceName, srvCallback);
+			this.scSrv.registerService(serviceName, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.shutdown();
 		}
 	}
-	
+
 	private void shutdown() {
 		try {
-			scSrv.deregisterService(serviceName);
+			this.scSrv.deregisterService(serviceName);
 		} catch (Exception e) {
-			scSrv = null;
+			this.scSrv = null;
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SessionServer {
 			return scSrv;
 		}
 	}
-	
+
 	private void initLogStuff(String loggerKey) {
 		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
 		ConnectionPoint.getInstance().addListener(

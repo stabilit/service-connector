@@ -27,11 +27,11 @@ package com.stabilit.scm.srv;
  */
 public interface ISCPublishServer {
 
-	void register() throws Exception;
+	void registerService() throws Exception;
 
 	void publish(String mask, Object data) throws Exception;
 
-	void deregister() throws Exception;
+	void deregisterService() throws Exception;
 
 	void startServer(String fileName) throws Exception;
 	

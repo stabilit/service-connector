@@ -48,7 +48,7 @@ public class PublishServer {
 
 		try {
 			sc.startServer("publish-server.properties");
-			sc.register();
+			sc.registerService();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

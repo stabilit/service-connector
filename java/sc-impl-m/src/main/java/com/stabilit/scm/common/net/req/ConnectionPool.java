@@ -208,8 +208,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			//TODO operation timeout
-			callback.getMessageSync();
+			callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
