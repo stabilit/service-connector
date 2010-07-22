@@ -25,10 +25,13 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.IFilterMask;
+import com.stabilit.scm.common.service.SCSessionException;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.FilterMask;
@@ -68,8 +71,16 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 
-		Server server = service.allocateServerAndSubscribe(reqMessage);
-
+		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
+		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
+		SCMPMessage reply = callback.getMessageSync();
+		
+		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			// server rejected session - throw exception with server errors
+			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+			throw e;
+		}
 		// add server to session
 		session.setServer(server);
 		// finally add subscription to the registry
@@ -198,5 +209,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
+	}
+
+	private class ClnSubscribeCommandCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

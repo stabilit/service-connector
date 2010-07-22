@@ -27,9 +27,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public interface IConnection extends ICommunicationPoint {
 
-	IConnectionContext getContext();
+	public abstract IConnectionContext getContext();
 	
-	void setContext(IConnectionContext connectionContext);
+	public abstract void setContext(IConnectionContext connectionContext);
 	
 	/**
 	 * Connect.
@@ -37,18 +37,7 @@ public interface IConnection extends ICommunicationPoint {
 	 * @throws Exception
 	 *             the exception
 	 */
-	void connect() throws Exception;
-
-	/**
-	 * Send and receive synchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
-	 * @throws Exception
-	 *             the exception
-	 */
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
+	public abstract void connect() throws Exception;
 
 	/**
 	 * Send and receive asynchronous operation.
@@ -59,7 +48,7 @@ public interface IConnection extends ICommunicationPoint {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
+	public abstract void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
 
 	/**
 	 * Disconnect.
@@ -67,19 +56,19 @@ public interface IConnection extends ICommunicationPoint {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void disconnect() throws Exception;
+	public abstract void disconnect() throws Exception;
 
 	/**
 	 * Destroys connection.
 	 */
-	public void destroy();
+	public abstract void destroy();
 
 	/**
 	 * Checks if is connected.
 	 * 
 	 * @return true, if is connected
 	 */
-	boolean isConnected();
+	public abstract boolean isConnected();
 
 	/**
 	 * Sets the idle timeout.
@@ -87,12 +76,12 @@ public interface IConnection extends ICommunicationPoint {
 	 * @param idleTimeout
 	 *            the new idle timeout
 	 */
-	void setIdleTimeout(int idleTimeout);
+	public abstract void setIdleTimeout(int idleTimeout);
 	
-	public void incrementNrOfIdles();
+	public abstract void incrementNrOfIdles();
 	
-	public void resetNrOfIdles();
+	public abstract void resetNrOfIdles();
 	
-	public int getNrOfIdlesInSequence();
+	public abstract int getNrOfIdlesInSequence();
 
 }

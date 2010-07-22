@@ -20,6 +20,7 @@ import java.net.InetAddress;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -45,13 +46,13 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 	}
 
 	@Override
-	public SCMPMessage invoke() throws Exception {
+	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipList += "/" + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		return super.invoke();
+		super.invoke(scmpCallback);
 	}
 
 	/**

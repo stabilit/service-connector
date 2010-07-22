@@ -19,6 +19,7 @@ package com.stabilit.scm.common.call;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -56,10 +57,10 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage invoke() throws Exception {
+	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
-		return super.invoke();
+		super.invoke(scmpCallback);
 	}
 	
 	/**

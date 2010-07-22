@@ -34,6 +34,7 @@ import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 
 /**
@@ -84,8 +85,9 @@ public class Performance {
 
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.setKeepAliveInterval(360);
-		SCMPMessage result = attachCall.invoke();
-
+		PerformanceCallback callback = new PerformanceCallback();
+		attachCall.invoke(callback);
+		SCMPMessage result = callback.getMessageSync();
 		// ISessionService session = new SCDataSession("simulation", req);
 		// session.setMessageInfo("message info");
 		// session.setSessionInfo("session info");
@@ -100,7 +102,7 @@ public class Performance {
 			request = new SCMPMessage(buffer);
 			request.setMessageType(SCMPMsgType.ATTACH.getValue());
 			// request.setSessionId(session.getSessionId());
-			resp = con.sendAndReceive(request);
+		//	resp = con.sendAndReceive(request);
 		}
 		double endTime = System.currentTimeMillis();
 
@@ -109,5 +111,9 @@ public class Performance {
 		System.out.println("Anz msg pro sec: " + anzMsg / ((neededTime / 1000)));
 
 		con.disconnect();
+	}
+	
+	private class PerformanceCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

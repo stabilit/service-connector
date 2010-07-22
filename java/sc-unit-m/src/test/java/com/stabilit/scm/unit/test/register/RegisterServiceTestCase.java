@@ -37,11 +37,14 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class RegisterServiceTestCase extends SuperTestCase {
+
+	protected RegisterServiceCallback registerCallback;
 
 	/**
 	 * The Constructor.
@@ -51,6 +54,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	 */
 	public RegisterServiceTestCase(String fileName) {
 		super(fileName);
+		this.registerCallback = new RegisterServiceCallback();
 	}
 
 	@Test
@@ -65,7 +69,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
-			registerServiceCall.invoke();
+			registerServiceCall.invoke(this.registerCallback);
+			this.registerCallback.getMessageSync();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
@@ -79,7 +84,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
-			registerServiceCall.invoke();
+			registerServiceCall.invoke(this.registerCallback);
+			this.registerCallback.getMessageSync();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
@@ -103,10 +109,12 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 
-		registerServiceCall.invoke();
+		registerServiceCall.invoke(this.registerCallback);
+		this.registerCallback.getMessageSync();
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		SCMPMessage inspect = inspectCall.invoke();
+		inspectCall.invoke(this.registerCallback);
+		SCMPMessage inspect = this.registerCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
@@ -123,11 +131,13 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
-		deRegisterServiceCall.invoke();
+		deRegisterServiceCall.invoke(this.registerCallback);
+		this.registerCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspect = inspectCall.invoke();
+		inspectCall.invoke(this.registerCallback);
+		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		expectedScEntry = "simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 10|";
@@ -145,7 +155,8 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {
-			registerServiceCall.invoke();
+			registerServiceCall.invoke(this.registerCallback);
+			this.registerCallback.getMessageSync();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException e) {
 			SCMPFault scmpFault = e.getFault();
@@ -156,6 +167,19 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "P01_RTXS_RPRWS1");
-		deRegisterServiceCall.invoke();
+		deRegisterServiceCall.invoke(this.registerCallback);
+		this.registerCallback.getMessageSync();
+	}
+
+	protected class RegisterServiceCallback extends SynchronousCallback {
+		@Override
+		public SCMPMessage getMessageSync() throws Exception {
+			SCMPMessage reply = super.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCMPCallException(fault);
+			}
+			return reply;
+		}
 	}
 }

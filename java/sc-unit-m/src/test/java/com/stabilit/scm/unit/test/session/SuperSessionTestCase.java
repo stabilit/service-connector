@@ -19,10 +19,13 @@ package com.stabilit.scm.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
 /**
@@ -31,6 +34,7 @@ import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 
 	protected String sessionId = null;
+	protected SuperSessionCallback sessionCallback;
 
 	/**
 	 * The Constructor.
@@ -40,6 +44,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	 */
 	public SuperSessionTestCase(String fileName) {
 		super(fileName);
+		this.sessionCallback = new SuperSessionCallback();
 	}
 
 	@Before
@@ -62,13 +67,27 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoInterval(3600);
 		createSessionCall.setEchoTimeout(3600);
 		// create session and keep sessionId
-		SCMPMessage resp = createSessionCall.invoke();
+		createSessionCall.invoke(this.sessionCallback);
+		SCMPMessage resp = this.sessionCallback.getMessageSync();
 		this.sessionId = resp.getSessionId();
 	}
 
 	public void clnDeleteSessionAfter() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, "simulation", this.sessionId);
-		deleteSessionCall.invoke();
+		deleteSessionCall.invoke(this.sessionCallback);
+		this.sessionCallback.getMessageSync();
+	}
+
+	protected class SuperSessionCallback extends SynchronousCallback {
+		@Override
+		public SCMPMessage getMessageSync() throws Exception {
+			SCMPMessage reply = super.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCMPCallException(fault);
+			}
+			return reply;
+		}
 	}
 }

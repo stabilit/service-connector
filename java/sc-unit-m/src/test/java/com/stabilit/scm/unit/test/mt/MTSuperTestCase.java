@@ -38,6 +38,7 @@ import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.util.ReflectionUtil;
@@ -54,11 +55,13 @@ public abstract class MTSuperTestCase {
 	protected List<IRequester> reqList = null;
 	private IRequester registerReq = null;
 	protected IRequesterContext testContext = null;
+	protected MTSuperTestCallback callback;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
 		this.reqList = new ArrayList<IRequester>();
 		this.testContext = new TestContext(this.config.getRequesterConfig());
+		this.callback = new MTSuperTestCallback();
 	}
 
 	// @Parameters
@@ -87,7 +90,8 @@ public abstract class MTSuperTestCase {
 		registerService.setPortNumber(7000);
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(360);
-		registerService.invoke();
+		registerService.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	public IRequester newReq() {
@@ -108,7 +112,8 @@ public abstract class MTSuperTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 
-		deRegisterServiceCall.invoke();
+		deRegisterServiceCall.invoke(this.callback);
+		this.callback.getMessageSync();
 		this.testContext.getConnectionPool().destroy();
 	}
 
@@ -137,5 +142,9 @@ public abstract class MTSuperTestCase {
 				Assert.fail(e.toString());
 			}
 		}
+	}
+
+	protected class MTSuperTestCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

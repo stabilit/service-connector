@@ -46,7 +46,8 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 	public void clnDeleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "simulation", this.sessionId);
-		SCMPMessage result = deleteSessionCall.invoke();
+		deleteSessionCall.invoke(this.sessionCallback);
+		SCMPMessage result = this.sessionCallback.getMessageSync();
 
 		/*************************** verify delete session **********************************/
 		Assert.assertNull(result.getBody());
@@ -56,11 +57,12 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		SCMPMessage inspect = inspectCall.invoke();
+		inspectCall.invoke(this.sessionCallback);
+		SCMPMessage inspect = this.sessionCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
-		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);		
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		String scEntry = (String) inspectMap.get("sessionRegistry");
 		Assert.assertEquals("", scEntry);
 		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));

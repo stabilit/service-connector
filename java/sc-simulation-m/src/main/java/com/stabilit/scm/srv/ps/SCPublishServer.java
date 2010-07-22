@@ -39,6 +39,7 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerContext;
 import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
@@ -59,6 +60,7 @@ public class SCPublishServer implements ISCPublishServer {
 	protected IRequester requester;
 	/** The context. */
 	private SCPublishServerContext context;
+	private SCPublishServerCallback callback;
 
 	/**
 	 * Instantiates a new service connector.
@@ -81,6 +83,7 @@ public class SCPublishServer implements ISCPublishServer {
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
 		this.context = new SCPublishServerContext();
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
+		this.callback = new SCPublishServerCallback();
 	}
 
 	public SCPublishServer(String host, int port, String connectionType) {
@@ -92,7 +95,8 @@ public class SCPublishServer implements ISCPublishServer {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.requester, "publish-simulation");
 
-		deRegisterServiceCall.invoke();
+		deRegisterServiceCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	@Override
@@ -100,20 +104,20 @@ public class SCPublishServer implements ISCPublishServer {
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
 				"publish-simulation");
 		publishCall.setRequestBody(data);
-		publishCall.invoke();
+		publishCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	@Override
 	public void register() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(this.requester, "publish-simulation");
-
 		registerServiceCall.setMaxSessions(2);
 		registerServiceCall.setPortNumber(14000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(0);
-
-		registerServiceCall.invoke();
+		registerServiceCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	@Override
@@ -152,5 +156,9 @@ public class SCPublishServer implements ISCPublishServer {
 		public ISCPublishServer getSCPublishServer() {
 			return SCPublishServer.this;
 		}
+	}
+
+	private class SCPublishServerCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

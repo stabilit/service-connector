@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionPlace;
@@ -50,7 +51,7 @@ public class PublishService extends Service {
 		return this.subscriptionPlace;
 	}
 
-	public Server allocateServerAndSubscribe(SCMPMessage msgToForward) throws Exception {
+	public Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -59,7 +60,7 @@ public class PublishService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.subscribe(msgToForward);
+				server.subscribe(msgToForward, callback);
 				return server;
 			}
 		}

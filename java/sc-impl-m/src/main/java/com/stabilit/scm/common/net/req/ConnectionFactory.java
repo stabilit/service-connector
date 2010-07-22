@@ -20,8 +20,6 @@ import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpConnection;
-import com.stabilit.scm.common.net.req.nio.http.NioHttpConnection;
-import com.stabilit.scm.common.net.req.nio.tcp.NioTcpConnection;
 
 /**
  * A factory for creating connection objects. Provides access to concrete client instances. 
@@ -29,10 +27,6 @@ import com.stabilit.scm.common.net.req.nio.tcp.NioTcpConnection;
  */
 public class ConnectionFactory extends Factory {
 
-	/** The Constant NIO_HTTP. */
-	private static final String NIO_HTTP = "nio.http";
-	/** The Constant NIO_TCP. */
-	private static final String NIO_TCP = "nio.tcp";
 	/** The Constant NETTY_TCP. */
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
@@ -49,15 +43,10 @@ public class ConnectionFactory extends Factory {
 		// jboss netty tcp client
 		IConnection nettyTCPClient = new NettyTcpConnection();
 		add(NETTY_TCP, nettyTCPClient);
-		// nio tcp client
-		IConnection nioTCPClient = new NioTcpConnection();
-		add(NIO_TCP, nioTCPClient);
-		// nio http client
-		IConnection nioHttpClient = new NioHttpConnection();
-		add(NIO_HTTP, nioHttpClient);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public IConnection newInstance() {
 		return newInstance(DEFAULT);
 	}

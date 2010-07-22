@@ -16,9 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.test.attach;
 
-import java.util.Date;
-import java.util.Map;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -26,12 +23,11 @@ import org.junit.Test;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
-import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class AttachTestCase extends SuperTestCase {
@@ -46,15 +42,14 @@ public class AttachTestCase extends SuperTestCase {
 		super(parameter);
 	}
 
-	public void failAttach() throws Exception {
-		// TODO
-	}
-
 	@Test
 	public void attach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.setKeepAliveInterval(360);
-		SCMPMessage result = attachCall.invoke();
+		
+		AttachTestCallback callback = new AttachTestCallback();
+		attachCall.invoke(callback);
+		SCMPMessage result = callback.getMessageSync();
 
 		/*********************************** Verify attach response msg **********************************/
 		Assert.assertNull(result.getBody());
@@ -64,6 +59,11 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
-		detachCall.invoke();
+		detachCall.invoke(callback);
+		callback.getMessageSync();
+	}
+	
+	private class AttachTestCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

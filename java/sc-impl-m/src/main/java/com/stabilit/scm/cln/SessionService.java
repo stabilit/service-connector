@@ -48,12 +48,14 @@ public class SessionService implements ISessionService {
 	private String sessionId;
 	private IServiceContext serviceContext;
 	private IRequester requester;
+	private ISCMPSynchronousCallback callback;
 
 	public SessionService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.serviceContext = new ServiceContext(context, this);
+		this.callback = new ServiceCallback();
 	}
 
 	@Override
@@ -63,7 +65,8 @@ public class SessionService implements ISessionService {
 		createSessionCall.setSessionInfo(sessionInfo);
 		createSessionCall.setEchoTimeout(echoTimeout);
 		createSessionCall.setEchoInterval(echoInterval);
-		SCMPMessage reply = createSessionCall.invoke();
+		createSessionCall.invoke(this.callback);
+		SCMPMessage reply = this.callback.getMessageSync();
 		this.sessionId = reply.getSessionId();
 	}
 
@@ -71,7 +74,8 @@ public class SessionService implements ISessionService {
 	public void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		deleteSessionCall.invoke();
+		deleteSessionCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	@Override
@@ -84,14 +88,10 @@ public class SessionService implements ISessionService {
 			clnDataCall.setMessagInfo(msgInfo);
 		}
 		clnDataCall.setRequestBody(requestMsg.getData());
-		// SCMPMessage reply = clnDataCall.invoke();
-
-		// set up synchronous callback
-		ISCMPSynchronousCallback scmpCallback = new ServiceCallback();
 		// invoke asynchronous
-		clnDataCall.invoke(scmpCallback);
+		clnDataCall.invoke(this.callback);
 		// wait for message in callback
-		SCMPMessage reply = scmpCallback.getMessageSync();
+		SCMPMessage reply = this.callback.getMessageSync();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));

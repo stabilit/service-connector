@@ -31,6 +31,7 @@ import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
  * The Class SCClient.
@@ -53,9 +54,9 @@ public class SCClient implements ISCClient {
 	protected IRequester requester;
 	/** The attributes. */
 	private MapBean<Object> attributes;
-
 	/** The context. */
 	private ServiceConnectorContext context;
+	private SCClientCallback callback;
 
 	/**
 	 * Instantiates a new service connector.
@@ -122,6 +123,7 @@ public class SCClient implements ISCClient {
 		this.attributes = new MapBean<Object>();
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
 		this.context = new ServiceConnectorContext();
+		this.callback = new SCClientCallback();
 	}
 	
 	/** {@inheritDoc} */
@@ -135,14 +137,17 @@ public class SCClient implements ISCClient {
 	public void attach() throws Exception {
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool()));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		attachCall.invoke();
+		SCClientCallback callback = new SCClientCallback();
+		attachCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void detach() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
-		detachCall.invoke();
+		detachCall.invoke(this.callback);
+		this.callback.getMessageSync();
 		// destroy connection pool
 		this.connectionPool.destroy();
 	}
@@ -250,5 +255,9 @@ public class SCClient implements ISCClient {
 		public ISCClient getServiceConnector() {
 			return SCClient.this;
 		}
+	}	
+	
+	private class SCClientCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

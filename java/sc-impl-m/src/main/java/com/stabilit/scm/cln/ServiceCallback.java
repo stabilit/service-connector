@@ -36,7 +36,7 @@ import com.stabilit.scm.common.util.SynchronousCallback;
 public class ServiceCallback extends SynchronousCallback implements ISCMPCallback {
 
 	/** The message callback. */
-	private ISCMessageCallback messageCallback;	
+	private ISCMessageCallback messageCallback;
 
 	/**
 	 * Instantiates a new ServiceCallback.
@@ -53,7 +53,6 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 	 */
 	public ServiceCallback(ISCMessageCallback messageCallback) {
 		this.messageCallback = messageCallback;
-		this.synchronous = false;
 	}
 
 	@Override

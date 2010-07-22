@@ -21,7 +21,6 @@
  */
 package com.stabilit.scm.common.ctx;
 
-import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
  * @author JTraber

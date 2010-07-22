@@ -8,6 +8,7 @@ import com.stabilit.scm.common.conf.IConstants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.IIdleCallback;
 
 /**
@@ -205,7 +206,10 @@ public class ConnectionPool implements IConnectionPool {
 		}
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
 		try {
-			connection.sendAndReceive(keepAliveMessage);
+			ConnectionPoolCallback callback = new ConnectionPoolCallback();
+			connection.send(keepAliveMessage, callback);
+			//TODO operation timeout
+			callback.getMessageSync();
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
@@ -224,5 +228,9 @@ public class ConnectionPool implements IConnectionPool {
 		public void connectionIdle(IConnection connection) {
 			ConnectionPool.this.connectionIdle(connection);
 		}
+	}
+
+	private class ConnectionPoolCallback extends SynchronousCallback {
+		// nothing to implement in this case everything is done in super-class
 	}
 }

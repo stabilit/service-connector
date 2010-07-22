@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -117,20 +116,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage closeGroup() {
+	public void closeGroup(ISCMPCallback callback) {
 		throw new UnsupportedOperationException("not allowed");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMessage invoke() throws Exception {
-		this.requestMessage.setMessageType(getMessageType().getValue());
-		this.responseMessage = requester.sendAndReceive(this.requestMessage);
-
-		if (this.responseMessage.isFault()) {
-			throw new SCMPCallException((SCMPFault) responseMessage);
-		}
-		return this.responseMessage;
 	}
 
 	@Override
@@ -161,20 +148,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or
 	 * small message request and response. But all of them are handled as partial messages, large calls will be split
 	 * into partial calls (PRQ). The client uses group calls if the active communication is open end. Closing the group
-	 * will send the completing request (REQ). 
-	 * Communication sample: 
-	 * 	openGroup    (no transport) 
-	 * 	PRQ -> <-PRS 
-	 * 	.... 
-	 * 	PRQ-> <-PRS 
-	 * 	closeGroup   (terminates group) 
-	 * 	REQ-> <-RES
+	 * will send the completing request (REQ). Communication sample: openGroup (no transport) PRQ -> <-PRS .... PRQ->
+	 * <-PRS closeGroup (terminates group) REQ-> <-RES
 	 */
 	public final class SCMPGroupCall implements ISCMPCall {
 
 		/** The parent call. */
 		private ISCMPCall parentCall;
-
 		/** The group state. */
 		private SCMPGroupState groupState;
 
@@ -189,9 +169,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			this.groupState = SCMPGroupState.OPEN;
 		}
 
-		/** {@inheritDoc} */
 		@Override
-		public SCMPMessage invoke() throws Exception {
+		public void invoke(ISCMPCallback callback) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				throw new SCMPCallException("group is closed");
 			}
@@ -200,8 +179,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 			if (callSCMP.isLargeMessage()) {
 				// parent call is large no need to change anything
-				SCMPMessage message = this.parentCall.invoke();
-				return message;
+				this.parentCall.invoke(callback);
+				return;
 			}
 			if (callSCMP.isPart() == false) {
 				// callSCMP is small and not part but inside a group only parts are allowed
@@ -211,13 +190,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}
-			SCMPMessage message = this.parentCall.invoke();
-			return message;
-		}
-
-		@Override
-		public void invoke(ISCMPCallback callback) throws Exception {
-			throw new UnsupportedOperationException();
+			this.parentCall.invoke(callback);
+			return;
 		}
 
 		/** {@inheritDoc} */
@@ -228,7 +202,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public SCMPMessage closeGroup() throws Exception {
+		public void closeGroup(ISCMPCallback callback) throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
 			// send empty closing REQ
 			SCMPMessage message = new SCMPMessage();
@@ -236,8 +210,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			message.setBody(null);
 			message.setInternalStatus(SCMPInternalStatus.GROUP);
 			SCMPCallAdapter.this.requestMessage = message;
-			SCMPMessage result = this.parentCall.invoke();
-			return result;
+			this.parentCall.invoke(callback);
+			return;
 		}
 
 		/** {@inheritDoc} */

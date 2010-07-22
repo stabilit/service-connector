@@ -17,7 +17,6 @@
 package com.stabilit.scm.sc.req;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -40,31 +39,12 @@ public class SCRequester implements IRequester {
 	}
 
 	@Override
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		// return an already connected live instance
-		IConnection connection = this.reqContext.getConnectionPool().getConnection();
-		try {
-			PerformancePoint.getInstance().fireBegin(this, "sendAndReceive");
-			return connection.sendAndReceive(scmp);
-		} finally {
-			PerformancePoint.getInstance().fireEnd(this, "sendAndReceive");
-			this.reqContext.getConnectionPool().freeConnection(connection);
-		}
-	}
-
-	@Override
 	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
 		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
-		try {
-			connection.send(message, requesterCallback);
-		} finally {
-			// don't free it here, free them after call message received,
-			// this.outerContext.getConnectionPool().freeConnection(connection);//
-			// give back to pool
-		}
+		connection.send(message, requesterCallback);
 	}
 
 	@Override
@@ -72,7 +52,6 @@ public class SCRequester implements IRequester {
 		return " [" + this.hashCode() + "]";
 	}
 
-	// member class
 	private class SCRequesterSCMPCallback implements ISCMPCallback {
 		private ISCMPCallback scmpCallback;
 		private IConnectionContext connectionContext;
@@ -85,13 +64,13 @@ public class SCRequester implements IRequester {
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			this.scmpCallback.callback(scmpReply);
-			freeConnection();
+			this.freeConnection();
 		}
 
 		@Override
 		public void callback(Throwable th) {
 			this.scmpCallback.callback(th);
-			freeConnection();
+			this.freeConnection();
 		}
 
 		private void freeConnection() {

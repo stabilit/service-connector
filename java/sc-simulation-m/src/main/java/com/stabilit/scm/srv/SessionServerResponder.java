@@ -25,6 +25,7 @@ import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
  * @author JTraber
@@ -32,12 +33,14 @@ import com.stabilit.scm.common.service.ISCMessage;
 public class SessionServerResponder extends Responder {
 
 	private IRequester req;
+	private SessionServerResponderCallback callback;
 
 	/**
 	 * @param respConfig
 	 */
 	public SessionServerResponder(ICommunicatorConfig respConfig) {
 		super(respConfig);
+		this.callback = new SessionServerResponderCallback();
 	}
 
 	@Override
@@ -65,7 +68,8 @@ public class SessionServerResponder extends Responder {
 		registerService.setPortNumber(this.getResponderConfig().getPort());
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(0);
-		registerService.invoke();
+		registerService.invoke(this.callback);
+		this.callback.getMessageSync();
 		SrvService service = new SrvService("simulation", new ISCServerCallback() {
 
 			@Override
@@ -98,5 +102,7 @@ public class SessionServerResponder extends Responder {
 		});
 		SrvServiceRegistry.getCurrentInstance().addSrvService("simulation", service);
 	}
-
+	
+	private class SessionServerResponderCallback extends SynchronousCallback {
+	}
 }

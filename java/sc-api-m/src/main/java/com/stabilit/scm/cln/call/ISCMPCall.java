@@ -72,15 +72,6 @@ public interface ISCMPCall {
 	 * @return the iSCMP call
 	 */
 	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage);
-
-	/**
-	 * Invoke.
-	 * 
-	 * @return the scmp message
-	 * @throws Exception
-	 *             the exception
-	 */
-	public SCMPMessage invoke() throws Exception;
 	
 	/**
 	 * Invoke asynchronous.
@@ -131,10 +122,10 @@ public interface ISCMPCall {
 
 	/**
 	 * Close group, sends the ending request.
-	 * 
+	 *
+	 * @param callback the callback
 	 * @return the result
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
-	public SCMPMessage closeGroup() throws Exception;
+	public void closeGroup(ISCMPCallback callback) throws Exception;
 }

@@ -26,8 +26,8 @@ import java.net.InetAddress;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -45,11 +45,10 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage invoke() throws Exception {
+	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		super.invoke();
-		return this.responseMessage;
+		super.invoke(scmpCallback);
 	}
 
 	/** {@inheritDoc} */

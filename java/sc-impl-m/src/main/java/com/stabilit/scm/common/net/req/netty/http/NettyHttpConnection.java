@@ -19,9 +19,7 @@ package com.stabilit.scm.common.net.req.netty.http;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -110,11 +108,13 @@ public class NettyHttpConnection implements IConnection {
 		this.connectionContext = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IConnectionContext getContext() {
 		return this.connectionContext;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setContext(IConnectionContext connectionContext) {
 		this.connectionContext = connectionContext;
@@ -176,15 +176,6 @@ public class NettyHttpConnection implements IConnection {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
 		this.releaseExternalResources();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		NettyHttpSCMPCallback callback = new NettyHttpSCMPCallback();
-		this.send(scmp, callback);
-		SCMPMessage ret = callback.join();
-		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -290,30 +281,5 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void resetNrOfIdles() {
 		this.nrOfIdles = 0;
-	}
-
-	private class NettyHttpSCMPCallback implements ISCMPCallback {
-		private SCMPMessage reply;
-		/** Queue to store the answer. */
-		private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
-
-		public NettyHttpSCMPCallback() {
-			this.reply = null;
-		}
-
-		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
-			answer.offer(scmpReply);
-		}
-
-		@Override
-		public void callback(Throwable th) {
-			return;
-		}
-
-		public SCMPMessage join() throws Exception {
-			this.reply = answer.take();
-			return this.reply;
-		}
 	}
 }

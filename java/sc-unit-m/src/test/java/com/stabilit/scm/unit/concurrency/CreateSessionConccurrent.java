@@ -30,25 +30,22 @@ import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.unit.test.mt.MTSuperTestCase;
 
 /**
  * @author JTraber
- *
  */
-public class CreateSessionConccurrent extends MTSuperTestCase{
+public class CreateSessionConccurrent extends MTSuperTestCase {
 
 	private IRequester requester;
-	
+
 	/**
 	 * @param fileName
 	 */
 	public CreateSessionConccurrent(String fileName) {
 		super(fileName);
 	}
-	
-	
+
 	@Test
 	public void createSessionConcurrent() throws Exception {
 		Map<CreateSessionConccurrent, Thread> map = new HashMap<CreateSessionConccurrent, Thread>();
@@ -66,7 +63,7 @@ public class CreateSessionConccurrent extends MTSuperTestCase{
 			map.get(createSessionConccurrent).join();
 		}
 	}
-	
+
 	public void createSession() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
@@ -75,20 +72,23 @@ public class CreateSessionConccurrent extends MTSuperTestCase{
 		createSessionCall.setEchoInterval(300);
 		createSessionCall.setEchoTimeout(10);
 		// create session and keep sessionId
-		SCMPMessage resp = createSessionCall.invoke();
+		createSessionCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
-	
+
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
 
 		attachCall.setKeepAliveInterval(360);
-		attachCall.invoke();
+		attachCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
-	
+
 	/**
-	 * @param requester the requester to set
+	 * @param requester
+	 *            the requester to set
 	 */
 	public void setReq(IRequester requester) {
 		this.requester = requester;
-	}	
+	}
 }

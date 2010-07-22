@@ -29,6 +29,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
@@ -74,7 +75,9 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		SCMPMessage result = null;
 
 		try {
-			result = server.srvEcho(message);
+			ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
+			server.srvEcho(message, callback);
+			result = callback.getMessageSync();
 		} catch (SCServiceException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
@@ -91,11 +94,15 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	/**
 	 * The Class ClnEchoCommandValidator.
 	 */
-	public class ClnEchoCommandValidator implements ICommandValidator {
+	private class ClnEchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
 		}
+	}
+
+	private class ClnEchoCommandCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

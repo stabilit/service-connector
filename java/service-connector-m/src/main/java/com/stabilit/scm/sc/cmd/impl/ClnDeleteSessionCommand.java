@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
@@ -63,7 +64,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 
 		Server server = session.getServer();
 		try {
-			server.deleteSession(message);
+			ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
+			server.deleteSession(message, callback);
+			callback.getMessageSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan
@@ -109,5 +112,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				throw validatorException;
 			}
 		}
+	}
+
+	private class ClnDeleteSessionCommandCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

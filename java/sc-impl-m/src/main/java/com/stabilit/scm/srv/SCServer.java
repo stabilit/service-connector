@@ -32,6 +32,7 @@ import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 public class SCServer implements ISCServer {
@@ -56,8 +57,8 @@ public class SCServer implements ISCServer {
 	private boolean immediateConnect;
 	private int keepAliveInterval;
 	private int runningPort;
-
 	private SrvServiceRegistry srvServiceRegistry;
+	private SrvServerCallback callback;
 
 	public SCServer(String host, int port) {
 		this(host, port, IConstants.DEFAULT_SERVER_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
@@ -90,6 +91,7 @@ public class SCServer implements ISCServer {
 		this.context = new SCServerContext();
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
+		this.callback = new SrvServerCallback();
 	}
 
 	/** {@inheritDoc} */
@@ -144,11 +146,11 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setPortNumber(this.runningPort);
 		registerServiceCall.setImmediateConnect(this.immediateConnect);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveInterval);
-		registerServiceCall.invoke();
+		registerServiceCall.invoke(this.callback);
+		this.callback.getMessageSync();
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, scCallback);
 		this.srvServiceRegistry.addSrvService(serviceName, srvService);
-
 	}
 
 	/** {@inheritDoc} */
@@ -156,7 +158,8 @@ public class SCServer implements ISCServer {
 	public void deregisterService(String serviceName) throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
-		deRegisterServiceCall.invoke();
+		deRegisterServiceCall.invoke(this.callback);
+		this.callback.getMessageSync();
 		// remove srvService from registry
 		this.srvServiceRegistry.removeSrvService(serviceName);
 		// destroy the connection pool
@@ -231,5 +234,9 @@ public class SCServer implements ISCServer {
 	protected void finalize() throws Throwable {
 		super.finalize();
 		this.connectionPool.destroy();
+	}
+
+	private class SrvServerCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

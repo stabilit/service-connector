@@ -24,17 +24,13 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.IResponderCallback;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -57,30 +53,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.CLN_DATA;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		Session session = getSessionById(sessionId);
-
-		Server server = session.getServer();
-		try {
-			// try sending to backend server
-			SCMPMessage scmpReply = server.sendData(message);
-			scmpReply.setMessageType(getKey().getValue());
-			response.setSCMP(scmpReply);
-		} catch (SCServiceException e) {
-			// clnDatat failed, connection to backend server disturbed - clean up
-			// TODO clean up??
-			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			ExceptionPoint.getInstance().fireException(this, e);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
-		}
 	}
 
 	/** {@inheritDoc} */

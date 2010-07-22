@@ -51,34 +51,6 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	}
 
 	/**
-	 * Fail cln create session not connected.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Test
-	public void failClnCreateSessionNotConnected() throws Exception {
-		// this.clnDetachAfter();
-		// // sets up a create session call
-		// SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall)
-		// SCMPCallFactory.CLN_CREATE_SESSION_CALL
-		// .newInstance(req, "simluation");
-		// createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		// createSessionCall.setEchoInterval(300);
-		// createSessionCall.setEchoTimeout(10);
-		// try {
-		// createSessionCall.invoke();
-		// Assert.fail("Should throw Exception!");
-		// } catch (SCMPCallException ex) {
-		// SCMPFault scmpFault = ex.getFault();
-		// Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-		// SCTest.verifyError(ex.getFault(), SCMPError.UNKNOWN_CLIENT, SCMPMsgType.CLN_CREATE_SESSION);
-		// }
-		// this.clnAttachBefore();
-		// TODO what ? verify with jan
-	}
-
-	/**
 	 * Fail cln create session wrong header.
 	 * 
 	 * @throws Exception
@@ -94,7 +66,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoInterval(300);
 		createSessionCall.setEchoTimeout(10);
 		try {
-			createSessionCall.invoke();
+			createSessionCall.invoke(this.attachCallback);
+			this.attachCallback.getMessageSync();
 			Assert.fail("Should throw Exception!");
 		} catch (SCMPCallException ex) {
 			SCMPFault scmpFault = ex.getFault();
@@ -117,14 +90,16 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoInterval(300);
 		createSessionCall.setEchoTimeout(10);
-		SCMPMessage responseMessage = createSessionCall.invoke();
+		createSessionCall.invoke(this.attachCallback);
+		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		String sessId = responseMessage.getSessionId();
 		/*************************** verify create session **********************************/
 		Assert.assertNotNull(sessId);
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		SCMPMessage inspect = inspectCall.invoke();
+		inspectCall.invoke(this.attachCallback);
+		SCMPMessage inspect = this.attachCallback.getMessageSync();
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
@@ -135,11 +110,13 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
-		deleteSessionCall.invoke();
+		deleteSessionCall.invoke(this.attachCallback);
+		this.attachCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspect = inspectCall.invoke();
+		inspectCall.invoke(this.attachCallback);
+		inspect = this.attachCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		scEntry = (String) inspectMap.get("sessionRegistry");

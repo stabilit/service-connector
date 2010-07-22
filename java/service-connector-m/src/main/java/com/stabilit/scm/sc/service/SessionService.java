@@ -21,6 +21,7 @@
  */
 package com.stabilit.scm.sc.service;
 
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 public class SessionService extends Service {
@@ -29,7 +30,7 @@ public class SessionService extends Service {
 		super(name, ServiceType.SESSION_SERVICE);
 	}
 
-	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward) throws Exception {
+	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -38,7 +39,7 @@ public class SessionService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.createSession(msgToForward);
+				server.createSession(msgToForward, callback);
 				return server;
 			}
 		}

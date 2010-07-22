@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
@@ -57,7 +58,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 
 		Server server = session.getServer();
 		try {
-			server.unsubscribe(message);
+			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
+			server.unsubscribe(message, callback);
+			callback.getMessageSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan
@@ -100,5 +103,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				throw validatorException;
 			}
 		}
+	}
+
+	private class ClnSubscribeCommandCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

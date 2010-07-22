@@ -20,11 +20,9 @@ import java.net.InetAddress;
 import java.util.Map;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -57,16 +55,12 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage invoke() throws Exception {
+	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, requester.hashCode());
 		this.requestMessage.setMessageType(getMessageType().getValue());
-		this.responseMessage = requester.sendAndReceive(this.requestMessage);
-		if (this.responseMessage.isFault()) {
-			throw new SCMPCallException((SCMPFault) responseMessage);
-		}
-		return this.responseMessage;
+		this.requester.send(this.requestMessage, scmpCallback);
 	}
 
 	/** {@inheritDoc} */

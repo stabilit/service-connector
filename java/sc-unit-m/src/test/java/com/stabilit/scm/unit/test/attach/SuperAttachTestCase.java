@@ -19,10 +19,14 @@ package com.stabilit.scm.unit.test.attach;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 /**
@@ -31,6 +35,7 @@ import com.stabilit.scm.unit.test.SuperTestCase;
 public abstract class SuperAttachTestCase extends SuperTestCase {
 
 	protected String localDateTimeOfConnect;
+	protected SuperAttachCallback attachCallback;
 
 	/**
 	 * The Constructor.
@@ -40,6 +45,7 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	 */
 	public SuperAttachTestCase(String fileName) {
 		super(fileName);
+		this.attachCallback = new SuperAttachCallback();
 	}
 
 	@Before
@@ -57,12 +63,26 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.setKeepAliveInterval(0);
-		attachCall.invoke();
+		attachCall.invoke(this.attachCallback);
+		this.attachCallback.getMessageSync();
 		localDateTimeOfConnect = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 	}
 
 	public void clnDetachAfter() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
-		detachCall.invoke();
+		detachCall.invoke(this.attachCallback);
+		this.attachCallback.getMessageSync();
+	}
+
+	protected class SuperAttachCallback extends SynchronousCallback {
+		@Override
+		public SCMPMessage getMessageSync() throws Exception {
+			SCMPMessage reply = super.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCMPCallException(fault);
+			}
+			return reply;
+		}
 	}
 }

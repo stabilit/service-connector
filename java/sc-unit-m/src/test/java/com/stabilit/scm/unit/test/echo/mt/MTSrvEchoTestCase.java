@@ -106,7 +106,8 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.setKeepAliveInterval(360);
-		attachCall.invoke();
+		attachCall.invoke(this.callback);
+		this.callback.getMessageSync();
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
@@ -114,7 +115,8 @@ public class MTSrvEchoTestCase extends MTSuperTestCase {
 		createSessionCall.setEchoTimeout(10);
 		createSessionCall.setSessionInfo("sessionInfo");
 		try {
-			createSessionCall.invoke();
+			createSessionCall.invoke(callback);
+			callback.getMessageSync();
 			Assert.fail("should throw exception");
 		} catch(SCMPCallException e) {
 			SCTest.verifyError(e.getFault(), SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_CREATE_SESSION);

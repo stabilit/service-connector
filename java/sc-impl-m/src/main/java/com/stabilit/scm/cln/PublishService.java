@@ -29,7 +29,6 @@ import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCContext;
@@ -45,7 +44,7 @@ public class PublishService implements IPublishService {
 	private String sessionId;
 	private IServiceContext publishContext;
 	private IRequester requester;
-	private ISCMPCallback scmpCallback;
+	private PublishServiceCallback scmpCallback;
 	private String mask;
 
 	public PublishService(String serviceName, ISCContext context) {
@@ -71,7 +70,8 @@ public class PublishService implements IPublishService {
 		this.mask = mask;
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
-		SCMPMessage reply = subscribeCall.invoke();
+		subscribeCall.invoke(this.scmpCallback);
+		SCMPMessage reply = this.scmpCallback.getMessageSync();
 		this.sessionId = reply.getSessionId();
 		if (this.scmpCallback != null) {
 			throw new SCServiceException("already subscribed");
@@ -92,7 +92,8 @@ public class PublishService implements IPublishService {
 		this.scmpCallback = null;
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		unsubscribeCall.invoke();
+		unsubscribeCall.invoke(this.scmpCallback);
+		this.scmpCallback.getMessageSync();
 	}
 
 	private class PublishServiceCallback extends ServiceCallback {

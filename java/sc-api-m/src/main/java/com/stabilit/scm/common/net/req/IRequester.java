@@ -27,17 +27,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public interface IRequester {
 
 	/**
-	 * Send and receive, synchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @return the scmp
-	 * @throws Exception
-	 *             exception in sending/receiving process
-	 */
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception;
-
-	/**
 	 * Send and receive response asynchronous
 	 * 
 	 * @param scmp

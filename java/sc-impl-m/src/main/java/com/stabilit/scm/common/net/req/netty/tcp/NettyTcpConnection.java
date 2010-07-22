@@ -18,9 +18,7 @@ package com.stabilit.scm.common.net.req.netty.tcp;
 
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -97,16 +95,18 @@ public class NettyTcpConnection implements IConnection {
 		this.connectionContext = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IConnectionContext getContext() {
 		return this.connectionContext;
 	}
-		
+
+	/** {@inheritDoc} */
 	@Override
 	public void setContext(IConnectionContext connectionContext) {
 		this.connectionContext = connectionContext;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
@@ -160,15 +160,6 @@ public class NettyTcpConnection implements IConnection {
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 		this.releaseExternalResources();
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMessage sendAndReceive(SCMPMessage scmp) throws Exception {
-		NettyTcpSCMPCallback callback = new NettyTcpSCMPCallback();
-		this.send(scmp, callback);
-		SCMPMessage ret = callback.join();
-		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -261,30 +252,5 @@ public class NettyTcpConnection implements IConnection {
 	@Override
 	public void resetNrOfIdles() {
 		this.nrOfIdles = 0;
-	}
-	
-	private class NettyTcpSCMPCallback implements ISCMPCallback {
-		private SCMPMessage reply;
-		/** Queue to store the answer. */
-		private final BlockingQueue<SCMPMessage> answer = new LinkedBlockingQueue<SCMPMessage>();
-
-		public NettyTcpSCMPCallback() {
-			this.reply = null;
-		}
-
-		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
-			answer.offer(scmpReply);
-		}
-
-		@Override
-		public void callback(Throwable th) {
-			return;
-		}
-
-		public SCMPMessage join() throws Exception {
-			this.reply = answer.take();
-			return this.reply;
-		}
 	}
 }

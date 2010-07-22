@@ -35,11 +35,8 @@ import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.sc.req.SCRequester;
 
 /**
@@ -124,34 +121,25 @@ public class Server {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(SCMPMessage msgToForward) throws Exception {
+	public synchronized void createSession(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
-		SCMPMessage serverReply = null;
 		try {
-			serverReply = createSessionCall.invoke();
+			createSessionCall.invoke(callback);
 		} catch (Throwable e) {
 			// create session failed
-			throw new SCServiceException("createSession failed", e);
-		}
-		Boolean rejectSessionFlag = serverReply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.TRUE.equals(rejectSessionFlag)) {
-			// server rejected session - throw exception with server errors
-			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, serverReply.getHeader());
-			throw e;
+			callback.callback(e);
 		}
 	}
 
-	public void subscribe(SCMPMessage msgToForward) throws Exception {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
-		SCMPMessage serverReply = null;
 		try {
-			serverReply = subscribeCall.invoke();
-			// TODO subscription rejected???
+			subscribeCall.invoke(callback);
 		} catch (Throwable e) {
 			// subscribe failed
-			throw new SCServiceException("subscribe failed", e);
+			callback.callback(e);
 		}
 	}
 
@@ -163,48 +151,28 @@ public class Server {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public void deleteSession(SCMPMessage message) throws SCServiceException {
+	public void deleteSession(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(requester, message);
 
 		try {
-			deleteSessionCall.invoke();
+			deleteSessionCall.invoke(callback);
 		} catch (Exception e) {
 			// delete session failed
 			throw new SCServiceException("deleteSession failed", e);
 		}
 	}
 
-	public void unsubscribe(SCMPMessage message) throws SCServiceException {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
 		try {
-			unsubscribeCall.invoke();
+			unsubscribeCall.invoke(callback);
 		} catch (Exception e) {
 			// unsubscribe failed
 			throw new SCServiceException("unsubscribe failed", e);
 		}
-	}
-
-	/**
-	 * Send data. Tries sending data to server.
-	 * 
-	 * @param message
-	 *            the message
-	 * @return the sCMP message
-	 * @throws SCServiceException
-	 *             the SC service exception
-	 */
-	public SCMPMessage sendData(SCMPMessage message) throws SCServiceException {
-		SCMPMessage serverReply = null;
-		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
-		try {
-			serverReply = srvDataCall.invoke();
-		} catch (Exception e) {
-			throw new SCServiceException("sendData failed", e);
-		}
-		return serverReply;
 	}
 
 	/**
@@ -220,8 +188,8 @@ public class Server {
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
 		try {
 			srvDataCall.invoke(callback);
-		} catch (Exception e) {
-			Exception ex = new SCServiceException("sendData failed", e);
+		} catch (Throwable th) {
+			Exception ex = new SCServiceException("sendData failed", th);
 			callback.callback(ex);
 		}
 		return;
@@ -232,19 +200,19 @@ public class Server {
 	 * 
 	 * @param message
 	 *            the message
+	 * @param callback
+	 *            the callback
 	 * @return the scmp message
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public SCMPMessage srvEcho(SCMPMessage message) throws SCServiceException {
-		SCMPMessage serverReply = null;
+	public void srvEcho(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
 		try {
-			serverReply = srvEchoCall.invoke();
-		} catch (Exception e) {
-			throw new SCServiceException("srvEcho failed", e);
+			srvEchoCall.invoke(callback);
+		} catch (Throwable th) {
+			callback.callback(th);
 		}
-		return serverReply;
 	}
 
 	/**
@@ -320,6 +288,5 @@ public class Server {
 	}
 
 	public class ServerContext implements IContext {
-
 	}
 }

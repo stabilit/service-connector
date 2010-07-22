@@ -25,24 +25,32 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import javax.naming.CommunicationException;
+
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a callback.
- * This class is designed to be extended by various callbacks.
+ * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the
+ * callback. This class is designed to be extended by various callback's. It provides synchronous flag to to save state
+ * if somebody is waiting for a message. Synchronous flag might be useful in subclasses. It only gets access to the
+ * newest message - its not a queuing mechanism.
  * 
  * @author JTraber
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** Queue to store the answer. */
-	private final BlockingQueue<SCMPMessage> answer = new ArrayBlockingQueue<SCMPMessage>(1);
+	private final BlockingQueue<SCMPMessage> answer; 
 	/** The synchronous, marks if somebody waits for the message. */
 	protected boolean synchronous;
 
+	public SynchronousCallback() {
+		this.synchronous = false;
+		this.answer = new ArrayBlockingQueue<SCMPMessage>(1);
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void callback(SCMPMessage scmpReply) throws Exception {
@@ -71,12 +79,15 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync() throws Exception {
+		// set synchronous mode
 		this.synchronous = true;
 		// the method take() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.take();
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException(fault.getCause());
+		// reset synchronous mode
+		this.synchronous = false;
+		if (reply == null) {
+			// time runs out before message got received
+			throw new CommunicationException("receiving message failed. Getting message synchronous failed.");
 		}
 		return reply;
 	}
@@ -84,12 +95,15 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) throws Exception {
+		// set synchronous mode
 		this.synchronous = true;
 		// the method poll() from BlockingQueue waits inside
 		SCMPMessage reply = this.answer.poll(timeoutInMillis, TimeUnit.MILLISECONDS);
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException(fault.getCause());
+		// reset synchronous mode
+		this.synchronous = false;
+		if (reply == null) {
+			// time runs out before message got received
+			throw new CommunicationException("time for receiving message run out. Getting message synchronous failed.");
 		}
 		return reply;
 	}
