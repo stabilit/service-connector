@@ -70,7 +70,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 *            the new version
 	 */
 	private void setVersion(String version) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
 	/**

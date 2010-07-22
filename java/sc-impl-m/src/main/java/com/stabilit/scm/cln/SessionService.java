@@ -21,46 +21,41 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.common.service.SCServiceException;
 
 /**
  * @author JTraber
  */
-public class SessionService implements ISessionService {
-
-	private String serviceName;
-	private String sessionId;
-	private IServiceContext serviceContext;
-	private IRequester requester;
-	private ISCMPSynchronousCallback callback;
+public class SessionService extends Service implements ISessionService {
 
 	public SessionService(String serviceName, ISCContext context) {
-		this.serviceName = serviceName;
-		this.sessionId = null;
+		super(serviceName, context);
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
 		this.serviceContext = new ServiceContext(context, this);
-		this.callback = new ServiceCallback();
 	}
 
 	@Override
 	public void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception {
+		if (this.callback != null) {
+			throw new SCServiceException("session already created - delete session first.");
+		}
+		this.callback = new ServiceCallback();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
@@ -73,14 +68,24 @@ public class SessionService implements ISessionService {
 
 	@Override
 	public void deleteSession() throws Exception {
+		if (this.callback == null) {
+			throw new SCServiceException("no session to delete - create session first.");
+		}
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		deleteSessionCall.invoke(this.callback);
 		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback = null;
 	}
 
 	@Override
 	public SCMessage execute(ISCMessage requestMsg) throws Exception {
+		if (pendingRequest) {
+			// already executed before - reply still outstanding
+			throw new SCServiceException(
+					"execute not possible, there is a pending request - two pending request are not allowed.");
+		}
+		this.pendingRequest = true;
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
@@ -96,11 +101,18 @@ public class SessionService implements ISessionService {
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		this.pendingRequest = false;
 		return replyToClient;
 	}
 
 	@Override
 	public void execute(ISCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
+		if (pendingRequest) {
+			// already executed before - reply still outstanding
+			throw new SCServiceException(
+					"execute not possible, there is a pending request - two pending request are not allowed.");
+		}
+		this.pendingRequest = true;
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
@@ -109,13 +121,7 @@ public class SessionService implements ISessionService {
 			clnDataCall.setMessagInfo(msgInfo);
 		}
 		clnDataCall.setRequestBody(requestMsg.getData());
-		ISCMPCallback scmpCallback = new ServiceCallback(messageCallback);
+		ISCMPCallback scmpCallback = new ServiceCallback(this, messageCallback);
 		clnDataCall.invoke(scmpCallback);
-		return;
-	}
-
-	@Override
-	public IServiceContext getContext() {
-		return this.serviceContext;
 	}
 }

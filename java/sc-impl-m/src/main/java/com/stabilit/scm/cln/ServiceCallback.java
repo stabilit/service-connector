@@ -21,7 +21,7 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
@@ -33,16 +33,17 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-public class ServiceCallback extends SynchronousCallback implements ISCMPCallback {
+public class ServiceCallback extends SynchronousCallback {
 
 	/** The message callback. */
 	private ISCMessageCallback messageCallback;
+	private Service service;
 
 	/**
 	 * Instantiates a new ServiceCallback.
 	 */
 	public ServiceCallback() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
@@ -51,7 +52,8 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 	 * @param messageCallback
 	 *            the message callback
 	 */
-	public ServiceCallback(ISCMessageCallback messageCallback) {
+	public ServiceCallback(Service service, ISCMessageCallback messageCallback) {
+		this.service = service;
 		this.messageCallback = messageCallback;
 	}
 
@@ -65,6 +67,8 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 		SCMessage messageReply = new SCMessage();
 		messageReply.setData(scmpReply.getBody());
 		messageReply.setCompressed(scmpReply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		// inform service request is completed
+		this.service.setRequestComplete();
 		this.messageCallback.callback(messageReply);
 	}
 
@@ -75,6 +79,8 @@ public class ServiceCallback extends SynchronousCallback implements ISCMPCallbac
 			super.callback(th);
 			return;
 		}
+		// inform service request is completed
+		this.service.setRequestComplete();
 		this.messageCallback.callback(th);
 	}
 }

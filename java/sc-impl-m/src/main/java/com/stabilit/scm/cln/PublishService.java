@@ -21,13 +21,12 @@
  */
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.service.IServiceContext;
+import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.conf.IConstants;
-import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -36,50 +35,37 @@ import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
 
-/**
- * @author JTraber
- */
-public class PublishService implements IPublishService {
+public class PublishService extends Service implements IPublishService {
 
-	private String serviceName;
-	private String sessionId;
-	private IServiceContext publishContext;
-	private IRequester requester;
-	private PublishServiceCallback scmpCallback;
 	private String mask;
 
 	public PublishService(String serviceName, ISCContext context) {
-		this.serviceName = serviceName;
-		this.sessionId = null;
+		super(serviceName, context);
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
-		this.publishContext = new ServiceContext(context, this);
-		this.scmpCallback = null;
+		this.serviceContext = new ServiceContext(context, this);
 		this.mask = null;
 	}
 
 	@Override
-	public IServiceContext getContext() {
-		return this.publishContext;
-	}
-
-	@Override
 	public void changeSubscription(String mask) throws Exception {
-		if (this.scmpCallback == null) {
+		if (this.callback == null) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
+		this.mask = mask;
+		// TODO
 	}
 
 	@Override
 	public void subscribe(String mask, ISCMessageCallback callback) throws Exception {
-		if (this.scmpCallback != null) {
+		if (this.callback != null) {
 			throw new SCServiceException("already subscribed");
 		}
 		this.mask = mask;
-		this.scmpCallback = new PublishServiceCallback(callback);
+		this.callback = new PublishServiceCallback(callback);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
-		subscribeCall.invoke(this.scmpCallback);
-		SCMPMessage reply = this.scmpCallback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		subscribeCall.invoke(this.callback);
+		SCMPMessage reply = this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 		this.sessionId = reply.getSessionId();
 		this.receivePublication();
 	}
@@ -88,25 +74,26 @@ public class PublishService implements IPublishService {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		receivePublicationCall.setMask(mask);
-		receivePublicationCall.invoke(this.scmpCallback);
+		receivePublicationCall.invoke(this.callback);
 	}
 
 	@Override
 	public void unsubscribe() throws Exception {
-		if (this.scmpCallback == null) {
+		if (this.callback == null) {
 			throw new SCServiceException("unsubscrib not possible - not subscribed");
 		}
-		this.scmpCallback = null;
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		unsubscribeCall.invoke(this.scmpCallback);
-		this.scmpCallback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		unsubscribeCall.invoke(this.callback);
+		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback = null;
+		this.mask = null;
 	}
 
 	private class PublishServiceCallback extends ServiceCallback {
 
 		public PublishServiceCallback(ISCMessageCallback messageCallback) {
-			super(messageCallback);
+			super(PublishService.this, messageCallback);
 		}
 
 		@Override

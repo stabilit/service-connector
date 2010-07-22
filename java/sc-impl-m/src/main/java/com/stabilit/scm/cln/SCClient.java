@@ -30,7 +30,7 @@ import com.stabilit.scm.common.service.IFileService;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCContext;
-import com.stabilit.scm.common.util.MapBean;
+import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
@@ -52,8 +52,6 @@ public class SCClient implements ISCClient {
 	private String conType;
 	/** The requester. */
 	protected IRequester requester;
-	/** The attributes. */
-	private MapBean<Object> attributes;
 	/** The context. */
 	private ServiceConnectorContext context;
 	private SCClientCallback callback;
@@ -120,24 +118,26 @@ public class SCClient implements ISCClient {
 		this.port = port;
 		this.conType = connectionType;
 		this.numberOfThreads = numberOfThreads;
-		this.attributes = new MapBean<Object>();
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
 		this.context = new ServiceConnectorContext();
-		this.callback = new SCClientCallback();
+		this.callback = null;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCContext getContext() {
 		return context;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void attach() throws Exception {
+		if (this.callback != null) {
+			throw new SCServiceException("already attached before - detach first, attaching in sequence is not allowed.");
+		}
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool()));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		SCClientCallback callback = new SCClientCallback();
+		this.callback = new SCClientCallback();
 		attachCall.invoke(this.callback);
 		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 	}
@@ -145,17 +145,15 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void detach() throws Exception {
+		if (this.callback == null) {
+			throw new SCServiceException("detach not possible - client not attached.");
+		}
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(this.callback);
 		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setAttribute(String name, Object value) {
-		this.attributes.setAttribute(name, value);
 	}
 
 	/**
@@ -217,7 +215,6 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public IFileService newFileService(String serviceName) {
-
 		return null;
 	}
 
@@ -226,7 +223,7 @@ public class SCClient implements ISCClient {
 	public ISessionService newSessionService(String serviceName) {
 		return new SessionService(serviceName, this.context);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public IPublishService newPublishService(String serviceName) {
@@ -255,8 +252,8 @@ public class SCClient implements ISCClient {
 		public ISCClient getServiceConnector() {
 			return SCClient.this;
 		}
-	}	
-	
+	}
+
 	private class SCClientCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
