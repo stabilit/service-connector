@@ -23,7 +23,7 @@ import java.util.Date;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -80,7 +80,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		// create new server
 		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions,
-				IConstants.DEFAULT_KEEP_ALIVE_INTERVAL);
+				Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

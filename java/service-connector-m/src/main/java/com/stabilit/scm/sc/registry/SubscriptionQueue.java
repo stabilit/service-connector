@@ -21,7 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
@@ -339,7 +339,7 @@ public class SubscriptionQueue<E> {
 			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
 			// schedules subscriptionTimeouter on subscription queue timer
 			SubscriptionQueue.this.timer.schedule(this.subscriptionTimeouter, timeout
-					* IConstants.SEC_TO_MILISEC_FACTOR);
+					* Constants.SEC_TO_MILISEC_FACTOR);
 		}
 
 		/**

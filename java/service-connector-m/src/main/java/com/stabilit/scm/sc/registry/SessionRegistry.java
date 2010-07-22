@@ -19,7 +19,7 @@ package com.stabilit.scm.sc.registry;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
@@ -102,7 +102,7 @@ public class SessionRegistry extends Registry {
 		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
 		session.setSessionTimeouter(sessionTimeouter);
 		// schedule sessionTimeouter in registry timer
-		this.timer.schedule(sessionTimeouter, session.getEchoInterval() * IConstants.SEC_TO_MILISEC_FACTOR);
+		this.timer.schedule(sessionTimeouter, session.getEchoInterval() * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	private void cancelSessionTimeout(Session session) {

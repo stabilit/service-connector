@@ -21,7 +21,7 @@ import java.util.Map;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -74,7 +74,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
-		SCMPMessage reply = callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {

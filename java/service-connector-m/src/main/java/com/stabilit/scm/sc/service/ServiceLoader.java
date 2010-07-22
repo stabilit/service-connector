@@ -29,7 +29,7 @@ import java.security.InvalidParameterException;
 import java.util.Properties;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.sc.registry.DisabledServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 
@@ -62,15 +62,15 @@ public class ServiceLoader {
 		Properties props = new Properties();
 		props.load(is);
 
-		String serviceNamesString = props.getProperty(IConstants.SERVICE_NAMES);
-		String[] serviceNames = serviceNamesString.split(IConstants.COMMA_OR_SEMICOLON);
+		String serviceNamesString = props.getProperty(Constants.SERVICE_NAMES);
+		String[] serviceNames = serviceNamesString.split(Constants.COMMA_OR_SEMICOLON);
 
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
 
 		for (String serviceName : serviceNames) {
 
-			String serviceTypeString = (String) props.get(serviceName + IConstants.TYPE_QUALIFIER);
+			String serviceTypeString = (String) props.get(serviceName + Constants.TYPE_QUALIFIER);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
 			// instantiate right type of service
@@ -93,7 +93,7 @@ public class ServiceLoader {
 								+ serviceTypeString);
 			}
 
-			String enable = props.getProperty(serviceName + IConstants.ENABLE_QUALIFIER);
+			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
 				// enable is not set - means true or true itself
 				serviceRegistry.addService(service.getServiceName(), service);

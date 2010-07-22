@@ -21,7 +21,7 @@ import javax.xml.bind.ValidationException;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -67,7 +67,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		try {
 			ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
 			server.deleteSession(message, callback);
-			callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan
