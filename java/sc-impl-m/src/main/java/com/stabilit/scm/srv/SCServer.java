@@ -49,7 +49,7 @@ public class SCServer implements ISCServer {
 
 	// fields for register service
 	/** The requester. */
-	private IRequester requester;
+	protected IRequester requester;
 	private int maxSessions;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
@@ -58,7 +58,7 @@ public class SCServer implements ISCServer {
 	private int keepAliveInterval;
 	private int runningPort;
 	private SrvServiceRegistry srvServiceRegistry;
-	private SrvServerCallback callback;
+	protected SrvServerCallback callback;
 
 	public SCServer(String host, int port) {
 		this(host, port, IConstants.DEFAULT_SERVER_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
@@ -236,7 +236,7 @@ public class SCServer implements ISCServer {
 		this.connectionPool.destroy();
 	}
 
-	private class SrvServerCallback extends SynchronousCallback {
+	protected class SrvServerCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
 }

@@ -26,10 +26,16 @@ import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.cmd.impl.CommandAdapter;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.common.service.SCMessageFault;
+import com.stabilit.scm.srv.ISCPublishServerCallback;
+import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
-public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class SrvChangeSubscriptionCommand extends SrvCommandAdapter implements IPassThroughPartMsg {
 
 	public SrvChangeSubscriptionCommand() {
 		this.commandValidator = new SrvChangeSubscriptionCommandValidator();
@@ -44,7 +50,33 @@ public class SrvChangeSubscriptionCommand extends CommandAdapter implements IPas
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		
+		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		// look up srvService
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
+
+		SCMPMessage scmpMessage = request.getMessage();
+		// create scMessage
+		ISCMessage scMessage = new SCMessage();
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(scmpMessage.getSessionId());
+
+		// inform callback with scMessages
+		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).changeSubscription(scMessage);
+		// set up reply
+		SCMPMessage reply = new SCMPMessage();
+		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setMessageType(this.getKey().getValue());
+
+		if (scReply.isFault()) {
+			SCMessageFault scFault = (SCMessageFault) scReply;
+			reply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		}
+		response.setSCMP(reply);
 	}
 
 	private class SrvChangeSubscriptionCommandValidator implements ICommandValidator {

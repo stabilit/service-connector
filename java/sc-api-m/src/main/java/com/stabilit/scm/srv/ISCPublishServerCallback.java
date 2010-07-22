@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,20 +14,23 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.rr.registry;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package com.stabilit.scm.srv;
 
-import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.common.service.ISCMessage;
 
 /**
  * @author JTraber
- *
  */
-public class PublishServerSessionRegistry extends SessionRegistry {
-	
-	private static PublishServerSessionRegistry instance = new PublishServerSessionRegistry();
+public interface ISCPublishServerCallback extends ISCServerCallback {
 
-	public static PublishServerSessionRegistry getCurrentInstance() {
-		return instance;
-	}
+	public abstract ISCMessage subscribe(ISCMessage message);
+
+	public abstract void unsubscribe(ISCMessage message);
+
+	public abstract ISCMessage changeSubscription(ISCMessage message);
 }

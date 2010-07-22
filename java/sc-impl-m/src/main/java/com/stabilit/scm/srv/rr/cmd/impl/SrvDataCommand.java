@@ -27,6 +27,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 public class SrvDataCommand extends SrvCommandAdapter {
@@ -55,7 +56,7 @@ public class SrvDataCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
-		ISCMessage scReply = srvService.getCallback().execute(scMessage);
+		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).execute(scMessage);
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

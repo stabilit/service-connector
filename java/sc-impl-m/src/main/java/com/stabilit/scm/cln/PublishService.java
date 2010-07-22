@@ -63,21 +63,24 @@ public class PublishService implements IPublishService {
 	}
 
 	@Override
-	public void changeSubscription(String mask) {
+	public void changeSubscription(String mask) throws Exception {
+		if (this.scmpCallback == null) {
+			throw new SCServiceException("changeSubscription not possible - not subscribed");
+		}
 	}
 
 	@Override
 	public void subscribe(String mask, ISCMessageCallback callback) throws Exception {
+		if (this.scmpCallback != null) {
+			throw new SCServiceException("already subscribed");
+		}
 		this.mask = mask;
+		this.scmpCallback = new PublishServiceCallback(callback);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.invoke(this.scmpCallback);
 		SCMPMessage reply = this.scmpCallback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
 		this.sessionId = reply.getSessionId();
-		if (this.scmpCallback != null) {
-			throw new SCServiceException("already subscribed");
-		}
-		this.scmpCallback = new PublishServiceCallback(callback);
 		this.receivePublication();
 	}
 
@@ -90,6 +93,9 @@ public class PublishService implements IPublishService {
 
 	@Override
 	public void unsubscribe() throws Exception {
+		if (this.scmpCallback == null) {
+			throw new SCServiceException("unsubscrib not possible - not subscribed");
+		}
 		this.scmpCallback = null;
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);

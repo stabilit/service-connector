@@ -28,7 +28,6 @@ import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.srv.ps.PublishServer;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIPublishSubscribeTestCase {
@@ -81,13 +80,6 @@ public class ClnAPIPublishSubscribeTestCase {
 			publishServiceA = sc.newPublishService("publish-simulation");		
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("AEC----", callback);
-
-			PublishServer.beginPublish();
-			
-			while(publishedMessageCounter < 10) {
-			    Thread.sleep(1000);
-			}
-			PublishServer.endPublish();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

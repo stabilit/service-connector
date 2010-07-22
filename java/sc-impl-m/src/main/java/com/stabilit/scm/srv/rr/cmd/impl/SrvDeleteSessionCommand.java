@@ -27,6 +27,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 public class SrvDeleteSessionCommand extends SrvCommandAdapter {
@@ -55,7 +56,7 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
-		ISCMessage scReply = srvService.getCallback().deleteSession(scMessage);
+		((ISCSessionServerCallback)srvService.getCallback()).deleteSession(scMessage);
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

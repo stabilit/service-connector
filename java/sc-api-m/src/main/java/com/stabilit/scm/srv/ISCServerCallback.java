@@ -21,18 +21,9 @@
  */
 package com.stabilit.scm.srv;
 
-import com.stabilit.scm.common.service.ISCMessage;
 
 /**
  * @author JTraber
  */
 public interface ISCServerCallback {
-
-	public abstract ISCMessage createSession(ISCMessage message);
-
-	public abstract ISCMessage deleteSession(ISCMessage message);
-
-	public abstract ISCMessage abortSession(ISCMessage message);
-
-	public abstract ISCMessage execute(ISCMessage message);
 }

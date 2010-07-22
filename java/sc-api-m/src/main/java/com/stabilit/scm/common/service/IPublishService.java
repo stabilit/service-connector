@@ -28,7 +28,7 @@ import com.stabilit.scm.cln.service.IService;
  */
 public interface IPublishService extends IService {
 
-	void changeSubscription(String mask);
+	void changeSubscription(String mask) throws Exception;
 
 	void unsubscribe() throws Exception;
 

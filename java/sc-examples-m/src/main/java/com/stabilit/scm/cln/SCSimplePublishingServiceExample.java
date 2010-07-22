@@ -27,7 +27,6 @@ import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.srv.ps.PublishServer;
 
 public class SCSimplePublishingServiceExample {
 
@@ -51,13 +50,6 @@ public class SCSimplePublishingServiceExample {
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("AEC----", callback);
-
-			PublishServer.beginPublish();
-
-			while (publishedMessageCounter < 10) {
-				Thread.sleep(1000);
-			}
-			PublishServer.endPublish();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

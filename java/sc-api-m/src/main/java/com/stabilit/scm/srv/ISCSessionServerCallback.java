@@ -21,24 +21,18 @@
  */
 package com.stabilit.scm.srv;
 
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.IConnectionPool;
-import com.stabilit.scm.common.net.req.IRequesterContext;
+import com.stabilit.scm.common.service.ISCMessage;
 
 /**
  * @author JTraber
  */
-public class ServerContext implements IRequesterContext {
+public interface ISCSessionServerCallback extends ISCServerCallback {
 
-	private IConnectionPool connectionPool;
+	public abstract ISCMessage createSession(ISCMessage message);
 
-	public ServerContext(ICommunicatorConfig config) {
-		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
-	}
-	
-	@Override
-	public IConnectionPool getConnectionPool() {
-		return connectionPool;
-	}
+	public abstract void deleteSession(ISCMessage message);
+
+	public abstract void abortSession(ISCMessage message);
+
+	public abstract ISCMessage execute(ISCMessage message);
 }

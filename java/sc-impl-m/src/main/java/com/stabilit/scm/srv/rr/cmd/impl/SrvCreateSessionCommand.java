@@ -31,10 +31,11 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 public class SrvCreateSessionCommand extends SrvCommandAdapter {
-	
+
 	public SrvCreateSessionCommand() {
 		this.commandValidator = new SrvCreateSessionCommandValidator();
 	}
@@ -59,7 +60,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
-		ISCMessage scReply = srvService.getCallback().createSession(scMessage);
+		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

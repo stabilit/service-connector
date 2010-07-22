@@ -19,17 +19,38 @@
 /**
  * 
  */
-package com.stabilit.scm.srv;
+package com.stabilit.scm.srv.ps;
 
-import com.stabilit.scm.common.ctx.IContext;
-import com.stabilit.scm.common.net.req.IConnectionPool;
+import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPPublishCall;
+import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.srv.ISCPublishServer;
+import com.stabilit.scm.srv.ISCPublishServerCallback;
+import com.stabilit.scm.srv.ISCServerCallback;
+import com.stabilit.scm.srv.SCServer;
 
-/**
- * @author JTraber
- */
-public interface ISCPublishServerContext extends IContext {
+public class SCPublishServer extends SCServer implements ISCPublishServer {
 
-	public IConnectionPool getConnectionPool();
+	public SCPublishServer(String host, int port) {
+		super(host, port);
+	}
 
-	public ISCPublishServer getSCPublishServer();
+	@Override
+	public void publish(String serviceName, String mask, Object data) throws Exception {
+		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
+				serviceName);
+		publishCall.setRequestBody(data);
+		publishCall.invoke(this.callback);
+		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+	}
+
+	@Override
+	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception {
+		super.registerService(serviceName, scCallback);
+	}
 }

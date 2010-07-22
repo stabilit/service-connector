@@ -43,10 +43,12 @@ import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.sc.SC;
+import com.stabilit.scm.srv.ISCPublishServer;
+import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCServerCallback;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
-import com.stabilit.scm.srv.ps.PublishServer;
+import com.stabilit.scm.srv.ps.SCPublishServer;
 import com.stabilit.scm.unit.UnitCommandFactory;
 
 /**
@@ -56,6 +58,7 @@ public class SetupTestCases {
 
 	private static SetupTestCases setupTestCases = null;
 	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
+	private static boolean killPublishServer = false;
 
 	private SetupTestCases() {
 	}
@@ -104,7 +107,6 @@ public class SetupTestCases {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
 				SetupTestCases.startSessionServer();
-				// OldSessionServer.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -119,8 +121,7 @@ public class SetupTestCases {
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
 				SetupTestCases.startSessionServer();
-				// OldSessionServer.main(null);
-				PublishServer.main(null);
+				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -142,7 +143,6 @@ public class SetupTestCases {
 
 	private static void startSessionServer() throws Exception {
 		ISCServer scSrv = new SCServer("localhost", 9000);
-
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
 		scSrv.setKeepAliveInterval(0);
@@ -153,11 +153,10 @@ public class SetupTestCases {
 		scSrv.registerService("simulation", srvCallback);
 	}
 
-	private static class SessionServerCallback implements ISCServerCallback {
+	private static class SessionServerCallback implements ISCSessionServerCallback {
 
 		@Override
-		public ISCMessage abortSession(ISCMessage message) {
-			return message;
+		public void abortSession(ISCMessage message) {
 		}
 
 		@Override
@@ -166,8 +165,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public ISCMessage deleteSession(ISCMessage message) {
-			return message;
+		public void deleteSession(ISCMessage message) {
 		}
 
 		@Override
@@ -189,5 +187,73 @@ public class SetupTestCases {
 			message.setData("message data test case");
 			return message;
 		}
+	}
+
+	private static void startPublishServer() throws Exception {
+		String serviceName = "publish-simulation";
+		ISCPublishServer publishSrv = new SCPublishServer("localhost", 9000);
+		// connect to SC as server
+		publishSrv.setMaxSessions(10);
+		publishSrv.setKeepAliveInterval(0);
+		publishSrv.setRunningPortNr(7001);
+		publishSrv.setImmediateConnect(true);
+		publishSrv.startServer("localhost");
+		PublishServerCallback publishCallback = new PublishServerCallback();
+		publishSrv.registerService(serviceName, publishCallback);
+		Runnable run = new PublishRun(publishSrv, serviceName);
+		Thread thread = new Thread(run);
+		thread.start();
+	}
+
+	private static class PublishServerCallback implements ISCPublishServerCallback {
+
+		@Override
+		public ISCMessage changeSubscription(ISCMessage message) {
+			return message;
+		}
+
+		@Override
+		public ISCMessage subscribe(ISCMessage message) {
+			return message;
+		}
+
+		@Override
+		public void unsubscribe(ISCMessage message) {
+		}
+	}
+
+	private static class PublishRun implements Runnable {
+		ISCPublishServer server;
+		String serviceName;
+
+		public PublishRun(ISCPublishServer server, String serviceName) {
+			this.server = server;
+			this.serviceName = serviceName;
+		}
+
+		@Override
+		public void run() {
+			int index = 0;
+			while (!killPublishServer) {
+				try {
+					Thread.sleep(5000);
+					Object data = "publish message nr " + ++index;
+					String mask = "AVSD-----";
+					server.publish(serviceName, mask, data);
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+				}
+			}
+		}
+	}
+
+	private static void killPublishServer() {
+		SetupTestCases.killPublishServer = true;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		SetupTestCases.killPublishServer();
 	}
 }

@@ -23,16 +23,10 @@ package com.stabilit.scm.srv;
 
 /**
  * @author JTraber
- *
  */
-public interface ISCPublishServer {
+public interface ISCPublishServer extends ISCServer {
 
-	void registerService() throws Exception;
+	public abstract void publish(String serviceName, String mask, Object data) throws Exception;
 
-	void publish(String mask, Object data) throws Exception;
-
-	void deregisterService() throws Exception;
-
-	void startServer(String fileName) throws Exception;
-	
+	public abstract void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception;
 }

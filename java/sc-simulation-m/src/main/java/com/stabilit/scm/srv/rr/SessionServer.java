@@ -40,7 +40,7 @@ import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCServerCallback;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
 public class SessionServer {
@@ -79,7 +79,7 @@ public class SessionServer {
 		}
 	}
 
-	class SrvCallback implements ISCServerCallback {
+	class SrvCallback implements ISCSessionServerCallback {
 
 		private SessionServerContext outerContext;
 
@@ -94,16 +94,13 @@ public class SessionServer {
 		}
 
 		@Override
-		public ISCMessage deleteSession(ISCMessage message) {
+		public void deleteSession(ISCMessage message) {
 			System.out.println("SessionServer.SrvCallback.deleteSession()");
-			return message;
-
 		}
 
 		@Override
-		public ISCMessage abortSession(ISCMessage message) {
+		public void abortSession(ISCMessage message) {
 			System.out.println("SessionServer.SrvCallback.abortSession()");
-			return message;
 		}
 
 		@Override
