@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionEvent;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IConnectionListener;
@@ -152,12 +152,12 @@ public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
 	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
-		return IConstants.LOG_DIR;
+		return Constants.LOG_DIR;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.CONNECTION_LOG_FILE_NAME;
+		return Constants.CONNECTION_LOG_FILE_NAME;
 	}
 }

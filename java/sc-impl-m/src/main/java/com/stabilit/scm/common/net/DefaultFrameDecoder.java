@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 
@@ -43,7 +43,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
-		if (buffer == null || buffer.length < IConstants.FIX_HEADLINE_SIZE) {
+		if (buffer == null || buffer.length < Constants.FIX_HEADLINE_SIZE) {
 			return 0; // don't throw exception it is the case if client disconnects
 		}
 
@@ -54,17 +54,17 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		}
 		// parse frame size
 		int scmpLength = this.parseMessageSize(buffer);
-		return IConstants.FIX_HEADLINE_SIZE + scmpLength;
+		return Constants.FIX_HEADLINE_SIZE + scmpLength;
 	}
 	
 	@Override
 	public int parseMessageSize(byte[] buffer) throws FrameDecoderException {
-		return this.readInt(buffer, IConstants.FIX_MSG_SIZE_START, IConstants.FIX_MSG_SIZE_END);
+		return this.readInt(buffer, Constants.FIX_MSG_SIZE_START, Constants.FIX_MSG_SIZE_END);
 	}
 	
 	@Override
 	public int parseHeaderSize(byte[] buffer) throws Exception {
-		return this.readInt(buffer, IConstants.FIX_HEADER_SIZE_START, IConstants.FIX_HEADER_SIZE_END);
+		return this.readInt(buffer, Constants.FIX_HEADER_SIZE_START, Constants.FIX_HEADER_SIZE_END);
 	}
 
 	/**

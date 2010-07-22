@@ -21,7 +21,11 @@ package com.stabilit.scm.common.conf;
  * 
  * @author JTraber
  */
-public interface IConstants {
+public final class Constants {
+
+	private Constants() {
+		// instantiating not allowed
+	}
 
 	/** Protocol literal. */
 	public static final String HTTP = "http";
@@ -34,18 +38,25 @@ public interface IConstants {
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 	/** The Constant READ_TIMEOUT_MILLIS. */
 	public static final int READ_TIMEOUT_MILLIS = 500;
-	/** The Constant WRITE_TIMEOUT_MILLIS. */
-	public static final int WRITE_TIMEOUT_MILLIS = 500;
 	/** The Constant CONNECT_TIMEOUT_MILLIS. */
 	public static final int CONNECT_TIMEOUT_MILLIS = 500;
 	/** The Constant OPERATION_TIMEOUT_MILLIS. */
-	public static final int OPERATION_TIMEOUT_MILLIS = 500;
+	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 50;
+	/**
+	 * The SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS - attention variable might be set different when configurations get
+	 * loaded.
+	 */
+	public static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = 60000;
 
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;
 
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
+	/** The Constant ROOT_LOGGER_QUALIFIER. */
+	public static final String ROOT_LOGGER_QUALIFIER = "root.logger";
+	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMillis";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The HOST. */
@@ -58,18 +69,16 @@ public interface IConstants {
 	public static final String TYPE_QUALIFIER = ".type";
 	/** The Constant ENABLE_QUALIFIER. */
 	public static final String ENABLE_QUALIFIER = ".enable";
-
 	/** The Constant CONNECTIONS. */
 	public static final String CONNECTIONS = "connections";
 	/** The server names. */
 	public static final String SERVER_LISTENER = "serverListener";
 	/** The services Names. */
 	public static final String SERVICE_NAMES = "serviceNames";
-
 	/** The Constant MAX_CONNECTION_POOL_SIZE. */
 	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
 	/** The Constant KEEP_ALIVE_INTERVAL. */
-	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";	
+	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
 
 	/** The logging directory. */
 	public static final String LOG_DIR = "log/";

@@ -23,7 +23,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
@@ -57,7 +57,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
-		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
+		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
 		this.channelFactory = null;
 	}
 

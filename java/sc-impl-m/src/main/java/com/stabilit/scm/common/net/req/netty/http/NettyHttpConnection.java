@@ -35,10 +35,9 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
@@ -96,7 +95,7 @@ public class NettyHttpConnection implements IConnection {
 		this.bootstrap = null;
 		this.channel = null;
 		this.port = 0;
-		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
+		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
 		this.host = null;
 		this.operationListener = null;
 		this.channelFactory = null;
@@ -130,7 +129,7 @@ public class NettyHttpConnection implements IConnection {
 		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
 				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.bootstrap.setOption("connectTimeoutMillis", IConstants.CONNECT_TIMEOUT_MILLIS);
+		this.bootstrap.setOption("connectTimeoutMillis", Constants.CONNECT_TIMEOUT_MILLIS);
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
@@ -139,7 +138,7 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS)
+			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
 					.getChannel();
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -156,7 +155,7 @@ public class NettyHttpConnection implements IConnection {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(this.operationListener);
 		try {
-			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
+			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -171,7 +170,7 @@ public class NettyHttpConnection implements IConnection {
 		ChannelFuture future = this.channel.close();
 		future.addListener(this.operationListener);
 		try {
-			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
+			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
@@ -184,13 +183,13 @@ public class NettyHttpConnection implements IConnection {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
-		url = new URL(IConstants.HTTP, host, port, IConstants.HTTP_FILE);
+		url = new URL(Constants.HTTP, host, port, Constants.HTTP_FILE);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		// Http header fields
 		request.addHeader(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
 		request.addHeader(HttpHeaders.Names.HOST, host);
-		request.addHeader(HttpHeaders.Names.ACCEPT, IConstants.ACCEPT_PARAMS);
+		request.addHeader(HttpHeaders.Names.ACCEPT, Constants.ACCEPT_PARAMS);
 		request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
 		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
@@ -203,7 +202,7 @@ public class NettyHttpConnection implements IConnection {
 		ChannelFuture future = channel.write(request);
 		future.addListener(this.operationListener);
 		try {
-			this.operationListener.awaitUninterruptibly(IConstants.OPERATION_TIMEOUT_MILLIS);
+			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -248,9 +247,6 @@ public class NettyHttpConnection implements IConnection {
 		ChannelPipeline pipeline = this.channel.getPipeline();
 		// release resources in idle timeout handler
 		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in write timeout handler
-		externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
 		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);

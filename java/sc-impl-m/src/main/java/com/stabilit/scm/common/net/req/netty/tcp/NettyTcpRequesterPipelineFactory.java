@@ -20,7 +20,6 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
@@ -54,8 +53,6 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// responsible for observing read timeout - Netty
 		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, this.context.getReadTimeout()));
-		// responsible for observing write timeout - Netty
-		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, this.context.getWriteTimeout()));
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
 				.getIdleTimeout()));

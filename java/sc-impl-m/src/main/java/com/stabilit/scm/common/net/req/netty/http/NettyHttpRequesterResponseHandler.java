@@ -25,9 +25,12 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.timeout.ReadTimeoutException;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -42,30 +45,50 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private ISCMPCallback scmpCallback;
+	private boolean pendingRequest;
 
 	public NettyHttpRequesterResponseHandler() {
 		this.scmpCallback = null;
-	}
-
-	public ISCMPCallback getCallback() {
-		return scmpCallback;
+		this.pendingRequest = false;
 	}
 
 	public void setCallback(ISCMPCallback scmpCallback) {
 		this.scmpCallback = scmpCallback;
+		this.pendingRequest = true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		this.callback((HttpResponse) e.getMessage());
+		if (this.pendingRequest) {
+			this.pendingRequest = false;
+			this.callback((HttpResponse) e.getMessage());
+			return;
+		}
+		// message not expected - race condition
+		LoggerPoint.getInstance().fireWarn(this, "message received but no reply was outstanding - race condition.");
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = (Throwable) e.getCause();
-		this.scmpCallback.callback(th);
+		if (this.pendingRequest) {
+			this.pendingRequest = false;
+			if (th instanceof ReadTimeoutException) {
+				// read timed out in a pending request - operation timeout occurred
+				th = new CommunicationException("operation timed out. could not be completed.");
+			}
+			this.scmpCallback.callback(th);
+			return;
+		}
+		if (th instanceof ReadTimeoutException) {
+			// read timed out no pending request outstanding - ignore exception
+			return;
+		}
+		// message not expected - race condition
+		LoggerPoint.getInstance().fireWarn(this, "exception caught but no reply was outstanding - race condition.");
+		ExceptionPoint.getInstance().fireException(this, th);
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {

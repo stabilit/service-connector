@@ -27,7 +27,7 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -62,7 +62,7 @@ public class SessionService extends Service implements ISessionService {
 		createSessionCall.setEchoTimeout(echoTimeout);
 		createSessionCall.setEchoInterval(echoInterval);
 		createSessionCall.invoke(this.callback);
-		SCMPMessage reply = this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		this.sessionId = reply.getSessionId();
 	}
 
@@ -74,7 +74,7 @@ public class SessionService extends Service implements ISessionService {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		deleteSessionCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		this.callback = null;
 	}
 
@@ -97,7 +97,7 @@ public class SessionService extends Service implements ISessionService {
 		// invoke asynchronous
 		clnDataCall.invoke(this.callback);
 		// wait for message in callback
-		SCMPMessage reply = this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));

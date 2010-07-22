@@ -23,7 +23,6 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
@@ -61,11 +60,9 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMPMessage.LARGE_MESSAGE_LIMIT + 4 << 10));
 		// responsible for observing read timeout - Netty
 		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, this.context.getReadTimeout()));
-		// responsible for observing write timeout - Netty
-		pipeline.addLast("writeTimeout", new WriteTimeoutHandler(this.timer, this.context.getWriteTimeout()));
 		// responsible for observing idle timeout - Netty
-		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0,
-				this.context.getIdleTimeout()));
+		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
+				.getIdleTimeout()));
 		// responsible for handle responses - Stabilit
 		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 		return pipeline;

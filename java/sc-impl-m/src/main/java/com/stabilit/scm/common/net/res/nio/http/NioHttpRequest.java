@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
@@ -67,7 +67,7 @@ public class NioHttpRequest extends RequestAdapter {
 		if (bytesRead < 0) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
-		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(IConstants.HTTP);
+		IFrameDecoder scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(Constants.HTTP);
 		// warning, returns always the same instance, singleton
 		byte[] byteReadBuffer = byteBuffer.array();
 		int httpFrameSize = scmpFrameDecoder.parseFrameSize(byteReadBuffer);

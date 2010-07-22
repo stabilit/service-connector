@@ -19,7 +19,7 @@ package com.stabilit.scm.common.log.impl;
 import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IPerformanceListener;
 import com.stabilit.scm.common.listener.PerformanceEvent;
@@ -87,12 +87,12 @@ public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator
 	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
-		return IConstants.LOG_DIR;
+		return Constants.LOG_DIR;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.PERFORMANCE_LOG_FILE_NAME;
+		return Constants.PERFORMANCE_LOG_FILE_NAME;
 	}
 }

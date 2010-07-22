@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
@@ -33,7 +33,7 @@ public class ConnectionPool implements IConnectionPool {
 		this.port = port;
 		this.conType = conType;
 		this.closeOnFree = false; // default = false
-		this.maxConnections = IConstants.DEFAULT_MAX_CONNECTIONS;
+		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.minConnections = 1;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
@@ -43,16 +43,16 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	public ConnectionPool(String host, int port, String conType) {
-		this(host, port, conType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, IConstants.DEFAULT_CLIENT_CON, keepAliveInterval, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public ConnectionPool(String host, int port) {
-		this(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
+				Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class ConnectionPool implements IConnectionPool {
 			// this connection is no more free - no keep alive necessary
 			return;
 		}
-		if (connection.getNrOfIdlesInSequence() > IConstants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
+		if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
 			// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
 			if (this.freeConnections.size() > 1) {
 				// there is still more than one connection free - destroy this one
@@ -208,7 +208,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {

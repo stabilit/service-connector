@@ -21,7 +21,7 @@ import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
@@ -61,16 +61,16 @@ public class SCServer implements ISCServer {
 	protected SrvServerCallback callback;
 
 	public SCServer(String host, int port) {
-		this(host, port, IConstants.DEFAULT_SERVER_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
+				Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public SCServer(String host, int port, String connectionType) {
-		this(host, port, connectionType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public SCServer(String host, int port, String connectionType, int keepAliveInterval) {
-		this(host, port, connectionType, keepAliveInterval, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	public SCServer(String host, int port, String connectionType, int keepAliveInterval, int numberOfThreads) {
@@ -80,7 +80,7 @@ public class SCServer implements ISCServer {
 		this.numberOfThreads = numberOfThreads;
 
 		// attributes for registerService
-		this.maxSessions = IConstants.DEFAULT_MAX_CONNECTIONS;
+		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.immediateConnect = true;
 		this.keepAliveInterval = 0;
 		this.runningPort = 0;
@@ -147,7 +147,7 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setImmediateConnect(this.immediateConnect);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveInterval);
 		registerServiceCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, scCallback);
 		this.srvServiceRegistry.addSrvService(serviceName, srvService);
@@ -159,7 +159,7 @@ public class SCServer implements ISCServer {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
 		deRegisterServiceCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		// remove srvService from registry
 		this.srvServiceRegistry.removeSrvService(serviceName);
 		// destroy the connection pool
@@ -169,7 +169,7 @@ public class SCServer implements ISCServer {
 	/** {@inheritDoc} */
 	@Override
 	public void startServer(String host) throws Exception {
-		this.startServer(host, IConstants.DEFAULT_NR_OF_THREADS);
+		this.startServer(host, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	/** {@inheritDoc} */

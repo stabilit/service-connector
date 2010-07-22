@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
@@ -47,8 +47,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
-	private DecimalFormat dfMsgSize = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
-	private DecimalFormat dfHeaderSize = new DecimalFormat(IConstants.FORMAT_OF_HEADER_SIZE);
+	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
+	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
 
 	/** {@inheritDoc} */
@@ -58,7 +58,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		BufferedReader br = new BufferedReader(isr);
 
 		// read headline
-		byte[] headline = new byte[IConstants.FIX_HEADLINE_SIZE];
+		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
 		is.read(headline);
 
 		SCMPMessage scmpMsg = null;
@@ -91,9 +91,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 		// storing header fields in meta map
 		Map<String, String> metaMap = new HashMap<String, String>();
-		int readBytes = IConstants.FIX_HEADLINE_SIZE;
+		int readBytes = Constants.FIX_HEADLINE_SIZE;
 		String line;
-		while (readBytes < IConstants.FIX_HEADLINE_SIZE + scmpHeaderSize) {
+		while (readBytes < Constants.FIX_HEADLINE_SIZE + scmpHeaderSize) {
 			line = br.readLine();
 			if (line == null || line.length() <= 0) {
 				break;

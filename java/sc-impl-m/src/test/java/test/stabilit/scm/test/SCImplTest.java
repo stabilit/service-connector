@@ -37,7 +37,7 @@ import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTest;
 import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTest;
 import test.stabilit.scm.common.util.ValidatorUtilityTest;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 
 /**
@@ -57,8 +57,8 @@ import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 				 ValidatorUtilityTest.class })
 public final class SCImplTest {
 
-	private static DecimalFormat dfMsg = new DecimalFormat(IConstants.FORMAT_OF_MSG_SIZE);
-	private static DecimalFormat dfHeader = new DecimalFormat(IConstants.FORMAT_OF_HEADER_SIZE);
+	private static DecimalFormat dfMsg = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
+	private static DecimalFormat dfHeader = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 
 	/**
 	 * Instantiates a new sC impl test.

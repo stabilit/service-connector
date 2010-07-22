@@ -19,7 +19,7 @@ package com.stabilit.scm.common.log.impl;
 import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionEvent;
 import com.stabilit.scm.common.listener.IExceptionListener;
 import com.stabilit.scm.common.log.ILogger;
@@ -70,12 +70,12 @@ public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
-		return IConstants.LOG_DIR;
+		return Constants.LOG_DIR;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.EXCEPTION_LOG_FILE_NAME;
+		return Constants.EXCEPTION_LOG_FILE_NAME;
 	}
 }

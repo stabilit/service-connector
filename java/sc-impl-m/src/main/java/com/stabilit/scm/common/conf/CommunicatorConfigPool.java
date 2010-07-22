@@ -50,19 +50,6 @@ public abstract class CommunicatorConfigPool {
 		this.loggerKey = null;
 	}
 
-	public static InputStream getLiveOddsConfigStream() {
-		// try to load config file from actual path
-		InputStream is = null;
-		try {
-			is = new FileInputStream("liveodds-config.xml");
-			return is;
-		} catch (FileNotFoundException e) {
-		}
-		// try to load config file from classpath
-		is = Thread.currentThread().getContextClassLoader().getResourceAsStream("liveodds-config.xml");
-		return is;
-	}
-
 	/**
 	 * Loads configuration from a file.
 	 * 
@@ -94,7 +81,7 @@ public abstract class CommunicatorConfigPool {
 					+ topLevelPropsKey);
 		}
 
-		String[] resps = respNames.split(IConstants.COMMA_OR_SEMICOLON);
+		String[] resps = respNames.split(Constants.COMMA_OR_SEMICOLON);
 		comConfigList = new ArrayList<ICommunicatorConfig>();
 
 		for (String respName : resps) {
@@ -103,15 +90,15 @@ public abstract class CommunicatorConfigPool {
 
 			comConfigList.add(reqConfig);
 
-			int port = Integer.parseInt((String) props.get(respName + IConstants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) props.get(respName + IConstants.MAX_CONNECTION_POOL_SIZE);
+			int port = Integer.parseInt((String) props.get(respName + Constants.PORT_QUALIFIER));
+			String maxPoolSizeValue = (String) props.get(respName + Constants.MAX_CONNECTION_POOL_SIZE);
 
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 				reqConfig.setMaxPoolSize(maxPoolSize);
 			}
 
-			String keepAliveIntervalValue = (String) props.get(respName + IConstants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) props.get(respName + Constants.KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = 0;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
@@ -119,13 +106,18 @@ public abstract class CommunicatorConfigPool {
 			reqConfig.setKeepAliveInterval(keepAliveInterval);
 
 			reqConfig.setPort(port);
-			reqConfig.setHost((String) props.get(respName + IConstants.HOST_QUALIFIER));
-			reqConfig.setConnectionType((String) props.get(respName + IConstants.CONNECTION_TYPE_QUALIFIER));
+			reqConfig.setHost((String) props.get(respName + Constants.HOST_QUALIFIER));
+			reqConfig.setConnectionType((String) props.get(respName + Constants.CONNECTION_TYPE_QUALIFIER));
 			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName
-					+ IConstants.THREAD_POOL_SIZE_QUALIFIER)));
+					+ Constants.THREAD_POOL_SIZE_QUALIFIER)));
 
 		}
-		this.loggerKey = props.getProperty("root.logger");
+		this.loggerKey = props.getProperty(Constants.ROOT_LOGGER_QUALIFIER);
+		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
+		if (operationTimeoutString != null) {
+			int operationTimeout = Integer.parseInt(operationTimeoutString);
+			Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeout;
+		}
 	}
 
 	/**
@@ -136,7 +128,7 @@ public abstract class CommunicatorConfigPool {
 	 * @throws IOException
 	 */
 	public void loadResponderConfig(String fileName) throws Exception {
-		this.load(fileName, IConstants.SERVER_LISTENER);
+		this.load(fileName, Constants.SERVER_LISTENER);
 	}
 
 	/**
@@ -147,7 +139,7 @@ public abstract class CommunicatorConfigPool {
 	 * @throws IOException
 	 */
 	public void loadRequesterConfig(String fileName) throws Exception {
-		this.load(fileName, IConstants.CONNECTIONS);
+		this.load(fileName, Constants.CONNECTIONS);
 	}
 
 	/**

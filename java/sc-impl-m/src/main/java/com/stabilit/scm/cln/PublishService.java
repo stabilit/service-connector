@@ -26,7 +26,7 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -65,7 +65,7 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.invoke(this.callback);
-		SCMPMessage reply = this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		this.sessionId = reply.getSessionId();
 		this.receivePublication();
 	}
@@ -85,7 +85,7 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		unsubscribeCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		this.callback = null;
 		this.mask = null;
 	}

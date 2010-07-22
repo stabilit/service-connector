@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.nio.NioTcpRequestThread;
@@ -54,7 +54,7 @@ public class NioTcpEndpoint extends EndpointAdapter implements Runnable {
 	public NioTcpEndpoint() {
 		this.host = null;
 		this.port = 0;
-		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
+		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
 		this.serverChannel = null;
 		this.pool = null;
 	}

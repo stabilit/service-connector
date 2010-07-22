@@ -1,6 +1,6 @@
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.srv.IIdleCallback;
 
 public class ConnectionContext implements IConnectionContext {
@@ -24,15 +24,11 @@ public class ConnectionContext implements IConnectionContext {
 	public int getIdleTimeout() {
 		return this.idleTimeout;
 	}
-	
+
 	@Override
 	public int getReadTimeout() {
-		return IConstants.READ_TIMEOUT_MILLIS;
-	}
-	
-	@Override
-	public int getWriteTimeout() {
-		return IConstants.WRITE_TIMEOUT_MILLIS;
+		// read timeout & observation is used to detect operation timeout
+		return Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS;
 	}
 
 	@Override

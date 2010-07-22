@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ILoggerListener;
 import com.stabilit.scm.common.listener.LoggerEvent;
 import com.stabilit.scm.common.log.ILogger;
@@ -75,12 +75,12 @@ public class TopLogger implements ILoggerListener, ILoggerDecorator {
 	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
-		return IConstants.LOG_DIR;
+		return Constants.LOG_DIR;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.TOP_LOG_FILE_NAME;
+		return Constants.TOP_LOG_FILE_NAME;
 	}
 }

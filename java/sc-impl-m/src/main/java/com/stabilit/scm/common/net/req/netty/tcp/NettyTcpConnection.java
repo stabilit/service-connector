@@ -29,7 +29,6 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
@@ -217,9 +216,6 @@ public class NettyTcpConnection implements IConnection {
 		ChannelPipeline pipeline = this.channel.getPipeline();
 		// release resources in idle timeout handler
 		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in write timeout handler
-		externalResourceReleasable = pipeline.get(WriteTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
 		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);

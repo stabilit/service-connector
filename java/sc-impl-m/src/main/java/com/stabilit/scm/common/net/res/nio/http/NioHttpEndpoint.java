@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.nio.NioHttpRequestThread;
@@ -54,7 +54,7 @@ public class NioHttpEndpoint extends EndpointAdapter implements Runnable {
 	public NioHttpEndpoint() {
 		this.host = null;
 		this.port = 0;
-		this.numberOfThreads = IConstants.DEFAULT_NR_OF_THREADS;
+		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
 		this.serverChannel = null;
 		this.pool = null;
 	}
@@ -63,7 +63,7 @@ public class NioHttpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void create() {
 		try {
-			this.pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, IConstants.MAX_KEEP_ALIVE_OF_THREADS,
+			this.pool = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, Constants.MAX_KEEP_ALIVE_OF_THREADS,
 					TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>());
 			// Create a new blocking server socket channel
 			this.serverChannel = ServerSocketChannel.open();

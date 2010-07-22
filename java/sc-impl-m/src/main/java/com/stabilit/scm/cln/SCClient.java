@@ -20,7 +20,7 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -65,8 +65,8 @@ public class SCClient implements ISCClient {
 	 *            the port
 	 */
 	public SCClient(String host, int port) {
-		this(host, port, IConstants.DEFAULT_CLIENT_CON, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
+				Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class SCClient implements ISCClient {
 	 *            the connection type
 	 */
 	public SCClient(String host, int port, String connectionType) {
-		this(host, port, connectionType, IConstants.DEFAULT_KEEP_ALIVE_INTERVAL, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class SCClient implements ISCClient {
 	 *            the keep alive interval
 	 */
 	public SCClient(String host, int port, String connectionType, int keepAliveInterval) {
-		this(host, port, connectionType, keepAliveInterval, IConstants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class SCClient implements ISCClient {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		attachCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 	}
 
 	/** {@inheritDoc} */
@@ -150,7 +150,7 @@ public class SCClient implements ISCClient {
 		}
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(this.callback);
-		this.callback.getMessageSync(IConstants.OPERATION_TIMEOUT_MILLIS);
+		this.callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();

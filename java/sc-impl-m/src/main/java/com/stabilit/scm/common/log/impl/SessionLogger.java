@@ -18,7 +18,7 @@ package com.stabilit.scm.common.log.impl;
 
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.IConstants;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.SessionEvent;
 import com.stabilit.scm.common.log.ILogger;
@@ -76,12 +76,12 @@ public class SessionLogger implements ISessionListener, ILoggerDecorator {
 	/** {@inheritDoc} */
 	@Override
 	public String getLogDir() {
-		return IConstants.LOG_DIR;
+		return Constants.LOG_DIR;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getLogFileName() {
-		return IConstants.SESSION_LOG_FILE_NAME;
+		return Constants.SESSION_LOG_FILE_NAME;
 	}
 }
