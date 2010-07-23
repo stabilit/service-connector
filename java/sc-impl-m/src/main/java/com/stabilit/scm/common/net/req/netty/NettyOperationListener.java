@@ -38,23 +38,6 @@ public class NettyOperationListener implements ChannelFutureListener {
 	private final BlockingQueue<ChannelFuture> answer = new ArrayBlockingQueue<ChannelFuture>(1);
 
 	/**
-	 * Await unInterruptibly until operation is completed.
-	 * 
-	 * @return the channel future
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ChannelFuture awaitUninterruptibly() throws Exception {
-		ChannelFuture response;
-		// take() waits until message arrives in queue
-		response = this.answer.take();
-		if (response.isSuccess() == false) {
-			throw new CommunicationException("Operation could not be completed", response.getCause());
-		}
-		return response;
-	}
-
-	/**
 	 * Await unInterruptibly until operation is completed or time runs out.
 	 * 
 	 * @param timeoutMillis
@@ -68,7 +51,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 		// poll() waits until message arrives in queue or time runs out
 		response = this.answer.poll(timeoutMillis, TimeUnit.MILLISECONDS);
 		if (response == null || response.isSuccess() == false) {
-			throw new CommunicationException("Operation could not be completed", response.getCause());
+			throw new CommunicationException("Operation could not be completed");
 		}
 		return response;
 	}

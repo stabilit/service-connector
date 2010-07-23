@@ -20,26 +20,9 @@ import java.io.File;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IConnectionListener;
-import com.stabilit.scm.common.listener.IExceptionListener;
-import com.stabilit.scm.common.listener.ILoggerListener;
-import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.IStatisticsListener;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.listener.StatisticsPoint;
-import com.stabilit.scm.common.log.Level;
-import com.stabilit.scm.common.log.impl.ConnectionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.log.impl.LoggerFactory;
-import com.stabilit.scm.common.log.impl.PerformanceLogger;
-import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.sc.SC;
@@ -70,18 +53,18 @@ public class SetupTestCases {
 		deleteLog();
 		// setup loggers
 		try {
-			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
-			ConnectionPoint.getInstance().addListener(
-					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-			ExceptionPoint.getInstance().addListener(
-					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-			LoggerPoint.getInstance().setLevel(Level.DEBUG);
-			PerformancePoint.getInstance().addListener(
-					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-			PerformancePoint.getInstance().setOn(true);
-			SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
-			StatisticsPoint.getInstance().addListener(statisticsListener);
+//			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
+//			ConnectionPoint.getInstance().addListener(
+//					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
+//			ExceptionPoint.getInstance().addListener(
+//					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
+//			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
+//			LoggerPoint.getInstance().setLevel(Level.DEBUG);
+//			PerformancePoint.getInstance().addListener(
+//					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
+//			PerformancePoint.getInstance().setOn(true);
+//			SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
+//			StatisticsPoint.getInstance().addListener(statisticsListener);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -161,6 +144,19 @@ public class SetupTestCases {
 
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
+			Object data = message.getData();
+			if (data instanceof String) {
+				String body = (String) data;
+				if (body.startsWith("wait:")) {
+					String timeValue = body.substring(5);
+					try {
+						int time = Integer.parseInt(timeValue);
+						Thread.sleep(time);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			return message;
 		}
 
@@ -247,10 +243,10 @@ public class SetupTestCases {
 		}
 	}
 
-	private static void killPublishServer() {
+	public static void killPublishServer() {
 		SetupTestCases.killPublishServer = true;
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();

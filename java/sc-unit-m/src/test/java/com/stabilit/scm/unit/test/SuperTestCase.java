@@ -46,13 +46,6 @@ public abstract class SuperTestCase {
 		this.fileName = fileName;
 	}
 
-	// @Parameters
-	// public static Collection<String[]> getParameters() {
-	// return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
-	// new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
-	// new String[] { "sc-unit-nio-tcp.properties" });
-	// }
-
 	@Parameters
 	public static Collection<String[]> getParameters() {
 		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
@@ -85,6 +78,7 @@ public abstract class SuperTestCase {
 
 	@Override
 	protected void finalize() throws Throwable {
+		SetupTestCases.killPublishServer();
 		this.testContext.getConnectionPool().destroy();
 		req = null;
 	}

@@ -74,7 +74,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
-		SCMPMessage reply = callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 		
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {

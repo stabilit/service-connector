@@ -45,6 +45,8 @@ public interface IConnectionPool {
 	public abstract boolean hasFreeConnections();
 
 	public abstract void connectionIdle(IConnection connection) throws Exception;
-	
+
 	public abstract int getKeepAliveInterval();
+
+	public abstract int getBusyConnections();
 }

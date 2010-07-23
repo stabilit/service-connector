@@ -19,38 +19,46 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.common.net.req.netty;
 
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPPublishCall;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.srv.ISCPublishServer;
-import com.stabilit.scm.srv.ISCPublishServerCallback;
-import com.stabilit.scm.srv.ISCServerCallback;
-import com.stabilit.scm.srv.SCServer;
+import java.util.concurrent.TimeUnit;
 
-public class SCPublishServer extends SCServer implements ISCPublishServer {
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.timeout.IdleState;
+import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.jboss.netty.util.Timer;
 
-	public SCPublishServer(String host, int port) {
-		super(host, port);
+/**
+ * @author JTraber
+ */
+public class NettyOperationTimeoutHandler extends IdleStateHandler {
+
+	/**
+	 * @param timer
+	 * @param readerIdleTime
+	 * @param writerIdleTime
+	 * @param allIdleTime
+	 * @param unit
+	 */
+	public NettyOperationTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime,
+			TimeUnit unit) {
+		super(timer, readerIdleTime, writerIdleTime, allIdleTime, unit);
 	}
 
 	@Override
-	public void publish(String serviceName, String mask, Object data) throws Exception {
-		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
-				serviceName);
-		publishCall.setRequestBody(data);
-		publishCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
-	}
-
-	@Override
-	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception {
-		super.registerService(serviceName, scCallback);
+	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
+			throws Exception {
+		super.channelIdle(ctx, state, lastActivityTimeMillis);
+		switch (state) {
+		case WRITER_IDLE:
+			return;
+		case READER_IDLE:
+		case ALL_IDLE:
+			Channels.fireExceptionCaught(ctx, new OperationTimeoutException());
+		default:
+			Channels.fireExceptionCaught(ctx, new OperationTimeoutException());
+			break;
+		}
 	}
 }

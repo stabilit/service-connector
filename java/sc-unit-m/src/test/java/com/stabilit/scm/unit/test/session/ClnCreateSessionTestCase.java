@@ -22,7 +22,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
@@ -65,15 +64,12 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		createSessionCall.setEchoInterval(300);
 		createSessionCall.setEchoTimeout(10);
-		try {
-			createSessionCall.invoke(this.attachCallback);
-			this.attachCallback.getMessageSync();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException ex) {
-			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
-		}
+
+		createSessionCall.invoke(this.attachCallback);
+		SCMPMessage fault = this.attachCallback.getMessageSync();
+		Assert.assertEquals("2", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
 	/**

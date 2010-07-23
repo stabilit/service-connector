@@ -68,30 +68,25 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 
-		try {
-			registerServiceCall.invoke(this.registerCallback);
-			this.registerCallback.getMessageSync();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException ex) {
-			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("1", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
-		}
+		registerServiceCall.invoke(this.registerCallback);
+		SCMPMessage fault = this.registerCallback.getMessageSync();
+
+		Assert.assertTrue(fault.isFault());
+		Assert.assertEquals("1", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 
-		try {
-			registerServiceCall.invoke(this.registerCallback);
-			this.registerCallback.getMessageSync();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException ex) {
-			SCMPFault scmpFault = ex.getFault();
-			Assert.assertEquals("2", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(ex.getFault(), SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
-		}
+		registerServiceCall.invoke(this.registerCallback);
+		fault = this.registerCallback.getMessageSync();
+
+		Assert.assertTrue(fault.isFault());
+		Assert.assertEquals("2", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+
 	}
 
 	@Test
@@ -172,14 +167,5 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	}
 
 	protected class RegisterServiceCallback extends SynchronousCallback {
-		@Override
-		public SCMPMessage getMessageSync() throws Exception {
-			SCMPMessage reply = super.getMessageSync();
-			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCMPCallException(fault);
-			}
-			return reply;
-		}
 	}
 }

@@ -19,38 +19,11 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.common.net.req.netty;
 
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPPublishCall;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.srv.ISCPublishServer;
-import com.stabilit.scm.srv.ISCPublishServerCallback;
-import com.stabilit.scm.srv.ISCServerCallback;
-import com.stabilit.scm.srv.SCServer;
-
-public class SCPublishServer extends SCServer implements ISCPublishServer {
-
-	public SCPublishServer(String host, int port) {
-		super(host, port);
-	}
-
-	@Override
-	public void publish(String serviceName, String mask, Object data) throws Exception {
-		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
-				serviceName);
-		publishCall.setRequestBody(data);
-		publishCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
-	}
-
-	@Override
-	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception {
-		super.registerService(serviceName, scCallback);
-	}
+/**
+ * @author JTraber
+ *
+ */
+public class OperationTimeoutException extends Exception {
 }

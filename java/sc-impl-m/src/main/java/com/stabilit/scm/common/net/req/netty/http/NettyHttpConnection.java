@@ -48,6 +48,7 @@ import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
+import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -249,7 +250,7 @@ public class NettyHttpConnection implements IConnection {
 		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
-		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);
+		externalResourceReleasable = pipeline.get(NettyOperationTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in client connection
 		this.bootstrap.releaseExternalResources();

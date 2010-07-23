@@ -19,13 +19,10 @@ package com.stabilit.scm.unit.test.attach;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
@@ -75,14 +72,5 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	}
 
 	protected class SuperAttachCallback extends SynchronousCallback {
-		@Override
-		public SCMPMessage getMessageSync() throws Exception {
-			SCMPMessage reply = super.getMessageSync();
-			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCMPCallException(fault);
-			}
-			return reply;
-		}
 	}
 }

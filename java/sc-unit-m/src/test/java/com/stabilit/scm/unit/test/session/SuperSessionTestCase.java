@@ -19,11 +19,9 @@ package com.stabilit.scm.unit.test.session;
 import org.junit.After;
 import org.junit.Before;
 
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
@@ -80,14 +78,5 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	}
 
 	protected class SuperSessionCallback extends SynchronousCallback {
-		@Override
-		public SCMPMessage getMessageSync() throws Exception {
-			SCMPMessage reply = super.getMessageSync();
-			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCMPCallException(fault);
-			}
-			return reply;
-		}
 	}
 }

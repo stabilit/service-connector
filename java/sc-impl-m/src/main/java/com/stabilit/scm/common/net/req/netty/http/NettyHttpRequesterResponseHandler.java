@@ -25,7 +25,6 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.timeout.ReadTimeoutException;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -33,6 +32,7 @@ import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -45,7 +45,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private ISCMPCallback scmpCallback;
-	private boolean pendingRequest;
+	private volatile boolean pendingRequest;
 
 	public NettyHttpRequesterResponseHandler() {
 		this.scmpCallback = null;
@@ -75,14 +75,15 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		Throwable th = (Throwable) e.getCause();
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			if (th instanceof ReadTimeoutException) {
+			if (th instanceof OperationTimeoutException) {
 				// read timed out in a pending request - operation timeout occurred
-				th = new CommunicationException("operation timed out. could not be completed.");
+				th = new CommunicationException("operation timeout. operation - could not be completed.");
+				LoggerPoint.getInstance().fireWarn(this, "idle timeout occurred on netty level.");
 			}
 			this.scmpCallback.callback(th);
 			return;
 		}
-		if (th instanceof ReadTimeoutException) {
+		if (th instanceof OperationTimeoutException) {
 			// read timed out no pending request outstanding - ignore exception
 			return;
 		}

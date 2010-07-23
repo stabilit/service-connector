@@ -16,15 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty.tcp;
 
+import java.util.concurrent.TimeUnit;
+
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
+import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.net.res.netty.tcp.SCMPBasedFrameDecoder;
 
 /**
@@ -49,13 +51,14 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
-		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
-		// responsible for observing read timeout - Netty
-		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, this.context.getReadTimeout()));
+		// responsible for observing idle timeout - Netty
+		pipeline.addLast("operationTimeout", new NettyOperationTimeoutHandler(this.timer, 0, 0, this.context
+				.getOperationTimeoutMillis(), TimeUnit.MILLISECONDS));
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
 				.getIdleTimeout()));
+		// responsible for reading until SCMP frame is complete
+		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// responsible for handling response
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;

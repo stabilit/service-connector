@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.conf;
 
+import com.stabilit.scm.common.listener.LoggerPoint;
+
 /**
  * The Interface IConstants. SC constants.
  * 
@@ -36,17 +38,33 @@ public final class Constants {
 	public static final int DEFAULT_NR_OF_THREADS = 16;
 	/** The MAX KEEP ALIVE TIME OF THREADS. */
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
-	/** The Constant READ_TIMEOUT_MILLIS. */
-	public static final int READ_TIMEOUT_MILLIS = 500;
-	/** The Constant CONNECT_TIMEOUT_MILLIS. */
-	public static final int CONNECT_TIMEOUT_MILLIS = 500;
-	/** The Constant OPERATION_TIMEOUT_MILLIS. */
-	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 50;
+
 	/**
-	 * The SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS - attention variable might be set different when configurations get
-	 * loaded.
+	 * IDLE_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting is
+	 * only allowed one time. Needed on lowest level of communication. Used to detect operation timeout, can be ignored
+	 * if no request is outstanding. If a request is outstanding the connection is busy and also blocked. Hand timeout
+	 * at least up to requester callback to give connection free. IDLE_TIMEOUT_MILLIS should be lower than
+	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS so that most of operation timeout can be detected on lower level.<br>
+	 **/
+	private static int IDLE_TIMEOUT_MILLIS = Constants.IDLE_TIMEOUT_MILLIS_DEFAULT;
+	/**
+	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect operation timeout on service level. Actually it should
+	 * never happen. Operation timeout should be detected in lower level by idle timeout. Therefore a difference is
+	 * summed up.
+	 **/
+	private static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = Constants.IDLE_TIMEOUT_MILLIS
+			+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
+	/** IDLE_TIMEOUT_MILLIS_DEFAULT: Default value for IDLE_TIMEOUT_MILLIS **/
+	private static final int IDLE_TIMEOUT_MILLIS_DEFAULT = 60000;
+	/** OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and IDLE_TIMEOUT_MILLIS. */
+	private static final int OPERATION_TIMEOUT_DIFFERENCE = 1000;
+	/**
+	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
+	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
-	public static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = 60000;
+	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 10000;
+	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
+	public static final int CONNECT_TIMEOUT_MILLIS = 500;
 
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;
@@ -128,4 +146,26 @@ public final class Constants {
 	public static final int FIX_HEADER_SIZE_START = 12;
 	/** The Constant FIX_HEADER_SIZE_END. */
 	public static final int FIX_HEADER_SIZE_END = 16;
+
+	/**
+	 * @return the serviceLevelOperationTimeoutMillis
+	 */
+	public static int getServiceLevelOperationTimeoutMillis() {
+		return Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS;
+	}
+
+	public static void setIdleTimeoutMillis(int idleTimeoutMillis) {
+		if (Constants.IDLE_TIMEOUT_MILLIS != Constants.IDLE_TIMEOUT_MILLIS_DEFAULT) {
+			// setting IDLE_TIMEOUT_MILLIS only allowed one time
+			LoggerPoint.getInstance().fireWarn(Constants.class, "setIdleTimeoutMillis called two times - not allowed.");
+			return;
+		}
+		Constants.IDLE_TIMEOUT_MILLIS = idleTimeoutMillis;
+		// IDLE_TIMEOUT_MILLIS needs to be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS
+		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = idleTimeoutMillis + Constants.OPERATION_TIMEOUT_DIFFERENCE;
+	}
+
+	public static int getIdleTimeoutMillis() {
+		return Constants.IDLE_TIMEOUT_MILLIS;
+	}
 }

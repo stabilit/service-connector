@@ -22,7 +22,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPInspectCall;
@@ -75,15 +74,11 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
-		try {
-			deRegisterServiceCall.invoke(this.attachCallback);
-			this.attachCallback.getMessageSync();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException e) {
-			SCMPFault scmpFault = e.getFault();
-			Assert.assertEquals("3", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			SCTest.verifyError(e.getFault(), SCMPError.NOT_REGISTERED, SCMPMsgType.DEREGISTER_SERVICE);
-		}
+		deRegisterServiceCall.invoke(this.attachCallback);
+		SCMPMessage fault = this.attachCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		Assert.assertEquals("3", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		SCTest.verifyError((SCMPFault) fault, SCMPError.NOT_REGISTERED, SCMPMsgType.DEREGISTER_SERVICE);
 		super.registerServiceBefore();
 	}
 }

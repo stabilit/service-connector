@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
+import java.util.Formatter;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ILoggerListener;
 import com.stabilit.scm.common.listener.LoggerEvent;
@@ -29,6 +31,8 @@ public class TopLogger implements ILoggerListener, ILoggerDecorator {
 
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
+	private Formatter format;
+	private String END_STR = "log by class %s %s";
 
 	/**
 	 * Instantiates a new runtime logger. Only visible in package for Factory.
@@ -42,28 +46,32 @@ public class TopLogger implements ILoggerListener, ILoggerDecorator {
 
 	@Override
 	public void logEvent(LoggerEvent loggerEvent) throws Exception {
-
+		Object source = loggerEvent.getSource();
 		String text = loggerEvent.getText();
+
+		format = new Formatter();
+		format.format(END_STR, source.getClass().getSimpleName(), text);
 
 		switch (loggerEvent.getLevel()) {
 		case INFO:
-			this.logger.logInfo(text);
+			this.logger.logInfo(format.toString());
 			break;
 		case WARN:
-			this.logger.logWarn(text);
+			this.logger.logWarn(format.toString());
 			break;
 		case ERROR:
-			this.logger.logError(text);
+			this.logger.logError(format.toString());
 			break;
 		case DEBUG:
-			this.logger.logDebug(text);
+			this.logger.logDebug(format.toString());
 			break;
 		case FATAL:
-			this.logger.logError(text);
+			this.logger.logError(format.toString());
 			break;
 		default:
-			this.logger.logInfo(text);
+			this.logger.logInfo(format.toString());
 		}
+		format.close();
 	}
 
 	/** {@inheritDoc} */

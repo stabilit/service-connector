@@ -176,6 +176,11 @@ public class ConnectionPool implements IConnectionPool {
 	public int getMaxConnections() {
 		return maxConnections;
 	}
+	
+	@Override
+	public int getBusyConnections() {
+		return this.usedConnections.size();
+	}
 
 	@Override
 	public boolean hasFreeConnections() {
@@ -208,7 +213,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {

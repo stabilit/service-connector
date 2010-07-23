@@ -67,7 +67,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		try {
 			ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
 			server.deleteSession(message, callback);
-			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan

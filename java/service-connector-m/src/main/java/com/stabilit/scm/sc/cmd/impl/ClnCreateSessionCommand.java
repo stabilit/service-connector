@@ -80,7 +80,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// error codes and error text from server in reject case are inside the exception
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
-		SCMPMessage reply = callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
+		SCMPMessage reply = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 

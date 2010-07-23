@@ -116,7 +116,7 @@ public abstract class CommunicatorConfigPool {
 		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
 		if (operationTimeoutString != null) {
 			int operationTimeout = Integer.parseInt(operationTimeoutString);
-			Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeout;
+			Constants.setIdleTimeoutMillis(operationTimeout);
 		}
 	}
 

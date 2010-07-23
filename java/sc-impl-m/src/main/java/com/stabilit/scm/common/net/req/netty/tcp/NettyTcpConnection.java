@@ -28,9 +28,9 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.CommunicationException;
@@ -41,6 +41,7 @@ import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
+import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -123,7 +124,8 @@ public class NettyTcpConnection implements IConnection {
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		try {
-			this.channel = operationListener.awaitUninterruptibly().getChannel();
+			this.channel = operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
+					.getChannel();
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
@@ -139,7 +141,7 @@ public class NettyTcpConnection implements IConnection {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -154,7 +156,7 @@ public class NettyTcpConnection implements IConnection {
 		ChannelFuture future = this.channel.close();
 		future.addListener(operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
@@ -176,7 +178,7 @@ public class NettyTcpConnection implements IConnection {
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		try {
-			operationListener.awaitUninterruptibly();
+			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
@@ -218,7 +220,7 @@ public class NettyTcpConnection implements IConnection {
 		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in read timeout handler
-		externalResourceReleasable = pipeline.get(ReadTimeoutHandler.class);
+		externalResourceReleasable = pipeline.get(NettyOperationTimeoutHandler.class);
 		externalResourceReleasable.releaseExternalResources();
 		// release resources in client connection
 		this.bootstrap.releaseExternalResources();

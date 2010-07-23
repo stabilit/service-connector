@@ -79,7 +79,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
 			server.srvEcho(message, callback);
 			//TODO echo timeout in callback.getMessagSync()
-			result = callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			result = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 		} catch (SCServiceException e) {
 			// srvEcho or clnEcho failed, connection disturbed - clean up
 			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());

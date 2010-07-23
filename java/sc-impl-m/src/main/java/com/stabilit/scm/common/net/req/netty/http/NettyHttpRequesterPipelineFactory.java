@@ -16,18 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req.netty.http;
 
+import java.util.concurrent.TimeUnit;
+
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
+import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -52,17 +54,18 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// responsible for observing idle timeout - Netty
+		pipeline.addLast("operationTimeout", new NettyOperationTimeoutHandler(this.timer, 0, 0, this.context
+				.getOperationTimeoutMillis(), TimeUnit.MILLISECONDS));
+		// responsible for observing idle timeout - Netty
+		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
+				.getIdleTimeout()));
 		// responsible for decoding responses - Netty
 		pipeline.addLast("decoder", new HttpResponseDecoder());
 		// responsible for encoding requests - Netty
 		pipeline.addLast("encoder", new HttpRequestEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(SCMPMessage.LARGE_MESSAGE_LIMIT + 4 << 10));
-		// responsible for observing read timeout - Netty
-		pipeline.addLast("readTimeout", new ReadTimeoutHandler(this.timer, this.context.getReadTimeout()));
-		// responsible for observing idle timeout - Netty
-		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
-				.getIdleTimeout()));
 		// responsible for handle responses - Stabilit
 		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 		return pipeline;
