@@ -65,9 +65,6 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			// arrive late after operation timeout already run out, can be ignored
 			return;
 		}
-		if (scmpReply.getMessageType().equals("CCS")) {
-			System.out.println("shit");
-		}
 		if (this.answer.offer(scmpReply)) {
 			// queue empty object can be added
 			return;

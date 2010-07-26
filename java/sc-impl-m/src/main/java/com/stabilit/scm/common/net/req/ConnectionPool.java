@@ -103,8 +103,9 @@ public class ConnectionPool implements IConnectionPool {
 		if (this.usedConnections.remove(connection) == false) {
 			LoggerPoint.getInstance().fireWarn(this, "connection does not exist - not possible to free");
 		}
-		if (closeOnFree) {
+		if (closeOnFree && this.freeConnections.size() > 0) {
 			// do not add the connection to free pool array - just close it immediately!
+			// at least keep one connection alive
 			this.destroyConnection(connection);
 			return;
 		}
@@ -176,7 +177,7 @@ public class ConnectionPool implements IConnectionPool {
 	public int getMaxConnections() {
 		return maxConnections;
 	}
-	
+
 	@Override
 	public int getBusyConnections() {
 		return this.usedConnections.size();

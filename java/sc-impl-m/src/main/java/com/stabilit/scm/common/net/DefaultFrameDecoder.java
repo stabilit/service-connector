@@ -46,7 +46,6 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		if (buffer == null || buffer.length < Constants.FIX_HEADLINE_SIZE) {
 			return 0; // don't throw exception it is the case if client disconnects
 		}
-
 		// check headerKey
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
 		if (headerKey == SCMPHeadlineKey.UNDEF) {

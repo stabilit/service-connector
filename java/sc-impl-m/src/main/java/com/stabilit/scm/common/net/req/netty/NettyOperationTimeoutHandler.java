@@ -29,6 +29,8 @@ import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
+import com.stabilit.scm.common.listener.LoggerPoint;
+
 /**
  * @author JTraber
  */
@@ -50,14 +52,19 @@ public class NettyOperationTimeoutHandler extends IdleStateHandler {
 	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
 			throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
+
 		switch (state) {
 		case WRITER_IDLE:
+			// ignore writer idle
 			return;
 		case READER_IDLE:
+			// ignore reader idle
+			return;
 		case ALL_IDLE:
-			Channels.fireExceptionCaught(ctx, new OperationTimeoutException());
+			Channels.fireExceptionCaught(ctx, new OperationTimeoutException(
+			"operation timeout. operation - could not be completed."));
+			break;
 		default:
-			Channels.fireExceptionCaught(ctx, new OperationTimeoutException());
 			break;
 		}
 	}

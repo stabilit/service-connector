@@ -46,8 +46,9 @@ public interface ISCMPSynchronousCallback extends ISCMPCallback {
 	 * wait depends on Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS.
 	 * 
 	 * @return the message sync
+	 * @throws Exception 
 	 */
-	public abstract SCMPMessage getMessageSync();
+	public abstract SCMPMessage getMessageSync() throws Exception;
 
 	/**
 	 * Careful, be aware of timeout concept if you use this method. Should not be used in normal cases. Gets the message
@@ -58,7 +59,8 @@ public interface ISCMPSynchronousCallback extends ISCMPCallback {
 	 * @param timeoutInMillis
 	 *            the timeout in milliseconds
 	 * @return the message sync
+	 * @throws Exception 
 	 */
-	public abstract SCMPMessage getMessageSync(int timeoutInMillis);
+	public abstract SCMPMessage getMessageSync(int timeoutInMillis) throws Exception;
 
 }

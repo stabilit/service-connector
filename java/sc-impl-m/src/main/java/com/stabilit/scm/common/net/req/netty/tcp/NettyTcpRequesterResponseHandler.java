@@ -28,7 +28,6 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
@@ -74,20 +73,13 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		Throwable th = (Throwable) e.getCause();
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			if (th instanceof OperationTimeoutException) {
-				// read timed out in a pending request - operation timeout occurred
-				th = new CommunicationException("operation timeout. operation - could not be completed.");
-				LoggerPoint.getInstance().fireWarn(this, "idle timeout occurred on netty tcp level.");
-			}
 			this.scmpCallback.callback(th);
 			return;
 		}
 		if (th instanceof OperationTimeoutException) {
-			// read timed out no pending request outstanding - ignore exception
+			// idle timed out no pending request outstanding - ignore exception
 			return;
 		}
-		// message not expected - race condition
-		LoggerPoint.getInstance().fireWarn(this, "exception caught but no reply was outstanding - race condition.");
 		ExceptionPoint.getInstance().fireException(this, th);
 	}
 

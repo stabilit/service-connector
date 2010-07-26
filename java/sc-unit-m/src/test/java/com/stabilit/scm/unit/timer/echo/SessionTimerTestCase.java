@@ -34,7 +34,7 @@ public class SessionTimerTestCase {
 	private boolean sessionAborted = false;
 	@Before
 	public void setUp() {
-		SetupTestCases.setupSCSessionServer();
+		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
 	@Test

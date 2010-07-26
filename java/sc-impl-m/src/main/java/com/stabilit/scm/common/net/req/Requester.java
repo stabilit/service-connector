@@ -177,9 +177,10 @@ public class Requester implements IRequester {
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}
-			this.freeConnection();
 			msgID.incrementMsgSequenceNr();
 			this.scmpCallback.callback(scmpReply);
+			// free connection after callback returns - prevents using the same connection right away, race conditions
+			this.freeConnection();
 		}
 
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {

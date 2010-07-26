@@ -30,7 +30,7 @@ public class ClnAPISessionTestCase {
 
 	@Before
 	public void setUp() {
-		SetupTestCases.setupSCSessionServer();
+		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
 	@Test

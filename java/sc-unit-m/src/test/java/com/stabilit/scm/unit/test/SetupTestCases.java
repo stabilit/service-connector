@@ -82,14 +82,28 @@ public class SetupTestCases {
 		}
 	}
 
-	public static void setupSCSessionServer() {
+	public static void setupSCSessionServer10Connections() {
 		if (setupTestCases == null) {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
-				SetupTestCases.startSessionServer();
+				SetupTestCases.startSessionServer10Connections();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void setupSCSessionServer1Connections() {
+		if (setupTestCases == null) {
+			try {
+				init();
+				setupTestCases = new SetupTestCases();
+				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				SC.main(null);
+				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -103,7 +117,7 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
 				SC.main(null);
-				SetupTestCases.startSessionServer();
+				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -124,7 +138,7 @@ public class SetupTestCases {
 		}
 	}
 
-	private static void startSessionServer() throws Exception {
+	private static void startSessionServer1Connections() throws Exception {
 		ISCServer scSrv = new SCServer("localhost", 9000);
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
@@ -136,8 +150,22 @@ public class SetupTestCases {
 		scSrv.registerService("simulation", srvCallback);
 	}
 
+	private static void startSessionServer10Connections() throws Exception {
+		ISCServer scSrv = new SCServer("localhost", 9000);
+		// connect to SC as server
+		scSrv.setMaxSessions(10);
+		scSrv.setKeepAliveInterval(0);
+		scSrv.setRunningPortNr(7000);
+		scSrv.setImmediateConnect(true);
+		scSrv.startServer("localhost");
+		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSrv.registerService("simulation", srvCallback);
+	}	
+
 	private static class SessionServerCallback implements ISCSessionServerCallback {
 
+		private static int count = 100;
+		
 		@Override
 		public void abortSession(ISCMessage message) {
 		}
@@ -157,6 +185,8 @@ public class SetupTestCases {
 					}
 				}
 			}
+			message.setData(count+"");
+			count++;
 			return message;
 		}
 

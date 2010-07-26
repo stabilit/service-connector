@@ -66,6 +66,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
+		reply.setBody(scReply.getData());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;

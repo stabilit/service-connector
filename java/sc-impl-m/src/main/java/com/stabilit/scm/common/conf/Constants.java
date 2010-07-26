@@ -40,22 +40,22 @@ public final class Constants {
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 
 	/**
-	 * IDLE_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting is
+	 * OPERATION_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting is
 	 * only allowed one time. Needed on lowest level of communication. Used to detect operation timeout, can be ignored
 	 * if no request is outstanding. If a request is outstanding the connection is busy and also blocked. Hand timeout
-	 * at least up to requester callback to give connection free. IDLE_TIMEOUT_MILLIS should be lower than
+	 * at least up to requester callback to give connection free. OPERATION_TIMEOUT_MILLIS should be lower than
 	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS so that most of operation timeout can be detected on lower level.<br>
 	 **/
-	private static int IDLE_TIMEOUT_MILLIS = Constants.IDLE_TIMEOUT_MILLIS_DEFAULT;
+	private static int OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT;
 	/**
 	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect operation timeout on service level. Actually it should
 	 * never happen. Operation timeout should be detected in lower level by idle timeout. Therefore a difference is
 	 * summed up.
 	 **/
-	private static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = Constants.IDLE_TIMEOUT_MILLIS
+	private static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS
 			+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
-	/** IDLE_TIMEOUT_MILLIS_DEFAULT: Default value for IDLE_TIMEOUT_MILLIS **/
-	private static final int IDLE_TIMEOUT_MILLIS_DEFAULT = 60000;
+	/** OPERATION_TIMEOUT_MILLIS_DEFAULT: Default value for OPERATION_TIMEOUT_MILLIS **/
+	private static final int OPERATION_TIMEOUT_MILLIS_DEFAULT = 60000;
 	/** OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and IDLE_TIMEOUT_MILLIS. */
 	private static final int OPERATION_TIMEOUT_DIFFERENCE = 1000;
 	/**
@@ -154,18 +154,19 @@ public final class Constants {
 		return Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS;
 	}
 
-	public static void setIdleTimeoutMillis(int idleTimeoutMillis) {
-		if (Constants.IDLE_TIMEOUT_MILLIS != Constants.IDLE_TIMEOUT_MILLIS_DEFAULT) {
-			// setting IDLE_TIMEOUT_MILLIS only allowed one time
-			LoggerPoint.getInstance().fireWarn(Constants.class, "setIdleTimeoutMillis called two times - not allowed.");
+	public static void setOperationTimeoutMillis(int operationTimeoutMillis) {
+		if (Constants.OPERATION_TIMEOUT_MILLIS != Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT) {
+			// setting OPERATION_TIMEOUT_MILLIS only allowed one time
+			LoggerPoint.getInstance().fireWarn(Constants.class, "setOperationTimeoutMillis called two times - not allowed.");
 			return;
 		}
-		Constants.IDLE_TIMEOUT_MILLIS = idleTimeoutMillis;
-		// IDLE_TIMEOUT_MILLIS needs to be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS
-		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = idleTimeoutMillis + Constants.OPERATION_TIMEOUT_DIFFERENCE;
+		Constants.OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis;
+		// OPERATION_TIMEOUT_MILLIS needs to be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS
+		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis + Constants.OPERATION_TIMEOUT_DIFFERENCE;
 	}
 
-	public static int getIdleTimeoutMillis() {
-		return Constants.IDLE_TIMEOUT_MILLIS;
+	public static int getOperationTimeoutMillis() {
+		return Constants.OPERATION_TIMEOUT_MILLIS;
+		
 	}
 }

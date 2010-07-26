@@ -75,20 +75,13 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		Throwable th = (Throwable) e.getCause();
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			if (th instanceof OperationTimeoutException) {
-				// read timed out in a pending request - operation timeout occurred
-				th = new CommunicationException("operation timeout. operation - could not be completed.");
-				LoggerPoint.getInstance().fireWarn(this, "idle timeout occurred on netty level.");
-			}
 			this.scmpCallback.callback(th);
 			return;
 		}
 		if (th instanceof OperationTimeoutException) {
-			// read timed out no pending request outstanding - ignore exception
+			// idle timed out no pending request outstanding - ignore exception
 			return;
 		}
-		// message not expected - race condition
-		LoggerPoint.getInstance().fireWarn(this, "exception caught but no reply was outstanding - race condition.");
 		ExceptionPoint.getInstance().fireException(this, th);
 	}
 

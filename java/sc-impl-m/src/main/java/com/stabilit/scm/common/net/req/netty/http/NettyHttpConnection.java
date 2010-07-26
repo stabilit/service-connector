@@ -34,7 +34,6 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.util.ExternalResourceReleasable;
 
 import com.stabilit.scm.common.conf.Constants;

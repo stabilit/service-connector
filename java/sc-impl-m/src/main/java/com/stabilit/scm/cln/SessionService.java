@@ -27,7 +27,6 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;

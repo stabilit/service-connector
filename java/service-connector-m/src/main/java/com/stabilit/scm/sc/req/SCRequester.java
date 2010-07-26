@@ -69,8 +69,8 @@ public class SCRequester implements IRequester {
 
 		@Override
 		public void callback(Throwable th) {
-			this.scmpCallback.callback(th);
 			this.freeConnection();
+			this.scmpCallback.callback(th);
 		}
 
 		private void freeConnection() {

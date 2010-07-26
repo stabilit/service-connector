@@ -28,7 +28,7 @@ public class ConnectionContext implements IConnectionContext {
 	@Override
 	public int getOperationTimeoutMillis() {
 		// operation timeout & observation is used to detect operation timeout
-		return Constants.getIdleTimeoutMillis();
+		return Constants.getOperationTimeoutMillis();
 	}
 
 	@Override

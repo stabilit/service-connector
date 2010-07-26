@@ -56,7 +56,9 @@ public enum SCMPError {
 	/** The FRAME_DECODER. */
 	FRAME_DECODER("506", "Not possible to decode frame, scmp header line must be wrong!"),
 	/** The SESSION_REJECTED. */
-	SESSION_REJECTED("507", "Session from server rejected.");
+	SESSION_REJECTED("507", "Session from server rejected."),
+	/** The OPERATION_TIMEOUT. */
+	OPERATION_TIMEOUT("508", "Operation timeout - operation could not be completed.");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

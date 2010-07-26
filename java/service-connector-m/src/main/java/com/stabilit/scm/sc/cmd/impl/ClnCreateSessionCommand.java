@@ -22,16 +22,16 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SessionRegistry;
@@ -61,7 +61,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response) throws Throwable {
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
@@ -80,15 +80,25 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// error codes and error text from server in reject case are inside the exception
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
-		SCMPMessage reply = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 
-		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+		SCMPMessage reply = callback.getMessageSync();
+//		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 
-		// TODO verify
-		if (Boolean.TRUE.equals(rejectSessionFlag)) {
-			// server rejected session - throw exception with server errors
-			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
-			throw e;
+//		// TODO verify
+//		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+//			// server rejected session - throw exception with server errors
+//			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+//			throw e;
+//		}
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			Throwable th = fault.getCause();
+			if (th instanceof OperationTimeoutException) {
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				scmpEx.setMessageType(getKey());
+				throw scmpEx;
+			}
+			throw th;
 		}
 
 		this.validateServer(server);
@@ -105,6 +115,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		scmpReply.setMessageType(getKey().getValue());
 		scmpReply.setSessionId(session.getId());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		scmpReply.setBody(reply.getBody());
 		response.setSCMP(scmpReply);
 	}
 
