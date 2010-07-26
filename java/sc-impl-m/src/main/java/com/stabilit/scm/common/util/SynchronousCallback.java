@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -47,12 +42,22 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** The synchronous, marks if somebody waits for the message. */
 	protected volatile boolean synchronous;
 
+	/**
+	 * Instantiates a new synchronous callback.
+	 */
 	public SynchronousCallback() {
 		this.synchronous = false;
 		this.answer = new ArrayBlockingQueue<SCMPMessage>(1);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Callback.
+	 * 
+	 * @param scmpReply
+	 *            the scmp reply
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void callback(SCMPMessage scmpReply) throws Exception {
 		if (this.synchronous == false) {
@@ -60,7 +65,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			// arrive late after operation timeout already run out, can be ignored
 			return;
 		}
-		if(scmpReply.getMessageType().equals("CCS")) {
+		if (scmpReply.getMessageType().equals("CCS")) {
 			System.out.println("shit");
 		}
 		if (this.answer.offer(scmpReply)) {
@@ -72,7 +77,12 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		this.answer.offer(scmpReply);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Callback.
+	 * 
+	 * @param th
+	 *            the th {@inheritDoc}
+	 */
 	@Override
 	public void callback(Throwable th) {
 		if (this.synchronous == false) {
@@ -90,13 +100,23 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		this.answer.offer(fault);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message sync.
+	 * 
+	 * @return the message sync {@inheritDoc}
+	 */
 	@Override
 	public SCMPMessage getMessageSync() {
 		return this.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message sync.
+	 * 
+	 * @param timeoutInMillis
+	 *            the timeout in millis
+	 * @return the message sync {@inheritDoc}
+	 */
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) {
 		if (timeoutInMillis == 0) {
@@ -122,6 +142,11 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		return reply;
 	}
 
+	/**
+	 * Gets the message sync ever waiting.
+	 * 
+	 * @return the message sync ever waiting
+	 */
 	private SCMPMessage getMessageSyncEverWaiting() {
 		// set synchronous mode
 		this.synchronous = true;
