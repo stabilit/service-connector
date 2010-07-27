@@ -30,6 +30,7 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.util.SynchronousCallback;
@@ -59,6 +60,7 @@ public class SCServer implements ISCServer {
 	private int runningPort;
 	private SrvServiceRegistry srvServiceRegistry;
 	protected SrvServerCallback callback;
+	private SCMPMessageId msgId;
 
 	public SCServer(String host, int port) {
 		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
@@ -89,7 +91,8 @@ public class SCServer implements ISCServer {
 		// register service only needs one connection
 		this.connectionPool.setMaxConnections(1);
 		this.context = new SCServerContext();
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), null));
+		this.msgId = new SCMPMessageId();
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 		this.callback = new SrvServerCallback();
 	}
