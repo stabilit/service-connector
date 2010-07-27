@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.req;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -226,12 +227,26 @@ public class Requester implements IRequester {
 			this.compositeReceiver = null;
 			this.compositSender = null;
 			this.scmpCallback.callback(th);
-			this.freeConnection();
+			if (th instanceof OperationTimeoutException) {
+				// operation timed out - delete this specific connection, prevents race conditions
+				this.disconnectConnection();
+			} else {
+				// another exception occurred - just free the connection
+				this.freeConnection();
+			}
 		}
 
 		private void freeConnection() {
 			try {
 				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+
+		private void disconnectConnection() {
+			try {
+				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

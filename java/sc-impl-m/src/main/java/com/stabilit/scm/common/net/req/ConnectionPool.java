@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
 import java.util.ArrayList;
@@ -102,11 +118,12 @@ public class ConnectionPool implements IConnectionPool {
 	public void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
 			LoggerPoint.getInstance().fireWarn(this, "connection does not exist - not possible to free");
+			return;
 		}
 		if (closeOnFree && this.freeConnections.size() > 0) {
 			// do not add the connection to free pool array - just close it immediately!
 			// at least keep one connection alive
-			this.destroyConnection(connection);
+			this.disconnectConnection(connection);
 			return;
 		}
 		connection.resetNrOfIdles();
@@ -132,14 +149,41 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/**
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may
+	 * affect others because of shared stuff (timer) etc.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
 	private void destroyConnection(IConnection connection) {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			LoggerPoint.getInstance().fireException(this,
-					"Exception when connection pool destroys - connection destroy failed");
+			LoggerPoint.getInstance().fireException(this, "connection destroy failed.");
 		} finally {
 			connection.destroy();
+		}
+	}
+
+	private void disconnectConnection(IConnection connection) {
+		try {
+			connection.disconnect();
+		} catch (Exception e) {
+			LoggerPoint.getInstance().fireException(this, "connection disconnect failed.");
+		}
+	}
+
+	@Override
+	public void forceClosingConnection(IConnection connection) {
+		// assure connection is nowhere registered
+		this.usedConnections.remove(connection);
+		this.freeConnections.remove(connection);
+
+		try {
+			connection.disconnect();
+		} catch (Exception e) {
+			LoggerPoint.getInstance().fireException(this, "disconnecting connection failed.");
 		}
 	}
 
@@ -205,8 +249,8 @@ public class ConnectionPool implements IConnectionPool {
 		if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
 			// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
 			if (this.freeConnections.size() > 1) {
-				// there is still more than one connection free - destroy this one
-				this.destroyConnection(connection);
+				// there is still more than one connection free - disconnect this one
+				this.disconnectConnection(connection);
 				return;
 			}
 		}

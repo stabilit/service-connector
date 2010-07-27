@@ -57,7 +57,7 @@ public final class Constants {
 	/** OPERATION_TIMEOUT_MILLIS_DEFAULT: Default value for OPERATION_TIMEOUT_MILLIS **/
 	private static final int OPERATION_TIMEOUT_MILLIS_DEFAULT = 60000;
 	/** OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and IDLE_TIMEOUT_MILLIS. */
-	private static final int OPERATION_TIMEOUT_DIFFERENCE = 1000;
+	private static final int OPERATION_TIMEOUT_DIFFERENCE = 2000;
 	/**
 	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.

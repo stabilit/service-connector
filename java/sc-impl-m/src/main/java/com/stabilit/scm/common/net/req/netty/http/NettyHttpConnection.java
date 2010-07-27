@@ -161,7 +161,6 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
 		}
 		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
-		this.bootstrap.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
