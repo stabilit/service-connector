@@ -17,20 +17,22 @@
 package com.stabilit.scm.common.net.res;
 
 import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
+import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class SCMPCompositeReceiverRegistry.
+ * The Class SCMPSessionCompositeRegistry.
  */
-public final class SCMPCompositeReceiverRegistry extends Registry {
+public final class SCMPSessionCompositeRegistry extends Registry {
 
 	/** The instance. */
-	private final static SCMPCompositeReceiverRegistry instance = new SCMPCompositeReceiverRegistry();
+	private final static SCMPSessionCompositeRegistry instance = new SCMPSessionCompositeRegistry();
 
-	private SCMPCompositeReceiverRegistry() {
+	private SCMPSessionCompositeRegistry() {
 	}
 
-	public static SCMPCompositeReceiverRegistry getCurrentInstance() {
+	public static SCMPSessionCompositeRegistry getCurrentInstance() {
 		return instance;
 	}
 
@@ -44,5 +46,38 @@ public final class SCMPCompositeReceiverRegistry extends Registry {
 
 	public void removeSCMPCompositeReceiver(Object key) {
 		super.remove(key);
+	}
+
+	private class SCMPSessionCompositeItem {
+		private SCMPCompositeReceiver receiver;
+		private SCMPCompositeSender sender;
+		private SCMPMessageId messageId;
+
+		public SCMPSessionCompositeItem(SCMPCompositeSender sender) {
+			this(null, sender);
+		}
+
+		public SCMPSessionCompositeItem(SCMPCompositeReceiver receiver) {
+			this(receiver, null);
+		}
+
+		public SCMPSessionCompositeItem(SCMPCompositeReceiver receiver, SCMPCompositeSender sender) {
+			super();
+			this.receiver = receiver;
+			this.sender = sender;
+			this.messageId = new SCMPMessageId();
+		}
+
+		public SCMPCompositeReceiver getReceiver() {
+			return receiver;
+		}
+
+		public SCMPCompositeSender getSender() {
+			return sender;
+		}
+
+		public SCMPMessageId getMessageId() {
+			return messageId;
+		}
 	}
 }

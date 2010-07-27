@@ -19,11 +19,15 @@ package com.stabilit.scm.common.net.req;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.net.req.IConnection;
+import com.stabilit.scm.common.net.req.IConnectionContext;
+import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMessageID;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
@@ -37,8 +41,6 @@ public class Requester implements IRequester {
 
 	/** The context. */
 	protected IRequesterContext reqContext;
-	/** The msg id for the next request. */
-	private SCMPMessageID msgID;
 
 	/**
 	 * Instantiates a new requester.
@@ -48,7 +50,6 @@ public class Requester implements IRequester {
 	 */
 	public Requester(IRequesterContext outerContext) {
 		this.reqContext = outerContext;
-		msgID = new SCMPMessageID();
 	}
 
 	@Override
@@ -56,41 +57,31 @@ public class Requester implements IRequester {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
+		SCMPMessageId msgId = this.reqContext.getSCMPMessageId();
 
 		ISCMPCallback requesterCallback = null;
 		// differ if message is large or not, sending procedure is different
 		if (message.isLargeMessage()) {
 			// SCMPCompositeSender handles splitting, works like an iterator
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender);
+			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
+					msgId);
 			// extract first part message & send
 			SCMPMessage part = compositeSender.getFirst();
-			msgID.incrementPartSequenceNr();
-			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
+			// handling messageId
+			msgId.incrementPartSequenceNr();
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
 			connection.send(part, requesterCallback);
 		} else {
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext);
-			this.sendSmallSCMP(message, connection, requesterCallback);
+			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
+			if (message.isGroup()) {
+				// increment messageId in case of group call
+				msgId.incrementPartSequenceNr();
+			}
+			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+			// process send and receive
+			connection.send(message, requesterCallback);
 		}
-	}
-
-	/**
-	 * request is small but response could be small or large.
-	 * 
-	 * @param message
-	 *            the scmp
-	 * @return the SCMP
-	 * @throws Exception
-	 *             the exception
-	 */
-	private void sendSmallSCMP(SCMPMessage message, IConnection connection, ISCMPCallback callback) throws Exception {
-		if (message.isGroup()) {
-			msgID.incrementPartSequenceNr();
-		}
-		message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getNextMessageID());
-		// process send and receive
-		connection.send(message, callback);
-		return;
 	}
 
 	public IContext getContext() {
@@ -113,17 +104,20 @@ public class Requester implements IRequester {
 		private SCMPMessage requestMsg;
 		private SCMPCompositeReceiver compositeReceiver;
 		private SCMPCompositeSender compositSender;
+		private SCMPMessageId msgId;
 
-		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx) {
-			this(reqMsg, scmpCallback, conCtx, null);
+		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
+				SCMPMessageId msgId) {
+			this(reqMsg, scmpCallback, conCtx, null, msgId);
 		}
 
 		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
-				SCMPCompositeSender compositeSender) {
+				SCMPCompositeSender compositeSender, SCMPMessageId msgId) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
 			this.compositSender = compositeSender;
+			this.msgId = msgId;
 		}
 
 		@Override
@@ -143,6 +137,7 @@ public class Requester implements IRequester {
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
 					// response is a part - response is large, continue pulling
 					// delete compositeSender - large request done!
+					this.msgId.incrementMsgSequenceNr();
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
@@ -174,11 +169,11 @@ public class Requester implements IRequester {
 			}
 
 			if (scmpReply.isPart()) {
-				// handling large response
+				// handling large response & messageId
+				this.msgId.incrementMsgSequenceNr();
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}
-			msgID.incrementMsgSequenceNr();
 			this.scmpCallback.callback(scmpReply);
 			// free connection after callback returns - prevents using the same connection right away, race conditions
 			this.freeConnection();
@@ -189,11 +184,13 @@ public class Requester implements IRequester {
 			// SCMPComposite handles parts of large requests, putting all together
 			this.compositeReceiver = new SCMPCompositeReceiver(requestMsg, scmpReply);
 			SCMPMessage message = compositeReceiver.getPart();
+			// increment part number in case of large response
+			this.msgId.incrementPartSequenceNr();
+			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
 			this.connectionCtx.getConnection().send(message, this); // pull & exit
 		}
 
 		private boolean handlingLargeRequest(SCMPMessage scmpReply) throws Exception {
-			// handling large request
 			SCMPMessage part = null;
 
 			part = compositSender.getCurrentPart();
@@ -217,6 +214,14 @@ public class Requester implements IRequester {
 				return true;
 			}
 			part = compositSender.getNext();
+			if (compositSender.hasNext() == false) {
+				// last part to send - will be a REQ message, increment message number
+				this.msgId.incrementMsgSequenceNr();
+			} else {
+				// there are more parts to complete request - just increment part number
+				this.msgId.incrementPartSequenceNr();
+			}
+			part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
 			this.connectionCtx.getConnection().send(part, this);
 			return false;
 		}

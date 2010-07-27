@@ -89,7 +89,7 @@ public class SCServer implements ISCServer {
 		// register service only needs one connection
 		this.connectionPool.setMaxConnections(1);
 		this.context = new SCServerContext();
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), null));
 		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 		this.callback = new SrvServerCallback();
 	}

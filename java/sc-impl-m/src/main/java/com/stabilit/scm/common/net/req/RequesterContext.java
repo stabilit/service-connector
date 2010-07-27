@@ -21,19 +21,28 @@
  */
 package com.stabilit.scm.common.net.req;
 
+import com.stabilit.scm.common.scmp.SCMPMessageId;
+
 /**
  * @author JTraber
  */
 public class RequesterContext implements IRequesterContext {
 
 	private IConnectionPool connectionPool;
+	private SCMPMessageId msgId;
 
-	public RequesterContext(IConnectionPool connectionPool) {
+	public RequesterContext(IConnectionPool connectionPool, SCMPMessageId msgId) {
 		this.connectionPool = connectionPool;
+		this.msgId = msgId;
 	}
 
 	@Override
 	public IConnectionPool getConnectionPool() {
 		return this.connectionPool;
+	}
+
+	@Override
+	public SCMPMessageId getSCMPMessageId() {
+		return this.msgId;
 	}
 }
