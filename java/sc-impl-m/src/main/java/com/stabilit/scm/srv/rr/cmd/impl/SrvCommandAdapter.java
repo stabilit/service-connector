@@ -21,6 +21,7 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.net.res.SCMPSessionCompositeRegistry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -35,7 +36,12 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The command validator. */
 	protected ICommandValidator commandValidator;
-
+	protected SCMPSessionCompositeRegistry sessionCompositeRegistry;
+	
+	public SrvCommandAdapter() {
+		this.sessionCompositeRegistry = SCMPSessionCompositeRegistry.getCurrentInstance();
+	}
+	
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return this.commandValidator;

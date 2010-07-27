@@ -63,7 +63,6 @@ public class SrvDataSyncTestCase extends SuperSessionTestCase {
 			String sessionId = clnDataCall.getRequest().getSessionId();
 			Assert.assertEquals(serviceName, scmpReply.getServiceName());
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
-			Assert.assertEquals((i + 3) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 	}
 }

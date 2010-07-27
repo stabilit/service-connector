@@ -20,6 +20,8 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 
+import com.stabilit.scm.common.net.res.SCMPBasedFrameDecoder;
+
 
 /**
  * A factory for creating NettyTcpResponderPipelineFactory objects.

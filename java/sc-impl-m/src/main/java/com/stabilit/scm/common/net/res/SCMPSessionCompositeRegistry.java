@@ -36,16 +36,68 @@ public final class SCMPSessionCompositeRegistry extends Registry {
 		return instance;
 	}
 
+	public void addSession(Object key) {
+		this.put(key, new SCMPSessionCompositeItem());
+	}
+
+	public void removeSession(Object key) {
+		super.remove(key);
+	}
+
 	public void addSCMPCompositeReceiver(Object key, SCMPCompositeReceiver compositeReceiver) {
-		this.put(key, compositeReceiver);
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) this.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setCompositeReceiver(compositeReceiver);
 	}
 
 	public SCMPCompositeReceiver getSCMPCompositeReceiver(Object key) {
-		return (SCMPCompositeReceiver) super.get(key);
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) super.get(key);
+		if (item == null) {
+			return null;
+		}
+		return item.getCompositeReceiver();
 	}
 
 	public void removeSCMPCompositeReceiver(Object key) {
-		super.remove(key);
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) super.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setCompositeReceiver(null);
+	}
+
+	public void addSCMPCompositeSender(Object key, SCMPCompositeSender compositeSender) {
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) this.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setCompositeSender(compositeSender);
+	}
+
+	public SCMPCompositeSender getSCMPCompositeSender(Object key) {
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) super.get(key);
+		if (item == null) {
+			return null;
+		}
+		return item.getCompositeSender();
+	}
+
+	public void removeSCMPCompositeSender(Object key) {
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) super.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setCompositeSender(null);
+	}
+
+	public SCMPMessageId getSCMPMessageId(Object key) {
+		SCMPSessionCompositeItem item = (SCMPSessionCompositeItem) super.get(key);
+		if (item == null) {
+			return null;
+		}
+		return item.getMessageId();
 	}
 
 	private class SCMPSessionCompositeItem {
@@ -53,12 +105,8 @@ public final class SCMPSessionCompositeRegistry extends Registry {
 		private SCMPCompositeSender sender;
 		private SCMPMessageId messageId;
 
-		public SCMPSessionCompositeItem(SCMPCompositeSender sender) {
-			this(null, sender);
-		}
-
-		public SCMPSessionCompositeItem(SCMPCompositeReceiver receiver) {
-			this(receiver, null);
+		public SCMPSessionCompositeItem() {
+			this(null, null);
 		}
 
 		public SCMPSessionCompositeItem(SCMPCompositeReceiver receiver, SCMPCompositeSender sender) {
@@ -68,16 +116,24 @@ public final class SCMPSessionCompositeRegistry extends Registry {
 			this.messageId = new SCMPMessageId();
 		}
 
-		public SCMPCompositeReceiver getReceiver() {
+		public SCMPCompositeReceiver getCompositeReceiver() {
 			return receiver;
 		}
 
-		public SCMPCompositeSender getSender() {
+		public SCMPCompositeSender getCompositeSender() {
 			return sender;
 		}
 
 		public SCMPMessageId getMessageId() {
 			return messageId;
+		}
+
+		public void setCompositeReceiver(SCMPCompositeReceiver receiver) {
+			this.receiver = receiver;
+		}
+
+		public void setCompositeSender(SCMPCompositeSender sender) {
+			this.sender = sender;
 		}
 	}
 }

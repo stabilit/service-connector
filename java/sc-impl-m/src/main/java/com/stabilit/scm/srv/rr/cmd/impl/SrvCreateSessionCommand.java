@@ -52,12 +52,13 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		ISCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(scmpMessage.getSessionId());
+		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
 		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
@@ -75,6 +76,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}
 		response.setSCMP(reply);
+		// create session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.addSession(sessionId);
 	}
 
 	public class SrvCreateSessionCommandValidator implements ICommandValidator {

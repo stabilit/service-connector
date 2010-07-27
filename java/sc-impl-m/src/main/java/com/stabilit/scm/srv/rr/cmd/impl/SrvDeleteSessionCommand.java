@@ -48,21 +48,24 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		ISCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(scmpMessage.getSessionId());
+		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		((ISCSessionServerCallback)srvService.getCallback()).deleteSession(scMessage);
+		((ISCSessionServerCallback) srvService.getCallback()).deleteSession(scMessage);
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
 		response.setSCMP(reply);
+		// delete session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	public class SrvDeleteSessionCommandValidator implements ICommandValidator {
