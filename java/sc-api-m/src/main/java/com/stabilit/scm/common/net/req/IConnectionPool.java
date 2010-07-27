@@ -30,6 +30,8 @@ public interface IConnectionPool {
 
 	public abstract void freeConnection(IConnection connection) throws Exception;
 
+	public abstract void forceClosingConnection(IConnection connection) throws Exception;
+
 	public abstract void setMaxConnections(int maxConnections);
 
 	public abstract void setMinConnections(int minConnections);
