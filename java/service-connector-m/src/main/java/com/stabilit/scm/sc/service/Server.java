@@ -89,7 +89,7 @@ public class Server {
 		this.host = socketAddress.getHostName();
 		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval, numberOfThreads);
 		this.cp.setMaxConnections(maxSessions);
-		this.requester = new SCRequester(new RequesterContext(this.cp));
+		this.requester = new SCRequester(new RequesterContext(this.cp, null));
 	}
 
 	/**
