@@ -20,20 +20,14 @@ import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
-import com.stabilit.scm.common.net.res.nio.http.NioHttpEndpoint;
-import com.stabilit.scm.common.net.res.nio.tcp.NioTcpEndpoint;
 import com.stabilit.scm.common.res.IEndpoint;
 
 /**
- * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints
- * are shown in key string constants below.
+ * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown
+ * in key string constants below.
  */
 public class EndpointFactory extends Factory {
 
-	/** The Constant NIO_HTTP. */
-	private static final String NIO_HTTP = "nio.http";
-	/** The Constant NIO_TCP. */
-	private static final String NIO_TCP = "nio.tcp";
 	/** The Constant NETTY_TCP. */
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
@@ -50,12 +44,6 @@ public class EndpointFactory extends Factory {
 		// jboss netty tcp endpoint
 		IEndpoint nettyTCPEndpoint = new NettyTcpEnpoint();
 		add(NETTY_TCP, nettyTCPEndpoint);
-		// nio tcp endpoint
-		IEndpoint nioTcpEndpoint = new NioTcpEndpoint();
-		add(NIO_TCP, nioTcpEndpoint);
-		// nio http endpoint
-		IEndpoint nioHttpEndpoint = new NioHttpEndpoint();
-		add(NIO_HTTP, nioHttpEndpoint);
 	}
 
 	/** {@inheritDoc} */
