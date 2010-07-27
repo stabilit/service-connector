@@ -133,9 +133,10 @@ public class SCClient implements ISCClient {
 	@Override
 	public void attach() throws Exception {
 		if (this.callback != null) {
-			throw new SCServiceException("already attached before - detach first, attaching in sequence is not allowed.");
+			throw new SCServiceException(
+					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
-		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool()));
+		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		attachCall.invoke(this.callback);

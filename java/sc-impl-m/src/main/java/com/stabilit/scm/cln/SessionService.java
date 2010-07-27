@@ -32,6 +32,7 @@ import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
@@ -45,7 +46,7 @@ public class SessionService extends Service implements ISessionService {
 
 	public SessionService(String serviceName, ISCContext context) {
 		super(serviceName, context);
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool()));
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 	}
 
@@ -54,6 +55,7 @@ public class SessionService extends Service implements ISessionService {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
+		this.msgId = new SCMPMessageId();
 		this.callback = new ServiceCallback();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
@@ -70,11 +72,13 @@ public class SessionService extends Service implements ISessionService {
 		if (this.callback == null) {
 			throw new SCServiceException("no session to delete - create session first.");
 		}
+		this.msgId.incrementMsgSequenceNr();
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		deleteSessionCall.invoke(this.callback);
 		this.callback.getMessageSync();
 		this.callback = null;
+		this.msgId = null;
 	}
 
 	@Override
@@ -85,6 +89,7 @@ public class SessionService extends Service implements ISessionService {
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		this.pendingRequest = true;
+		this.msgId.incrementMsgSequenceNr();
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
@@ -112,6 +117,7 @@ public class SessionService extends Service implements ISessionService {
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		this.pendingRequest = true;
+		this.msgId.incrementMsgSequenceNr();
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
