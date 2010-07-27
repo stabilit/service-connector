@@ -17,76 +17,75 @@
 package com.stabilit.scm.common.scmp;
 
 /**
- * The Class SCMPMessageID. Responsible to provide correct message id for a specific request/response. Message id
- * is unique for every message. Format: messageSequenceNr / partSequenceNr.
+ * The Class SCMPMessageId. Responsible to provide correct message id for a specific request/response. Message id is
+ * unique for every message. Format: messageSequenceNr / partSequenceNr.
  * 
  * @author JTraber
  */
-public class SCMPMessageID {
+public class SCMPMessageId {
 
-	/** The msg sequence nr. */
+	/** The message sequence number. */
 	private int msgSequenceNr;
-	/** The part sequence nr. */
+	/** The part sequence number. */
 	private int partSequenceNr;
-	
 	/** The string builder. */
-	private StringBuilder stringBuilder;
+	private StringBuilder sb;
 
 	/**
 	 * Instantiates a new scmp message id.
 	 */
-	public SCMPMessageID() {
+	public SCMPMessageId() {
 		this.msgSequenceNr = 1;
 		this.partSequenceNr = 0;
-		this.stringBuilder = null;
+		this.sb = null;
 	}
 
 	/**
-	 * Gets the next message id.
+	 * Gets the current message id.
 	 * 
-	 * @return the next message id
+	 * @return the current message id
 	 */
-	public String getNextMessageID() {
+	public String getCurrentMessageID() {
 		if (partSequenceNr == 0) {
-			//no part SCMP has been sent, partSequenceNr irrelevant
+			// no part SCMP has been sent, partSequenceNr irrelevant
 			return String.valueOf(msgSequenceNr);
 		}
-		stringBuilder = new StringBuilder();
-		stringBuilder.append(msgSequenceNr);
-		stringBuilder.append("/");
-		stringBuilder.append(partSequenceNr);
-		return stringBuilder.toString();
+		sb = new StringBuilder();
+		sb.append(msgSequenceNr);
+		sb.append("/");
+		sb.append(partSequenceNr);
+		return sb.toString();
 	}
 
 	/**
-	 * Increment part sequence nr.
+	 * Increment part sequence number.
 	 */
 	public void incrementPartSequenceNr() {
 		partSequenceNr++;
 	}
 
 	/**
-	 * Increment msg sequence nr.
+	 * Increment message sequence number.
 	 */
 	public void incrementMsgSequenceNr() {
-		//partSequenceNr reset when msgSequenceNr gets incremented
+		// partSequenceNr reset when msgSequenceNr gets incremented
 		partSequenceNr = 0;
 		msgSequenceNr++;
 	}
 
 	/**
-	 * Gets the message sequence nr.
+	 * Gets the message sequence number.
 	 * 
-	 * @return the message sequence nr
+	 * @return the message sequence number
 	 */
 	public Integer getMessageSequenceNr() {
 		return msgSequenceNr;
 	}
 
 	/**
-	 * Gets the part sequence nr.
+	 * Gets the part sequence number.
 	 * 
-	 * @return the part sequence nr
+	 * @return the part sequence number
 	 */
 	public Integer getPartSequenceNr() {
 		return partSequenceNr;
