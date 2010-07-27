@@ -53,7 +53,6 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.CLN_DELETE_SESSION.getValue(), result.getMessageType());
 		Assert.assertNotNull(result.getServiceName());
-		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
@@ -65,7 +64,6 @@ public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		String scEntry = (String) inspectMap.get("sessionRegistry");
 		Assert.assertEquals("", scEntry);
-		Assert.assertEquals("3", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		super.clnCreateSessionBefore();
 	}
 }

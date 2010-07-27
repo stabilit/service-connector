@@ -24,6 +24,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
@@ -58,11 +59,15 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
 		// inform callback with scMessages
 		((ISCSessionServerCallback) srvService.getCallback()).deleteSession(scMessage);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry
 		this.sessionCompositeRegistry.removeSession(sessionId);

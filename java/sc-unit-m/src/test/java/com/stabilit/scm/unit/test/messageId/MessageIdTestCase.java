@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.test.msgid;
+package com.stabilit.scm.unit.test.messageId;
 
 import junit.framework.Assert;
 
@@ -39,18 +39,20 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 	public void messageIdTest() throws Exception {
 		SCMPClnDataCall clnDataCall = null;
 		// normal communication
-		for (int i = 0; i < 20; i++) {
+		int index = 0;
+		for (index = 0; index < 20; index++) {
+			this.msgId.incrementMsgSequenceNr();
 			clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL
 					.newInstance(req, "simulation", this.sessionId);
 
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
-
+			clnDataCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, this.msgId.getCurrentMessageID());
 			clnDataCall.invoke(this.sessionCallback);
 			SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 			String sessionId = clnDataCall.getRequest().getSessionId();
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
-			Assert.assertEquals(i + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			Assert.assertEquals((index + 2) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		}
 		// small request - large response communication
 		StringBuilder reqData = new StringBuilder();
@@ -58,12 +60,14 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 10000; i++) {
 			reqData.append(i);
 		}
+		this.msgId.incrementMsgSequenceNr();
 		clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation", this.sessionId);
+		clnDataCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, this.msgId.getCurrentMessageID());
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(reqData.toString());
 		clnDataCall.invoke(this.sessionCallback);
 		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
-		Assert.assertEquals("3/2", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals((index + 3) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		// large request - large response communication
 		reqData = new StringBuilder();
@@ -74,11 +78,12 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 			}
 			reqData.append(i);
 		}
+		this.msgId.incrementMsgSequenceNr();
 		clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation", this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(reqData.toString());
 		clnDataCall.invoke(this.sessionCallback);
 		scmpReply = this.sessionCallback.getMessageSync();
-		Assert.assertEquals("3/2", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		Assert.assertEquals((index + 6) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}
 }

@@ -62,17 +62,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
 @ChannelPipelineCoverage("one")
 public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler implements IResponderCallback {
 
-	/** The msg id. */
-	private SCMPMessageId msgID;
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
-
-	/**
-	 * Instantiates a new NettyHttpResponderRequestHandler.
-	 */
-	public NettyHttpResponderRequestHandler() {
-		msgID = new SCMPMessageId();
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -85,6 +76,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
 		SCMPMessage scmpReq = request.getMessage();
 		String sessionId = scmpReq.getSessionId();
+		SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
@@ -122,16 +114,20 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 						// there are still parts to send to complete request
 						SCMPMessage nextSCMP = compositeSender.getNext();
 						response.setSCMP(nextSCMP);
-						msgID.incrementPartSequenceNr();
-						nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-						response.write();
-						if (compositeSender.hasNext() == false) {
+
+						if (compositeSender.hasNext()) {
+							// there are more parts to send - just increment part number
+							messageId.incrementPartSequenceNr();
 							compositeSender = null;
+						} else {
+							// last part to send - will be a RES message increment message number
+							messageId.incrementMsgSequenceNr();
 						}
+						nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+						response.write();
 						return;
 					}
-					compositeSender = null;
-					msgID.incrementMsgSequenceNr();
+					NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPCompositeSender(sessionId);
 				}
 				// command needs buffered message - buffer message
 				SCMPCompositeReceiver compositeReceiver = this.getCompositeReceiver(request, response);
@@ -139,8 +135,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				if (compositeReceiver != null && compositeReceiver.isComplete() == false) {
 					// request is not complete yet
 					SCMPMessage message = response.getSCMP();
-					msgID.incrementPartSequenceNr();
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
+					messageId.incrementPartSequenceNr();
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 					response.write();
 					return;
 				}
@@ -179,20 +175,11 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
 			SCMPMessage firstSCMP = compositeSender.getFirst();
 			response.setSCMP(firstSCMP);
-			msgID.incrementMsgSequenceNr();
-			msgID.incrementPartSequenceNr();
-			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
+			// override messageId now - because parts need to be sent
+			messageId.incrementPartSequenceNr();
+			firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 			// adding compositeReceiver to the composite registry
 			NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
-		} else {
-			SCMPMessage message = response.getSCMP();
-			if (message.isPart() || scmpReq.isPart()) {
-				msgID.incrementPartSequenceNr();
-				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-			} else {
-				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-				msgID.incrementMsgSequenceNr();
-			}
 		}
 		response.write();
 	}
@@ -214,24 +201,17 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			SCMPMessage scmpRequest = request.getMessage();
 			String sessionId = scmpRequest.getSessionId();
 			if (response.isLarge()) {
+				SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry
+						.getSCMPMessageId(sessionId);
 				// response is large, create a large response for reply
 				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
 				SCMPMessage firstSCMP = compositeSender.getFirst();
 				response.setSCMP(firstSCMP);
-				msgID.incrementMsgSequenceNr();
-				msgID.incrementPartSequenceNr();
-				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
+				// override messageId now - because parts need to be sent
+				messageId.incrementPartSequenceNr();
+				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 				// adding compositeReceiver to the composite registry
 				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
-			} else {
-				SCMPMessage message = response.getSCMP();
-				if (message.isPart() || scmpRequest.isPart()) {
-					msgID.incrementPartSequenceNr();
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-				} else {
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-					msgID.incrementMsgSequenceNr();
-				}
 			}
 			response.write();
 		} catch (Throwable th) {
@@ -261,8 +241,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);
-		scmpFault.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID.getCurrentMessageID());
-		msgID.incrementMsgSequenceNr();
 		response.write();
 	}
 

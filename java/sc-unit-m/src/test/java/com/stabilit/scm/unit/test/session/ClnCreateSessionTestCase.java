@@ -67,7 +67,6 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
-		Assert.assertEquals("2", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 	}
@@ -102,7 +101,6 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 10|";
 		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
-		Assert.assertEquals("3", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, responseMessage.getServiceName(), responseMessage.getSessionId());

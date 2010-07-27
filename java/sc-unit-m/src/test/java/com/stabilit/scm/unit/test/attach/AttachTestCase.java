@@ -56,7 +56,6 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.ATTACH.getValue());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
-		Assert.assertEquals("1", result.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(callback);

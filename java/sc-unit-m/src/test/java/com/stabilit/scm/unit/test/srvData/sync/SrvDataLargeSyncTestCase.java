@@ -77,7 +77,6 @@ public class SrvDataLargeSyncTestCase extends SuperSessionTestCase {
 		String sessionId = clnDataCall.getRequest().getSessionId();
 		Assert.assertEquals(serviceName, scmpReply.getServiceName());
 		Assert.assertEquals(sessionId, scmpReply.getSessionId());
-		Assert.assertEquals("3/2", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}
 
 	@Test
@@ -94,7 +93,6 @@ public class SrvDataLargeSyncTestCase extends SuperSessionTestCase {
 		clnDataCall.invoke(this.sessionCallback);
 		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		Assert.assertEquals("3/1", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(expectedBody.length(), scmpReply.getBodyLength());
 		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
@@ -118,7 +116,6 @@ public class SrvDataLargeSyncTestCase extends SuperSessionTestCase {
 		clnDataCall.invoke(this.sessionCallback);
 		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		Assert.assertEquals("3/3", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
 		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));

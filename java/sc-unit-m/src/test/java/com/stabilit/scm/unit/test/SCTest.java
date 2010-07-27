@@ -36,6 +36,7 @@ import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
 import com.stabilit.scm.unit.test.echo.SrvEchoLargeTestCase;
 import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
+import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
@@ -64,7 +65,8 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 	SrvEchoTestCase.class, 
 	SrvEchoLargeTestCase.class,
 	SCImplTest.class,
-	ConnectionPoolTest.class })
+	ConnectionPoolTest.class,
+	MessageIdTestCase.class})
 public class SCTest {
 
 	private SCTest() {
@@ -111,7 +113,7 @@ public class SCTest {
 
 		String[] values = string.split("@|&");
 		for (int i = 0; i < values.length / 2; i++) {
-			map.put(values[i*2], values[i*2 + 1]);
+			map.put(values[i * 2], values[i * 2 + 1]);
 		}
 		return map;
 	}

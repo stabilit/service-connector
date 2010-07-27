@@ -72,7 +72,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		SCMPMessage fault = this.registerCallback.getMessageSync();
 
 		Assert.assertTrue(fault.isFault());
-		Assert.assertEquals("1", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
@@ -84,7 +83,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		fault = this.registerCallback.getMessageSync();
 
 		Assert.assertTrue(fault.isFault());
-		Assert.assertEquals("2", fault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 
 	}
@@ -118,7 +116,6 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/127.0.0.1: : 7000 : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/127.0.0.1: : 7000 : 10|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
-		Assert.assertEquals("2", inspect.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
 		expectedScEntry = "publish-simulation_localhost/127.0.0.1::publish-simulation_localhost/127.0.0.1: : 7000 : 10|simulation_localhost/127.0.0.1::simulation_localhost/127.0.0.1: : 7000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");

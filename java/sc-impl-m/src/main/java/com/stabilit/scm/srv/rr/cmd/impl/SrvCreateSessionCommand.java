@@ -26,6 +26,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
@@ -62,12 +63,19 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 		// inform callback with scMessages
 		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
+
+		// create session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.addSession(sessionId);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
 		reply.setBody(scReply.getData());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
@@ -76,8 +84,6 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}
 		response.setSCMP(reply);
-		// create session in SCMPSessionCompositeRegistry
-		this.sessionCompositeRegistry.addSession(sessionId);
 	}
 
 	public class SrvCreateSessionCommandValidator implements ICommandValidator {
