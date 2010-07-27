@@ -38,6 +38,7 @@ import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -56,20 +57,15 @@ public abstract class MTSuperTestCase {
 	private IRequester registerReq = null;
 	protected IRequesterContext testContext = null;
 	protected MTSuperTestCallback callback;
+	protected SCMPMessageId msgId;
 
 	public MTSuperTestCase(final String fileName) {
 		this.fileName = fileName;
 		this.reqList = new ArrayList<IRequester>();
-		this.testContext = new TestContext(this.config.getRequesterConfig());
+		this.msgId = new SCMPMessageId();
+		this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 		this.callback = new MTSuperTestCallback();
 	}
-
-	// @Parameters
-	// public static Collection<String[]> getParameters() {
-	// return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
-	// new String[] { "sc-unit-netty-tcp.properties" }, new String[] { "sc-unit-nio-http.properties" },
-	// new String[] { "sc-unit-nio-tcp.properties" });
-	// }
 
 	@Parameters
 	public static Collection<String[]> getParameters() {
@@ -108,7 +104,7 @@ public abstract class MTSuperTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {		
+	public void tearDown() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 
@@ -118,7 +114,7 @@ public abstract class MTSuperTestCase {
 	}
 
 	@Override
-	protected void finalize() throws Throwable {	
+	protected void finalize() throws Throwable {
 		this.testContext.getConnectionPool().destroy();
 		ConnectionPoint.getInstance().clearAll();
 		reqList = null;

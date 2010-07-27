@@ -29,6 +29,7 @@ import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.unit.TestContext;
 
 /**
@@ -41,9 +42,11 @@ public abstract class SuperTestCase {
 	protected RequesterConfigPool config = null;
 	protected IRequester req = null;
 	protected IRequesterContext testContext;
+	protected SCMPMessageId msgId;
 
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;
+		this.msgId = new SCMPMessageId();
 	}
 
 	@Parameters
@@ -62,7 +65,7 @@ public abstract class SuperTestCase {
 		try {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getRequesterConfig());
+			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new Requester(this.testContext);
 		} catch (Throwable e) {
 			e.printStackTrace();

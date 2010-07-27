@@ -25,6 +25,7 @@ import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequesterContext;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
  * @author JTraber
@@ -32,9 +33,11 @@ import com.stabilit.scm.common.net.req.IRequesterContext;
 public class TestContext implements IRequesterContext {
 
 	private IConnectionPool connectionPool;
+	private SCMPMessageId msgId;
 
-	public TestContext(ICommunicatorConfig config) {
+	public TestContext(ICommunicatorConfig config, SCMPMessageId msgId) {
 		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
+		this.msgId = msgId;
 	}
 
 	/**
@@ -49,5 +52,10 @@ public class TestContext implements IRequesterContext {
 	@Override
 	public IConnectionPool getConnectionPool() {
 		return this.connectionPool;
+	}
+
+	@Override
+	public SCMPMessageId getSCMPMessageId() {
+		return this.msgId;
 	}
 }

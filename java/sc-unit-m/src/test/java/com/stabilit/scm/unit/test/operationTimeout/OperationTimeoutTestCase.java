@@ -51,7 +51,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		try {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getRequesterConfig());
+			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new Requester(this.testContext);
 			IConnectionPool cp = this.testContext.getConnectionPool();
 			cp.setCloseOnFree(true);

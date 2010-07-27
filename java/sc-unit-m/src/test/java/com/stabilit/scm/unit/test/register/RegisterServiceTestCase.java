@@ -93,7 +93,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	public void registerServiceCall() throws Exception {
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
 				"netty.tcp", 16, 1000, 60, 10);
-		IRequesterContext context = new TestContext(config);
+		IRequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new Requester(context);
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
