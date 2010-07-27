@@ -23,6 +23,7 @@ package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
+import com.stabilit.scm.common.scmp.SCMPMessageID;
 import com.stabilit.scm.common.service.ISCContext;
 
 public abstract class Service {
@@ -33,12 +34,14 @@ public abstract class Service {
 	protected IRequester requester;
 	protected ISCMPSynchronousCallback callback;
 	protected boolean pendingRequest;
-
+	private SCMPMessageID msgID;
+	
 	public Service(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.callback = null;
 		this.pendingRequest = false;
+		this.msgID = null;
 	}
 
 	public void setRequestComplete() {
