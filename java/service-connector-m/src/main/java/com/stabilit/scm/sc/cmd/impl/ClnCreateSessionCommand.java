@@ -76,24 +76,25 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
-		// tries allocating a server for this session if server rejects session exception will be thrown
-		// error codes and error text from server in reject case are inside the exception
+		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
 
 		SCMPMessage reply = callback.getMessageSync();
-//		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+		// Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 
-//		// TODO verify
-//		if (Boolean.TRUE.equals(rejectSessionFlag)) {
-//			// server rejected session - throw exception with server errors
-//			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
-//			throw e;
-//		}
+		// // TODO verify
+		// if (Boolean.TRUE.equals(rejectSessionFlag)) {
+		// // server rejected session - throw exception with server errors
+		// SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+		// throw e;
+		// }
 		if (reply.isFault()) {
+			// exception handling
 			SCMPFault fault = (SCMPFault) reply;
 			Throwable th = fault.getCause();
 			if (th instanceof OperationTimeoutException) {
+				// operation timeout handling
 				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
 				scmpEx.setMessageType(getKey());
 				throw scmpEx;

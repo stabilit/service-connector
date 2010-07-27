@@ -21,6 +21,7 @@ import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -54,11 +55,11 @@ public class SCRequester implements IRequester {
 
 	private class SCRequesterSCMPCallback implements ISCMPCallback {
 		private ISCMPCallback scmpCallback;
-		private IConnectionContext connectionContext;
+		private IConnectionContext connectionCtx;
 
-		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionContext) {
+		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
-			this.connectionContext = connectionContext;
+			this.connectionCtx = connectionCtx;
 		}
 
 		@Override
@@ -69,13 +70,27 @@ public class SCRequester implements IRequester {
 
 		@Override
 		public void callback(Throwable th) {
-			this.freeConnection();
 			this.scmpCallback.callback(th);
+			if (th instanceof OperationTimeoutException) {
+				// operation timed out - delete this specific connection, prevents race conditions
+				this.disconnectConnection();
+			} else {
+				// another exception occurred - just free the connection
+				this.freeConnection();
+			}
 		}
 
 		private void freeConnection() {
 			try {
-				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionContext.getConnection());
+				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+
+		private void disconnectConnection() {
+			try {
+				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
