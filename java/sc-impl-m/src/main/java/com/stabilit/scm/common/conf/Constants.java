@@ -40,10 +40,10 @@ public final class Constants {
 	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
 
 	/**
-	 * OPERATION_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting is
-	 * only allowed one time. Needed on lowest level of communication. Used to detect operation timeout, can be ignored
-	 * if no request is outstanding. If a request is outstanding the connection is busy and also blocked. Hand timeout
-	 * at least up to requester callback to give connection free. OPERATION_TIMEOUT_MILLIS should be lower than
+	 * OPERATION_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting
+	 * is only allowed one time. Needed on lowest level of communication. Used to detect operation timeout, can be
+	 * ignored if no request is outstanding. If a request is outstanding the connection is busy and also blocked. Hand
+	 * timeout at least up to requester callback to give connection free. OPERATION_TIMEOUT_MILLIS should be lower than
 	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS so that most of operation timeout can be detected on lower level.<br>
 	 **/
 	private static int OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT;
@@ -146,6 +146,8 @@ public final class Constants {
 	public static final int FIX_HEADER_SIZE_START = 12;
 	/** The Constant FIX_HEADER_SIZE_END. */
 	public static final int FIX_HEADER_SIZE_END = 16;
+	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
+	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 
 	/**
 	 * @return the serviceLevelOperationTimeoutMillis
@@ -157,16 +159,18 @@ public final class Constants {
 	public static void setOperationTimeoutMillis(int operationTimeoutMillis) {
 		if (Constants.OPERATION_TIMEOUT_MILLIS != Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT) {
 			// setting OPERATION_TIMEOUT_MILLIS only allowed one time
-			LoggerPoint.getInstance().fireWarn(Constants.class, "setOperationTimeoutMillis called two times - not allowed.");
+			LoggerPoint.getInstance().fireWarn(Constants.class,
+					"setOperationTimeoutMillis called two times - not allowed.");
 			return;
 		}
 		Constants.OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis;
 		// OPERATION_TIMEOUT_MILLIS needs to be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS
-		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis + Constants.OPERATION_TIMEOUT_DIFFERENCE;
+		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis
+				+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
 	}
 
 	public static int getOperationTimeoutMillis() {
 		return Constants.OPERATION_TIMEOUT_MILLIS;
-		
+
 	}
 }
