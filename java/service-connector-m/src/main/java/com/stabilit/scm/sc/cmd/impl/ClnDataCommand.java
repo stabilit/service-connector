@@ -85,24 +85,28 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			try {
-				// sessionId
-				String sessionId = message.getSessionId();
-				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
-
-				// TODO messageId
-
-				// compression default = true
-				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
-				if (compression == null) {
-					compression = true;
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
 				}
+				// message info
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
+				if (messageInfo != null) {
+					// TODO messageInfo
+				}
+				// compression
+				boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

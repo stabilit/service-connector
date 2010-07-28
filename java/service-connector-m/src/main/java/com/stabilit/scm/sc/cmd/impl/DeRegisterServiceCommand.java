@@ -68,7 +68,9 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		// validate server is registered - otherwise deregister not possible
 		this.validateServer(server);
 
-		// release all resources used by server, disconnects requesters
+		// deregister server from service
+		server.getService().removeServer(server);
+		// release all resources used by server, disconnects requester
 		server.destroy();
 		serverRegistry.removeServer(server);
 
@@ -107,7 +109,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	/**
 	 * The Class DeRegisterServiceCommandValidator.
 	 */
-	public class DeRegisterServiceCommandValidator implements ICommandValidator {
+	private class DeRegisterServiceCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override

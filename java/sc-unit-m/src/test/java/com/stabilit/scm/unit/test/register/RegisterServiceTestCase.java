@@ -61,7 +61,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	public void failRegisterServiceCall() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation2");
-
+		// TODO check all header fields
 		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(0);
