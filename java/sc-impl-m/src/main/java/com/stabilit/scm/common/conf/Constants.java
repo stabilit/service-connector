@@ -59,12 +59,18 @@ public final class Constants {
 	/** OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and IDLE_TIMEOUT_MILLIS. */
 	private static final int OPERATION_TIMEOUT_DIFFERENCE = 2000;
 	/**
+	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when
+	 * communication should work very fast. Often used in emergency cases and in situation where reply of operation is
+	 * irrelevant.
+	 */
+	public static final int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT = 3000;
+	/**
 	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
-	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 10000;
+	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 3000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
-	public static final int CONNECT_TIMEOUT_MILLIS = 500;
+	public static final int CONNECT_TIMEOUT_MILLIS = 1000;
 
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;

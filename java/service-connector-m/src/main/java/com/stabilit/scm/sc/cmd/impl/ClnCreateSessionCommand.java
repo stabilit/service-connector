@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.util.Map;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
@@ -32,6 +30,7 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SessionRegistry;
@@ -70,25 +69,23 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
-
-		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-
+		// no need to forward echo attributes
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+
 		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
-
 		SCMPMessage reply = callback.getMessageSync();
-		// Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 
-		// // TODO verify
-		// if (Boolean.TRUE.equals(rejectSessionFlag)) {
-		// // server rejected session - throw exception with server errors
-		// SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
-		// throw e;
-		// }
+		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			// server rejected session - throw exception with server errors
+			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+			e.setMessageType(getKey());
+			throw e;
+		}
+
 		if (reply.isFault()) {
 			// exception handling
 			SCMPFault fault = (SCMPFault) reply;
@@ -101,23 +98,20 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			}
 			throw th;
 		}
-
 		this.validateServer(server);
 
 		// add server to session
 		session.setServer(server);
+		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
+		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 		// finally add session to the registry
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		sessionRegistry.addSession(session.getId(), session);
 
-		// creating reply
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setSessionId(session.getId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		scmpReply.setBody(reply.getBody());
-		response.setSCMP(scmpReply);
+		// forward server reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey().getValue());
+		response.setSCMP(reply);
 	}
 
 	/**
@@ -140,34 +134,38 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	/**
 	 * The Class ClnCreateSessionCommandValidator.
 	 */
-	public class ClnCreateSessionCommandValidator implements ICommandValidator {
+	private class ClnCreateSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
+			SCMPMessage message = request.getMessage();
 
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
+				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 				ValidatorUtility.validateString(0, sessionInfo, 256);
 				// echoTimeout
-				String echoTimeoutValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
-				int echoTimeout = ValidatorUtility.validateInt(0, echoTimeoutValue, 3601);
+				String echoTimeoutValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
+				int echoTimeout = ValidatorUtility.validateInt(1, echoTimeoutValue, 3600);
 				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue(), echoTimeout);
 				// echoInterval
-				String echoIntervalValue = scmpHeader.get(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
-				int echoInterval = ValidatorUtility.validateInt(0, echoIntervalValue, 3601);
+				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
+				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600);
 				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue(), echoInterval);
-
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
@@ -183,5 +181,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 	private class ClnCreateSessionCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
+
 	}
 }

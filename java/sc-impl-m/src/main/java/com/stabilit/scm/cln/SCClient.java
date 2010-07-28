@@ -140,7 +140,7 @@ public class SCClient implements ISCClient {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		attachCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		this.callback.getMessageSync();
 	}
 
 	/** {@inheritDoc} */
@@ -151,7 +151,7 @@ public class SCClient implements ISCClient {
 		}
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		this.callback.getMessageSync();
 		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();

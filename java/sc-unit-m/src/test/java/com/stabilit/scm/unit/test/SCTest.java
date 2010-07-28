@@ -73,7 +73,6 @@ public class SCTest {
 	}
 
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
-		Assert.assertNull(result.getBody());
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(error.getErrorText(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

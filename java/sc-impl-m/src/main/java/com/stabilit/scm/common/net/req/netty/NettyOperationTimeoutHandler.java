@@ -29,8 +29,6 @@ import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
-import com.stabilit.scm.common.listener.LoggerPoint;
-
 /**
  * @author JTraber
  */

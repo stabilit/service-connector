@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPSrvAbortSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvDataCall;
 import com.stabilit.scm.common.call.SCMPSrvDeleteSessionCall;
@@ -48,7 +49,7 @@ public class Server {
 
 	/** The host. */
 	private String host;
-	/** The port nr. */
+	/** The port number. */
 	private int portNr;
 	/** The service name. */
 	private String serviceName;
@@ -56,11 +57,11 @@ public class Server {
 	private Service service;
 	/** The max sessions. */
 	private int maxSessions;
-	private int keepAliveInterval;
 	/** The socket address. */
 	private SocketAddress socketAddress;
-
+	/** The requester. */
 	private IRequester requester;
+	/** The connectionPool. */
 	private IConnectionPool cp;
 
 	/**
@@ -79,7 +80,6 @@ public class Server {
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
 		this.portNr = portNr;
-		this.keepAliveInterval = keepAliveInterval;
 		this.maxSessions = maxSessions;
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		IResponder responder = responderRegistry.getCurrentResponder();
@@ -108,8 +108,11 @@ public class Server {
 	 *             the exception
 	 */
 	public void immediateConnect() throws Exception {
+		// set minimum connections to max for initial process
 		this.cp.setMinConnections(cp.getMaxConnections());
 		this.cp.initMinConnections();
+		// initial done - set it back to 0
+		this.cp.setMinConnections(0);
 	}
 
 	/**
@@ -121,7 +124,7 @@ public class Server {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
+	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback) {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
 		try {
@@ -132,7 +135,7 @@ public class Server {
 		}
 	}
 
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
@@ -151,7 +154,7 @@ public class Server {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
+	public void deleteSession(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(requester, message);
 
@@ -159,11 +162,11 @@ public class Server {
 			deleteSessionCall.invoke(callback);
 		} catch (Exception e) {
 			// delete session failed
-			throw new SCServiceException("deleteSession failed", e);
+			callback.callback(e);
 		}
 	}
 
-	public void unsubscribe(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
@@ -171,7 +174,7 @@ public class Server {
 			unsubscribeCall.invoke(callback);
 		} catch (Exception e) {
 			// unsubscribe failed
-			throw new SCServiceException("unsubscribe failed", e);
+			callback.callback(e);
 		}
 	}
 
@@ -189,24 +192,21 @@ public class Server {
 		try {
 			srvDataCall.invoke(callback);
 		} catch (Throwable th) {
-			Exception ex = new SCServiceException("sendData failed", th);
-			callback.callback(ex);
+			callback.callback(th);
 		}
 		return;
 	}
 
 	/**
-	 * Srv echo.
+	 * Server echo.
 	 * 
 	 * @param message
 	 *            the message
 	 * @param callback
 	 *            the callback
 	 * @return the scmp message
-	 * @throws SCServiceException
-	 *             the SC service exception
 	 */
-	public void srvEcho(SCMPMessage message, ISCMPCallback callback) throws SCServiceException {
+	public void serverEcho(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
 		try {
 			srvEchoCall.invoke(callback);
@@ -216,10 +216,29 @@ public class Server {
 	}
 
 	/**
-	 * Destroy.
+	 * Server abort session.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 */
+	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback) {
+		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION
+				.newInstance(requester, message);
+		try {
+			srvAbortSessionCall.invoke(callback);
+		} catch (Throwable th) {
+			callback.callback(th);
+		}
+	}
+
+	/**
+	 * Destroy server.
 	 */
 	public void destroy() {
 		this.cp.destroy();
+		this.requester = null;
 	}
 
 	/**
@@ -232,9 +251,9 @@ public class Server {
 	}
 
 	/**
-	 * Gets the port nr.
+	 * Gets the port number.
 	 * 
-	 * @return the port nr
+	 * @return the port number
 	 */
 	public int getPortNr() {
 		return portNr;
@@ -267,11 +286,6 @@ public class Server {
 		return serviceName;
 	}
 
-	@Override
-	public String toString() {
-		return serviceName + "_" + socketAddress + " : " + portNr + " : " + maxSessions;
-	}
-
 	public void setService(Service service) {
 		this.service = service;
 	}
@@ -280,13 +294,11 @@ public class Server {
 		return service;
 	}
 
-	/**
-	 * @return the keepAliveInterval
-	 */
-	public int getKeepAliveInterval() {
-		return keepAliveInterval;
+	public class ServerContext implements IContext {
 	}
 
-	public class ServerContext implements IContext {
+	@Override
+	public String toString() {
+		return serviceName + "_" + socketAddress + " : " + portNr + " : " + maxSessions;
 	}
 }

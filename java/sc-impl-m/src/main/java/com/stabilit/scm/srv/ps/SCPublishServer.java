@@ -23,7 +23,6 @@ package com.stabilit.scm.srv.ps;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPPublishCall;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -41,7 +40,7 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 				serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		this.callback.getMessageSync();
 	}
 
 	@Override

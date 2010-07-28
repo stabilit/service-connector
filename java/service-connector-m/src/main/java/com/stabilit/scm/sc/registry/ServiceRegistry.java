@@ -48,15 +48,17 @@ public final class ServiceRegistry extends Registry {
 		super.put(key, service);
 	}
 
-	public Service getService(String serviceName) {
-		return (Service) this.get(serviceName);
+	public Service getService(Object key) {
+		return (Service) this.get(key);
 	}
 
 	public void removeService(Service service) {
 		this.removeService(service.getServiceName());
 	}
 
-	public void removeService(Object key) {
+	public Service removeService(Object key) {
+		Service service = this.getService(key);
 		super.remove(key);
+		return service;
 	}
 }

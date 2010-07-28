@@ -34,10 +34,6 @@ public final class ValidatorUtility {
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
 	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
 
-	// TODO
-	// if (port < 0 || port > 0xFFFF) {
-	// throw new IllegalArgumentException("port out of range:" + port);
-	// }
 	/**
 	 * Instantiates a new validator utility.
 	 */
@@ -83,17 +79,17 @@ public final class ValidatorUtility {
 	}
 
 	/**
-	 * Validate int.
+	 * Validate integer.
 	 * 
-	 * @param lowerLimit
-	 *            the lower limit
+	 * @param lowerLimitInc
+	 *            the lower inclusive limit
 	 * @param intStringValue
-	 *            the int string value
-	 * @return the int
+	 *            the integer string value
+	 * @return the integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimit, String intStringValue) throws SCMPValidatorException {
+	public static int validateInt(int lowerLimitInc, String intStringValue) throws SCMPValidatorException {
 		if (intStringValue == null) {
 			throw new SCMPValidatorException("intValue must be set.");
 		}
@@ -104,26 +100,27 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 
-		if (intValue < lowerLimit) {
+		if (intValue < lowerLimitInc) {
 			throw new SCMPValidatorException("intValue to low.");
 		}
 		return intValue;
 	}
 
 	/**
-	 * Validate int.
+	 * Validate integer.
 	 * 
-	 * @param lowerLimit
-	 *            the lower limit
+	 * @param lowerLimitInc
+	 *            the lower inclusive limit
 	 * @param intStringValue
-	 *            the int string value
-	 * @param upperLimit
-	 *            the upper limit
-	 * @return the int
+	 *            the integer string value
+	 * @param upperLimitInc
+	 *            the upper inclusive limit
+	 * @return the integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimit, String intStringValue, int upperLimit) throws SCMPValidatorException {
+	public static int validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc)
+			throws SCMPValidatorException {
 		if (intStringValue == null) {
 			throw new SCMPValidatorException("intValue must be set.");
 		}
@@ -134,7 +131,7 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException("intValue must be numeric.");
 		}
 
-		if (intValue <= lowerLimit || intValue >= upperLimit) {
+		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
 			throw new SCMPValidatorException("intValue not within limits.");
 		}
 		return intValue;

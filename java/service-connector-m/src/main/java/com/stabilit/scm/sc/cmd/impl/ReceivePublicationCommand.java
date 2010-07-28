@@ -100,7 +100,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 				if (noDataIntervalValue == null) {
 					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, 360);
 				} else {
-					int noDataInterval = ValidatorUtility.validateInt(1, noDataIntervalValue, 3601);
+					int noDataInterval = ValidatorUtility.validateInt(1, noDataIntervalValue, 3600);
 					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
 				}
 			} catch (HasFaultResponseException ex) {

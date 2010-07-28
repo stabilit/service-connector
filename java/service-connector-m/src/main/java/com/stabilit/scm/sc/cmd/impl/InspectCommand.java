@@ -21,10 +21,8 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
@@ -57,15 +55,14 @@ public class InspectCommand extends CommandAdapter {
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-
-		// dump internal registries
 		String inspectString = "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
 		inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
 		inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
+
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
+		scmpReply.setMessageType(getKey().getValue());
+		// dump internal registries
 		scmpReply.setBody(inspectString);
 		response.setSCMP(scmpReply);
 	}
@@ -81,11 +78,12 @@ public class InspectCommand extends CommandAdapter {
 	/**
 	 * The Class InspectCommandValidator.
 	 */
-	public class InspectCommandValidator implements ICommandValidator {
+	private class InspectCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
+			// no validation necessary in case of inspect command
 		}
 	}
 }

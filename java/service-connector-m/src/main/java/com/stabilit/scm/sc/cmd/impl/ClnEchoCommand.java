@@ -18,20 +18,19 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -58,7 +57,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response) throws Throwable {
 		SCMPMessage message = request.getMessage();
 		if (message.getBodyLength() > 0) {
 			if (message.getBody().toString().length() > 100) {
@@ -74,20 +73,31 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		Server server = session.getServer();
 
 		SCMPMessage result = null;
+		ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
+		server.serverEcho(message, callback);
+		// TODO echo timeout in callback.getMessagSync()
+		result = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 
-		try {
-			ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
-			server.srvEcho(message, callback);
-			//TODO echo timeout in callback.getMessagSync()
-			result = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
-		} catch (SCServiceException e) {
-			// srvEcho or clnEcho failed, connection disturbed - clean up
-			SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-			ExceptionPoint.getInstance().fireException(this, e);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
+		if (result.isFault()) {
+			// exception handling
+			SCMPFault fault = (SCMPFault) result;
+			Throwable th = fault.getCause();
+			if (th instanceof OperationTimeoutException) {
+				// operation timeout handling
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				scmpEx.setMessageType(getKey());
+				throw scmpEx;
+			}
+			throw th;
 		}
+		// TODO echo failed
+		// // srvEcho or clnEcho failed, connection disturbed - clean up
+		// SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
+		// ExceptionPoint.getInstance().fireException(this, e);
+		// HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
+		// communicationException.setMessageType(getKey());
+		// throw communicationException;
+
 		result.setMessageType(getKey().getValue());
 		result.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);

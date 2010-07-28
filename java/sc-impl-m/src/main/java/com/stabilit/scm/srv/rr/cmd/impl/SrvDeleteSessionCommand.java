@@ -31,17 +31,25 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
+/**
+ * The Class SrvDeleteSessionCommand.
+ */
 public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvDeleteSessionCommand.
+	 */
 	public SrvDeleteSessionCommand() {
 		this.commandValidator = new SrvDeleteSessionCommandValidator();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_DELETE_SESSION;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
@@ -73,13 +81,22 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
-	public class SrvDeleteSessionCommandValidator implements ICommandValidator {
+	/**
+	 * The Class SrvDeleteSessionCommandValidator.
+	 */
+	private class SrvDeleteSessionCommandValidator implements ICommandValidator {
 
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {

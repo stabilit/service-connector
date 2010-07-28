@@ -46,6 +46,8 @@ public abstract class CommandAdapter implements ICommand {
 
 	/** The command validator. */
 	protected ICommandValidator commandValidator;
+	/** The session registry. */
+	protected SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 
 	/**
 	 * Instantiates a new command adapter.
@@ -65,7 +67,6 @@ public abstract class CommandAdapter implements ICommand {
 	 *             occurs when session is not in registry, invalid session id
 	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		Session session = sessionRegistry.getSession(sessionId);
 
 		if (session == null) {

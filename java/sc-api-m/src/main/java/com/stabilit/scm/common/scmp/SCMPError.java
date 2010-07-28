@@ -58,7 +58,9 @@ public enum SCMPError {
 	/** The SESSION_REJECTED. */
 	SESSION_REJECTED("507", "Session from server rejected."),
 	/** The OPERATION_TIMEOUT. */
-	OPERATION_TIMEOUT("508", "Operation timeout - operation could not be completed.");
+	OPERATION_TIMEOUT("508", "Operation timeout - operation could not be completed."),
+	/** The SC_ERROR. */
+	SC_ERROR("509", "SC error occured.");
 
 	/** The error code. */
 	private String errorCode; // should not be int because it is transmitted over the line

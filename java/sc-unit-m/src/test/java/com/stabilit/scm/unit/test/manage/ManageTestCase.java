@@ -14,47 +14,20 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.service;
+package com.stabilit.scm.unit.test.manage;
 
-import java.net.SocketAddress;
+import org.junit.Test;
 
-import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
-/**
- * The Class Client. Represents an attached client.
- * 
- * @author JTraber
- */
-public class Client {
+public class ManageTestCase extends SuperAttachTestCase {
 
-	/** The request received when client attached on SC. */
-	private IRequest initialRequest;
-	/** The socket address of the client, unique identifier. */
-	private SocketAddress socketAddress;
-
-	/**
-	 * Instantiates a new client.
-	 * 
-	 * @param socketAddress
-	 *            the socket address
-	 * @param scmp
-	 *            the scmp
-	 */
-	public Client(SocketAddress socketAddress, IRequest initialRequest) {
-		this.initialRequest = initialRequest;
-		this.socketAddress = socketAddress;
+	public ManageTestCase(String fileName) {
+		super(fileName);
 	}
 
-	public Object getSocketAddress() {
-		return socketAddress;
-	}
-
-	public IRequest getInitialRequest() {
-		return initialRequest;
-	}
-
-	@Override
-	public String toString() {
-		return socketAddress + ":" + initialRequest;
+	@Test
+	public void manageCommand() throws Exception {
+		// TODO manage enable / disable services
 	}
 }

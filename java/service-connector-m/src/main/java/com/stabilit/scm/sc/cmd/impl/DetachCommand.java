@@ -25,8 +25,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to
- * detach (virtual detach) to SC. Client will be removed from Client Registry of SC.
+ * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to detach (virtual
+ * detach) to SC.
  * 
  * @author JTraber
  */
@@ -47,8 +47,8 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {		
-		//TODO What todo verify with jan
+	public void run(IRequest request, IResponse response) throws Exception {
+		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getValue());
@@ -58,11 +58,12 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 	/**
 	 * The Class DetachCommandValidator.
 	 */
-	public class DetachCommandValidator implements ICommandValidator {
+	private class DetachCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws SCMPValidatorException {
+			// no validation in case of detach command
 		}
 	}
 }

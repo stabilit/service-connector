@@ -26,11 +26,12 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -64,34 +65,61 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		Session session = this.getSessionById(sessionId);
 
 		Server server = session.getServer();
+		SCMPMessage reply = null;
+		ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
 		try {
-			ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
 			server.deleteSession(message, callback);
-			callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+			reply = callback.getMessageSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
-			// TODO verify with jan
+			/**
+			 * error in deleting session process<br>
+			 * 1. delete session on SC<br>
+			 * 2. deregister server from service<br>
+			 * 3. SRV_ABORT_SESSION (SAS) to server<br>
+			 * 4. destroy server<br>
+			 * 5. EXC message to client<br>
+			 **/
+			this.sessionRegistry.removeSession(sessionId);
+			server.getService().removeServer(server);
+			// set up server abort session message - don't forward messageId & include error stuff
+			message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SC_ERROR.getErrorCode());
+			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SC_ERROR.getErrorText());
+			message.setBody("ServerDeleteSession failed for sessionId " + sessionId);
+			server.serverAbortSession(message, callback);
+			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT);
+			server.destroy();
+			// set up client EXC message
+			SCMPFault fault = new SCMPFault(SCMPError.SERVER_ERROR);
+			fault.setMessageType(getKey().getValue());
+			response.setSCMP(fault);
+			return;
 		}
 		// delete session on server successful - delete entry from session registry
-		SessionRegistry.getCurrentInstance().removeSession(session);
+		this.sessionRegistry.removeSession(session);
 
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
-		response.setSCMP(scmpReply);
+		// forward server reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey().getValue());
+		response.setSCMP(reply);
 	}
 
 	/**
 	 * The Class ClnDeleteSessionCommandValidator.
 	 */
-	public class ClnDeleteSessionCommandValidator implements ICommandValidator {
+	private class ClnDeleteSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {

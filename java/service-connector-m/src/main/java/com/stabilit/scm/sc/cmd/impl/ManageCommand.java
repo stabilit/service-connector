@@ -16,85 +16,74 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.util.Date;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.DateTimeUtility;
-import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.sc.registry.DisabledServiceRegistry;
+import com.stabilit.scm.sc.registry.ServiceRegistry;
+import com.stabilit.scm.sc.service.Service;
 
 /**
- * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach (virtual
- * attach) to SC.
+ * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to
+ * enable/disable services.
  * 
  * @author JTraber
  */
-public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ManageCommand extends CommandAdapter {
 
 	/**
-	 * Instantiates a new AttachCommand.
+	 * Instantiates a new InspectCommand.
 	 */
-	public AttachCommand() {
-		this.commandValidator = new AttachCommandValidator();
+	public ManageCommand() {
+		this.commandValidator = new ManageCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ATTACH;
+		return SCMPMsgType.MANAGE;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
+		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
+
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
+
+		SCMPMessage reqMsg = request.getMessage();
+		String serviceName = (String) reqMsg.getBody();
+
+		if (disabledServiceRegistry.containsKey(serviceName)) {
+			Service service = disabledServiceRegistry.removeService(serviceName);
+			serviceRegistry.addService(serviceName, service);
+			return;
+		}
+
+		if (serviceRegistry.containsKey(serviceName)) {
+			// TODO verify with jan .. how to disable service
+			Service service = serviceRegistry.removeService(serviceName);
+			disabledServiceRegistry.addService(serviceName, service);
+		}
 	}
 
 	/**
-	 * The Class AttachCommandValidator.
+	 * The Class InspectCommandValidator.
 	 */
-	private class AttachCommandValidator implements ICommandValidator {
+	private class ManageCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-
-			try {
-				// scVersion
-				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-				SCMPMessage.SC_VERSION.isSupported(scVersion);
-
-				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
-						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
-
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				SCMPValidatorException valExc = new SCMPValidatorException();
-				valExc.setMessageType(getKey());
-				valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-				throw valExc;
-			}
+		public void validate(IRequest request) throws SCMPValidatorException {
+			// no validation necessary in case of manage command
 		}
 	}
 }

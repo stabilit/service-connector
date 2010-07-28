@@ -61,7 +61,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		try {
 			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 			server.unsubscribe(message, callback);
-			callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+			callback.getMessageSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			// TODO verify with jan

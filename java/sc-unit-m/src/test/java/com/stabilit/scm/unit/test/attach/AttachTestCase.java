@@ -43,10 +43,15 @@ public class AttachTestCase extends SuperTestCase {
 	}
 
 	@Test
+	public void attachFail() throws Exception {
+		// TODO wrong sc version
+		// TODO wrong local date time
+	}
+
+	@Test
 	public void attach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-		attachCall.setKeepAliveInterval(360);
-		
+
 		AttachTestCallback callback = new AttachTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
@@ -56,12 +61,12 @@ public class AttachTestCase extends SuperTestCase {
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.ATTACH.getValue());
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
-		
+
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(callback);
 		callback.getMessageSync();
 	}
-	
+
 	private class AttachTestCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

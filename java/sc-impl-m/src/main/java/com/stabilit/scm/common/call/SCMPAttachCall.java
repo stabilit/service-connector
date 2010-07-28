@@ -83,16 +83,6 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 
-	/**
-	 * Sets the keep alive interval.
-	 * 
-	 * @param keepAliveInterval
-	 *            the new keep alive interval
-	 */
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {

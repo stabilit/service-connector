@@ -49,12 +49,12 @@ public abstract class Service {
 	}
 
 	public void addServer(Server server) {
-		listOfServers.add(server);
+		this.listOfServers.add(server);
 	}
 
 	public void removeServer(Server server) {
 		server.destroy();
-		listOfServers.remove(server);
+		this.listOfServers.remove(server);
 	}
 
 	public String getLocation() {
@@ -72,8 +72,8 @@ public abstract class Service {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(serverIndex);
-		for (Server server : listOfServers) {
+		sb.append(this.serverIndex);
+		for (Server server : this.listOfServers) {
 			sb.append(" - ");
 			sb.append(server);
 		}

@@ -150,7 +150,7 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setImmediateConnect(this.immediateConnect);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveInterval);
 		registerServiceCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		this.callback.getMessageSync();
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, scCallback);
 		this.srvServiceRegistry.addSrvService(serviceName, srvService);
@@ -162,7 +162,7 @@ public class SCServer implements ISCServer {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
 		deRegisterServiceCall.invoke(this.callback);
-		this.callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		this.callback.getMessageSync();
 		// remove srvService from registry
 		this.srvServiceRegistry.removeSrvService(serviceName);
 		// destroy the connection pool

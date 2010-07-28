@@ -35,17 +35,25 @@ import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
+/**
+ * The Class SrvCreateSessionCommand.
+ */
 public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvCreateSessionCommand.
+	 */
 	public SrvCreateSessionCommand() {
 		this.commandValidator = new SrvCreateSessionCommandValidator();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
@@ -71,28 +79,37 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey().getValue());
 		reply.setBody(scReply.getData());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class SrvCreateSessionCommandValidator.
+	 */
 	public class SrvCreateSessionCommandValidator implements ICommandValidator {
 
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			Map<String, String> scmpHeader = message.getHeader();
 			try {
+				// messageId
+				String messageId = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
 				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
@@ -106,7 +123,6 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				// ipAddressList
 				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
-
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 				ValidatorUtility.validateString(0, sessionInfo, 256);

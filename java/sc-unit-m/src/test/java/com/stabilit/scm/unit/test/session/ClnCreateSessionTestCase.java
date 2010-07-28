@@ -28,7 +28,6 @@ import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.SCTest;
@@ -59,6 +58,11 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "");
+
+		// TODO messageId not set
+		// TODO ipl wron
+		// TODO sin not set
+		// TODO eci & ect wrong
 
 		/*********************** serviceName not set *******************/
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -115,5 +119,10 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		scEntry = (String) inspectMap.get("sessionRegistry");
 		Assert.assertEquals("", scEntry);
+	}
+
+	@Test
+	public void rejectedSession() throws Exception {
+		// TODO reject session from server
 	}
 }
