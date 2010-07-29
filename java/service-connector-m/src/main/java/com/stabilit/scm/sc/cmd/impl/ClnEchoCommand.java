@@ -16,17 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import javax.xml.bind.ValidationException;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -59,47 +57,26 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	@Override
 	public void run(IRequest request, IResponse response) throws Throwable {
 		SCMPMessage message = request.getMessage();
-		if (message.getBodyLength() > 0) {
-			if (message.getBody().toString().length() > 100) {
-				System.out.println("ClnEchoCommand body = " + message.getBody().toString().substring(0, 100));
-			} else {
-				System.out.println("ClnEchoCommand body = " + message.getBody().toString());
-			}
-		} else {
-			System.out.println("ClnEchoCommand empty body");
-		}
-
-		Session session = getSessionById(message.getSessionId());
+		Session session = this.getSessionById(message.getSessionId());
 		Server server = session.getServer();
 
-		SCMPMessage result = null;
 		ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
 		server.serverEcho(message, callback);
-		// TODO echo timeout in callback.getMessagSync()
-		result = callback.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		SCMPMessage result = callback.getMessageSync(session.getEchoTimeout());
 
 		if (result.isFault()) {
-			// exception handling
-			SCMPFault fault = (SCMPFault) result;
-			Throwable th = fault.getCause();
-			if (th instanceof OperationTimeoutException) {
-				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
-				scmpEx.setMessageType(getKey());
-				throw scmpEx;
-			}
-			throw th;
+			/**
+			 * error in echo process<br>
+			 * 1. delete session on SC<br>
+			 * 2. remove session on server instance<br>
+			 * 3. EXC message to client<br>
+			 **/
+			this.sessionRegistry.removeSession(message.getSessionId());
+			server.removeSession(session);
 		}
-		// TODO echo failed
-		// // srvEcho or clnEcho failed, connection disturbed - clean up
-		// SessionRegistry.getCurrentInstance().removeSession(message.getSessionId());
-		// ExceptionPoint.getInstance().fireException(this, e);
-		// HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.SERVER_ERROR);
-		// communicationException.setMessageType(getKey());
-		// throw communicationException;
-
-		result.setMessageType(getKey().getValue());
-		result.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, request.getRemoteSocketAddress().hashCode());
+		result.removeHeader(SCMPHeaderAttributeKey.SRV_RES_ID);
+		result.setMessageType(getKey());
+		// result.setHeader(SCMPHeaderAttributeKey.SC_RES_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 
@@ -110,7 +87,34 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 
 		/** {@inheritDoc} */
 		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
+		public void validate(IRequest request) throws Exception {
+			SCMPMessage message = request.getMessage();
+			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
+				// serviceName
+				String serviceName = message.getServiceName();
+				if (serviceName == null || serviceName.equals("")) {
+					throw new SCMPValidatorException("serviceName must be set!");
+				}
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
+				}
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
+			} catch (Throwable e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+				SCMPValidatorException validatorException = new SCMPValidatorException();
+				validatorException.setMessageType(getKey());
+				throw validatorException;
+			}
 		}
 	}
 

@@ -76,6 +76,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
+		this.validateServer(server);
 		SCMPMessage reply = callback.getMessageSync();
 
 		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -97,10 +98,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				throw scmpEx;
 			}
 			throw th;
-		}
-		this.validateServer(server);
-
-		// add server to session
+		}		
+		// add server to session & session to the server
+		server.addSession(session);
 		session.setServer(server);
 		session.setEchoTimeout((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
 		session.setEchoInterval((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
@@ -110,7 +110,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		// forward server reply to client
 		reply.setIsReply(true);
-		reply.setMessageType(getKey().getValue());
+		reply.setMessageType(getKey());
 		response.setSCMP(reply);
 	}
 
@@ -157,15 +157,15 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
 				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
-				ValidatorUtility.validateString(0, sessionInfo, 256);
+				ValidatorUtility.validateString(1, sessionInfo, 256);
 				// echoTimeout
 				String echoTimeoutValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
 				int echoTimeout = ValidatorUtility.validateInt(1, echoTimeoutValue, 3600);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue(), echoTimeout);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 				// echoInterval
 				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue(), echoInterval);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

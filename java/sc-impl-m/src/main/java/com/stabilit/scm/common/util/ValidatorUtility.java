@@ -140,23 +140,23 @@ public final class ValidatorUtility {
 	/**
 	 * Validate string.
 	 * 
-	 * @param minSize
-	 *            the minimum size
+	 * @param minSizeInc
+	 *            the minimum inclusive size
 	 * @param stringValue
 	 *            the string value
-	 * @param maxSize
-	 *            the max size
+	 * @param maxSizeInc
+	 *            the max inclusive size
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static void validateString(int minSize, String stringValue, int maxSize) throws SCMPValidatorException {
+	public static void validateString(int minSizeInc, String stringValue, int maxSizeInc) throws SCMPValidatorException {
 
 		if (stringValue == null) {
 			throw new SCMPValidatorException("stringValue must be set.");
 		}
 		int length = stringValue.getBytes().length;
 
-		if (length < minSize || length > maxSize) {
+		if (length < minSizeInc || length > maxSizeInc) {
 			throw new SCMPValidatorException("stringValue length is not within limits.");
 		}
 	}

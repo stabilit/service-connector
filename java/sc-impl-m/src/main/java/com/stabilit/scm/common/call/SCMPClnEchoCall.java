@@ -59,7 +59,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, requester.hashCode());
-		this.requestMessage.setMessageType(getMessageType().getValue());
+		this.requestMessage.setMessageType(this.getMessageType());
 		this.requester.send(this.requestMessage, scmpCallback);
 	}
 

@@ -16,10 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
-import java.util.Map;
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -31,11 +30,12 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
-public class SrvSubscribeCommand extends SrvCommandAdapter implements IPassThroughPartMsg {
+public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	public SrvSubscribeCommand() {
 		this.commandValidator = new SrvSubscribeCommandValidator();
@@ -68,7 +68,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter implements IPassThrou
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
-		reply.setMessageType(this.getKey().getValue());
+		reply.setMessageType(this.getKey());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
@@ -84,23 +84,48 @@ public class SrvSubscribeCommand extends SrvCommandAdapter implements IPassThrou
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
+			SCMPMessage message = request.getMessage();
 
 			try {
-
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
+				}
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				if (mask == null) {
+					throw new SCMPValidatorException("mask must be set!");
+				}
+				if (mask.indexOf("%") != -1) {
+					// percent sign in mask not allowed
+					throw new SCMPValidatorException("percent sign found in mask - not allowed.");
+				}
+				ValidatorUtility.validateString(1, mask, 256);
+				// ipAddressList
+				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+				ValidatorUtility.validateIpAddressList(ipAddressList);
+				// sessionInfo
+				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+				ValidatorUtility.validateString(1, sessionInfo, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
-				ex.setMessageType(getKey());
+				ex.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw ex;
 			} catch (Throwable e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
+				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw validatorException;
 			}
 		}

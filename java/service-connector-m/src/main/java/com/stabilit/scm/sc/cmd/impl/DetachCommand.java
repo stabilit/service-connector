@@ -51,7 +51,7 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
+		scmpReply.setMessageType(getKey());
 		response.setSCMP(scmpReply);
 	}
 

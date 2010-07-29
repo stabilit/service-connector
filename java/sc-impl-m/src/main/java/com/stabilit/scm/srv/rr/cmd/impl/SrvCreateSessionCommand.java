@@ -82,7 +82,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
-		reply.setMessageType(this.getKey().getValue());
+		reply.setMessageType(this.getKey());
 		reply.setBody(scReply.getData());
 
 		if (scReply.isFault()) {
@@ -125,7 +125,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
 				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
-				ValidatorUtility.validateString(0, sessionInfo, 256);
+				ValidatorUtility.validateString(1, sessionInfo, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

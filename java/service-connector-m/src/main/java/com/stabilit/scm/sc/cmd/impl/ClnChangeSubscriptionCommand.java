@@ -16,19 +16,24 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.util.Map;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.service.SessionService;
+import com.stabilit.scm.common.util.SynchronousCallback;
+import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Session;
 
 public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -44,19 +49,34 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		// check service is present
+	public void run(IRequest request, IResponse response) throws Throwable {
 		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
-		SessionService service = this.validateSessionService(serviceName);
+		String sessionId = reqMessage.getSessionId();
+
+		Session session = this.getSessionById(sessionId);
+		Server server = session.getServer();
+
+		ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback();
+		server.changeSubscription(reqMessage, callback);
+		SCMPMessage reply = callback.getMessageSync();
 		
-		// creating reply
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-//		scmpReply.setSessionId(session.getId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		response.setSCMP(scmpReply);
+		if (reply.isFault()) {
+			// exception handling
+			SCMPFault fault = (SCMPFault) reply;
+			Throwable th = fault.getCause();
+			if (th instanceof OperationTimeoutException) {
+				// operation timeout handling
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				scmpEx.setMessageType(getKey());
+				throw scmpEx;
+			}
+			throw th;
+		}
+		// forward reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		reply.setSessionId(sessionId);
+		response.setSCMP(reply);
 	}
 
 	private class ClnChangeSubscriptionCommandValidator implements ICommandValidator {
@@ -64,15 +84,28 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
-
+			SCMPMessage message = request.getMessage();
 			try {
-				
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				if (mask == null) {
+					throw new SCMPValidatorException("mask must be set!");
+				}
+				if (mask.indexOf("%") != -1) {
+					// percent sign in mask not allowed
+					throw new SCMPValidatorException("percent sign found in mask - not allowed.");
+				}
+				ValidatorUtility.validateString(1, mask, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
@@ -84,5 +117,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				throw validatorException;
 			}
 		}
+	}
+
+	private class ClnChangeSubscriptionCommandCallback extends SynchronousCallback {
+		// nothing to implement in this case - everything is done by super-class
 	}
 }

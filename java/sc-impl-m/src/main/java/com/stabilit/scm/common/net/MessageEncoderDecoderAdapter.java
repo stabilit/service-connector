@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
 import com.stabilit.scm.common.conf.Constants;
@@ -82,9 +84,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			scmpMsg = new SCMPMessage();
 		}
 
-		// check scmp version 
+		// check scmp version
 		// TODO check SCMP version
-		
+
 		// parse headerSize & bodySize
 		int scmpHeaderSize = defaultFrameDecoder.parseHeaderSize(headline);
 		int scmpBodySize = defaultFrameDecoder.parseMessageSize(headline) - scmpHeaderSize;
@@ -101,11 +103,21 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			readBytes += line.getBytes().length;
 			readBytes += 1; // read LF
 
-			Matcher match = IEncoderDecoder.DECODE_REG.matcher(line);
-			if (match.matches() && match.groupCount() == 2) {
+			Matcher match = IEncoderDecoder.EQUAL_SIGN_DECODE_REG.matcher(line);
+			if (match.matches()) {
 				String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
-				String value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+				String value = null;
+				if (match.groupCount() == 2) {
+					// key has a value mapping - extract value
+					value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+				}
 				metaMap.put(key, value);
+				continue;
+			}
+			match = IEncoderDecoder.FLAG_DECODE_REG.matcher(line);
+			if (match.matches()) {
+				String key = match.group(0);
+				metaMap.put(key, null);
 			}
 		}
 		// reading body - depends on body type
@@ -159,5 +171,25 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		bw.append(SCMPMessage.SCMP_VERSION.toString());
 		bw.append("\n");
 		bw.flush();
+	}
+
+	protected StringBuilder writeHeader(Map<String, String> metaMap) {
+		StringBuilder sb = new StringBuilder();
+
+		// write header fields
+		Set<Entry<String, String>> entrySet = metaMap.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+			sb.append(key);
+			if (value != null) {
+				value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
+				sb.append(EQUAL_SIGN);
+				sb.append(value);
+			}
+			sb.append("\n");
+		}
+		return sb;
 	}
 }

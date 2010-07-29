@@ -122,7 +122,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	@Override
 	public void invoke(ISCMPCallback callback) throws Exception {
-		this.requestMessage.setMessageType(getMessageType().getValue());
+		this.requestMessage.setMessageType(this.getMessageType());
 		this.requester.send(this.requestMessage, callback);
 		return;
 	}

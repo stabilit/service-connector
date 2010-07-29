@@ -147,7 +147,9 @@ public class SCServer implements ISCServer {
 
 		registerServiceCall.setMaxSessions(this.maxSessions);
 		registerServiceCall.setPortNumber(this.runningPort);
-		registerServiceCall.setImmediateConnect(this.immediateConnect);
+		if (this.immediateConnect) {
+			registerServiceCall.setImmediateConnect();
+		}
 		registerServiceCall.setKeepAliveInterval(this.keepAliveInterval);
 		registerServiceCall.invoke(this.callback);
 		this.callback.getMessageSync();

@@ -18,9 +18,13 @@ package com.stabilit.scm.sc.service;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPSrvAbortSessionCall;
+import com.stabilit.scm.common.call.SCMPSrvChangeSubscriptionCall;
 import com.stabilit.scm.common.call.SCMPSrvCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvDataCall;
 import com.stabilit.scm.common.call.SCMPSrvDeleteSessionCall;
@@ -51,18 +55,20 @@ public class Server {
 	private String host;
 	/** The port number. */
 	private int portNr;
+	/** The socket address. */
+	private SocketAddress socketAddress;
 	/** The service name. */
 	private String serviceName;
 	/** The service. */
 	private Service service;
 	/** The max sessions. */
 	private int maxSessions;
-	/** The socket address. */
-	private SocketAddress socketAddress;
 	/** The requester. */
 	private IRequester requester;
 	/** The connectionPool. */
 	private IConnectionPool cp;
+	/** The sessions, list of sessions allocated to the server. */
+	private List<Session> sessions;
 
 	/**
 	 * Instantiates a new server.
@@ -77,6 +83,7 @@ public class Server {
 	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions,
 			int keepAliveInterval) {
 		this.service = null;
+		this.sessions = Collections.synchronizedList(new ArrayList<Session>());
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
 		this.portNr = portNr;
@@ -135,17 +142,6 @@ public class Server {
 		}
 	}
 
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) {
-		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
-				requester, msgToForward);
-		try {
-			subscribeCall.invoke(callback);
-		} catch (Throwable e) {
-			// subscribe failed
-			callback.callback(e);
-		}
-	}
-
 	/**
 	 * Delete session.
 	 * 
@@ -166,6 +162,33 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Subscribe.
+	 * 
+	 * @param msgToForward
+	 *            the message to forward
+	 * @param callback
+	 *            the callback
+	 */
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) {
+		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
+				requester, msgToForward);
+		try {
+			subscribeCall.invoke(callback);
+		} catch (Throwable e) {
+			// subscribe failed
+			callback.callback(e);
+		}
+	}
+
+	/**
+	 * Unsubscribe.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 */
 	public void unsubscribe(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
@@ -174,6 +197,26 @@ public class Server {
 			unsubscribeCall.invoke(callback);
 		} catch (Exception e) {
 			// unsubscribe failed
+			callback.callback(e);
+		}
+	}
+
+	/**
+	 * Change subscription.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 */
+	public void changeSubscription(SCMPMessage message, ISCMPCallback callback) {
+		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
+				.newInstance(requester, message);
+
+		try {
+			changeSubscriptionCall.invoke(callback);
+		} catch (Exception e) {
+			// changeSubscription failed
 			callback.callback(e);
 		}
 	}
@@ -194,7 +237,6 @@ public class Server {
 		} catch (Throwable th) {
 			callback.callback(th);
 		}
-		return;
 	}
 
 	/**
@@ -274,7 +316,7 @@ public class Server {
 	 * @return true, if successful
 	 */
 	public boolean hasFreeSession() {
-		return this.cp.hasFreeConnections();
+		return this.sessions.size() < this.maxSessions;
 	}
 
 	/**
@@ -286,12 +328,43 @@ public class Server {
 		return serviceName;
 	}
 
+	/**
+	 * Sets the service which is served by the server.
+	 * 
+	 * @param service
+	 *            the new service
+	 */
 	public void setService(Service service) {
 		this.service = service;
 	}
 
+	/**
+	 * Gets the service which is served by the server.
+	 * 
+	 * @return the service
+	 */
 	public Service getService() {
 		return service;
+	}
+
+	/**
+	 * Adds an allocated session to the server.
+	 * 
+	 * @param session
+	 *            the session
+	 */
+	public void addSession(Session session) {
+		this.sessions.add(session);
+	}
+
+	/**
+	 * Removes an allocated session from the server.
+	 * 
+	 * @param session
+	 *            the session
+	 */
+	public void removeSession(Session session) {
+		this.sessions.remove(session);
 	}
 
 	public class ServerContext implements IContext {

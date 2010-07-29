@@ -32,6 +32,7 @@ public class SCMPSrvUnsubscribeCall extends SCMPServerCallAdapter {
 		super(req, receivedMessage);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
 		return new SCMPSrvUnsubscribeCall(req, receivedMessage);
@@ -41,6 +42,7 @@ public class SCMPSrvUnsubscribeCall extends SCMPServerCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_SUBSCRIBE;

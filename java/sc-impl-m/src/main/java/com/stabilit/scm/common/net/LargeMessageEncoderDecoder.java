@@ -20,9 +20,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -80,24 +77,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			}
 		}
 
-		Map<String, String> metaMap = scmpMsg.getHeader();
-		StringBuilder sb = new StringBuilder();
-		// write header fields
-		Set<Entry<String, String>> entrySet = metaMap.entrySet();
-		for (Entry<String, String> entry : entrySet) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			if (value == null) {
-				throw new EncodingDecodingException("key [" + key + "] has null value");
-			}
-			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
-			value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
-			sb.append(key);
-			sb.append(EQUAL_SIGN);
-			sb.append(value);
-			sb.append("\n");
-		}
-
+		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
 		// write body depends on body type
 		try {
 			Object body = scmpMsg.getBody();

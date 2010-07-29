@@ -69,8 +69,18 @@ public class SCMPMessage {
 	 * @param messageType
 	 *            the new message type
 	 */
-	public void setMessageType(String messageType) {
-		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageType);
+	public void setMessageType(SCMPMsgType messageType) {
+		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageType.getValue());
+	}
+
+	/**
+	 * Sets the message type.
+	 * 
+	 * @param messageTypeValue
+	 *            the new message type
+	 */
+	public void setMessageType(String messageTypeValue) {
+		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageTypeValue);
 	}
 
 	/**

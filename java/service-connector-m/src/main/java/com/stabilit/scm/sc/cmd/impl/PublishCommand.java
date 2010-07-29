@@ -19,19 +19,20 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.service.PublishService;
 
-public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class PublishCommand extends CommandAdapter {
 
 	public PublishCommand() {
 		this.commandValidator = new PublishCommandValidator();
@@ -46,7 +47,6 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		System.out.println("PublishCommand.run()");
 		SocketAddress socketAddress = request.getRemoteSocketAddress();
 		request.setAttribute(SocketAddress.class.getName(), socketAddress);
 
@@ -58,11 +58,15 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		if (place == null) {
 			throw new SCServiceException("no subscriptionPlace for serviceName : " + serviceName);
 		}
-		place.add(message); // throws an exception if failed
-		SCMPMessage replyMessage = new SCMPMessage();
-		replyMessage.setMessageType(message.getMessageType());
-		replyMessage.setServiceName(message.getServiceName());
-		response.setSCMP(replyMessage);
+		// throws an exception if failed
+		place.add(message);
+
+		// reply to server
+		SCMPMessage reply = new SCMPMessage();
+		reply.setMessageType(this.getKey());
+		reply.setServiceName(message.getServiceName());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		response.setSCMP(reply);
 	}
 
 	private class PublishCommandValidator implements ICommandValidator {
@@ -72,11 +76,27 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
+				// message info
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+				if (messageInfo != null) {
+					ValidatorUtility.validateString(1, messageInfo, 256);
+				}
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				if (mask == null) {
+					throw new SCMPValidatorException("mask must be set!");
+				}
+				ValidatorUtility.validateString(1, mask, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

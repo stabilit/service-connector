@@ -43,6 +43,10 @@ public class SrvDataLargeSyncTestCase extends SuperSessionTestCase {
 		super(fileName);
 	}
 
+	public void srvDataApplicationError() {
+		// TODO
+	}
+
 	@Test
 	public void srvDataSmallRequestLargeResponseTest() throws Exception {
 		StringBuilder sb = new StringBuilder();

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import javax.xml.bind.ValidationException;
+
 import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -28,7 +30,6 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 
 /**
@@ -63,7 +64,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 
 		// looks up subscription place
 		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
-		// tries polling messages
+		// tries polling message
 		SCMPMessage message = subscriptionPlace.poll(sessionId);
 		if (message != null) {
 			// message found in subscription queue set up reply
@@ -73,9 +74,15 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
 			reply.setIsReply(true);
 			reply.setBody(message.getBody());
+			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, message.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+			reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
+			reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
+					.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 			response.setSCMP(reply);
 			// message already gotten from queue no asynchronous process necessary call callback right away
 			communicatorCallback.callback(request, response);
+			return;
 		}
 		// no message available, start listening for new message
 		subscriptionPlace.listen(sessionId, request, response);
@@ -88,20 +95,20 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
-
-				// noDataInterval
-				// TODO integer validierung
-				String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-				if (noDataIntervalValue == null) {
-					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, 360);
-				} else {
-					int noDataInterval = ValidatorUtility.validateInt(1, noDataIntervalValue, 3600);
-					request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

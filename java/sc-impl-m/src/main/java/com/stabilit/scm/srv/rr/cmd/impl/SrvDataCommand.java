@@ -28,6 +28,8 @@ import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.common.service.SCMessageFault;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
@@ -67,12 +69,18 @@ public class SrvDataCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
-		reply.setMessageType(this.getKey().getValue());
+		reply.setMessageType(this.getKey());
 		String msgInfo = scReply.getMessageInfo();
 		if (msgInfo != null) {
 			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
 		}
 		reply.setBody(scReply.getData());
+
+		if (scReply.isFault()) {
+			SCMessageFault scFault = (SCMessageFault) scReply;
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		}
 		response.setSCMP(reply);
 	}
 
@@ -82,31 +90,30 @@ public class SrvDataCommand extends SrvCommandAdapter {
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
 
-			if (message.isPart()) {
-				return;
-			}
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException("sessonId must be set!");
 				}
-
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.SERVICE_NAME.getValue(), serviceName);
-
-				// bodyLength
-
-				// compression
-				Boolean compression = message.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION);
-				if (compression == null) {
-					compression = true;
+				// message info
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
+				if (messageInfo != null) {
+					ValidatorUtility.validateString(1, messageInfo, 256);
 				}
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
+				// compression
+				boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

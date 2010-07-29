@@ -28,7 +28,9 @@ import com.stabilit.scm.common.factory.IFactoryable;
 public interface IEncoderDecoder extends IFactoryable {
 
 	/** The Constant UNESCAPED_EQUAL_SIGN_REGEX. */
-	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";
+	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";	
+	/** The Constant FLAG_REGEX. */
+	public static final String FLAG_REGEX = ".*[^=]";
 	/** The Constant ESCAPED_EQUAL_SIGN. */
 	public static final String ESCAPED_EQUAL_SIGN = "\\=";
 	/** The Constant EQUAL_SIGN. */
@@ -36,7 +38,9 @@ public interface IEncoderDecoder extends IFactoryable {
 	/** The Constant CHARSET. */
 	public static final String CHARSET = "ISO-8859-1";
 	/** The Constant DECODE_REG. */
-	public static final Pattern DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);
+	public static final Pattern EQUAL_SIGN_DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);	
+	/** The Constant FLAG_DECODE_REG. */
+	public static final Pattern FLAG_DECODE_REG = Pattern.compile(FLAG_REGEX);
 
 	/**
 	 * Encode object to output stream.

@@ -29,33 +29,29 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 /**
  * @author JTraber
  */
-public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
+public class SCMPSrvChangeSubscriptionCall extends SCMPSessionCallAdapter {
 
-	public SCMPReceivePublicationCall() {
+	public SCMPSrvChangeSubscriptionCall() {
 		this(null, null, null);
 	}
 
-	public SCMPReceivePublicationCall(IRequester requester, String serviceName, String sessionId) {
+	public SCMPSrvChangeSubscriptionCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.RECEIVE_PUBLICATION;
+	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
+		return new SCMPSrvChangeSubscriptionCall(req, serviceName, sessionId);
+	}
+
+	public void setSessionId(String sessionId) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
-		return new SCMPReceivePublicationCall(req, serviceName, sessionId);
-	}
-
-	public void setNoDataInterval(int noDataInterval) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
-	}
-
-	public void setMask(String mask) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_SUBSCRIBE;
 	}
 }

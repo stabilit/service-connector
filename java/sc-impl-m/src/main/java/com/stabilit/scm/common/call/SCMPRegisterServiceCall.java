@@ -53,8 +53,8 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName) {
 		return new SCMPRegisterServiceCall(req, serviceName);
-	}	
-	
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback) throws Exception {
@@ -62,7 +62,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		super.invoke(scmpCallback);
 	}
-	
+
 	/**
 	 * Sets the version.
 	 * 
@@ -72,7 +72,6 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	private void setVersion(String version) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
-
 
 	/**
 	 * Sets the max sessions.
@@ -114,8 +113,11 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
 	}
 
-	public void setImmediateConnect(boolean immediateConnect) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnect);
+	/**
+	 * Sets the immediate connect.
+	 */
+	public void setImmediateConnect() {
+		requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 	}
 
 	/** {@inheritDoc} */

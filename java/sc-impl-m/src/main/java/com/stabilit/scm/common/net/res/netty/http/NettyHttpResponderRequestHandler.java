@@ -165,7 +165,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getValue());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
@@ -195,6 +195,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(IRequest request, IResponse response) {
 		try {
@@ -219,6 +220,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(IResponse response, Throwable th) {
 		ExceptionPoint.getInstance().fireException(this, th);
@@ -226,13 +228,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			((HasFaultResponseException) th).setFaultResponse(response);
 		} else {
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED.getValue());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		}
 		try {
 			response.write();
 		} catch (Throwable thr) {
+			ExceptionPoint.getInstance().fireException(this, thr);
 		}
 	}
 

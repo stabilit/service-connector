@@ -64,7 +64,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 						"command error: no srvService found for serviceName :" + serviceName);
 			}
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND);
-			scmpCommandException.setMessageType(getKey());
+			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
 		return srvService;

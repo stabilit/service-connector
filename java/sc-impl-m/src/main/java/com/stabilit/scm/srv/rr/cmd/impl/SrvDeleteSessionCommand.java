@@ -74,7 +74,7 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
-		reply.setMessageType(this.getKey().getValue());
+		reply.setMessageType(this.getKey());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry

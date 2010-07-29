@@ -82,6 +82,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			 **/
 			this.sessionRegistry.removeSession(sessionId);
 			server.getService().removeServer(server);
+			server.removeSession(session);
 			// set up server abort session message - don't forward messageId & include error stuff
 			message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SC_ERROR.getErrorCode());
@@ -92,16 +93,17 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			server.destroy();
 			// set up client EXC message
 			SCMPFault fault = new SCMPFault(SCMPError.SERVER_ERROR);
-			fault.setMessageType(getKey().getValue());
+			fault.setMessageType(getKey());
 			response.setSCMP(fault);
 			return;
 		}
 		// delete session on server successful - delete entry from session registry
 		this.sessionRegistry.removeSession(session);
-
+		// free server from session
+		server.removeSession(session);
 		// forward server reply to client
 		reply.setIsReply(true);
-		reply.setMessageType(getKey().getValue());
+		reply.setMessageType(getKey());
 		response.setSCMP(reply);
 	}
 
@@ -116,7 +118,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			SCMPMessage message = request.getMessage();
 			try {
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException("messageId must be set!");
 				}

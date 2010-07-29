@@ -21,7 +21,6 @@ import java.net.SocketAddress;
 import java.util.Date;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
@@ -44,7 +43,7 @@ import com.stabilit.scm.sc.service.Service;
  * 
  * @author JTraber
  */
-public class RegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class RegisterServiceCommand extends CommandAdapter {
 
 	/**
 	 * Instantiates a new RegisterServiceCommand.
@@ -101,7 +100,7 @@ public class RegisterServiceCommand extends CommandAdapter implements IPassThrou
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
+		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);

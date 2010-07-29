@@ -16,10 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
-import java.util.Map;
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -27,6 +26,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
@@ -34,7 +34,7 @@ import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
-public class SrvUnsubscribeCommand extends SrvCommandAdapter implements IPassThroughPartMsg {
+public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
 	public SrvUnsubscribeCommand() {
 		this.commandValidator = new SrvUnsubscribeCommandValidator();
@@ -57,17 +57,19 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter implements IPassThr
 		// create scMessage
 		ISCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
 		((ISCPublishServerCallback) srvService.getCallback()).unsubscribe(scMessage);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
-		reply.setMessageType(this.getKey().getValue());
+		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 	}
 
@@ -76,14 +78,22 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter implements IPassThr
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
-
+			SCMPMessage message = request.getMessage();
 			try {
-
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
+				}
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

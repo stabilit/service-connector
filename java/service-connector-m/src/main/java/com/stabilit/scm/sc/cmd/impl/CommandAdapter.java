@@ -48,6 +48,8 @@ public abstract class CommandAdapter implements ICommand {
 	protected ICommandValidator commandValidator;
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+	/** The subscription registry. */
+	protected SubscriptionSessionRegistry subscriptionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 
 	/**
 	 * Instantiates a new command adapter.

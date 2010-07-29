@@ -31,6 +31,7 @@ import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -86,7 +87,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			SCMPMessage message = request.getMessage();
 			try {
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException("messageId must be set!");
 				}
@@ -101,13 +102,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 					throw new ValidationException("sessionId must be set!");
 				}
 				// message info
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				if (messageInfo != null) {
-					// TODO messageInfo
+					ValidatorUtility.validateString(1, messageInfo, 256);
 				}
 				// compression
 				boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION.getValue(), compression);
+				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
@@ -135,7 +136,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) {
-			scmpReply.setMessageType(getKey().getValue());
+			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
 		}
@@ -143,7 +144,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
-			// TODO clean up!!! if th is SCServiceException
+			// TODO verify with jan - what happens if clnData fails
 			this.callback.callback(response, th);
 		}
 	}

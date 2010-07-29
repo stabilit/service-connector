@@ -56,7 +56,7 @@ public class ManageCommand extends CommandAdapter {
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
+		scmpReply.setMessageType(getKey());
 		response.setSCMP(scmpReply);
 
 		SCMPMessage reqMsg = request.getMessage();

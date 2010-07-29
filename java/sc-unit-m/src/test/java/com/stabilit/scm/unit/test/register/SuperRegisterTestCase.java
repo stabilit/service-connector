@@ -75,7 +75,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 				.newInstance(registerRequester, "publish-simulation");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 		registerServiceCall.invoke(this.attachCallback);
 		this.attachCallback.getMessageSync();

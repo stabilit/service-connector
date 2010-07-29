@@ -16,12 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.util.Map;
+import javax.xml.bind.ValidationException;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -53,30 +52,37 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
-		
+
 		// lookup session and checks properness
 		Session session = this.getSubscriptionSessionById(sessionId);
 
 		Server server = session.getServer();
+		SCMPMessage reply = null;
 		try {
 			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 			server.unsubscribe(message, callback);
-			callback.getMessageSync();
+			reply = callback.getMessageSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
-			// TODO verify with jan
+			/**
+			 * error in unsubscribe process<br>
+			 * 1. delete subscription in registry on SC<br>
+			 * 2. destroy subscription - dereference messages in subscription queue<br>
+			 * 3. EXC message to client<br>
+			 **/
+			// TODO error handling
 		}
 		// looks up subscription place
 		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
 		subscriptionPlace.unsubscribe(sessionId);
 		// delete session on server successful - delete entry from session registry
-		SubscriptionSessionRegistry.getCurrentInstance().removeSession(sessionId);
+		this.subscriptionRegistry.removeSession(sessionId);
 
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, message.getServiceName());
-		response.setSCMP(scmpReply);
+		// forward reply to client
+		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+		reply.setIsReply(true);
+		reply.setMessageType(this.getKey());
+		response.setSCMP(reply);
 	}
 
 	private class ClnUnsubscribeCommandValidator implements ICommandValidator {
@@ -84,14 +90,22 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
-
+			SCMPMessage message = request.getMessage();
 			try {
-
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
+				}
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new ValidationException("sessionId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

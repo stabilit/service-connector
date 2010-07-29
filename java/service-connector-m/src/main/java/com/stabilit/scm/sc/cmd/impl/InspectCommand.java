@@ -61,7 +61,7 @@ public class InspectCommand extends CommandAdapter {
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
+		scmpReply.setMessageType(getKey());
 		// dump internal registries
 		scmpReply.setBody(inspectString);
 		response.setSCMP(scmpReply);

@@ -36,15 +36,15 @@ public enum SCMPHeaderAttributeKey {
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
 	/** The REQ_ID. */
-	CLN_REQ_ID("clnReqId"),
+	CLN_REQ_ID("crq"),
 	/** The SC_REQ_ID. */
-	SC_REQ_ID("scReqId"),
+	SC_REQ_ID("brq"),
 	/** The SC_RES_ID. */
-	SC_RES_ID("scResId"),
+	SC_RES_ID("brs"),
 	/** The SRV_REQ_ID. */
-	SRV_REQ_ID("srvReqId"),
+	SRV_REQ_ID("srq"),
 	/** The SRV_RES_ID. */
-	SRV_RES_ID("srvResId"),
+	SRV_RES_ID("srs"),
 	/** The COMPRESSION. */
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */

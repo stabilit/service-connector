@@ -65,7 +65,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************** maxSessions 0 value *******************/
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(0);
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 
 		registerServiceCall.invoke(this.registerCallback);
@@ -76,7 +76,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		/*********************** port too high 10000 *******************/
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 
 		registerServiceCall.invoke(this.registerCallback);
@@ -99,7 +99,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(7000);
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 
 		registerServiceCall.invoke(this.registerCallback);
@@ -143,7 +143,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 				.newInstance(req, "");
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(9100);
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 
 		try {

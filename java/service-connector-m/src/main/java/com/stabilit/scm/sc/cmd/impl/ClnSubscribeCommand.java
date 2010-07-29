@@ -16,23 +16,24 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.util.Map;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.FilterMask;
@@ -61,10 +62,10 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response) throws Throwable {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+		String mask = (String) request.getAttribute(SCMPHeaderAttributeKey.MASK);
 		// check service is present
 		PublishService service = this.validatePublishService(serviceName);
 
@@ -72,14 +73,30 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 
+		int noDataInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+
 		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
 		SCMPMessage reply = callback.getMessageSync();
-		
+
+		if (reply.isFault()) {
+			// exception handling
+			SCMPFault fault = (SCMPFault) reply;
+			Throwable th = fault.getCause();
+			if (th instanceof OperationTimeoutException) {
+				// operation timeout handling
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				scmpEx.setMessageType(getKey());
+				throw scmpEx;
+			}
+			throw th;
+		}
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {
 			// server rejected session - throw exception with server errors
 			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+			e.setMessageType(getKey());
 			throw e;
 		}
 		// add server to session
@@ -89,18 +106,15 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 
 		ISubscriptionPlace<SCMPMessage> subscriptionPlace = service.getSubscriptionPlace();
-		// TODO verify with jan - timeout arrives with cln_subscribe
-		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, 15);
+
+		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, noDataInterval);
 		IFilterMask filterMask = new FilterMask(mask);
 		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
 
-		// creating reply
-		SCMPMessage scmpReply = new SCMPMessage();
-		scmpReply.setIsReply(true);
-		scmpReply.setMessageType(getKey().getValue());
-		scmpReply.setSessionId(session.getId());
-		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-		response.setSCMP(scmpReply);
+		// forward reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
 	}
 
 	/**
@@ -111,14 +125,39 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			Map<String, String> scmpHeader = request.getMessage().getHeader();
+			SCMPMessage message = request.getMessage();
 
 			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				if (mask == null) {
+					throw new SCMPValidatorException("mask must be set!");
+				}
+				if (mask.indexOf("%") != -1) {
+					// percent sign in mask not allowed
+					throw new SCMPValidatorException("percent sign found in mask - not allowed.");
+				}
+				ValidatorUtility.validateString(1, mask, 256);
+				// ipAddressList
+				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+				ValidatorUtility.validateIpAddressList(ipAddressList);
+				// sessionInfo
+				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+				ValidatorUtility.validateString(1, sessionInfo, 256);
+				// noDataInterval
+				String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+				int noi = ValidatorUtility.validateInt(1, noDataIntervalValue, 3600);
+				request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noi);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
@@ -194,13 +233,18 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			SCMPMessage message = this.subscriptionPlace.poll(sessionId);
 			if (message == null) {
 				// no message found on queue - subscription timeout set up no data message
-				reply.setHeader(SCMPHeaderAttributeKey.NO_DATA, true);
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 			} else {
 				// message received
 				reply.setBody(message.getBody());
 				reply
-						.setHeader(SCMPHeaderAttributeKey.MASK, (String) request
-								.getAttribute(SCMPHeaderAttributeKey.MASK));
+						.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message
+								.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, message.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+				reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
+				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
+						.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
+				reply.setBody(message.getBody());
 			}
 			response.setSCMP(reply);
 			try {

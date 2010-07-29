@@ -74,6 +74,8 @@ public final class SCMPCallFactory {
 
 	/** The SRV_SUBSCRIBE_CALL. */
 	public static final ISCMPCall SRV_SUBSCRIBE_CALL = new SCMPSrvSubscribeCall();
+	/** The SRV_CHANGE_SUBSCRIPTION_CALL. */
+	public static final ISCMPCall SRV_CHANGE_SUBSCRIPTION_CALL = new SCMPSrvChangeSubscriptionCall();
 	/** The SRV_UNSUBSCRIBE_CALL. */
 	public static final ISCMPCall SRV_UNSUBSCRIBE_CALL = new SCMPSrvUnsubscribeCall();
 	/** The PUBLISH_CALL. */
