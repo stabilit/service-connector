@@ -90,4 +90,37 @@ public class SCMPMessageId {
 	public Integer getPartSequenceNr() {
 		return partSequenceNr;
 	}
+
+	/**
+	 * Necessary to write. Evaluates if messageId needs to be written for specific messageType.
+	 * 
+	 * @param messageTypeValue
+	 *            the message type value
+	 * @return true, if successful
+	 */
+	public static boolean necessaryToWrite(String messageTypeValue) {
+		SCMPMsgType messageType = SCMPMsgType.getMsgType(messageTypeValue);
+
+		switch (messageType) {
+		case CLN_CREATE_SESSION:
+		case SRV_CREATE_SESSION:
+		case CLN_DELETE_SESSION:
+		case SRV_DELETE_SESSION:
+		case CLN_DATA:
+		case SRV_DATA:
+		case CLN_ECHO:
+		case SRV_ECHO:
+		case CLN_SUBSCRIBE:
+		case SRV_SUBSCRIBE:
+		case CLN_CHANGE_SUBSCRIPTION:
+		case SRV_CHANGE_SUBSCRIPTION:
+		case CLN_UNSUBSCRIBE:
+		case SRV_UNSUBSCRIBE:
+		case RECEIVE_PUBLICATION:
+		case PUBLISH:
+			return true;
+		default:
+			return false;
+		}
+	}
 }
