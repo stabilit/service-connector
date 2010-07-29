@@ -103,9 +103,6 @@ public class SCTest {
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
 
-		if (!expectedMap.equals(actualMap)) {
-			System.out.println("unlgleich");
-		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
 
