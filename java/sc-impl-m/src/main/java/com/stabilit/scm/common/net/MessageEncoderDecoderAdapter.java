@@ -63,6 +63,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
 		is.read(headline);
 
+//		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
+//		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
+
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type
 		SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(headline);
@@ -83,9 +86,6 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		default:
 			scmpMsg = new SCMPMessage();
 		}
-
-		// check scmp version
-		// TODO check SCMP version
 
 		// parse headerSize & bodySize
 		int scmpHeaderSize = defaultFrameDecoder.parseHeaderSize(headline);
@@ -168,8 +168,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));
 		bw.write(" ");
-		bw.append(SCMPMessage.SCMP_VERSION.toString());
-		bw.append("\n");
+		bw.write(SCMPMessage.SCMP_VERSION.toString());
+		bw.write("\n");
 		bw.flush();
 	}
 

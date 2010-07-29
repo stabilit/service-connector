@@ -152,6 +152,10 @@ public final class Constants {
 	public static final int FIX_HEADER_SIZE_START = 12;
 	/** The Constant FIX_HEADER_SIZE_END. */
 	public static final int FIX_HEADER_SIZE_END = 16;
+	/** The Constant FIX_SCMP_VERSION_START. */
+	public static final int FIX_SCMP_VERSION_START = 18;
+	/** The Constant FIX_SCMP_VERSION_LENGTH. */
+	public static final int FIX_SCMP_VERSION_LENGTH = 3;
 	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 

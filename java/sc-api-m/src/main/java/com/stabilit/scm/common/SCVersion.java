@@ -29,11 +29,11 @@ public enum SCVersion {
 
 	/** The current version. */
 	CURRENT(1, 0, 0),
-	/** The test version - DO NOT CHANGE ! */
+	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
-	
+
 	private static final DecimalFormat df = new DecimalFormat("000");
-	
+
 	/** The release. */
 	private int release; // e.g : 1
 	/** The version. */
@@ -59,12 +59,14 @@ public enum SCVersion {
 
 	/**
 	 * Checks if is supported.
-	 *
-	 * @param text the text in format 999.999-999 e.g. 1.5-003
-	 * @throws SCMPValidatorException the sCMP validator exception
+	 * 
+	 * @param text
+	 *            the text in format 999.999-999 e.g. 1.5-003
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void isSupported(String text) throws SCMPValidatorException {
-		if(text.matches("\\d*\\.\\d*-\\d{3}") == false) {
+		if (text.matches("\\d*\\.\\d*-\\d{3}") == false) {
 			throw new SCMPValidatorException("invalid sc version format [" + text + "]");
 		}
 		String[] splitted = text.split("\\.|-");
@@ -85,7 +87,7 @@ public enum SCVersion {
 		}
 		return;
 	}
-	
+
 	/**
 	 * To string.
 	 * 

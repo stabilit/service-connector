@@ -99,7 +99,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+					throw new SCMPValidatorException("sessionId must be set!");
 				}
 				// message info
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);

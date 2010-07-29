@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -96,7 +94,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+					throw new SCMPValidatorException("sessionId must be set!");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();

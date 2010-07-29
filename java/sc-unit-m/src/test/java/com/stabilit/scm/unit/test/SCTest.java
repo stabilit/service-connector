@@ -39,6 +39,7 @@ import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
+import com.stabilit.scm.unit.test.scmpVersion.SCVersionToSCTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.scm.unit.test.srvData.async.SrvDataAsyncTestCase;
@@ -66,7 +67,8 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 	SrvEchoLargeTestCase.class,
 	SCImplTest.class,
 	ConnectionPoolTest.class,
-	MessageIdTestCase.class})
+	MessageIdTestCase.class,
+	SCVersionToSCTestCase.class})
 public class SCTest {
 
 	private SCTest() {

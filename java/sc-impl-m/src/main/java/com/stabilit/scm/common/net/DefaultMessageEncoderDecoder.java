@@ -80,7 +80,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				if (body instanceof byte[]) {
 					byte[] ba = (byte[]) body;
 					int messageLength = sb.length() + ba.length;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					this.writeHeadLine(bw, headerKey, messageLength, headerSize);
 					bw.write(sb.toString());
 					bw.flush();
 					os.write((byte[]) ba);
@@ -92,7 +92,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
 					int messageLength = sb.length() + t.length();
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					this.writeHeadLine(bw, headerKey, messageLength, headerSize);
 					bw.write(sb.toString()); // write header
 					bw.flush();
 					bw.write(t); // write body
@@ -104,7 +104,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 				throw new EncodingDecodingException("unsupported body type");
 			} else {
-				writeHeadLine(bw, headerKey, headerSize, headerSize);
+				this.writeHeadLine(bw, headerKey, headerSize, headerSize);
 				bw.write(sb.toString());
 				bw.flush();
 			}

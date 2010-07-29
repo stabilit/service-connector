@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -73,6 +71,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			 **/
 			this.sessionRegistry.removeSession(message.getSessionId());
 			server.removeSession(session);
+			ExceptionPoint.getInstance().fireException(this, new Exception("genau1"));
 		}
 		result.removeHeader(SCMPHeaderAttributeKey.SRV_RES_ID);
 		result.setMessageType(getKey());
@@ -103,9 +102,10 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+					throw new SCMPValidatorException("sessionId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
+				ExceptionPoint.getInstance().fireException(this, new Exception("genau2"));
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;

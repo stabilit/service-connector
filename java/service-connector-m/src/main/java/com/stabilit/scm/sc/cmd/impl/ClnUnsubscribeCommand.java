@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -105,7 +103,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+					throw new SCMPValidatorException("sessionId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

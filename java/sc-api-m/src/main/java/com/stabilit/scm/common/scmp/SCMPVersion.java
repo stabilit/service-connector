@@ -27,11 +27,11 @@ public enum SCMPVersion {
 
 	/** The current version */
 	CURRENT(1, 0),
-	/** The test version - DO NOT CHANGE ! */
+	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2);
 
 	/** The release. */
-	private int release ;
+	private int release;
 	/** The version. */
 	private int version;
 
@@ -50,13 +50,15 @@ public enum SCMPVersion {
 
 	/**
 	 * Checks if is supported.
-	 *
-	 * @param scmpVersion the scmp version to be checked
-	 * @throws SCMPValidatorException the sCMP validator exception
+	 * 
+	 * @param scmpVersion
+	 *            the scmp version to be checked
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void isSupported(String text) throws SCMPValidatorException {
-		
-		if(text.matches("\\d\\.\\d") == false) {
+
+		if (text.matches("\\d\\.\\d") == false) {
 			throw new SCMPValidatorException("invalid scmp version format [" + text + "]");
 		}
 		String[] splitted = text.split("\\.");

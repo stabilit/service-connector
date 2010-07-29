@@ -80,7 +80,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 *            the new local date time
 	 */
 	private void setLocalDateTime(String localDateTime) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 
 	/** {@inheritDoc} */

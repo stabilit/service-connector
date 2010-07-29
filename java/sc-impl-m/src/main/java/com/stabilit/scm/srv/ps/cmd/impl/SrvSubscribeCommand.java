@@ -100,7 +100,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessionId must be set!");
+					throw new SCMPValidatorException("sessionId must be set!");
 				}
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);

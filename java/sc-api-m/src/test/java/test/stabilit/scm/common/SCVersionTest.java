@@ -70,8 +70,6 @@ public final class SCVersionTest {
 	@Test (expected=SCMPValidatorException.class)
 	public void versionCompatibilityTest13() throws SCMPValidatorException {
 		SCVersion.TEST.isSupported("11");
-	}	
-
-
+	}
 }
 

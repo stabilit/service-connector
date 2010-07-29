@@ -157,7 +157,7 @@ public class DefaultEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeUNDEFTest() {
-		String requestString = "garbage /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID
+		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID
 				+ "\n" + "mty=" + msgType.getValue() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();

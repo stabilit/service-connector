@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import javax.xml.bind.ValidationException;
-
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -130,7 +128,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new ValidationException("sessonId must be set!");
+					throw new SCMPValidatorException("sessonId must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
