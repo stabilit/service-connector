@@ -51,23 +51,22 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 /**
  * @author JTraber
  */
-
 @RunWith(Suite.class)
-@SuiteClasses( { AttachTestCase.class, // <br>
-		DetachTestCase.class, // <br>
-		ClnCreateSessionTestCase.class, // <br>
-		ClnDeleteSessionTestCase.class, // <br>
-		RegisterServiceTestCase.class, // <br>
-		DeRegisterServiceTestCase.class, // <br>
-		SrvDataSyncTestCase.class, // <br>
-		SrvDataLargeSyncTestCase.class, // <br>
-		SrvDataAsyncTestCase.class,// <br>
-		SrvDataLargeAsyncTestCase.class, // <br>
-		SCImplTest.class, // <br>
-		ConnectionPoolTest.class, // <br>
-		MessageIdTestCase.class,// <br>
-		SCVersionToSCTestCase.class, // <br>
-		SCMPVersionTest.class, // <br>
+@SuiteClasses( { AttachTestCase.class, //
+		DetachTestCase.class, // 
+		ClnCreateSessionTestCase.class, // 
+		ClnDeleteSessionTestCase.class, // 
+		RegisterServiceTestCase.class, // 
+		DeRegisterServiceTestCase.class, // 
+		SrvDataSyncTestCase.class, // 
+		SrvDataLargeSyncTestCase.class, // 
+		SrvDataAsyncTestCase.class,// 
+		SrvDataLargeAsyncTestCase.class, // 
+		SCImplTest.class, // 
+		ConnectionPoolTest.class, // 
+		MessageIdTestCase.class,// 
+		SCVersionToSCTestCase.class, // 
+		SCMPVersionTest.class, // 
 		SessionTimeoutTest.class })
 public class SCTest {
 
@@ -131,5 +130,4 @@ public class SCTest {
 			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 	}
-
 }

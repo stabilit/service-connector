@@ -49,7 +49,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	}
 
 	/**
-	 * Fail cln create session wrong header.
+	 * Fail client create session wrong header.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -57,20 +57,45 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "");
+				.newInstance(req, "simulation");
 
-		// TODO messageId not set
-		// TODO ipl wron
-		// TODO sin not set
-		// TODO eci & ect wrong
-
-		/*********************** serviceName not set *******************/
+		// echoTimeout not set
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
-
+		createSessionCall.getRequest().setServiceName("simulation");
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+
+		// echoInterval not valid
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		createSessionCall.setEchoIntervalSeconds(0);
+		createSessionCall.setEchoTimeoutSeconds(10);
+		createSessionCall.getRequest().setServiceName("simulation");
+		createSessionCall.invoke(this.attachCallback);
+		fault = this.attachCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+
+		// serviceName not set
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		createSessionCall.getRequest().setServiceName(null);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
+		createSessionCall.invoke(this.attachCallback);
+		fault = this.attachCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		// serviceName not set
+
+		// sessionInfo not set
+		createSessionCall.setSessionInfo(null);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.getRequest().setServiceName("simulation");
+		createSessionCall.setEchoTimeoutSeconds(10);
+		createSessionCall.invoke(this.attachCallback);
+		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 	}
@@ -123,6 +148,25 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 	@Test
 	public void rejectedSession() throws Exception {
-		// TODO reject session from server
+		// sets up a create session call
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(req, "simulation");
+		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
+		createSessionCall.setRequestBody("reject");
+		createSessionCall.invoke(this.attachCallback);
+		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
+		String sessId = responseMessage.getSessionId();
+		Assert.assertNull(sessId);
+
+		/*********************************** Verify registry entries in SC ********************************/
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
+		inspectCall.invoke(this.attachCallback);
+		SCMPMessage inspect = this.attachCallback.getMessageSync();
+		String inspectMsg = (String) inspect.getBody();
+		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
+		String scEntry = (String) inspectMap.get("sessionRegistry");
+		Assert.assertEquals("", scEntry);
 	}
 }

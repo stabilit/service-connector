@@ -43,12 +43,6 @@ public class AttachTestCase extends SuperTestCase {
 	}
 
 	@Test
-	public void attachFail() throws Exception {
-		// TODO wrong sc version
-		// TODO wrong local date time
-	}
-
-	@Test
 	public void attach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 

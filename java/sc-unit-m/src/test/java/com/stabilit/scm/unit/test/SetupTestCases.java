@@ -25,6 +25,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IStatisticsListener;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
@@ -186,6 +187,9 @@ public class SetupTestCases {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if (body.startsWith("reject")) {
+					ISCMessage fault = new SCMessageFault();
+					return fault;
 				}
 			}
 			message.setData(count + "");

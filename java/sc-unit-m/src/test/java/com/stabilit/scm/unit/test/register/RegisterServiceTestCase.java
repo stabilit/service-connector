@@ -22,7 +22,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.cln.call.SCMPCallException;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPInspectCall;
@@ -34,7 +33,6 @@ import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.SynchronousCallback;
@@ -58,33 +56,38 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	}
 
 	@Test
-	public void failRegisterServiceCall() throws Exception {
+	public void failRegisterServiceCallWrongHeader() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation2");
-		// TODO check all header fields
-		/*********************** maxSessions 0 value *******************/
+
+		// keep alive interval not set
+		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setImmediateConnect();
+		registerServiceCall.invoke(this.registerCallback);
+		SCMPMessage fault = this.registerCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+
+		// maxSessions 0 value
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(0);
 		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
-
 		registerServiceCall.invoke(this.registerCallback);
-		SCMPMessage fault = this.registerCallback.getMessageSync();
-
+		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
-		/*********************** port too high 10000 *******************/
+
+		// port too high 10000
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
-
 		registerServiceCall.invoke(this.registerCallback);
 		fault = this.registerCallback.getMessageSync();
-
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
-
 	}
 
 	@Test
@@ -137,28 +140,34 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
 
-	// TODO verify second registry!!
+	@Test
 	public void secondRegisterServiceCall() throws Exception {
+		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
+				"netty.tcp", 1, 60, 10);
+		IRequesterContext context = new TestContext(config, this.msgId);
+		IRequester req = new Requester(context);
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
-				.newInstance(req, "");
+				.newInstance(req, "publish-simulation");
+
 		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setPortNumber(7000);
+		registerServiceCall.setImmediateConnect();
+		registerServiceCall.setKeepAliveInterval(360);
+		registerServiceCall.invoke(this.registerCallback);
+		this.registerCallback.getMessageSync();
+
+		registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(req, "publish-simulation");
+		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 
-		try {
-			registerServiceCall.invoke(this.registerCallback);
-			this.registerCallback.getMessageSync();
-			Assert.fail("Should throw Exception!");
-		} catch (SCMPCallException e) {
-			SCMPFault scmpFault = e.getFault();
-			Assert.assertEquals("1", scmpFault.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-			// TODO
-			// SCTest.verifyError(e.getFault(), SCMPError.ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
-		}
+		registerServiceCall.invoke(this.registerCallback);
+		SCMPFault message = (SCMPFault) this.registerCallback.getMessageSync();
+		SCTest.verifyError(message, SCMPError.SERVER_ALREADY_REGISTERED, SCMPMsgType.REGISTER_SERVICE);
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(req, "P01_RTXS_RPRWS1");
+				.newInstance(req, "publish-simulation");
 		deRegisterServiceCall.invoke(this.registerCallback);
 		this.registerCallback.getMessageSync();
 	}

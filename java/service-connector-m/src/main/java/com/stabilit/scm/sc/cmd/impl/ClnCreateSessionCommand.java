@@ -81,6 +81,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// server rejected session - throw exception with server errors
 			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
 			e.setMessageType(getKey());
@@ -88,6 +89,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 
 		if (reply.isFault()) {
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// exception handling
 			SCMPFault fault = (SCMPFault) reply;
 			Throwable th = fault.getCause();
@@ -99,7 +101,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				throw scmpEx;
 			}
 			throw th;
-		}		
+		}
 		// add server to session & session to the server
 		server.addSession(session);
 		session.setServer(server);

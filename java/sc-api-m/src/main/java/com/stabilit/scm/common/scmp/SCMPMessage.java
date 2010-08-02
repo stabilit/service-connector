@@ -341,7 +341,7 @@ public class SCMPMessage {
 	 * @return the header flag
 	 */
 	public boolean getHeaderFlag(SCMPHeaderAttributeKey headerKey) {
-		if (this.header.containsKey(headerKey)) {
+		if (this.header.containsKey(headerKey.getValue())) {
 			return true;
 		}
 		return false;

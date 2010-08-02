@@ -4,6 +4,10 @@
 	<groupId>com.stabilit.sc</groupId>
 	<artifactId>sc-examples-m</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>

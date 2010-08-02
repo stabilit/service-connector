@@ -7,6 +7,10 @@
 	<name>sc-impl</name>
 	<description>sc-impl</description>
 	<url>http://www.stabilit.ch</url>
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>

@@ -6,6 +6,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sc-simluation</name>
 	<description>sc-simluation</description>
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>

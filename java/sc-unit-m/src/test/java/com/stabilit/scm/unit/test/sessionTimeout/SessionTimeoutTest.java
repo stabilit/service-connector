@@ -50,7 +50,7 @@ public class SessionTimeoutTest extends SuperAttachTestCase {
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		SCTest.checkReply(responseMessage);
 		String sessionId = responseMessage.getSessionId();
-		Thread.sleep(1000);
+		Thread.sleep(1200);
 		// session should not exist
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
 				sessionId);
@@ -83,7 +83,7 @@ public class SessionTimeoutTest extends SuperAttachTestCase {
 					"simulation", sessionId);
 			clnEchoCall.invoke(this.attachCallback);
 			SCTest.checkReply(this.attachCallback.getMessageSync());
-			Thread.sleep(500);
+			Thread.sleep(400);
 		}
 		// session should still exist
 		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
