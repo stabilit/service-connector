@@ -66,4 +66,16 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_SUBSCRIBE;
 	}
+
+	public void setMask(String mask) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+	}
+
+	public void setNoDataIntervalSeconds(int noDataInterval) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
+	}
+
+	public void setAuthenticationId(String authId) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.AUTH_SESSION_ID, authId);
+	}
 }

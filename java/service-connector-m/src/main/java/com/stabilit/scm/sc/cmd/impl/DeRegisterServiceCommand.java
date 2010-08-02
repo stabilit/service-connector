@@ -88,7 +88,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
 	 */
-	private void validateServer(Server server) throws SCMPCommandException {
+	public void validateServer(Server server) throws SCMPCommandException {
 		if (server == null) {
 			// server not registered - deregister not possible
 			if (LoggerPoint.getInstance().isWarn()) {

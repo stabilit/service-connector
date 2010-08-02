@@ -71,4 +71,14 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
 	}
+
+	/**
+	 * Sets the mask.
+	 * 
+	 * @param mask
+	 *            the new mask
+	 */
+	public void setMask(String mask) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+	}
 }

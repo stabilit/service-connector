@@ -23,7 +23,6 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -49,13 +48,5 @@ public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
 		return new SCMPReceivePublicationCall(req, serviceName, sessionId);
-	}
-
-	public void setNoDataInterval(int noDataInterval) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
-	}
-
-	public void setMask(String mask) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
 }

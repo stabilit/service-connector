@@ -37,13 +37,10 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class PublishService extends Service implements IPublishService {
 
-	private String mask;
-
 	public PublishService(String serviceName, ISCContext context) {
 		super(serviceName, context);
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
-		this.mask = null;
 	}
 
 	@Override
@@ -52,7 +49,6 @@ public class PublishService extends Service implements IPublishService {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		this.msgId.incrementMsgSequenceNr();
-		this.mask = mask;
 		// TODO
 	}
 
@@ -63,10 +59,11 @@ public class PublishService extends Service implements IPublishService {
 			throw new SCServiceException("already subscribed");
 		}
 		this.msgId = new SCMPMessageId();
-		this.mask = mask;
 		this.callback = new PublishServiceCallback(callback);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
+		subscribeCall.setMask(mask);
+		
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		this.sessionId = reply.getSessionId();
@@ -77,7 +74,6 @@ public class PublishService extends Service implements IPublishService {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
-		receivePublicationCall.setMask(mask);
 		receivePublicationCall.invoke(this.callback);
 	}
 
@@ -94,7 +90,6 @@ public class PublishService extends Service implements IPublishService {
 		this.callback.getMessageSync();
 		this.msgId = null;
 		this.callback = null;
-		this.mask = null;
 	}
 
 	private class PublishServiceCallback extends ServiceCallback {

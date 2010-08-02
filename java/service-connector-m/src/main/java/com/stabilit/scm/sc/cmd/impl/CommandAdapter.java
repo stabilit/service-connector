@@ -32,6 +32,7 @@ import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.PublishService;
+import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.ServiceType;
 import com.stabilit.scm.sc.service.Session;
@@ -97,6 +98,23 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return session;
+	}
+
+	/**
+	 * Validate server. Checks properness of allocated server. If server null no free server available.
+	 * 
+	 * @param server
+	 *            the server
+	 * @throws SCMPCommandException
+	 *             the SCMP command exception
+	 */
+	public void validateServer(Server server) throws SCMPCommandException {
+		if (server == null) {
+			// no available server for this service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
 	}
 
 	/**

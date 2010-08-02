@@ -118,23 +118,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 	}
 
 	/**
-	 * Validate server. Checks properness of allocated server. If server null no free server available.
-	 * 
-	 * @param server
-	 *            the server
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	private void validateServer(Server server) throws SCMPCommandException {
-		if (server == null) {
-			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-	}
-
-	/**
 	 * The Class ClnCreateSessionCommandValidator.
 	 */
 	private class ClnCreateSessionCommandValidator implements ICommandValidator {

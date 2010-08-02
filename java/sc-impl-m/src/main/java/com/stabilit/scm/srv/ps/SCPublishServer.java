@@ -39,6 +39,7 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
 				serviceName);
 		publishCall.setRequestBody(data);
+		publishCall.setMask(mask);
 		publishCall.invoke(this.callback);
 		this.callback.getMessageSync();
 	}

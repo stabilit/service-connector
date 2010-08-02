@@ -78,10 +78,12 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
+		this.validateServer(server);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
 			// exception handling
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			SCMPFault fault = (SCMPFault) reply;
 			Throwable th = fault.getCause();
 			if (th instanceof OperationTimeoutException) {
@@ -94,6 +96,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		}
 		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// server rejected session - throw exception with server errors
 			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
 			e.setMessageType(getKey());

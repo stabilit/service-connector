@@ -231,7 +231,7 @@ public class SetupTestCases {
 		}
 	}
 
-	private static void startPublishServer() throws Exception {
+	public static void startPublishServer() throws Exception {
 		String serviceName = "publish-simulation";
 		ISCPublishServer publishSrv = new SCPublishServer("localhost", 9000);
 		// connect to SC as server
@@ -278,7 +278,11 @@ public class SetupTestCases {
 			int index = 0;
 			while (!killPublishServer) {
 				try {
-					Thread.sleep(5000);
+					if (index % 3 == 0) {
+						Thread.sleep(3000);
+					} else {
+						Thread.sleep(1000);
+					}
 					Object data = "publish message nr " + ++index;
 					String mask = "AVSD-----";
 					server.publish(serviceName, mask, data);
