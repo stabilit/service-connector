@@ -63,8 +63,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
 		is.read(headline);
 
-//		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
-//		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
+		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
+		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
 
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type

@@ -66,7 +66,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	@Test
 	public void decodeKRSTest() {
 		this.headKey = SCMPHeadlineKey.KRS;
-		String requestString = headKey.name() + " 00000 00000 1.0\n";
+		String requestString = headKey.name() + " 0000000 00000 1.0\n";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);

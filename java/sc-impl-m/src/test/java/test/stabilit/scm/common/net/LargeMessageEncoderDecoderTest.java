@@ -158,7 +158,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void decodeUNDEFTest() {
-		String requestString = "garbage /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID
+		String requestString = "garbe /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID
 				+ "\n" + "mty=" + msgType.getValue() + "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
