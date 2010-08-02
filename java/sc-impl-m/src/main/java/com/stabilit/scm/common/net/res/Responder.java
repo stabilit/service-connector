@@ -43,12 +43,11 @@ public class Responder implements IResponder {
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		EndpointFactory endpointFactory = new EndpointFactory();
+		EndpointFactory endpointFactory = EndpointFactory.getCurrentInstance();
 		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnectionType());
 		this.endpoint.setResponder(this);
 		this.endpoint.setHost(this.respConfig.getHost());
 		this.endpoint.setPort(this.respConfig.getPort());
-		this.endpoint.setNumberOfThreads(this.respConfig.getNumberOfThreads());
 		this.endpoint.create();
 	}
 

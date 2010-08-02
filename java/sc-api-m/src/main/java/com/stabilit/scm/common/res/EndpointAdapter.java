@@ -42,7 +42,5 @@ public abstract class EndpointAdapter implements IEndpoint {
 	/** {@inheritDoc} */
 	public void setResponder(IResponder resp) {
 		this.resp = resp;
-	}
-	
-	
+	}	
 }

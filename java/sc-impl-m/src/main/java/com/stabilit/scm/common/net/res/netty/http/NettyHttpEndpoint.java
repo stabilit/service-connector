@@ -17,7 +17,6 @@
 package com.stabilit.scm.common.net.res.netty.http;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -43,10 +42,8 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	private String host;
 	/** The port. */
 	private int port;
-	/** The numberOfThreads. */
-	private int numberOfThreads;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory channelFactory;
+	private static NioServerSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a NettyHttpEndpoint.
@@ -56,16 +53,19 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		this.channel = null;
 		this.host = null;
 		this.port = 0;
-		this.numberOfThreads = 10;
-		this.channelFactory = null;
+	}
+
+	/**
+	 * Instantiates a NettyHttpEndpoint.
+	 */
+	public NettyHttpEndpoint(NioServerSocketChannelFactory channelFactory) {
+		this();
+		NettyHttpEndpoint.channelFactory = channelFactory;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() {
-		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
-				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyHttpResponderPipelineFactory());
@@ -106,7 +106,6 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	public void destroy() {
 		try {
 			this.channel.close();
-			this.bootstrap.releaseExternalResources();
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			return;
@@ -123,11 +122,6 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	/** {@inheritDoc} */
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
 	}
 
 	/** {@inheritDoc} */

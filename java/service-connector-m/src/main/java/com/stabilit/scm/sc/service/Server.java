@@ -92,9 +92,8 @@ public class Server {
 		IResponder responder = responderRegistry.getCurrentResponder();
 		ICommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
-		int numberOfThreads = respConfig.getNumberOfThreads();
 		this.host = socketAddress.getHostName();
-		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval, numberOfThreads);
+		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
 		this.cp.setMaxConnections(maxSessions);
 		this.requester = new SCRequester(new RequesterContext(this.cp, null));
 	}

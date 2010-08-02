@@ -39,12 +39,11 @@ public class ConnectionPool implements IConnectionPool {
 	private int minConnections;
 	private boolean closeOnFree;
 	private int keepAliveInterval;
-	private int numberOfThreads;
 	private List<IConnection> freeConnections;
 	private List<IConnection> usedConnections;
 	private ConnectionFactory connectionFactory;
 
-	public ConnectionPool(String host, int port, String conType, int keepAliveInterval, int numberOfThreads) {
+	public ConnectionPool(String host, int port, String conType, int keepAliveInterval) {
 		this.host = host;
 		this.port = port;
 		this.conType = conType;
@@ -53,22 +52,20 @@ public class ConnectionPool implements IConnectionPool {
 		this.minConnections = 1;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
-		this.connectionFactory = new ConnectionFactory();
+		this.connectionFactory = ConnectionFactory.getCurrentInstance();
 		this.keepAliveInterval = keepAliveInterval;
-		this.numberOfThreads = numberOfThreads;
 	}
 
 	public ConnectionPool(String host, int port, String conType) {
-		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, keepAliveInterval);
 	}
 
 	public ConnectionPool(String host, int port) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	@Override
@@ -95,16 +92,16 @@ public class ConnectionPool implements IConnectionPool {
 		if (usedConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
 			throw new ConnectionPoolException("Unable to create new connection - limit of : " + maxConnections
-					+ "reached!");
+					+ " reached!");
 		}
 		// we create a new one
 		connection = connectionFactory.newInstance(this.conType);
 		connection.setHost(this.host);
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
-		connection.setNumberOfThreads(this.numberOfThreads);
 		IIdleCallback idleCallback = new IdleCallback();
-		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
+		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback,
+				this.keepAliveInterval);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
@@ -150,8 +147,8 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	/**
-	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may
-	 * affect others because of shared stuff (timer) etc.
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single
+	 * connection may affect others because of shared stuff (timer) etc.
 	 * 
 	 * @param connection
 	 *            the connection

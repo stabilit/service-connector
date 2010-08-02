@@ -53,7 +53,6 @@ public abstract class Service {
 	}
 
 	public void removeServer(Server server) {
-		server.destroy();
 		this.listOfServers.remove(server);
 	}
 

@@ -108,9 +108,6 @@ public abstract class CommunicatorConfigPool {
 			reqConfig.setPort(port);
 			reqConfig.setHost((String) props.get(respName + Constants.HOST_QUALIFIER));
 			reqConfig.setConnectionType((String) props.get(respName + Constants.CONNECTION_TYPE_QUALIFIER));
-			reqConfig.setNumberOfThreads(Integer.parseInt((String) props.get(respName
-					+ Constants.THREAD_POOL_SIZE_QUALIFIER)));
-
 		}
 		this.loggerKey = props.getProperty(Constants.ROOT_LOGGER_QUALIFIER);
 		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);

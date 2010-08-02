@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,24 +13,28 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
-
 /**
+ * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
+ * 
  * @author JTraber
  */
 public class SCMessage implements ISCMessage {
 
+	/** The message info. */
 	private String messageInfo;
+	/** The compressed - regards data part of the message. */
 	private Boolean compressed;
+	/** The data. */
 	private Object data;
+	/** The session id - identifies session context of communication. */
 	private String sessionId;
 
+	/**
+	 * Instantiates a new SCMessage.
+	 */
 	public SCMessage() {
 		this.messageInfo = null;
 		this.compressed = null;
@@ -39,52 +42,71 @@ public class SCMessage implements ISCMessage {
 		this.sessionId = null;
 	}
 
+	/**
+	 * Instantiates a new SCMessage.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public SCMessage(Object data) {
 		this();
 		this.data = data;
 	}
-
+	
+	/** {@inheritDoc} */
 	@Override
 	public void setMessageInfo(String messageInfo) {
 
 		this.messageInfo = messageInfo;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageInfo() {
 		return messageInfo;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Boolean isCompressed() {
 		return compressed;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setCompressed(Boolean compressed) {
 		this.compressed = compressed;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setData(Object data) {
 		this.data = data;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Object getData() {
 		return this.data;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getSessionId() {
 		return this.sessionId;
 	}
 
-	@Override
+	/**
+	 * Sets the session id.
+	 * 
+	 * @param sessionId
+	 *            the new session id
+	 */
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isFault() {
 		return false;

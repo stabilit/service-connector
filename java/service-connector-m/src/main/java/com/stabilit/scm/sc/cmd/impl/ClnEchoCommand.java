@@ -19,6 +19,7 @@ package com.stabilit.scm.sc.cmd.impl;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -58,9 +59,11 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		Session session = this.getSessionById(message.getSessionId());
 		Server server = session.getServer();
 
+		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
 		ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
 		server.serverEcho(message, callback);
-		SCMPMessage result = callback.getMessageSync(session.getEchoTimeout());
+		// TODO careful timeout is in seconds
+		SCMPMessage result = callback.getMessageSync(session.getEchoTimeout() * Constants.SEC_TO_MILISEC_FACTOR);
 
 		if (result.isFault()) {
 			/**

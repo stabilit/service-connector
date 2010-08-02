@@ -39,6 +39,7 @@ public class SCRequester implements IRequester {
 		this.reqContext = context;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
@@ -48,13 +49,21 @@ public class SCRequester implements IRequester {
 		connection.send(message, requesterCallback);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";
 	}
 
+	/**
+	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the
+	 * time a reply is received. Handles freeing up earlier requested connections.
+	 */
 	private class SCRequesterSCMPCallback implements ISCMPCallback {
+
+		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
+		/** The connection context. */
 		private IConnectionContext connectionCtx;
 
 		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
@@ -62,15 +71,18 @@ public class SCRequester implements IRequester {
 			this.connectionCtx = connectionCtx;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
-			this.scmpCallback.callback(scmpReply);
+			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
+			this.scmpCallback.callback(scmpReply);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
-			this.scmpCallback.callback(th);
+			// first handle connection - that user has a connection to work, if he has only 1
 			if (th instanceof OperationTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
@@ -78,8 +90,13 @@ public class SCRequester implements IRequester {
 				// another exception occurred - just free the connection
 				this.freeConnection();
 			}
+			this.scmpCallback.callback(th);
 		}
 
+		/**
+		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester
+		 * anymore.
+		 */
 		private void freeConnection() {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
@@ -88,9 +105,14 @@ public class SCRequester implements IRequester {
 			}
 		}
 
+		/**
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if
+		 * connection has a curious state.
+		 */
 		private void disconnectConnection() {
 			try {
-				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
+				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(
+						connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

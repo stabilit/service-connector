@@ -24,7 +24,6 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
@@ -46,8 +45,8 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	/**
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
 	 */
-	public NettyHttpRequesterPipelineFactory(IConnectionContext context) {
-		this.timer = new HashedWheelTimer();
+	public NettyHttpRequesterPipelineFactory(IConnectionContext context, Timer timer) {
+		this.timer = timer;
 		this.context = context;
 	}
 

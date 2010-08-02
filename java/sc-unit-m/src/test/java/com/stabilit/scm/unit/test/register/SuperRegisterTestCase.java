@@ -22,11 +22,16 @@ import org.junit.Before;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
+import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
@@ -53,24 +58,24 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() throws Throwable {
 		super.setup();
 		this.registerConfig = new RequesterConfigPool();
 		this.responderConfig = new ResponderConfigPool();
 		this.registerConfig.load(registerFileName);
 		this.responderConfig.load(registerFileName);
-		this.registerContext = new TestContext(registerConfig.getRequesterConfig(), this.msgId);
+		this.registerContext = new RegisterServiceContext(registerConfig.getRequesterConfig(), this.msgId);
 		this.registerRequester = new Requester(registerContext);
 		registerServiceBefore();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws Throwable {
 		deRegisterServiceAfter();
 		super.tearDown();
 	}
 
-	public void registerServiceBefore() throws Exception {
+	public void registerServiceBefore() throws Throwable {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(registerRequester, "publish-simulation");
 		registerServiceCall.setMaxSessions(10);
@@ -78,17 +83,37 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 		registerServiceCall.invoke(this.attachCallback);
-		this.attachCallback.getMessageSync();
+		this.checkReply(this.attachCallback.getMessageSync());
 	}
 
-	public void deRegisterServiceAfter() throws Exception {
+	public void checkReply(SCMPMessage message) throws Throwable {
+		if (message.isFault()) {
+			SCMPFault fault = (SCMPFault) message;
+			Throwable th = fault.getCause();
+			if (th != null) {
+				throw th;
+			}
+			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		}
+	}
+
+	public void deRegisterServiceAfter() throws Throwable {
 		this.deRegisterServiceAfter("publish-simulation");
 	}
 
-	public void deRegisterServiceAfter(String serviceName) throws Exception {
+	public void deRegisterServiceAfter(String serviceName) throws Throwable {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerRequester, serviceName);
 		deRegisterServiceCall.invoke(this.attachCallback);
-		this.attachCallback.getMessageSync();
+		this.checkReply(this.attachCallback.getMessageSync());
+	}
+
+	private class RegisterServiceContext extends TestContext {
+
+		public RegisterServiceContext(ICommunicatorConfig config, SCMPMessageId msgId) {
+			super(config, msgId);
+			// for register only 1 connection is allowed
+			this.connectionPool.setMaxConnections(1);
+		}
 	}
 }

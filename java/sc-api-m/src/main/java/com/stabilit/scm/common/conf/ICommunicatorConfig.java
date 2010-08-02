@@ -44,13 +44,6 @@ public interface ICommunicatorConfig {
 	 */
 	public abstract String getHost();
 
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
-
 	public String getConnectionType();
 
 	/**

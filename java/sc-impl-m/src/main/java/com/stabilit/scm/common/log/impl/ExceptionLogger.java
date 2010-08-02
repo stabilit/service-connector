@@ -34,7 +34,7 @@ public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
 	private ILogger logger;
 
 	private Formatter format;
-	private String EXC_STR = "exception by class %s - %s:%s";
+	private String EXC_STR = "exception by %s - %s:%s";
 
 	/**
 	 * Instantiates a new exception logger. Only visible in package for Factory.

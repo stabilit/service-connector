@@ -53,18 +53,19 @@ public class SetupTestCases {
 		deleteLog();
 		// setup loggers
 		try {
-//			LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
-//			ConnectionPoint.getInstance().addListener(
-//					(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-//			ExceptionPoint.getInstance().addListener(
-//					(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-//			LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-//			LoggerPoint.getInstance().setLevel(Level.DEBUG);
-//			PerformancePoint.getInstance().addListener(
-//					(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-//			PerformancePoint.getInstance().setOn(true);
-//			SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
-//			StatisticsPoint.getInstance().addListener(statisticsListener);
+			// LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
+			// ConnectionPoint.getInstance().addListener(
+			// (IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
+			// ExceptionPoint.getInstance().addListener(
+			// (IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
+			// LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
+			// LoggerPoint.getInstance().setLevel(Level.DEBUG);
+			// PerformancePoint.getInstance().addListener(
+			// (IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
+			// PerformancePoint.getInstance().setOn(true);
+			// SessionPoint.getInstance().addListener((ISessionListener)
+			// loggerFactory.newInstance(SessionLogger.class));
+			// StatisticsPoint.getInstance().addListener(statisticsListener);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -95,7 +96,7 @@ public class SetupTestCases {
 			}
 		}
 	}
-	
+
 	public static void setupSCSessionServer1Connections() {
 		if (setupTestCases == null) {
 			try {
@@ -160,18 +161,20 @@ public class SetupTestCases {
 		scSrv.startServer("localhost");
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSrv.registerService("simulation", srvCallback);
-	}	
+	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
 
 		private static int count = 100;
-		
+
 		@Override
 		public void abortSession(ISCMessage message) {
+			this.waitABit();
 		}
 
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
+			this.waitABit();
 			Object data = message.getData();
 			if (data instanceof String) {
 				String body = (String) data;
@@ -185,18 +188,19 @@ public class SetupTestCases {
 					}
 				}
 			}
-			message.setData(count+"");
+			message.setData(count + "");
 			count++;
 			return message;
 		}
 
 		@Override
 		public void deleteSession(ISCMessage message) {
+			this.waitABit();
 		}
 
 		@Override
 		public ISCMessage execute(ISCMessage message) {
-
+			this.waitABit();
 			if (message.getData().toString().startsWith("large")) {
 				StringBuilder sb = new StringBuilder();
 				int i = 0;
@@ -212,6 +216,14 @@ public class SetupTestCases {
 			}
 			message.setData("message data test case");
 			return message;
+		}
+
+		private void waitABit() {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 

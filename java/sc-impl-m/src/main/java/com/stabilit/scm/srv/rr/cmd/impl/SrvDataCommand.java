@@ -52,9 +52,9 @@ public class SrvDataCommand extends SrvCommandAdapter {
 
 		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
-		ISCMessage scMessage = new SCMessage();
+		SCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(scmpMessage.getSessionId());
 

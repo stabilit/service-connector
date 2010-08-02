@@ -21,20 +21,16 @@
  */
 package com.stabilit.scm.common.service;
 
-
 /**
  * @author JTraber
- *
  */
 public interface ISC {
 
-	ISCContext getContext();
+	public abstract ISCContext getContext();
 
-	int getNumberOfThreads();
+	public abstract String getConnectionKey();
 
-	String getConnectionKey();
+	public abstract String getHost();
 
-	String getHost();
-
-	int getPort();
+	public abstract int getPort();
 }

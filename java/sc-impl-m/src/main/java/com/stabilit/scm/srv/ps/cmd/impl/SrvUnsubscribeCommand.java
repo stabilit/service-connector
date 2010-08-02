@@ -26,7 +26,6 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
@@ -53,7 +52,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
 		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
-		ISCMessage scMessage = new SCMessage();
+		SCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setSessionId(scmpMessage.getSessionId());
 

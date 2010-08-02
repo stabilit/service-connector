@@ -46,13 +46,13 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	}
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() throws Throwable {
 		super.setup();
 		clnCreateSessionBefore();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws Throwable {
 		clnDeleteSessionAfter();
 		super.tearDown();
 	}

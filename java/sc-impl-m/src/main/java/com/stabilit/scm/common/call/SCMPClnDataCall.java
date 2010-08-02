@@ -60,7 +60,7 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	 *            the new message info
 	 */
 	public void setMessagInfo(String messageInfo) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
 	/** {@inheritDoc} */
@@ -76,6 +76,8 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	 *            the compression
 	 */
 	public void setCompressed(boolean compressed) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.COMPRESSION, compressed);
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
 	}
 }

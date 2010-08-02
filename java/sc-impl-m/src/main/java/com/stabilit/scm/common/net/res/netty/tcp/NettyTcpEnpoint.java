@@ -17,13 +17,11 @@
 package com.stabilit.scm.common.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
@@ -44,10 +42,8 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	private String host;
 	/** The port. */
 	private int port;
-	/** The numberOfThreads. */
-	private int numberOfThreads;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory channelFactory;
+	private static NioServerSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a new NettyTcpEnpoint.
@@ -57,16 +53,19 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
-		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
-		this.channelFactory = null;
+	}
+	
+	/**
+	 * Instantiates a new NettyTcpEnpoint.
+	 */
+	public NettyTcpEnpoint(NioServerSocketChannelFactory channelFactory) {
+		this();
+		NettyTcpEnpoint.channelFactory = channelFactory;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() {
-		// Configure the server.
-		channelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
-				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyTcpResponderPipelineFactory());
@@ -107,7 +106,6 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	public void destroy() {
 		try {
 			this.channel.close();
-			this.bootstrap.releaseExternalResources();
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
@@ -123,12 +121,6 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
 	}
 
 	/** {@inheritDoc} */

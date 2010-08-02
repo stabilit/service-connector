@@ -14,39 +14,61 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-
 package com.stabilit.scm.common.service;
 
 /**
- * The Class SCMessageFault.
+ * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector
+ * in case of an error situation.
+ * 
+ * @author JTraber
  */
 public class SCMessageFault extends SCMessage {
 
+	/** The application error code. */
 	private String appErrorCode;
+	/** The application error text. */
 	private String appErrorText;
 
-	/**
-	 * Checks if is fault.
-	 * 
-	 * @return true, if is fault
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isFault() {
 		return true;
 	}
 
+	/**
+	 * Gets the application error code.
+	 * 
+	 * @return the application error code
+	 */
 	public String getAppErrorCode() {
 		return appErrorCode;
 	}
 
+	/**
+	 * Sets the application error code.
+	 * 
+	 * @param appErrorCode
+	 *            the new application error code
+	 */
 	public void setAppErrorCode(String appErrorCode) {
 		this.appErrorCode = appErrorCode;
 	}
 
+	/**
+	 * Gets the application error text.
+	 * 
+	 * @return the application error text
+	 */
 	public String getAppErrorText() {
 		return appErrorText;
 	}
 
+	/**
+	 * Sets the application error text.
+	 * 
+	 * @param appErrorText
+	 *            the new application error text
+	 */
 	public void setAppErrorText(String appErrorText) {
 		this.appErrorText = appErrorText;
 	}

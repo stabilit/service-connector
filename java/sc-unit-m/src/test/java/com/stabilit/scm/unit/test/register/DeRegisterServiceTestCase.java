@@ -44,13 +44,12 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	}
 
 	@Test
-	public void deRegisterServiceCall() throws Exception {
+	public void deRegisterServiceCall() throws Throwable {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
 		deRegisterServiceCall.invoke(this.attachCallback);
-		this.attachCallback.getMessageSync();
-
+		this.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback);
@@ -67,7 +66,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	}
 
 	@Test
-	public void secondDeRegisterServiceCall() throws Exception {
+	public void secondDeRegisterServiceCall() throws Throwable {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");

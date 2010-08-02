@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,20 +13,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
 import com.stabilit.scm.common.ctx.IContext;
 
 /**
+ * The Interface IService. Top interface for services.
+ * 
  * @author JTraber
- *
  */
 public interface IService {
-	
-	IContext getContext();
+
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
+	public abstract IContext getContext();
 }

@@ -16,19 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.impl;
 
-import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
-public class SrvEchoCommand implements ICommand {
-
-	/** The command validator. */
-	private ICommandValidator commandValidator;
+public class SrvEchoCommand extends SrvCommandAdapter {
 
 	public SrvEchoCommand() {
 		this.commandValidator = new SrvEchoCommandValidator();
@@ -48,27 +46,38 @@ public class SrvEchoCommand implements ICommand {
 	}
 
 	public class SrvEchoCommandValidator implements ICommandValidator {
+
+		/** {@inheritDoc} */
 		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// TODO echo validate?
+		public void validate(IRequest request) throws Exception {
+			SCMPMessage message = request.getMessage();
+			try {
+				// messageId
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				if (messageId == null || messageId.equals("")) {
+					throw new SCMPValidatorException("messageId must be set!");
+				}
+				// serviceName
+				String serviceName = message.getServiceName();
+				if (serviceName == null || serviceName.equals("")) {
+					throw new SCMPValidatorException("serviceName must be set!");
+				}
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new SCMPValidatorException("sessionId must be set!");
+				}
+			} catch (HasFaultResponseException ex) {
+				ExceptionPoint.getInstance().fireException(this, new Exception("genau2"));
+				// needs to set message type at this point
+				ex.setMessageType(getKey());
+				throw ex;
+			} catch (Throwable e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+				SCMPValidatorException validatorException = new SCMPValidatorException();
+				validatorException.setMessageType(getKey());
+				throw validatorException;
+			}
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean isAsynchronous() {
-		return false;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 }

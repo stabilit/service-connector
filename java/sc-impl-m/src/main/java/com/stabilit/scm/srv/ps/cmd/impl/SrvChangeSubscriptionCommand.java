@@ -54,7 +54,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
-		ISCMessage scMessage = new SCMessage();
+		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionId(scmpMessage.getSessionId());
 		scmpMessage.setServiceName(serviceName);
 

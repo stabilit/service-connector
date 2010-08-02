@@ -30,7 +30,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
 
 public class SrvEchoLargeTestCase extends SuperSessionTestCase {
-
+	//TODO change to clndata
 	/**
 	 * The Constructor.
 	 * 

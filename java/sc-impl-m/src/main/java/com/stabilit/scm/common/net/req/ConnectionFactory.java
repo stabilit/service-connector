@@ -16,14 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
+import java.util.concurrent.Executors;
+
+import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.util.HashedWheelTimer;
+import org.jboss.netty.util.Timer;
+
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpConnection;
 
 /**
- * A factory for creating connection objects. Provides access to concrete client instances. 
- * Possible connection types are shown as constants below.
+ * A factory for creating connection objects. Provides access to concrete client instances. Possible connection
+ * types are shown as constants below.
  */
 public class ConnectionFactory extends Factory {
 
@@ -31,18 +38,47 @@ public class ConnectionFactory extends Factory {
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
 	private static final String NETTY_HTTP = "netty.http";
+	/** ConnectionFactory instance */
+	private static final ConnectionFactory instance = new ConnectionFactory();
+
+	/** Netty stuff */
+	/*
+	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 */
+	private static NioClientSocketChannelFactory channelFactory;
+	/** The Constant timer, responsible component to observe timeouts in a connection. */
+	private static Timer timer;
+
+	{
+		ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors
+				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_CLIENT), Executors
+				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_CLIENT));
+		ConnectionFactory.timer = new HashedWheelTimer();
+	}
+
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
+	public static ConnectionFactory getCurrentInstance() {
+		return ConnectionFactory.instance;
+	}
 
 	/**
 	 * Instantiates a new ConnectionFactory.
 	 */
-	public ConnectionFactory() {
+	private ConnectionFactory() {
 		// jboss netty http client
-		IConnection nettyHttpClient = new NettyHttpConnection();
-		add(DEFAULT, nettyHttpClient);
-		add(NETTY_HTTP, nettyHttpClient);
+		IConnection nettyHttpConnection = new NettyHttpConnection(ConnectionFactory.channelFactory,
+				ConnectionFactory.timer);
+		add(DEFAULT, nettyHttpConnection);
+		add(NETTY_HTTP, nettyHttpConnection);
 		// jboss netty tcp client
-		IConnection nettyTCPClient = new NettyTcpConnection();
-		add(NETTY_TCP, nettyTCPClient);
+		IConnection nettyTCPConnection = new NettyTcpConnection(ConnectionFactory.channelFactory,
+				ConnectionFactory.timer);
+		add(NETTY_TCP, nettyTCPConnection);
 	}
 
 	/** {@inheritDoc} */
@@ -55,11 +91,20 @@ public class ConnectionFactory extends Factory {
 	 * New instance.
 	 * 
 	 * @param key
-	 *            the key designating the connection type 
+	 *            the key designating the connection type
 	 * @return the i client connection
 	 */
 	public IConnection newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);
 		return (IConnection) factoryInstance; // should be a clone if implemented
+	}
+
+	/**
+	 * Shutdown connection factory. This method shuts down every resource needed by connections. Should only be
+	 * used if whole application shuts down.
+	 */
+	public static void shutdownConnectionFactory() {
+		ConnectionFactory.channelFactory.releaseExternalResources();
+		ConnectionFactory.timer.stop();
 	}
 }

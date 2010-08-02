@@ -28,9 +28,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public interface IConnection extends ICommunicationPoint {
 
 	public abstract IConnectionContext getContext();
-	
+
 	public abstract void setContext(IConnectionContext connectionContext);
-	
+
 	/**
 	 * Connect.
 	 * 
@@ -77,11 +77,10 @@ public interface IConnection extends ICommunicationPoint {
 	 *            the new idle timeout
 	 */
 	public abstract void setIdleTimeout(int idleTimeout);
-	
-	public abstract void incrementNrOfIdles();
-	
-	public abstract void resetNrOfIdles();
-	
-	public abstract int getNrOfIdlesInSequence();
 
+	public abstract void incrementNrOfIdles();
+
+	public abstract void resetNrOfIdles();
+
+	public abstract int getNrOfIdlesInSequence();
 }

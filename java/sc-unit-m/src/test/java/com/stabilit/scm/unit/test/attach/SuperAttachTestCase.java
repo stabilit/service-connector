@@ -46,13 +46,13 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	}
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() throws Throwable {
 		super.setup();
 		clnAttachBefore();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws Throwable {
 		clnDetachAfter();
 		super.tearDown();
 	}

@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,24 +13,41 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
 import com.stabilit.scm.cln.service.IService;
 
-
 /**
+ * The Interface ISCMessageCallback. Represents basic functionality for callbacks to be used in asynchronous
+ * communication with an SC.
+ * 
  * @author JTraber
  */
 public interface ISCMessageCallback {
 
+	/**
+	 * Callback. Method gets called when reply arrives.
+	 * 
+	 * @param reply
+	 *            the reply
+	 * @throws Exception
+	 *             the exception
+	 */
 	public abstract void callback(ISCMessage reply) throws Exception;
 
+	/**
+	 * Callback. Method gets called when an error shows up in communication process.
+	 * 
+	 * @param th
+	 *            the throwable
+	 */
 	public abstract void callback(Throwable th);
 
+	/**
+	 * Gets the service which is using the message callback.
+	 * 
+	 * @return the service
+	 */
 	public abstract IService getService();
 }

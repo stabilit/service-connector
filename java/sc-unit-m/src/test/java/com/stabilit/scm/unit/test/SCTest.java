@@ -34,8 +34,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
-import com.stabilit.scm.unit.test.echo.SrvEchoLargeTestCase;
-import com.stabilit.scm.unit.test.echo.SrvEchoTestCase;
 import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
@@ -52,23 +50,11 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { 
-	AttachTestCase.class, 
-	DetachTestCase.class, 
-	ClnCreateSessionTestCase.class,
-	ClnDeleteSessionTestCase.class, 
-	RegisterServiceTestCase.class, 
-	DeRegisterServiceTestCase.class,
-	SrvDataSyncTestCase.class, 
-	SrvDataLargeSyncTestCase.class, 
-	SrvDataAsyncTestCase.class, 
-	SrvDataLargeAsyncTestCase.class, 
-	SrvEchoTestCase.class, 
-	SrvEchoLargeTestCase.class,
-	SCImplTest.class,
-	ConnectionPoolTest.class,
-	MessageIdTestCase.class,
-	SCVersionToSCTestCase.class})
+@SuiteClasses( { AttachTestCase.class, DetachTestCase.class, ClnCreateSessionTestCase.class,
+		ClnDeleteSessionTestCase.class, RegisterServiceTestCase.class, DeRegisterServiceTestCase.class,
+		SrvDataSyncTestCase.class, SrvDataLargeSyncTestCase.class, SrvDataAsyncTestCase.class,
+		SrvDataLargeAsyncTestCase.class, SCImplTest.class, ConnectionPoolTest.class, MessageIdTestCase.class,
+		SCVersionToSCTestCase.class })
 public class SCTest {
 
 	private SCTest() {
@@ -85,7 +71,8 @@ public class SCTest {
 		Assert.assertEquals(errorCode, expectedError.getErrorCode());
 	}
 
-	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter, String keyDelimiter) {
+	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter,
+			String keyDelimiter) {
 		Map<String, String> map = new HashMap<String, String>();
 
 		String[] rows = stringToSplit.split(entryDelimiter);
@@ -98,11 +85,16 @@ public class SCTest {
 	}
 
 	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
+		actual = actual.replaceAll("127.0.0.1/", "localhost/");
 		actual = actual.replaceAll("localhost/127.0.0.1:\\d*", "localhost/127.0.0.1:");
 
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
 
+//		if (expectedMap.equals(actualMap) == false) {
+//			System.out.println("actual : " + actual);
+//			System.out.println("expected : " + expected);
+//		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
 

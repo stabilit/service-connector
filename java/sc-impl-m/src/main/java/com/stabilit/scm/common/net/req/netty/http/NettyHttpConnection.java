@@ -19,14 +19,12 @@ package com.stabilit.scm.common.net.req.netty.http;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
@@ -34,7 +32,7 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.jboss.netty.util.ExternalResourceReleasable;
+import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
@@ -45,9 +43,7 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
-import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
-import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -69,12 +65,8 @@ public class NettyHttpConnection implements IConnection {
 	private int port;
 	/** The host. */
 	private String host;
-	/** The numberOfThreads. */
-	private int numberOfThreads;
 	/** The operation listener. */
 	private NettyOperationListener operationListener;
-	/** The channel factory. */
-	private NioClientSocketChannelFactory channelFactory;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 	/** The local socket address. */
@@ -86,6 +78,12 @@ public class NettyHttpConnection implements IConnection {
 	private boolean connected;
 	protected int idleTimeout;
 	private int nrOfIdles;
+	private static Timer timer;
+	/*
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread
+	 * accepts incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 */
+	private static NioClientSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a new netty http connection.
@@ -95,16 +93,23 @@ public class NettyHttpConnection implements IConnection {
 		this.bootstrap = null;
 		this.channel = null;
 		this.port = 0;
-		this.numberOfThreads = Constants.DEFAULT_NR_OF_THREADS;
 		this.host = null;
 		this.operationListener = null;
-		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
 		this.connected = false;
 		this.idleTimeout = 0; // default 0 -> inactive
 		this.pipelineFactory = null;
 		this.connectionContext = null;
+	}
+
+	/**
+	 * Instantiates a new netty http connection.
+	 */
+	public NettyHttpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
+		this();
+		NettyHttpConnection.channelFactory = channelFactory;
+		NettyHttpConnection.timer = timer;
 	}
 
 	/** {@inheritDoc} */
@@ -122,15 +127,10 @@ public class NettyHttpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		/*
-		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-		 */
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
-				.newFixedThreadPool(numberOfThreads / 4));
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", Constants.CONNECT_TIMEOUT_MILLIS);
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext);
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext,
+				NettyHttpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -138,8 +138,8 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
-					.getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(
+					Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS).getChannel();
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
@@ -173,7 +173,6 @@ public class NettyHttpConnection implements IConnection {
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
-		this.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
@@ -193,7 +192,8 @@ public class NettyHttpConnection implements IConnection {
 		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
 
-		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
+		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(
+				NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);
 
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
@@ -229,29 +229,9 @@ public class NettyHttpConnection implements IConnection {
 	}
 
 	/** {@inheritDoc} */
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public IConnection newInstance() {
 		return new NettyHttpConnection();
-	}
-
-	/**
-	 * Release external resources.
-	 */
-	private void releaseExternalResources() {
-		ChannelPipeline pipeline = this.channel.getPipeline();
-		// release resources in idle timeout handler
-		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in read timeout handler
-		externalResourceReleasable = pipeline.get(NettyOperationTimeoutHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in client connection
-		this.bootstrap.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */

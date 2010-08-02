@@ -56,6 +56,7 @@ public class PublishService extends Service implements IPublishService {
 		// TODO
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void subscribe(String mask, ISCMessageCallback callback) throws Exception {
 		if (this.callback != null) {
@@ -80,6 +81,7 @@ public class PublishService extends Service implements IPublishService {
 		receivePublicationCall.invoke(this.callback);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void unsubscribe() throws Exception {
 		if (this.callback == null) {
@@ -101,6 +103,7 @@ public class PublishService extends Service implements IPublishService {
 			super(PublishService.this, messageCallback);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			// TODO if no data message -> receivePublication again

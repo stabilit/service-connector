@@ -31,29 +31,24 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	private String host;
 	/** The connectionKey. */
 	private String connectionType;
-	/** The number of threads. */
-	private int numberOfThreads;
 	/** The max pool size. */
 	private int maxPoolSize;
 
 	private int keepAliveInterval;
-	
+
 	/**
 	 * Instantiates a new communicator configuration.
 	 */
 	CommunicatorConfig() {
 	}
 
-	
-
 	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType,
-			int numberOfThreads, int maxPoolSize, int keepAliveInterval, int keepAliveTimeout) {
+			int maxPoolSize, int keepAliveInterval, int keepAliveTimeout) {
 		super();
 		this.communicatorName = communicatorName;
 		this.port = port;
 		this.host = host;
 		this.connectionType = connectionType;
-		this.numberOfThreads = numberOfThreads;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
 	}
@@ -114,22 +109,6 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	 */
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getNumberOfThreads() {
-		return numberOfThreads;
-	}
-
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads
-	 *            the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
 	}
 
 	/** {@inheritDoc} */

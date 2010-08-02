@@ -44,8 +44,6 @@ public class SCServer implements ISCServer {
 	private int scPort;
 	/** The connection type, identifies low level component to use for communication (netty, nio). */
 	private String conType;
-	/** The number of threads to use on client side. */
-	private int numberOfThreads;
 	private SCServerContext context;
 
 	// fields for register service
@@ -63,31 +61,24 @@ public class SCServer implements ISCServer {
 	private SCMPMessageId msgId;
 
 	public SCServer(String host, int port) {
-		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	public SCServer(String host, int port, String connectionType) {
-		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	public SCServer(String host, int port, String connectionType, int keepAliveInterval) {
-		this(host, port, connectionType, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
-	}
-
-	public SCServer(String host, int port, String connectionType, int keepAliveInterval, int numberOfThreads) {
 		this.scHost = host;
 		this.scPort = port;
 		this.conType = connectionType;
-		this.numberOfThreads = numberOfThreads;
 
 		// attributes for registerService
 		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.immediateConnect = true;
 		this.keepAliveInterval = 0;
 		this.runningPort = 0;
-		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, keepAliveInterval,
-				numberOfThreads);
+		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, keepAliveInterval);
 		// register service only needs one connection
 		this.connectionPool.setMaxConnections(1);
 		this.context = new SCServerContext();
@@ -101,12 +92,6 @@ public class SCServer implements ISCServer {
 	@Override
 	public ISCContext getContext() {
 		return context;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getNumberOfThreads() {
-		return numberOfThreads;
 	}
 
 	/** {@inheritDoc} */
@@ -174,12 +159,6 @@ public class SCServer implements ISCServer {
 	/** {@inheritDoc} */
 	@Override
 	public void startServer(String host) throws Exception {
-		this.startServer(host, Constants.DEFAULT_NR_OF_THREADS);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void startServer(String host, int numberOfThreads) throws Exception {
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new SessionServerCommandFactory());
@@ -190,7 +169,6 @@ public class SCServer implements ISCServer {
 		respConfig.setHost(host);
 		respConfig.setPort(this.runningPort);
 		respConfig.setKeepAliveInterval(this.keepAliveInterval);
-		respConfig.setNumberOfThreads(numberOfThreads);
 
 		IResponder resp = new Responder(respConfig);
 		try {

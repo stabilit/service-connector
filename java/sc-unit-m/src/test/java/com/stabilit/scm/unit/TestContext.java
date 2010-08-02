@@ -32,19 +32,15 @@ import com.stabilit.scm.common.scmp.SCMPMessageId;
  */
 public class TestContext implements IRequesterContext {
 
-	private IConnectionPool connectionPool;
+	protected IConnectionPool connectionPool;
 	private SCMPMessageId msgId;
 
 	public TestContext(ICommunicatorConfig config, SCMPMessageId msgId) {
 		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
+		this.connectionPool.setMinConnections(1);
 		this.msgId = msgId;
 	}
 
-	/**
-	 * @param string
-	 * @param i
-	 * @param string2
-	 */
 	public TestContext(String host, int port, String conType) {
 		this.connectionPool = new ConnectionPool(host, port, conType);
 	}

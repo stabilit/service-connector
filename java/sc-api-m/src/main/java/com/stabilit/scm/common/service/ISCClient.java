@@ -44,21 +44,6 @@ public interface ISCClient extends ISC {
 	public void detach() throws Exception;
 
 	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads();
-
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads
-	 *            the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads);
-
-	/**
 	 * Gets the connection key.
 	 * 
 	 * @return the connection key

@@ -18,17 +18,15 @@ package com.stabilit.scm.common.net.req.netty.tcp;
 
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.util.ExternalResourceReleasable;
+import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
@@ -39,9 +37,7 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
-import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
-import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -59,12 +55,8 @@ public class NettyTcpConnection implements IConnection {
 	private int port;
 	/** The host. */
 	private String host;
-	/** The numberOfThreads. */
-	private int numberOfThreads;
 	/** The operation listener. */
 	private NettyOperationListener operationListener;
-	/** The channel factory. */
-	private NioClientSocketChannelFactory channelFactory;
 	/** The encoder decoder. */
 	private IEncoderDecoder encoderDecoder;
 	/** The local socket address. */
@@ -76,6 +68,13 @@ public class NettyTcpConnection implements IConnection {
 	private boolean isConnected;
 	protected int idleTimeout;
 	private int nrOfIdles;
+	private static Timer timer;
+	/** The channel factory. */
+	/*
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread
+	 * accepts incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 */
+	private static NioClientSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
@@ -85,14 +84,21 @@ public class NettyTcpConnection implements IConnection {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
-		this.numberOfThreads = 10;
 		this.operationListener = null;
-		this.channelFactory = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
 		this.isConnected = false;
 		this.pipelineFactory = null;
 		this.connectionContext = null;
+	}
+	
+	/**
+	 * Instantiates a new NettyTcpConnection.
+	 */
+	public NettyTcpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
+		this();
+		NettyTcpConnection.channelFactory = channelFactory;
+		NettyTcpConnection.timer = timer;
 	}
 
 	/** {@inheritDoc} */
@@ -110,14 +116,9 @@ public class NettyTcpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		/*
-		 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-		 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-		 */
-		channelFactory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(numberOfThreads), Executors
-				.newFixedThreadPool(numberOfThreads / 4));
-		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext);
+		this.bootstrap = new ClientBootstrap(NettyTcpConnection.channelFactory);
+		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext,
+				NettyTcpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Start the connection attempt.
 		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
@@ -159,7 +160,6 @@ public class NettyTcpConnection implements IConnection {
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
-		this.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
@@ -169,7 +169,8 @@ public class NettyTcpConnection implements IConnection {
 		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
 		encoderDecoder.encode(baos, scmp);
 
-		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
+		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(
+				NettyTcpRequesterResponseHandler.class);
 		handler.setCallback(callback);
 
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
@@ -200,29 +201,9 @@ public class NettyTcpConnection implements IConnection {
 	}
 
 	/** {@inheritDoc} */
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	/**
-	 * Release external resources.
-	 */
-	private void releaseExternalResources() {
-		ChannelPipeline pipeline = this.channel.getPipeline();
-		// release resources in idle timeout handler
-		ExternalResourceReleasable externalResourceReleasable = pipeline.get(NettyIdleHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in read timeout handler
-		externalResourceReleasable = pipeline.get(NettyOperationTimeoutHandler.class);
-		externalResourceReleasable.releaseExternalResources();
-		// release resources in client connection
-		this.bootstrap.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */

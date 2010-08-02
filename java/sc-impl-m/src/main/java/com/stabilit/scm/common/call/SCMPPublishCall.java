@@ -19,18 +19,36 @@ package com.stabilit.scm.common.call;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPPublishCall.
+ * 
+ * @author JTraber
+ */
 public class SCMPPublishCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPPublishCall.
+	 */
 	public SCMPPublishCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPPublishCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 */
 	public SCMPPublishCall(IRequester req, String serviceName) {
 		super(req, serviceName);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
 		return new SCMPPublishCall(requester, serviceName);
@@ -40,5 +58,17 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.PUBLISH;
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
 	}
 }

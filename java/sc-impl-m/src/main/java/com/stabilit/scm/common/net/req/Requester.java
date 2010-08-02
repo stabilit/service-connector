@@ -28,8 +28,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
- * has to process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect,
+ * send/receive has to process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -48,6 +48,7 @@ public class Requester implements IRequester {
 		this.reqContext = outerContext;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage message, ISCMPCallback scmpCallback) throws Exception {
 		// return an already connected live instance
@@ -60,8 +61,8 @@ public class Requester implements IRequester {
 		if (message.isLargeMessage()) {
 			// SCMPCompositeSender handles splitting, works like an iterator
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
-					msgId);
+			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext,
+					compositeSender, msgId);
 			// extract first part message & send
 			SCMPMessage part = compositeSender.getFirst();
 			// handling messageId
@@ -85,26 +86,39 @@ public class Requester implements IRequester {
 		}
 	}
 
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
 	public IContext getContext() {
 		return reqContext;
 	}
 
-	/**
-	 * To hash code string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";
 	}
 
+	/**
+	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time
+	 * a reply is received. Handles freeing up earlier requested connections. Provides functionality to deal with
+	 * large messages.
+	 */
 	private class RequesterSCMPCallback implements ISCMPCallback {
+
+		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
+		/** The connection context. */
 		private IConnectionContext connectionCtx;
+		/** The request message, initial message sent by requester. */
 		private SCMPMessage requestMsg;
+		/** The composite receiver. */
 		private SCMPCompositeReceiver compositeReceiver;
-		private SCMPCompositeSender compositSender;
+		/** The composite sender. */
+		private SCMPCompositeSender compositeSender;
+		/** The message id. */
 		private SCMPMessageId msgId;
 
 		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
@@ -117,15 +131,16 @@ public class Requester implements IRequester {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
-			this.compositSender = compositeSender;
+			this.compositeSender = compositeSender;
 			this.msgId = msgId;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 
 			// ------------------- handling large request --------------------
-			if (compositSender != null) {
+			if (compositeSender != null) {
 				// handle large messages
 				boolean largeRequestDone = this.handlingLargeRequest(scmpReply);
 
@@ -134,7 +149,7 @@ public class Requester implements IRequester {
 					return;
 				}
 
-				this.compositSender = null;
+				this.compositeSender = null;
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
 					// response is a part - response is large, continue pulling
 					// delete compositeSender - large request done!
@@ -142,6 +157,8 @@ public class Requester implements IRequester {
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
+				// first handle connection - that user has a connection to work, if he has only 1
+				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
 				return;
 			}
@@ -152,6 +169,8 @@ public class Requester implements IRequester {
 				this.compositeReceiver.add(scmpReply);
 				if (scmpReply.isPart() == false) {
 					// response received
+					// first handle connection - that user has a connection to work, if he has only 1
+					this.freeConnection();
 					this.scmpCallback.callback(this.compositeReceiver);
 					// delete compositeReceiver - large response done!
 					this.compositeReceiver = null;
@@ -165,6 +184,8 @@ public class Requester implements IRequester {
 			if (requestMsg.isPart()) {
 				// incoming message is a part groupCall is made by client - part
 				// response can be ignored
+				// first handle connection - that user has a connection to work, if he has only 1
+				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
 				return;
 			}
@@ -175,11 +196,19 @@ public class Requester implements IRequester {
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}
-			this.scmpCallback.callback(scmpReply);
-			// free connection after callback returns - prevents using the same connection right away, race conditions
+			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
+			this.scmpCallback.callback(scmpReply);
 		}
 
+		/**
+		 * Handling large response.
+		 * 
+		 * @param scmpReply
+		 *            the scmp reply
+		 * @throws Exception
+		 *             the exception
+		 */
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {
 			// response is a part - response is large, continue pulling
 			// SCMPComposite handles parts of large requests, putting all together
@@ -194,10 +223,19 @@ public class Requester implements IRequester {
 			this.connectionCtx.getConnection().send(message, this); // pull & exit
 		}
 
+		/**
+		 * Handling large request.
+		 * 
+		 * @param scmpReply
+		 *            the scmp reply
+		 * @return true, if successful
+		 * @throws Exception
+		 *             the exception
+		 */
 		private boolean handlingLargeRequest(SCMPMessage scmpReply) throws Exception {
 			SCMPMessage part = null;
 
-			part = compositSender.getCurrentPart();
+			part = compositeSender.getCurrentPart();
 			if (part.isRequest()) {
 				/*
 				 * request has been sent completely. The response can be small or large, this doesn't matter, we
@@ -205,22 +243,22 @@ public class Requester implements IRequester {
 				 */
 				return true;
 			}
-			if (compositSender.hasNext() == false) {
+			if (compositeSender.hasNext() == false) {
 				if (this.requestMsg.isGroup()) {
 					/*
-					 * client processes group call, he needs to get the response - happens in special case: client sends
-					 * a single part of a group but content is to large and we need to split
+					 * client processes group call, he needs to get the response - happens in special case: client
+					 * sends a single part of a group but content is to large and we need to split
 					 */
 					return true;
 				}
-				LoggerPoint.getInstance()
-						.fireWarn(this, "compositeSender.hasNext() == false but part request not done");
+				LoggerPoint.getInstance().fireWarn(this,
+						"compositeSender.hasNext() == false but part request not done");
 				return true;
 			}
-			part = compositSender.getNext();
+			part = compositeSender.getNext();
 			// handling messageId
 			if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
-				if (compositSender.hasNext() == false) {
+				if (compositeSender.hasNext() == false) {
 					// last part to send - will be a REQ message, increment message number
 					this.msgId.incrementMsgSequenceNr();
 				} else {
@@ -233,11 +271,12 @@ public class Requester implements IRequester {
 			return false;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
 			// delete composites
 			this.compositeReceiver = null;
-			this.compositSender = null;
+			this.compositeSender = null;
 			this.scmpCallback.callback(th);
 			if (th instanceof OperationTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
@@ -248,6 +287,10 @@ public class Requester implements IRequester {
 			}
 		}
 
+		/**
+		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester
+		 * anymore.
+		 */
 		private void freeConnection() {
 			try {
 				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
@@ -256,9 +299,14 @@ public class Requester implements IRequester {
 			}
 		}
 
+		/**
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if
+		 * connection has a curious state.
+		 */
 		private void disconnectConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
+				Requester.this.reqContext.getConnectionPool()
+						.forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

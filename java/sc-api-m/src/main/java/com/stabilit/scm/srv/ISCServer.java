@@ -39,7 +39,5 @@ public interface ISCServer extends ISC {
 
 	public abstract void setImmediateConnect(boolean immediateConnect);
 
-	public abstract void startServer(String host, int numberOfThreads) throws Exception;
-
 	public abstract void startServer(String host) throws Exception;
 }

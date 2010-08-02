@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.ISessionService;
@@ -40,16 +35,28 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
+ * The Class SessionService. SessionService is a remote interface to a service and provides communication
+ * functions.
+ * 
  * @author JTraber
  */
 public class SessionService extends Service implements ISessionService {
 
+	/**
+	 * Instantiates a new session service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param context
+	 *            the context
+	 */
 	public SessionService(String serviceName, ISCContext context) {
 		super(serviceName, context);
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception {
 		if (this.callback != null) {
@@ -67,6 +74,7 @@ public class SessionService extends Service implements ISessionService {
 		this.sessionId = reply.getSessionId();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void deleteSession() throws Exception {
 		if (this.callback == null) {
@@ -81,6 +89,7 @@ public class SessionService extends Service implements ISessionService {
 		this.msgId = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMessage execute(ISCMessage requestMsg) throws Exception {
 		if (pendingRequest) {
@@ -97,6 +106,7 @@ public class SessionService extends Service implements ISessionService {
 			// message info optional
 			clnDataCall.setMessagInfo(msgInfo);
 		}
+		clnDataCall.setCompressed(requestMsg.isCompressed());
 		clnDataCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
 		clnDataCall.invoke(this.callback);
@@ -104,11 +114,12 @@ public class SessionService extends Service implements ISessionService {
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
-		replyToClient.setCompressed(reply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		this.pendingRequest = false;
 		return replyToClient;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute(ISCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
 		if (pendingRequest) {
@@ -125,6 +136,7 @@ public class SessionService extends Service implements ISessionService {
 			// message info optional
 			clnDataCall.setMessagInfo(msgInfo);
 		}
+		clnDataCall.setCompressed(requestMsg.isCompressed());
 		clnDataCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(this, messageCallback);
 		clnDataCall.invoke(scmpCallback);

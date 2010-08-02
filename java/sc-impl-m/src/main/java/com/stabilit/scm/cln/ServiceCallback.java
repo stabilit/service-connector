@@ -29,14 +29,15 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
- * The Class ServiceCallback. Base class for service callbacks.
+ * The Class ServiceCallback. Base class for a service callback.
  * 
  * @author JTraber
  */
 public class ServiceCallback extends SynchronousCallback {
 
 	/** The message callback. */
-	private ISCMessageCallback messageCallback;
+	private ISCMessageCallback messageCallback;	
+	/** The service which is using the callback. */
 	private Service service;
 
 	/**
@@ -57,6 +58,7 @@ public class ServiceCallback extends SynchronousCallback {
 		this.messageCallback = messageCallback;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(SCMPMessage scmpReply) throws Exception {
 		if (this.synchronous) {
@@ -66,12 +68,13 @@ public class ServiceCallback extends SynchronousCallback {
 		}
 		SCMessage messageReply = new SCMessage();
 		messageReply.setData(scmpReply.getBody());
-		messageReply.setCompressed(scmpReply.getHeaderBoolean(SCMPHeaderAttributeKey.COMPRESSION));
+		messageReply.setCompressed(scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		// inform service request is completed
 		this.service.setRequestComplete();
 		this.messageCallback.callback(messageReply);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void callback(Throwable th) {
 		if (this.synchronous) {

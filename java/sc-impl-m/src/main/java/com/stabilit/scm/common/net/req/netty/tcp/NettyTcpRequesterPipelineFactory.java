@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.net.req.IConnectionContext;
@@ -43,8 +42,8 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	/**
 	 * Instantiates a new NettyTcpRequesterPipelineFactory.
 	 */
-	public NettyTcpRequesterPipelineFactory(IConnectionContext context) {
-		this.timer = new HashedWheelTimer();
+	public NettyTcpRequesterPipelineFactory(IConnectionContext context, Timer timer) {
+		this.timer = timer;
 		this.context = context;
 	}
 

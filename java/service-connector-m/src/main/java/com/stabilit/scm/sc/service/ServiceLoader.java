@@ -69,7 +69,8 @@ public class ServiceLoader {
 		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
 
 		for (String serviceName : serviceNames) {
-
+			// remove blanks in serviceName
+			serviceName = serviceName.trim();
 			String serviceTypeString = (String) props.get(serviceName + Constants.TYPE_QUALIFIER);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
@@ -89,8 +90,8 @@ public class ServiceLoader {
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(
-						"wrong serviceType in configuration file, serviceName - serviceType : " + serviceName + " - "
-								+ serviceTypeString);
+						"wrong serviceType in configuration file, serviceName - serviceType : " + serviceName
+								+ " - " + serviceTypeString);
 			}
 
 			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);

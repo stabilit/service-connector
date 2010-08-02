@@ -34,10 +34,10 @@ public final class Constants {
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE = "/";
 
-	/** The DEFAULT_NR_OF_THREADS. */
-	public static final int DEFAULT_NR_OF_THREADS = 16;
-	/** The MAX KEEP ALIVE TIME OF THREADS. */
-	public static final int MAX_KEEP_ALIVE_OF_THREADS = 10;
+	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
+	public static final int DEFAULT_NR_OF_THREADS_SERVER = 50;
+	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
+	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 50;
 
 	/**
 	 * OPERATION_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded. Setting
@@ -87,8 +87,6 @@ public final class Constants {
 	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
 	public static final String PORT_QUALIFIER = ".port";
-	/** The THREAD. */
-	public static final String THREAD_POOL_SIZE_QUALIFIER = ".threadPoolSize";
 	/** The connection names. */
 	public static final String TYPE_QUALIFIER = ".type";
 	/** The Constant ENABLE_QUALIFIER. */
@@ -181,6 +179,5 @@ public final class Constants {
 
 	public static int getOperationTimeoutMillis() {
 		return Constants.OPERATION_TIMEOUT_MILLIS;
-
 	}
 }

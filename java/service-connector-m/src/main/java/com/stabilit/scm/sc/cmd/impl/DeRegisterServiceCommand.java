@@ -33,7 +33,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Service;
 
 /**
  * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
@@ -74,11 +73,6 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		server.destroy();
 		serverRegistry.removeServer(server);
 
-		// validate service not null - otherwise deregister not possible
-		Service service = this.validateService(serviceName);
-		// remove server in service
-		service.removeServer(server);
-
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
@@ -100,7 +94,8 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED,
+					"server not registered.");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

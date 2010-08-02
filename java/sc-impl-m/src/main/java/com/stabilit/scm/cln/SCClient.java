@@ -46,8 +46,6 @@ public class SCClient implements ISCClient {
 	private int port;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
-	/** The number of threads to use on client side. */
-	private int numberOfThreads;
 	/** The connection type, identifies low level component to use for communication (netty, nio). */
 	private String conType;
 	/** The requester. */
@@ -65,8 +63,7 @@ public class SCClient implements ISCClient {
 	 *            the port
 	 */
 	public SCClient(String host, int port) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL,
-				Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/**
@@ -80,7 +77,7 @@ public class SCClient implements ISCClient {
 	 *            the connection type
 	 */
 	public SCClient(String host, int port, String connectionType) {
-		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL, Constants.DEFAULT_NR_OF_THREADS);
+		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/**
@@ -96,29 +93,10 @@ public class SCClient implements ISCClient {
 	 *            the keep alive interval
 	 */
 	public SCClient(String host, int port, String connectionType, int keepAliveInterval) {
-		this(host, port, connectionType, keepAliveInterval, Constants.DEFAULT_NR_OF_THREADS);
-	}
-
-	/**
-	 * Instantiates a new service connector.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param connectionType
-	 *            the connection type
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 * @param numberOfThreads
-	 *            the number of threads
-	 */
-	public SCClient(String host, int port, String connectionType, int keepAliveInterval, int numberOfThreads) {
 		this.host = host;
 		this.port = port;
 		this.conType = connectionType;
-		this.numberOfThreads = numberOfThreads;
-		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval, numberOfThreads);
+		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval);
 		this.context = new ServiceConnectorContext();
 		this.callback = null;
 	}
@@ -155,25 +133,6 @@ public class SCClient implements ISCClient {
 		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();
-	}
-
-	/**
-	 * Gets the number of threads.
-	 * 
-	 * @return the number of threads
-	 */
-	public int getNumberOfThreads() {
-		return numberOfThreads;
-	}
-
-	/**
-	 * Sets the number of threads.
-	 * 
-	 * @param numberOfThreads
-	 *            the new number of threads
-	 */
-	public void setNumberOfThreads(int numberOfThreads) {
-		this.numberOfThreads = numberOfThreads;
 	}
 
 	/**

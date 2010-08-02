@@ -34,6 +34,8 @@ import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
  */
 public class SrvDataAsyncTestCase extends SuperSessionTestCase {
 
+	private static boolean pendingRequest = false;
+
 	/**
 	 * The Constructor.
 	 * 
@@ -53,24 +55,26 @@ public class SrvDataAsyncTestCase extends SuperSessionTestCase {
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
 			SrvDataTestCaseCallback callback = new SrvDataTestCaseCallback(clnDataCall);
-			
-			clnDataCall.invoke(callback);			
+			SrvDataAsyncTestCase.pendingRequest = true;
+			clnDataCall.invoke(callback);
+			while (SrvDataAsyncTestCase.pendingRequest == true);
 		}
 	}
 
 	private class SrvDataTestCaseCallback implements ISCMPCallback {
-		
+
 		private SCMPClnDataCall clnDataCall;
-		
+
 		public SrvDataTestCaseCallback(SCMPClnDataCall clnDataCall) {
 			this.clnDataCall = clnDataCall;
 		}
 
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
-			System.out.println("SrvDataTestCase.SrvDataTestCaseCallback.callback()");
+			SrvDataAsyncTestCase.pendingRequest = false;
 			Assert.assertEquals("message data test case", scmpReply.getBody());
-			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply
+					.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			int bodyLength = "message data test case".length();
 			Assert.assertEquals(bodyLength + "", scmpReply.getBodyLength() + "");
 			Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), scmpReply.getMessageType());
@@ -82,6 +86,7 @@ public class SrvDataAsyncTestCase extends SuperSessionTestCase {
 
 		@Override
 		public void callback(Throwable th) {
+			SrvDataAsyncTestCase.pendingRequest = false;
 		}
 	}
 }

@@ -38,4 +38,8 @@ public class SCMPCommandException extends HasFaultResponseException {
 	public SCMPCommandException(SCMPError errorCode) {
 		super(errorCode);
 	}
+
+	public SCMPCommandException(SCMPError errorCode, String message) {
+		super(errorCode, message);
+	}
 }
