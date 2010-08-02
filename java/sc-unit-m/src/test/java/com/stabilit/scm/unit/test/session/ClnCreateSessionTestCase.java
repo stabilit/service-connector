@@ -66,8 +66,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 
 		/*********************** serviceName not set *******************/
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
@@ -87,8 +87,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		String sessId = responseMessage.getSessionId();

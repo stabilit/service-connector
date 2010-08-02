@@ -177,7 +177,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	private class PublishTimerRun implements IPublishTimerRun {
 
 		/** The timeout. */
-		private int timeout;
+		private int timeoutSeconds;
 		/** The subscription place. */
 		private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
 		/** The request. */
@@ -190,20 +190,20 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		 * 
 		 * @param subscriptionPlace
 		 *            the subscription place
-		 * @param timeout
+		 * @param timeoutSeconds
 		 *            the timeout
 		 */
-		public PublishTimerRun(ISubscriptionPlace<SCMPMessage> subscriptionPlace, int timeout) {
+		public PublishTimerRun(ISubscriptionPlace<SCMPMessage> subscriptionPlace, int timeoutSeconds) {
 			this.request = null;
 			this.response = null;
-			this.timeout = timeout;
+			this.timeoutSeconds = timeoutSeconds;
 			this.subscriptionPlace = subscriptionPlace;
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeout() {
-			return this.timeout;
+		public int getTimeoutSeconds() {
+			return this.timeoutSeconds;
 		}
 
 		/** {@inheritDoc} */

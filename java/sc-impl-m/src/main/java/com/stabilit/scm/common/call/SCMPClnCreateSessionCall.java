@@ -81,11 +81,11 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
 
-	public void setEchoTimeout(int echoTimeout) {
+	public void setEchoTimeoutSeconds(int echoTimeout) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 	}
 
-	public void setEchoInterval(int echoInterval) {
+	public void setEchoIntervalSeconds(int echoInterval) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
 	}
 }

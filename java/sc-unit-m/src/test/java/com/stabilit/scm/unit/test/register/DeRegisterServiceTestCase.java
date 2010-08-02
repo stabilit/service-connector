@@ -49,7 +49,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 				.newInstance(this.registerRequester, "publish-simulation");
 
 		deRegisterServiceCall.invoke(this.attachCallback);
-		this.checkReply(this.attachCallback.getMessageSync());
+		SCTest.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback);

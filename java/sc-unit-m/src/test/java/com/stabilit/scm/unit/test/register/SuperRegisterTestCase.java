@@ -28,11 +28,9 @@ import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.unit.TestContext;
+import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
 /**
@@ -83,18 +81,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		registerServiceCall.setImmediateConnect();
 		registerServiceCall.setKeepAliveInterval(360);
 		registerServiceCall.invoke(this.attachCallback);
-		this.checkReply(this.attachCallback.getMessageSync());
-	}
-
-	public void checkReply(SCMPMessage message) throws Throwable {
-		if (message.isFault()) {
-			SCMPFault fault = (SCMPFault) message;
-			Throwable th = fault.getCause();
-			if (th != null) {
-				throw th;
-			}
-			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		}
+		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
 	public void deRegisterServiceAfter() throws Throwable {
@@ -105,7 +92,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerRequester, serviceName);
 		deRegisterServiceCall.invoke(this.attachCallback);
-		this.checkReply(this.attachCallback.getMessageSync());
+		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
 	private class RegisterServiceContext extends TestContext {

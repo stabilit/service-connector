@@ -63,7 +63,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
 		server.serverEcho(message, callback);
 		// TODO careful timeout is in seconds
-		SCMPMessage result = callback.getMessageSync(session.getEchoTimeout() * Constants.SEC_TO_MILISEC_FACTOR);
+		SCMPMessage result = callback.getMessageSync(session.getEchoTimeoutSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
 
 		if (result.isFault()) {
 			/**

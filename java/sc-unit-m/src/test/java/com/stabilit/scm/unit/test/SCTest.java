@@ -29,6 +29,7 @@ import test.stabilit.scm.test.SCImplTest;
 
 import com.stabilit.scm.common.net.req.ConnectionPoolTest;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -41,6 +42,7 @@ import com.stabilit.scm.unit.test.scVersion.SCVersionToSCTestCase;
 import com.stabilit.scm.unit.test.scmpVersion.SCMPVersionTest;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
+import com.stabilit.scm.unit.test.sessionTimeout.SessionTimeoutTest;
 import com.stabilit.scm.unit.test.srvData.async.SrvDataAsyncTestCase;
 import com.stabilit.scm.unit.test.srvData.async.SrvDataLargeAsyncTestCase;
 import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeSyncTestCase;
@@ -65,7 +67,8 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		ConnectionPoolTest.class, // <br>
 		MessageIdTestCase.class,// <br>
 		SCVersionToSCTestCase.class, // <br>
-		SCMPVersionTest.class })
+		SCMPVersionTest.class, // <br>
+		SessionTimeoutTest.class })
 public class SCTest {
 
 	private SCTest() {
@@ -117,4 +120,16 @@ public class SCTest {
 		}
 		return map;
 	}
+
+	public static void checkReply(SCMPMessage message) throws Throwable {
+		if (message.isFault()) {
+			SCMPFault fault = (SCMPFault) message;
+			Throwable th = fault.getCause();
+			if (th != null) {
+				throw th;
+			}
+			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		}
+	}
+
 }

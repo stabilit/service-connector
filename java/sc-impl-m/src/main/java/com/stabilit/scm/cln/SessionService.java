@@ -67,8 +67,8 @@ public class SessionService extends Service implements ISessionService {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
-		createSessionCall.setEchoTimeout(echoTimeout);
-		createSessionCall.setEchoInterval(echoInterval);
+		createSessionCall.setEchoTimeoutSeconds(echoTimeout);
+		createSessionCall.setEchoIntervalSeconds(echoInterval);
 		createSessionCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		this.sessionId = reply.getSessionId();

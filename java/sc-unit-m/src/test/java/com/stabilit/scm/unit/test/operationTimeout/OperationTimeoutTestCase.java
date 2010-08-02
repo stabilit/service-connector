@@ -69,8 +69,8 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be lower than SC operation timeout, 1 second
 		createSessionCall.setRequestBody("wait:" + 500);
@@ -96,8 +96,8 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be higher than SC operation timeout
 		createSessionCall.setRequestBody("wait:" + 8000);
@@ -124,8 +124,8 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be higher than SC operation timeout
 		createSessionCall.setRequestBody("wait:" + 3000);
@@ -159,8 +159,8 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoInterval(300);
-		createSessionCall.setEchoTimeout(10);
+		createSessionCall.setEchoIntervalSeconds(300);
+		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be lower than SC operation timeout, 1 second
 		createSessionCall.setRequestBody("wait:" + 4000);

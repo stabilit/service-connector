@@ -76,9 +76,6 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		String sessionId = scmpReq.getSessionId();
 		SCMPMessageId messageId = NettyTcpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 
-		if ("SCS".equals(scmpReq.getMessageType())) {
-			System.out.println();
-		}
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
 			return;

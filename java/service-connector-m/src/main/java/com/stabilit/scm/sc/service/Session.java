@@ -32,9 +32,9 @@ public class Session extends MapBean<Object> {
 	/** The server. */
 	private Server server;
 	/** The echo timeout. */
-	private int echoTimeout;
+	private int echoTimeoutSeconds;
 	/** The echo interval. */
-	private int echoInterval;
+	private int echoIntervalSeconds;
 	/** The session timeouter - observes session timeout. */
 	private TimerTaskWrapper sessionTimeouter;
 
@@ -45,8 +45,8 @@ public class Session extends MapBean<Object> {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.server = null;
-		this.echoInterval = 0;
-		this.echoTimeout = 0;
+		this.echoIntervalSeconds = 0;
+		this.echoTimeoutSeconds = 0;
 		this.sessionTimeouter = null;
 	}
 
@@ -79,41 +79,41 @@ public class Session extends MapBean<Object> {
 	}
 
 	/**
-	 * Sets the echo timeout.
+	 * Sets the echo timeout in seconds.
 	 * 
-	 * @param echoTimeout
+	 * @param echoTimeoutSeconds
 	 *            the new echo timeout
 	 */
-	public void setEchoTimeout(int echoTimeout) {
-		this.echoTimeout = echoTimeout;
+	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) {
+		this.echoTimeoutSeconds = echoTimeoutSeconds;
 	}
 
 	/**
 	 * Sets the echo interval.
 	 * 
-	 * @param echoInterval
+	 * @param echoIntervalSeconds
 	 *            the new echo interval
 	 */
-	public void setEchoInterval(int echoInterval) {
-		this.echoInterval = echoInterval;
+	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
+		this.echoIntervalSeconds = echoIntervalSeconds;
 	}
 
 	/**
-	 * Gets the echo timeout.
+	 * Gets the echo timeout seconds.
 	 * 
-	 * @return the echo timeout
+	 * @return the echo timeout seconds
 	 */
-	public int getEchoTimeout() {
-		return echoTimeout;
+	public int getEchoTimeoutSeconds() {
+		return echoTimeoutSeconds;
 	}
 
 	/**
-	 * Gets the echo interval.
+	 * Gets the echo interval in seconds.
 	 * 
-	 * @return the echo interval
+	 * @return the echo interval in seconds
 	 */
-	public int getEchoInterval() {
-		return echoInterval;
+	public int getEchoIntervalSeconds() {
+		return echoIntervalSeconds;
 	}
 
 	/**

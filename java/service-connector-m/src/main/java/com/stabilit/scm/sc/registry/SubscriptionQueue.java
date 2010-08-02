@@ -324,7 +324,7 @@ public class SubscriptionQueue<E> {
 		 * Schedule. Activate timeout for no data message.
 		 */
 		public void schedule() {
-			this.schedule(this.timerRun.getTimeout());
+			this.schedule(this.timerRun.getTimeoutSeconds());
 		}
 
 		/**
