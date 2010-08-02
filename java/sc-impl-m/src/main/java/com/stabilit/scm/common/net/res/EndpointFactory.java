@@ -16,11 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
-import java.util.concurrent.Executors;
-
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
@@ -28,8 +23,8 @@ import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
 import com.stabilit.scm.common.res.IEndpoint;
 
 /**
- * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are
- * shown in key string constants below.
+ * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown
+ * in key string constants below.
  */
 public class EndpointFactory extends Factory {
 
@@ -39,18 +34,6 @@ public class EndpointFactory extends Factory {
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
 	private static final String NETTY_HTTP = "netty.http";
-	/** Netty stuff */
-	/*
-	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-	 */
-	private static NioServerSocketChannelFactory channelFactory;
-
-	{
-		EndpointFactory.channelFactory = new NioServerSocketChannelFactory(Executors
-				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER), Executors
-				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER));
-	}
 
 	/**
 	 * Gets the current instance.
@@ -66,11 +49,11 @@ public class EndpointFactory extends Factory {
 	 */
 	private EndpointFactory() {
 		// jboss netty http endpoint
-		IEndpoint nettyHttpEndpoint = new NettyHttpEndpoint(EndpointFactory.channelFactory);
+		IEndpoint nettyHttpEndpoint = new NettyHttpEndpoint();
 		add(DEFAULT, nettyHttpEndpoint);
 		add(NETTY_HTTP, nettyHttpEndpoint);
 		// jboss netty tcp endpoint
-		IEndpoint nettyTCPEndpoint = new NettyTcpEnpoint(EndpointFactory.channelFactory);
+		IEndpoint nettyTCPEndpoint = new NettyTcpEnpoint();
 		add(NETTY_TCP, nettyTCPEndpoint);
 	}
 
@@ -89,13 +72,5 @@ public class EndpointFactory extends Factory {
 	public IEndpoint newInstance(String key) {
 		IFactoryable factoryInstance = super.newInstance(key);
 		return (IEndpoint) factoryInstance; // should be a clone if implemented
-	}
-
-	/**
-	 * Shutdown connection factory. This method shuts down every resource needed by connections. Should only be
-	 * used if whole application shuts down.
-	 */
-	public static void shutdownConnectionFactory() {
-		EndpointFactory.channelFactory.releaseExternalResources();
 	}
 }

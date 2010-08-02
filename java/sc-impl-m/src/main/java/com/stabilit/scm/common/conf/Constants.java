@@ -35,7 +35,7 @@ public final class Constants {
 	public static final String HTTP_FILE = "/";
 
 	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
-	public static final int DEFAULT_NR_OF_THREADS_SERVER = 50;
+	public static final int DEFAULT_NR_OF_THREADS_SERVER = 1000;
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 50;
 

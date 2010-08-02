@@ -68,7 +68,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		this.waitABit();
 		NettyHttpResponse response = new NettyHttpResponse(event);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
@@ -190,14 +189,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
 		}
 		response.write();
-	}
-	
-	private void waitABit() {
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	/** {@inheritDoc} */

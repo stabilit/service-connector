@@ -95,6 +95,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// operation timeout handling
 				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
 				scmpEx.setMessageType(getKey());
+
 				throw scmpEx;
 			}
 			throw th;

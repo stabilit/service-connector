@@ -17,11 +17,13 @@
 package com.stabilit.scm.common.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
@@ -43,7 +45,9 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	/** The port. */
 	private int port;
 	/** The channel factory. */
-	private static NioServerSocketChannelFactory channelFactory;
+	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors
+			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER), Executors
+			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER));
 
 	/**
 	 * Instantiates a new NettyTcpEnpoint.
@@ -53,14 +57,6 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
-	}
-	
-	/**
-	 * Instantiates a new NettyTcpEnpoint.
-	 */
-	public NettyTcpEnpoint(NioServerSocketChannelFactory channelFactory) {
-		this();
-		NettyTcpEnpoint.channelFactory = channelFactory;
 	}
 
 	/** {@inheritDoc} */
@@ -109,6 +105,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 		}
+		this.channelFactory.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */

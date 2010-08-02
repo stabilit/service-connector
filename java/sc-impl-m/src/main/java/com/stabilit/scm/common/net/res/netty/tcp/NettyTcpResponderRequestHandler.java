@@ -67,7 +67,6 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		this.waitABit();
 		NettyTcpResponse response = new NettyTcpResponse(event);
 		Channel channel = ctx.getChannel();
 		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
@@ -77,6 +76,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		String sessionId = scmpReq.getSessionId();
 		SCMPMessageId messageId = NettyTcpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 
+		if ("SCS".equals(scmpReq.getMessageType())) {
+			System.out.println();
+		}
 		if (scmpReq == null) {
 			// no scmp protocol used - nothing to return
 			return;
@@ -187,14 +189,6 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			NettyTcpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
 		}
 		response.write();
-	}
-	
-	private void waitABit() {
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	/** {@inheritDoc} */

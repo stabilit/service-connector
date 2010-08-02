@@ -108,8 +108,10 @@ public final class SC {
 			IResponder resp = new Responder(respConfig);
 			try {
 				resp.create();
-				System.out.println("Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost()
-						+ ":" + respConfig.getPort());
+				LoggerPoint.getInstance().fireInfo(
+						SC.class,
+						"Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
+								+ respConfig.getPort());
 				resp.runAsync();
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(SC.class, e);
