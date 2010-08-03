@@ -21,18 +21,14 @@
  */
 package test.stabilit.scm.sc.service;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 
-/**
- * @author JTraber
- */
-public class SCMPMessageFilterMaskTestCase {
+public class SCMPMessageFilterMaskTest {
 
 	@Test
 	public void maskDoesntMatchTest() {

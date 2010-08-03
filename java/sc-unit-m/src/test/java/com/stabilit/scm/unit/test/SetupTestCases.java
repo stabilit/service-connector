@@ -284,7 +284,7 @@ public class SetupTestCases {
 						Thread.sleep(1000);
 					}
 					Object data = "publish message nr " + ++index;
-					String mask = "AVSD-----";
+					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
 				} catch (Exception e) {
 					ExceptionPoint.getInstance().fireException(this, e);

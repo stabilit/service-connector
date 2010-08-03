@@ -25,7 +25,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.scm.test.SCImplTest;
+import test.stabilit.scm.common.net.DefaultEncoderDecoderTest;
+import test.stabilit.scm.common.net.DefaultFrameDecoderTest;
+import test.stabilit.scm.common.net.HttpFrameDecoderTest;
+import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTest;
+import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTest;
+import test.stabilit.scm.common.scmp.internal.SCMPCompositeTest;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTest;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTest;
+import test.stabilit.scm.common.util.ValidatorUtilityTest;
 
 import com.stabilit.scm.common.net.req.ConnectionPoolTest;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -61,13 +69,22 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		SrvDataSyncTestCase.class, // 
 		SrvDataLargeSyncTestCase.class, // 
 		SrvDataAsyncTestCase.class,// 
-		SrvDataLargeAsyncTestCase.class, // 
-		SCImplTest.class, // 
+		SrvDataLargeAsyncTestCase.class, //  
 		ConnectionPoolTest.class, // 
 		MessageIdTestCase.class,// 
 		SCVersionToSCTestCase.class, // 
 		SCMPVersionTest.class, // 
-		SessionTimeoutTest.class })
+		SessionTimeoutTest.class, //
+		// SCImplTestCases
+		DefaultFrameDecoderTest.class,//
+		HttpFrameDecoderTest.class, //
+		SCMPCompositeTest.class,//
+		SCMPLargeRequestTest.class, //
+		SCMPLargeResponseTest.class,//
+		LargeMessageEncoderDecoderTest.class, //
+		KeepAliveMessageEncoderDecoderTest.class,//
+		DefaultEncoderDecoderTest.class,//
+		ValidatorUtilityTest.class })
 public class SCTest {
 
 	private SCTest() {

@@ -106,7 +106,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
-		subscribeCall.setMask("000012100012832102FADF");
+		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCTest.checkReply(reply);
