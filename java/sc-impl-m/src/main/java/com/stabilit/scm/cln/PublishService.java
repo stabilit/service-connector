@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.Service;
@@ -28,6 +23,7 @@ import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.IPublishService;
@@ -35,21 +31,33 @@ import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
 
+/**
+ * The Class PublishService.
+ */
 public class PublishService extends Service implements IPublishService {
 
+	/**
+	 * Instantiates a new publish service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param context
+	 *            the context
+	 */
 	public PublishService(String serviceName, ISCContext context) {
 		super(serviceName, context);
 		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void changeSubscription(String mask) throws Exception {
 		if (this.callback == null) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		this.msgId.incrementMsgSequenceNr();
-		// TODO
+		// TODO changeSubscription
 	}
 
 	/** {@inheritDoc} */
@@ -63,13 +71,19 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
-		
+
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		this.sessionId = reply.getSessionId();
 		this.receivePublication();
 	}
 
+	/**
+	 * Receive publication.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void receivePublication() throws Exception {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
@@ -92,8 +106,17 @@ public class PublishService extends Service implements IPublishService {
 		this.callback = null;
 	}
 
+	/**
+	 * The Class PublishServiceCallback.
+	 */
 	private class PublishServiceCallback extends ServiceCallback {
 
+		/**
+		 * Instantiates a new publish service callback.
+		 * 
+		 * @param messageCallback
+		 *            the message callback
+		 */
 		public PublishServiceCallback(ISCMessageCallback messageCallback) {
 			super(PublishService.this, messageCallback);
 		}
@@ -101,9 +124,14 @@ public class PublishService extends Service implements IPublishService {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
-			// TODO if no data message -> receivePublication again
+			// check if reply is real answer
+			boolean noData = scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+			if (noData) {
+				// no data reply received - send CRP again
+				PublishService.this.receivePublication();
+				return;
+			}
 			super.callback(scmpReply);
-			PublishService.this.receivePublication();
 		}
 	}
 }
