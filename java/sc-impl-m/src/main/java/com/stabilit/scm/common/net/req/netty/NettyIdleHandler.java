@@ -50,6 +50,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 		this.connectionContext = connectionContext;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
 			throws Exception {

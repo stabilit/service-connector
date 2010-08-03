@@ -32,7 +32,7 @@ import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 
 /**
  * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
- * listen is set up.
+ * listen is set up. Receive publication command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */

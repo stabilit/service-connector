@@ -20,7 +20,22 @@ import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 
+/**
+ * The Interface IAsyncCommand.
+ */
 public interface IAsyncCommand extends ICommand {
 
-	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception;
+	/**
+	 * Run asynchronously.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param responderCallback
+	 *            the communicator callback
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception;
 }

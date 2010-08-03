@@ -18,10 +18,29 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+/**
+ * The listener interface for receiving IStatistics events. The class that is interested in processing a IStatistics
+ * event implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addIStatisticsListener<code> method. When
+ * the IStatistics event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see IStatisticsEvent
+ */
 public interface IStatisticsListener extends EventListener {
 
+	/**
+	 * Process statistic for specific event.
+	 * 
+	 * @param statisticsEvent
+	 *            the statistics event
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void statistics(StatisticsEvent statisticsEvent) throws Exception;
 
+	/**
+	 * Clear statistic.
+	 */
 	public void clearAll();
-
 }

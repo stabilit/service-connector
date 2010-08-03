@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import com.stabilit.scm.common.scmp.SCMPFault;
 
-
 /**
  * The Class SCMPCallException. Exception occurs when invoking a call fails.
  * 
@@ -27,8 +26,7 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 public class SCMPCallException extends Exception {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -5469213266177973818L;
-	
+	private static final long serialVersionUID = -5469213266177973818L;	
 	/** The fault. */
 	private SCMPFault fault;	
 	

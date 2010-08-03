@@ -28,25 +28,62 @@ import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.IIdleCallback;
 
 /**
+ * The Class ConnectionPool. Concrete implementation of connection pooling.<br>
+ * <br>
+ * This connection pool takes care of following listed points:<br>
+ * - creating / destroying of connections<br>
+ * - observing the max numbers of connections<br>
+ * - keeping a minimum of connections active<br>
+ * - disconnect connection after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE <br>
+ * - destroying connection pool, destroys all connections <br>
+ * <br>
+ * optional functions:<br>
+ * - closing connection after getting it back<br>
+ * - initializing pool by starting a minimum of connections immediately<br>
+ * - observing connection idle timeout and sending keep alive messages to refresh firewall<br>
+ * - force closing of a specific connection, very useful if connection has a curious state
+ * 
  * @author JTraber
  */
 public class ConnectionPool implements IConnectionPool {
 
+	/** The port. */
 	private int port;
+	/** The host. */
 	private String host;
-	private String conType;
+	/** The connection type. */
+	private String connectionType;
+	/** The maximum connections. */
 	private int maxConnections;
+	/** The minimum connections. */
 	private int minConnections;
+	/** The close on free. */
 	private boolean closeOnFree;
+	/** The keep alive interval. */
 	private int keepAliveInterval;
+	/** The free connections. */
 	private List<IConnection> freeConnections;
+	/** The used connections. */
 	private List<IConnection> usedConnections;
+	/** The connection factory. */
 	private ConnectionFactory connectionFactory;
 
+	/**
+	 * Instantiates a new connection pool.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param conType
+	 *            the connection type
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 */
 	public ConnectionPool(String host, int port, String conType, int keepAliveInterval) {
 		this.host = host;
 		this.port = port;
-		this.conType = conType;
+		this.connectionType = conType;
 		this.closeOnFree = false; // default = false
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.minConnections = 1;
@@ -56,18 +93,47 @@ public class ConnectionPool implements IConnectionPool {
 		this.keepAliveInterval = keepAliveInterval;
 	}
 
+	/**
+	 * Instantiates a new connection pool.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param conType
+	 *            the connection type
+	 */
 	public ConnectionPool(String host, int port, String conType) {
 		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
+	/**
+	 * Instantiates a new connection pool.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 */
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
 		this(host, port, Constants.DEFAULT_CLIENT_CON, keepAliveInterval);
 	}
 
+	/**
+	 * Instantiates a new connection pool.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 */
 	public ConnectionPool(String host, int port) {
 		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IConnection getConnection() throws Exception {
 		IConnection connection = null;
@@ -87,6 +153,13 @@ public class ConnectionPool implements IConnectionPool {
 		return connection;
 	}
 
+	/**
+	 * Creates the new connection.
+	 * 
+	 * @return the i connection
+	 * @throws Exception
+	 *             the exception
+	 */
 	private IConnection createNewConnection() throws Exception {
 		IConnection connection = null;
 		if (usedConnections.size() >= maxConnections) {
@@ -95,13 +168,12 @@ public class ConnectionPool implements IConnectionPool {
 					+ " reached!");
 		}
 		// we create a new one
-		connection = connectionFactory.newInstance(this.conType);
+		connection = connectionFactory.newInstance(this.connectionType);
 		connection.setHost(this.host);
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
 		IIdleCallback idleCallback = new IdleCallback();
-		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback,
-				this.keepAliveInterval);
+		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
@@ -111,6 +183,7 @@ public class ConnectionPool implements IConnectionPool {
 		return connection;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
@@ -127,17 +200,25 @@ public class ConnectionPool implements IConnectionPool {
 		this.freeConnections.add(connection);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 		this.destroyConnections(this.usedConnections);
 		this.destroyConnections(this.freeConnections);
 	}
 
+	/**
+	 * Destroy connections.
+	 * 
+	 * @param connections
+	 *            the connections
+	 */
 	private void destroyConnections(List<IConnection> connections) {
 		IConnection connection;
 		for (int index = 0; index < connections.size(); index++) {
@@ -147,8 +228,8 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
 	/**
-	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single
-	 * connection may affect others because of shared stuff (timer) etc.
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may
+	 * affect others because of shared stuff (timer) etc.
 	 * 
 	 * @param connection
 	 *            the connection
@@ -163,6 +244,12 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/**
+	 * Disconnect connection.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
 	private void disconnectConnection(IConnection connection) {
 		try {
 			connection.disconnect();
@@ -171,6 +258,7 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void forceClosingConnection(IConnection connection) {
 		// assure connection is nowhere registered
@@ -184,16 +272,19 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setCloseOnFree(boolean closeOnFree) {
 		this.closeOnFree = closeOnFree;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setMinConnections(int minConnections) {
 		this.minConnections = minConnections;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void initMinConnections() {
 		IConnection connection = null;
@@ -214,16 +305,19 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getMaxConnections() {
 		return maxConnections;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getBusyConnections() {
 		return this.usedConnections.size();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasFreeConnections() {
 		if (freeConnections.size() > 0) {
@@ -237,6 +331,7 @@ public class ConnectionPool implements IConnectionPool {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void connectionIdle(IConnection connection) {
 		if (this.freeConnections.remove(connection) == false) {
@@ -251,6 +346,7 @@ public class ConnectionPool implements IConnectionPool {
 				return;
 			}
 		}
+		// send a keep alive message
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
@@ -263,20 +359,34 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
 	}
 
+	/**
+	 * The Class IdleCallback. Gets informed when connection runs into an idle timeout.
+	 */
 	private class IdleCallback implements IIdleCallback {
 
+		/** {@inheritDoc} */
 		@Override
 		public void connectionIdle(IConnection connection) {
 			ConnectionPool.this.connectionIdle(connection);
 		}
 	}
 
+	/**
+	 * The Class ConnectionPoolCallback.
+	 */
 	private class ConnectionPoolCallback extends SynchronousCallback {
 		// nothing to implement in this case everything is done in super-class
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void finalize() throws Throwable {
+		this.destroy();
 	}
 }

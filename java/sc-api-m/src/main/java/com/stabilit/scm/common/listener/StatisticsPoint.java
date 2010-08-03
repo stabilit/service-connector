@@ -18,12 +18,17 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+/**
+ * The Enum StatisticsEnum. Possible events in system.
+ */
 enum StatisticsEnum {
 	READ, WRITE, CONNECT, DISCONNECT, EXCEPTION, LOGGER, RUNTIME, CREATE_SESSION, DELETE_SESSION, ABORT_SESSION, DECODE_SCMP, ENCODE_SCMP, KEEP_ALIVE
 }
 
 /**
  * The Class ConnectionPoint. Allows collecting statistic information - fire read/write, connect/disconnect.
+ * 
+ * @author JTraber
  */
 public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> {
 
@@ -56,6 +61,12 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		return statisticsPoint;
 	}
 
+	/**
+	 * Adds the listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
 	public synchronized void addListener(IStatisticsListener listener) {
 		if (this.isEmpty()) {
 			// register connection point
@@ -68,6 +79,12 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		super.addListener(listener);
 	}
 
+	/**
+	 * Removes the listener.
+	 * 
+	 * @param listener
+	 *            the listener
+	 */
 	public synchronized void removeListener(IStatisticsListener listener) {
 		// register connection point
 		super.removeListener(listener);
@@ -101,8 +118,17 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		}
 	}
 
-	// member class
-	class StatisticsConnectionListener implements IConnectionListener {
+	/**
+	 * The listener interface for receiving statisticsConnection events. The class that is interested in processing a
+	 * statisticsConnection event implements this interface, and the object created with that class is registered with a
+	 * component using the component's <code>addStatisticsConnectionListener<code> method. When
+	 * the statisticsConnection event occurs, that object's appropriate
+	 * method is invoked.
+	 * 
+	 * @see StatisticsConnectionEvent
+	 */
+	private class StatisticsConnectionListener implements IConnectionListener {
+		/** {@inheritDoc} */
 		@Override
 		public void connectEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
@@ -110,6 +136,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void disconnectEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
@@ -117,6 +144,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void readEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
@@ -124,6 +152,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void writeEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
@@ -131,6 +160,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(connectionEvent.getSource(), connectionEvent);
@@ -139,8 +169,18 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		}
 	}
 
-	// member class
-	class StatisticsExceptionListener implements IExceptionListener {
+	/**
+	 * The listener interface for receiving statisticsException events. The class that is interested in processing a
+	 * statisticsException event implements this interface, and the object created with that class is registered with a
+	 * component using the component's <code>addStatisticsExceptionListener<code> method. When
+	 * the statisticsException event occurs, that object's appropriate
+	 * method is invoked.
+	 * 
+	 * @see StatisticsExceptionEvent
+	 */
+	private class StatisticsExceptionListener implements IExceptionListener {
+
+		/** {@inheritDoc} */
 		@Override
 		public void exceptionEvent(ExceptionEvent exceptionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(exceptionEvent.getSource(), exceptionEvent);
@@ -149,9 +189,18 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		}
 	}
 
-	// member class
-	class StatisticsLoggerListener implements ILoggerListener {
+	/**
+	 * The listener interface for receiving statisticsLogger events. The class that is interested in processing a
+	 * statisticsLogger event implements this interface, and the object created with that class is registered with a
+	 * component using the component's <code>addStatisticsLoggerListener<code> method. When
+	 * the statisticsLogger event occurs, that object's appropriate
+	 * method is invoked.
+	 * 
+	 * @see StatisticsLoggerEvent
+	 */
+	private class StatisticsLoggerListener implements ILoggerListener {
 
+		/** {@inheritDoc} */
 		@Override
 		public void logEvent(LoggerEvent loggerEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(loggerEvent.getSource(), loggerEvent);
@@ -160,9 +209,18 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		}
 	}
 
-	// member class
-	class StatisticsSessionListener implements ISessionListener {
+	/**
+	 * The listener interface for receiving statisticsSession events. The class that is interested in processing a
+	 * statisticsSession event implements this interface, and the object created with that class is registered with a
+	 * component using the component's <code>addStatisticsSessionListener<code> method. When
+	 * the statisticsSession event occurs, that object's appropriate
+	 * method is invoked.
+	 * 
+	 * @see StatisticsSessionEvent
+	 */
+	private class StatisticsSessionListener implements ISessionListener {
 
+		/** {@inheritDoc} */
 		@Override
 		public void createSessionEvent(SessionEvent sessionEvent) {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
@@ -170,6 +228,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
@@ -177,6 +236,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void abortSessionEvent(SessionEvent sessionEvent) {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(sessionEvent.getSource(), sessionEvent);
@@ -185,9 +245,18 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 		}
 	}
 
-	// member class
-	class StatisticsSCMPListener implements ISCMPListener {
+	/**
+	 * The listener interface for receiving statisticsSCMP events. The class that is interested in processing a
+	 * statisticsSCMP event implements this interface, and the object created with that class is registered with a
+	 * component using the component's <code>addStatisticsSCMPListener<code> method. When
+	 * the statisticsSCMP event occurs, that object's appropriate
+	 * method is invoked.
+	 * 
+	 * @see StatisticsSCMPEvent
+	 */
+	private class StatisticsSCMPListener implements ISCMPListener {
 
+		/** {@inheritDoc} */
 		@Override
 		public void decodeEvent(SCMPEvent scmpEvent) {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(scmpEvent.getSource(), scmpEvent);
@@ -195,6 +264,7 @@ public final class StatisticsPoint extends ListenerSupport<IStatisticsListener> 
 			fireStatistics(statisticsEvent);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void encodeEvent(SCMPEvent scmpEvent) {
 			StatisticsEvent statisticsEvent = new StatisticsEvent(scmpEvent.getSource(), scmpEvent);

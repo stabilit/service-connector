@@ -18,11 +18,44 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+/**
+ * The listener interface for receiving ISession events. The class that is interested in processing a ISession event
+ * implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addISessionListener<code> method. When
+ * the ISession event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see ISessionEvent
+ */
 public interface ISessionListener extends EventListener {
 
+	/**
+	 * Processes create session event.
+	 * 
+	 * @param sessionEvent
+	 *            the session event
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void createSessionEvent(SessionEvent sessionEvent) throws Exception;
 
+	/**
+	 * Processes delete session event.
+	 * 
+	 * @param sessionEvent
+	 *            the session event
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception;
 
+	/**
+	 * Processes abort session event.
+	 * 
+	 * @param sessionEvent
+	 *            the session event
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void abortSessionEvent(SessionEvent sessionEvent) throws Exception;
 }

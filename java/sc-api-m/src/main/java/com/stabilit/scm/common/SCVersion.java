@@ -32,6 +32,7 @@ public enum SCVersion {
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 
+	/** The Constant df. */
 	private static final DecimalFormat df = new DecimalFormat("000");
 
 	/** The release. */
@@ -88,11 +89,7 @@ public enum SCVersion {
 		return;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return release + "." + version + "-" + df.format(revision);

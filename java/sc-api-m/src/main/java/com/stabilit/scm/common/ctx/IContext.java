@@ -21,10 +21,8 @@
  */
 package com.stabilit.scm.common.ctx;
 
-
 /**
- * @author JTraber
- *
+ * The Interface IContext. Super Interface for every kind of contexts.
  */
 public interface IContext {
 }

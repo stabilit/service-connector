@@ -18,10 +18,30 @@ package com.stabilit.scm.common.listener;
 
 import java.util.EventListener;
 
+/**
+ * The listener interface for receiving ISCMP events. The class that is interested in processing a ISCMP event
+ * implements this interface, and the object created with that class is registered with a component using the
+ * component's <code>addISCMPListener<code> method. When
+ * the ISCMP event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see ISCMPEvent
+ */
 public interface ISCMPListener extends EventListener {
 
+	/**
+	 * Encode event.
+	 * 
+	 * @param scmpEvent
+	 *            the scmp event
+	 */
 	public abstract void encodeEvent(SCMPEvent scmpEvent);
 
+	/**
+	 * Decode event.
+	 * 
+	 * @param scmpEvent
+	 *            the scmp event
+	 */
 	public abstract void decodeEvent(SCMPEvent scmpEvent);
-
 }

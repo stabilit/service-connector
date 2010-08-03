@@ -35,7 +35,7 @@ import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data to a
- * server.
+ * server. Data command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
@@ -56,8 +56,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
-		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, communicatorCallback);
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
+		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, responderCallback);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = getSessionById(sessionId);
@@ -120,11 +120,28 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		}
 	}
 
+	/**
+	 * The Class ClnDataCommandCallback.
+	 */
 	private class ClnDataCommandCallback implements ISCMPCallback {
+
+		/** The callback. */
 		private IResponderCallback callback;
+		/** The request. */
 		private IRequest request;
+		/** The response. */
 		private IResponse response;
 
+		/**
+		 * Instantiates a new cln data command callback.
+		 * 
+		 * @param request
+		 *            the request
+		 * @param response
+		 *            the response
+		 * @param callback
+		 *            the callback
+		 */
 		public ClnDataCommandCallback(IRequest request, IResponse response, IResponderCallback callback) {
 			this.callback = callback;
 			this.request = request;
