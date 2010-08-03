@@ -49,45 +49,24 @@ public class TimerTaskDemo {
 		singleTask = new Task(singleTaskRun);
 		System.out.println("schedule single 2000");
 		timer.schedule(singleTask, 2000);
-
-<<<<<<< .mine
+//
 //		// nach 2 Sek geht’s los
 //		timer.schedule(new Task("hans"), 0, 2000);
 //
 //		// nach 1 Sek geht’s los und dann alle 5 Sekunden
 //		timer.schedule(new Task("peter"), 1000, 5000);
-//
+//		
 //		// nach 0 Sek geht’s los und dann alle 5 Sekunden
 //		timer.schedule(new Task("claudia"), 1000, 10000);
-//		Timer timer2 = new Timer();
 //
+//		Timer timer2 = new Timer();
 //		// nach 2 Sek geht’s los
 //		timer2.schedule(new Task("hans"), 0, 2000);
 //
 //		// nach 1 Sek geht’s los und dann alle 5 Sekunden
 //		timer2.schedule(new Task("peter"), 1000, 5000);
-//
+//		
 //		// nach 0 Sek geht’s los und dann alle 5 Sekunden
 //		timer2.schedule(new Task("claudia"), 1000, 10000);
-=======
-		// nach 2 Sek geht’s los
-		timer.schedule(new Task("hans"), 0, 2000);
-
-		// nach 1 Sek geht’s los und dann alle 5 Sekunden
-		timer.schedule(new Task("peter"), 1000, 5000);
-		
-		// nach 0 Sek geht’s los und dann alle 5 Sekunden
-		timer.schedule(new Task("claudia"), 1000, 10000);
-
-		Timer timer2 = new Timer();
-		// nach 2 Sek geht’s los
-		timer2.schedule(new Task("hans"), 0, 2000);
-
-		// nach 1 Sek geht’s los und dann alle 5 Sekunden
-		timer2.schedule(new Task("peter"), 1000, 5000);
-		
-		// nach 0 Sek geht’s los und dann alle 5 Sekunden
-		timer2.schedule(new Task("claudia"), 1000, 10000);
->>>>>>> .r1124
 	}
 }
