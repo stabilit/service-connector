@@ -188,7 +188,7 @@ public class SubscriptionQueue<E> {
 	 * @param timerRun
 	 *            the timer run
 	 */
-	public void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun) {
+	public void subscribe(String sessionId, IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(filterMask, timerRun);
 		// Stores sessionId and dataPointer in map
 		pointerMap.put(sessionId, dataPointer);
@@ -218,7 +218,7 @@ public class SubscriptionQueue<E> {
 		/** The timer run. */
 		private IPublishTimerRun timerRun;
 		/** The filter mask. */
-		private IFilterMask filterMask;
+		private IFilterMask<E> filterMask;
 		/** The listen state. */
 		private boolean listening;
 		/** The subscription timeouter. */
@@ -232,7 +232,7 @@ public class SubscriptionQueue<E> {
 		 * @param timerRun
 		 *            the timer run
 		 */
-		public TimeAwareDataPointer(IFilterMask filterMask, IPublishTimerRun timerRun) {
+		public TimeAwareDataPointer(IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
 			this.timerRun = timerRun;
 			this.listening = false;
 			this.filterMask = filterMask;
@@ -251,7 +251,7 @@ public class SubscriptionQueue<E> {
 				this.node = this.node.getNext();
 				if (this.node == null) {
 					// last possible node reached - no next move possible
-					break;
+					return;
 				}
 				if (this.filterMask.matches(this.node.getValue())) {
 					// reached node matches mask keep current position
@@ -338,8 +338,8 @@ public class SubscriptionQueue<E> {
 			this.cancel();
 			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
 			// schedules subscriptionTimeouter on subscription queue timer
-			SubscriptionQueue.this.timer.schedule(this.subscriptionTimeouter, timeout
-					* Constants.SEC_TO_MILISEC_FACTOR);
+			SubscriptionQueue.this.timer
+					.schedule(this.subscriptionTimeouter, timeout * Constants.SEC_TO_MILISEC_FACTOR);
 		}
 
 		/**
@@ -377,13 +377,11 @@ public class SubscriptionQueue<E> {
 			this.dataPointer = dataPointer;
 		}
 
-		/**
-		 * Run. {@inheritDoc}
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void run() {
 			// stops listening - ITimerRun gets executed
-			dataPointer.stopListen();
+			this.dataPointer.stopListen();
 			super.run();
 		}
 	}

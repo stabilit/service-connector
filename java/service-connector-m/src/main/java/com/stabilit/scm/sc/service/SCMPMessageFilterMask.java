@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,32 +13,48 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IFilterMask;
 
-
 /**
- * @author JTraber
- *
+ * The Class FilterMask.
  */
-public class FilterMask implements IFilterMask {
+public class SCMPMessageFilterMask implements IFilterMask<SCMPMessage> {
 
-	private String mask;
+	/** The mask in bytes. */
+	private byte[] mask;
+
 	/**
+	 * Instantiates a new filter mask.
+	 * 
 	 * @param mask
+	 *            the mask
 	 */
-	public FilterMask(String mask) {
-		this.mask = mask;
+	public SCMPMessageFilterMask(String mask) {
+		this.mask = mask.getBytes();
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public boolean matches(Object obj) {
+	public boolean matches(SCMPMessage message) {
+		String msgMask = message.getHeader(SCMPHeaderAttributeKey.MASK);
+		byte[] msgMaskByte = msgMask.getBytes();
+
+		if (mask.length != msgMaskByte.length) {
+			return false;
+		}
+		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
+			if (msgMaskByte[byteIndex] == 0x25) {
+				continue;
+			}
+			if (mask[byteIndex] != msgMaskByte[byteIndex]) {
+				return false;
+			}
+		}
 		return true;
 	}
 }

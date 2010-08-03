@@ -279,7 +279,7 @@ public class SetupTestCases {
 			while (!killPublishServer) {
 				try {
 					if (index % 3 == 0) {
-						Thread.sleep(3000);
+						Thread.sleep(3500);
 					} else {
 						Thread.sleep(1000);
 					}

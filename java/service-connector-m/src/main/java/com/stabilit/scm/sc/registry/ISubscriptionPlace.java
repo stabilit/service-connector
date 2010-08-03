@@ -63,7 +63,7 @@ public interface ISubscriptionPlace<E> {
 	 * @param timerRun
 	 *            the timer run
 	 */
-	public abstract void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun);
+	public abstract void subscribe(String sessionId, IFilterMask<E> filterMask, IPublishTimerRun timerRun);
 
 	/**
 	 * Unsubscribe. Unsubscribe client from subscription place.

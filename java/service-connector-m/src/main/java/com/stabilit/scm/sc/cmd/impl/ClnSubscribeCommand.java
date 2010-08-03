@@ -36,7 +36,7 @@ import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
-import com.stabilit.scm.sc.service.FilterMask;
+import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.IPublishTimerRun;
 import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.Server;
@@ -111,7 +111,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		ISubscriptionPlace<SCMPMessage> subscriptionPlace = service.getSubscriptionPlace();
 
 		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, noDataInterval);
-		IFilterMask filterMask = new FilterMask(mask);
+		IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
 		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
 
 		// forward reply to client

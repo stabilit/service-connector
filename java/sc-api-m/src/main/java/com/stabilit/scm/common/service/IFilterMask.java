@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,19 +13,24 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
 /**
- * @author JTraber
- *
+ * The Interface IFilterMask.
+ * 
+ * @param <T>
+ *            the generic type
  */
-public interface IFilterMask {
+public interface IFilterMask<T> {
 
-	boolean matches(Object obj);
+	/**
+	 * Matches.
+	 * 
+	 * @param obj
+	 *            the object
+	 * @return true, if successful
+	 */
+	boolean matches(T obj);
 
 }

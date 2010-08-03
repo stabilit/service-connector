@@ -18,7 +18,6 @@ package com.stabilit.scm.unit.test.subscribe;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +40,7 @@ import com.stabilit.scm.unit.test.SuperTestCase;
 public class ClnSubscribeTestCase extends SuperTestCase {
 
 	private SubscribeCallback callback = new SubscribeCallback();
+	private static int index = 0;
 
 	/**
 	 * @param fileName
@@ -57,6 +57,11 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new Requester(this.testContext);
+			if (ClnSubscribeTestCase.index != 0) {
+				ClnSubscribeTestCase.index = 4;
+			} else {
+				ClnSubscribeTestCase.index = 1;
+			}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -120,23 +125,17 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		receivePublicationCall.invoke(this.callback);
 		reply = this.callback.getMessageSync();
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-		Assert.assertEquals("publish message nr 1", reply.getBody());
+		Assert.assertEquals("publish message nr " + ClnSubscribeTestCase.index, reply.getBody());
 		Thread.sleep(3000);
-		for (int i = 0; i < 2; i++) {
+		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
 					this.req, "publish-simulation", sessionId);
 			receivePublicationCall.invoke(this.callback);
 			reply = this.callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-			Assert.assertEquals("publish message nr " + (i + 2), reply.getBody());
+			Assert.assertEquals("publish message nr " + (ClnSubscribeTestCase.index + i), reply.getBody());
 		}
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		SetupTestCases.killPublishServer();
-		SetupTestCases.startPublishServer();
 	}
 
 	private class SubscribeCallback extends SynchronousCallback {
