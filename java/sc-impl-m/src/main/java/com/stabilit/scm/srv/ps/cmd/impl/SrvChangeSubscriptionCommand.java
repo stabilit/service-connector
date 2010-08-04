@@ -70,11 +70,13 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		// inform callback with scMessages
 		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).changeSubscription(scMessage);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
-		messageId.incrementMsgSequenceNr();
+		//TODO
+//		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+//		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+		//TODO
+//		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
 		reply.setMessageType(this.getKey());
 

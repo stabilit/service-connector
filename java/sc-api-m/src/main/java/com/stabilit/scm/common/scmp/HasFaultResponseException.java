@@ -93,6 +93,16 @@ public abstract class HasFaultResponseException extends Exception {
 	 *            the new message type
 	 */
 	public void setMessageType(SCMPMsgType messageType) {
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), messageType.getValue());
+		this.setMessageType(messageType.getValue());
+	}
+
+	/**
+	 * Sets the message type.
+	 * 
+	 * @param messageTypeValue
+	 *            the new message type
+	 */
+	public void setMessageType(String messageTypeValue) {
+		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), messageTypeValue);
 	}
 }

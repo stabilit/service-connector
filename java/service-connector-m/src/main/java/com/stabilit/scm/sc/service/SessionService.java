@@ -21,16 +21,41 @@
  */
 package com.stabilit.scm.sc.service;
 
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
+/**
+ * The Class SessionService.
+ */
 public class SessionService extends Service {
 
+	/**
+	 * Instantiates a new session service.
+	 * 
+	 * @param name
+	 *            the name
+	 */
 	public SessionService(String name) {
 		super(name, ServiceType.SESSION_SERVICE);
 	}
 
-	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
+	/**
+	 * Allocate server and create session.
+	 * 
+	 * @param msgToForward
+	 *            the message to forward
+	 * @param callback
+	 *            the callback
+	 * @param session
+	 *            the session
+	 * @return the server
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
+			Session session) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -40,9 +65,13 @@ public class SessionService extends Service {
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.createSession(msgToForward, callback);
+				server.addSession(session);
 				return server;
 			}
 		}
-		return null;
+		// no available server for this service
+		SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+		scmpCommandException.setMessageType(msgToForward.getMessageType());
+		throw scmpCommandException;
 	}
 }

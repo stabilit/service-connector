@@ -95,10 +95,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			response.setSCMP(fault);
 			return;
 		}
-		// delete session on server successful - delete entry from session registry
-		this.sessionRegistry.removeSession(session);
 		// free server from session
 		server.removeSession(session);
+		// delete session on server successful - delete entry from session registry
+		this.sessionRegistry.removeSession(session);
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());

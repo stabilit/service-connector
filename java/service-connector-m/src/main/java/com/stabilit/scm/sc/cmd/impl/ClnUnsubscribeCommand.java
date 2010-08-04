@@ -74,11 +74,12 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 			 **/
 			// TODO error handling
 		}
-		// looks up subscription place
-		SubscriptionQueue<SCMPMessage> subscriptionPlace = this.getSubscriptionQueueById(sessionId);
-		subscriptionPlace.unsubscribe(sessionId);
+		// looks up subscription queue
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
+		subscriptionQueue.unsubscribe(sessionId);
 		// delete session on server successful - delete entry from session registry
-		this.subscriptionRegistry.removeSession(sessionId);
+		this.subscriptionRegistry.removeSession(session);
+		server.removeSession(session);
 
 		// forward reply to client
 		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);

@@ -77,8 +77,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
-		Server server = service.allocateServerAndCreateSession(reqMessage, callback);
-		this.validateServer(server);
+		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
 
 		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -104,8 +103,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			}
 			throw th;
 		}
-		// add server to session & session to the server
-		server.addSession(session);
+		// add server to session
 		session.setServer(server);
 		session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
 		session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));

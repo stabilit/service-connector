@@ -80,8 +80,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
-		Server server = service.allocateServerAndSubscribe(reqMessage, callback);
-		this.validateServer(server);
+		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
@@ -111,11 +110,11 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 
-		SubscriptionQueue<SCMPMessage> subscriptionPlace = service.getSubscriptionQueue();
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
 
-		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, noDataInterval);
+		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
 		IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
-		subscriptionPlace.subscribe(session.getId(), filterMask, timerRun);
+		subscriptionQueue.subscribe(session.getId(), filterMask, timerRun);
 
 		// forward reply to client
 		reply.setIsReply(true);
@@ -252,10 +251,10 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 						.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 				reply.setBody(message.getBody());
 			}
-			response.setSCMP(reply);
+			this.response.setSCMP(reply);
 			try {
 				// send message back to client
-				response.write();
+				this.response.write();
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

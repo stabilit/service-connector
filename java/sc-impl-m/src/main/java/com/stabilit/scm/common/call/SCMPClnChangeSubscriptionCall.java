@@ -38,7 +38,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPClnChangeSubscriptionCall.
 	 */
 	public SCMPClnChangeSubscriptionCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	/**
@@ -49,14 +49,14 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 * @param serviceName
 	 *            the service name
 	 */
-	public SCMPClnChangeSubscriptionCall(IRequester requester, String serviceName) {
-		super(requester, serviceName);
+	public SCMPClnChangeSubscriptionCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPClnChangeSubscriptionCall(requester, serviceName);
+	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
+		return new SCMPClnChangeSubscriptionCall(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */

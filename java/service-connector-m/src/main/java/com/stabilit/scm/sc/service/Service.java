@@ -26,15 +26,31 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The Class Service.
+ * 
  * @author JTraber
  */
 public abstract class Service {
+
+	/** The type. */
 	private ServiceType type;
+	/** The name. */
 	private String name;
+	/** The location. */
 	private String location;
+	/** The server index. */
 	protected int serverIndex;
+	/** The list of servers. */
 	protected List<Server> listOfServers;
 
+	/**
+	 * Instantiates a new service.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 */
 	public Service(String name, ServiceType type) {
 		this.name = name;
 		this.location = null;
@@ -44,30 +60,64 @@ public abstract class Service {
 		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
 	public String getServiceName() {
 		return name;
 	}
 
+	/**
+	 * Adds the server.
+	 * 
+	 * @param server
+	 *            the server
+	 */
 	public void addServer(Server server) {
 		this.listOfServers.add(server);
 	}
 
+	/**
+	 * Removes the server.
+	 * 
+	 * @param server
+	 *            the server
+	 */
 	public void removeServer(Server server) {
 		this.listOfServers.remove(server);
 	}
 
+	/**
+	 * Gets the location.
+	 * 
+	 * @return the location
+	 */
 	public String getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the location.
+	 * 
+	 * @param location
+	 *            the new location
+	 */
 	public void setLocation(String location) {
 		this.location = location;
 	}
 
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
 	public ServiceType getType() {
 		return type;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

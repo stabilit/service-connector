@@ -191,7 +191,22 @@ public class SubscriptionQueue<E> {
 	public void subscribe(String sessionId, IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(filterMask, timerRun);
 		// Stores sessionId and dataPointer in map
-		pointerMap.put(sessionId, dataPointer);
+		this.pointerMap.put(sessionId, dataPointer);
+	}
+
+	/**
+	 * Change subscription.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @param filterMask
+	 *            the filter mask
+	 */
+	public void changeSubscription(String sessionId, IFilterMask<E> filterMask) {
+		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
+		if (dataPointer != null) {
+			dataPointer.changeFilterMask(filterMask);
+		}
 	}
 
 	/**
@@ -201,10 +216,10 @@ public class SubscriptionQueue<E> {
 	 *            the session id
 	 */
 	public void unsubscribe(String sessionId) {
-		TimeAwareDataPointer dataPointer = pointerMap.get(sessionId);
+		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.cancel();
-			pointerMap.remove(sessionId);
+			this.pointerMap.remove(sessionId);
 		}
 	}
 
@@ -254,9 +269,30 @@ public class SubscriptionQueue<E> {
 					return;
 				}
 				if (this.filterMask.matches(this.node.getValue())) {
+					this.node.reference();
 					// reached node matches mask keep current position
 					return;
 				}
+			}
+		}
+
+		/**
+		 * Change filter mask.
+		 * 
+		 * @param filterMask
+		 *            the filter mask
+		 */
+		public void changeFilterMask(IFilterMask<E> filterMask) {
+			this.filterMask = filterMask;
+			if (this.node == null) {
+				return;
+			}
+			if (this.filterMask.matches(this.node.getValue())) {
+				// current node matches new mask keep current position
+				return;
+			} else {
+				// move to next matching node
+				this.moveNext();
 			}
 		}
 

@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
@@ -57,11 +59,14 @@ public class PublishService extends Service {
 	 *            the message to forward
 	 * @param callback
 	 *            the callback
+	 * @param session
+	 *            the session
 	 * @return the server
 	 * @throws Exception
 	 *             the exception
 	 */
-	public Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
+	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
+			Session session) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -71,9 +76,13 @@ public class PublishService extends Service {
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.subscribe(msgToForward, callback);
+				server.addSession(session);
 				return server;
 			}
 		}
-		return null;
+		// no available server for this service
+		SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+		scmpCommandException.setMessageType(msgToForward.getMessageType());
+		throw scmpCommandException;
 	}
 }

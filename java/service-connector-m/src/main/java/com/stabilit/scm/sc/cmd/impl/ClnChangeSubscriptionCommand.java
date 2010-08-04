@@ -30,9 +30,12 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
+import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -63,7 +66,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 
-		Session session = this.getSessionById(sessionId);
+		Session session = this.getSubscriptionSessionById(sessionId);
 		Server server = session.getServer();
 
 		ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback();
@@ -90,6 +93,10 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 			e.setMessageType(getKey());
 			throw e;
 		}
+		String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+		SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
+		IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
+		queue.changeSubscription(sessionId, filterMask);
 
 		// forward reply to client
 		reply.setIsReply(true);

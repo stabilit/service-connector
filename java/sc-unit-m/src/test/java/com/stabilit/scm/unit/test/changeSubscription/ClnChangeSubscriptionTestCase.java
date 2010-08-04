@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.test.subscribe;
+package com.stabilit.scm.unit.test.changeSubscription;
 
 import junit.framework.Assert;
 
@@ -22,30 +22,28 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnChangeSubscriptionCall;
 import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.TestContext;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SetupTestCases;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
-public class ClnSubscribeTestCase extends SuperTestCase {
+public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
-	private SubscribeCallback callback = new SubscribeCallback();
-	private static int index = 0;
+	private ChangeSubscriptionCallback callback = new ChangeSubscriptionCallback();
+	private static int run = -1;
 
 	/**
 	 * @param fileName
 	 */
-	public ClnSubscribeTestCase(String fileName) {
+	public ClnChangeSubscriptionTestCase(String fileName) {
 		super(fileName);
 	}
 
@@ -57,10 +55,10 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new Requester(this.testContext);
-			if (ClnSubscribeTestCase.index != 0) {
-				ClnSubscribeTestCase.index = 4;
+			if (run != -1) {
+				run = 5;
 			} else {
-				ClnSubscribeTestCase.index = 1;
+				run = 0;
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -74,26 +72,35 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
-		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
+		subscribeCall.setMask("000012100012832102FADF-----------------------");
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		// receive publication - no data
+		for (int i = 0; i < 2; i++) {
+
+			// receive publication - no data
+			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+					.newInstance(this.req, "publish-simulation", sessionId);
+			receivePublicationCall.invoke(this.callback);
+			reply = this.callback.getMessageSync();
+			Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
+		}
+
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
+				.newInstance(this.req, "publish-simulation", sessionId);
+		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
+		changeSubscriptionCall.invoke(this.callback);
+		SCTest.checkReply(this.callback.getMessageSync());
+
+		// receive publication first message
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.req, "publish-simulation", sessionId);
 		receivePublicationCall.invoke(this.callback);
 		reply = this.callback.getMessageSync();
-		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-
-		// receive publication first message
-		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(this.req,
-				"publish-simulation", sessionId);
-		receivePublicationCall.invoke(this.callback);
-		reply = this.callback.getMessageSync();
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-		Assert.assertEquals("publish message nr " + ClnSubscribeTestCase.index, reply.getBody());
+		Assert.assertEquals("publish message nr " + (2 + run), reply.getBody());
 		Thread.sleep(3000);
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
@@ -102,42 +109,10 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			receivePublicationCall.invoke(this.callback);
 			reply = this.callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-			Assert.assertEquals("publish message nr " + (ClnSubscribeTestCase.index + i), reply.getBody());
+			Assert.assertEquals("publish message nr " + (2 + i + run), reply.getBody());
 		}
 	}
 
-	@Test
-	public void failSubscribeWrongHeader() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"publish-simulation");
-
-		// mask not set
-		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(50);
-		subscribeCall.invoke(this.callback);
-		SCMPMessage fault = this.callback.getMessageSync();
-		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
-
-		// mask not valid
-		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(50);
-		subscribeCall.setMask("%%%ACSD");
-		subscribeCall.invoke(this.callback);
-		fault = this.callback.getMessageSync();
-		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
-
-		// noDataInterval wrong
-		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setMask("ACD");
-		subscribeCall.setNoDataIntervalSeconds(0);
-		subscribeCall.invoke(this.callback);
-		fault = this.callback.getMessageSync();
-		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
-	}
-
-	private class SubscribeCallback extends SynchronousCallback {
+	private class ChangeSubscriptionCallback extends SynchronousCallback {
 	}
 }

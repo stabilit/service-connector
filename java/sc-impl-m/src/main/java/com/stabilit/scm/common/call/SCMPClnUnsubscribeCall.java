@@ -48,11 +48,13 @@ public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_UNSUBSCRIBE;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
 		return new SCMPClnUnsubscribeCall(req, serviceName, sessionId);

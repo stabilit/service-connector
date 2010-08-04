@@ -50,14 +50,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		this.answer = new ArrayBlockingQueue<SCMPMessage>(1);
 	}
 
-	/**
-	 * Callback.
-	 * 
-	 * @param scmpReply
-	 *            the scmp reply
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void callback(SCMPMessage scmpReply) throws Exception {
 		if (this.synchronous == false) {
@@ -74,12 +67,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		this.answer.offer(scmpReply);
 	}
 
-	/**
-	 * Callback.
-	 * 
-	 * @param th
-	 *            the th {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void callback(Throwable th) {
 		if (this.synchronous == false) {
@@ -97,23 +85,13 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		this.answer.offer(fault);
 	}
 
-	/**
-	 * Gets the message sync.
-	 * 
-	 * @return the message sync {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync() {
 		return this.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
 	}
 
-	/**
-	 * Gets the message sync.
-	 * 
-	 * @param timeoutInMillis
-	 *            the timeout in millis
-	 * @return the message sync {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) {
 		if (timeoutInMillis == 0) {
