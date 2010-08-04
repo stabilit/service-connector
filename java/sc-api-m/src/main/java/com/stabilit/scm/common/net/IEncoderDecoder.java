@@ -18,7 +18,6 @@ package com.stabilit.scm.common.net;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.regex.Pattern;
 
 import com.stabilit.scm.common.factory.IFactoryable;
 
@@ -26,21 +25,10 @@ import com.stabilit.scm.common.factory.IFactoryable;
  * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.
  */
 public interface IEncoderDecoder extends IFactoryable {
-
-	/** The Constant UNESCAPED_EQUAL_SIGN_REGEX. */
-	public static final String UNESCAPED_EQUAL_SIGN_REGEX = "(.*)(?<!\\\\)=(.*)";	
-	/** The Constant FLAG_REGEX. */
-	public static final String FLAG_REGEX = ".*[^=]";
-	/** The Constant ESCAPED_EQUAL_SIGN. */
-	public static final String ESCAPED_EQUAL_SIGN = "\\=";
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 	/** The Constant CHARSET. */
 	public static final String CHARSET = "ISO-8859-1";
-	/** The Constant DECODE_REG. */
-	public static final Pattern EQUAL_SIGN_DECODE_REG = Pattern.compile(UNESCAPED_EQUAL_SIGN_REGEX);	
-	/** The Constant FLAG_DECODE_REG. */
-	public static final Pattern FLAG_DECODE_REG = Pattern.compile(FLAG_REGEX);
 
 	/**
 	 * Encode object to output stream.

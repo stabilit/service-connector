@@ -27,7 +27,6 @@ import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
@@ -61,8 +60,8 @@ public class SessionService extends Service implements ISessionService {
 	public void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
-		}
-		this.msgId = new SCMPMessageId();
+		}		
+		this.msgId.reset();
 		this.callback = new ServiceCallback();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);

@@ -79,13 +79,28 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
 		// write body depends on body type
+		Object body = scmpMsg.getBody();
+		int headerSize = sb.length();
 		try {
-			Object body = scmpMsg.getBody();
 			if (body != null) {
+				if (byte[].class == body.getClass()) {
+					byte[] ba = (byte[]) body;
+					int bodySize = scmpMsg.getBodyLength();
+					int messageLength = sb.length() + bodySize;
+					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					bw.write(sb.toString());
+					bw.flush();
+					int bodyOffset = scmpMsg.getBodyOffset();
+					os.write((byte[]) ba, bodyOffset, bodySize);
+					os.flush();
+					// set internal status to save communication state
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
+					return;
+				}
 				if (String.class == body.getClass()) {
 					String t = (String) body;
 					int bodyLength = scmpMsg.getBodyLength();
-					int headerSize = sb.length();
 					int messageSize = sb.length() + bodyLength;
 					writeHeadLine(bw, headerKey, messageSize, headerSize);
 					bw.write(sb.toString());
@@ -99,29 +114,10 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
 					return;
 				}
-
-				if (byte[].class == body.getClass()) {
-					byte[] ba = (byte[]) body;
-					int bodySize = scmpMsg.getBodyLength();
-					int headerSize = sb.length();
-					int messageLength = sb.length() + bodySize;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
-					bw.write(sb.toString());
-					bw.flush();
-					int bodyOffset = scmpMsg.getBodyOffset();
-					os.write((byte[]) ba, bodyOffset, bodySize);
-					os.flush();
-					// set internal status to save communication state
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
-					return;
-				} else {
-					// set internal status to save communication state
-					scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
-					throw new EncodingDecodingException("unsupported large message body type");
-				}
+				// set internal status to save communication state
+				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
+				throw new EncodingDecodingException("unsupported large message body type");
 			} else {
-				int headerSize = sb.length();
 				writeHeadLine(bw, headerKey, headerSize, headerSize);
 				bw.write(sb.toString());
 				bw.flush();

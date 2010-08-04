@@ -25,15 +25,18 @@ import com.stabilit.scm.common.cmd.SCMPValidatorException;
  */
 public enum SCMPVersion {
 
-	/** The current version */
-	CURRENT(1, 0),
-	/** The version to make tests - DO NOT CHANGE ! */
-	TEST(3, 2);
+	/** 1.0, the current version */
+	CURRENT(0x31, 0x30),
+	/** 3.2, the version to make tests - DO NOT CHANGE ! */
+	TEST(0x33, 0x32);
 
 	/** The release. */
-	private int release;
+	private byte release;
 	/** The version. */
-	private int version;
+	private byte version;
+
+	/** The Constant DOT_HEX. */
+	private static final byte DOT_HEX = 0x2E;
 
 	/**
 	 * Instantiates a new SCMP version.
@@ -43,9 +46,9 @@ public enum SCMPVersion {
 	 * @param version
 	 *            the version number
 	 */
-	private SCMPVersion(int release, int version) {
-		this.version = version;
-		this.release = release;
+	private SCMPVersion(Integer release, Integer version) {
+		this.version = version.byteValue();
+		this.release = release.byteValue();
 	}
 
 	/**
@@ -56,28 +59,22 @@ public enum SCMPVersion {
 	 * @throws SCMPValidatorException
 	 *             the sCMP validator exception
 	 */
-	public void isSupported(String text) throws SCMPValidatorException {
+	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 
-		if (text.matches("\\d\\.\\d") == false) {
-			throw new SCMPValidatorException("invalid scmp version format [" + text + "]");
+		if (this.release != buffer[0]) {
+			throw new SCMPValidatorException("invalid scmp release nr. [" + new String(buffer) + "]");
 		}
-		String[] splitted = text.split("\\.");
-		if (splitted.length != 2) {
-			throw new SCMPValidatorException("invalid scmp version [" + text + "]");
+		if (buffer[1] != SCMPVersion.DOT_HEX) {
+			throw new SCMPValidatorException("invalid scmp version format [" + new String(buffer) + "]");
 		}
-		int release = Integer.parseInt(splitted[0]);
-		if (this.release != release) {
-			throw new SCMPValidatorException("invalid scmp release nr. [" + text + "]");
-		}
-		int version = Integer.parseInt(splitted[1]);
-		if (this.version < version) {
-			throw new SCMPValidatorException("invalid scmp version nr. [" + text + "]");
+		if (this.version < buffer[2]) {
+			throw new SCMPValidatorException("invalid scmp version nr. [" + new String(buffer) + "]");
 		}
 		return;
 	}
 
 	@Override
 	public String toString() {
-		return release + "." + version;
+		return new String(new byte[] { this.release, SCMPVersion.DOT_HEX, this.version });
 	}
 }

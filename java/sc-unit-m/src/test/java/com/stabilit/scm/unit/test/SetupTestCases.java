@@ -204,6 +204,9 @@ public class SetupTestCases {
 
 		@Override
 		public ISCMessage execute(ISCMessage message) {
+			if (message.getData().toString().startsWith("Performance")) {
+				return message;
+			}
 			this.waitABit();
 			if (message.getData().toString().startsWith("large")) {
 				StringBuilder sb = new StringBuilder();

@@ -36,7 +36,7 @@ public class SCMPVersionTest {
 	 */
 	@Test
 	public void versionCompatibilityTest0() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported(SCMPVersion.TEST.toString());
+		SCMPVersion.TEST.isSupported(SCMPVersion.TEST.toString().getBytes());
 	}
 
 	/**
@@ -47,7 +47,8 @@ public class SCMPVersionTest {
 	 */
 	@Test
 	public void versionCompatibilityTest1() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("3.2"); // TEST = 3.2
+		String version = "3.2";
+		SCMPVersion.TEST.isSupported(version.getBytes()); // TEST = 3.2
 	}
 
 	/**
@@ -58,7 +59,8 @@ public class SCMPVersionTest {
 	 */
 	@Test
 	public void versionCompatibilityTest2() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("3.1");
+		String version = "3.1";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
@@ -69,7 +71,8 @@ public class SCMPVersionTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void versionCompatibilityTest3() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("3.3");
+		String version = "3.3";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
@@ -80,7 +83,8 @@ public class SCMPVersionTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void versionCompatibilityTest4() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("2.0");
+		String version = "2.0";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
@@ -91,7 +95,8 @@ public class SCMPVersionTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void versionCompatibilityTest5() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("4.0");
+		String version = "4.0";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
@@ -102,7 +107,8 @@ public class SCMPVersionTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void versionCompatibilityTest10() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("A.b");
+		String version = "A.b";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
@@ -113,6 +119,7 @@ public class SCMPVersionTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void versionCompatibilityTest11() throws SCMPValidatorException {
-		SCMPVersion.TEST.isSupported("11");
+		String version = "11";
+		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 }

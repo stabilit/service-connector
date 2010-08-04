@@ -54,7 +54,7 @@ public abstract class Service {
 		this.sessionId = null;
 		this.callback = null;
 		this.pendingRequest = false;
-		this.msgId = null;
+		this.msgId = new SCMPMessageId();
 	}
 
 	/**

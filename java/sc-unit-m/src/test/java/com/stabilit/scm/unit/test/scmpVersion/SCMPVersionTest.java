@@ -43,7 +43,7 @@ public class SCMPVersionTest {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp version format [xxx]", e.getMessage());
+			Assert.assertEquals("invalid scmp release nr. [xxx]", e.getMessage());
 		}
 	}
 

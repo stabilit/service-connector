@@ -25,7 +25,6 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessageCallback;
@@ -66,7 +65,7 @@ public class PublishService extends Service implements IPublishService {
 		if (this.callback != null) {
 			throw new SCServiceException("already subscribed");
 		}
-		this.msgId = new SCMPMessageId();
+		this.msgId.reset();
 		this.callback = new PublishServiceCallback(callback);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);

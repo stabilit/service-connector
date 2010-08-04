@@ -21,17 +21,14 @@
  */
 package com.stabilit.scm.common.net;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -56,15 +53,14 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/** {@inheritDoc} */
 	@Override
 	public Object decode(InputStream is) throws Exception {
-		InputStreamReader isr = new InputStreamReader(is, CHARSET);
-		BufferedReader br = new BufferedReader(isr);
-
 		// read headline
-		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
+		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE_WITHOUT_VERSION];
 		is.read(headline);
 
-		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
-		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
+		byte[] version = new byte[Constants.FIX_VERSION_LENGTH_IN_HEADLINE];
+		is.read(version);
+		SCMPMessage.SCMP_VERSION.isSupported(version);
+		is.skip(1); // read LF
 
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type
@@ -93,34 +89,40 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 		// storing header fields in meta map
 		Map<String, String> metaMap = new HashMap<String, String>();
-		int readBytes = Constants.FIX_HEADLINE_SIZE;
-		String line;
-		while (readBytes < Constants.FIX_HEADLINE_SIZE + scmpHeaderSize) {
-			line = br.readLine();
-			if (line == null || line.length() <= 0) {
-				break;
-			}
-			readBytes += line.getBytes().length;
-			readBytes += 1; // read LF
-
-			Matcher match = IEncoderDecoder.EQUAL_SIGN_DECODE_REG.matcher(line);
-			if (match.matches()) {
-				String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
-				String value = null;
-				if (match.groupCount() == 2) {
-					// key has a value mapping - extract value
-					value = match.group(2).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
+		byte[] buffer = new byte[scmpHeaderSize];
+		int keyOff = 0;
+		// decoding header
+		int readBytes = is.read(buffer);
+		for (int index = 0; index < readBytes; index++) {
+			// looping until <=> found, looking for key value pair
+			if (buffer[index] == 0x3D) {
+				// <=> found
+				for (int inLoopIndex = index; inLoopIndex < readBytes; inLoopIndex++) {
+					// looping until <LF> got found
+					if (buffer[inLoopIndex] == 0x0A) {
+						// <LF> found
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer,
+								index + 1, (inLoopIndex - 1) - index, CHARSET));
+						// updating outer loop index
+						index = inLoopIndex;
+						// updating offset for next key, +1 for <LF>
+						keyOff = inLoopIndex + 1;
+						// key value pair found, stop inner loop
+						break;
+					}
 				}
-				metaMap.put(key, value);
+				// key value pair found, continue looking for next pair
 				continue;
 			}
-			match = IEncoderDecoder.FLAG_DECODE_REG.matcher(line);
-			if (match.matches()) {
-				String key = match.group(0);
-				metaMap.put(key, null);
+			// looping until <LF> found, looking for header flag
+			if (buffer[index] == 0x0A) {
+				// <LF> found
+				metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), null);
+				// updating offset for next key, +1 for <LF>
+				keyOff = index + 1;
 			}
 		}
-		// reading body - depends on body type
+		// decoding body - depends on body type
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getValue());
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
@@ -130,35 +132,22 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		}
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
+			byte[] body = new byte[scmpBodySize];
+			is.read(body);
+
 			switch (scmpBodyType) {
 			case BINARY:
 			case UNDEFINED:
-				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodySize);
+				scmpMsg.setBody(body);
+				return scmpMsg;
 			case TEXT:
-				return this.decodeTextData(br, scmpMsg, scmpBodySize);
+				scmpMsg.setBody(new String(body));
+				return scmpMsg;
 			}
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		SCMPPoint.getInstance().fireDecode(this, scmpMsg);
-		return scmpMsg;
-	}
-
-	protected Object decodeTextData(BufferedReader br, SCMPMessage scmpMsg, int scmpBodySize) throws IOException {
-		char[] caBuffer = new char[scmpBodySize];
-		br.read(caBuffer);
-		String bodyString = new String(caBuffer, 0, scmpBodySize);
-		scmpMsg.setBody(bodyString);
-		return scmpMsg;
-	}
-
-	protected Object decodeBinaryData(InputStream is, SCMPMessage scmpMsg, int readBytes, int scmpBodySize)
-			throws IOException {
-		byte[] baBuffer = new byte[scmpBodySize];
-		is.reset();
-		is.skip(readBytes);
-		is.read(baBuffer);
-		scmpMsg.setBody(baBuffer);
 		return scmpMsg;
 	}
 
@@ -179,12 +168,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		// write header fields
 		Set<Entry<String, String>> entrySet = metaMap.entrySet();
 		for (Entry<String, String> entry : entrySet) {
-			String key = entry.getKey();
 			String value = entry.getValue();
-			key = key.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
-			sb.append(key);
+			sb.append(entry.getKey());
 			if (value != null) {
-				value = value.replace(EQUAL_SIGN, ESCAPED_EQUAL_SIGN);
 				sb.append(EQUAL_SIGN);
 				sb.append(value);
 			}

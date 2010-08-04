@@ -119,6 +119,12 @@ public final class SC {
 		}
 	}
 
+	/**
+	 * Initialize the log stuff.
+	 * 
+	 * @param config
+	 *            the configuration
+	 */
 	private static void initLogStuff(CommunicatorConfigPool config) {
 		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
 		ConnectionPoint.getInstance().addListener(

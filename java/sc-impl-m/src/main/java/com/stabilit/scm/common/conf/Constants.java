@@ -138,6 +138,8 @@ public final class Constants {
 	public static final byte LF = 0x0A;
 	/** The Constant FIX_HEADLINE_SIZE. */
 	public static final int FIX_HEADLINE_SIZE = 22;
+	/** The Constant FIX_HEADLINE_SIZE. */
+	public static final int FIX_HEADLINE_SIZE_WITHOUT_VERSION = 18;
 	/** The Constant FORMAT_OF_MSG_SIZE. */
 	public static final String FORMAT_OF_MSG_SIZE = " 0000000";
 	/** The Constant FORMAT_OF_HEADER_SIZE. */
@@ -150,12 +152,10 @@ public final class Constants {
 	public static final int FIX_HEADER_SIZE_START = 12;
 	/** The Constant FIX_HEADER_SIZE_END. */
 	public static final int FIX_HEADER_SIZE_END = 16;
-	/** The Constant FIX_SCMP_VERSION_START. */
-	public static final int FIX_SCMP_VERSION_START = 18;
-	/** The Constant FIX_SCMP_VERSION_LENGTH. */
-	public static final int FIX_SCMP_VERSION_LENGTH = 3;
 	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
+	/** The Constant FIX_VERSION_LENGTH_IN_HEADLINE. */
+	public static final int FIX_VERSION_LENGTH_IN_HEADLINE = 3;
 
 	/**
 	 * @return the serviceLevelOperationTimeoutMillis

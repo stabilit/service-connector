@@ -92,6 +92,15 @@ public class SCMPMessageId {
 	}
 
 	/**
+	 * Reset messageId.
+	 */
+	public void reset() {
+		this.msgSequenceNr = 1;
+		this.partSequenceNr = 0;
+		this.sb = null;
+	}
+
+	/**
 	 * Necessary to write. Evaluates if messageId needs to be written for specific messageType.
 	 * 
 	 * @param messageTypeValue
