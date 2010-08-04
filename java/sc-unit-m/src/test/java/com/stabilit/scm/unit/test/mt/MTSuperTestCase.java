@@ -84,7 +84,7 @@ public abstract class MTSuperTestCase {
 				.newInstance(registerReq, "simulation");
 		registerService.setMaxSessions(9);
 		registerService.setPortNumber(7000);
-		registerService.setImmediateConnect();
+		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(360);
 		registerService.invoke(this.callback);
 		this.callback.getMessageSync();

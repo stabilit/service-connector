@@ -69,7 +69,7 @@ public class SubscriptionPlace<E> implements ISubscriptionPlace<E> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void subscribe(String sessionId, IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
+	public void subscribe(String sessionId, IFilterMask filterMask, IPublishTimerRun timerRun) {
 		this.subscriptionQueue.subscribe(sessionId, filterMask, timerRun);
 	}
 

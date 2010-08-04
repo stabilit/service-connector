@@ -33,10 +33,6 @@ public abstract class SCMPSessionCallAdapter extends SCMPCallAdapter {
 	public SCMPSessionCallAdapter() {
 		this(null, null, null);
 	}
-	
-	public SCMPSessionCallAdapter(String s) {
-		
-	}
 
 	/**
 	 * Instantiates a new SCMPSessionCallAdapter.

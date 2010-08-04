@@ -23,35 +23,44 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPSrvChangeSubscriptionCall. Call changes subscription for a client.
+ * 
  * @author JTraber
  */
-public class SCMPSrvChangeSubscriptionCall extends SCMPSessionCallAdapter {
+public class SCMPSrvChangeSubscriptionCall extends SCMPServerCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
+	 */
 	public SCMPSrvChangeSubscriptionCall() {
-		this(null, null, null);
+		this(null, null);
 	}
 
-	public SCMPSrvChangeSubscriptionCall(IRequester requester, String serviceName, String sessionId) {
-		super(requester, serviceName, sessionId);
+	/**
+	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
+	 */
+	public SCMPSrvChangeSubscriptionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
-		return new SCMPSrvChangeSubscriptionCall(req, serviceName, sessionId);
-	}
-
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
+	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
+		return new SCMPSrvChangeSubscriptionCall(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_SUBSCRIBE;
+		return SCMPMsgType.SRV_CHANGE_SUBSCRIPTION;
 	}
 }

@@ -37,7 +37,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@Before
 	public void setUp() {
-		SetupTestCases.setupAll();
+		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
 	@Test

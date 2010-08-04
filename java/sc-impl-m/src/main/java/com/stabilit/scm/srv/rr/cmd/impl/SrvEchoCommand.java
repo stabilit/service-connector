@@ -26,17 +26,28 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
+/**
+ * The Class SrvEchoCommand. Responsible for validation and execution of server echo command. Allows echo on backend
+ * server.
+ * 
+ * @author JTraber
+ */
 public class SrvEchoCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvEchoCommand.
+	 */
 	public SrvEchoCommand() {
 		this.commandValidator = new SrvEchoCommandValidator();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_ECHO;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		// echo just sends the received message back
@@ -45,6 +56,9 @@ public class SrvEchoCommand extends SrvCommandAdapter {
 		response.setSCMP(message);
 	}
 
+	/**
+	 * The Class SrvEchoCommandValidator.
+	 */
 	public class SrvEchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */

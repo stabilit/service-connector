@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +13,75 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.registry.Registry;
 
 /**
+ * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to services and their callback.
+ * 
  * @author JTraber
  */
 public class SrvServiceRegistry extends Registry {
 
+	/** The instance. */
 	private static SrvServiceRegistry instance = new SrvServiceRegistry();
 
+	/**
+	 * Instantiates a new SrvServiceRegistry.
+	 */
 	private SrvServiceRegistry() {
 	}
 
+	/**
+	 * Gets the current instance.
+	 * 
+	 * @return the current instance
+	 */
 	public static SrvServiceRegistry getCurrentInstance() {
 		return instance;
 	}
 
+	/**
+	 * Adds the server service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param srvService
+	 *            the server service
+	 */
 	public void addSrvService(Object key, SrvService srvService) {
 		super.put(key, srvService);
 	}
 
+	/**
+	 * Gets the server service.
+	 * 
+	 * @param srvServiceName
+	 *            the server service name
+	 * @return the server service
+	 */
 	public SrvService getSrvService(String srvServiceName) {
 		return (SrvService) this.get(srvServiceName);
 	}
 
+	/**
+	 * Removes the server service.
+	 * 
+	 * @param srvService
+	 *            the server service
+	 */
 	public void removeSrvService(SrvService srvService) {
 		this.removeSrvService(srvService.getServiceName());
 	}
 
+	/**
+	 * Removes the server service.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public void removeSrvService(Object key) {
 		super.remove(key);
 	}

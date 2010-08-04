@@ -19,11 +19,17 @@ package com.stabilit.scm.sc.registry;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Service;
 
+/**
+ * The Class DisabledServiceRegistry.
+ */
 public final class DisabledServiceRegistry extends Registry {
 
 	/** The instance. */
 	private static DisabledServiceRegistry instance = new DisabledServiceRegistry();
 
+	/**
+	 * Instantiates a new disabled service registry.
+	 */
 	private DisabledServiceRegistry() {
 	}
 
@@ -36,18 +42,46 @@ public final class DisabledServiceRegistry extends Registry {
 		return instance;
 	}
 
+	/**
+	 * Adds the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param service
+	 *            the service
+	 */
 	public void addService(Object key, Service service) {
 		super.put(key, service);
 	}
 
+	/**
+	 * Gets the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the service
+	 */
 	public Service getService(Object key) {
 		return (Service) this.get(key);
 	}
 
+	/**
+	 * Removes the service.
+	 * 
+	 * @param service
+	 *            the service
+	 */
 	public void removeService(Service service) {
 		this.removeService(service.getServiceName());
 	}
 
+	/**
+	 * Removes the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the service
+	 */
 	public Service removeService(Object key) {
 		Service service = this.getService(key);
 		super.remove(key);

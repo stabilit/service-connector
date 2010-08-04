@@ -22,7 +22,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPDeRegisterServiceCall. Call deregisters server.
+ * The Class SCMPDeRegisterServiceCall. Call deregisters service.
  * 
  * @author JTraber
  */
@@ -38,13 +38,15 @@ public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
 	/**
 	 * Instantiates a new SCMPDeRegisterServiceCall.
 	 * 
-	 * @param requester the requester to use when invoking call
-	 * @param serviceName the service name
+	 * @param requester
+	 *            the requester to use when invoking call
+	 * @param serviceName
+	 *            the service name
 	 */
 	public SCMPDeRegisterServiceCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {

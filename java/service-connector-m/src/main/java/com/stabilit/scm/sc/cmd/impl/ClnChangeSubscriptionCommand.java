@@ -30,13 +30,23 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
+/**
+ * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
+ * Allows changing subscription mask on SC.
+ * 
+ * @author JTraber
+ */
 public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/**
+	 * Instantiates a new ClnChangeSubscriptionCommand.
+	 */
 	public ClnChangeSubscriptionCommand() {
 		this.commandValidator = new ClnChangeSubscriptionCommandValidator();
 	}
@@ -59,7 +69,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback();
 		server.changeSubscription(reqMessage, callback);
 		SCMPMessage reply = callback.getMessageSync();
-		
+
 		if (reply.isFault()) {
 			// exception handling
 			SCMPFault fault = (SCMPFault) reply;
@@ -72,6 +82,15 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 			}
 			throw th;
 		}
+		Boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+		if (Boolean.TRUE.equals(rejectSessionFlag)) {
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			// server rejected session - throw exception with server errors
+			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
+			e.setMessageType(getKey());
+			throw e;
+		}
+
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());
@@ -79,6 +98,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class ClnChangeSubscriptionCommandValidator.
+	 */
 	private class ClnChangeSubscriptionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
@@ -119,6 +141,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		}
 	}
 
+	/**
+	 * The Class ClnChangeSubscriptionCommandCallback.
+	 */
 	private class ClnChangeSubscriptionCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

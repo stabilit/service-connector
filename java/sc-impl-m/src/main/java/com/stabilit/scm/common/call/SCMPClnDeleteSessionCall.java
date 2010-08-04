@@ -35,7 +35,6 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 		this(null, null, null);
 	}
 
-
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.
 	 * 
@@ -56,6 +55,12 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 		return new SCMPClnDeleteSessionCall(req, serviceName, sessionId);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_DELETE_SESSION;
+	}
+
 	/**
 	 * Sets the service name.
 	 * 
@@ -63,12 +68,6 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 *            the new service name
 	 */
 	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 }

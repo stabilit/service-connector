@@ -21,22 +21,38 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvSubscribeCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 
+/**
+ * A factory for creating PublishServerCommand objects. Unifies commands used by publish services.
+ * 
+ * @author JTraber
+ */
 public class PublishServerCommandFactory extends CommandFactory {
 
+	/**
+	 * Instantiates a new publish server command factory.
+	 */
 	public PublishServerCommandFactory() {
 		init(this);
 	}
 
+	/**
+	 * Instantiates a new publish server command factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public PublishServerCommandFactory(CommandFactory commandFactory) {
 		init(commandFactory);
 	}
 
+	/**
+	 * Initialize factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public void init(CommandFactory commandFactory) {
-		ICommand srvEchoCommand = new SrvEchoCommand();
-		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
-		// publish subscribe commands
 		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
 		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
 		ICommand srvUnsubscribeCommand = new SrvUnsubscribeCommand();

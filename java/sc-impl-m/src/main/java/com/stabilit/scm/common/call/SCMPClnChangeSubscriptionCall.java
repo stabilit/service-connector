@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,7 +14,11 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
 package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
@@ -23,53 +28,51 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPPublishCall. Call publishes a message to clients.
+ * The Class SCMPClnChangeSubscriptionCall. Call changes a subscription for a client.
  * 
  * @author JTraber
  */
-public class SCMPPublishCall extends SCMPCallAdapter {
+public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new SCMPPublishCall.
+	 * Instantiates a new SCMPClnChangeSubscriptionCall.
 	 */
-	public SCMPPublishCall() {
+	public SCMPClnChangeSubscriptionCall() {
 		this(null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPPublishCall.
+	 * Instantiates a new SCMPClnChangeSubscriptionCall.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester
 	 * @param serviceName
 	 *            the service name
 	 */
-	public SCMPPublishCall(IRequester req, String serviceName) {
-		super(req, serviceName);
+	public SCMPClnChangeSubscriptionCall(IRequester requester, String serviceName) {
+		super(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPPublishCall(requester, serviceName);
+		return new SCMPClnChangeSubscriptionCall(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.PUBLISH;
+		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
 	}
 
 	/**
-	 * Sets the compression.
+	 * Sets the session info.
 	 * 
-	 * @param compressed
-	 *            the compression
+	 * @param sessionInfo
+	 *            the new session info
 	 */
-	public void setCompressed(boolean compressed) {
-		if (compressed) {
-			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-		}
+	public void setSessionInfo(String sessionInfo) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/**

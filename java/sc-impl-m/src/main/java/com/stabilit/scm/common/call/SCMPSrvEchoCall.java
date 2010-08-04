@@ -17,7 +17,6 @@
 package com.stabilit.scm.common.call;
 
 import java.net.InetAddress;
-import java.util.Map;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -52,17 +51,10 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 		super(req, message);
 	}
 
-	/**
-	 * Invoke.
-	 * 
-	 * @return the scmp
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_REQ_ID, requester.hashCode());
-
 		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
@@ -77,58 +69,9 @@ public class SCMPSrvEchoCall extends SCMPServerCallAdapter {
 		return new SCMPSrvEchoCall(req, message);
 	}
 
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_ECHO;
 	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param attr
-	 *            the attribute
-	 * @param value
-	 *            the value
-	 */
-	public void setHeader(SCMPHeaderAttributeKey attr, String value) {
-		this.requestMessage.setHeader(attr, value);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param attr
-	 *            the attribute
-	 * @param value
-	 *            the value
-	 */
-	public void setHeader(SCMPHeaderAttributeKey attr, int value) {
-		this.requestMessage.setHeader(attr, value);
-	}
-
 }

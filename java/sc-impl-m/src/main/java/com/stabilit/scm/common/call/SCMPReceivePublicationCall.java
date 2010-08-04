@@ -26,14 +26,29 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPReceivePublicationCall. Call receives publications from SC.
+ * 
  * @author JTraber
  */
 public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
 
+	/**
+	 * Instantiates a new sCMP receive publication call.
+	 */
 	public SCMPReceivePublicationCall() {
 		this(null, null, null);
 	}
 
+	/**
+	 * Instantiates a new sCMP receive publication call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
+	 */
 	public SCMPReceivePublicationCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
 	}

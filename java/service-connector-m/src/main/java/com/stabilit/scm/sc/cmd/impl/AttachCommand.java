@@ -32,7 +32,7 @@ import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
- * The Class AttachCommand. Responsible for validation and execution of attach command. Allows client to attach (virtual
+ * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual
  * attach) to SC.
  * 
  * @author JTraber

@@ -39,7 +39,8 @@ import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sc.service.SessionService;
 
 /**
- * The Class CommandAdapter.
+ * The Class CommandAdapter. Adapter for every kind of command. Provides basic functions that is used by executions of
+ * commands.
  * 
  * @author JTraber
  */
@@ -164,6 +165,15 @@ public abstract class CommandAdapter implements ICommand {
 		return service;
 	}
 
+	/**
+	 * Validate session service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the session service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected SessionService validateSessionService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.SESSION_SERVICE) {
@@ -175,6 +185,15 @@ public abstract class CommandAdapter implements ICommand {
 		return (SessionService) service;
 	}
 
+	/**
+	 * Validate publish service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the publish service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {

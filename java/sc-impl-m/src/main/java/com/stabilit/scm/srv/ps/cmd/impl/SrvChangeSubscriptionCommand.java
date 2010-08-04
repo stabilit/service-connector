@@ -33,8 +33,17 @@ import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
+/**
+ * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription
+ * command. Allows changing subscription mask of a subscription.
+ * 
+ * @author JTraber
+ */
 public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvChangeSubscriptionCommand.
+	 */
 	public SrvChangeSubscriptionCommand() {
 		this.commandValidator = new SrvChangeSubscriptionCommandValidator();
 	}
@@ -71,13 +80,16 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class SrvChangeSubscriptionCommandValidator.
+	 */
 	private class SrvChangeSubscriptionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */

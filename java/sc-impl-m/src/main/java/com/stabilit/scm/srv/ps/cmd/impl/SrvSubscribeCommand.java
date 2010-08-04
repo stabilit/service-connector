@@ -70,7 +70,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeader(SCMPHeaderAttributeKey.REJECT_SESSION, true);
+			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
 			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
 		}

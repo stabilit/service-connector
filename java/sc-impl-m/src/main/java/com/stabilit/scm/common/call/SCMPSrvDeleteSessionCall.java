@@ -18,45 +18,42 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPSrvDeleteSessionCall. Call deletets session on backend server.
+ * The Class SCMPSrvDeleteSessionCall. Call deletes session on backend server.
  * 
  * @author JTraber
  */
 public class SCMPSrvDeleteSessionCall extends SCMPServerCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvDeleteSessionCall.
+	 */
 	public SCMPSrvDeleteSessionCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvDeleteSessionCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
+	 */
 	public SCMPSrvDeleteSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
 		return new SCMPSrvDeleteSessionCall(req, receivedMessage);
 	}
 
-	/**
-	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
-	 */
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_DELETE_SESSION;

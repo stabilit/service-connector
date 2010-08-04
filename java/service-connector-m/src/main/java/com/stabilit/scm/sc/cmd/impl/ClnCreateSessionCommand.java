@@ -42,6 +42,8 @@ import com.stabilit.scm.sc.service.SessionService;
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
  * successfully if backend server accepts clients request and allows creating a session. Session is saved in a session
  * registry of SC.
+ * 
+ * @author JTraber
  */
 public class ClnCreateSessionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -165,6 +167,9 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		}
 	}
 
+	/**
+	 * The Class ClnCreateSessionCommandCallback.
+	 */
 	private class ClnCreateSessionCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 

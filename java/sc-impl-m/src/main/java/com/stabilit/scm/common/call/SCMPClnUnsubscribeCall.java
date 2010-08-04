@@ -18,21 +18,34 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPClnUnsubscribeCall. Call unsubscribes form a publish service.
+ * 
+ * @author JTraber
+ */
 public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPClnUnsubscribeCall.
+	 */
 	public SCMPClnUnsubscribeCall() {
 		this(null, null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnUnsubscribeCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
+	 */
 	public SCMPClnUnsubscribeCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
-	}
-
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
 	}
 
 	@Override

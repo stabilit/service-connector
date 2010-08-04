@@ -22,7 +22,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPManageCall.
+ * The Class SCMPManageCall. Allows enable/disable of a service on SC.
  */
 public class SCMPManageCall extends SCMPCallAdapter {
 

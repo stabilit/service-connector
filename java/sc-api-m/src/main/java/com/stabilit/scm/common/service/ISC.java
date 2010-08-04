@@ -22,15 +22,37 @@
 package com.stabilit.scm.common.service;
 
 /**
+ * The Interface ISC. Top interface for any kind of communication part (client, server) to an SC.
+ * 
  * @author JTraber
  */
 public interface ISC {
 
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
 	public abstract ISCContext getContext();
 
+	/**
+	 * Gets the connection key.
+	 * 
+	 * @return the connection key
+	 */
 	public abstract String getConnectionKey();
 
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public abstract String getHost();
 
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public abstract int getPort();
 }

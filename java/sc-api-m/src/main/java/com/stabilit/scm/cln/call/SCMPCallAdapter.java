@@ -49,6 +49,12 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this(null, null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPCallAdapter.
+	 * 
+	 * @param requester
+	 *            the requester
+	 */
 	public SCMPCallAdapter(IRequester requester) {
 		this.requester = requester;
 		this.requestMessage = new SCMPMessage();
@@ -120,6 +126,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback callback) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
@@ -175,6 +182,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			this.groupState = SCMPGroupState.OPEN;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void invoke(ISCMPCallback callback) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
@@ -262,6 +270,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			throw new UnsupportedOperationException("not allowed");
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ISCMPCall newInstance(IRequester requester) {
 			throw new UnsupportedOperationException("not allowed");

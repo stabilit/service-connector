@@ -33,17 +33,28 @@ import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
+/**
+ * The Class SrvDataCommand. Responsible for validation and execution of server data command. Allows executing data on
+ * backend server.
+ * 
+ * @author JTraber
+ */
 public class SrvDataCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvDataCommand.
+	 */
 	public SrvDataCommand() {
 		this.commandValidator = new SrvDataCommandValidator();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
 		return SCMPMsgType.SRV_DATA;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
@@ -84,8 +95,12 @@ public class SrvDataCommand extends SrvCommandAdapter {
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class SrvDataCommandValidator.
+	 */
 	public class SrvDataCommandValidator implements ICommandValidator {
 
+		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();

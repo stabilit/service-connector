@@ -34,7 +34,7 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class SessionService. SessionService is a remote interface to a service and provides communication
+ * The Class SessionService. SessionService is a remote interface to a session service and provides communication
  * functions.
  * 
  * @author JTraber
@@ -60,7 +60,7 @@ public class SessionService extends Service implements ISessionService {
 	public void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
-		}		
+		}
 		this.msgId.reset();
 		this.callback = new ServiceCallback();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL

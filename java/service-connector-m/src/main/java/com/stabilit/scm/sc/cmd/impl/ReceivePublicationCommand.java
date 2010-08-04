@@ -38,6 +38,9 @@ import com.stabilit.scm.sc.registry.ISubscriptionPlace;
  */
 public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
+	/**
+	 * Instantiates a new ReceivePublicationCommand.
+	 */
 	public ReceivePublicationCommand() {
 		this.commandValidator = new ClnReceivePublicationCommandValidator();
 	}
@@ -86,6 +89,9 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		subscriptionPlace.listen(sessionId, request, response);
 	}
 
+	/**
+	 * The Class ClnReceivePublicationCommandValidator.
+	 */
 	private class ClnReceivePublicationCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */

@@ -31,14 +31,27 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPSrvSubscribeCall. Call subscribes on a backend server.
+ * 
  * @author JTraber
  */
 public class SCMPSrvSubscribeCall extends SCMPServerCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvSubscribeCall.
+	 */
 	public SCMPSrvSubscribeCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvSubscribeCall.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
+	 */
 	public SCMPSrvSubscribeCall(IRequester requester, SCMPMessage receivedMessage) {
 		super(requester, receivedMessage);
 	}
@@ -46,11 +59,15 @@ public class SCMPSrvSubscribeCall extends SCMPServerCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback) throws Exception {
+		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipList += "/" + localHost.getHostAddress();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		super.invoke(scmpCallback);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage) {
 		return new SCMPSrvSubscribeCall(requester, receivedMessage);

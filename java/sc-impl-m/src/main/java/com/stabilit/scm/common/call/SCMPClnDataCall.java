@@ -53,6 +53,12 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 		return new SCMPClnDataCall(client, serviceName, sessionId);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_DATA;
+	}
+
 	/**
 	 * Sets the message info.
 	 * 
@@ -61,12 +67,6 @@ public class SCMPClnDataCall extends SCMPSessionCallAdapter {
 	 */
 	public void setMessagInfo(String messageInfo) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DATA;
 	}
 
 	/**

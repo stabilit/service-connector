@@ -36,14 +36,17 @@ import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
-import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.IPublishTimerRun;
 import com.stabilit.scm.sc.service.PublishService;
+import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnSubscribeCommand. Subscribes client to a subscription place.
+ * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a
+ * publish service.
+ * 
+ * @author JTraber
  */
 public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
@@ -94,7 +97,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			}
 			throw th;
 		}
-		Boolean rejectSessionFlag = reply.getHeaderBoolean(SCMPHeaderAttributeKey.REJECT_SESSION);
+		Boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.TRUE.equals(rejectSessionFlag)) {
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// server rejected session - throw exception with server errors
@@ -259,6 +262,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		}
 	}
 
+	/**
+	 * The Class ClnSubscribeCommandCallback.
+	 */
 	private class ClnSubscribeCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

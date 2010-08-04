@@ -30,29 +30,57 @@ import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.SrvServiceRegistry;
 
 /**
- * The Class SrvCommandAdapter.
+ * The Class SrvCommandAdapter. Command adapter for every kind of command on server.
  */
 public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The command validator. */
 	protected ICommandValidator commandValidator;
+	/** The session composite registry. */
 	protected SCMPSessionCompositeRegistry sessionCompositeRegistry;
-	
+
+	/**
+	 * Instantiates a new SrvCommandAdapter.
+	 */
 	public SrvCommandAdapter() {
 		this.sessionCompositeRegistry = SCMPSessionCompositeRegistry.getCurrentInstance();
 	}
-	
+
+	/** {@inheritDoc} */
 	@Override
 	public ICommandValidator getCommandValidator() {
 		return this.commandValidator;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public abstract SCMPMsgType getKey();
 
+	/** {@inheritDoc} */
 	@Override
 	public abstract void run(IRequest request, IResponse response) throws Exception;
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAsynchronous() {
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IFactoryable newInstance() {
+		return this;
+	}
+
+	/**
+	 * Gets the server service by service name.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the server service by service name
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
@@ -68,15 +96,5 @@ public abstract class SrvCommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return srvService;
-	}
-
-	@Override
-	public boolean isAsynchronous() {
-		return false;
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 }

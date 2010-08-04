@@ -32,19 +32,32 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvCreateSessionCall.
+	 */
 	public SCMPSrvCreateSessionCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvCreateSessionCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
+	 */
 	public SCMPSrvCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
 		return new SCMPSrvCreateSessionCall(req, receivedMessage);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		// adding ip of current unit to header field ip address list
@@ -55,21 +68,7 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 		super.invoke(scmpCallback);
 	}
 
-	/**
-	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
-	 */
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_CREATE_SESSION;

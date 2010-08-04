@@ -143,6 +143,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		}
 	}
 
+	/**
+	 * The Class ClnDeleteSessionCommandCallback.
+	 */
 	private class ClnDeleteSessionCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

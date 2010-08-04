@@ -16,11 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.call;
 
-import java.util.Map;
-
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -49,31 +46,7 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
-	/**
-	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
-	 */
-	public void setSessionId(String sessionId) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_ID, sessionId);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_ABORT_SESSION;

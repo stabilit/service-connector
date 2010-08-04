@@ -36,7 +36,10 @@ import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 /**
- * The Class SrvCreateSessionCommand.
+ * The Class SrvCreateSessionCommand. Responsible for validation and execution of server create session command. Allows
+ * creating session on backend server.
+ * 
+ * @author JTraber
  */
 public class SrvCreateSessionCommand extends SrvCommandAdapter {
 

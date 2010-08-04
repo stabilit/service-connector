@@ -28,12 +28,24 @@ import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
+/**
+ * The Class SCPublishServer. A Server that publishes messages to an SC.
+ */
 public class SCPublishServer extends SCServer implements ISCPublishServer {
 
+	/**
+	 * Instantiates a new SCPublishServer.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 */
 	public SCPublishServer(String host, int port) {
 		super(host, port);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void publish(String serviceName, String mask, Object data) throws Exception {
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
@@ -44,11 +56,13 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 		this.callback.getMessageSync();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception {
 		super.registerService(serviceName, scCallback);

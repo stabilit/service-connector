@@ -23,16 +23,36 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvDataCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 
+/**
+ * A factory for creating SessionServerCommand objects. Unifies commands used by session service.
+ * 
+ * @author JTraber
+ */
 public class SessionServerCommandFactory extends CommandFactory {
 
+	/**
+	 * Instantiates a new session server command factory.
+	 */
 	public SessionServerCommandFactory() {
 		init(this);
 	}
 
+	/**
+	 * Instantiates a new session server command factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public SessionServerCommandFactory(CommandFactory commandFactory) {
 		init(commandFactory);
 	}
 
+	/**
+	 * Initialize factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
 		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);

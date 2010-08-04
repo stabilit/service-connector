@@ -32,8 +32,17 @@ import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.service.PublishService;
 
+/**
+ * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to
+ * clients.
+ * 
+ * @author JTraber
+ */
 public class PublishCommand extends CommandAdapter {
 
+	/**
+	 * Instantiates a new PublishCommand.
+	 */
 	public PublishCommand() {
 		this.commandValidator = new PublishCommandValidator();
 	}
@@ -69,6 +78,9 @@ public class PublishCommand extends CommandAdapter {
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class PublishCommandValidator.
+	 */
 	private class PublishCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */

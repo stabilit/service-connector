@@ -31,8 +31,17 @@ import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
+/**
+ * The Class SrvUnsubscribeCommand. Responsible for validation and execution of server unsubscribe command. Allows
+ * unsubscribing from service.
+ * 
+ * @author JTraber
+ */
 public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
+	/**
+	 * Instantiates a new SrvUnsubscribeCommand.
+	 */
 	public SrvUnsubscribeCommand() {
 		this.commandValidator = new SrvUnsubscribeCommandValidator();
 	}
@@ -70,6 +79,9 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class SrvUnsubscribeCommandValidator.
+	 */
 	private class SrvUnsubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */

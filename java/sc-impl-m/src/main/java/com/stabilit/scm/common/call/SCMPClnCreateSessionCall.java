@@ -65,6 +65,12 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		return new SCMPClnCreateSessionCall(requester, serviceName);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_CREATE_SESSION;
+	}
+
 	/**
 	 * Sets the session info.
 	 * 
@@ -75,16 +81,22 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_CREATE_SESSION;
-	}
-
+	/**
+	 * Sets the echo timeout seconds.
+	 * 
+	 * @param echoTimeout
+	 *            the new echo timeout seconds
+	 */
 	public void setEchoTimeoutSeconds(int echoTimeout) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 	}
 
+	/**
+	 * Sets the echo interval seconds.
+	 * 
+	 * @param echoInterval
+	 *            the new echo interval seconds
+	 */
 	public void setEchoIntervalSeconds(int echoInterval) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
 	}

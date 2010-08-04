@@ -133,7 +133,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		private IResponse response;
 
 		/**
-		 * Instantiates a new cln data command callback.
+		 * Instantiates a new ClnDataCommandCallback.
 		 * 
 		 * @param request
 		 *            the request

@@ -18,6 +18,7 @@ package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
+import com.stabilit.scm.common.call.SCMPClnChangeSubscriptionCall;
 import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
@@ -31,7 +32,8 @@ import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class PublishService.
+ * The Class PublishService. PublishService is a remote interface to a publish service and provides communication
+ * functions.
  */
 public class PublishService extends Service implements IPublishService {
 
@@ -56,7 +58,11 @@ public class PublishService extends Service implements IPublishService {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		this.msgId.incrementMsgSequenceNr();
-		// TODO changeSubscription
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
+				.newInstance(this.requester, this.serviceName, this.sessionId);
+		changeSubscriptionCall.setMask(mask);
+		changeSubscriptionCall.invoke(this.callback);
+		this.callback.getMessageSync();
 	}
 
 	/** {@inheritDoc} */
@@ -78,7 +84,7 @@ public class PublishService extends Service implements IPublishService {
 	}
 
 	/**
-	 * Receive publication.
+	 * Sends a receive publication to the SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -106,7 +112,8 @@ public class PublishService extends Service implements IPublishService {
 	}
 
 	/**
-	 * The Class PublishServiceCallback.
+	 * The Class PublishServiceCallback. Responsible for handling the right communication sequence for publish subscribe
+	 * protocol.
 	 */
 	private class PublishServiceCallback extends ServiceCallback {
 

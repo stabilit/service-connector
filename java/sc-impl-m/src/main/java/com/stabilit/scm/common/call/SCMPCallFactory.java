@@ -54,6 +54,8 @@ public final class SCMPCallFactory {
 
 	/** The CLN_SUBSCRIBE_CALL. */
 	public static final ISCMPCall CLN_SUBSCRIBE_CALL = new SCMPClnSubscribeCall();
+	/** The Constant CLN_CHANGE_SUBSCRIPTION. */
+	public static final ISCMPCall CLN_CHANGE_SUBSCRIPTION = new SCMPClnChangeSubscriptionCall();
 	/** The CLN_UNSUBSCRIBE_CALL. */
 	public static final ISCMPCall CLN_UNSUBSCRIBE_CALL = new SCMPClnUnsubscribeCall();
 	/** The RECEIVE_PUBLICATION. */

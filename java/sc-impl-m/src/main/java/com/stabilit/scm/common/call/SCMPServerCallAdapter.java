@@ -18,11 +18,12 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class SCMPCallAdapter. Provides basic functionality for calls to a backend server.
+ * The Class SCMPCallAdapter. Provides basic functionality for direct calls to a backend server.
  * 
  * @author JTraber
  */
@@ -56,6 +57,7 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
 		if (message == null) {
 			this.requestMessage = new SCMPMessage();
+			ExceptionPoint.getInstance().fireException(this, new Exception("something is strange here, check that!"));
 			return;
 		}
 		this.requestMessage = message;

@@ -36,6 +36,11 @@ import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
+/**
+ * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
+ * 
+ * @author JTraber
+ */
 public class SCServer implements ISCServer {
 
 	/** The host of the SC. */
@@ -44,30 +49,67 @@ public class SCServer implements ISCServer {
 	private int scPort;
 	/** The connection type, identifies low level component to use for communication (netty, nio). */
 	private String conType;
+	/** The context. */
 	private SCServerContext context;
 
 	// fields for register service
 	/** The requester. */
 	protected IRequester requester;
+	/** The max sessions. */
 	private int maxSessions;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
-	/** The context. */
+	/** The immediate connect. */
 	private boolean immediateConnect;
+	/** The keep alive interval. */
 	private int keepAliveInterval;
+	/** The running port. */
 	private int runningPort;
+	/** The srv service registry. */
 	private SrvServiceRegistry srvServiceRegistry;
+	/** The callback. */
 	protected SrvServerCallback callback;
+	/** The msg id. */
 	private SCMPMessageId msgId;
 
+	/**
+	 * Instantiates a new sC server.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 */
 	public SCServer(String host, int port) {
 		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
+	/**
+	 * Instantiates a new sC server.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
+	 */
 	public SCServer(String host, int port, String connectionType) {
 		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
+	/**
+	 * Instantiates a new sC server.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 */
 	public SCServer(String host, int port, String connectionType, int keepAliveInterval) {
 		this.scHost = host;
 		this.scPort = port;
@@ -133,7 +175,7 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setMaxSessions(this.maxSessions);
 		registerServiceCall.setPortNumber(this.runningPort);
 		if (this.immediateConnect) {
-			registerServiceCall.setImmediateConnect();
+			registerServiceCall.setImmediateConnect(true);
 		}
 		registerServiceCall.setKeepAliveInterval(this.keepAliveInterval);
 		registerServiceCall.invoke(this.callback);
@@ -179,6 +221,9 @@ public class SCServer implements ISCServer {
 		}
 	}
 
+	/**
+	 * The Class SCServerContext.
+	 */
 	private class SCServerContext implements ISCContext {
 
 		/** {@inheritDoc} */
@@ -219,6 +264,9 @@ public class SCServer implements ISCServer {
 		this.connectionPool.destroy();
 	}
 
+	/**
+	 * The Class SrvServerCallback.
+	 */
 	protected class SrvServerCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

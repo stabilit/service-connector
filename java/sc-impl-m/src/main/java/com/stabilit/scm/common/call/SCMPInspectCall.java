@@ -26,14 +26,14 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations.
+ * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations are done properly.
  * 
  * @author JTraber
  */
 public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new sCMP inspect call.
+	 * Instantiates a new SCMPInspectCall.
 	 */
 	public SCMPInspectCall() {
 		this(null);
@@ -48,7 +48,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Instantiates a new sCMP inspect call.
+	 * Instantiates a new SCMPInspectCall.
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call

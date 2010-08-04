@@ -63,6 +63,12 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.REGISTER_SERVICE;
+	}
+
 	/**
 	 * Sets the version.
 	 * 
@@ -70,17 +76,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new version
 	 */
 	private void setVersion(String version) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
-	}
-
-	/**
-	 * Sets the max sessions.
-	 * 
-	 * @param maxSessions
-	 *            the new max sessions
-	 */
-	public void setMaxSessions(int maxSessions) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
 	/**
@@ -90,7 +86,17 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new local date time
 	 */
 	private void setLocalDateTime(String localDateTime) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+	}
+
+	/**
+	 * Sets the max sessions.
+	 * 
+	 * @param maxSessions
+	 *            the new max sessions
+	 */
+	public void setMaxSessions(int maxSessions) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
 	}
 
 	/**
@@ -100,7 +106,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new keep alive interval
 	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 	}
 
 	/**
@@ -110,19 +116,18 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	 *            the new port number
 	 */
 	public void setPortNumber(int portNumber) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
 	}
 
 	/**
 	 * Sets the immediate connect.
+	 * 
+	 * @param immediateConnect
+	 *            the new immediate connect
 	 */
-	public void setImmediateConnect() {
-		requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REGISTER_SERVICE;
+	public void setImmediateConnect(boolean immediateConnect) {
+		if (immediateConnect) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
+		}
 	}
 }

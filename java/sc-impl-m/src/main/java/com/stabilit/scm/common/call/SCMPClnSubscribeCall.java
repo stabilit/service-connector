@@ -31,19 +31,39 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
+ * The Class SCMPClnSubscribeCall. Call tries subscribing to a publish service.
+ * 
  * @author JTraber
  */
 public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPClnSubscribeCall.
+	 */
 	public SCMPClnSubscribeCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPClnSubscribeCall.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 */
 	public SCMPClnSubscribeCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Invoke.
+	 * 
+	 * @param scmpCallback
+	 *            the scmp callback
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -51,30 +71,66 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * New instance.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 * @return the iSCMP call {@inheritDoc}
+	 */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
 		return new SCMPClnSubscribeCall(requester, serviceName);
 	}
 
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            the new session info
+	 */
 	public void setSessionInfo(String sessionInfo) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type {@inheritDoc}
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_SUBSCRIBE;
 	}
 
+	/**
+	 * Sets the mask.
+	 * 
+	 * @param mask
+	 *            the new mask
+	 */
 	public void setMask(String mask) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
 
+	/**
+	 * Sets the no data interval seconds.
+	 * 
+	 * @param noDataInterval
+	 *            the new no data interval seconds
+	 */
 	public void setNoDataIntervalSeconds(int noDataInterval) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
 	}
 
+	/**
+	 * Sets the authentication id.
+	 * 
+	 * @param authId
+	 *            the new authentication id
+	 */
 	public void setAuthenticationId(String authId) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.AUTH_SESSION_ID, authId);
 	}

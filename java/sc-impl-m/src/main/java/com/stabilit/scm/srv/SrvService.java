@@ -22,23 +22,45 @@
 package com.stabilit.scm.srv;
 
 /**
+ * The Class SrvService. Represent of a service on backend server.
+ * 
  * @author JTraber
  */
 public class SrvService {
 
+	/** The service name. */
 	private String serviceName;
+	/** The callback. */
 	private ISCServerCallback callback;
 
+	/**
+	 * Instantiates a new srv service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param callback
+	 *            the callback
+	 */
 	public SrvService(String serviceName, ISCServerCallback callback) {
 		super();
 		this.serviceName = serviceName;
 		this.callback = callback;
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
 	public String getServiceName() {
 		return serviceName;
 	}
 
+	/**
+	 * Gets the callback.
+	 * 
+	 * @return the callback
+	 */
 	public ISCServerCallback getCallback() {
 		return callback;
 	}

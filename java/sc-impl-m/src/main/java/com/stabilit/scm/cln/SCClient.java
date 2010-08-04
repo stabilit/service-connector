@@ -34,7 +34,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
- * The Class SCClient.
+ * The Class SCClient. Client to an SC.
  * 
  * @author JTraber
  */
@@ -52,6 +52,7 @@ public class SCClient implements ISCClient {
 	protected IRequester requester;
 	/** The context. */
 	private ServiceConnectorContext context;
+	/** The callback. */
 	private SCClientCallback callback;
 
 	/**
@@ -214,6 +215,9 @@ public class SCClient implements ISCClient {
 		}
 	}
 
+	/**
+	 * The Class SCClientCallback.
+	 */
 	private class SCClientCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

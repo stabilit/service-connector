@@ -16,11 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.call;
 
-import java.util.Map;
-
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
@@ -31,54 +28,32 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class SCMPSrvDataCall extends SCMPServerCallAdapter {
 
+	/**
+	 * Instantiates a new SCMPSrvDataCall.
+	 */
 	public SCMPSrvDataCall() {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new SCMPSrvDataCall.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
+	 */
 	public SCMPSrvDataCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
 		return new SCMPSrvDataCall(req, receivedMessage);
 	}
 
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
-	}
-
-	/**
-	 * Sets the messag info.
-	 * 
-	 * @param messageInfo
-	 *            the new messag info
-	 */
-	public void setMessagInfo(String messageInfo) {
-		requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_DATA;

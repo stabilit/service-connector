@@ -36,7 +36,7 @@ import com.stabilit.scm.sc.service.Server;
 
 /**
  * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
- * deregister backend server from SC. Backend server will be removed from server registry of SC.
+ * deregister backend server from SC service. Backend server will be removed from server registry of SC.
  * 
  * @author JTraber
  */

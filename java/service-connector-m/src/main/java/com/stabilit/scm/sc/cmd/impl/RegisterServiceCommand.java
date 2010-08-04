@@ -106,6 +106,14 @@ public class RegisterServiceCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * Validate server not registered.
+	 * 
+	 * @param server
+	 *            the server
+	 * @throws SCMPCommunicationException
+	 *             the sCMP communication exception
+	 */
 	private void validateServerNotRegistered(Server server) throws SCMPCommunicationException {
 		if (server != null) {
 			// server registered two times for this service

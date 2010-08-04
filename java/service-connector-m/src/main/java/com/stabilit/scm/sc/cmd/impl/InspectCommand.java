@@ -67,6 +67,13 @@ public class InspectCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
+	/**
+	 * Gets the registry inspect string.
+	 * 
+	 * @param registry
+	 *            the registry
+	 * @return the registry inspect string
+	 */
 	private String getRegistryInspectString(Registry registry) {
 		String string = registry.toString();
 		if (registry.getSize() == 0) {

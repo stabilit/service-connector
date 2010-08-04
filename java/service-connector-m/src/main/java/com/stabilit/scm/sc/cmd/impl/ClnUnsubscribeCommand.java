@@ -32,6 +32,10 @@ import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
+/**
+ * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
+ * unsubscribing from a publish service.
+ */
 public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	public ClnUnsubscribeCommand() {
@@ -83,6 +87,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		response.setSCMP(reply);
 	}
 
+	/**
+	 * The Class ClnUnsubscribeCommandValidator.
+	 */
 	private class ClnUnsubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
@@ -118,6 +125,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		}
 	}
 
+	/**
+	 * The Class ClnSubscribeCommandCallback.
+	 */
 	private class ClnSubscribeCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

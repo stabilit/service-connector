@@ -25,8 +25,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class DetachCommand. Responsible for validation and execution of detach command. Allows client to detach (virtual
- * detach) to SC.
+ * The Class DetachCommand. Responsible for validation and execution of detach command. Allows detaching (virtual
+ * detach) from SC.
  * 
  * @author JTraber
  */

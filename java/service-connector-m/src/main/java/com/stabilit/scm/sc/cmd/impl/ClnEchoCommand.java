@@ -32,8 +32,8 @@ import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Simply sends back incoming
- * content. Depending on header fields on which node echo executes or forwards to next server.
+ * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Forwards message to backend
+ * server. Used to refresh session on SC.
  * 
  * @author JTraber
  */
@@ -121,6 +121,9 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		}
 	}
 
+	/**
+	 * The Class ClnEchoCommandCallback.
+	 */
 	private class ClnEchoCommandCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}

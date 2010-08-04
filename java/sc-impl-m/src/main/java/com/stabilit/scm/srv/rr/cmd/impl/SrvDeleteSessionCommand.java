@@ -31,7 +31,10 @@ import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 /**
- * The Class SrvDeleteSessionCommand.
+ * The Class SrvDeleteSessionCommand. Responsible for validation and execution of server delete session command. Allows
+ * deleting session on backend server.
+ * 
+ * @author JTraber
  */
 public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
