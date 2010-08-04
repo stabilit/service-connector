@@ -51,7 +51,7 @@ public class PerformanceSessionServiceTestCase {
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 
-			int total = 100000;
+			int total = 5000;
 			long startTime = System.currentTimeMillis();
 			for (int i = 0; i < total; i++) {
 				requestMsg.setData("Performance : " + i);
