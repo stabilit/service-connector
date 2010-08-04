@@ -27,9 +27,9 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.Server;
@@ -85,6 +85,15 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
+	/**
+	 * Gets the subscription session by id.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @return the subscription session by id
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected Session getSubscriptionSessionById(String sessionId) throws SCMPCommandException {
 		SubscriptionSessionRegistry sessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		Session session = sessionRegistry.getSession(sessionId);
@@ -119,15 +128,15 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Gets the subscription place by id. Looks up the subscription place by session id.
+	 * Gets the subscription place by id.
 	 * 
 	 * @param sessionId
 	 *            the session id
 	 * @return the subscription place by id
 	 * @throws Exception
-	 *             the exception thrown if no session is found
+	 *             the exception
 	 */
-	protected ISubscriptionPlace<SCMPMessage> getSubscriptionPlaceById(String sessionId) throws Exception {
+	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String sessionId) throws Exception {
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		Session session = subscriptionSessionRegistry.getSession(sessionId);
 
@@ -140,7 +149,7 @@ public abstract class CommandAdapter implements ICommand {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return ((PublishService) session.getServer().getService()).getSubscriptionPlace();
+		return ((PublishService) session.getServer().getService()).getSubscriptionQueue();
 	}
 
 	/**

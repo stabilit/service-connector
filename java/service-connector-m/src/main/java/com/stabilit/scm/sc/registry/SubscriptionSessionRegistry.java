@@ -21,7 +21,7 @@ import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class SessionRegistry. Registry stores entries for properly created sessions.
+ * The Class SessionRegistry. Registry stores entries for properly created subscriptions.
  * 
  * @author JTraber
  */
@@ -39,20 +39,47 @@ public class SubscriptionSessionRegistry extends Registry {
 		return instance;
 	}
 
+	/**
+	 * Adds the session.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param session
+	 *            the session
+	 */
 	public void addSession(Object key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
 	}
 
+	/**
+	 * Removes the session.
+	 * 
+	 * @param session
+	 *            the session
+	 */
 	public void removeSession(Session session) {
 		this.removeSession(session.getId());
 	}
 
+	/**
+	 * Removes the session.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public void removeSession(Object key) {
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
+	/**
+	 * Gets the session.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the session
+	 */
 	public Session getSession(Object key) {
 		Session session = (Session) super.get(key);
 		return session;

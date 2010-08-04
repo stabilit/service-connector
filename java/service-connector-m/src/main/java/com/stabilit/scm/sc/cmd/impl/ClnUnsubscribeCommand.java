@@ -27,7 +27,7 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
@@ -75,7 +75,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 			// TODO error handling
 		}
 		// looks up subscription place
-		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
+		SubscriptionQueue<SCMPMessage> subscriptionPlace = this.getSubscriptionQueueById(sessionId);
 		subscriptionPlace.unsubscribe(sessionId);
 		// delete session on server successful - delete entry from session registry
 		this.subscriptionRegistry.removeSession(sessionId);

@@ -34,7 +34,7 @@ import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.IPublishTimerRun;
 import com.stabilit.scm.sc.service.PublishService;
@@ -111,7 +111,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
 		subscriptionSessionRegistry.addSession(session.getId(), session);
 
-		ISubscriptionPlace<SCMPMessage> subscriptionPlace = service.getSubscriptionPlace();
+		SubscriptionQueue<SCMPMessage> subscriptionPlace = service.getSubscriptionQueue();
 
 		IPublishTimerRun timerRun = new PublishTimerRun(subscriptionPlace, noDataInterval);
 		IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
@@ -184,8 +184,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		/** The timeout. */
 		private int timeoutSeconds;
-		/** The subscription place. */
-		private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
+		/** The subscription queue. */
+		private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 		/** The request. */
 		private IRequest request;
 		/** The response. */
@@ -199,11 +199,11 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		 * @param timeoutSeconds
 		 *            the timeout
 		 */
-		public PublishTimerRun(ISubscriptionPlace<SCMPMessage> subscriptionPlace, int timeoutSeconds) {
+		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, int timeoutSeconds) {
 			this.request = null;
 			this.response = null;
 			this.timeoutSeconds = timeoutSeconds;
-			this.subscriptionPlace = subscriptionPlace;
+			this.subscriptionQueue = subscriptionPlace;
 		}
 
 		/** {@inheritDoc} */
@@ -236,7 +236,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			reply.setIsReply(true);
 
 			// tries polling from queue
-			SCMPMessage message = this.subscriptionPlace.poll(sessionId);
+			SCMPMessage message = this.subscriptionQueue.poll(sessionId);
 			if (message == null) {
 				// no message found on queue - subscription timeout set up no data message
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);

@@ -18,16 +18,15 @@ package com.stabilit.scm.sc.service;
 
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
-import com.stabilit.scm.sc.registry.SubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
  * The Class PublishService.
  */
 public class PublishService extends Service {
 
-	/** The subscription place. */
-	private ISubscriptionPlace<SCMPMessage> subscriptionPlace;
+	/** The subscription queue. */
+	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 
 	/**
 	 * Instantiates a new publish service.
@@ -39,18 +38,29 @@ public class PublishService extends Service {
 	 */
 	public PublishService(String name) {
 		super(name, ServiceType.PUBLISH_SERVICE);
-		this.subscriptionPlace = new SubscriptionPlace<SCMPMessage>();
+		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
 	}
 
 	/**
-	 * Gets the subscription place.
+	 * Gets the subscription queue.
 	 * 
-	 * @return the subscription place
+	 * @return the subscription queue
 	 */
-	public ISubscriptionPlace<SCMPMessage> getSubscriptionPlace() {
-		return this.subscriptionPlace;
+	public SubscriptionQueue<SCMPMessage> getSubscriptionQueue() {
+		return this.subscriptionQueue;
 	}
 
+	/**
+	 * Allocate server and subscribe.
+	 * 
+	 * @param msgToForward
+	 *            the message to forward
+	 * @param callback
+	 *            the callback
+	 * @return the server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;

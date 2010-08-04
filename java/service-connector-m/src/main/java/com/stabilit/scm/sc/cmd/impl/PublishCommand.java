@@ -29,7 +29,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.service.PublishService;
 
 /**
@@ -63,12 +63,12 @@ public class PublishCommand extends CommandAdapter {
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
-		ISubscriptionPlace<SCMPMessage> place = service.getSubscriptionPlace();
-		if (place == null) {
-			throw new SCServiceException("no subscriptionPlace for serviceName : " + serviceName);
+		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
+		if (queue == null) {
+			throw new SCServiceException("no subscriptionQueue for serviceName : " + serviceName);
 		}
 		// throws an exception if failed
-		place.add(message);
+		queue.add(message);
 
 		// reply to server
 		SCMPMessage reply = new SCMPMessage();

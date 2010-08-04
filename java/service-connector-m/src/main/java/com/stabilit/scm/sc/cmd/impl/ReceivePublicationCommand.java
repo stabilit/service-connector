@@ -28,7 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ISubscriptionPlace;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
  * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
@@ -63,10 +63,10 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 
-		// looks up subscription place
-		ISubscriptionPlace<SCMPMessage> subscriptionPlace = this.getSubscriptionPlaceById(sessionId);
+		// looks up subscription queue
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
 		// tries polling message
-		SCMPMessage message = subscriptionPlace.poll(sessionId);
+		SCMPMessage message = subscriptionQueue.poll(sessionId);
 		if (message != null) {
 			// message found in subscription queue set up reply
 			SCMPMessage reply = new SCMPMessage();
@@ -86,7 +86,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 			return;
 		}
 		// no message available, start listening for new message
-		subscriptionPlace.listen(sessionId, request, response);
+		subscriptionQueue.listen(sessionId, request, response);
 	}
 
 	/**
