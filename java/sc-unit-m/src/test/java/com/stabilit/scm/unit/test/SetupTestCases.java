@@ -43,6 +43,7 @@ public class SetupTestCases {
 	private static SetupTestCases setupTestCases = null;
 	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
+	private static boolean large = false;
 
 	private SetupTestCases() {
 	}
@@ -259,6 +260,14 @@ public class SetupTestCases {
 
 		@Override
 		public ISCMessage subscribe(ISCMessage message) {
+			Object obj = message.getData();
+			if (obj != null && obj instanceof String) {
+				String data = (String) obj;
+				if (data.startsWith("large")) {
+					SetupTestCases.large = true;
+				}
+			}
+
 			return message;
 		}
 
@@ -279,6 +288,16 @@ public class SetupTestCases {
 		@Override
 		public void run() {
 			int index = 0;
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("large:");
+			for (int i = 0; i < 100000; i++) {
+				if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+					break;
+				}
+				sb.append(i);
+			}
+
 			while (!killPublishServer) {
 				try {
 					if (index % 3 == 0) {
@@ -287,6 +306,9 @@ public class SetupTestCases {
 						Thread.sleep(1000);
 					}
 					Object data = "publish message nr " + ++index;
+					if (SetupTestCases.large) {
+						data = sb.toString();
+					}
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
 				} catch (Exception e) {
