@@ -56,10 +56,19 @@ public class PerformanceSessionServiceTestCase {
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 
+			// prepare body
+			StringBuilder sb = new StringBuilder();
+			int dataSize = 128; // 128 Byte
+			for (int i = 0; i < 100000; i++) {
+				sb.append(i);
+				if (sb.length() > dataSize)
+					break;
+			}
+
 			int total = 5000;
 			long startTime = System.currentTimeMillis();
 			for (int i = 0; i < total; i++) {
-				requestMsg.setData("Performance : " + i);
+				requestMsg.setData("Performance : " + i + sb.toString());
 				sessionServiceA.execute(requestMsg);
 			}
 			long endTime = System.currentTimeMillis();
