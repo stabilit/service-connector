@@ -98,11 +98,7 @@ public abstract class Registry implements IRegistryMXBean {
 		return registryMap.containsKey(key);
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer dump = new StringBuffer();
@@ -118,11 +114,7 @@ public abstract class Registry implements IRegistryMXBean {
 		return dump.toString();
 	}
 
-	/**
-	 * Gets the entries.
-	 * 
-	 * @return the entries {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public RegistryEntryWrapperJMX[] getEntries() {
 		RegistryEntryWrapperJMX[] mapBeanStringJMX = new RegistryEntryWrapperJMX[registryMap.size()];
