@@ -19,6 +19,7 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.SocketAddress;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -38,7 +39,7 @@ import com.stabilit.scm.sc.service.PublishService;
  * 
  * @author JTraber
  */
-public class PublishCommand extends CommandAdapter {
+public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/**
 	 * Instantiates a new PublishCommand.
