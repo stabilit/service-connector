@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.internal.SCMPPart;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
@@ -70,6 +71,10 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		if (message != null) {
 			// message found in subscription queue set up reply
 			SCMPMessage reply = new SCMPMessage();
+			if (message.isPart()) {
+				// message is part
+				reply = new SCMPPart();
+			}
 			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
 			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
 			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
