@@ -19,7 +19,7 @@ package com.stabilit.scm.common.conf;
 import com.stabilit.scm.common.listener.LoggerPoint;
 
 /**
- * The Interface IConstants. SC constants.
+ * The Interface IConstants. SCM constants.
  * 
  * @author JTraber
  */
@@ -29,6 +29,8 @@ public final class Constants {
 		// instantiating not allowed
 	}
 
+	/** The Constant DEFAULT_PROPERTY_FILE_NAME. */
+	public static final String DEFAULT_PROPERTY_FILE_NAME = "sc.properties";
 	/** Protocol literal. */
 	public static final String HTTP = "http";
 	/** File qualifier for Http requests. */
@@ -79,6 +81,8 @@ public final class Constants {
 	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The Constant ROOT_LOGGER_QUALIFIER. */
 	public static final String ROOT_LOGGER_QUALIFIER = "root.logger";
+	/** The Constant ROOT_LOGGING_QUALIFIER. */
+	public static final String ROOT_LOGGING_QUALIFIER = "root.logging";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMillis";
 	/** The CON. */
@@ -164,6 +168,12 @@ public final class Constants {
 		return Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS;
 	}
 
+	/**
+	 * Sets the operation timeout milliseconds.
+	 * 
+	 * @param operationTimeoutMillis
+	 *            the new operation timeout milliseconds
+	 */
 	public static void setOperationTimeoutMillis(int operationTimeoutMillis) {
 		if (Constants.OPERATION_TIMEOUT_MILLIS != Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT) {
 			// setting OPERATION_TIMEOUT_MILLIS only allowed one time
@@ -177,6 +187,11 @@ public final class Constants {
 				+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
 	}
 
+	/**
+	 * Gets the operation timeout milliseconds.
+	 * 
+	 * @return the operation timeout milliseconds
+	 */
 	public static int getOperationTimeoutMillis() {
 		return Constants.OPERATION_TIMEOUT_MILLIS;
 	}

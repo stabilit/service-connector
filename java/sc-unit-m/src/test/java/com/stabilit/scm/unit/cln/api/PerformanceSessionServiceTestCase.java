@@ -27,9 +27,14 @@ import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class PerformanceSessionServiceTestCase {
 
+	/**
+	 * Last results without logging - 05.07.2010<br>
+	 * Throughput : 1666 msg per sec.
+	 */
+
 	@Before
 	public void setUp() {
-		SetupTestCases.setupSCSessionServer10Connections();
+		SetupTestCases.setupSCSessionServer10ConnectionsOverFile("scPerf.properties");
 	}
 
 	@Test

@@ -40,6 +40,8 @@ public abstract class CommunicatorConfigPool {
 	private List<ICommunicatorConfig> comConfigList;
 	/** The logger key. */
 	private String loggerKey;
+	/** The logging state on/off. */
+	private boolean loggable;
 
 	/**
 	 * Instantiates a new communicator configuration pool.
@@ -48,6 +50,8 @@ public abstract class CommunicatorConfigPool {
 		this.comConfigList = null;
 		this.props = null;
 		this.loggerKey = null;
+		this.loggable = true;
+
 	}
 
 	/**
@@ -115,6 +119,11 @@ public abstract class CommunicatorConfigPool {
 			int operationTimeout = Integer.parseInt(operationTimeoutString);
 			Constants.setOperationTimeoutMillis(operationTimeout);
 		}
+
+		String loggable = props.getProperty(Constants.ROOT_LOGGING_QUALIFIER);
+		if ("disable".equals(loggable)) {
+			this.loggable = false;
+		}
 	}
 
 	/**
@@ -146,6 +155,15 @@ public abstract class CommunicatorConfigPool {
 	 */
 	public String getLoggerKey() {
 		return loggerKey;
+	}
+
+	/**
+	 * Logging on or off.
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean loggable() {
+		return this.loggable;
 	}
 
 	/**

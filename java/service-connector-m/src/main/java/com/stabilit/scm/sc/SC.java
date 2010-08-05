@@ -23,31 +23,16 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.CommunicatorConfigPool;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IConnectionListener;
-import com.stabilit.scm.common.listener.IExceptionListener;
-import com.stabilit.scm.common.listener.ILoggerListener;
-import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.IStatisticsListener;
 import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.listener.StatisticsPoint;
-import com.stabilit.scm.common.log.Level;
-import com.stabilit.scm.common.log.impl.ConnectionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.log.impl.LoggerFactory;
-import com.stabilit.scm.common.log.impl.PerformanceLogger;
-import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.util.ConsoleUtil;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
@@ -78,7 +63,14 @@ public final class SC {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		SC.run();
+		String fileName = ConsoleUtil.getArg(args, "-filename");
+		if (fileName == null) {
+			// fileName not set - use default
+			SC.run(Constants.DEFAULT_PROPERTY_FILE_NAME);
+		} else {
+			// fileName extracted from vm arguments
+			SC.run(fileName);
+		}
 	}
 
 	/**
@@ -87,20 +79,25 @@ public final class SC {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static void run() throws Exception {
+	private static void run(String fileName) throws Exception {
 		ResponderConfigPool config = new ResponderConfigPool();
-		config.load("sc.properties");
-		SC.initLogStuff(config);
+		config.load(fileName);
+
+		LoggerConfigurator loggerConfigurator = new LoggerConfigurator(config);
+
+		if (config.loggable()) {
+			// logging enabled
+			loggerConfigurator.addAllLoggers();
+		}
+		SC.initializeJMX(loggerConfigurator);
 
 		// load services
-		ServiceLoader.load("sc.properties");
+		ServiceLoader.load(fileName);
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
-
-		SC.initializeJMXStuff();
 
 		List<ICommunicatorConfig> respConfigList = config.getResponderConfigList();
 
@@ -120,40 +117,25 @@ public final class SC {
 	}
 
 	/**
-	 * Initialize the log stuff.
+	 * Initialize java management interface stuff.
 	 * 
-	 * @param config
-	 *            the configuration
+	 * @param loggerConfigurator
+	 *            the logger configurator
 	 */
-	private static void initLogStuff(CommunicatorConfigPool config) {
-		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
-		ConnectionPoint.getInstance().addListener(
-				(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-		ExceptionPoint.getInstance().addListener((IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-		LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-		LoggerPoint.getInstance().setLevel(Level.DEBUG);
-		PerformancePoint.getInstance().addListener(
-				(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-		PerformancePoint.getInstance().setOn(true);
-		SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
-		StatisticsPoint.getInstance().addListener(statisticsListener);
-	}
-
-	/**
-	 * Initialize jmx stuff.
-	 */
-	private static void initializeJMXStuff() {
+	private static void initializeJMX(LoggerConfigurator loggerConfigurator) {
 		try {
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
 			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
 			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.scm.registry:type=ServerRegistry");
+			ObjectName mxbeanNameLogging = new ObjectName("com.stabilit.scm:type=LoggerConfigurator");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
+			mbs.registerMBean(loggerConfigurator, mxbeanNameLogging);
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(SC.class, th);
 		}

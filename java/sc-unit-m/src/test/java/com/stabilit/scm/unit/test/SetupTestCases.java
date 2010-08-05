@@ -99,6 +99,20 @@ public class SetupTestCases {
 		}
 	}
 
+	public static void setupSCSessionServer10ConnectionsOverFile(String propertyFileName) {
+		if (setupTestCases == null) {
+			try {
+				init();
+				setupTestCases = new SetupTestCases();
+				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				SC.main(new String[] { "-filename", propertyFileName });
+				SetupTestCases.startSessionServer10Connections();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static void setupSCSessionServer1Connections() {
 		if (setupTestCases == null) {
 			try {
