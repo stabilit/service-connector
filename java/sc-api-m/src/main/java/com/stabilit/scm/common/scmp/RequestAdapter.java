@@ -17,9 +17,10 @@
 package com.stabilit.scm.common.scmp;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.util.MapBean;
 
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.
@@ -31,7 +32,7 @@ public abstract class RequestAdapter implements IRequest {
 	/** The scmp message. */
 	private SCMPMessage message;
 	/** The map bean. MapBean to store any data. */
-	private MapBean<Object> mapBean;
+	private Map<String, Object> attrMap;
 	/** The local socket address. */
 	private InetSocketAddress localSocketAddress;
 	/** The remote socket address. */
@@ -44,7 +45,7 @@ public abstract class RequestAdapter implements IRequest {
 		this.localSocketAddress = localAddress;
 		this.remoteSocketAddress = remoteAddress;
 		this.message = null;
-		this.mapBean = new MapBean<Object>();
+		this.attrMap = new HashMap<String, Object>();
 	}
 
 	/** {@inheritDoc} */
@@ -71,8 +72,8 @@ public abstract class RequestAdapter implements IRequest {
 	@Override
 	public Object getAttribute(String key) {
 		// looks up the attribute in request map and in received message map
-		if (this.mapBean.containsKey(key)) {
-			return this.mapBean.getAttribute(key);
+		if (this.attrMap.containsKey(key)) {
+			return this.attrMap.get(key);
 		}
 		return this.message.getHeader(key);
 	}
@@ -85,7 +86,7 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(String key, Object value) {
-		mapBean.setAttribute(key, value);
+		this.attrMap.put(key, value);
 	}
 
 	/** {@inheritDoc} */
@@ -131,9 +132,10 @@ public abstract class RequestAdapter implements IRequest {
 		String messageType = message.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
 	}
-	
+
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return this.message + " MapBean: " + this.mapBean;
+		return this.message + " Attributes: " + this.attrMap;
 	}
 }

@@ -18,14 +18,13 @@ package com.stabilit.scm.sc.service;
 
 import java.util.UUID;
 
-import com.stabilit.scm.common.util.MapBean;
 import com.stabilit.scm.common.util.TimerTaskWrapper;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
  * between a client and a server.
  */
-public class Session extends MapBean<Object> {
+public class Session {
 
 	/** The id. */
 	private String id;
@@ -135,11 +134,7 @@ public class Session extends MapBean<Object> {
 		this.sessionTimeouter = sessionTimeouter;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return id + ":" + server;
