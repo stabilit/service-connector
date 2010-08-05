@@ -18,7 +18,6 @@ package com.stabilit.scm.common.call;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -45,7 +44,7 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPServerCallAdapter. Constructor is necessary because in SC you need to hand over received
-	 * message because behavior is different if message is of type part.
+	 * message.
 	 * 
 	 * @param req
 	 *            the requester
@@ -54,12 +53,6 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	 */
 	public SCMPServerCallAdapter(IRequester req, SCMPMessage message) {
 		this.requester = req;
-
-		if (message == null) {
-			this.requestMessage = new SCMPMessage();
-			ExceptionPoint.getInstance().fireException(this, new Exception("something is strange here, check that!"));
-			return;
-		}
 		this.requestMessage = message;
 	}
 
