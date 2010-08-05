@@ -55,9 +55,9 @@ public final class Constants {
 	private static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS
 			+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
 	/** OPERATION_TIMEOUT_MILLIS_DEFAULT: Default value for OPERATION_TIMEOUT_MILLIS **/
-	private static final int OPERATION_TIMEOUT_MILLIS_DEFAULT = 60000;
+	private static final int OPERATION_TIMEOUT_MILLIS_DEFAULT = 180000;
 	/** OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and IDLE_TIMEOUT_MILLIS. */
-	private static final int OPERATION_TIMEOUT_DIFFERENCE = 2000;
+	private static final int OPERATION_TIMEOUT_DIFFERENCE = 5000;
 	/**
 	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when
 	 * communication should work very fast. Often used in emergency cases and in situation where reply of operation is
