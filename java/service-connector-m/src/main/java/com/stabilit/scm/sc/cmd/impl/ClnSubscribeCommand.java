@@ -30,6 +30,7 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.internal.SCMPPart;
 import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
@@ -226,21 +227,31 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		/** {@inheritDoc} */
 		@Override
 		public void timeout() {
-			// set up reply
-			SCMPMessage reply = new SCMPMessage();
-			String sessionId = (String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID);
-			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
-			reply.setSessionId(sessionId);
-			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
-			reply.setIsReply(true);
+			// extracting sessionId from request message
+			SCMPMessage reqMsg = request.getMessage();
+			String sessionId = reqMsg.getSessionId();
 
 			// tries polling from queue
 			SCMPMessage message = this.subscriptionQueue.poll(sessionId);
 			if (message == null) {
 				// no message found on queue - subscription timeout set up no data message
-				reply.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+				reqMsg.setIsReply(true);
+				this.response.setSCMP(reqMsg);
 			} else {
-				// message received
+				// set up reply
+				SCMPMessage reply = null;
+				if (message.isPart()) {
+					reply = new SCMPPart();
+				} else {
+					reply = new SCMPMessage();
+				}
+				reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
+				reply.setSessionId(sessionId);
+				reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+				reply.setIsReply(true);
+
+				// message polling successful
 				reply.setBody(message.getBody());
 				reply
 						.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message
@@ -250,8 +261,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
 						.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 				reply.setBody(message.getBody());
+				this.response.setSCMP(reply);
 			}
-			this.response.setSCMP(reply);
+
 			try {
 				// send message back to client
 				this.response.write();
