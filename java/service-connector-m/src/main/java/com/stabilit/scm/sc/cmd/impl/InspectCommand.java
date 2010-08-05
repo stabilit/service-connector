@@ -74,7 +74,7 @@ public class InspectCommand extends CommandAdapter {
 	 *            the registry
 	 * @return the registry inspect string
 	 */
-	private String getRegistryInspectString(Registry registry) {
+	private String getRegistryInspectString(Registry<?, ?> registry) {
 		String string = registry.toString();
 		if (registry.getSize() == 0) {
 			string += "@";

@@ -24,7 +24,7 @@ import com.stabilit.scm.sc.service.Service;
  * 
  * @author JTraber
  */
-public final class ServiceRegistry extends Registry {
+public final class ServiceRegistry extends Registry<String, Service> {
 
 	/** The instance. */
 	private static ServiceRegistry instance = new ServiceRegistry();
@@ -44,19 +44,47 @@ public final class ServiceRegistry extends Registry {
 		return instance;
 	}
 
-	public void addService(Object key, Service service) {
+	/**
+	 * Adds the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param service
+	 *            the service
+	 */
+	public void addService(String key, Service service) {
 		super.put(key, service);
 	}
 
-	public Service getService(Object key) {
-		return (Service) this.get(key);
+	/**
+	 * Gets the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the service
+	 */
+	public Service getService(String key) {
+		return this.get(key);
 	}
 
+	/**
+	 * Removes the service.
+	 * 
+	 * @param service
+	 *            the service
+	 */
 	public void removeService(Service service) {
 		this.removeService(service.getServiceName());
 	}
 
-	public Service removeService(Object key) {
+	/**
+	 * Removes the service.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the service
+	 */
+	public Service removeService(String key) {
 		Service service = this.getService(key);
 		super.remove(key);
 		return service;

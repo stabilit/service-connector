@@ -25,18 +25,22 @@ import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
 /**
  * The Class Registry. Provides functionality for general registries.
  * 
+ * @param <K>
+ *            the key type
+ * @param <V>
+ *            the value type
  * @author JTraber
  */
-public abstract class Registry implements IRegistryMXBean {
+public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/** The registry map. */
-	private Map<Object, Object> registryMap;
+	private Map<K, V> registryMap;
 
 	/**
 	 * Instantiates a new registry.
 	 */
 	public Registry() {
-		registryMap = new ConcurrentHashMap<Object, Object>();
+		this.registryMap = new ConcurrentHashMap<K, V>();
 	}
 
 	/**
@@ -47,8 +51,8 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param value
 	 *            the value
 	 */
-	protected void put(Object key, Object value) {
-		registryMap.put(key, value);
+	protected void put(K key, V value) {
+		this.registryMap.put(key, value);
 	}
 
 	/**
@@ -58,7 +62,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 *            the key
 	 * @return the map bean
 	 */
-	protected Object get(Object key) {
+	protected V get(K key) {
 		if (key == null) {
 			return null;
 		}
@@ -71,7 +75,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 * @param key
 	 *            the key
 	 */
-	protected void remove(Object key) {
+	protected void remove(K key) {
 		if (key == null) {
 			return;
 		}
@@ -94,7 +98,7 @@ public abstract class Registry implements IRegistryMXBean {
 	 *            the key
 	 * @return true, if successful
 	 */
-	public boolean containsKey(Object key) {
+	public boolean containsKey(K key) {
 		return registryMap.containsKey(key);
 	}
 

@@ -23,7 +23,7 @@ import com.stabilit.scm.common.registry.Registry;
  * 
  * @author JTraber
  */
-public class SrvServiceRegistry extends Registry {
+public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/** The instance. */
 	private static SrvServiceRegistry instance = new SrvServiceRegistry();
@@ -51,7 +51,7 @@ public class SrvServiceRegistry extends Registry {
 	 * @param srvService
 	 *            the server service
 	 */
-	public void addSrvService(Object key, SrvService srvService) {
+	public void addSrvService(String key, SrvService srvService) {
 		super.put(key, srvService);
 	}
 
@@ -63,7 +63,7 @@ public class SrvServiceRegistry extends Registry {
 	 * @return the server service
 	 */
 	public SrvService getSrvService(String srvServiceName) {
-		return (SrvService) this.get(srvServiceName);
+		return this.get(srvServiceName);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SrvServiceRegistry extends Registry {
 	 * @param key
 	 *            the key
 	 */
-	public void removeSrvService(Object key) {
+	public void removeSrvService(String key) {
 		super.remove(key);
 	}
 }

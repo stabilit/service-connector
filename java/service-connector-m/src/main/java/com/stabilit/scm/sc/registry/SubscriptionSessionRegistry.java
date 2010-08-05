@@ -25,7 +25,7 @@ import com.stabilit.scm.sc.service.Session;
  * 
  * @author JTraber
  */
-public class SubscriptionSessionRegistry extends Registry {
+public class SubscriptionSessionRegistry extends Registry<String, Session> {
 
 	/** The instance. */
 	private static SubscriptionSessionRegistry instance = new SubscriptionSessionRegistry();
@@ -47,7 +47,7 @@ public class SubscriptionSessionRegistry extends Registry {
 	 * @param session
 	 *            the session
 	 */
-	public void addSession(Object key, Session session) {
+	public void addSession(String key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
 	}
@@ -68,7 +68,7 @@ public class SubscriptionSessionRegistry extends Registry {
 	 * @param key
 	 *            the key
 	 */
-	public void removeSession(Object key) {
+	public void removeSession(String key) {
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
@@ -80,8 +80,8 @@ public class SubscriptionSessionRegistry extends Registry {
 	 *            the key
 	 * @return the session
 	 */
-	public Session getSession(Object key) {
-		Session session = (Session) super.get(key);
+	public Session getSession(String key) {
+		Session session = super.get(key);
 		return session;
 	}
 }

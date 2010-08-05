@@ -22,7 +22,7 @@ import com.stabilit.scm.sc.service.Service;
 /**
  * The Class DisabledServiceRegistry.
  */
-public final class DisabledServiceRegistry extends Registry {
+public final class DisabledServiceRegistry extends Registry<String, Service> {
 
 	/** The instance. */
 	private static DisabledServiceRegistry instance = new DisabledServiceRegistry();
@@ -50,7 +50,7 @@ public final class DisabledServiceRegistry extends Registry {
 	 * @param service
 	 *            the service
 	 */
-	public void addService(Object key, Service service) {
+	public void addService(String key, Service service) {
 		super.put(key, service);
 	}
 
@@ -61,8 +61,8 @@ public final class DisabledServiceRegistry extends Registry {
 	 *            the key
 	 * @return the service
 	 */
-	public Service getService(Object key) {
-		return (Service) this.get(key);
+	public Service getService(String key) {
+		return this.get(key);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public final class DisabledServiceRegistry extends Registry {
 	 *            the key
 	 * @return the service
 	 */
-	public Service removeService(Object key) {
+	public Service removeService(String key) {
 		Service service = this.getService(key);
 		super.remove(key);
 		return service;

@@ -33,7 +33,7 @@ import com.stabilit.scm.sc.service.Session;
  * 
  * @author JTraber
  */
-public class SessionRegistry extends Registry {
+public class SessionRegistry extends Registry<String, Session> {
 
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
@@ -64,7 +64,7 @@ public class SessionRegistry extends Registry {
 	 * @param session
 	 *            the session
 	 */
-	public void addSession(Object key, Session session) {
+	public void addSession(String key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
 		this.put(key, session);
 		if (session.getEchoIntervalSeconds() != 0) {
@@ -89,8 +89,8 @@ public class SessionRegistry extends Registry {
 	 * @param key
 	 *            the key
 	 */
-	public void removeSession(Object key) {
-		Session session = (Session) super.get(key);
+	public void removeSession(String key) {
+		Session session = super.get(key);
 		this.cancelSessionTimeout(session);
 		super.remove(key);
 		SessionPoint.getInstance().fireDelete(this, (String) key);
@@ -104,8 +104,8 @@ public class SessionRegistry extends Registry {
 	 * @return the session
 	 */
 	// TODO verify rescheduling timeout at this point
-	public Session getSession(Object key) {
-		Session session = (Session) super.get(key);
+	public Session getSession(String key) {
+		Session session = super.get(key);
 		if (session != null && session.getEchoIntervalSeconds() != 0) {
 			// rescheduling session timeout - cancel an old timeouter is done inside
 			this.scheduleSessionTimeout(session);

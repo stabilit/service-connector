@@ -24,7 +24,7 @@ import com.stabilit.scm.common.res.IResponder;
  * 
  * @author JTraber
  */
-public final class ResponderRegistry extends Registry {
+public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/** The instance. */
 	private static ResponderRegistry instance = new ResponderRegistry();
@@ -71,7 +71,7 @@ public final class ResponderRegistry extends Registry {
 	}
 
 	public IResponder getResponder(Object key) {
-		return (IResponder) super.get(key);
+		return super.get(key);
 	}
 
 	/**

@@ -20,13 +20,18 @@ import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Server;
 
 /**
+ * The Class ServerRegistry. Stores an entry for every registered server in system.
+ * 
  * @author JTraber
  */
-public class ServerRegistry extends Registry {
+public class ServerRegistry extends Registry<String, Server> {
 
 	/** The instance. */
 	private static ServerRegistry instance = new ServerRegistry();
 
+	/**
+	 * Instantiates a new server registry.
+	 */
 	private ServerRegistry() {
 	}
 
@@ -44,10 +49,10 @@ public class ServerRegistry extends Registry {
 	 * 
 	 * @param key
 	 *            the key
-	 * @param item
-	 *            the item
+	 * @param server
+	 *            the server
 	 */
-	public void addServer(Object key, Server server) {
+	public void addServer(String key, Server server) {
 		this.put(key, server);
 	}
 
@@ -58,8 +63,8 @@ public class ServerRegistry extends Registry {
 	 *            the key
 	 * @return the server
 	 */
-	public Server getServer(Object key) {
-		return (Server) super.get(key);
+	public Server getServer(String key) {
+		return super.get(key);
 	}
 
 	/**
@@ -78,7 +83,7 @@ public class ServerRegistry extends Registry {
 	 * @param key
 	 *            the key
 	 */
-	public void removeServer(Object key) {
+	public void removeServer(String key) {
 		super.remove(key);
 	}
 }
