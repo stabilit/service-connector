@@ -22,8 +22,10 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.stabilit.scm.common.conf.Constants;
+import com.stabilit.scm.common.listener.SubscriptionPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.LinkedNode;
@@ -104,6 +106,7 @@ public class SubscriptionQueue<E> {
 			return null;
 		}
 		E message = node.getValue();
+		SubscriptionPoint.getInstance().firePoll(this, sessionId, message);
 		if (message == null) {
 			return null;
 		}

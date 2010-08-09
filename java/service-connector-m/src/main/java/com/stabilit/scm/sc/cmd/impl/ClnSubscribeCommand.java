@@ -21,6 +21,7 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.SubscriptionPoint;
 import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -238,6 +239,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
+				SubscriptionPoint.getInstance().fireSubscriptionNoDataTimeout(this, sessionId);
 			} else {
 				// set up reply
 				SCMPMessage reply = null;
