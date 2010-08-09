@@ -76,8 +76,6 @@ public abstract class MTSuperTestCase {
 	@Before
 	public void setup() throws Exception {
 		SetupTestCases.setupSCSessionServer10Connections();
-		RequesterConfigPool config = new RequesterConfigPool();
-		config.load("session-server.properties");
 		registerReq = new Requester(this.testContext);
 		// scmp registerService
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL

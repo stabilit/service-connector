@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
@@ -73,7 +74,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		reqData = new StringBuilder();
 		reqData.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (reqData.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+			if (reqData.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			reqData.append(i);

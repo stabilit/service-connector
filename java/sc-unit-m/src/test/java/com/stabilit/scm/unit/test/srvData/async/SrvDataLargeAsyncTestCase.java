@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -64,7 +65,7 @@ public class SrvDataLargeAsyncTestCase extends SuperSessionTestCase {
 		StringBuilder sbRes = new StringBuilder();
 		sbRes.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sbRes.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+			if (sbRes.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			sbRes.append(i);
@@ -113,7 +114,7 @@ public class SrvDataLargeAsyncTestCase extends SuperSessionTestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+			if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			sb.append(i);

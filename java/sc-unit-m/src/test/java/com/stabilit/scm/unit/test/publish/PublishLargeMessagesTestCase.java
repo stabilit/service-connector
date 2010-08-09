@@ -24,6 +24,7 @@ import org.junit.Test;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -74,7 +75,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+			if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 				break;
 			}
 			sb.append(i);

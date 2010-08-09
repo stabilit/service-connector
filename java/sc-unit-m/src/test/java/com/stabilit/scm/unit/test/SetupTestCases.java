@@ -19,11 +19,11 @@ package com.stabilit.scm.unit.test;
 import java.io.File;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IStatisticsListener;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.sc.SC;
@@ -228,7 +228,7 @@ public class SetupTestCases {
 				int i = 0;
 				sb.append("large:");
 				for (i = 0; i < 100000; i++) {
-					if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+					if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 						break;
 					}
 					sb.append(i);
@@ -306,7 +306,7 @@ public class SetupTestCases {
 			StringBuilder sb = new StringBuilder();
 			sb.append("large:");
 			for (int i = 0; i < 100000; i++) {
-				if (sb.length() > SCMPMessage.LARGE_MESSAGE_LIMIT + 10000) {
+				if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
 					break;
 				}
 				sb.append(i);
