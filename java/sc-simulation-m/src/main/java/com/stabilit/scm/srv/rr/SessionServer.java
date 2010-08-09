@@ -49,7 +49,7 @@ public class SessionServer {
 
 	public static void main(String[] args) throws Exception {
 		SessionServer sessionServer = new SessionServer();
-		sessionServer.initLogStuff("log4j");
+		//sessionServer.initLogStuff("log4j");
 		sessionServer.runExample();
 	}
 
@@ -111,7 +111,8 @@ public class SessionServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.outerContext.getServer().deregisterService(serviceName);
+						KillThread kill = new KillThread(this.outerContext.getServer(), serviceName);
+						kill.start();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -131,12 +132,35 @@ public class SessionServer {
 		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
 		ConnectionPoint.getInstance().addListener(
 				(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-		ExceptionPoint.getInstance().addListener((IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
+		ExceptionPoint.getInstance().addListener(
+				(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
 		LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
 		LoggerPoint.getInstance().setLevel(Level.DEBUG);
 		PerformancePoint.getInstance().addListener(
 				(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
 		PerformancePoint.getInstance().setOn(true);
 		SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
+	}
+
+	private class KillThread extends Thread {
+
+		private ISCServer server;
+		private String serviceName;
+
+		public KillThread(ISCServer server, String serviceName) {
+			this.server = server;
+			this.serviceName = serviceName;
+		}
+
+		@Override
+		public void run() {
+			// sleep for 3 seconds before killing the server
+			try {
+				Thread.sleep(2000);
+				this.server.deregisterService(this.serviceName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
