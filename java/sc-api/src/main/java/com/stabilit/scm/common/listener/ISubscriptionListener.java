@@ -22,4 +22,10 @@ public interface ISubscriptionListener extends EventListener {
 
 	public abstract void noDataTimeoutEvent(SubscriptionEvent connectionEvent);
 
+	public abstract void firePoll(SubscriptionEvent connectionEvent);
+
+	public abstract void fireAdd(SubscriptionEvent subEvent);
+
+	public abstract void fireRemove(SubscriptionEvent subEvent);
+
 }

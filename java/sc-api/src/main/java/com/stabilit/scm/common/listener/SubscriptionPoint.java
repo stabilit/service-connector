@@ -20,7 +20,8 @@ import java.util.EventListener;
 
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
-public final class SubscriptionPoint extends ListenerSupport<IConnectionListener> {
+public final class SubscriptionPoint extends
+		ListenerSupport<ISubscriptionListener> {
 
 	private static SubscriptionPoint subscriptionPoint = new SubscriptionPoint();
 
@@ -33,28 +34,87 @@ public final class SubscriptionPoint extends ListenerSupport<IConnectionListener
 
 	public void fireSubscriptionNoDataTimeout(Object source, String sessionId) {
 		if (getInstance().isEmpty() == false) {
-			SubscriptionEvent connectionEvent = new SubscriptionEvent(source, sessionId);
-			SubscriptionPoint.getInstance().fireNoDataTimeout(connectionEvent);
+			SubscriptionEvent subEvent = new SubscriptionEvent(source,
+					sessionId);
+			SubscriptionPoint.getInstance().fireNoDataTimeout(subEvent);
 		}
 	}
 
-	public void firePoll(Object source, String sessionId, Object queueItem) {
-		if (getInstance().isEmpty() == false) {
-			if (queueItem instanceof SCMPMessage) {
-				SubscriptionEvent connectionEvent = new SubscriptionEvent(source, sessionId,
-						(SCMPMessage) queueItem);
-				SubscriptionPoint.getInstance().fireNoDataTimeout(connectionEvent);
-			}
-		}
-	}
-
-	public void fireNoDataTimeout(SubscriptionEvent connectionEvent) {
+	public void fireNoDataTimeout(SubscriptionEvent subEvent) {
 		int localSize = this.size;
 		EventListener[] localArray = this.listenerArray;
 		for (int i = 0; i < localSize; i++) {
 			try {
-				ISubscriptionListener connectionListener = (ISubscriptionListener) localArray[i];
-				connectionListener.noDataTimeoutEvent(connectionEvent);
+				ISubscriptionListener subscriptionListener = (ISubscriptionListener) localArray[i];
+				subscriptionListener.noDataTimeoutEvent(subEvent);
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+	}
+
+	public void firePoll(Object source, String sessionId, Object queueItem,
+			int queueSize) {
+		if (getInstance().isEmpty() == false) {
+			if (queueItem instanceof SCMPMessage) {
+				SubscriptionEvent subEvent = new SubscriptionEvent(source,
+						sessionId, (SCMPMessage) queueItem, queueSize);
+				SubscriptionPoint.getInstance().firePoll(subEvent);
+			}
+		}
+	}
+
+	private void firePoll(SubscriptionEvent subEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISubscriptionListener subscriptionListener = (ISubscriptionListener) localArray[i];
+				subscriptionListener.firePoll(subEvent);
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+	}
+
+	public void fireAdd(Object source, Object queueItem, int queueSize) {
+		if (getInstance().isEmpty() == false) {
+			if (queueItem instanceof SCMPMessage) {
+				SubscriptionEvent subEvent = new SubscriptionEvent(source,
+						(SCMPMessage) queueItem, queueSize);
+				SubscriptionPoint.getInstance().fireAdd(subEvent);
+			}
+		}
+	}
+
+	private void fireAdd(SubscriptionEvent subEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISubscriptionListener subscriptionListener = (ISubscriptionListener) localArray[i];
+				subscriptionListener.fireAdd(subEvent);
+			} catch (Exception e) {
+				ExceptionPoint.getInstance().fireException(this, e);
+			}
+		}
+	}
+
+	public void fireRemove(Object source, int queueSize) {
+		if (getInstance().isEmpty() == false) {
+			SubscriptionEvent subEvent = new SubscriptionEvent(source,
+					queueSize);
+			SubscriptionPoint.getInstance().fireRemove(subEvent);
+		}
+	}
+
+	private void fireRemove(SubscriptionEvent subEvent) {
+		int localSize = this.size;
+		EventListener[] localArray = this.listenerArray;
+		for (int i = 0; i < localSize; i++) {
+			try {
+				ISubscriptionListener subscriptionListener = (ISubscriptionListener) localArray[i];
+				subscriptionListener.fireRemove(subEvent);
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

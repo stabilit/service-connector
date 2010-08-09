@@ -27,22 +27,37 @@ public class SubscriptionEvent extends EventObject {
 
 	private String sessionId;
 	private SCMPMessage queueItem;
+	private int queueSize = -1;
 
-	public SubscriptionEvent(Object source, String sessionId) {
-		this(source, sessionId, null);
+	public SubscriptionEvent(Object source, int queueSize) {
+		this(source, null, null, queueSize);
 	}
 
-	public SubscriptionEvent(Object source, String sessionId, SCMPMessage queueItem) {
+	public SubscriptionEvent(Object source, String sessionId) {
+		this(source, sessionId, null, -1);
+	}
+
+	public SubscriptionEvent(Object source, SCMPMessage queueItem, int queueSize) {
+		this(source, null, queueItem, queueSize);
+	}
+
+	public SubscriptionEvent(Object source, String sessionId,
+			SCMPMessage queueItem, int queueSize) {
 		super(source);
 		this.sessionId = sessionId;
 		this.queueItem = queueItem;
+		this.queueSize = queueSize;
 	}
 
 	public String getSessionId() {
-		return sessionId;
+		return this.sessionId;
 	}
 
 	public SCMPMessage getQueueItem() {
-		return queueItem;
+		return this.queueItem;
+	}
+
+	public int getQueueSize() {
+		return this.queueSize;
 	}
 }

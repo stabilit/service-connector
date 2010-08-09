@@ -25,7 +25,6 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IFilterMask;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.LinkedNode;
@@ -73,6 +72,7 @@ public class SubscriptionQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
+		SubscriptionPoint.getInstance().fireAdd(this, message, this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -106,13 +106,13 @@ public class SubscriptionQueue<E> {
 			return null;
 		}
 		E message = node.getValue();
-		SubscriptionPoint.getInstance().firePoll(this, sessionId, message);
 		if (message == null) {
 			return null;
 		}
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
+		SubscriptionPoint.getInstance().firePoll(this, sessionId, message, this.dataQueue.getSize());
 		return message;
 	}
 
@@ -156,6 +156,7 @@ public class SubscriptionQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
+			SubscriptionPoint.getInstance().fireRemove(this, this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}

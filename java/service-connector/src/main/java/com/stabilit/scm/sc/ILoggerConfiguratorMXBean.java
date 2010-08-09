@@ -93,4 +93,14 @@ public interface ILoggerConfiguratorMXBean {
 	 * Removes the statistics listener.
 	 */
 	public abstract void removeStatisticsListener();
+
+	/**
+	 * Removes the subscription listener.
+	 */
+	public abstract void removeSubscriptionListener();
+
+	/**
+	 * Adds the subscription listener.
+	 */
+	public abstract void addSubscriptionListener();
 }

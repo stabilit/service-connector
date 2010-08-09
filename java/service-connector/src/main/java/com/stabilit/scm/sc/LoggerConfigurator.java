@@ -31,20 +31,24 @@ import com.stabilit.scm.common.listener.ILoggerListener;
 import com.stabilit.scm.common.listener.IPerformanceListener;
 import com.stabilit.scm.common.listener.ISessionListener;
 import com.stabilit.scm.common.listener.IStatisticsListener;
+import com.stabilit.scm.common.listener.ISubscriptionListener;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.listener.StatisticsPoint;
+import com.stabilit.scm.common.listener.SubscriptionPoint;
 import com.stabilit.scm.common.log.Level;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
+import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
 
 /**
- * The Class LoggerConfigurator. Logger configurator for handling logging. Interface gives access for JXM console.
+ * The Class LoggerConfigurator. Logger configurator for handling logging.
+ * Interface gives access for JXM console.
  * 
  * @author JTraber
  */
@@ -62,6 +66,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 	private IPerformanceListener performanceListener;
 	/** The session listener. */
 	private ISessionListener sessionListener;
+	/** The subscription listener. */
+	private ISubscriptionListener subscriptionListener;
 	/** The statistics listener. */
 	private IStatisticsListener statisticsListener;
 
@@ -72,7 +78,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 	 *            the configuration
 	 */
 	public LoggerConfigurator(CommunicatorConfigPool config) {
-		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
+		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(config
+				.getLoggerKey());
 	}
 
 	/** {@Inherited} */
@@ -84,6 +91,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.addPerformanceListener();
 		this.addSessionListener();
 		this.addTopLoggerListener();
+		this.addSubscriptionListener();
 	}
 
 	/** {@Inherited} */
@@ -93,7 +101,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// connectionListener is already turned on - no action necessary
 			return;
 		}
-		this.connectionListener = (IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class);
+		this.connectionListener = (IConnectionListener) loggerFactory
+				.newInstance(ConnectionLogger.class);
 		ConnectionPoint.getInstance().addListener(this.connectionListener);
 	}
 
@@ -115,7 +124,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// exceptionListener is already turned on - no action necessary
 			return;
 		}
-		this.exceptionListener = (IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class);
+		this.exceptionListener = (IExceptionListener) loggerFactory
+				.newInstance(ExceptionLogger.class);
 		ExceptionPoint.getInstance().addListener(this.exceptionListener);
 	}
 
@@ -137,7 +147,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// loggerListener is already turned on - no action necessary
 			return;
 		}
-		this.loggerListener = (ILoggerListener) loggerFactory.newInstance(TopLogger.class);
+		this.loggerListener = (ILoggerListener) loggerFactory
+				.newInstance(TopLogger.class);
 		LoggerPoint.getInstance().addListener(this.loggerListener);
 		this.setTopLoggerLevel(Level.DEBUG);
 	}
@@ -155,8 +166,9 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 
 	/**
 	 * Sets the top logger level.
-	 *
-	 * @param level the new top logger level
+	 * 
+	 * @param level
+	 *            the new top logger level
 	 */
 	private void setTopLoggerLevel(Level level) {
 		LoggerPoint.getInstance().setLevel(level);
@@ -169,7 +181,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// performanceListener is already turned on - no action necessary
 			return;
 		}
-		this.performanceListener = (IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class);
+		this.performanceListener = (IPerformanceListener) loggerFactory
+				.newInstance(PerformanceLogger.class);
 		PerformancePoint.getInstance().addListener(this.performanceListener);
 		PerformancePoint.getInstance().setOn(true);
 	}
@@ -193,7 +206,8 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// sessionListener is already turned on - no action necessary
 			return;
 		}
-		this.sessionListener = (ISessionListener) loggerFactory.newInstance(SessionLogger.class);
+		this.sessionListener = (ISessionListener) loggerFactory
+				.newInstance(SessionLogger.class);
 		SessionPoint.getInstance().addListener(this.sessionListener);
 	}
 
@@ -206,6 +220,30 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		}
 		SessionPoint.getInstance().removeListener(this.sessionListener);
 		this.sessionListener = null;
+	}
+
+	/** {@Inherited} */
+	@Override
+	public void addSubscriptionListener() {
+		if (this.subscriptionListener != null) {
+			// subscriptionListener is already turned on - no action necessary
+			return;
+		}
+		this.subscriptionListener = (ISubscriptionListener) loggerFactory
+				.newInstance(SubscriptionLogger.class);
+		SubscriptionPoint.getInstance().addListener(this.subscriptionListener);
+	}
+
+	/** {@Inherited} */
+	@Override
+	public void removeSubscriptionListener() {
+		if (this.subscriptionListener == null) {
+			// subscriptionListener has not been turned on - no action necessary
+			return;
+		}
+		SubscriptionPoint.getInstance().removeListener(
+				this.subscriptionListener);
+		this.subscriptionListener = null;
 	}
 
 	/** {@Inherited} */
