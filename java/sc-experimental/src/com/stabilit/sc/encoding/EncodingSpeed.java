@@ -36,7 +36,6 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
 import com.stabilit.scm.common.net.EncodingDecodingException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
-import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.IFrameDecoder;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -69,14 +68,25 @@ public class EncodingSpeed {
 
 	public static void main(String[] args) throws Exception {
 		EncodingSpeed enc = new EncodingSpeed();
-		enc.runRegex();
-	}
-
-	private void runRegex() throws Exception {
 
 		byte[] encodeBytes = new byte[] { 82, 69, 81, 32, 48, 48, 48, 48, 48, 51, 52, 32, 48, 48, 48, 50, 50, 32, 49,
 				46, 48, 10, 98, 116, 121, 61, 98, 105, 110, 10, 109, 105, 100, 61, 49, 10, 109, 116, 121, 61, 65, 84,
 				84, 10, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33 };
+
+		enc.run(encodeBytes);
+
+		byte[] encodeBytesReg = new byte[] { 82, 69, 81, 32, 48, 48, 48, 48, 49, 48, 52, 32, 48, 48, 49, 48, 52, 32,
+				49, 46, 48, 10, 109, 120, 115, 61, 49, 48, 10, 110, 97, 109, 61, 112, 117, 98, 108, 105, 115, 104, 45,
+				115, 105, 109, 117, 108, 97, 116, 105, 111, 110, 10, 105, 109, 99, 10, 107, 112, 105, 61, 51, 54, 48,
+				10, 112, 110, 114, 61, 55, 48, 48, 48, 10, 108, 100, 116, 61, 50, 48, 49, 48, 45, 48, 56, 45, 48, 52,
+				84, 48, 57, 58, 52, 52, 58, 48, 56, 46, 50, 53, 48, 43, 48, 50, 48, 48, 10, 118, 101, 114, 61, 49, 46,
+				48, 45, 48, 48, 48, 10, 109, 116, 121, 61, 82, 69, 71, 10 };
+
+		enc.run(encodeBytesReg);
+	}
+
+	private void run(byte[] encodeBytes) throws Exception {
+
 		InputStream in = new ByteArrayInputStream(encodeBytes);
 
 		long startTime = System.currentTimeMillis();
@@ -96,11 +106,12 @@ public class EncodingSpeed {
 
 	private SCMPMessage encodeWithByteBase(InputStream is) throws Exception {
 		// read headline
-		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
+		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE_WITHOUT_VERSION];
 		is.read(headline);
 
-		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
-		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
+		byte[] version = new byte[4];
+		is.read(version);
+		SCMPMessage.SCMP_VERSION.isSupported(version);
 
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type
@@ -130,33 +141,35 @@ public class EncodingSpeed {
 		// storing header fields in meta map
 		Map<String, String> metaMap = new HashMap<String, String>();
 
-		int length = 256;
+		int length = scmpHeaderSize;
 		byte[] buffer = new byte[length];
 		int keyOff = 0;
 
 		int readBytes = is.read(buffer);
-		do {
-			for (int i = 0; i < readBytes; i++) {
-				// looping until "="
-				if (buffer[i] == 0x3D) {
-					// byte = "="
-					for (int j = i; j < readBytes; j++) {
-						// looping until <LF>
-						if (buffer[j] == 0x0A) {
-							// byte == "LF"
-							metaMap.put(new String(buffer, keyOff, (i - keyOff)),
-									new String(buffer, i + 1, (j - 1) - i));
-							i = j;
-							keyOff = j + 1;
-							break;
-						}
+		int i = 0;
+		for (i = 0; i < readBytes; i++) {
+			// looping until "="
+			if (buffer[i] == 0x3D) {
+				// byte = "="
+				for (int j = i; j < readBytes; j++) {
+					// looping until <LF>
+					if (buffer[j] == 0x0A) {
+						// byte == "LF"
+						metaMap.put(new String(buffer, keyOff, (i - keyOff), CHARSET), new String(buffer, i + 1,
+								(j - 1) - i, CHARSET));
+						i = j;
+						keyOff = j + 1;
+						break;
 					}
 				}
-
+				continue;
 			}
-			buffer = new byte[length];
-			readBytes = is.read(buffer);
-		} while (readBytes != -1);
+			if (buffer[i] == 0x0A) {
+				// byte = LF
+				metaMap.put(new String(buffer, keyOff, (i - keyOff), CHARSET), null);
+				keyOff = i + 1;
+			}
+		}
 
 		// reading body - depends on body type
 		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getValue());
@@ -171,7 +184,10 @@ public class EncodingSpeed {
 			switch (scmpBodyType) {
 			case BINARY:
 			case UNDEFINED:
-				return this.decodeBinaryData(is, scmpMsg, readBytes, scmpBodySize);
+				byte[] body = new byte[scmpBodySize];
+				is.read(body);
+				scmpMsg.setBody(body);
+				return scmpMsg;
 			case TEXT:
 				return this.decodeTextData(is, scmpMsg, scmpBodySize);
 			}
@@ -187,11 +203,12 @@ public class EncodingSpeed {
 		BufferedReader br = new BufferedReader(isr);
 
 		// read headline
-		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE];
+		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE_WITHOUT_VERSION];
 		is.read(headline);
 
-		String scmpVer = new String(headline, Constants.FIX_SCMP_VERSION_START, Constants.FIX_SCMP_VERSION_LENGTH);
-		SCMPMessage.SCMP_VERSION.isSupported(scmpVer);
+		byte[] version = new byte[4];
+		is.read(version);
+		SCMPMessage.SCMP_VERSION.isSupported(version);
 
 		SCMPMessage scmpMsg = null;
 		// evaluating headline key and creating corresponding SCMP type
@@ -230,7 +247,7 @@ public class EncodingSpeed {
 			readBytes += line.getBytes().length;
 			readBytes += 1; // read LF
 
-			Matcher match = IEncoderDecoder.EQUAL_SIGN_DECODE_REG.matcher(line);
+			Matcher match = EncodingSpeed.EQUAL_SIGN_DECODE_REG.matcher(line);
 			if (match.matches()) {
 				String key = match.group(1).replace(ESCAPED_EQUAL_SIGN, EQUAL_SIGN);
 				String value = null;
@@ -241,7 +258,7 @@ public class EncodingSpeed {
 				metaMap.put(key, value);
 				continue;
 			}
-			match = IEncoderDecoder.FLAG_DECODE_REG.matcher(line);
+			match = EncodingSpeed.FLAG_DECODE_REG.matcher(line);
 			if (match.matches()) {
 				String key = match.group(0);
 				metaMap.put(key, null);
@@ -296,5 +313,4 @@ public class EncodingSpeed {
 		scmpMsg.setBody(baBuffer);
 		return scmpMsg;
 	}
-
 }
