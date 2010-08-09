@@ -57,6 +57,9 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		switch (this.decodeState) {
 		case READY:
 			try {
+				if (buffer.readableBytes() <= 0) {
+					return null;
+				}
 				// parse headline
 				scmpFrameSize = scmpFrameDecoder.parseFrameSize(buffer.toByteBuffer().array());
 				if (scmpFrameSize == 0) {

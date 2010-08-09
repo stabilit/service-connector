@@ -28,12 +28,14 @@ import java.util.Properties;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 
 /**
- * The Class CommunicatorConfigPool.
+ * The Class CommunicatorConfigPool. Processes scm property files.
  * 
  * @author JTraber
  */
 public abstract class CommunicatorConfigPool {
 
+	/** The Constant DISABLE. */
+	private static final String DISABLE = "disable";
 	/** The properties. */
 	private Properties props;
 	/** The requester configuration list. */
@@ -121,8 +123,14 @@ public abstract class CommunicatorConfigPool {
 		}
 
 		String loggable = props.getProperty(Constants.ROOT_LOGGING_QUALIFIER);
-		if ("disable".equals(loggable)) {
+		if (DISABLE.equals(loggable)) {
 			this.loggable = false;
+		}
+
+		String largeMsgLimitValue = props.getProperty(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);
+		if (largeMsgLimitValue != null) {
+			int largeMsgLimit = Integer.parseInt(largeMsgLimitValue);
+			Constants.setLargeMessageLimit(largeMsgLimit);
 		}
 	}
 

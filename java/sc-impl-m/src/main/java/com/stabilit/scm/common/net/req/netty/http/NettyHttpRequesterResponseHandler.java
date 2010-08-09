@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -40,7 +39,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-@ChannelPipelineCoverage("one")
 public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	private ISCMPCallback scmpCallback;
@@ -65,7 +63,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			return;
 		}
 		// message not expected - race condition
-		LoggerPoint.getInstance().fireWarn(this, "message received but no reply was outstanding - race condition.");
+		LoggerPoint.getInstance()
+				.fireWarn(this, "message received but no reply was outstanding - race condition.");
 	}
 
 	/** {@inheritDoc} */
@@ -92,8 +91,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			content.readBytes(buffer);
 			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
-					.newInstance(buffer);
+			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
+					buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);

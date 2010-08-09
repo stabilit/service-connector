@@ -20,7 +20,6 @@ import java.net.InetSocketAddress;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -59,7 +58,6 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  * 
  * @author JTraber
  */
-@ChannelPipelineCoverage("one")
 public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandler implements IResponderCallback {
 
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
