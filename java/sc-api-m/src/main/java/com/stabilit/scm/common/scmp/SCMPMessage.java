@@ -20,11 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.stabilit.scm.common.SCVersion;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**
  * Service Connector Message Protocol. Data container for one message.
+ * 
+ * @author JTraber
  */
 public class SCMPMessage {
 
@@ -32,8 +35,6 @@ public class SCMPMessage {
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
 	/** The actual SC_VERSION. */
 	public static final SCVersion SC_VERSION = SCVersion.CURRENT;
-	/** The Constant LARGE_MESSAGE_LIMIT. */
-	public static final int LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
 	/** The is reply. */
 	private boolean isReply;
 	/** The message header. */
@@ -190,7 +191,7 @@ public class SCMPMessage {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
-		return bodyLength > LARGE_MESSAGE_LIMIT;
+		return bodyLength > Constants.LARGE_MESSAGE_LIMIT;
 	}
 
 	/**
@@ -314,8 +315,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and
-	 * if you unbox return value automatically into boolean than a NullPointerException will be thrown.
+	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned
+	 * and if you unbox return value automatically into boolean than a NullPointerException will be thrown.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -334,7 +335,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Gets the header flag. Gets a header flag if header contains header key. Value totally irrelevant in this case.
+	 * Gets the header flag. Gets a header flag if header contains header key. Value totally irrelevant in this
+	 * case.
 	 * 
 	 * @param headerKey
 	 *            the header key

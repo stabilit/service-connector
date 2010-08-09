@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp.internal;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -44,10 +45,10 @@ public class SCMPSendPart extends SCMPPart {
 		this.offset = offset;
 		this.callLength = message.getBodyLength();
 		// evaluates the size of this part
-		if (this.callLength - this.offset < SCMPMessage.LARGE_MESSAGE_LIMIT) {
+		if (this.callLength - this.offset < Constants.LARGE_MESSAGE_LIMIT) {
 			this.size = this.callLength - this.offset;
 		} else {
-			this.size = SCMPMessage.LARGE_MESSAGE_LIMIT;
+			this.size = Constants.LARGE_MESSAGE_LIMIT;
 		}
 		this.setHeader(message);
 		this.setInternalStatus(message.getInternalStatus());
