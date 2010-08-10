@@ -35,7 +35,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 /**
  * The Class LargeMessageEncoderDecoderTest.
  */
-public class KeepAliveMessageEncoderDecoderTest {
+public class KeepAliveMessageEncoderDecoderTestCase {
 
 	/** The coder factory. */
 	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();

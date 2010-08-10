@@ -27,15 +27,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.scm.common.net.DefaultEncoderDecoderTest;
-import test.stabilit.scm.common.net.DefaultFrameDecoderTest;
-import test.stabilit.scm.common.net.HttpFrameDecoderTest;
-import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTest;
-import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTest;
-import test.stabilit.scm.common.scmp.internal.SCMPCompositeTest;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTest;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTest;
-import test.stabilit.scm.common.util.ValidatorUtilityTest;
+import test.stabilit.scm.common.net.DefaultEncoderDecoderTestCase;
+import test.stabilit.scm.common.net.DefaultFrameDecoderTestCase;
+import test.stabilit.scm.common.net.HttpFrameDecoderTestCase;
+import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTestCase;
+import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPCompositeTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTestCase;
+import test.stabilit.scm.common.util.ValidatorUtilityTestCase;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
@@ -46,15 +46,15 @@ import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { DefaultFrameDecoderTest.class,
-				 HttpFrameDecoderTest.class, 
-				 SCMPCompositeTest.class,
-				 SCMPLargeRequestTest.class, 
-				 SCMPLargeResponseTest.class,
-				 LargeMessageEncoderDecoderTest.class, 
-				 KeepAliveMessageEncoderDecoderTest.class,
-				 DefaultEncoderDecoderTest.class,
-				 ValidatorUtilityTest.class })
+@SuiteClasses( { DefaultFrameDecoderTestCase.class,
+				 HttpFrameDecoderTestCase.class, 
+				 SCMPCompositeTestCase.class,
+				 SCMPLargeRequestTestCase.class, 
+				 SCMPLargeResponseTestCase.class,
+				 LargeMessageEncoderDecoderTestCase.class, 
+				 KeepAliveMessageEncoderDecoderTestCase.class,
+				 DefaultEncoderDecoderTestCase.class,
+				 ValidatorUtilityTestCase.class })
 public final class SCImplTest {
 
 	private static DecimalFormat dfMsg = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);

@@ -32,7 +32,7 @@ import com.stabilit.scm.common.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ValidatorUtilityTest {
+public class ValidatorUtilityTestCase {
 
 	/** The FOUR. */
 	private static final int FOUR = 4;

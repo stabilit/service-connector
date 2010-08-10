@@ -25,17 +25,20 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.scm.common.net.DefaultEncoderDecoderTest;
-import test.stabilit.scm.common.net.DefaultFrameDecoderTest;
-import test.stabilit.scm.common.net.HttpFrameDecoderTest;
-import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTest;
-import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTest;
-import test.stabilit.scm.common.scmp.internal.SCMPCompositeTest;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTest;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTest;
-import test.stabilit.scm.common.util.ValidatorUtilityTest;
+import test.stabilit.scm.common.SCVersionTestCase;
+import test.stabilit.scm.common.net.DefaultEncoderDecoderTestCase;
+import test.stabilit.scm.common.net.DefaultFrameDecoderTestCase;
+import test.stabilit.scm.common.net.HttpFrameDecoderTestCase;
+import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTestCase;
+import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTestCase;
+import test.stabilit.scm.common.scmp.SCMPVersionTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPCompositeTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTestCase;
+import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTestCase;
+import test.stabilit.scm.common.util.LinkedQueueTestCase;
+import test.stabilit.scm.common.util.ValidatorUtilityTestCase;
 
-import com.stabilit.scm.common.net.req.ConnectionPoolTest;
+import com.stabilit.scm.common.net.req.ConnectionPoolTestCase;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -48,10 +51,10 @@ import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.scm.unit.test.scVersion.SCVersionToSCTestCase;
-import com.stabilit.scm.unit.test.scmpVersion.SCMPVersionTest;
+import com.stabilit.scm.unit.test.scmpVersion.DecodeSCMPVersionTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
-import com.stabilit.scm.unit.test.sessionTimeout.SessionTimeoutTest;
+import com.stabilit.scm.unit.test.sessionTimeout.SessionTimeoutTestCase;
 import com.stabilit.scm.unit.test.srvData.async.SrvDataAsyncTestCase;
 import com.stabilit.scm.unit.test.srvData.async.SrvDataLargeAsyncTestCase;
 import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeSyncTestCase;
@@ -71,22 +74,26 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		SrvDataLargeSyncTestCase.class, // 
 		SrvDataAsyncTestCase.class,// 
 		SrvDataLargeAsyncTestCase.class, //  
-		ConnectionPoolTest.class, // 
+		ConnectionPoolTestCase.class, // 
 		MessageIdTestCase.class,// 
 		SCVersionToSCTestCase.class, // 
-		SCMPVersionTest.class, // 
-		SessionTimeoutTest.class, //
+		DecodeSCMPVersionTestCase.class, // 
+		SessionTimeoutTestCase.class, //
 		GroupCallTestCase.class, //
 		// SCImplTestCases
-		DefaultFrameDecoderTest.class,//
-		HttpFrameDecoderTest.class, //
-		SCMPCompositeTest.class,//
-		SCMPLargeRequestTest.class, //
-		SCMPLargeResponseTest.class,//
-		LargeMessageEncoderDecoderTest.class, //
-		KeepAliveMessageEncoderDecoderTest.class,//
-		DefaultEncoderDecoderTest.class,//
-		ValidatorUtilityTest.class })
+		DefaultFrameDecoderTestCase.class,//
+		HttpFrameDecoderTestCase.class, //
+		SCMPCompositeTestCase.class,//
+		SCMPLargeRequestTestCase.class, //
+		SCMPLargeResponseTestCase.class,//
+		LargeMessageEncoderDecoderTestCase.class, //
+		KeepAliveMessageEncoderDecoderTestCase.class,//
+		DefaultEncoderDecoderTestCase.class,//
+		ValidatorUtilityTestCase.class, //
+		LinkedQueueTestCase.class, //
+		// SCAPITestCases
+		SCVersionTestCase.class, //
+		SCMPVersionTestCase.class })
 public class SCTest {
 
 	private SCTest() {
@@ -116,7 +123,7 @@ public class SCTest {
 	}
 
 	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
-//		actual = actual.replaceAll("127.0.0.1/", "localhost/");
+		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
 		actual = actual.replaceAll("localhost/127.0.0.1:\\d*", "localhost/127.0.0.1:");
 
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");

@@ -36,6 +36,7 @@ import com.stabilit.scm.common.util.LinkedQueue;
 public class LinkedQueueTestCase {
 
 	private LinkedQueue<SCMPMessage> queue;
+	public boolean killThreads = false;
 
 	@Before
 	public void setUp() {
@@ -115,18 +116,48 @@ public class LinkedQueueTestCase {
 	}
 
 	@Test
-	public void manyConsumersOneProducerTest() {
-		// TODO
+	public void manyConsumersOneProducerTest() throws Exception {
+		QueueProducer producer = new QueueProducer(queue);
+		QueueConsumer consumer1 = new QueueConsumer(queue);
+		QueueConsumer consumer2 = new QueueConsumer(queue);
+		QueueConsumer consumer3 = new QueueConsumer(queue);
+		QueueConsumer consumer4 = new QueueConsumer(queue);
+		producer.start();
+		consumer1.start();
+		consumer2.start();
+		consumer3.start();
+		consumer4.start();
+		this.killThreads = true;
+		Thread.sleep(1500);
+		Assert.assertEquals("0", this.queue.getSize() + "");
 	}
 
 	@Test
-	public void oneConsumerManyProducerTest() {
-		// TODO
+	public void oneConsumerManyProducerTest() throws Exception {
+		QueueConsumer consumer = new QueueConsumer(queue);
+		QueueProducer producer1 = new QueueProducer(queue);
+		QueueProducer producer2 = new QueueProducer(queue);
+		QueueProducer producer3 = new QueueProducer(queue);
+		QueueProducer producer4 = new QueueProducer(queue);
+		consumer.start();
+		producer1.start();
+		producer2.start();
+		producer3.start();
+		producer4.start();
+		this.killThreads = true;
+		Thread.sleep(1000);
+		Assert.assertEquals("3", this.queue.getSize() + "");
 	}
 
 	@Test
-	public void manyConsumerManyProducerTest() {
-		// TODO
+	public void produce10000Test() throws Exception {
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 128; i++) {
+			sb.append(i);
+		}
+		this.insertIntoQueue(10000, sb.toString());
+		Assert.assertEquals("10000", this.queue.getSize() + "");
 	}
 
 	private void insertIntoQueue(int numberOfMsg, String bodyString) {
@@ -134,6 +165,52 @@ public class LinkedQueueTestCase {
 			SCMPMessage message = new SCMPMessage();
 			message.setBody(bodyString + i);
 			this.queue.insert(message);
+		}
+	}
+
+	private class QueueConsumer extends Thread {
+
+		private LinkedQueue<SCMPMessage> queue;
+
+		public QueueConsumer(LinkedQueue<SCMPMessage> queue) {
+			this.queue = queue;
+		}
+
+		@Override
+		public void run() {
+
+			while (!LinkedQueueTestCase.this.killThreads) {
+				SCMPMessage message = queue.extract();
+				if (message == null) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		}
+	}
+
+	private class QueueProducer extends Thread {
+
+		private LinkedQueue<SCMPMessage> queue;
+
+		public QueueProducer(LinkedQueue<SCMPMessage> queue) {
+			this.queue = queue;
+		}
+
+		@Override
+		public void run() {
+			int i = 0;
+			while (!LinkedQueueTestCase.this.killThreads) {
+				SCMPMessage message = new SCMPMessage();
+				message.setBody(i++);
+				queue.insert(message);
+				try {
+					Thread.sleep(600);
+				} catch (InterruptedException e) {
+				}
+			}
 		}
 	}
 }

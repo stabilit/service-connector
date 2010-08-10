@@ -29,7 +29,7 @@ import com.stabilit.scm.unit.test.SetupTestCases;
 /**
  * @author JTraber
  */
-public class ConnectionPoolTest {
+public class ConnectionPoolTestCase {
 
 	@Before
 	public void setUp() {

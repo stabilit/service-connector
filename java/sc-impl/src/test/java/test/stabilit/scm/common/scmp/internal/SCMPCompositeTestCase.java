@@ -32,7 +32,7 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  * 
  * @author JTraber
  */
-public class SCMPCompositeTest {
+public class SCMPCompositeTestCase {
 
 	/**
 	 * Scmp composite test.

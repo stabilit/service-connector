@@ -29,7 +29,7 @@ import com.stabilit.scm.common.net.IFrameDecoder;
  * 
  * @author JTraber
  */
-public class DefaultFrameDecoderTest {
+public class DefaultFrameDecoderTestCase {
 
 	/** The decoder. */
 	private IFrameDecoder decoder = FrameDecoderFactory.getDefaultFrameDecoder();

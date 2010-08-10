@@ -29,12 +29,12 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.attach.SuperAttachTestCase;
 
-public class SessionTimeoutTest extends SuperAttachTestCase {
+public class SessionTimeoutTestCase extends SuperAttachTestCase {
 
 	/**
 	 * @param fileName
 	 */
-	public SessionTimeoutTest(String fileName) {
+	public SessionTimeoutTestCase(String fileName) {
 		super(fileName);
 	}
 

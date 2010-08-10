@@ -29,7 +29,7 @@ import com.stabilit.scm.common.net.IFrameDecoder;
  * 
  * @author JTraber
  */
-public class HttpFrameDecoderTest {
+public class HttpFrameDecoderTestCase {
 
 	/** The decoder. */
 	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder("http");

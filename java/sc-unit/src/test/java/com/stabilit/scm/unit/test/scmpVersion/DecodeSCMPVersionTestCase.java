@@ -26,7 +26,7 @@ import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
 
-public class SCMPVersionTest {
+public class DecodeSCMPVersionTestCase {
 
 	/** The coder factory. */
 	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
