@@ -47,8 +47,7 @@ import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.log.impl.TopLogger;
 
 /**
- * The Class LoggerConfigurator. Logger configurator for handling logging.
- * Interface gives access for JXM console.
+ * The Class LoggerConfigurator. Logger configurator for handling logging. Interface gives access for JXM console.
  * 
  * @author JTraber
  */
@@ -78,8 +77,17 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 	 *            the configuration
 	 */
 	public LoggerConfigurator(CommunicatorConfigPool config) {
-		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(config
-				.getLoggerKey());
+		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
+	}
+
+	/**
+	 * Instantiates a new logger configurator.
+	 * 
+	 * @param loggerKey
+	 *            the logger key
+	 */
+	public LoggerConfigurator(String loggerKey) {
+		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
 	}
 
 	/** {@Inherited} */
@@ -101,8 +109,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// connectionListener is already turned on - no action necessary
 			return;
 		}
-		this.connectionListener = (IConnectionListener) loggerFactory
-				.newInstance(ConnectionLogger.class);
+		this.connectionListener = (IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class);
 		ConnectionPoint.getInstance().addListener(this.connectionListener);
 	}
 
@@ -124,8 +131,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// exceptionListener is already turned on - no action necessary
 			return;
 		}
-		this.exceptionListener = (IExceptionListener) loggerFactory
-				.newInstance(ExceptionLogger.class);
+		this.exceptionListener = (IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class);
 		ExceptionPoint.getInstance().addListener(this.exceptionListener);
 	}
 
@@ -147,8 +153,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// loggerListener is already turned on - no action necessary
 			return;
 		}
-		this.loggerListener = (ILoggerListener) loggerFactory
-				.newInstance(TopLogger.class);
+		this.loggerListener = (ILoggerListener) loggerFactory.newInstance(TopLogger.class);
 		LoggerPoint.getInstance().addListener(this.loggerListener);
 		this.setTopLoggerLevel(Level.DEBUG);
 	}
@@ -181,8 +186,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// performanceListener is already turned on - no action necessary
 			return;
 		}
-		this.performanceListener = (IPerformanceListener) loggerFactory
-				.newInstance(PerformanceLogger.class);
+		this.performanceListener = (IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class);
 		PerformancePoint.getInstance().addListener(this.performanceListener);
 		PerformancePoint.getInstance().setOn(true);
 	}
@@ -206,8 +210,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// sessionListener is already turned on - no action necessary
 			return;
 		}
-		this.sessionListener = (ISessionListener) loggerFactory
-				.newInstance(SessionLogger.class);
+		this.sessionListener = (ISessionListener) loggerFactory.newInstance(SessionLogger.class);
 		SessionPoint.getInstance().addListener(this.sessionListener);
 	}
 
@@ -229,8 +232,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// subscriptionListener is already turned on - no action necessary
 			return;
 		}
-		this.subscriptionListener = (ISubscriptionListener) loggerFactory
-				.newInstance(SubscriptionLogger.class);
+		this.subscriptionListener = (ISubscriptionListener) loggerFactory.newInstance(SubscriptionLogger.class);
 		SubscriptionPoint.getInstance().addListener(this.subscriptionListener);
 	}
 
@@ -241,8 +243,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// subscriptionListener has not been turned on - no action necessary
 			return;
 		}
-		SubscriptionPoint.getInstance().removeListener(
-				this.subscriptionListener);
+		SubscriptionPoint.getInstance().removeListener(this.subscriptionListener);
 		this.subscriptionListener = null;
 	}
 
