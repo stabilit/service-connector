@@ -244,6 +244,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				// set up reply
 				SCMPMessage reply = null;
 				if (message.isPart()) {
+					// incoming message is of type part - outgoing must be part too
 					reply = new SCMPPart();
 				} else {
 					reply = new SCMPMessage();

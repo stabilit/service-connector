@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.scmp.internal.SCMPPart;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
@@ -72,8 +73,15 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		queue.add(message);
 
 		// reply to server
-		SCMPMessage reply = new SCMPMessage();
+		SCMPMessage reply = null;
+		if (message.isPart()) {
+			// incoming message is of type part - outgoing must be part too
+			reply = new SCMPPart();
+		} else {
+			reply = new SCMPMessage();
+		}
 		reply.setMessageType(this.getKey());
+		reply.setIsReply(true);
 		reply.setServiceName(message.getServiceName());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		response.setSCMP(reply);
