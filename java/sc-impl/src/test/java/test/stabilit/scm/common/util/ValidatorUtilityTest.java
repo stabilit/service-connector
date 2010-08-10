@@ -57,15 +57,7 @@ public class ValidatorUtilityTest {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Validate keep alive test.
-	 */
-	@Test
-	public void validateKeepAliveTest() {
-		// TODO test keep alive Validation if necessary
-	}
-
+	
 	/**
 	 * Validate ip address list.
 	 */
