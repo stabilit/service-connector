@@ -99,7 +99,7 @@ public class DefaultStatisticsListener implements IStatisticsListener {
 			this.runtimeWarnings++;
 			break;
 		case LOGGER:
-			LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent.getEventObject();
+			// LoggerEvent loggerEvent = (LoggerEvent) statisticsEvent.getEventObject();
 			this.logs++;
 			break;
 		case KEEP_ALIVE:

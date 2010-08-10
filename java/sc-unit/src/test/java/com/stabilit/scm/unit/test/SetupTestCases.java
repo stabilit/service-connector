@@ -221,6 +221,8 @@ public class SetupTestCases {
 				fault.setAppErrorCode("appErrorCode");
 				fault.setAppErrorText("appErrorText");
 				return fault;
+			} else if (message.getData().toString().startsWith("reflect")) {
+				return message;
 			}
 			message.setData("message data test case");
 			return message;

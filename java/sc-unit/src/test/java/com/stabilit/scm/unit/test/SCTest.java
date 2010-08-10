@@ -43,6 +43,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
+import com.stabilit.scm.unit.test.group.GroupCallTestCase;
 import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
@@ -75,6 +76,7 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		SCVersionToSCTestCase.class, // 
 		SCMPVersionTest.class, // 
 		SessionTimeoutTest.class, //
+		GroupCallTestCase.class, //
 		// SCImplTestCases
 		DefaultFrameDecoderTest.class,//
 		HttpFrameDecoderTest.class, //
