@@ -18,6 +18,7 @@ package com.stabilit.scm.srv.ps.cmd.factory.impl;
 
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvSubscribeCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
@@ -59,5 +60,7 @@ public class PublishServerCommandFactory extends CommandFactory {
 		commandFactory.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
 		ICommand srvChangeSubscriptionCommand = new SrvChangeSubscriptionCommand();
 		commandFactory.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
+		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
+		commandFactory.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
 	}
 }

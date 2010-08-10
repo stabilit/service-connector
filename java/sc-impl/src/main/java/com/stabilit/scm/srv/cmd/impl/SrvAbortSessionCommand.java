@@ -14,10 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.cmd.impl;
+package com.stabilit.scm.srv.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -25,93 +24,97 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.sc.registry.SubscriptionQueue;
-import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
-import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
+import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
 /**
- * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
- * unsubscribing from a publish service.
+ * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active
+ * session on server.
+ * 
+ * @author JTraber
  */
-public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
-	public ClnUnsubscribeCommand() {
-		this.commandValidator = new ClnUnsubscribeCommandValidator();
+	/**
+	 * Instantiates a new SrvAbortSessionCommand.
+	 */
+	public SrvAbortSessionCommand() {
+		this.commandValidator = new SrvAbortSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_UNSUBSCRIBE;
+		return SCMPMsgType.SRV_ABORT_SESSION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
+		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		// look up srvService
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		// lookup session and checks properness
-		Session session = this.getSubscriptionSessionById(sessionId);
+		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
+		// create scMessage
+		SCMessage scMessage = new SCMessage();
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(sessionId);
 
-		Server server = session.getServer();
-		SCMPMessage reply = null;
-		try {
-			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
-			server.unsubscribe(message, callback);
-			reply = callback.getMessageSync();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-			/**
-			 * error in unsubscribe process<br>
-			 * 1. delete subscription in registry on SC<br>
-			 * 2. destroy subscription - dereference messages in subscription queue<br>
-			 * 3. EXC message to client<br>
-			 **/
-			// TODO verify with jan error handling
-		}
-		// looks up subscription queue
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
-		subscriptionQueue.unsubscribe(sessionId);
-		// delete session on server successful - delete entry from session registry
-		this.subscriptionRegistry.removeSession(session);
-		server.removeSession(session);
+		// inform callback with scMessages
+		((ISCSessionServerCallback) srvService.getCallback()).abortSession(scMessage);
 
-		// forward reply to client
-		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-		reply.setIsReply(true);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		messageId.incrementMsgSequenceNr();
+		// set up reply
+		SCMPMessage reply = new SCMPMessage();
+		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
+		// delete session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	/**
-	 * The Class ClnUnsubscribeCommandValidator.
+	 * The Class SrvAbortSessionCommandValidator.
 	 */
-	private class ClnUnsubscribeCommandValidator implements ICommandValidator {
+	public class SrvAbortSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
+
 			try {
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
-				}
 				// serviceName
-				String serviceName = message.getServiceName();
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException("serviceName must be set!");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException("sessionId must be set!");
+					throw new SCMPValidatorException("sessonId must be set!");
+				}
+				// sc error code
+				String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
+				if (sec == null || sec.equals("")) {
+					throw new SCMPValidatorException("sec must be set!");
+				}
+				// sc error text
+				String set = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT);
+				if (set == null || set.equals("")) {
+					throw new SCMPValidatorException("set must be set!");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
@@ -124,12 +127,5 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnSubscribeCommandCallback.
-	 */
-	private class ClnSubscribeCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

@@ -60,15 +60,16 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
-		scMessage.setSessionId(scmpMessage.getSessionId());
+		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
 		((ISCPublishServerCallback) srvService.getCallback()).unsubscribe(scMessage);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
@@ -77,6 +78,8 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
+		// delete session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	/**

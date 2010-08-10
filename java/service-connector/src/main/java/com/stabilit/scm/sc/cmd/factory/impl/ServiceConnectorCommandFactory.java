@@ -62,7 +62,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 * Initialize the command factory.
 	 * 
 	 * @param commandFactory
-	 *            the command factory TODO (TRN) (Open JOT)list is not complete. Why?
+	 *            the command factory
 	 */
 	public void init(CommandFactory commandFactory) {
 		ICommand attachCommand = new AttachCommand();

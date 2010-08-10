@@ -44,8 +44,16 @@ public class SrvDataLargeSyncTestCase extends SuperSessionTestCase {
 		super(fileName);
 	}
 
-	public void srvDataApplicationError() {
-		// TODO
+	@Test
+	public void srvDataApplicationError() throws Exception {
+		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+				this.sessionId);
+		clnDataCall.setMessagInfo("message info");
+		clnDataCall.setRequestBody("appError");
+		clnDataCall.invoke(this.sessionCallback);
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		Assert.assertEquals("appErrorCode", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		Assert.assertEquals("appErrorText", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 	}
 
 	@Test

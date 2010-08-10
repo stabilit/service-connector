@@ -24,6 +24,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
@@ -53,19 +54,27 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(scmpMessage.getSessionId());
+		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
 		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).subscribe(scMessage);
+
+		// create session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.addSession(sessionId);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
-		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setSessionId(sessionId);
 		reply.setMessageType(this.getKey());
 
 		if (scReply.isFault()) {

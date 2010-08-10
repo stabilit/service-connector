@@ -51,26 +51,7 @@ public class SetupTestCases {
 	public static void init() throws Exception {
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load("sc.properties");
-
 		deleteLog();
-		// setup loggers
-		try {
-			// LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(config.getLoggerKey());
-			// ConnectionPoint.getInstance().addListener(
-			// (IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-			// ExceptionPoint.getInstance().addListener(
-			// (IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-			// LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-			// LoggerPoint.getInstance().setLevel(Level.DEBUG);
-			// PerformancePoint.getInstance().addListener(
-			// (IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-			// PerformancePoint.getInstance().setOn(true);
-			// SessionPoint.getInstance().addListener((ISessionListener)
-			// loggerFactory.newInstance(SessionLogger.class));
-			// StatisticsPoint.getInstance().addListener(statisticsListener);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static void deleteLog() {
@@ -235,6 +216,11 @@ public class SetupTestCases {
 				}
 				message.setData(sb.toString());
 				return message;
+			} else if (message.getData().toString().startsWith("appError")) {
+				SCMessageFault fault = new SCMessageFault();
+				fault.setAppErrorCode("appErrorCode");
+				fault.setAppErrorText("appErrorText");
+				return fault;
 			}
 			message.setData("message data test case");
 			return message;
