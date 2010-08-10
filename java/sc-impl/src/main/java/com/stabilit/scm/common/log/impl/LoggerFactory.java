@@ -23,8 +23,7 @@ import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
 
 /**
- * A factory for creating logger objects. Provides access to the concrete logger
- * instances and logger decorator's.
+ * A factory for creating logger objects. Provides access to the concrete logger instances and logger decorator's.
  * 
  * @author JTraber
  */
@@ -84,16 +83,13 @@ public final class LoggerFactory extends Factory {
 			this.add(LOG4J_KEY, logger);
 
 			// Connection logger
-			loggerDecorator = new ConnectionLogger((ILogger) this
-					.getInstance(key));
+			loggerDecorator = new ConnectionLogger((ILogger) this.getInstance(key));
 			this.add(ConnectionLogger.class, loggerDecorator);
 			// Exception logger
-			loggerDecorator = new ExceptionLogger((ILogger) this
-					.getInstance(key));
+			loggerDecorator = new ExceptionLogger((ILogger) this.getInstance(key));
 			this.add(ExceptionLogger.class, loggerDecorator);
 			// Performance logger
-			loggerDecorator = new PerformanceLogger((ILogger) this
-					.getInstance(key));
+			loggerDecorator = new PerformanceLogger((ILogger) this.getInstance(key));
 			this.add(PerformanceLogger.class, loggerDecorator);
 			// Session logger
 			loggerDecorator = new SessionLogger((ILogger) this.getInstance(key));
@@ -102,8 +98,7 @@ public final class LoggerFactory extends Factory {
 			loggerDecorator = new TopLogger((ILogger) this.getInstance(key));
 			this.add(TopLogger.class, loggerDecorator);
 			// Subscription logger
-			loggerDecorator = new SubscriptionLogger((ILogger) this
-					.getInstance(key));
+			loggerDecorator = new SubscriptionLogger((ILogger) this.getInstance(key));
 			this.add(SubscriptionLogger.class, loggerDecorator);
 			this.add(DEFAULT, loggerDecorator);
 		} catch (Exception e) {
