@@ -21,23 +21,6 @@
  */
 package com.stabilit.scm.srv.rr;
 
-import com.stabilit.scm.common.listener.ConnectionPoint;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IConnectionListener;
-import com.stabilit.scm.common.listener.IExceptionListener;
-import com.stabilit.scm.common.listener.ILoggerListener;
-import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.ISessionListener;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.log.Level;
-import com.stabilit.scm.common.log.impl.ConnectionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.log.impl.LoggerFactory;
-import com.stabilit.scm.common.log.impl.PerformanceLogger;
-import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
@@ -49,11 +32,10 @@ public class SessionServer {
 
 	public static void main(String[] args) throws Exception {
 		SessionServer sessionServer = new SessionServer();
-		//sessionServer.initLogStuff("log4j");
-		sessionServer.runExample();
+		sessionServer.runSessionServer();
 	}
 
-	public void runExample() {
+	public void runSessionServer() {
 		try {
 			this.scSrv = new SCServer("localhost", 9000);
 
@@ -126,20 +108,6 @@ public class SessionServer {
 		public ISCServer getServer() {
 			return scSrv;
 		}
-	}
-
-	private void initLogStuff(String loggerKey) {
-		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
-		ConnectionPoint.getInstance().addListener(
-				(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-		ExceptionPoint.getInstance().addListener(
-				(IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-		LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-		LoggerPoint.getInstance().setLevel(Level.DEBUG);
-		PerformancePoint.getInstance().addListener(
-				(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-		PerformancePoint.getInstance().setOn(true);
-		SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
 	}
 
 	private class KillThread extends Thread {

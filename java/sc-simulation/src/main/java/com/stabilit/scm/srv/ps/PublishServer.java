@@ -21,23 +21,7 @@
  */
 package com.stabilit.scm.srv.ps;
 
-import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IConnectionListener;
-import com.stabilit.scm.common.listener.IExceptionListener;
-import com.stabilit.scm.common.listener.ILoggerListener;
-import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.ISessionListener;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
-import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.log.Level;
-import com.stabilit.scm.common.log.impl.ConnectionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.log.impl.LoggerFactory;
-import com.stabilit.scm.common.log.impl.PerformanceLogger;
-import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.TopLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
@@ -45,14 +29,14 @@ import com.stabilit.scm.srv.ISCPublishServerCallback;
 public class PublishServer {
 	private ISCPublishServer publishSrv = null;
 	private String serviceName = "publish-simulation";
+	private static boolean killPublishServer = false;
 
 	public static void main(String[] args) throws Exception {
 		PublishServer publishServer = new PublishServer();
-		publishServer.initLogStuff("log4j");
-		publishServer.runExample();
+		publishServer.runPublishServer();
 	}
 
-	public void runExample() {
+	public void runPublishServer() {
 		try {
 			this.publishSrv = new SCPublishServer("localhost", 9000);
 
@@ -64,13 +48,46 @@ public class PublishServer {
 			this.publishSrv.startServer("localhost");
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
 			this.publishSrv.registerService(serviceName, srvCallback);
+			Runnable run = new PublishRun(publishSrv, serviceName);
+			Thread thread = new Thread(run);
+			thread.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionPoint.getInstance().fireException(this, e);
 			this.shutdown();
 		}
 	}
 
+	private static class PublishRun implements Runnable {
+		ISCPublishServer server;
+		String serviceName;
+
+		public PublishRun(ISCPublishServer server, String serviceName) {
+			this.server = server;
+			this.serviceName = serviceName;
+		}
+
+		@Override
+		public void run() {
+			int index = 0;
+			while (!PublishServer.killPublishServer) {
+				try {
+					if (index % 3 == 0) {
+						Thread.sleep(3500);
+					} else {
+						Thread.sleep(1000);
+					}
+					Object data = "publish message nr " + ++index;
+					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
+					server.publish(serviceName, mask, data);
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+				}
+			}
+		}
+	}
+
 	private void shutdown() {
+		PublishServer.killPublishServer = true;
 		try {
 			this.publishSrv.deregisterService(serviceName);
 		} catch (Exception e) {
@@ -120,18 +137,5 @@ public class PublishServer {
 		public ISCPublishServer getServer() {
 			return publishSrv;
 		}
-	}
-
-	private void initLogStuff(String loggerKey) {
-		LoggerFactory loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
-		ConnectionPoint.getInstance().addListener(
-				(IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class));
-		ExceptionPoint.getInstance().addListener((IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class));
-		LoggerPoint.getInstance().addListener((ILoggerListener) loggerFactory.newInstance(TopLogger.class));
-		LoggerPoint.getInstance().setLevel(Level.DEBUG);
-		PerformancePoint.getInstance().addListener(
-				(IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class));
-		PerformancePoint.getInstance().setOn(true);
-		SessionPoint.getInstance().addListener((ISessionListener) loggerFactory.newInstance(SessionLogger.class));
 	}
 }
