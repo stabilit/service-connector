@@ -33,53 +33,26 @@ import com.stabilit.scm.unit.test.SetupTestCases;
 public class ClnAPIPublishSubscribeTestCase {
 
 	private int publishedMessageCounter = 0;
+
 	@Before
 	public void setUp() {
 		SetupTestCases.setupAll();
 	}
-	
+
 	@Test
-	public void testSubscribeUnsubscribe() throws Exception {		
+	public void testSubscribeUnsubscribe() throws Exception {
 		ISCClient sc = null;
 		IPublishService publishServiceA = null;
-		try {			
-			sc = new SCClient("localhost", 8080);		
+		try {
+			sc = new SCClient("localhost", 8080);
 			sc.setMaxConnections(100);
-			
+
 			// connects to SC, checks connection to SC
 			sc.attach();
-			
-			publishServiceA = sc.newPublishService("publish-simulation");		
+
+			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", callback);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				// disconnects from SC
-				publishServiceA.unsubscribe();				
-				sc.detach();
-			} catch (Exception e) {
-				sc = null;
-			}
-		}
-	}
-	
-	
-	@Test
-	public void testSubscribePublishUnsubscribe() throws Exception {		
-		ISCClient sc = null;
-		IPublishService publishServiceA = null;
-		try {			
-			sc = new SCClient("localhost", 8080);		
-			sc.setMaxConnections(100);
-			
-			// connects to SC, checks connection to SC
-			sc.attach();
-			
-			publishServiceA = sc.newPublishService("publish-simulation");		
-			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", callback);
+			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -92,7 +65,34 @@ public class ClnAPIPublishSubscribeTestCase {
 			}
 		}
 	}
-	
+
+	@Test
+	public void testSubscribePublishUnsubscribe() throws Exception {
+		ISCClient sc = null;
+		IPublishService publishServiceA = null;
+		try {
+			sc = new SCClient("localhost", 8080);
+			sc.setMaxConnections(100);
+
+			// connects to SC, checks connection to SC
+			sc.attach();
+
+			publishServiceA = sc.newPublishService("publish-simulation");
+			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
+			publishServiceA.subscribe("AEC----", "sessionInfo", 300,  callback);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// disconnects from SC
+				publishServiceA.unsubscribe();
+				sc.detach();
+			} catch (Exception e) {
+				sc = null;
+			}
+		}
+	}
+
 	class TestPublishCallback extends SCMessageCallback {
 
 		public TestPublishCallback(IService service) {
@@ -102,12 +102,13 @@ public class ClnAPIPublishSubscribeTestCase {
 		@Override
 		public void callback(ISCMessage reply) throws Exception {
 			publishedMessageCounter++;
-			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = " + publishedMessageCounter);
+			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
+					+ publishedMessageCounter);
 		}
 
 		@Override
 		public void callback(Throwable th) {
 			Assert.fail(th.toString());
-		}		
+		}
 	}
 }

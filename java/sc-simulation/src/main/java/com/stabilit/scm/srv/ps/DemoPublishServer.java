@@ -26,13 +26,13 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 
-public class PublishServer {
+public class DemoPublishServer {
 	private ISCPublishServer publishSrv = null;
 	private String serviceName = "publish-simulation";
 	private static boolean killPublishServer = false;
 
 	public static void main(String[] args) throws Exception {
-		PublishServer publishServer = new PublishServer();
+		DemoPublishServer publishServer = new DemoPublishServer();
 		publishServer.runPublishServer();
 	}
 
@@ -69,7 +69,7 @@ public class PublishServer {
 		@Override
 		public void run() {
 			int index = 0;
-			while (!PublishServer.killPublishServer) {
+			while (!DemoPublishServer.killPublishServer) {
 				try {
 					if (index % 3 == 0) {
 						Thread.sleep(3500);
@@ -87,7 +87,7 @@ public class PublishServer {
 	}
 
 	private void shutdown() {
-		PublishServer.killPublishServer = true;
+		DemoPublishServer.killPublishServer = true;
 		try {
 			this.publishSrv.deregisterService(serviceName);
 		} catch (Exception e) {

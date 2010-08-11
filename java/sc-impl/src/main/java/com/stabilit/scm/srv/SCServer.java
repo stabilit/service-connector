@@ -34,7 +34,7 @@ import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
+import com.stabilit.scm.srv.rr.cmd.factory.impl.UnitServerCommandFactory;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
@@ -203,7 +203,7 @@ public class SCServer implements ISCServer {
 	public void startServer(String host) throws Exception {
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new SessionServerCommandFactory());
+			CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 		}
 
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());

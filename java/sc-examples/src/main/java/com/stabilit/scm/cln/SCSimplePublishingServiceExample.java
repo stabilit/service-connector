@@ -49,7 +49,7 @@ public class SCSimplePublishingServiceExample {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", callback);
+			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

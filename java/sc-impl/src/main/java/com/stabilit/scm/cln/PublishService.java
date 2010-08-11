@@ -68,7 +68,15 @@ public class PublishService extends Service implements IPublishService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void subscribe(String mask, ISCMessageCallback callback) throws Exception {
+	public void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback)
+			throws Exception {
+		this.subscribe(mask, sessionInfo, noDataInterval, null, callback);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
+			ISCMessageCallback callback) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("already subscribed");
 		}
@@ -77,7 +85,11 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
-
+		subscribeCall.setSessionInfo(sessionInfo);
+		subscribeCall.setNoDataIntervalSeconds(noDataInterval);
+		if (authenticationId != null) {
+			subscribeCall.setAuthenticationId(authenticationId);
+		}
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {

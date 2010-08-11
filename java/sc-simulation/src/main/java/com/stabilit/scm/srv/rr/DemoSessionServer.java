@@ -26,12 +26,12 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
-public class SessionServer {
+public class DemoSessionServer {
 	private ISCServer scSrv = null;
 	private String serviceName = "simulation";
 
 	public static void main(String[] args) throws Exception {
-		SessionServer sessionServer = new SessionServer();
+		DemoSessionServer sessionServer = new DemoSessionServer();
 		sessionServer.runSessionServer();
 	}
 

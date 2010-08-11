@@ -33,7 +33,7 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.ps.SCPublishServer;
-import com.stabilit.scm.unit.UnitCommandFactory;
+import com.stabilit.scm.srv.rr.cmd.factory.impl.UnitServerCommandFactory;
 
 /**
  * @author JTraber
@@ -71,7 +71,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 				SC.main(null);
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -85,7 +85,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 				SC.main(new String[] { "-filename", propertyFileName });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -99,7 +99,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 				SC.main(null);
 				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
@@ -113,7 +113,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 				SC.main(null);
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
@@ -128,7 +128,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new UnitCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
 				SC.main(null);
 			} catch (Exception e) {
 				e.printStackTrace();

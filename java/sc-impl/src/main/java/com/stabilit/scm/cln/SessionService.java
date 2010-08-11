@@ -58,7 +58,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void createSession(String sessionInfo, int echoTimeout, int echoInterval) throws Exception {
+	public void createSession(String sessionInfo, int echoTimeoutInSeconds, int echoIntervalInSeconds) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
@@ -67,8 +67,8 @@ public class SessionService extends Service implements ISessionService {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
-		createSessionCall.setEchoTimeoutSeconds(echoTimeout);
-		createSessionCall.setEchoIntervalSeconds(echoInterval);
+		createSessionCall.setEchoTimeoutSeconds(echoTimeoutInSeconds);
+		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		createSessionCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {

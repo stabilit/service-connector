@@ -1,14 +1,14 @@
 package com.stabilit.scm.srv;
 
 import com.stabilit.scm.sc.LoggerConfigurator;
-import com.stabilit.scm.srv.ps.PublishServer;
-import com.stabilit.scm.srv.rr.SessionServer;
+import com.stabilit.scm.srv.ps.DemoPublishServer;
+import com.stabilit.scm.srv.rr.DemoSessionServer;
 
 public class SessionAndPublishServer {
 
 	public static void main(String[] args) {
-		SessionServer sessionServer = new SessionServer();
-		PublishServer publishServer = new PublishServer();
+		DemoSessionServer sessionServer = new DemoSessionServer();
+		DemoPublishServer publishServer = new DemoPublishServer();
 		
 		LoggerConfigurator loggerConfigurator = new LoggerConfigurator("log4j");
 		loggerConfigurator.addAllLoggers();
