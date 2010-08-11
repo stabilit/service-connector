@@ -122,7 +122,7 @@ public class SessionServer {
 
 		@Override
 		public void run() {
-			// sleep for 3 seconds before killing the server
+			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
 				this.server.deregisterService(this.serviceName);

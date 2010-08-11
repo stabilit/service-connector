@@ -24,6 +24,7 @@ import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IPublishService;
@@ -79,6 +80,10 @@ public class PublishService extends Service implements IPublishService {
 
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("subscribe failed", fault.getCause());
+		}
 		this.sessionId = reply.getSessionId();
 		this.receivePublication();
 	}

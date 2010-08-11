@@ -25,6 +25,7 @@ import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
@@ -70,6 +71,10 @@ public class SessionService extends Service implements ISessionService {
 		createSessionCall.setEchoIntervalSeconds(echoInterval);
 		createSessionCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("create session failed", fault.getCause());
+		}
 		this.sessionId = reply.getSessionId();
 	}
 
@@ -111,10 +116,14 @@ public class SessionService extends Service implements ISessionService {
 		clnDataCall.invoke(this.callback);
 		// wait for message in callback
 		SCMPMessage reply = this.callback.getMessageSync();
+		this.pendingRequest = false;
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("execute fails", fault.getCause());
+		}
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		this.pendingRequest = false;
 		return replyToClient;
 	}
 
