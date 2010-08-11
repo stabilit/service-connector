@@ -38,7 +38,6 @@ import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTestCase;
 import test.stabilit.scm.common.util.LinkedQueueTestCase;
 import test.stabilit.scm.common.util.ValidatorUtilityTestCase;
 
-import com.stabilit.scm.common.net.req.ConnectionPoolTestCase;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -48,6 +47,7 @@ import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
 import com.stabilit.scm.unit.test.group.GroupCallTestCase;
 import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
+import com.stabilit.scm.unit.test.pool.ConnectionPoolTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
 import com.stabilit.scm.unit.test.register.RegisterServiceTestCase;
 import com.stabilit.scm.unit.test.scVersion.SCVersionToSCTestCase;
