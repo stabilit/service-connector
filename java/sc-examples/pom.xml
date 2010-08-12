@@ -24,14 +24,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-impl-m</artifactId>
+			<artifactId>sc-impl</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-api-m</artifactId>
+			<artifactId>sc-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
@@ -45,7 +45,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-simluation-m</artifactId>
+			<artifactId>sc-simluation</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
