@@ -14,71 +14,21 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.srv.cmd.factory.impl;
+
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
+import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 /**
- * The Interface ISCMessage. ISCMessage represents basic message interface for a request/ response to/from a SC.
+ * A factory for creating UnitServerCommand objects. Unifies all commands used by publish and session server.
  * 
  * @author JTraber
  */
-public interface ISCMessage {
-
-	/**
-	 * Sets the message info.
-	 * 
-	 * @param messageInfo
-	 *            the new message info
-	 */
-	public abstract void setMessageInfo(String messageInfo);
-
-	/**
-	 * Gets the message info.
-	 * 
-	 * @return the message info
-	 */
-	public abstract String getMessageInfo();
-
-	/**
-	 * Checks if is compressed.
-	 * 
-	 * @return the boolean
-	 */
-	public abstract boolean isCompressed();
-
-	/**
-	 * Sets the compressed.
-	 * 
-	 * @param compressed
-	 *            the new compressed
-	 */
-	public abstract void setCompressed(Boolean compressed);
-
-	/**
-	 * Gets the data.
-	 * 
-	 * @return the data
-	 */
-	public abstract Object getData();
-
-	/**
-	 * Sets the data.
-	 * 
-	 * @param data
-	 *            the new data
-	 */
-	public abstract void setData(Object data);
-
-	/**
-	 * Gets the session id.
-	 * 
-	 * @return the session id
-	 */
-	public abstract String getSessionId();
-
-	/**
-	 * Checks if is fault.
-	 * 
-	 * @return true, if is fault
-	 */
-	public abstract boolean isFault();
+public class UnitServerCommandFactory extends CommandFactory {
+	@SuppressWarnings("unused")
+	public UnitServerCommandFactory() {
+		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
+		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
+	}
 }

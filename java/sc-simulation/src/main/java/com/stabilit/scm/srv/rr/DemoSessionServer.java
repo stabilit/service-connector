@@ -98,6 +98,12 @@ public class DemoSessionServer {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else {
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return request;

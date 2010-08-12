@@ -45,7 +45,7 @@ public class DemoPublishClient extends Thread {
 
 		@Override
 		public void callback(ISCMessage reply) throws Exception {
-			System.out.println(reply.getData());
+			System.out.println("Publish client received: " + reply.getData());
 		}
 
 		@Override

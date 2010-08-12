@@ -34,7 +34,7 @@ import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.util.SynchronousCallback;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.UnitServerCommandFactory;
+import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.

@@ -10,6 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	<build>
 		<plugins>
@@ -45,14 +46,6 @@
 					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<configLocation>${basedir}/checkstyle.xml</configLocation>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -64,7 +57,7 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>stabilit.lib</groupId>
+			<groupId>org.jboss.netty</groupId>
 			<artifactId>netty</artifactId>
 			<version>3.2.1.Final</version>
 		</dependency>
@@ -104,6 +97,13 @@
 		<repository>
 			<id>stabilit.repos</id>
 			<url>http://www.stabilit.ch/svn/repos/sc/trunk/java</url>
+		</repository>
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 </project>

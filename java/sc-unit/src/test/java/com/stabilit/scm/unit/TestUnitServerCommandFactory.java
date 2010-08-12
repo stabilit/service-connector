@@ -14,17 +14,22 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.srv.rr.cmd.factory.impl;
+package com.stabilit.scm.unit;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
+import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
+import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 /**
+ * A factory for creating command objects. Unifies all commands used by publish, session server and service connector.
+ * 
  * @author JTraber
  */
-public class UnitServerCommandFactory extends CommandFactory {
+public class TestUnitServerCommandFactory extends CommandFactory {
 	@SuppressWarnings("unused")
-	public UnitServerCommandFactory() {
+	public TestUnitServerCommandFactory() {
+		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);
 		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
 		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
 	}

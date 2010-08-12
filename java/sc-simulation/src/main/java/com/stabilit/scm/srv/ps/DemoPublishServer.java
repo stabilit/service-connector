@@ -72,9 +72,9 @@ public class DemoPublishServer {
 			while (!DemoPublishServer.killPublishServer) {
 				try {
 					if (index % 3 == 0) {
-						Thread.sleep(3500);
-					} else {
 						Thread.sleep(1000);
+					} else {
+						Thread.sleep(5000);
 					}
 					Object data = "publish message nr " + ++index;
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";

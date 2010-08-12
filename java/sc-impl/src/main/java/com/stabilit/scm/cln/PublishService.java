@@ -38,6 +38,8 @@ import com.stabilit.scm.common.service.SCServiceException;
  */
 public class PublishService extends Service implements IPublishService {
 
+	private boolean subscribed = false;
+
 	/**
 	 * Instantiates a new publish service.
 	 * 
@@ -77,9 +79,10 @@ public class PublishService extends Service implements IPublishService {
 	@Override
 	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback) throws Exception {
-		if (this.callback != null) {
+		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
+		this.subscribed = true;
 		this.msgId.reset();
 		this.callback = new PublishServiceCallback(callback);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
@@ -116,9 +119,10 @@ public class PublishService extends Service implements IPublishService {
 	/** {@inheritDoc} */
 	@Override
 	public void unsubscribe() throws Exception {
-		if (this.callback == null) {
+		if (this.subscribed == false) {
 			throw new SCServiceException("unsubscrib not possible - not subscribed");
 		}
+		this.subscribed = false;
 		this.msgId.incrementMsgSequenceNr();
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
@@ -146,15 +150,25 @@ public class PublishService extends Service implements IPublishService {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
-			// check if reply is real answer
-			boolean noData = scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
-			if (noData) {
-				// no data reply received - send CRP again
-				PublishService.this.receivePublication();
+		public void callback(SCMPMessage reply) throws Exception {
+			if (PublishService.this.subscribed == false) {
+				// client is not subscribed anymore - stop continuing
 				return;
 			}
-			super.callback(scmpReply);
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCServiceException("receiving publication failed", fault.getCause());
+			}
+			// check if reply is real answer
+			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+			if (noData == false) {
+				// data reply received - give to application
+				super.callback(reply);
+			}
+			if (PublishService.this.subscribed) {
+				// client is still subscribed - CRP again
+				PublishService.this.receivePublication();
+			}
 		}
 	}
 }

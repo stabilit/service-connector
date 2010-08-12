@@ -8,7 +8,8 @@
 	<description>sc-unit</description>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding><project.skip>true</project.skip>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	<build>
 		<plugins>
@@ -19,6 +20,24 @@
 					<skip>true</skip>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies
+						</descriptorRef>
+					</descriptorRefs>
+					<finalName>client</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<mainClass>com.stabilit.scm.cln.SessionAndPublishClient</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>

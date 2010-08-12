@@ -26,7 +26,7 @@ public class SCMessage implements ISCMessage {
 	/** The message info. */
 	private String messageInfo;
 	/** The compressed - regards data part of the message. */
-	private Boolean compressed;
+	private boolean compressed;
 	/** The data. */
 	private Object data;
 	/** The session id - identifies session context of communication. */
@@ -37,7 +37,8 @@ public class SCMessage implements ISCMessage {
 	 */
 	public SCMessage() {
 		this.messageInfo = null;
-		this.compressed = null;
+		// default of compression is true
+		this.compressed = true;
 		this.data = null;
 		this.sessionId = null;
 	}
@@ -52,11 +53,10 @@ public class SCMessage implements ISCMessage {
 		this();
 		this.data = data;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setMessageInfo(String messageInfo) {
-
 		this.messageInfo = messageInfo;
 	}
 
@@ -68,7 +68,7 @@ public class SCMessage implements ISCMessage {
 
 	/** {@inheritDoc} */
 	@Override
-	public Boolean isCompressed() {
+	public boolean isCompressed() {
 		return compressed;
 	}
 

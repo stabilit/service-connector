@@ -3,14 +3,15 @@ package com.stabilit.scm.cln.rr;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
-import com.stabilit.scm.common.util.SynchronousCallback;
+import com.stabilit.scm.common.service.SCMessageCallback;
 
 public class DemoSessionClient extends Thread {
+
+	private static boolean pendingRequest = false;
 
 	public static void main(String[] args) {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
@@ -19,7 +20,7 @@ public class DemoSessionClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient sc = new SCClient("localhost", 8080);
+		ISCClient sc = new SCClient("localhost", 8000);
 		ISessionService sessionService = sc.newSessionService("simulation");
 
 		try {
@@ -30,10 +31,11 @@ public class DemoSessionClient extends Thread {
 				SCMessage requestMsg = new SCMessage();
 				requestMsg.setData("body nr : " + index++);
 				ISCMessageCallback callback = new DemoSessionClientCallback(sessionService);
+				DemoSessionClient.pendingRequest = true;
 				sessionService.execute(requestMsg, callback);
-				ISCMPSynchronousCallback syncCallback = (ISCMPSynchronousCallback) callback;
-				syncCallback.getMessageSync();
-				Thread.sleep(500);
+				while (DemoSessionClient.pendingRequest) {
+					Thread.sleep(500);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,21 +48,27 @@ public class DemoSessionClient extends Thread {
 		}
 	}
 
-	private class DemoSessionClientCallback extends SynchronousCallback implements ISCMessageCallback {
+	private class DemoSessionClientCallback extends SCMessageCallback {
 
 		private IService service;
 
 		public DemoSessionClientCallback(IService service) {
-			this.service = service;
+			super(service);
 		}
 
 		@Override
 		public void callback(ISCMessage reply) throws Exception {
+			System.out.println("Session client received: " + reply.getData());
+			DemoSessionClient.pendingRequest = false;
 		}
 
 		@Override
 		public IService getService() {
 			return this.service;
+		}
+
+		@Override
+		public void callback(Throwable th) {
 		}
 	}
 }
