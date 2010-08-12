@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
-		<maven.test.skip>true</maven.test.skip>
+		<skipTests>true</skipTests>
 	</properties>
 	<build>
 		<plugins>
@@ -74,6 +74,13 @@
 			<artifactId>sc-simluation</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.stabilit.sc</groupId>
+			<artifactId>sc-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<reporting>
