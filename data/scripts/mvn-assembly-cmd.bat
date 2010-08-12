@@ -1,6 +1,5 @@
 rem delete old files
-cd %1%
-del /s /q target
+del %1%\target /s /q
 rem assembly
-mvn assembly:assembly -B
+mvn assembly:assembly -f=%1%\pom.xml -B
 exit

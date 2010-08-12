@@ -1,28 +1,31 @@
-@echo on
-set startPath=%cd%
-
+@echo off
 rem Build Kit
 rem kick-off maven to build all
 
-rem first install all projects
-call mvn-install-cmd.bat ../../java/sc-api
-cd %startPathr%
-call mvn-install-cmd.bat ../../java/sc-impl
-cd %startPath%
-call mvn-install-cmd.bat ../../java/service-connector
-cd %startPath%
-call mvn-install-cmd.bat ../../java/sc-simulation
-cd %startPath%
+rem first create sources and install all projects to local repository
+call mvn-source-cmd.bat ..\..\java\sc-api
+call mvn-install-cmd.bat ..\..\java\sc-api
+call mvn-source-cmd.bat ..\..\java\sc-impl
+call mvn-install-cmd.bat ..\..\java\sc-impl
+call mvn-source-cmd.bat ..\..\java\service-connector
+call mvn-install-cmd.bat ..\..\java\service-connector
+call mvn-install-cmd.bat ..\..\java\sc-simulation
+call mvn-install-cmd.bat ..\..\java\sc-unit
 
-rem assembly service-connector sc.jar
-call mvn-assembly-cmd.bat ../../java/service-connector
-rem copy sc.jar to dist dir
-copy /y target\sc.jar ..\..\data\dist
-cd %startPath%
+rem create service-connector sc.jar and copy to dist dir
+call mvn-assembly-cmd.bat ..\..\java\service-connector
+copy ..\..\java\service-connector\target\sc.jar ..\..\data\dist /y
 
-rem assembly sc-simulation server.jar
-call mvn-assembly-cmd.bat ../../java/sc-simulation
-rem copy server.jar to dist dir
-copy /y target\server.jar ..\..\data\dist
-cd %startPath%
+rem create sc-simulation server.jar and copy to dist dir
+call mvn-assembly-cmd.bat ..\..\java\sc-simulation
+copy ..\..\java\sc-simulation\target\server.jar ..\..\data\dist /y
+
+
+rem create sc-unit client.jar and copy to dist dir
+call mvn-assembly-cmd.bat ..\..\java\sc-unit
+copy ..\..\java\sc-unit\target\client.jar ..\..\data\dist /y
+
+rem create javadoc and copies everything to documentation
+call mvn-javadoc-cmd.bat ..\..\java\service-connector
+xcopy ..\..\java\service-connector\target\site ..\documentation /y /e
 

@@ -1,5 +1,3 @@
 rem install
-cd %1%
-del /s /q target
-mvn install
+mvn install -f=%1%\pom.xml
 exit
