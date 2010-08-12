@@ -62,8 +62,8 @@ public enum SCMPError {
 	/** The SC_ERROR. */
 	SC_ERROR("509", "SC error occured.");
 
-	/** The error code. */
-	private String errorCode; // should not be int because it is transmitted over the line
+	/** The error code. Should not be integer because it is transmitted over the line */
+	private String errorCode;
 	/** The error text. */
 	private String errorText;
 
