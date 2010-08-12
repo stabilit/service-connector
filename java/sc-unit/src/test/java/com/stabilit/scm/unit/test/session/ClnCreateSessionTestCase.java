@@ -66,7 +66,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// echoInterval not valid
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -76,7 +76,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// serviceName not set
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -86,7 +86,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 		// serviceName not set
 
 		// sessionInfo not set
@@ -97,7 +97,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
 	/**

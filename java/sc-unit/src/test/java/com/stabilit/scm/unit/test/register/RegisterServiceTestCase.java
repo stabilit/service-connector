@@ -67,7 +67,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.invoke(this.registerCallback);
 		SCMPMessage fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 
 		// maxSessions 0 value
 		registerServiceCall.setPortNumber(9100);
@@ -77,7 +77,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.invoke(this.registerCallback);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 
 		// port too high 10000
 		registerServiceCall.setMaxSessions(10);
@@ -87,7 +87,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.invoke(this.registerCallback);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.REGISTER_SERVICE);
 	}
 
 	@Test

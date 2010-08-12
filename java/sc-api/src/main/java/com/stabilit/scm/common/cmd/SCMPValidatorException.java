@@ -28,12 +28,16 @@ public class SCMPValidatorException extends HasFaultResponseException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5190062727277529571L;
-	
+
 	public SCMPValidatorException() {
-		super(SCMPError.VALIDATION_ERROR);
+		super(SCMPError.HEADER_VALIDATION_ERROR);
 	}
 
 	public SCMPValidatorException(String message) {
-		super(SCMPError.VALIDATION_ERROR, message);
+		super(SCMPError.HEADER_VALIDATION_ERROR, message);
+	}
+
+	public SCMPValidatorException(SCMPError error, String additionalInfo) {
+		super(error, error.getErrorText() + " [" + additionalInfo + "]");
 	}
 }

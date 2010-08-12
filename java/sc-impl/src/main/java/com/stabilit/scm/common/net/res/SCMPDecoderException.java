@@ -18,7 +18,6 @@ package com.stabilit.scm.common.net.res;
 
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -39,7 +38,7 @@ public class SCMPDecoderException extends HasFaultResponseException {
 	 */
 	public SCMPDecoderException(SCMPError errorCode, Throwable cause) {
 		super(errorCode, cause);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
+		this.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 
 	/**
@@ -50,6 +49,6 @@ public class SCMPDecoderException extends HasFaultResponseException {
 	 */
 	public SCMPDecoderException(SCMPError errorCode) {
 		super(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
+		this.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 }

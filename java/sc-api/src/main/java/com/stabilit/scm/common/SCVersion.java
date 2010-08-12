@@ -19,6 +19,7 @@ package com.stabilit.scm.common;
 import java.text.DecimalFormat;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
  * The Enum SCVersion. Responsible to provide SCVersion and compatibility checks.
@@ -68,7 +69,7 @@ public enum SCVersion {
 	 */
 	public void isSupported(String text) throws SCMPValidatorException {
 		if (text.matches("\\d*\\.\\d*-\\d{3}") == false) {
-			throw new SCMPValidatorException("invalid sc version format [" + text + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
 		}
 		String[] splitted = text.split("\\.|-");
 		if (splitted.length != 3) {

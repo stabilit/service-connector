@@ -58,7 +58,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
-		SCTest.verifyError(result, SCMPError.VALIDATION_ERROR, SCMPMsgType.ATTACH);
+		SCTest.verifyError(result, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
-		SCTest.verifyError(result, SCMPError.VALIDATION_ERROR, SCMPMsgType.ATTACH);
+		SCTest.verifyError(result, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
-		SCTest.verifyError(result, SCMPError.VALIDATION_ERROR, SCMPMsgType.ATTACH);
+		SCTest.verifyError(result, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
-		SCTest.verifyError(result, SCMPError.VALIDATION_ERROR, SCMPMsgType.ATTACH);
+		SCTest.verifyError(result, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.ATTACH);
 	}
 
 	@Test

@@ -20,7 +20,6 @@ import java.util.Map;
 
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -53,7 +52,7 @@ public class SCSessionException extends HasFaultResponseException {
 	 */
 	public SCSessionException(SCMPError errorCode) {
 		super(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
+		this.fault.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 
 	/**
@@ -64,7 +63,7 @@ public class SCSessionException extends HasFaultResponseException {
 	 */
 	public SCSessionException(Throwable cause) {
 		super(cause);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
+		this.fault.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 
 	/**
@@ -76,8 +75,8 @@ public class SCSessionException extends HasFaultResponseException {
 	 *            the map
 	 */
 	public SCSessionException(SCMPError errorCode, Map<String, String> map) {
-		this.faultAttr = map;
-		this.setErrorCode(errorCode);
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), SCMPMsgType.UNDEFINED.getValue());
+		this.fault.setHeader(map);
+		this.fault.setError(errorCode);
+		this.fault.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 }

@@ -16,9 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the
  * response. Used to save data about occurred errors and writing the response on a different level of software
@@ -30,8 +27,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
-	/** The attribute bean. */
-	protected Map<String, String> faultAttr = new HashMap<String, String>();
+	/** The fault message. */
+	protected SCMPFault fault = new SCMPFault();
 
 	public HasFaultResponseException() {
 		super();
@@ -41,49 +38,26 @@ public abstract class HasFaultResponseException extends Exception {
 		super(cause);
 	}
 
-	public HasFaultResponseException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 	public HasFaultResponseException(SCMPError errorCode) {
-		this.setErrorCode(errorCode);
+		this.fault.setError(errorCode);
 	}
 
 	public HasFaultResponseException(SCMPError errorCode, Throwable cause) {
 		this(cause);
-		this.setErrorCode(errorCode);
+		this.fault.setError(errorCode);
 	}
 
 	public HasFaultResponseException(SCMPError errorCode, String message) {
 		super(message);
-		this.setErrorCode(errorCode);
-	}
-
-	public void setErrorCode(SCMPError errorCode) {
-		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), errorCode.getErrorCode());
-		this.faultAttr.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), errorCode.getErrorText());
-	}
-
-	public void setAttribute(String name, String value) {
-		this.faultAttr.put(name, value);
+		this.fault.setError(errorCode);
 	}
 
 	public void setAttribute(SCMPHeaderAttributeKey key, String value) {
-		this.faultAttr.put(key.getValue(), value);
-	}
-
-	public Object getAttribute(String name) {
-		return this.faultAttr.get(name);
+		this.fault.setHeader(key, value);
 	}
 
 	public void setFaultResponse(IResponse response) {
-		SCMPFault scmpFault = new SCMPFault(faultAttr);
-		String detailMsg = this.getMessage();
-		// TODO verify with jan error handling
-		if (detailMsg != null) {
-			scmpFault.setBody(detailMsg);
-		}
-		response.setSCMP(scmpFault);
+		response.setSCMP(this.fault);
 	}
 
 	/**
@@ -93,7 +67,7 @@ public abstract class HasFaultResponseException extends Exception {
 	 *            the new message type
 	 */
 	public void setMessageType(SCMPMsgType messageType) {
-		this.setMessageType(messageType.getValue());
+		this.fault.setMessageType(messageType);
 	}
 
 	/**
@@ -103,6 +77,6 @@ public abstract class HasFaultResponseException extends Exception {
 	 *            the new message type
 	 */
 	public void setMessageType(String messageTypeValue) {
-		this.setAttribute(SCMPHeaderAttributeKey.MSG_TYPE.getValue(), messageTypeValue);
+		this.fault.setMessageType(messageTypeValue);
 	}
 }

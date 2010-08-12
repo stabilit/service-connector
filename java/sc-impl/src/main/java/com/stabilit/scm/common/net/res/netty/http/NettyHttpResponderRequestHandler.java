@@ -248,7 +248,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	}
 
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPFault scmpFault = new SCMPFault(SCMPError.REQUEST_UNKNOWN);
+		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST);
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);

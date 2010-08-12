@@ -23,12 +23,13 @@ package com.stabilit.scm.common.scmp;
  */
 public enum SCMPError {
 
-	/** The client error. */
-	CLIENT_ERROR("400", "Client error occured."),
-	/** The request unknown. */
-	REQUEST_UNKNOWN("401", "Request unknown"),
-	/** The validation error. */
-	VALIDATION_ERROR("402", "Validation error occured."),
+	/** The bad request. */
+	BAD_REQUEST("400", "Bad request. The request could not be understood by the server due to malformed syntax."),
+	/** The header validation error. */
+	HEADER_VALIDATION_ERROR("420", "Validation error occured."),
+
+	HV_WRONG_SC_VERSION_FORMAT("420", "Invalid sc version format."),
+
 	/** The not found. */
 	NOT_FOUND("404", "Not found error occured."),
 	/** The protocol mismatch. */

@@ -90,7 +90,7 @@ public class SCMPMessage {
 	 * @return the message type
 	 */
 	public String getMessageType() {
-		return getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
+		return this.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
 	}
 
 	/**
@@ -315,8 +315,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned
-	 * and if you unbox return value automatically into boolean than a NullPointerException will be thrown.
+	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and
+	 * if you unbox return value automatically into boolean than a NullPointerException will be thrown.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -335,8 +335,7 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Gets the header flag. Gets a header flag if header contains header key. Value totally irrelevant in this
-	 * case.
+	 * Gets the header flag. Gets a header flag if header contains header key. Value totally irrelevant in this case.
 	 * 
 	 * @param headerKey
 	 *            the header key
