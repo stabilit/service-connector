@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stabilit.sc</groupId>
-	<artifactId>service-connector-m</artifactId>
+	<artifactId>service-connector</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>service-connector</name>
 	<description>service-connector</description>
@@ -93,13 +93,13 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-impl-m</artifactId>
+			<artifactId>sc-impl</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-api-m</artifactId>
+			<artifactId>sc-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

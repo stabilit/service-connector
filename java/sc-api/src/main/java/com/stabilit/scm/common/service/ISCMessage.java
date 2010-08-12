@@ -27,7 +27,10 @@ public interface ISCMessage {
 	 * Sets the message info.
 	 * 
 	 * @param messageInfo
-	 *            the new message info
+	 *            Optional information passed together with the message body that helps to identify the message content
+	 *            without investigating the body.<br>
+	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 *            Example: SECURITY_MARKET_QUERY
 	 */
 	public abstract void setMessageInfo(String messageInfo);
 
@@ -46,10 +49,10 @@ public interface ISCMessage {
 	public abstract boolean isCompressed();
 
 	/**
-	 * Sets the compressed.
+	 * Sets the compressed. Default is true.
 	 * 
 	 * @param compressed
-	 *            the new compressed
+	 *            Regards the data part of the message.
 	 */
 	public abstract void setCompressed(Boolean compressed);
 
@@ -64,7 +67,7 @@ public interface ISCMessage {
 	 * Sets the data.
 	 * 
 	 * @param data
-	 *            the new data
+	 *            the data
 	 */
 	public abstract void setData(Object data);
 

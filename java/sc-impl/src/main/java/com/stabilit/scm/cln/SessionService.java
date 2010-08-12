@@ -124,6 +124,7 @@ public class SessionService extends Service implements ISessionService {
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(this.sessionId);
 		return replyToClient;
 	}
 

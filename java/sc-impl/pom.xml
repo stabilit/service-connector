@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stabilit.sc</groupId>
-	<artifactId>sc-impl-m</artifactId>
+	<artifactId>sc-impl</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sc-impl</name>
 	<description>sc-impl</description>
@@ -46,6 +46,18 @@
 					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -88,7 +100,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-api-m</artifactId>
+			<artifactId>sc-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

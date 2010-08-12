@@ -2,31 +2,32 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stabilit.sc</groupId>
-	<artifactId>sc-simluation-m</artifactId>
+	<artifactId>sc-simluation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sc-simluation</name>
 	<description>sc-simluation</description>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>service-connector-m</artifactId>
+			<artifactId>service-connector</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-api-m</artifactId>
+			<artifactId>sc-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stabilit.sc</groupId>
-			<artifactId>sc-impl-m</artifactId>
+			<artifactId>sc-impl</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>

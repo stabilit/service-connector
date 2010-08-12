@@ -90,7 +90,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.loggerFactory = LoggerFactory.getCurrentLoggerFactory(loggerKey);
 	}
 
-	/** {@Inherited} */
+	/** {@inheritDoc} */
 	@Override
 	public void addAllLoggers() {
 		this.addStatisticsListener();
@@ -102,7 +102,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.addSubscriptionListener();
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addConnectionListener() {
 		if (this.connectionListener != null) {
@@ -113,7 +113,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		ConnectionPoint.getInstance().addListener(this.connectionListener);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeConnectionListener() {
 		if (this.connectionListener == null) {
@@ -124,7 +124,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.connectionListener = null;
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addExceptionListener() {
 		if (this.exceptionListener != null) {
@@ -135,7 +135,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		ExceptionPoint.getInstance().addListener(this.exceptionListener);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeExceptionListener() {
 		if (this.exceptionListener == null) {
@@ -146,7 +146,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.exceptionListener = null;
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addTopLoggerListener() {
 		if (this.loggerListener != null) {
@@ -158,7 +158,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.setTopLoggerLevel(Level.DEBUG);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeTopLoggerListener() {
 		if (this.loggerListener == null) {
@@ -179,7 +179,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		LoggerPoint.getInstance().setLevel(level);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addPerformanceListener() {
 		if (this.performanceListener != null) {
@@ -191,7 +191,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		PerformancePoint.getInstance().setOn(true);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removePerformanceListener() {
 		if (this.performanceListener == null) {
@@ -203,7 +203,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		PerformancePoint.getInstance().setOn(false);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addSessionListener() {
 		if (this.sessionListener != null) {
@@ -214,7 +214,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		SessionPoint.getInstance().addListener(this.sessionListener);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeSessionListener() {
 		if (this.sessionListener == null) {
@@ -225,7 +225,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.sessionListener = null;
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addSubscriptionListener() {
 		if (this.subscriptionListener != null) {
@@ -236,7 +236,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		SubscriptionPoint.getInstance().addListener(this.subscriptionListener);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeSubscriptionListener() {
 		if (this.subscriptionListener == null) {
@@ -247,7 +247,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		this.subscriptionListener = null;
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void addStatisticsListener() {
 		if (this.statisticsListener != null) {
@@ -258,7 +258,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 		StatisticsPoint.getInstance().addListener(this.statisticsListener);
 	}
 
-	/** {@Inherited} */
+		/** {@inheritDoc} */
 	@Override
 	public void removeStatisticsListener() {
 		if (this.statisticsListener == null) {
