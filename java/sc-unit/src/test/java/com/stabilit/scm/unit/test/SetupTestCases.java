@@ -141,9 +141,10 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
 		scSrv.setKeepAliveInterval(0);
-		scSrv.setRunningPortNr(7000);
+		scSrv.setLocalServerPort(7000);
+		scSrv.setLocalServerHost("localhost");
 		scSrv.setImmediateConnect(true);
-		scSrv.startServer("localhost");
+		scSrv.startServer();
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSrv.registerService("simulation", srvCallback);
 	}
@@ -153,9 +154,10 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
 		scSrv.setKeepAliveInterval(0);
-		scSrv.setRunningPortNr(7000);
+		scSrv.setLocalServerPort(7000);
+		scSrv.setLocalServerHost("localhost");
 		scSrv.setImmediateConnect(true);
-		scSrv.startServer("localhost");
+		scSrv.startServer();
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSrv.registerService("simulation", srvCallback);
 	}
@@ -243,9 +245,10 @@ public class SetupTestCases {
 		// connect to SC as server
 		publishSrv.setMaxSessions(10);
 		publishSrv.setKeepAliveInterval(0);
-		publishSrv.setRunningPortNr(7001);
+		publishSrv.setLocalServerPort(7001);
+		publishSrv.setLocalServerHost("localhost");
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startServer("localhost");
+		publishSrv.startServer();
 		PublishServerCallback publishCallback = new PublishServerCallback();
 		publishSrv.registerService(serviceName, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
