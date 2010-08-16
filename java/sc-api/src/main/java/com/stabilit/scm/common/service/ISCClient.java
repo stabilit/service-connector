@@ -44,21 +44,6 @@ public interface ISCClient extends ISC {
 	public void detach() throws Exception;
 
 	/**
-	 * Gets the connection key.
-	 * 
-	 * @return the connection key
-	 */
-	public String getConnectionKey();
-
-	/**
-	 * Sets the connection key.
-	 * 
-	 * @param connectionKey
-	 *            the new connection key
-	 */
-	public void setConnectionType(String connectionKey);
-
-	/**
 	 * Gets the host.
 	 * 
 	 * @return the host

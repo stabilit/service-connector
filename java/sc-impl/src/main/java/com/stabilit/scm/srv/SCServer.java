@@ -138,7 +138,7 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getConnectionKey() {
+	public String getConnectionType() {
 		return conType;
 	}
 

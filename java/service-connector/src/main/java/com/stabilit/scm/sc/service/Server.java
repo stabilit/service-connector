@@ -364,6 +364,15 @@ public class Server {
 		this.sessions.remove(session);
 	}
 
+	/**
+	 * Gets the sessions.
+	 * 
+	 * @return the sessions
+	 */
+	public List<Session> getSessions() {
+		return sessions;
+	}
+
 	public class ServerContext implements IContext {
 	}
 

@@ -17,6 +17,7 @@
 package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -26,11 +27,13 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
@@ -39,6 +42,9 @@ import com.stabilit.scm.sc.service.Server;
  * @author JTraber
  */
 public class DeRegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
+
+	private static final String ABORT_SESSION_ERROR_STRING = SCMPError.SESSION_ABORT.getErrorText()
+			+ "[deregister service]";
 
 	/**
 	 * Instantiates a new DeRegisterServiceCommand.
@@ -65,6 +71,21 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		Server server = this.getServerByName(serverKey);
 		// deregister server from service
 		server.getService().removeServer(server);
+
+		List<Session> serverSessions = server.getSessions();
+		ISCMPCallback callback = new DeRegisterServiceCommmandCallback();
+		// set up abort message
+		SCMPMessage abortMsg = new SCMPMessage();
+		abortMsg.setServiceName(serviceName);
+		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServiceCommand.ABORT_SESSION_ERROR_STRING);
+
+		for (Session session : serverSessions) {
+			this.sessionRegistry.removeSession(session);
+			server.removeSession(session);
+			abortMsg.setSessionId(session.getId());
+			server.serverAbortSession(abortMsg, callback);
+		}
 		// release all resources used by server, disconnects requester
 		server.destroy();
 		this.serverRegistry.removeServer(serverKey);
@@ -124,6 +145,22 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
+		}
+	}
+
+	/**
+	 * The Class DeRegisterServiceCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.
+	 */
+	private class DeRegisterServiceCommmandCallback implements ISCMPCallback {
+
+		@Override
+		public void callback(SCMPMessage scmpReply) throws Exception {
+			// nothing to do
+		}
+
+		@Override
+		public void callback(Throwable th) {
+			// nothing to do
 		}
 	}
 }

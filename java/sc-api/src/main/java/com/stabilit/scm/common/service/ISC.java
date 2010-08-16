@@ -40,7 +40,7 @@ public interface ISC {
 	 * 
 	 * @return the connection key
 	 */
-	public abstract String getConnectionKey();
+	public abstract String getConnectionType();
 
 	/**
 	 * Gets the host.

@@ -30,7 +30,7 @@ public enum SCMPError {
 	NOT_FOUND("404", "Not found."),
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT("408",
-	"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
+			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
 	/** 420 Validation errors */
 	/** The header validation error. */
 	HV_ERROR("420", "Validation error occured."),
@@ -97,6 +97,8 @@ public enum SCMPError {
 	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
 	/** The FRAME_DECODER. */
 	FRAME_DECODER("606", "Not possible to decode frame, scmp header line wrong."),
+	/** The SESSION_ABORT. */
+	SESSION_ABORT("607", "Session aborted."),
 	/** The CONNECTION_EXCEPTION. */
 	CONNECTION_EXCEPTION("610", "Connection error.");
 
