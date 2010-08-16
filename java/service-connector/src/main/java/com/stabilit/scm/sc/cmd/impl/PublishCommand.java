@@ -25,11 +25,11 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
-import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.service.PublishService;
@@ -66,9 +66,6 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
 		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
-		if (queue == null) {
-			throw new SCServiceException("no subscriptionQueue for serviceName : " + serviceName);
-		}
 		// throws an exception if failed
 		queue.add(message);
 
@@ -100,24 +97,19 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// message info
 				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				if (messageInfo != null) {
-					ValidatorUtility.validateString(1, messageInfo, 256);
-				}
+				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				if (mask == null) {
-					throw new SCMPValidatorException("mask must be set!");
-				}
-				ValidatorUtility.validateString(1, mask, 256);
+				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

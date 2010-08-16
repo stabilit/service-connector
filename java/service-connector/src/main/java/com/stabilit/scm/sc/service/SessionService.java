@@ -70,7 +70,8 @@ public class SessionService extends Service {
 			}
 		}
 		// no available server for this service
-		SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
+		SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER, "for service "
+				+ msgToForward.getServiceName());
 		scmpCommandException.setMessageType(msgToForward.getMessageType());
 		throw scmpCommandException;
 	}

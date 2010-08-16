@@ -23,6 +23,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -101,17 +102,17 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException("sessionId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

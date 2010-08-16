@@ -30,13 +30,13 @@ import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sc.service.SessionService;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -80,15 +80,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
 
-		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.TRUE.equals(rejectSessionFlag)) {
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			// server rejected session - throw exception with server errors
-			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
-			e.setMessageType(getKey());
-			throw e;
-		}
-
 		if (reply.isFault()) {
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// exception handling
@@ -96,21 +87,27 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			Throwable th = fault.getCause();
 			if (th instanceof OperationTimeoutException) {
 				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
+						SrvCreateSessionCommand.class.getSimpleName());
 				scmpEx.setMessageType(getKey());
-
 				throw scmpEx;
 			}
 			throw th;
 		}
-		// add server to session
-		session.setServer(server);
-		session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-		session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-		// finally add session to the registry
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		sessionRegistry.addSession(session.getId(), session);
 
+		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+		if (Boolean.FALSE.equals(rejectSessionFlag)) {
+			// session has not been rejected, add server to session
+			session.setServer(server);
+			session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
+			session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
+			// finally add session to the registry
+			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+			sessionRegistry.addSession(session.getId(), session);
+		} else {
+			// session has been rejected - remove session id from header
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+		}
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());
@@ -131,26 +128,28 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
 				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
-				ValidatorUtility.validateString(1, sessionInfo, 256);
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 				// echoTimeout
 				String echoTimeoutValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
-				int echoTimeout = ValidatorUtility.validateInt(1, echoTimeoutValue, 3600);
+				int echoTimeout = ValidatorUtility.validateInt(1, echoTimeoutValue, 3600,
+						SCMPError.HV_WRONG_ECHO_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 				// echoInterval
 				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
-				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600);
+				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
+						SCMPError.HV_WRONG_ECHO_INTERVAL);
 				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

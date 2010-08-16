@@ -31,13 +31,13 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.service.SCSessionException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
 
 /**
  * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
@@ -79,29 +79,28 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 			Throwable th = fault.getCause();
 			if (th instanceof OperationTimeoutException) {
 				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.OPERATION_TIMEOUT);
+				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
+						SrvChangeSubscriptionCommand.class.getName());
 				scmpEx.setMessageType(getKey());
 				throw scmpEx;
 			}
 			throw th;
 		}
 		Boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.TRUE.equals(rejectSessionFlag)) {
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			// server rejected session - throw exception with server errors
-			SCSessionException e = new SCSessionException(SCMPError.SESSION_REJECTED, reply.getHeader());
-			e.setMessageType(getKey());
-			throw e;
-		}
-		String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-		SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
-		IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
-		queue.changeSubscription(sessionId, filterMask);
 
+		if (Boolean.FALSE.equals(rejectSessionFlag)) {
+			// session has not been rejected
+			String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+			SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
+			IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
+			queue.changeSubscription(sessionId, filterMask);
+		} else {
+			// session has been rejected - remove session id from header
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+		}
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());
-		reply.setSessionId(sessionId);
 		response.setSCMP(reply);
 	}
 
@@ -118,23 +117,20 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				if (mask == null) {
-					throw new SCMPValidatorException("mask must be set!");
-				}
+				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 				if (mask.indexOf("%") != -1) {
 					// percent sign in mask not allowed
-					throw new SCMPValidatorException("percent sign found in mask - not allowed.");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed " + mask);
 				}
-				ValidatorUtility.validateString(1, mask, 256);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

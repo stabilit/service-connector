@@ -17,10 +17,10 @@
 package com.stabilit.scm.sc.cmd.impl;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.Date;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
+import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
@@ -33,7 +33,6 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.DateTimeUtility;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 
@@ -61,24 +60,23 @@ public class RegisterServiceCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress();
+		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
 
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		Service service = this.validateService(serviceName);
 
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
-		this.validateServerNotRegistered(server);
+		Server server = this.getServerByKeyAndValidateNotRegistered(serverKey);
 
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		// create new server
-		server = new Server((InetSocketAddress) socketAddress, serviceName, portNr, maxSessions, keepAliveInterval);
+		server = new Server(socketAddress, serviceName, portNr, maxSessions, keepAliveInterval);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately
@@ -87,7 +85,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(
-					SCMPError.IMMEDIATE_CONNECT_FAILED);
+					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
@@ -96,7 +94,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 		// add service to server
 		server.setService(service);
 		// add server to server registry
-		serverRegistry.addServer(serviceName + "_" + server.getSocketAddress(), server);
+		this.serverRegistry.addServer(serverKey, server);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -114,14 +112,16 @@ public class RegisterServiceCommand extends CommandAdapter {
 	 * @throws SCMPCommunicationException
 	 *             the sCMP communication exception
 	 */
-	private void validateServerNotRegistered(Server server) throws SCMPCommunicationException {
+	private Server getServerByKeyAndValidateNotRegistered(String key) throws SCMPCommandException {
+		Server server = this.serverRegistry.getServer(key);
 		if (server != null) {
 			// server registered two times for this service
-			SCMPCommunicationException communicationException = new SCMPCommunicationException(
-					SCMPError.SERVER_ALREADY_REGISTERED);
-			communicationException.setMessageType(getKey());
-			throw communicationException;
+			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.SERVER_ALREADY_REGISTERED, "server key "
+					+ key);
+			cmdExc.setMessageType(getKey());
+			throw cmdExc;
 		}
+		return server;
 	}
 
 	/**
@@ -137,18 +137,18 @@ public class RegisterServiceCommand extends CommandAdapter {
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("ServiceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// maxSessions - validate with lower limit 1
 				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
-				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions);
+				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessionsInt);
 				// immmediateConnect
 				boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnect);
 				// portNr - portNr >= 1 && portNr <= 0xFFFF
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-				int portNrInt = ValidatorUtility.validateInt(1, portNr, 0xFFFF);
+				int portNrInt = ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR, portNrInt);
 				// scVersion
 				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
@@ -159,7 +159,8 @@ public class RegisterServiceCommand extends CommandAdapter {
 				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 				// keepAliveInterval
 				String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-				int keepAliveInterval = ValidatorUtility.validateInt(0, kpi, 3600);
+				int keepAliveInterval = ValidatorUtility.validateInt(0, kpi, 3600,
+						SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 				request.setAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

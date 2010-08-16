@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.sc.registry.DisabledServiceRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 
@@ -89,9 +90,8 @@ public class ServiceLoader {
 				break;
 			case UNDEFINED:
 			default:
-				throw new SCMPValidatorException(
-						"wrong serviceType in configuration file, serviceName - serviceType : " + serviceName
-								+ " - " + serviceTypeString);
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+						"wrong serviceType, serviceName/serviceType: " + serviceName + "/" + serviceTypeString);
 			}
 
 			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);

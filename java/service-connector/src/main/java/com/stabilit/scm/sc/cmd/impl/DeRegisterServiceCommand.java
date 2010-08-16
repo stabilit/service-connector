@@ -16,14 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
-import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -31,7 +30,6 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.service.Server;
 
 /**
@@ -60,18 +58,16 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
-		SocketAddress socketAddress = request.getRemoteSocketAddress();
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		Server server = serverRegistry.getServer(serviceName + "_" + socketAddress);
+		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
 
-		// validate server is registered - otherwise deregister not possible
-		this.validateServer(server);
-
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		// looks up server & validate server is registered
+		Server server = this.getServerByName(serverKey);
 		// deregister server from service
 		server.getService().removeServer(server);
 		// release all resources used by server, disconnects requester
 		server.destroy();
-		serverRegistry.removeServer(server);
+		this.serverRegistry.removeServer(serverKey);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -81,24 +77,25 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	}
 
 	/**
-	 * Validate server. Checks if server is registered. If not an exception will be thrown.
+	 * Validate server. Checks properness of allocated server. If server null no free server available.
 	 * 
-	 * @param server
-	 *            the server
+	 * @param key
+	 *            the key
+	 * @return the server by name
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
 	 */
-	public void validateServer(Server server) throws SCMPCommandException {
+	public Server getServerByName(String key) throws SCMPCommandException {
+		Server server = this.serverRegistry.getServer(key);
+
 		if (server == null) {
-			// server not registered - deregister not possible
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: server not registered");
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_REGISTERED,
-					"server not registered.");
+			// no available server for this service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"server not registered, key " + key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
+		return server;
 	}
 
 	/**
@@ -115,7 +112,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("ServiceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

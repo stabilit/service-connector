@@ -70,16 +70,6 @@ public class ServerRegistry extends Registry<String, Server> {
 	/**
 	 * Removes the server.
 	 * 
-	 * @param server
-	 *            the server
-	 */
-	public void removeServer(Server server) {
-		super.remove(server.getServiceName() + "_" + server.getSocketAddress());
-	}
-
-	/**
-	 * Removes the server.
-	 * 
 	 * @param key
 	 *            the key
 	 */

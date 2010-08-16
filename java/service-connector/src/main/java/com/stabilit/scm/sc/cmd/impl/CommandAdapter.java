@@ -27,12 +27,12 @@ import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.PublishService;
-import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Service;
 import com.stabilit.scm.sc.service.ServiceType;
 import com.stabilit.scm.sc.service.Session;
@@ -52,6 +52,8 @@ public abstract class CommandAdapter implements ICommand {
 	protected SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 	/** The subscription registry. */
 	protected SubscriptionSessionRegistry subscriptionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
+	/** The server registry. */
+	protected ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 
 	/**
 	 * Instantiates a new command adapter.
@@ -68,7 +70,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the session id
 	 * @return the session by id
 	 * @throws SCMPCommandException
-	 *             occurs when session is not in registry, invalid session id
+	 *             session is not in registry, invalid session id
 	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
 		Session session = sessionRegistry.getSession(sessionId);
@@ -78,7 +80,8 @@ public abstract class CommandAdapter implements ICommand {
 			if (LoggerPoint.getInstance().isWarn()) {
 				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"no session found for " + sessionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -101,30 +104,15 @@ public abstract class CommandAdapter implements ICommand {
 		if (session == null) {
 			// incoming session not found
 			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
+				LoggerPoint.getInstance().fireWarn(this,
+						"command error: no subscription session found for id :" + sessionId);
 			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"subscriptionQueue not found for " + sessionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		return session;
-	}
-
-	/**
-	 * Validate server. Checks properness of allocated server. If server null no free server available.
-	 * 
-	 * @param server
-	 *            the server
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	public void validateServer(Server server) throws SCMPCommandException {
-		if (server == null) {
-			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
 	}
 
 	/**
@@ -137,18 +125,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the exception
 	 */
 	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String sessionId) throws Exception {
-		SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
-		Session session = subscriptionSessionRegistry.getSession(sessionId);
-
-		if (session == null) {
-			// incoming session not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
-			}
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SESSION_FOUND);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
+		Session session = this.getSubscriptionSessionById(sessionId);
 		return ((PublishService) session.getServer().getService()).getSubscriptionQueue();
 	}
 
@@ -167,7 +144,8 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = serviceRegistry.getService(serviceName);
 		if (service == null) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"service not found for " + serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -187,7 +165,8 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.SESSION_SERVICE) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"wrong service type requested " + serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -207,7 +186,8 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UNKNOWN_SERVICE);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"wrong service type requested " + serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

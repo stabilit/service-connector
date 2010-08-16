@@ -84,13 +84,14 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			// set up server abort session message - don't forward messageId & include error stuff
 			message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SC_ERROR.getErrorCode());
-			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SC_ERROR.getErrorText());
+			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SC_ERROR.getErrorText()
+					+ " [delete session failed]");
 			message.setBody("ServerDeleteSession failed for sessionId " + sessionId);
 			server.serverAbortSession(message, callback);
 			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT);
 			server.destroy();
 			// set up client EXC message
-			SCMPFault fault = new SCMPFault(SCMPError.SERVER_ERROR);
+			SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, "delete session failed");
 			fault.setMessageType(getKey());
 			response.setSCMP(fault);
 			return;
@@ -118,17 +119,17 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException("sessonId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

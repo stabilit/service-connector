@@ -41,11 +41,11 @@ import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.sc.req.SCRequester;
 
 /**
- * The Class Server.
+ * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of
+ * sessions and holds a connection pool to communicate to backend server.
  * 
  * @author JTraber
  */
@@ -56,7 +56,7 @@ public class Server {
 	/** The port number. */
 	private int portNr;
 	/** The socket address. */
-	private SocketAddress socketAddress;
+	private InetSocketAddress socketAddress;
 	/** The service name. */
 	private String serviceName;
 	/** The service. */
@@ -126,7 +126,6 @@ public class Server {
 	 * 
 	 * @param msgToForward
 	 *            the message to forward
-	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -144,10 +143,10 @@ public class Server {
 	/**
 	 * Delete session.
 	 * 
-	 * @param session
-	 *            the session to delete
-	 * @throws SCServiceException
-	 *             the SC service exception
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
 	 */
 	public void deleteSession(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
@@ -225,15 +224,15 @@ public class Server {
 	 * 
 	 * @param message
 	 *            the message
-	 * @return the sCMP message
-	 * @throws SCServiceException
-	 *             the SC service exception
+	 * @param callback
+	 *            the callback
 	 */
 	public void sendData(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
 		try {
 			srvDataCall.invoke(callback);
 		} catch (Throwable th) {
+			// send data failed
 			callback.callback(th);
 		}
 	}
@@ -245,7 +244,6 @@ public class Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
-	 * @return the scmp message
 	 */
 	public void serverEcho(SCMPMessage message, ISCMPCallback callback) {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
@@ -371,6 +369,7 @@ public class Server {
 
 	@Override
 	public String toString() {
-		return serviceName + "_" + socketAddress + " : " + portNr + " : " + maxSessions;
+		return serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort() + ":" + portNr + " : "
+				+ maxSessions;
 	}
 }
