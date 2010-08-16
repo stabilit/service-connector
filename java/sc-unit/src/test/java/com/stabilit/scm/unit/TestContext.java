@@ -26,6 +26,7 @@ import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
+import java.lang.Math;
 
 /**
  * @author JTraber
