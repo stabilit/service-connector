@@ -33,7 +33,7 @@ import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class PublishService. PublishService is a remote interface to a publish service and provides communication
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
  * functions.
  */
 public class PublishService extends Service implements IPublishService {

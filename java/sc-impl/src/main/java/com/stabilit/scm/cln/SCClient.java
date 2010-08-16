@@ -47,7 +47,7 @@ public class SCClient implements ISCClient {
 	private int port;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
-	/** The connection type, identifies low level component to use for communication default is "netty.http". */
+	/** Identifies low level component to use for communication default for clients is "netty.http". */
 	private String conType;
 	/** The requester. */
 	protected IRequester requester;
@@ -139,17 +139,14 @@ public class SCClient implements ISCClient {
 		ConnectionFactory.shutdownConnectionFactory();
 	}
 
-	/**
-	 * Gets the connection type. Default connection type is "netty.http" will be used.
-	 * 
-	 * @return the connection type which identifies low level communication technology
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public String getConnectionType() {
 		return conType;
 	}
 
 	/**
-	 * Sets the connection type. Should only be used if you really need to change low level technology- careful.
+	 * Sets the connection type. Should only be used if you really need to change low level technology careful.
 	 * 
 	 * @param conType
 	 *            the new connection type, identifies low level communication technology

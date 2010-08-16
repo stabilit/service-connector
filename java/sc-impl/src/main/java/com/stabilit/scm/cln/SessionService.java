@@ -35,7 +35,7 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class SessionService. SessionService is a remote interface to a session service and provides communication
+ * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
  * functions.
  * 
  * @author JTraber
