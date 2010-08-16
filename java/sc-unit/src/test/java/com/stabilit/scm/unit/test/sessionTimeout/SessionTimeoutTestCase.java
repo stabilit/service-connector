@@ -58,7 +58,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		clnDataCall.setRequestBody("get Data (query)");
 		clnDataCall.invoke(this.attachCallback);
 		SCMPMessage msg = this.attachCallback.getMessageSync();
-		SCTest.verifyError(msg, SCMPError.NO_SESSION_FOUND, SCMPMsgType.CLN_DATA);
+		SCTest.verifyError(msg, SCMPError.NOT_FOUND, " [no session found for " + sessionId + "]", SCMPMsgType.CLN_DATA);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "simulation", sessionId);

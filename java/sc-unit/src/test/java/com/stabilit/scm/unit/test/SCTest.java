@@ -99,15 +99,10 @@ public class SCTest {
 	private SCTest() {
 	}
 
-	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
+	public static void verifyError(SCMPMessage result, SCMPError error, String additionalInfo, SCMPMsgType msgType) {
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(error.getErrorText(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		Assert.assertEquals(error.getErrorText() + additionalInfo, result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-	}
-
-	public static void verifyError(String errorText, String errorCode, SCMPError expectedError) {
-		Assert.assertEquals(errorText, expectedError.getErrorText());
-		Assert.assertEquals(errorCode, expectedError.getErrorCode());
 	}
 
 	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter, String keyDelimiter) {
@@ -123,8 +118,8 @@ public class SCTest {
 	}
 
 	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
-		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
-		actual = actual.replaceAll("localhost/127.0.0.1:\\d*", "localhost/127.0.0.1:");
+		actual = actual.replaceAll("127.0.0.1/", "localhost/");
+		actual = actual.replaceAll("localhost/\\d*:", "localhost/:");
 
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");

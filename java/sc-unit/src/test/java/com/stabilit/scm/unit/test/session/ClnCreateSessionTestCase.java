@@ -66,7 +66,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_ECHO_TIMEOUT, " [IntValue must be set]", SCMPMsgType.CLN_CREATE_SESSION);
 
 		// echoInterval not valid
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -76,7 +76,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_ECHO_INTERVAL," [IntValue 0 not within limits]",  SCMPMsgType.CLN_CREATE_SESSION);
 
 		// serviceName not set
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -86,8 +86,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
-		// serviceName not set
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SERVICE_NAME, " [serviceName must be set]", SCMPMsgType.CLN_CREATE_SESSION);
 
 		// sessionInfo not set
 		createSessionCall.setSessionInfo(null);
@@ -97,7 +96,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback);
 		fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SESSION_INFO," [StringValue must be set]",  SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
 	/**
@@ -127,7 +126,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/127.0.0.1: : 7000 : 10|";
+		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/:7000 : 10|";
 		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 

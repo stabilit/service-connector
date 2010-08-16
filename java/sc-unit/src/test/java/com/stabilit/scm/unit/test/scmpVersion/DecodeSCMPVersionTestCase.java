@@ -43,7 +43,7 @@ public class DecodeSCMPVersionTestCase {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp release nr. [xxx]", e.getMessage());
+			Assert.assertEquals("Invalid scmp release nr. [xxx]", e.getMessage());
 		}
 	}
 
@@ -58,7 +58,7 @@ public class DecodeSCMPVersionTestCase {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp release nr. [2.0]", e.getMessage());
+			Assert.assertEquals("Invalid scmp release nr. [2.0]", e.getMessage());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class DecodeSCMPVersionTestCase {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp version nr. [1.1]", e.getMessage());
+			Assert.assertEquals("Invalid scmp version nr. [1.1]", e.getMessage());
 		}
 	}
 
@@ -90,7 +90,7 @@ public class DecodeSCMPVersionTestCase {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp release nr. [0.9]", e.getMessage());
+			Assert.assertEquals("Invalid scmp release nr. [0.9]", e.getMessage());
 		}
 	}
 

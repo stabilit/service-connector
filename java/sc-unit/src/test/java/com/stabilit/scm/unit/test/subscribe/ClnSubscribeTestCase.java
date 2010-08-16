@@ -117,7 +117,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(this.callback);
 		SCMPMessage fault = this.callback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR," [IntValue must be set]",  SCMPMsgType.CLN_SUBSCRIBE);
 
 		// mask not valid
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -126,7 +126,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(this.callback);
 		fault = this.callback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR," [IntValue must be set]",  SCMPMsgType.CLN_SUBSCRIBE);
 
 		// noDataInterval wrong
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -135,7 +135,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(this.callback);
 		fault = this.callback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HEADER_VALIDATION_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR," [IntValue must be set]",  SCMPMsgType.CLN_SUBSCRIBE);
 	}
 
 	private class SubscribeCallback extends SynchronousCallback {
