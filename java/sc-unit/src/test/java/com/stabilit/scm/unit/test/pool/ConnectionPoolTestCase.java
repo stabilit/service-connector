@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.ConnectionPoolConnectException;
+import com.stabilit.scm.common.net.req.ConnectionPoolBusyException;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.unit.test.SetupTestCases;
@@ -63,7 +63,7 @@ public class ConnectionPoolTestCase {
 			// only two connections should be created, third connection fails
 			localCp.getConnection();
 			Assert.fail("Should throw exception");
-		} catch (ConnectionPoolConnectException es) {
+		} catch (ConnectionPoolBusyException es) {
 		}
 		localCp.destroy();
 	}
@@ -88,7 +88,7 @@ public class ConnectionPoolTestCase {
 			// only two connections should be created, third connection fails
 			localCp.getConnection();
 			Assert.fail("Should throw exception");
-		} catch (ConnectionPoolConnectException es) {
+		} catch (ConnectionPoolBusyException es) {
 		}
 		Assert.assertFalse(localCp.hasFreeConnections());
 		localCp.destroy();
