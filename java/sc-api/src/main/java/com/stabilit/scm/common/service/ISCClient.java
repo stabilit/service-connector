@@ -25,6 +25,8 @@ import com.stabilit.scm.cln.service.ISessionService;
  */
 public interface ISCClient extends ISC {
 
+	/** {@inheritDoc} */
+	@Override
 	public ISCContext getContext();
 
 	/**
@@ -57,11 +59,42 @@ public interface ISCClient extends ISC {
 	 */
 	public int getPort();
 
+	/**
+	 * Creates a new file service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the file service to use
+	 * @return the file service
+	 */
 	public IFileService newFileService(String serviceName);
 
+	/**
+	 * Creates a new publish service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the publish service to use
+	 * @return the publish service
+	 */
 	public IPublishService newPublishService(String serviceName);
 
+	/**
+	 * Creates a new session service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the session service to use
+	 * @return the session service
+	 */
 	public ISessionService newSessionService(String serviceName);
 
+	/**
+	 * Sets the max connections.
+	 * 
+	 * @param maxConnections
+	 *            the new max connections
+	 */
 	public void setMaxConnections(int maxConnections);
+
+	/** {@inheritDoc} */
+	@Override
+	public String getConnectionType();
 }

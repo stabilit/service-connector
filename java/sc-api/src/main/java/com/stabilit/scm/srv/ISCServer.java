@@ -71,12 +71,20 @@ public interface ISCServer extends ISC {
 	public abstract void setKeepAliveInterval(int keepAliveInterval);
 
 	/**
-	 * Sets the running port number.
+	 * Sets the local server port.
 	 * 
-	 * @param runningPort
-	 *            the new running port number
+	 * @param localServerPort
+	 *            the local server port which should be bind in startServer method.
 	 */
-	public abstract void setRunningPortNr(int runningPort);
+	public abstract void setLocalServerPort(int localServerPort);
+
+	/**
+	 * Sets the local server host.
+	 * 
+	 * @param localServerHost
+	 *            the local server host which should be bind in startServer method.
+	 */
+	public abstract void setLocalServerHost(String localServerHost);
 
 	/**
 	 * Sets the immediate connect.
@@ -87,12 +95,10 @@ public interface ISCServer extends ISC {
 	public abstract void setImmediateConnect(boolean immediateConnect);
 
 	/**
-	 * Start server.
+	 * Start server. Binds listeners to configured ports and host.
 	 * 
-	 * @param host
-	 *            the host
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void startServer(String host) throws Exception;
+	public abstract void startServer() throws Exception;
 }

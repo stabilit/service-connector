@@ -36,9 +36,9 @@ public interface ISC {
 	public abstract ISCContext getContext();
 
 	/**
-	 * Gets the connection key.
+	 * Gets the connection type. Possible values {netty.http, netty.tcp}.
 	 * 
-	 * @return the connection key
+	 * @return the connection type which identifies low level communication technology
 	 */
 	public abstract String getConnectionType();
 
