@@ -27,7 +27,8 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class SessionService.
+ * The Class SessionService. SessionService is a remote interface to a session service and provides communication
+ * functions.
  */
 public class SessionService extends Service {
 

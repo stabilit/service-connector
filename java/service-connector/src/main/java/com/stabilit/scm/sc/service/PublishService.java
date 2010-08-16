@@ -23,7 +23,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
- * The Class PublishService.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
+ * communication functions.
  */
 public class PublishService extends Service {
 
