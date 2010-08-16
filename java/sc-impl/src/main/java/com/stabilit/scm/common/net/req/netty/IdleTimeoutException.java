@@ -24,11 +24,11 @@ package com.stabilit.scm.common.net.req.netty;
 /**
  * @author JTraber
  */
-public class OperationTimeoutException extends Exception {
+public class IdleTimeoutException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public OperationTimeoutException(String message) {
+	public IdleTimeoutException(String message) {
 		super(message);
 	}
 }

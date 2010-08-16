@@ -30,7 +30,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
-import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
+import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -76,7 +76,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			this.scmpCallback.callback(th);
 			return;
 		}
-		if (th instanceof OperationTimeoutException) {
+		if (th instanceof IdleTimeoutException) {
 			// idle timed out no pending request outstanding - ignore exception
 			return;
 		}

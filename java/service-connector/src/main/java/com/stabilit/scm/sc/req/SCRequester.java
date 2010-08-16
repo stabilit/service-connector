@@ -21,7 +21,7 @@ import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
-import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
+import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -83,7 +83,7 @@ public class SCRequester implements IRequester {
 		@Override
 		public void callback(Throwable th) {
 			// first handle connection - that user has a connection to work, if he has only 1
-			if (th instanceof OperationTimeoutException) {
+			if (th instanceof IdleTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {

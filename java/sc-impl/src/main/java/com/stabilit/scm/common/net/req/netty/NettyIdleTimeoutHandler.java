@@ -32,7 +32,7 @@ import org.jboss.netty.util.Timer;
 /**
  * @author JTraber
  */
-public class NettyOperationTimeoutHandler extends IdleStateHandler {
+public class NettyIdleTimeoutHandler extends IdleStateHandler {
 
 	/**
 	 * @param timer
@@ -41,7 +41,7 @@ public class NettyOperationTimeoutHandler extends IdleStateHandler {
 	 * @param allIdleTime
 	 * @param unit
 	 */
-	public NettyOperationTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime,
+	public NettyIdleTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime,
 			TimeUnit unit) {
 		super(timer, readerIdleTime, writerIdleTime, allIdleTime, unit);
 	}
@@ -59,8 +59,8 @@ public class NettyOperationTimeoutHandler extends IdleStateHandler {
 			// ignore reader idle
 			return;
 		case ALL_IDLE:
-			Channels.fireExceptionCaught(ctx, new OperationTimeoutException(
-			"operation timeout. operation - could not be completed."));
+			Channels.fireExceptionCaught(ctx, new IdleTimeoutException(
+			"idle timeout. operation - could not be completed."));
 			break;
 		default:
 			break;

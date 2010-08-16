@@ -25,7 +25,7 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
-import com.stabilit.scm.common.net.req.netty.NettyOperationTimeoutHandler;
+import com.stabilit.scm.common.net.req.netty.NettyIdleTimeoutHandler;
 import com.stabilit.scm.common.net.res.SCMPBasedFrameDecoder;
 
 /**
@@ -51,7 +51,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for observing idle timeout - Netty
-		pipeline.addLast("operationTimeout", new NettyOperationTimeoutHandler(this.timer, 0, 0, this.context
+		pipeline.addLast("operationTimeout", new NettyIdleTimeoutHandler(this.timer, 0, 0, this.context
 				.getOperationTimeoutMillis(), TimeUnit.MILLISECONDS));
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context

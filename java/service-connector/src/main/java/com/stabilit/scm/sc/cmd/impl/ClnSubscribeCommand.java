@@ -22,7 +22,7 @@ import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
-import com.stabilit.scm.common.net.req.netty.OperationTimeoutException;
+import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -90,7 +90,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			SCMPFault fault = (SCMPFault) reply;
 			Throwable th = fault.getCause();
-			if (th instanceof OperationTimeoutException) {
+			if (th instanceof IdleTimeoutException) {
 				// operation timeout handling
 				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
 						SrvSubscribeCommand.class.getSimpleName());

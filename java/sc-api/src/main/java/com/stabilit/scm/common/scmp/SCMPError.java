@@ -26,6 +26,11 @@ public enum SCMPError {
 	/** 4xx errors caused by client */
 	/** The bad request. */
 	BAD_REQUEST("400", "Bad request. The request could not be understood by the server due to malformed syntax."),
+	/** The NOT_FOUND. */
+	NOT_FOUND("404", "Not found."),
+	/** The REQUEST_TIMEOUT. */
+	REQUEST_TIMEOUT("408",
+	"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
 	/** 420 Validation errors */
 	/** The header validation error. */
 	HV_ERROR("420", "Validation error occured."),
@@ -76,12 +81,6 @@ public enum SCMPError {
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE("420", "Invalid configuration file."),
 
-	/** The NOT_FOUND. */
-	NOT_FOUND("404", "Not found."),
-	/** The REQUEST_TIMEOUT. */
-	REQUEST_TIMEOUT("408",
-			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
-
 	/** 5xx errors caused by server */
 	/** The SERVER_ERROR. */
 	SERVER_ERROR("500", "Server error occured."),
@@ -91,13 +90,13 @@ public enum SCMPError {
 			"Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server specified by the URI."),
 
 	/** 6xx errors caused by service connector */
-	SC_ERROR("600", "SC error."),
+	SC_ERROR("600", "Service connector error."),
 	/** The NO_FREE_SERVER. */
 	NO_FREE_SERVER("601", "No free server."),
 	/** The SERVER_ALREADY_REGISTERED for this service. */
 	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
 	/** The FRAME_DECODER. */
-	FRAME_DECODER("606", "Not possible to decode frame, scmp header line wrong!"),
+	FRAME_DECODER("606", "Not possible to decode frame, scmp header line wrong."),
 	/** The CONNECTION_EXCEPTION. */
 	CONNECTION_EXCEPTION("610", "Connection error.");
 
