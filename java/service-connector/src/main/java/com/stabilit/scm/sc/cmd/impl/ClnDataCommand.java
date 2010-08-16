@@ -27,6 +27,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -160,8 +161,9 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
-			// TODO verify with jan - what happens if clnData fails
-			this.callback.callback(response, th);
+			SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, "clnDataCommand execution failed");
+			fault.setIsReply(true);
+			this.callback(fault);
 		}
 	}
 }

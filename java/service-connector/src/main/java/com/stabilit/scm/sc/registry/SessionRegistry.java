@@ -103,7 +103,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the key
 	 * @return the session
 	 */
-	// TODO verify rescheduling timeout at this point
 	public Session getSession(String key) {
 		Session session = super.get(key);
 		if (session != null && session.getEchoIntervalSeconds() != 0) {

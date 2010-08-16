@@ -30,33 +30,48 @@ public abstract class HasFaultResponseException extends Exception {
 	/** The fault message. */
 	protected SCMPFault fault = new SCMPFault();
 
-	public HasFaultResponseException() {
-		super();
-	}
-
-	public HasFaultResponseException(Throwable cause) {
-		super(cause);
-	}
-
+	/**
+	 * Instantiates a new checks for fault response exception.
+	 * 
+	 * @param error
+	 *            the error
+	 */
 	public HasFaultResponseException(SCMPError error) {
 		super(error.getErrorText());
 		this.fault.setError(error);
 	}
 
-	public HasFaultResponseException(SCMPError error, Throwable cause) {
-		super(error.getErrorText(), cause);
-		this.fault.setError(error);
-	}
-
+	/**
+	 * Instantiates a new checks for fault response exception.
+	 * 
+	 * @param error
+	 *            the error
+	 * @param additionalInfo
+	 *            the additional info
+	 */
 	public HasFaultResponseException(SCMPError error, String additionalInfo) {
 		super(error.getErrorText() + " [" + additionalInfo + "]");
 		this.fault.setError(error, additionalInfo);
 	}
 
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
 	public void setAttribute(SCMPHeaderAttributeKey key, String value) {
 		this.fault.setHeader(key, value);
 	}
 
+	/**
+	 * Sets the fault response.
+	 * 
+	 * @param response
+	 *            the new fault response
+	 */
 	public void setFaultResponse(IResponse response) {
 		response.setSCMP(this.fault);
 	}

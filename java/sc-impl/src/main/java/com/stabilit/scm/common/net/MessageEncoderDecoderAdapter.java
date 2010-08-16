@@ -122,14 +122,15 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				keyOff = index + 1;
 			}
 		}
-		// decoding body - depends on body type
-		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getValue());
+
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
 			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
 			return scmpMsg;
 		}
+		// decoding body - depends on body type
+		String scmpBodyTypeString = metaMap.get(SCMPHeaderAttributeKey.BODY_TYPE.getValue());
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
 			byte[] body = new byte[scmpBodySize];

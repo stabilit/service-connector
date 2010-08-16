@@ -448,21 +448,17 @@ public class SCMPMessage {
 	 */
 	public void setBody(Object body) {
 		this.body = body;
-		if (this.body == null) {
-			// TODO makes that sense clarify
-			this.removeHeader(SCMPHeaderAttributeKey.BODY_TYPE);
+		// set body type (bty) in header fields if body is of type TEXT
+		SCMPBodyType bodyType = this.getBodyType();
+		switch (bodyType) {
+		case BINARY:
+		case UNDEFINED:
+			return;
+		case TEXT:
+			this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
+		default:
 			return;
 		}
-		this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, this.getBodyTypeAsString());
-	}
-
-	/**
-	 * Gets the body type as string.
-	 * 
-	 * @return the body type as string
-	 */
-	private String getBodyTypeAsString() {
-		return getBodyType().getValue();
 	}
 
 	/**
