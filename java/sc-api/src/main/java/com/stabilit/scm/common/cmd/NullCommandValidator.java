@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.cmd;
 
 import com.stabilit.scm.common.scmp.IRequest;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
  * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation. Throws
@@ -41,6 +42,6 @@ public final class NullCommandValidator implements ICommandValidator {
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
-		throw new SCMPValidatorException("no validator implemented - no allowed.");
+		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented - no allowed.");
 	}
 }

@@ -22,22 +22,34 @@
 package com.stabilit.scm.common.service;
 
 /**
+ * The Class SCServiceException. Used to notify errors on SC service level.
+ * 
  * @author JTraber
- *
  */
 public class SCServiceException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 75222936621899150L;
 
+	/**
+	 * Instantiates a new sC service exception.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 */
 	public SCServiceException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new sC service exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public SCServiceException(String message) {
 		super(message);
-	}
-
-	public SCServiceException(Throwable cause) {
-		super(cause);
 	}
 }

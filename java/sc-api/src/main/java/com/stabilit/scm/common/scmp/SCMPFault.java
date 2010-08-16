@@ -52,11 +52,13 @@ public class SCMPFault extends SCMPMessage {
 	/**
 	 * Instantiates a new SCMP fault message.
 	 * 
-	 * @param errorCode
+	 * @param error
 	 *            the error code
+	 * @param additionalInfo
+	 *            the additional info
 	 */
-	public SCMPFault(SCMPError errorCode) {
-		this.setError(errorCode);
+	public SCMPFault(SCMPError error, String additionalInfo) {
+		this.setError(error, additionalInfo);
 	}
 
 	/**
@@ -96,6 +98,22 @@ public class SCMPFault extends SCMPMessage {
 	public void setError(String errorCode, String errorText) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), errorCode);
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), errorText);
+	}
+
+	/**
+	 * Sets the error.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 * @param errorText
+	 *            the error text
+	 * @param additionalInfo
+	 *            the additional info
+	 */
+	public void setError(SCMPError scmpError, String additionalInfo) {
+		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
+		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText() + " ["
+				+ additionalInfo + "]");
 	}
 
 	/**

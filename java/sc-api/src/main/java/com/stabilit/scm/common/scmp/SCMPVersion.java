@@ -62,13 +62,13 @@ public enum SCMPVersion {
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 
 		if (this.release != buffer[0]) {
-			throw new SCMPValidatorException("invalid scmp release nr. [" + new String(buffer) + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_RELEASE_NR, new String(buffer));
 		}
 		if (buffer[1] != SCMPVersion.DOT_HEX) {
-			throw new SCMPValidatorException("invalid scmp version format [" + new String(buffer) + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_VERSION_FORMAT, new String(buffer));
 		}
 		if (this.version < buffer[2]) {
-			throw new SCMPValidatorException("invalid scmp version nr. [" + new String(buffer) + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_VERSION_NR, new String(buffer));
 		}
 		return;
 	}

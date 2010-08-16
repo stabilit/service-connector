@@ -30,16 +30,14 @@ public class SCMPCommandException extends HasFaultResponseException {
 	private static final long serialVersionUID = -7198688558643060L;
 
 	/**
-	 * Instantiates a new SCMPCommandException.
+	 * Instantiates a new sCMP command exception.
 	 * 
-	 * @param errorCode
-	 *            the error code
+	 * @param error
+	 *            the error
+	 * @param additionalInfo
+	 *            the additional info
 	 */
-	public SCMPCommandException(SCMPError errorCode) {
-		super(errorCode);
-	}
-
-	public SCMPCommandException(SCMPError errorCode, String message) {
-		super(errorCode, message);
+	public SCMPCommandException(SCMPError error, String additionalInfo) {
+		super(error, additionalInfo);
 	}
 }

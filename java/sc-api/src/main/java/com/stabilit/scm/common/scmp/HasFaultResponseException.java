@@ -38,18 +38,19 @@ public abstract class HasFaultResponseException extends Exception {
 		super(cause);
 	}
 
-	public HasFaultResponseException(SCMPError errorCode) {
-		this.fault.setError(errorCode);
+	public HasFaultResponseException(SCMPError error) {
+		super(error.getErrorText());
+		this.fault.setError(error);
 	}
 
-	public HasFaultResponseException(SCMPError errorCode, Throwable cause) {
-		this(cause);
-		this.fault.setError(errorCode);
+	public HasFaultResponseException(SCMPError error, Throwable cause) {
+		super(error.getErrorText(), cause);
+		this.fault.setError(error);
 	}
 
-	public HasFaultResponseException(SCMPError errorCode, String message) {
-		super(message);
-		this.fault.setError(errorCode);
+	public HasFaultResponseException(SCMPError error, String additionalInfo) {
+		super(error.getErrorText() + " [" + additionalInfo + "]");
+		this.fault.setError(error, additionalInfo);
 	}
 
 	public void setAttribute(SCMPHeaderAttributeKey key, String value) {

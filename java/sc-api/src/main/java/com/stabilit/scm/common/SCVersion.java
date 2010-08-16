@@ -73,19 +73,19 @@ public enum SCVersion {
 		}
 		String[] splitted = text.split("\\.|-");
 		if (splitted.length != 3) {
-			throw new SCMPValidatorException("invalid sc version [" + text + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
 		}
 		int release = Integer.parseInt(splitted[0]);
 		if (this.release != release) {
-			throw new SCMPValidatorException("invalid sc release nr. [" + text + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_RELEASE_NR, text);
 		}
 		int version = Integer.parseInt(splitted[1]);
 		if (this.version < version) {
-			throw new SCMPValidatorException("invalid sc version nr. [" + text + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
 		}
 		int revision = Integer.parseInt(splitted[2]);
 		if ((this.version == version) && (this.revision < revision)) {
-			throw new SCMPValidatorException("invalid sc revision nr. [" + text + "]");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_REVISION_NR, text);
 		}
 		return;
 	}

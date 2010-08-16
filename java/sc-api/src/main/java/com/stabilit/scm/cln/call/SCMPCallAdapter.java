@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -186,7 +187,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		@Override
 		public void invoke(ISCMPCallback callback) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
-				throw new SCMPCallException("group is closed");
+				LoggerPoint.getInstance().fireWarn(this, "tried to invoke groupCall but state of group is closed");
 			}
 			SCMPMessage callSCMP = this.parentCall.getRequest();
 			SCMPCallAdapter.this.requestMessage.setInternalStatus(SCMPInternalStatus.GROUP);
