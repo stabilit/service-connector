@@ -22,6 +22,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
@@ -99,22 +100,22 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 				// serviceName
 				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException("sessonId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 				// sc error code
 				String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
 				if (sec == null || sec.equals("")) {
-					throw new SCMPValidatorException("sec must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_CODE, "sc error code must be set");
 				}
 				// sc error text
 				String set = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT);
 				if (set == null || set.equals("")) {
-					throw new SCMPValidatorException("set must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_TEXT, "sc error text must be set");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

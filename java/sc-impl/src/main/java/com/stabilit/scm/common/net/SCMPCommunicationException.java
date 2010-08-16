@@ -20,7 +20,7 @@ import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
- * The Class SCMPCommunicationException. Occurs when communication fails.
+ * The Class SCMPCommunicationException. Communication on SCMP level failed.
  * 
  * @author JTraber
  */
@@ -30,12 +30,14 @@ public class SCMPCommunicationException extends HasFaultResponseException {
 	private static final long serialVersionUID = -7198688558643060L;
 
 	/**
-	 * Instantiates a new sCMP communication exception.
+	 * Instantiates a new SCMPCommunicationException.
 	 * 
-	 * @param errorCode
-	 *            the error code
+	 * @param error
+	 *            the error
+	 * @param additionalInfo
+	 *            the additional info
 	 */
-	public SCMPCommunicationException(SCMPError errorCode) {
-		super(errorCode);
+	public SCMPCommunicationException(SCMPError error, String additionalInfo) {
+		super(error, additionalInfo);
 	}
 }

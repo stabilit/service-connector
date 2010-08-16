@@ -73,15 +73,19 @@ public class NettyHttpConnection implements IConnection {
 	private InetSocketAddress localSocketAddress;
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
+	/** The connection context. */
 	private IConnectionContext connectionContext;
 	/** state of connection. */
 	private boolean connected;
+	/** The idle timeout. */
 	protected int idleTimeout;
+	/** The number of idles, counts idle states. */
 	private int nrOfIdles;
+	/** The timer to observe timeouts, static because should be shared. */
 	private static Timer timer;
 	/*
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread
-	 * accepts incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts
+	 * incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 
@@ -129,21 +133,23 @@ public class NettyHttpConnection implements IConnection {
 	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", Constants.CONNECT_TIMEOUT_MILLIS);
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext,
-				NettyHttpConnection.timer);
+		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyHttpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+		this.localSocketAddress = new InetSocketAddress(host, port);
+		ChannelFuture future = bootstrap.connect(this.localSocketAddress);
 		this.operationListener = new NettyOperationListener();
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(
-					Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS).getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
+					.getChannel();
+			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
+					+ this.localSocketAddress.toString());
 		}
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 		this.connected = true;
@@ -158,7 +164,8 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
+					+ this.localSocketAddress.toString());
 		}
 		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
 	}
@@ -192,8 +199,7 @@ public class NettyHttpConnection implements IConnection {
 		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
 
-		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(
-				NettyHttpRequesterResponseHandler.class);
+		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);
 
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
@@ -204,7 +210,8 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_LOST);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
+					+ this.localSocketAddress);
 		}
 		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
 		return;

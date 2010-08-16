@@ -57,7 +57,7 @@ public class PublishService extends Service implements IPublishService {
 	/** {@inheritDoc} */
 	@Override
 	public void changeSubscription(String mask) throws Exception {
-		if (this.callback == null) {
+		if (this.subscribed == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		this.msgId.incrementMsgSequenceNr();

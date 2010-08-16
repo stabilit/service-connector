@@ -163,7 +163,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			}
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
-			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
@@ -232,7 +232,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) th).setFaultResponse(response);
 		} else {
-			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR);
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
@@ -244,7 +244,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	}
 
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST);
+		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);

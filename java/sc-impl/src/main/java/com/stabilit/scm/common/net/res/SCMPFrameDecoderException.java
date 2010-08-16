@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,26 +13,31 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.net.res;
+
+import com.stabilit.scm.common.scmp.HasFaultResponseException;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPMsgType;
+
 /**
+ * The Class SCMPFrameDecoderException. Decoding SCMP frame fails.
  * 
- */
-package com.stabilit.scm.common.net.req;
-
-/**
  * @author JTraber
- *
  */
-public class ConnectionPoolException extends Exception {
+public class SCMPFrameDecoderException extends HasFaultResponseException {
 
-	private static final long serialVersionUID = -4611941547421470420L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -6537338790870840933L;
 
-	public ConnectionPoolException(String message) {
-		super(message);
-	}
-
-	public ConnectionPoolException(String message, Throwable cause) {
-		super(message, cause);
+	/**
+	 * Instantiates a new SCMPFrameDecoderException.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 */
+	public SCMPFrameDecoderException(SCMPError errorCode) {
+		super(errorCode);
+		this.setMessageType(SCMPMsgType.UNDEFINED);
 	}
 }

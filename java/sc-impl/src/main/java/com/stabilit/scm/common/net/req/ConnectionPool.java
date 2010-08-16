@@ -137,18 +137,15 @@ public class ConnectionPool implements IConnectionPool {
 	@Override
 	public IConnection getConnection() throws Exception {
 		IConnection connection = null;
-
 		synchronized (freeConnections) {
 			if (freeConnections.size() > 0) {
 				connection = freeConnections.remove(0);
 			}
 		}
-
 		if (connection == null) {
 			// no free connection available - try to create a new one
 			connection = this.createNewConnection();
 		}
-
 		this.usedConnections.add(connection);
 		return connection;
 	}
@@ -164,7 +161,7 @@ public class ConnectionPool implements IConnectionPool {
 		IConnection connection = null;
 		if (usedConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
-			throw new ConnectionPoolException("Unable to create new connection - limit of : " + maxConnections
+			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections
 					+ " reached!");
 		}
 		// we create a new one
@@ -178,7 +175,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.connect(); // can throw an exception
 		} catch (Throwable th) {
-			throw new ConnectionPoolException("Unable to establish new connection.", th);
+			throw new ConnectionPoolConnectException("Unable to establish new connection.", th);
 		}
 		return connection;
 	}

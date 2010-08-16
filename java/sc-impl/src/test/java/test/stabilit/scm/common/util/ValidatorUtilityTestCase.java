@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
@@ -57,7 +58,7 @@ public class ValidatorUtilityTestCase {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Validate ip address list.
 	 */
@@ -79,7 +80,7 @@ public class ValidatorUtilityTestCase {
 			ValidatorUtility.validateIpAddressList("127.0.0.1545");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("iplist has wrong format.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0.1545]", e.getMessage());
 		}
 
 		try {
@@ -87,7 +88,7 @@ public class ValidatorUtilityTestCase {
 			ValidatorUtility.validateIpAddressList("127.0.0");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("iplist has wrong format.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0]", e.getMessage());
 		}
 
 		try {
@@ -95,7 +96,7 @@ public class ValidatorUtilityTestCase {
 			ValidatorUtility.validateIpAddressList("127.0.0.1/");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("iplist has wrong format.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0.1/]", e.getMessage());
 		}
 	}
 
@@ -107,57 +108,62 @@ public class ValidatorUtilityTestCase {
 		// validate int value with lower limit
 		try {
 			// greater than lowerLimit
-			ValidatorUtility.validateInt(0, "1");
+			ValidatorUtility.validateInt(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
 		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
 		try {
 			// lower than lowerLimit
-			ValidatorUtility.validateInt(0, "-1");
+			ValidatorUtility.validateInt(0, "-1", SCMPError.HV_WRONG_MAX_SESSIONS);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("intValue to low.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue -1 too low]", e
+					.getMessage());
 		}
 
 		try {
 			// no nummeric value
-			ValidatorUtility.validateInt(0, "");
+			ValidatorUtility.validateInt(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("intValue must be numeric.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue  must be numeric]", e
+					.getMessage());
 		}
 
 		// validate int value with lower & upper limit
 		try {
 			// greater than lowerLimit and lower than upperLimit
-			ValidatorUtility.validateInt(0, "1", 2);
+			ValidatorUtility.validateInt(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
 		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
 		try {
 			// lower than lowerLimit
-			ValidatorUtility.validateInt(0, "-1", 2);
+			ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("intValue not within limits.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 not within limits]", e
+					.getMessage());
 		}
 
 		try {
 			// higher than upperLimit
-			ValidatorUtility.validateInt(0, "3", 2);
+			ValidatorUtility.validateInt(0, "3", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("intValue not within limits.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 not within limits]", e
+					.getMessage());
 		}
 
 		try {
 			// no nummeric value
-			ValidatorUtility.validateInt(0, "", 1);
+			ValidatorUtility.validateInt(0, "", 1, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("intValue must be numeric.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue  must be numeric]", e
+					.getMessage());
 		}
 	}
 
@@ -169,27 +175,29 @@ public class ValidatorUtilityTestCase {
 
 		try {
 			// length is between 1 and 4
-			ValidatorUtility.validateString(1, "abc", FOUR);
+			ValidatorUtility.validateStringLength(1, "abc", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 			// length is between 1 and 4
-			ValidatorUtility.validateString(1, "a", FOUR);
+			ValidatorUtility.validateStringLength(1, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
 		try {
 			// length is shorter than 2
-			ValidatorUtility.validateString(2, "a", FOUR);
+			ValidatorUtility.validateStringLength(2, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
+					+ " [StringValue length 1 is not within limits]", e.getMessage());
 		}
 
 		try {
 			// length is longer than 2
-			ValidatorUtility.validateString(1, "abc", 2);
+			ValidatorUtility.validateStringLength(1, "abc", 2, SCMPError.HV_WRONG_SESSION_INFO);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals("stringValue length is not within limits.", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
+					+ " [StringValue length 3 is not within limits]", e.getMessage());
 		}
 	}
 }

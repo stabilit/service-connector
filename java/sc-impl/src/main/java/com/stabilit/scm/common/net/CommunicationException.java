@@ -34,26 +34,7 @@ public class CommunicationException extends Exception {
 	/**
 	 * Instantiates a new communication exception.
 	 * 
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public CommunicationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * Instantiates a new communication exception.
-	 * 
-	 * @param cause the cause
-	 */
-	public CommunicationException(Throwable cause) {
-		super(cause);
-	}
-
-	/**
-	 * Instantiates a new communication exception.
-	 * 
-	 * @param errorMsg the error msg
+	 * @param errorMsg the error message
 	 */
 	public CommunicationException(String errorMsg) {
 		super(errorMsg);

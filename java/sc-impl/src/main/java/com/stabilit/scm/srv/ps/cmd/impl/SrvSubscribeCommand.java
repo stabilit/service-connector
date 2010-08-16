@@ -22,6 +22,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
@@ -97,34 +98,31 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException("messageId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
 				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException("serviceName must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException("sessionId must be set!");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				if (mask == null) {
-					throw new SCMPValidatorException("mask must be set!");
-				}
+				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 				if (mask.indexOf("%") != -1) {
 					// percent sign in mask not allowed
-					throw new SCMPValidatorException("percent sign found in mask - not allowed.");
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed");
 				}
-				ValidatorUtility.validateString(1, mask, 256);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
 				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-				ValidatorUtility.validateString(1, sessionInfo, 256);
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(SrvSubscribeCommand.this.getKey());

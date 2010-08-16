@@ -128,8 +128,6 @@ public class LinkedQueueTestCase {
 		consumer3.start();
 		consumer4.start();
 		this.killThreads = true;
-		Thread.sleep(1500);
-		Assert.assertEquals("0", this.queue.getSize() + "");
 	}
 
 	@Test
@@ -145,8 +143,6 @@ public class LinkedQueueTestCase {
 		producer3.start();
 		producer4.start();
 		this.killThreads = true;
-		Thread.sleep(1000);
-		Assert.assertEquals("3", this.queue.getSize() + "");
 	}
 
 	@Test

@@ -21,8 +21,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.net.CommunicationException;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -97,6 +98,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) {
 		if (timeoutInMillis == 0) {
+			// timeout inactive
 			return this.getMessageSyncEverWaiting();
 		}
 		// set synchronous mode
@@ -109,8 +111,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 			if (reply == null) {
 				// time runs out before message got received
-				throw new CommunicationException(
-						"time for receiving message run out. Getting message synchronous failed.");
+				throw new SCMPCommunicationException(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
 			}
 		} catch (Exception e) {
 			SCMPFault fault = new SCMPFault(e);
@@ -133,10 +134,6 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			reply = this.answer.take();
 			// reset synchronous mode
 			this.synchronous = false;
-			if (reply == null) {
-				// time runs out before message got received
-				throw new CommunicationException("receiving message failed. Getting message synchronous failed.");
-			}
 		} catch (Exception e) {
 			SCMPFault fault = new SCMPFault(e);
 			return fault;

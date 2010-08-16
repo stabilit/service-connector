@@ -20,12 +20,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
  * The Class CommunicatorConfigPool. Processes scm property files.
@@ -75,7 +75,8 @@ public abstract class CommunicatorConfigPool {
 		}
 
 		if (is == null) {
-			throw new InvalidParameterException("could not find property file : " + fileName);
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "could not find property file: "
+					+ fileName);
 		}
 		props = new Properties();
 		props.load(is);
@@ -83,7 +84,7 @@ public abstract class CommunicatorConfigPool {
 		String respNames = props.getProperty(topLevelPropsKey);
 
 		if (respNames == null) {
-			throw new SCMPValidatorException("wrong format of configuration file, top level key not found : "
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "top level key not found: "
 					+ topLevelPropsKey);
 		}
 

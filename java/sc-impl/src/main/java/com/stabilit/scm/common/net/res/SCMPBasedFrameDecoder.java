@@ -22,6 +22,7 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
+import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
@@ -67,14 +68,15 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 				}
 				this.decodeState = DecodeState.SIZE;
 			} catch (FrameDecoderException e) {
+				ExceptionPoint.getInstance().fireException(this, e);
 				decodeState = DecodeState.EXC;
-				throw new SCMPDecoderException(SCMPError.FRAME_DECODER, e);
+				throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);
 			}
 			break;
 		case SIZE:
 			break;
 		default:
-			throw new SCMPDecoderException(SCMPError.FRAME_DECODER);
+			throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);
 		}
 		if (this.decodeState == DecodeState.SIZE) {
 			int readableBytes = buffer.readableBytes();

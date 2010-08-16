@@ -22,9 +22,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
- * The Class ValidatorUtility.
+ * The Class ValidatorUtility. Provides validation functions for checking header fields of requestFs.
  * 
  * @author JTraber
  */
@@ -58,7 +59,7 @@ public final class ValidatorUtility {
 		try {
 			localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
 		} catch (ParseException ex) {
-			throw new SCMPValidatorException("ParseException when parsing localDateTime: " + localDateTimeString);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, localDateTimeString);
 		}
 		return localDateTime;
 	}
@@ -74,7 +75,7 @@ public final class ValidatorUtility {
 	public static void validateIpAddressList(String ipAddressListString) throws SCMPValidatorException {
 		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
 		if (!m.matches()) {
-			throw new SCMPValidatorException("iplist has wrong format.");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_IPLIST_FORMAT, ipAddressListString);
 		}
 	}
 
@@ -85,23 +86,26 @@ public final class ValidatorUtility {
 	 *            the lower inclusive limit
 	 * @param intStringValue
 	 *            the integer string value
-	 * @return the integer
+	 * @param error
+	 *            the error to be thrown in case of an invalidation
+	 * @return the valid integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimitInc, String intStringValue) throws SCMPValidatorException {
+	public static int validateInt(int lowerLimitInc, String intStringValue, SCMPError error)
+			throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException("intValue must be set.");
+			throw new SCMPValidatorException(error, "IntValue must be set");
 		}
 		int intValue = 0;
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			throw new SCMPValidatorException("intValue must be numeric.");
+			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
 		}
 
 		if (intValue < lowerLimitInc) {
-			throw new SCMPValidatorException("intValue to low.");
+			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " too low");
 		}
 		return intValue;
 	}
@@ -112,27 +116,29 @@ public final class ValidatorUtility {
 	 * @param lowerLimitInc
 	 *            the lower inclusive limit
 	 * @param intStringValue
-	 *            the integer string value
+	 *            the integer string value to validate
 	 * @param upperLimitInc
 	 *            the upper inclusive limit
-	 * @return the integer
+	 * @param error
+	 *            the error to be thrown in case of an invalidation
+	 * @return the valid integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc)
+	public static int validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException("intValue must be set.");
+			throw new SCMPValidatorException(error, "IntValue must be set");
 		}
 		int intValue = 0;
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			throw new SCMPValidatorException("intValue must be numeric.");
+			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
 		}
 
 		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
-			throw new SCMPValidatorException("intValue not within limits.");
+			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " not within limits");
 		}
 		return intValue;
 	}
@@ -149,53 +155,16 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static void validateString(int minSizeInc, String stringValue, int maxSizeInc) throws SCMPValidatorException {
+	public static void validateStringLength(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
+			throws SCMPValidatorException {
 
 		if (stringValue == null) {
-			throw new SCMPValidatorException("stringValue must be set.");
+			throw new SCMPValidatorException(error, "StringValue must be set");
 		}
 		int length = stringValue.getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
-			throw new SCMPValidatorException("stringValue length is not within limits.");
+			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits");
 		}
-	}
-
-	/**
-	 * Validate boolean. Be careful if booleanValue is null - null will be returned. If you unbox the return value to
-	 * type of boolean a NullPointerException will be thrown.
-	 * 
-	 * @param booleanValue
-	 *            the boolean value
-	 * @return the boolean
-	 */
-	public static Boolean validateBoolean(String booleanValue) {
-		if (booleanValue == null) {
-			return null;
-		}
-		if ("0".equals(booleanValue)) {
-			return false;
-		}
-		if ("1".equals(booleanValue)) {
-			return true;
-		}
-		return null;
-	}
-
-	/**
-	 * Validate boolean. Returns defaultValue if string value is not a valid boolean.
-	 * 
-	 * @param booleanValue
-	 *            the boolean value
-	 * @param defaultValue
-	 *            the default value
-	 * @return the boolean
-	 */
-	public static Boolean validateBoolean(String booleanValue, Boolean defaultValue) {
-		Boolean booleanVal = ValidatorUtility.validateBoolean(booleanValue);
-		if (booleanVal == null) {
-			return defaultValue;
-		}
-		return booleanVal;
 	}
 }

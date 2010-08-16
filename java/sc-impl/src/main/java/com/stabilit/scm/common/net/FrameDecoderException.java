@@ -28,13 +28,6 @@ public class FrameDecoderException extends Exception {
 
 	/**
 	 * Instantiates a new frame decoder exception.
-	 */
-	public FrameDecoderException() {
-		super();
-	}
-
-	/**
-	 * Instantiates a new frame decoder exception.
 	 * 
 	 * @param message
 	 *            the message

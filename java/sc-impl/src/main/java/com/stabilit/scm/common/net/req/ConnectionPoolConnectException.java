@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,41 +15,27 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.net.res;
-
-import com.stabilit.scm.common.scmp.HasFaultResponseException;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
+package com.stabilit.scm.common.net.req;
 
 /**
- * The Class SCMPDecoderException. Occurs when decoding SCMP frame fails.
+ * The Class ConnectionPoolConnectException. Connection pool failed when establish a connection.
  * 
  * @author JTraber
  */
-public class SCMPDecoderException extends HasFaultResponseException {
+public class ConnectionPoolConnectException extends Exception {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -6537338790870840933L;
+	private static final long serialVersionUID = -4611941547421470420L;
 
 	/**
-	 * Instantiates a new SCMPValidatorException.
+	 * Instantiates a new connection pool connect exception.
 	 * 
-	 * @param errorCode
-	 *            the error code
-	 */
-	public SCMPDecoderException(SCMPError errorCode, Throwable cause) {
-		super(errorCode, cause);
-		this.setMessageType(SCMPMsgType.UNDEFINED);
-	}
-
-	/**
-	 * Instantiates a new SCMPDecoderException.
-	 * 
-	 * @param msg
+	 * @param message
 	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
-	public SCMPDecoderException(SCMPError errorCode) {
-		super(errorCode);
-		this.setMessageType(SCMPMsgType.UNDEFINED);
+	public ConnectionPoolConnectException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }
