@@ -199,6 +199,12 @@ public class SCClient implements ISCClient {
 	public void setMaxConnections(int maxConnections) {
 		this.connectionPool.setMaxConnections(maxConnections);
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public int getMaxConnections() {
+		return this.connectionPool.getMaxConnections();
+	}
 
 	/**
 	 * The Class ServiceConnectorContext.

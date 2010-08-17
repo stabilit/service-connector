@@ -83,12 +83,20 @@ public interface ISCClient extends ISC {
 	public abstract ISessionService newSessionService(String serviceName);
 
 	/**
-	 * Sets the max connections.
+	 * Sets the max connections. If client is already connected to the SC and max connections is lower than
+	 * default value or value set earlier connection pool is not reducing the connections immediately.
 	 * 
 	 * @param maxConnections
-	 *            the new max connections
+	 *            the new max connections used by connection pool.
 	 */
 	public abstract void setMaxConnections(int maxConnections);
+
+	/**
+	 * Gets the max connections.
+	 * 
+	 * @return the max connections used in pool
+	 */
+	public abstract int getMaxConnections();
 
 	/** {@inheritDoc} */
 	@Override

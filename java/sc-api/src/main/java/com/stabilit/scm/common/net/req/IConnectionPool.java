@@ -66,7 +66,7 @@ public interface IConnectionPool {
 	public abstract void setMaxConnections(int maxConnections);
 
 	/**
-	 * Sets the minimum connections for the ooll.
+	 * Sets the minimum connections for the pool.
 	 * 
 	 * @param minConnections
 	 *            the new minimum connections
