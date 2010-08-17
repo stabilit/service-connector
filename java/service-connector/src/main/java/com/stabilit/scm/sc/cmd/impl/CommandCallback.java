@@ -12,7 +12,6 @@ public class CommandCallback extends SynchronousCallback {
 
 	@Override
 	public void callback(Throwable th) {
-
 		SCMPMessage fault = null;
 		if (th instanceof IdleTimeoutException) {
 			// operation timeout handling

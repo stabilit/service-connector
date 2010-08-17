@@ -20,8 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.unit.test.SetupTestCases;

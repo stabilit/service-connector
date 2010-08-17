@@ -18,22 +18,19 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
-import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
@@ -42,7 +39,6 @@ import com.stabilit.scm.sc.service.PublishService;
 import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
-import com.stabilit.scm.srv.ps.cmd.impl.SrvSubscribeCommand;
 
 /**
  * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a
@@ -81,27 +77,14 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		int noDataInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
-
-		if (reply.isFault()) {
-			// exception handling
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			SCMPFault fault = (SCMPFault) reply;
-			Throwable th = fault.getCause();
-			if (th instanceof IdleTimeoutException) {
-				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
-						SrvSubscribeCommand.class.getSimpleName());
-				scmpEx.setMessageType(getKey());
-				throw scmpEx;
-			}
-			throw th;
-		}
-		Boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+		// no specific error handling in case of fault - everything is or will be done anyway
+		
+		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.FALSE.equals(rejectSessionFlag)) {
-			//session has not been rejected, add server to session
+			// session has not been rejected, add server to session
 			session.setServer(server);
 			// finally add subscription to the registry
 			SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
@@ -270,12 +253,5 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnSubscribeCommandCallback.
-	 */
-	private class ClnSubscribeCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

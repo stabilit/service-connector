@@ -21,8 +21,8 @@
  */
 package com.stabilit.scm.cln;
 
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 

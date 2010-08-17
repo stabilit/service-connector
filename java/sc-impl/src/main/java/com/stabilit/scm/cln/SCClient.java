@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import com.stabilit.scm.cln.service.IFileService;
+import com.stabilit.scm.cln.service.IPublishService;
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -27,9 +30,6 @@ import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
-import com.stabilit.scm.common.service.IFileService;
-import com.stabilit.scm.common.service.IPublishService;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;

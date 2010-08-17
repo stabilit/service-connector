@@ -1,9 +1,9 @@
 package com.stabilit.scm.cln.ps;
 
 import com.stabilit.scm.cln.SCClient;
+import com.stabilit.scm.cln.service.IPublishService;
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.common.service.IPublishService;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
 

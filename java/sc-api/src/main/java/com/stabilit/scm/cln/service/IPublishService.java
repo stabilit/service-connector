@@ -19,9 +19,9 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.common.service.ISCMessageCallback;
 
 /**
  * The Interface IPublishService.

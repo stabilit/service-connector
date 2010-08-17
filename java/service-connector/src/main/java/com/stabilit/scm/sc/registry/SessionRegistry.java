@@ -23,8 +23,13 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.registry.Registry;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.util.ITimerRun;
 import com.stabilit.scm.common.util.TimerTaskWrapper;
+import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
@@ -156,10 +161,16 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	private class SessionTimerRun implements ITimerRun {
 
+		/** Error text in case of a session abortion. */
+		private static final String ABORT_SESSION_ERROR_STRING = "session timed out";
 		/** The session. */
 		private Session session;
 		/** The timeout. */
 		private int timeoutSeconds;
+		/** The callback, callback to send abort session. */
+		private ISCMPCallback callback;
+		/** The abort message, message to send to server in case of a session abortion. */
+		private SCMPMessage abortMessage;
 
 		/**
 		 * Instantiates a new session timer run.
@@ -170,6 +181,10 @@ public class SessionRegistry extends Registry<String, Session> {
 		public SessionTimerRun(Session session) {
 			this.session = session;
 			this.timeoutSeconds = session.getEchoIntervalSeconds();
+			this.callback = new SessionTimerRunCallback();
+			this.abortMessage = new SCMPMessage();
+			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, ABORT_SESSION_ERROR_STRING);
 		}
 
 		/**
@@ -177,14 +192,18 @@ public class SessionRegistry extends Registry<String, Session> {
 		 */
 		@Override
 		public void timeout() {
-			// we assume that this session is dead
-			// TODO verify with jan
 			/**
 			 * broken session procedure<br>
 			 * 1. remove session from session registry<br>
-			 * 2. remove session from server<br>
+			 * 2. abort session on backend server<br>
+			 * 3. remove session from server<br>
 			 */
 			SessionRegistry.this.removeSession(session);
+			Server server = session.getServer();
+			// aborts session on server
+			abortMessage.setServiceName(server.getServiceName());
+			abortMessage.setSessionId(session.getId());
+			server.serverAbortSession(abortMessage, callback);
 			// removes session on server
 			session.getServer().removeSession(session);
 			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
@@ -195,6 +214,23 @@ public class SessionRegistry extends Registry<String, Session> {
 		@Override
 		public int getTimeoutSeconds() {
 			return this.timeoutSeconds;
+		}
+
+		/**
+		 * The Class SessionTimerRunCallback. For abort session callback is irrelevant. Nobody is going to wait/evaluate
+		 * for the response.
+		 */
+		private class SessionTimerRunCallback implements ISCMPCallback {
+
+			@Override
+			public void callback(SCMPMessage scmpReply) throws Exception {
+				// nothing to do in callback
+			}
+
+			@Override
+			public void callback(Throwable th) {
+				// nothing to do in callback
+			}
 		}
 	}
 }

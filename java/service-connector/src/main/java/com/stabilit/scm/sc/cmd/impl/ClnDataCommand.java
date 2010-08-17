@@ -22,6 +22,7 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.IResponderCallback;
+import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -127,6 +128,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	 */
 	private class ClnDataCommandCallback implements ISCMPCallback {
 
+		private static final String ERROR_STRING = "clnDataCommand execution failed";
 		/** The callback. */
 		private IResponderCallback callback;
 		/** The request. */
@@ -161,8 +163,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Throwable th) {
-			SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, "clnDataCommand execution failed");
-			fault.setIsReply(true);
+			SCMPMessage fault = null;
+			if (th instanceof IdleTimeoutException) {
+				// operation timeout handling
+				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING);
+			} else {
+				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING);
+			}
 			this.callback(fault);
 		}
 	}

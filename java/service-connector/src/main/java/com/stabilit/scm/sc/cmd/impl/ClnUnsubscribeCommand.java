@@ -23,11 +23,11 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
@@ -58,30 +58,21 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 
 		// lookup session and checks properness
 		Session session = this.getSubscriptionSessionById(sessionId);
-
-		Server server = session.getServer();
-		SCMPMessage reply = null;
-		try {
-			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback();
-			server.unsubscribe(message, callback);
-			reply = callback.getMessageSync();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-			/**
-			 * error in unsubscribe process<br>
-			 * 1. delete subscription in registry on SC<br>
-			 * 2. destroy subscription - dereference messages in subscription queue<br>
-			 * 3. EXC message to client<br>
-			 **/
-			// TODO verify with jan error handling
-		}
-		// looks up subscription queue
+		// looks up subscription queue and stops publish mechanism
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
 		subscriptionQueue.unsubscribe(sessionId);
-		// delete session on server successful - delete entry from session registry
+		// delete entry from session registry
 		this.subscriptionRegistry.removeSession(session);
-		server.removeSession(session);
 
+		// unsubscribe on backend server
+		Server server = session.getServer();
+		SCMPMessage reply = null;
+		ISCMPSynchronousCallback callback = new CommandCallback();
+		server.unsubscribe(message, callback);
+		reply = callback.getMessageSync();
+		// no specific error handling in case of fault - everything is done anyway
+		
+		server.removeSession(session);
 		// forward reply to client
 		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		reply.setIsReply(true);
@@ -125,12 +116,5 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnSubscribeCommandCallback.
-	 */
-	private class ClnSubscribeCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

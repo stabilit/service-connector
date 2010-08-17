@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.cln.service;
 
 import java.io.InputStream;
 import java.io.OutputStream;

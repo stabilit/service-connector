@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -34,8 +37,13 @@ import com.stabilit.scm.sc.service.Service;
  */
 public class ManageCommand extends CommandAdapter {
 
+	private static final String DISABLE = "disable";
+	private static final String ENABLE = "enable";
+	private static final String MANAGE_REGEX_STRING = "(" + ENABLE + "|" + DISABLE + ")=(.*)";
+	private static final Pattern MANAGE_PATTER = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
+
 	/**
-	 * Instantiates a new InspectCommand.
+	 * Instantiates a new manage command.
 	 */
 	public ManageCommand() {
 		this.commandValidator = new ManageCommandValidator();
@@ -60,23 +68,34 @@ public class ManageCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 
 		SCMPMessage reqMsg = request.getMessage();
-		String serviceName = (String) reqMsg.getBody();
+		String bodyString = (String) reqMsg.getBody();
 
-		if (disabledServiceRegistry.containsKey(serviceName)) {
-			Service service = disabledServiceRegistry.removeService(serviceName);
-			serviceRegistry.addService(serviceName, service);
+		Matcher m = MANAGE_PATTER.matcher(bodyString);
+		if (!m.matches()) {
+			// given string has bad format
 			return;
 		}
 
+		String serviceName = m.group(0);
+		String stateString = m.group(1);
+
+		if (stateString.equalsIgnoreCase(ENABLE)) {
+			// enable service is requested
+			if (disabledServiceRegistry.containsKey(serviceName)) {
+				Service service = disabledServiceRegistry.removeService(serviceName);
+				serviceRegistry.addService(serviceName, service);
+			}
+			return;
+		}
 		if (serviceRegistry.containsKey(serviceName)) {
-			// TODO verify with jan .. how to disable service
+			// disable service requested
 			Service service = serviceRegistry.removeService(serviceName);
 			disabledServiceRegistry.addService(serviceName, service);
 		}
 	}
 
 	/**
-	 * The Class InspectCommandValidator.
+	 * The Class ManageCommandValidator.
 	 */
 	private class ManageCommandValidator implements ICommandValidator {
 

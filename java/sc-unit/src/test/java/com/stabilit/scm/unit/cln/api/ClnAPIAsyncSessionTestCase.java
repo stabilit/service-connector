@@ -21,12 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISC;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;

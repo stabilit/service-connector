@@ -19,17 +19,15 @@ package com.stabilit.scm.sc.cmd.impl;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -61,45 +59,33 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		String sessionId = message.getSessionId();
 		// lookup session and checks properness
 		Session session = this.getSessionById(sessionId);
+		// delete entry from session registry
+		this.sessionRegistry.removeSession(session);
 
 		Server server = session.getServer();
 		SCMPMessage reply = null;
-		ClnDeleteSessionCommandCallback callback = new ClnDeleteSessionCommandCallback();
-		try {
-			server.deleteSession(message, callback);
-			reply = callback.getMessageSync();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+		ISCMPSynchronousCallback callback = new CommandCallback();
+		server.deleteSession(message, callback);
+		reply = callback.getMessageSync();
+
+		if (reply.isFault()) {
 			/**
 			 * error in deleting session process<br>
-			 * 1. delete session on SC<br>
-			 * 2. deregister server from service<br>
+			 * 1. deregister server from service<br>
 			 * 3. SRV_ABORT_SESSION (SAS) to server<br>
 			 * 4. destroy server<br>
-			 * 5. EXC message to client<br>
 			 **/
-			this.sessionRegistry.removeSession(sessionId);
 			server.getService().removeServer(server);
-			server.removeSession(session);
 			// set up server abort session message - don't forward messageId & include error stuff
 			message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SC_ERROR.getErrorCode());
-			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SC_ERROR.getErrorText()
+			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
 					+ " [delete session failed]");
-			message.setBody("ServerDeleteSession failed for sessionId " + sessionId);
 			server.serverAbortSession(message, callback);
-			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT);
 			server.destroy();
-			// set up client EXC message
-			SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, "delete session failed");
-			fault.setMessageType(getKey());
-			response.setSCMP(fault);
-			return;
 		}
 		// free server from session
 		server.removeSession(session);
-		// delete session on server successful - delete entry from session registry
-		this.sessionRegistry.removeSession(session);
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());
@@ -142,12 +128,5 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnDeleteSessionCommandCallback.
-	 */
-	private class ClnDeleteSessionCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

@@ -221,10 +221,8 @@ public class SubscriptionQueue<E> {
 	 */
 	public void unsubscribe(String sessionId) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
-		if (dataPointer != null) {
-			dataPointer.cancel();
-			this.pointerMap.remove(sessionId);
-		}
+		this.pointerMap.remove(sessionId);
+		dataPointer.destroy();
 	}
 
 	/**
@@ -380,6 +378,21 @@ public class SubscriptionQueue<E> {
 			// schedules subscriptionTimeouter on subscription queue timer
 			SubscriptionQueue.this.timer
 					.schedule(this.subscriptionTimeouter, timeout * Constants.SEC_TO_MILISEC_FACTOR);
+		}
+
+		/**
+		 * Destroys data pointer and dereferences node in queue.
+		 */
+		public void destroy() {
+			this.cancel();
+			if (node != null) {
+				this.node.dereference();
+			}
+			this.node = null;
+			this.timerRun = null;
+			this.listening = false;
+			this.filterMask = null;
+			this.subscriptionTimeouter = null;
 		}
 
 		/**

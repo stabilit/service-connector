@@ -21,14 +21,15 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -57,11 +58,12 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	@Override
 	public void run(IRequest request, IResponse response) throws Throwable {
 		SCMPMessage message = request.getMessage();
-		Session session = this.getSessionById(message.getSessionId());
+		String sessionId = message.getSessionId();
+		Session session = this.getSessionById(sessionId);
 		Server server = session.getServer();
 
 		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
-		ClnEchoCommandCallback callback = new ClnEchoCommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback();
 		server.serverEcho(message, callback);
 		SCMPMessage result = callback.getMessageSync(session.getEchoTimeoutSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
 
@@ -74,11 +76,10 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			 **/
 			this.sessionRegistry.removeSession(message.getSessionId());
 			server.removeSession(session);
-			ExceptionPoint.getInstance().fireException(this, new Exception("genau1"));
+			LoggerPoint.getInstance().fireWarn(this, "echo failed - session destroyed " + sessionId);
 		}
 		result.removeHeader(SCMPHeaderAttributeKey.SRV_RES_ID);
 		result.setMessageType(getKey());
-		// result.setHeader(SCMPHeaderAttributeKey.SC_RES_ID, request.getRemoteSocketAddress().hashCode());
 		response.setSCMP(result);
 	}
 
@@ -119,12 +120,5 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnEchoCommandCallback.
-	 */
-	private class ClnEchoCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

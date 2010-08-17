@@ -23,6 +23,7 @@ import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -71,17 +72,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		CommandCallback callback = new CommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
-
-		if (reply.isFault()) {
-			// handling fault happens in callback, just need to set message type here
-			reply.setMessageType(getKey());
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			response.setSCMP(reply);
-			return;
-		}
+		// no specific error handling in case of fault - everything is or will be done anyway
 
 		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (Boolean.FALSE.equals(rejectSessionFlag)) {

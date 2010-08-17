@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.call;
 
-import com.stabilit.scm.cln.call.SCMPCallAdapter;
+import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
@@ -25,25 +26,31 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
+public class SCMPSrvAbortSessionCall extends SCMPServerCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPSrvAbortSessionCall.
 	 */
 	public SCMPSrvAbortSessionCall() {
-		this(null, null, null);
+		this(null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPSrvAbortSessionCall.
+	 * Instantiates a new SCMP srv abort session call.
 	 * 
 	 * @param req
-	 *            the client
-	 * @param scSession
-	 *            the scmp session
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
 	 */
-	public SCMPSrvAbortSessionCall(IRequester req, String serviceName, String sessionId) {
-		super(req, serviceName, sessionId);
+	public SCMPSrvAbortSessionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IRequester req, SCMPMessage message) {
+		return null;
 	}
 
 	/** {@inheritDoc} */

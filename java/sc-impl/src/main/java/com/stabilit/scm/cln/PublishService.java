@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnChangeSubscriptionCall;
@@ -27,7 +28,6 @@ import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.service.IPublishService;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;

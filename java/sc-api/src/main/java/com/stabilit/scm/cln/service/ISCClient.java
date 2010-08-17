@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.service;
+package com.stabilit.scm.cln.service;
 
-import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.common.service.ISC;
+import com.stabilit.scm.common.service.ISCContext;
 
 /**
  * The Interface IServiceConnector.
