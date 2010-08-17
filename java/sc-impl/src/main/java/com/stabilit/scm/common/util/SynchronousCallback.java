@@ -21,7 +21,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -39,7 +38,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** Queue to store the answer. */
-	private final BlockingQueue<SCMPMessage> answer;
+	protected final BlockingQueue<SCMPMessage> answer;
 	/** The synchronous, marks if somebody waits for the message. */
 	protected volatile boolean synchronous;
 
@@ -53,7 +52,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(SCMPMessage scmpReply) throws Exception {
+	public void callback(SCMPMessage scmpReply) {
 		// TODO activate later - very bad for testing purpose
 		// if (this.synchronous == false) {
 		// // offering is only allowed if someone is expecting a message - prevents race conditions, an answer might
@@ -111,7 +110,8 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 			if (reply == null) {
 				// time runs out before message got received
-				throw new SCMPCommunicationException(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
+				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
+				return fault;
 			}
 		} catch (Exception e) {
 			SCMPFault fault = new SCMPFault(e);

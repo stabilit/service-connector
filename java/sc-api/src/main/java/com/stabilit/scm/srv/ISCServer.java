@@ -101,4 +101,8 @@ public interface ISCServer extends ISC {
 	 *             the exception
 	 */
 	public abstract void startServer() throws Exception;
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract int getKeepAliveInterval();
 }

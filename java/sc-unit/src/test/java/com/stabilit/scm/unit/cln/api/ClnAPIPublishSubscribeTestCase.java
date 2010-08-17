@@ -79,7 +79,7 @@ public class ClnAPIPublishSubscribeTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", "sessionInfo", 300,  callback);
+			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -100,7 +100,7 @@ public class ClnAPIPublishSubscribeTestCase {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) throws Exception {
+		public void callback(ISCMessage reply) {
 			publishedMessageCounter++;
 			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
 					+ publishedMessageCounter);

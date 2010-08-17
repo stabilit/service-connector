@@ -122,7 +122,7 @@ public class SCServer implements ISCServer {
 		// attributes for registerService
 		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.immediateConnect = true;
-		this.keepAliveInterval = 0;
+		this.keepAliveInterval = keepAliveInterval;
 		this.localServerHost = null;
 		this.localServerPort = 0;
 		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, keepAliveInterval);
@@ -158,7 +158,13 @@ public class SCServer implements ISCServer {
 	public int getPort() {
 		return scPort;
 	}
-
+	
+	/** {@inheritDoc} */
+	@Override
+	public int getKeepAliveInterval() {
+		return this.keepAliveInterval;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void setMaxSessions(int maxSessions) {

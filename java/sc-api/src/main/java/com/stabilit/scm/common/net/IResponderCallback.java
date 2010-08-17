@@ -25,11 +25,12 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 
 /**
+ * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous
+ * commands.
+ * 
  * @author JTraber
  */
 public interface IResponderCallback {
 
 	public abstract void callback(IRequest request, IResponse response);
-
-	public abstract void callback(IResponse response, Throwable th);
 }

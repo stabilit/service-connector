@@ -33,8 +33,8 @@ import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
- * functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
+ * communication functions.
  */
 public class PublishService extends Service implements IPublishService {
 
@@ -150,14 +150,16 @@ public class PublishService extends Service implements IPublishService {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(SCMPMessage reply) throws Exception {
+		public void callback(SCMPMessage reply) {
 			if (PublishService.this.subscribed == false) {
 				// client is not subscribed anymore - stop continuing
 				return;
 			}
 			if (reply.isFault()) {
+				// operation failed
 				SCMPFault fault = (SCMPFault) reply;
-				throw new SCServiceException("receiving publication failed", fault.getCause());
+				super.callback(fault.getCause());
+				return;
 			}
 			// check if reply is real answer
 			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
@@ -167,7 +169,13 @@ public class PublishService extends Service implements IPublishService {
 			}
 			if (PublishService.this.subscribed) {
 				// client is still subscribed - CRP again
-				PublishService.this.receivePublication();
+				try {
+					PublishService.this.receivePublication();
+				} catch (Exception e) {
+					SCMPFault fault = new SCMPFault(e);
+					super.callback(fault);
+					return;
+				}
 			}
 		}
 	}

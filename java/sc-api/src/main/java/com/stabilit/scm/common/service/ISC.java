@@ -55,4 +55,11 @@ public interface ISC {
 	 * @return the port
 	 */
 	public abstract int getPort();
+
+	/**
+	 * Gets the keep alive interval.
+	 * 
+	 * @return the keep alive interval
+	 */
+	public abstract int getKeepAliveInterval();
 }

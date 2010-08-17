@@ -25,17 +25,13 @@ import com.stabilit.scm.cln.service.ISessionService;
  */
 public interface ISCClient extends ISC {
 
-	/** {@inheritDoc} */
-	@Override
-	public ISCContext getContext();
-
 	/**
 	 * Connects to SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void attach() throws Exception;
+	public abstract void attach() throws Exception;
 
 	/**
 	 * Disconnects from SC.
@@ -43,21 +39,21 @@ public interface ISCClient extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void detach() throws Exception;
+	public abstract void detach() throws Exception;
 
 	/**
 	 * Gets the host.
 	 * 
 	 * @return the host
 	 */
-	public String getHost();
+	public abstract String getHost();
 
 	/**
 	 * Gets the port.
 	 * 
 	 * @return the port
 	 */
-	public int getPort();
+	public abstract int getPort();
 
 	/**
 	 * Creates a new file service.
@@ -66,7 +62,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the file service to use
 	 * @return the file service
 	 */
-	public IFileService newFileService(String serviceName);
+	public abstract IFileService newFileService(String serviceName);
 
 	/**
 	 * Creates a new publish service.
@@ -75,7 +71,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the publish service to use
 	 * @return the publish service
 	 */
-	public IPublishService newPublishService(String serviceName);
+	public abstract IPublishService newPublishService(String serviceName);
 
 	/**
 	 * Creates a new session service.
@@ -84,7 +80,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the session service to use
 	 * @return the session service
 	 */
-	public ISessionService newSessionService(String serviceName);
+	public abstract ISessionService newSessionService(String serviceName);
 
 	/**
 	 * Sets the max connections.
@@ -92,9 +88,17 @@ public interface ISCClient extends ISC {
 	 * @param maxConnections
 	 *            the new max connections
 	 */
-	public void setMaxConnections(int maxConnections);
+	public abstract void setMaxConnections(int maxConnections);
 
 	/** {@inheritDoc} */
 	@Override
-	public String getConnectionType();
+	public abstract String getConnectionType();
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract ISCContext getContext();
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract int getKeepAliveInterval();
 }

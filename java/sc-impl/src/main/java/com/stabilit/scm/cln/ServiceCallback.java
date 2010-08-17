@@ -60,7 +60,7 @@ public class ServiceCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(SCMPMessage scmpReply) throws Exception {
+	public void callback(SCMPMessage scmpReply) {
 		if (this.synchronous) {
 			// interested thread waits for message
 			super.callback(scmpReply);

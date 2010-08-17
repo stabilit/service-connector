@@ -228,8 +228,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Callback in case of an error.
+	 * 
+	 * @param response
+	 *            the response
+	 * @param th
+	 *            the error
+	 */
 	public void callback(IResponse response, Throwable th) {
 		ExceptionPoint.getInstance().fireException(this, th);
 		if (th instanceof HasFaultResponseException) {

@@ -18,25 +18,20 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SessionRegistry;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 import com.stabilit.scm.sc.service.SessionService;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -76,23 +71,16 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		ClnCreateSessionCommandCallback callback = new ClnCreateSessionCommandCallback();
+		CommandCallback callback = new CommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
+			// handling fault happens in callback, just need to set message type here
+			reply.setMessageType(getKey());
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			// exception handling
-			SCMPFault fault = (SCMPFault) reply;
-			Throwable th = fault.getCause();
-			if (th instanceof IdleTimeoutException) {
-				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
-						SrvCreateSessionCommand.class.getSimpleName());
-				scmpEx.setMessageType(getKey());
-				throw scmpEx;
-			}
-			throw th;
+			response.setSCMP(reply);
+			return;
 		}
 
 		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -162,13 +150,5 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnCreateSessionCommandCallback.
-	 */
-	private class ClnCreateSessionCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
-
 	}
 }

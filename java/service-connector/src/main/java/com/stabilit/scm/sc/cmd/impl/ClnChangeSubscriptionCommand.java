@@ -18,26 +18,21 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
-import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.IFilterMask;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.service.SCMPMessageFilterMask;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
-import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
 
 /**
  * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
@@ -69,22 +64,16 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		Session session = this.getSubscriptionSessionById(sessionId);
 		Server server = session.getServer();
 
-		ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback();
+		CommandCallback callback = new CommandCallback();
 		server.changeSubscription(reqMessage, callback);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
-			// exception handling
-			SCMPFault fault = (SCMPFault) reply;
-			Throwable th = fault.getCause();
-			if (th instanceof IdleTimeoutException) {
-				// operation timeout handling
-				HasFaultResponseException scmpEx = new SCMPCommandException(SCMPError.GATEWAY_TIMEOUT,
-						SrvChangeSubscriptionCommand.class.getName());
-				scmpEx.setMessageType(getKey());
-				throw scmpEx;
-			}
-			throw th;
+			// handling fault happens in callback, just need to set message type here
+			reply.setMessageType(getKey());
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			response.setSCMP(reply);
+			return;
 		}
 		Boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 
@@ -142,12 +131,5 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				throw validatorException;
 			}
 		}
-	}
-
-	/**
-	 * The Class ClnChangeSubscriptionCommandCallback.
-	 */
-	private class ClnChangeSubscriptionCommandCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }

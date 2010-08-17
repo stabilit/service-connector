@@ -70,7 +70,7 @@ public class SCSimplePublishingServiceExample {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) throws Exception {
+		public void callback(ISCMessage reply) {
 			publishedMessageCounter++;
 			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
 					+ publishedMessageCounter);

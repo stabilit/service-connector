@@ -45,6 +45,8 @@ public class SCClient implements ISCClient {
 	private String host;
 	/** The port of the SC. */
 	private int port;
+	/** The keep alive interval. */
+	private int keepAliveInterval;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
 	/** Identifies low level component to use for communication default for clients is "netty.http". */
@@ -98,6 +100,7 @@ public class SCClient implements ISCClient {
 		this.host = host;
 		this.port = port;
 		this.conType = connectionType;
+		this.keepAliveInterval = keepAliveInterval;
 		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval);
 		this.context = new ServiceConnectorContext();
 		this.callback = null;
@@ -155,22 +158,22 @@ public class SCClient implements ISCClient {
 		this.conType = conType;
 	}
 
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public String getHost() {
 		return host;
 	}
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public int getPort() {
 		return port;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getKeepAliveInterval() {
+		return this.keepAliveInterval;
 	}
 
 	/** {@inheritDoc} */

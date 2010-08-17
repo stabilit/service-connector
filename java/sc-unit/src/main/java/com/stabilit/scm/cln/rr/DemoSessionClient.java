@@ -57,7 +57,7 @@ public class DemoSessionClient extends Thread {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) throws Exception {
+		public void callback(ISCMessage reply) {
 			System.out.println("Session client received: " + reply.getData());
 			DemoSessionClient.pendingRequest = false;
 		}

@@ -25,12 +25,23 @@ import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
+ * The Interface ISCContext. Service Connector context.
+ * 
  * @author JTraber
  */
 public interface ISCContext extends IContext {
 
+	/**
+	 * Gets the connection pool.
+	 * 
+	 * @return the connection pool
+	 */
 	public IConnectionPool getConnectionPool();
 
+	/**
+	 * Gets the service connector.
+	 * 
+	 * @return the service connector
+	 */
 	public ISC getServiceConnector();
-
 }

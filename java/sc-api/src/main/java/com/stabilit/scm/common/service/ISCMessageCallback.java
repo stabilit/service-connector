@@ -34,7 +34,7 @@ public interface ISCMessageCallback {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void callback(ISCMessage reply) throws Exception;
+	public abstract void callback(ISCMessage reply);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
