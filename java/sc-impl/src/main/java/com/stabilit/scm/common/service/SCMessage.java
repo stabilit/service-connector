@@ -74,7 +74,7 @@ public class SCMessage implements ISCMessage {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCompressed(Boolean compressed) {
+	public void setCompressed(boolean compressed) {
 		this.compressed = compressed;
 	}
 
