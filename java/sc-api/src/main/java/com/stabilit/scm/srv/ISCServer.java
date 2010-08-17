@@ -28,6 +28,10 @@ public interface ISCServer extends ISC {
 	/**
 	 * Register service.
 	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
 	 * @param serviceName
 	 *            the service name
 	 * @param scCallback
@@ -35,7 +39,8 @@ public interface ISCServer extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void registerService(String serviceName, ISCServerCallback scCallback) throws Exception;
+	public abstract void registerService(String scHost, int scPort, String serviceName, ISCServerCallback scCallback)
+			throws Exception;
 
 	/**
 	 * Deregister service.
@@ -63,28 +68,18 @@ public interface ISCServer extends ISC {
 	public abstract int getMaxSessions();
 
 	/**
-	 * Sets the keep alive interval.
+	 * Gets the local server port.
 	 * 
-	 * @param keepAliveInterval
-	 *            the new keep alive interval
+	 * @return the local server port
 	 */
-	public abstract void setKeepAliveInterval(int keepAliveInterval);
+	public abstract int getLocalServerPort();
 
 	/**
-	 * Sets the local server port.
+	 * Gets the local server host.
 	 * 
-	 * @param localServerPort
-	 *            the local server port which should be bind in startServer method.
+	 * @return the local server host
 	 */
-	public abstract void setLocalServerPort(int localServerPort);
-
-	/**
-	 * Sets the local server host.
-	 * 
-	 * @param localServerHost
-	 *            the local server host which should be bind in startServer method.
-	 */
-	public abstract void setLocalServerHost(String localServerHost);
+	public abstract String getLocalServerHost();
 
 	/**
 	 * Sets the immediate connect.
@@ -95,14 +90,32 @@ public interface ISCServer extends ISC {
 	public abstract void setImmediateConnect(boolean immediateConnect);
 
 	/**
-	 * Start server. Binds listeners to configured ports and host.
+	 * Start server.
 	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void startServer() throws Exception;
+	public abstract void startServer(String host, int port) throws Exception;
+
+	/**
+	 * Start server.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract int getKeepAliveInterval();
+	public abstract int getKeepAliveIntervalInSeconds();
 }

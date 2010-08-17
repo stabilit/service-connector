@@ -35,11 +35,11 @@ public class SCSimpleSessionServiceExample {
 	public static void runExample() {
 		ISCClient sc = null;
 		try {
-			sc = new SCClient("localhost", 8000);
+			sc = new SCClient();
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach();
+			sc.attach("localhost", 8000);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 300);
@@ -49,11 +49,11 @@ public class SCSimpleSessionServiceExample {
 			requestMsg.setCompressed(false);
 			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
 			System.out.println(responseMsg.getData().toString());
-			
+
 			requestMsg = new SCMessage();
 			requestMsg.setData("kill server");
 			requestMsg.setCompressed(false);
-			responseMsg = sessionServiceA.execute(requestMsg);			
+			responseMsg = sessionServiceA.execute(requestMsg);
 
 			// deletes the session
 			sessionServiceA.deleteSession();

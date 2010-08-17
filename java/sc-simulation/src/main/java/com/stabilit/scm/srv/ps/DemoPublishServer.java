@@ -38,17 +38,14 @@ public class DemoPublishServer {
 
 	public void runPublishServer() {
 		try {
-			this.publishSrv = new SCPublishServer("localhost", 9000);
+			this.publishSrv = new SCPublishServer();
 
 			// connect to SC as server
 			this.publishSrv.setMaxSessions(10);
-			this.publishSrv.setKeepAliveInterval(0);
-			this.publishSrv.setLocalServerPort(7000);
-			this.publishSrv.setLocalServerHost("localhost");
 			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startServer();
+			this.publishSrv.startServer("localhost", 7000, 0);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerService(serviceName, srvCallback);
+			this.publishSrv.registerService("localhost", 9000, serviceName, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();

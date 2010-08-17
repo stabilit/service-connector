@@ -18,6 +18,8 @@ package com.stabilit.scm.srv;
 
 import java.security.InvalidParameterException;
 
+import javax.activity.InvalidActivityException;
+
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
@@ -25,6 +27,7 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.net.req.ConnectionFactory;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -75,64 +78,30 @@ public class SCServer implements ISCServer {
 	protected SrvServerCallback callback;
 	/** The message id. */
 	private SCMPMessageId msgId;
+	/** The server started state. */
+	private boolean serverStarted;
 
-	/**
-	 * Instantiates a new SC server.
-	 * 
-	 * @param host
-	 *            the host to connect for registering a service.
-	 * @param port
-	 *            the port to connect for registering a service.
-	 */
-	public SCServer(String host, int port) {
-		this(host, port, Constants.DEFAULT_SERVER_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
-	}
-
-	/**
-	 * Instantiates a new SC server.
-	 * 
-	 * @param host
-	 *            the host to connect for registering a service.
-	 * @param port
-	 *            the port to connect for registering a service.
-	 * @param connectionType
-	 *            the connection type to use to communicate with an SC. Possible values {netty.http, netty.tcp}.
-	 */
-	public SCServer(String host, int port, String connectionType) {
-		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
-	}
-
-	/**
-	 * Instantiates a new SC server.
-	 * 
-	 * @param host
-	 *            the host to connect for registering a service.
-	 * @param port
-	 *            the port to connect for registering a service.
-	 * @param connectionType
-	 *            the connection type to use to communicate with an SC. Possible values {netty.http, netty.tcp}.
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 */
-	public SCServer(String host, int port, String connectionType, int keepAliveInterval) {
-		this.scHost = host;
-		this.scPort = port;
-		this.conType = connectionType;
-
+	public SCServer() {
+		this.serverStarted = false;
+		this.scHost = null;
+		this.scPort = -1;
+		this.conType = Constants.DEFAULT_SERVER_CON;
 		// attributes for registerService
-		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.immediateConnect = true;
-		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.localServerHost = null;
-		this.localServerPort = 0;
-		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, keepAliveInterval);
-		// register service only needs one connection
-		this.connectionPool.setMaxConnections(1);
+		this.localServerPort = -1;
+		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.context = new SCServerContext();
 		this.msgId = new SCMPMessageId();
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, keepAliveInterval);
 		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 		this.callback = new SrvServerCallback();
+
+		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
+		if (commandFactory == null) {
+			CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -141,30 +110,34 @@ public class SCServer implements ISCServer {
 		return context;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the connection type. Default {netty.tcp}
+	 * 
+	 * @return the connection type in use
+	 */
 	@Override
 	public String getConnectionType() {
-		return conType;
+		return this.conType;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getHost() {
-		return scHost;
+		return this.scHost;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getPort() {
-		return scPort;
+		return this.scPort;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public int getKeepAliveInterval() {
+	public int getKeepAliveIntervalInSeconds() {
 		return this.keepAliveInterval;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setMaxSessions(int maxSessions) {
@@ -179,7 +152,23 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
+	public void registerService(String scHost, int scPort, String serviceName, ISCServerCallback scCallback) throws Exception {
+		if (this.serverStarted == false) {
+			throw new InvalidActivityException("start server has to be called before register service is allowed.");
+		}
+		if (scPort < 1 || scPort > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		}
+		if (scHost == null) {
+			throw new InvalidParameterException("Host must be set.");
+		}
+		this.scHost = scHost;
+		this.scPort = scPort;
+		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType, this.keepAliveInterval);
+		// register service only needs one connection
+		this.connectionPool.setMaxConnections(1);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
 
@@ -207,27 +196,31 @@ public class SCServer implements ISCServer {
 		this.srvServiceRegistry.removeSrvService(serviceName);
 		// destroy the connection pool
 		this.connectionPool.destroy();
+		// destroy connection resource
+		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void startServer() throws Exception {
-		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
-		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
-		}
-
+	public void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());
 		respConfig.setConnectionType(this.conType);
-		if (localServerHost == null) {
-			throw new InvalidParameterException("localServerHost must be set.");
+
+		if (port < 1 || port > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
 		}
-		respConfig.setHost(this.localServerHost);
-		if (localServerPort == 0) {
-			throw new InvalidParameterException("localServerPort must be set.");
+		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
+			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
 		}
-		respConfig.setPort(this.localServerPort);
-		respConfig.setKeepAliveInterval(this.keepAliveInterval);
+		if (host == null) {
+			throw new InvalidParameterException("Host must be set.");
+		}
+		this.localServerHost = host;
+		this.localServerPort = port;
+		this.keepAliveInterval = keepAliveIntervalInSeconds;
+		respConfig.setHost(host);
+		respConfig.setPort(port);
+		respConfig.setKeepAliveInterval(keepAliveIntervalInSeconds);
 
 		IResponder resp = new Responder(respConfig);
 		try {
@@ -236,6 +229,7 @@ public class SCServer implements ISCServer {
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
+		this.serverStarted = true;
 	}
 
 	/**
@@ -264,20 +258,24 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.keepAliveInterval = keepAliveInterval;
+	public String getLocalServerHost() {
+		return this.localServerHost;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setLocalServerHost(String localServerHost) {
-		this.localServerHost = localServerHost;
+	public int getLocalServerPort() {
+		return this.localServerPort;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setLocalServerPort(int localServerPort) {
-		this.localServerPort = localServerPort;
+	/**
+	 * Sets the connection type. Should only be used if you really need to change low level technology careful.
+	 * 
+	 * @param conType
+	 *            the new connection type, identifies low level communication technology
+	 */
+	public void setConnectionType(String conType) {
+		this.conType = conType;
 	}
 
 	/** {@inheritDoc} */
@@ -285,6 +283,8 @@ public class SCServer implements ISCServer {
 	protected void finalize() throws Throwable {
 		super.finalize();
 		this.connectionPool.destroy();
+		// destroy connection resource
+		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/**
@@ -292,5 +292,9 @@ public class SCServer implements ISCServer {
 	 */
 	protected class SrvServerCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
+	}
+
+	@Override
+	public void startServer(String host, int port) throws Exception {
 	}
 }

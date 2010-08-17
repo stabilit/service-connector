@@ -137,29 +137,23 @@ public class SetupTestCases {
 	}
 
 	private static void startSessionServer1Connections() throws Exception {
-		ISCServer scSrv = new SCServer("localhost", 9000);
+		ISCServer scSrv = new SCServer();
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
-		scSrv.setKeepAliveInterval(0);
-		scSrv.setLocalServerPort(7000);
-		scSrv.setLocalServerHost("localhost");
 		scSrv.setImmediateConnect(true);
-		scSrv.startServer();
+		scSrv.startServer("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSrv.registerService("simulation", srvCallback);
+		scSrv.registerService("localhost", 9000, "simulation", srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
-		ISCServer scSrv = new SCServer("localhost", 9000);
+		ISCServer scSrv = new SCServer();
 		// connect to SC as server
 		scSrv.setMaxSessions(10);
-		scSrv.setKeepAliveInterval(0);
-		scSrv.setLocalServerPort(7000);
-		scSrv.setLocalServerHost("localhost");
 		scSrv.setImmediateConnect(true);
-		scSrv.startServer();
+		scSrv.startServer("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSrv.registerService("simulation", srvCallback);
+		scSrv.registerService("localhost", 9000, "simulation", srvCallback);
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
@@ -241,16 +235,13 @@ public class SetupTestCases {
 
 	public static void startPublishServer() throws Exception {
 		String serviceName = "publish-simulation";
-		ISCPublishServer publishSrv = new SCPublishServer("localhost", 9000);
+		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setMaxSessions(10);
-		publishSrv.setKeepAliveInterval(0);
-		publishSrv.setLocalServerPort(7001);
-		publishSrv.setLocalServerHost("localhost");
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startServer();
+		publishSrv.startServer("localhost", 7000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService(serviceName, publishCallback);
+		publishSrv.registerService("localhost", 9000, serviceName, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

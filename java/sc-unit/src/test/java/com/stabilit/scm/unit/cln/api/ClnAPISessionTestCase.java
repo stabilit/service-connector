@@ -37,11 +37,11 @@ public class ClnAPISessionTestCase {
 	public void testClnAPI() throws Exception {
 		ISCClient sc = null;
 		try {
-			sc = new SCClient("localhost", 8080);
+			sc = new SCClient();
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach();
+			sc.attach("localhost", 8080);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 10);

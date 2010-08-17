@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import java.security.InvalidParameterException;
+
 import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -46,7 +48,7 @@ public class SCClient implements ISCClient {
 	/** The port of the SC. */
 	private int port;
 	/** The keep alive interval. */
-	private int keepAliveInterval;
+	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
 	/** Identifies low level component to use for communication default for clients is "netty.http". */
@@ -59,51 +61,19 @@ public class SCClient implements ISCClient {
 	private SCClientCallback callback;
 
 	/**
-	 * Instantiates a new service connector.
+	 * Instantiates a new SC client.
 	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 */
-	public SCClient(String host, int port) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
-	}
-
-	/**
-	 * Instantiates a new service connector.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
 	 * @param connectionType
 	 *            the connection type
 	 */
-	public SCClient(String host, int port, String connectionType) {
-		this(host, port, connectionType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
-	}
-
-	/**
-	 * Instantiates a new service connector.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param connectionType
-	 *            the connection type
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 */
-	public SCClient(String host, int port, String connectionType, int keepAliveInterval) {
-		this.host = host;
-		this.port = port;
-		this.conType = connectionType;
-		this.keepAliveInterval = keepAliveInterval;
-		this.connectionPool = new ConnectionPool(this.host, this.port, this.conType, keepAliveInterval);
+	public SCClient() {
+		this.host = null;
+		this.port = -1;
+		this.conType = Constants.DEFAULT_CLIENT_CON;
+		this.keepAliveIntervalInSeconds = 0;
 		this.context = new ServiceConnectorContext();
 		this.callback = null;
+		this.connectionPool = null;
 	}
 
 	/** {@inheritDoc} */
@@ -112,13 +82,27 @@ public class SCClient implements ISCClient {
 		return context;
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public void attach() throws Exception {
+	public void attach(String host, int port) throws Exception {
+		this.attach(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+	}
+
+	@Override
+	public void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+		if (port < 1 || port > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		}
+		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
+			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
+		}
 		if (this.callback != null) {
 			throw new SCServiceException(
 					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
+		this.port = port;
+		this.host = host;
+		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
+		this.connectionPool = new ConnectionPool(host, port, this.conType, keepAliveIntervalInSeconds);
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
@@ -172,8 +156,8 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public int getKeepAliveInterval() {
-		return this.keepAliveInterval;
+	public int getKeepAliveIntervalInSeconds() {
+		return this.keepAliveIntervalInSeconds;
 	}
 
 	/** {@inheritDoc} */
@@ -199,11 +183,20 @@ public class SCClient implements ISCClient {
 	public void setMaxConnections(int maxConnections) {
 		this.connectionPool.setMaxConnections(maxConnections);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public int getMaxConnections() {
 		return this.connectionPool.getMaxConnections();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		this.connectionPool.destroy();
+		// destroy connection resource
+		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/**

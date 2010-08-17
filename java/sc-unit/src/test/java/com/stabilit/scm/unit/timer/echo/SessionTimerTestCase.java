@@ -32,13 +32,14 @@ import com.stabilit.scm.unit.test.SetupTestCases;
 public class SessionTimerTestCase {
 
 	private boolean sessionAborted = false;
+
 	@Before
 	public void setUp() {
 		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
 	@Test
-	public void testClnAPI() throws Exception {		
+	public void testClnAPI() throws Exception {
 		ISCClient sc = null;
 		ISessionListener sessionListener = new ISessionListener() {
 
@@ -54,21 +55,21 @@ public class SessionTimerTestCase {
 			@Override
 			public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
 			}
-			
+
 		};
 		SessionPoint.getInstance().addListener(sessionListener);
-		try {			
-			sc = new SCClient("localhost", 8080);		
+		try {
+			sc = new SCClient();
 			sc.setMaxConnections(100);
-			
+
 			// connects to SC, checks connection to SC
-			sc.attach();
-			
+			sc.attach("localhost", 8080);
+
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 5);
-			
+
 			Thread.sleep(8000);
-					
+
 			Assert.assertEquals(true, sessionAborted);
 
 			// deletes the session

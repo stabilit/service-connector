@@ -16,10 +16,10 @@ public class DemoPublishClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient sc = new SCClient("localhost", 8000);
+		ISCClient sc = new SCClient();
 		IPublishService publishService = null;
 		try {
-			sc.attach();
+			sc.attach("localhost", 8000);
 			publishService = sc.newPublishService("publish-simulation");
 			publishService.subscribe("0000121ABCDEFGHIJKLMNO-----------X-----------", "sessionInfo", 300,
 					new DemoSessionClientCallback(publishService));

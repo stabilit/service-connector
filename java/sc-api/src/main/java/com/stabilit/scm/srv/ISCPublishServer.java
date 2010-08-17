@@ -41,6 +41,10 @@ public interface ISCPublishServer extends ISCServer {
 	/**
 	 * Register service on SC.
 	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
 	 * @param serviceName
 	 *            the service name
 	 * @param scCallback
@@ -48,5 +52,6 @@ public interface ISCPublishServer extends ISCServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception;
+	public abstract void registerService(String scHost, int scPort, String serviceName,
+			ISCPublishServerCallback scCallback) throws Exception;
 }

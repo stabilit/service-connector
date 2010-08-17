@@ -44,11 +44,11 @@ public class ClnAPIPublishSubscribeTestCase {
 		ISCClient sc = null;
 		IPublishService publishServiceA = null;
 		try {
-			sc = new SCClient("localhost", 8080);
+			sc = new SCClient();
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach();
+			sc.attach("localhost", 8080);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
@@ -71,11 +71,11 @@ public class ClnAPIPublishSubscribeTestCase {
 		ISCClient sc = null;
 		IPublishService publishServiceA = null;
 		try {
-			sc = new SCClient("localhost", 8080);
+			sc = new SCClient();
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach();
+			sc.attach("localhost", 8080);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);

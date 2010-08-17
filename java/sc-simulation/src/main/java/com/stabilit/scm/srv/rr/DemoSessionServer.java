@@ -37,17 +37,14 @@ public class DemoSessionServer {
 
 	public void runSessionServer() {
 		try {
-			this.scSrv = new SCServer("localhost", 9000);
+			this.scSrv = new SCServer();
 
 			// connect to SC as server
 			this.scSrv.setMaxSessions(10);
-			this.scSrv.setKeepAliveInterval(0);
-			this.scSrv.setLocalServerPort(7000);
-			this.scSrv.setLocalServerHost("localhost");
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startServer();
+			this.scSrv.startServer("localhost", 7000, 0);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService(serviceName, srvCallback);
+			this.scSrv.registerService("localhost", 9000, serviceName, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.shutdown();

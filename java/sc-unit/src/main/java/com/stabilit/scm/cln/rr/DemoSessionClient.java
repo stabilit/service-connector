@@ -20,10 +20,11 @@ public class DemoSessionClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient sc = new SCClient("localhost", 8000);
+		ISCClient sc = new SCClient();
 		ISessionService sessionService = sc.newSessionService("simulation");
 
 		try {
+			sc.attach("localhost", 8000);
 			sessionService.createSession("sessionInfo", 60, 60);
 
 			int index = 0;

@@ -27,12 +27,30 @@ import com.stabilit.scm.common.service.ISCContext;
 public interface ISCClient extends ISC {
 
 	/**
-	 * Connects to SC.
+	 * Attach.
 	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void attach() throws Exception;
+	public abstract void attach(String host, int port) throws Exception;
+
+	/**
+	 * Attach.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 
 	/**
 	 * Disconnects from SC.
@@ -84,8 +102,8 @@ public interface ISCClient extends ISC {
 	public abstract ISessionService newSessionService(String serviceName);
 
 	/**
-	 * Sets the max connections. If client is already connected to the SC and max connections is lower than
-	 * default value or value set earlier connection pool is not reducing the connections immediately.
+	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default
+	 * value or value set earlier connection pool is not reducing the connections immediately.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
@@ -109,5 +127,5 @@ public interface ISCClient extends ISC {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract int getKeepAliveInterval();
+	public abstract int getKeepAliveIntervalInSeconds();
 }
