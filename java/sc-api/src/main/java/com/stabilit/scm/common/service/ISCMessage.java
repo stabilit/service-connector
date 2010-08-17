@@ -54,7 +54,7 @@ public interface ISCMessage {
 	 * @param compressed
 	 *            Regards the data part of the message.
 	 */
-	public abstract void setCompressed(Boolean compressed);
+	public abstract void setCompressed(boolean compressed);
 
 	/**
 	 * Gets the data.
