@@ -95,7 +95,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the file service to use
 	 * @return the file service
 	 */
-	public abstract IFileService newFileService(String serviceName);
+	public abstract IFileService newFileService(String serviceName) throws Exception;
 
 	/**
 	 * Creates a new publish service.
@@ -104,7 +104,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the publish service to use
 	 * @return the publish service
 	 */
-	public abstract IPublishService newPublishService(String serviceName);
+	public abstract IPublishService newPublishService(String serviceName) throws Exception;
 
 	/**
 	 * Creates a new session service.
@@ -113,7 +113,7 @@ public interface ISCClient extends ISC {
 	 *            the service name of the session service to use
 	 * @return the session service
 	 */
-	public abstract ISessionService newSessionService(String serviceName);
+	public abstract ISessionService newSessionService(String serviceName) throws Exception;
 
 	/**
 	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default

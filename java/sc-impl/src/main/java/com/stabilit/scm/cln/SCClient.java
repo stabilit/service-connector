@@ -84,7 +84,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public ISCContext getContext() {
-		return context;
+		return this.context;
 	}
 
 	/** {@inheritDoc} */
@@ -122,7 +122,7 @@ public class SCClient implements ISCClient {
 		if (reply.isFault()) {
 			this.callback = null;
 			SCMPFault fault = (SCMPFault) reply;
-			throw fault.getCause();
+			throw new SCServiceException("attach client failed", fault.getCause());
 		}
 	}
 
@@ -140,10 +140,14 @@ public class SCClient implements ISCClient {
 		}
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		SCMPMessage reply = this.callback.getMessageSync();
 		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("detach client failed", fault.getCause());
+		}
 	}
 
 	/**
@@ -186,27 +190,36 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public IFileService newFileService(String serviceName) {
+	public IFileService newFileService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
+		}
+		if (this.callback == null) {
+			throw new SCServiceException("newFileService not possible - client not attached.");
 		}
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISessionService newSessionService(String serviceName) {
+	public ISessionService newSessionService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
+		}
+		if (this.callback == null) {
+			throw new SCServiceException("newSessionService not possible - client not attached.");
 		}
 		return new SessionService(serviceName, this.context);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IPublishService newPublishService(String serviceName) {
+	public IPublishService newPublishService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
+		}
+		if (this.callback == null) {
+			throw new SCServiceException("newPublishService not possible - client not attached.");
 		}
 		return new PublishService(serviceName, this.context);
 	}
@@ -243,7 +256,7 @@ public class SCClient implements ISCClient {
 		/** {@inheritDoc} */
 		@Override
 		public IConnectionPool getConnectionPool() {
-			return connectionPool;
+			return SCClient.this.connectionPool;
 		}
 
 		/** {@inheritDoc} */

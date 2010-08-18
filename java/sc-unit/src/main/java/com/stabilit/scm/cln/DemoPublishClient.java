@@ -1,6 +1,5 @@
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
@@ -19,7 +18,8 @@ public class DemoPublishClient extends Thread {
 		ISCClient sc = new SCClient();
 		IPublishService publishService = null;
 		try {
-			sc.attach("localhost", 8000);
+			((SCClient) sc).setConnectionType("netty.tcp");
+			sc.attach("localhost", 9000);
 			publishService = sc.newPublishService("publish-simulation");
 			publishService.subscribe("0000121ABCDEFGHIJKLMNO-----------X-----------", "sessionInfo", 300,
 					new DemoSessionClientCallback(publishService));
