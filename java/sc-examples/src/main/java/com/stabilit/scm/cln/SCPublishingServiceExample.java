@@ -28,12 +28,12 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessageCallback;
 
-public class SCSimplePublishingServiceExample {
+public class SCPublishingServiceExample {
 
 	private int publishedMessageCounter = 0;
 
 	public static void main(String[] args) {
-		SCSimplePublishingServiceExample test = new SCSimplePublishingServiceExample();
+		SCPublishingServiceExample test = new SCPublishingServiceExample();
 		test.runExample();
 	}
 
@@ -49,7 +49,7 @@ public class SCSimplePublishingServiceExample {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
+			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

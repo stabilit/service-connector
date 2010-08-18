@@ -26,10 +26,10 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 
-public class SCSimpleSessionServiceExample {
+public class SCSyncSessionServiceExample {
 
 	public static void main(String[] args) {
-		SCSimpleSessionServiceExample.runExample();
+		SCSyncSessionServiceExample.runExample();
 	}
 
 	public static void runExample() {
@@ -39,22 +39,18 @@ public class SCSimpleSessionServiceExample {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", 8000);
+			sc.attach("localhost", 8080);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			// creates a session
 			sessionServiceA.createSession("sessionInfo", 60, 300);
 
 			ISCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
 			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			
 			System.out.println(responseMsg.getData().toString());
-
-			requestMsg = new SCMessage();
-			requestMsg.setData("kill server");
-			requestMsg.setCompressed(false);
-			responseMsg = sessionServiceA.execute(requestMsg);
-
 			// deletes the session
 			sessionServiceA.deleteSession();
 
