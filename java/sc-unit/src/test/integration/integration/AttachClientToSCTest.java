@@ -13,7 +13,7 @@ import com.stabilit.scm.common.net.req.ConnectionPoolConnectException;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.sc.SC;
 
-public class attachClientToSCTest {
+public class AttachClientToSCTest {
 
 	private ISC sc;
 	private ISCClient client;
