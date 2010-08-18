@@ -31,18 +31,16 @@ public interface ISCMessageCallback {
 	 * 
 	 * @param reply
 	 *            the reply
-	 * @throws Exception
-	 *             the exception
 	 */
 	public abstract void callback(ISCMessage reply);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
 	 * 
-	 * @param th
-	 *            the throwable
+	 * @param ex
+	 *            the exception
 	 */
-	public abstract void callback(Throwable th);
+	public abstract void callback(Exception ex);
 
 	/**
 	 * Gets the service which is using the message callback.

@@ -77,8 +77,8 @@ public class SCPublishingServiceExample {
 		}
 
 		@Override
-		public void callback(Throwable th) {
-			th.printStackTrace();
+		public void callback(Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 }

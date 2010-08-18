@@ -191,9 +191,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
-		Throwable th = e.getCause();
-		if (th instanceof HasFaultResponseException) {
-			((HasFaultResponseException) th).setFaultResponse(response);
+		Exception ex = (Exception) e.getCause();
+		if (ex instanceof HasFaultResponseException) {
+			((HasFaultResponseException) ex).setFaultResponse(response);
 			response.write();
 		}
 	}
@@ -220,8 +220,8 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				NettyTcpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
 			}
 			response.write();
-		} catch (Throwable th) {
-			this.callback(response, th);
+		} catch (Exception ex) {
+			this.callback(response, ex);
 		}
 	}
 
@@ -230,15 +230,15 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	 * 
 	 * @param response
 	 *            the response
-	 * @param th
+	 * @param ex
 	 *            the error
 	 */
-	public void callback(IResponse response, Throwable th) {
-		ExceptionPoint.getInstance().fireException(this, th);
-		if (th instanceof HasFaultResponseException) {
-			((HasFaultResponseException) th).setFaultResponse(response);
+	public void callback(IResponse response, Exception ex) {
+		ExceptionPoint.getInstance().fireException(this, ex);
+		if (ex instanceof HasFaultResponseException) {
+			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
-			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
+			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, ex.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);

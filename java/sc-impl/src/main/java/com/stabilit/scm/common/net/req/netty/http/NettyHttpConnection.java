@@ -177,8 +177,8 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-		} catch (Throwable th) {
-			ExceptionPoint.getInstance().fireException(this, th);
+		} catch (Exception ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}
 

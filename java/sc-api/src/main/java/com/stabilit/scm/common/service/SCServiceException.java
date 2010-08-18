@@ -36,11 +36,11 @@ public class SCServiceException extends Exception {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param cause
+	 * @param exception
 	 *            the cause
 	 */
-	public SCServiceException(String message, Throwable cause) {
-		super(message, cause);
+	public SCServiceException(String message, Exception exception) {
+		super(message, exception);
 	}
 
 	/**

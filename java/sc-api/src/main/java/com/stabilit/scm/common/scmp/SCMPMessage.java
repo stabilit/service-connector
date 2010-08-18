@@ -363,8 +363,8 @@ public class SCMPMessage {
 		Integer intValue = null;
 		try {
 			intValue = Integer.parseInt(value);
-		} catch (Throwable th) {
-			ExceptionPoint.getInstance().fireException(this, th);
+		} catch (Exception ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
 			return null;
 		}
 		return intValue;

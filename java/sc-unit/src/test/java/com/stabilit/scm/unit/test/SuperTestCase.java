@@ -60,7 +60,7 @@ public abstract class SuperTestCase {
 	}
 
 	@Before
-	public void setup() throws Throwable {
+	public void setup() throws Exception {
 		SetupTestCases.setupSCSessionServer10Connections();
 		try {
 			this.config = new RequesterConfigPool();
@@ -73,7 +73,7 @@ public abstract class SuperTestCase {
 	}
 
 	@After
-	public void tearDown() throws Throwable {
+	public void tearDown() throws Exception {
 		SetupTestCases.statisticsListener.clearAll();
 		this.testContext.getConnectionPool().destroy();
 	}

@@ -69,7 +69,7 @@ public class DemoSessionClient extends Thread {
 		}
 
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception e) {
 		}
 	}
 }

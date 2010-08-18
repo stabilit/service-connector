@@ -56,7 +56,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Throwable {
+	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);

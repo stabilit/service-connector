@@ -40,7 +40,6 @@ public class DemoPublishServer {
 	public void runPublishServer() {
 		try {
 			this.publishSrv = new SCPublishServer();
-
 			// connect to SC as server
 			this.publishSrv.setMaxSessions(10);
 			this.publishSrv.setImmediateConnect(true);
@@ -80,6 +79,7 @@ public class DemoPublishServer {
 					server.publish(serviceName, mask, data);
 				} catch (Exception e) {
 					ExceptionPoint.getInstance().fireException(this, e);
+					return;
 				}
 			}
 		}

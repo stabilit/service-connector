@@ -78,14 +78,14 @@ public class ServiceCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(Throwable th) {
+	public void callback(Exception ex) {
 		if (this.synchronous) {
 			// interested thread waits for message
-			super.callback(th);
+			super.callback(ex);
 			return;
 		}
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.callback(th);
+		this.messageCallback.callback(ex);
 	}
 }

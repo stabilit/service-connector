@@ -134,7 +134,7 @@ public class Server {
 				.newInstance(requester, msgToForward);
 		try {
 			createSessionCall.invoke(callback);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			// create session failed
 			callback.callback(e);
 		}
@@ -173,7 +173,7 @@ public class Server {
 				requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			// subscribe failed
 			callback.callback(e);
 		}
@@ -231,7 +231,7 @@ public class Server {
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
 		try {
 			srvDataCall.invoke(callback);
-		} catch (Throwable th) {
+		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);
 		}
@@ -249,7 +249,7 @@ public class Server {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
 		try {
 			srvEchoCall.invoke(callback);
-		} catch (Throwable th) {
+		} catch (Exception th) {
 			callback.callback(th);
 		}
 	}
@@ -267,7 +267,7 @@ public class Server {
 				.newInstance(requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback);
-		} catch (Throwable th) {
+		} catch (Exception th) {
 			callback.callback(th);
 		}
 	}

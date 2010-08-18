@@ -160,7 +160,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		}
 
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception th) {
 			// nothing to do
 		}
 	}

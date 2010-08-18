@@ -98,8 +98,8 @@ public class SCAsyncSessionServiceExample {
 		}
 
 		@Override
-		public void callback(Throwable th) {
-			ExceptionPoint.getInstance().fireException(this, th);
+		public void callback(Exception ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}
 }

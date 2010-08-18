@@ -44,7 +44,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 	}
 
 	@Test
-	public void manageCommand() throws Throwable {
+	public void manageCommand() throws Exception {
 		// try to create a session on service enableService - should fail
 		SCMPFault fault = (SCMPFault) this.createSession();
 		SCTest.verifyError(fault, SCMPError.NOT_FOUND, " [service not found for enableService]",

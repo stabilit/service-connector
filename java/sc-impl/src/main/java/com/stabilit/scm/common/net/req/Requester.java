@@ -28,8 +28,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 
 /**
- * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect,
- * send/receive has to process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
+ * has to process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -61,8 +61,8 @@ public class Requester implements IRequester {
 		if (message.isLargeMessage()) {
 			// SCMPCompositeSender handles splitting, works like an iterator
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext,
-					compositeSender, msgId);
+			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
+					msgId);
 			// extract first part message & send
 			SCMPMessage part = compositeSender.getFirst();
 			// handling messageId
@@ -102,9 +102,9 @@ public class Requester implements IRequester {
 	}
 
 	/**
-	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time
-	 * a reply is received. Handles freeing up earlier requested connections. Provides functionality to deal with
-	 * large messages.
+	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
+	 * reply is received. Handles freeing up earlier requested connections. Provides functionality to deal with large
+	 * messages.
 	 */
 	private class RequesterSCMPCallback implements ISCMPCallback {
 
@@ -246,13 +246,13 @@ public class Requester implements IRequester {
 			if (compositeSender.hasNext() == false) {
 				if (this.requestMsg.isGroup()) {
 					/*
-					 * client processes group call, he needs to get the response - happens in special case: client
-					 * sends a single part of a group but content is to large and we need to split
+					 * client processes group call, he needs to get the response - happens in special case: client sends
+					 * a single part of a group but content is to large and we need to split
 					 */
 					return true;
 				}
-				LoggerPoint.getInstance().fireWarn(this,
-						"compositeSender.hasNext() == false but part request not done");
+				LoggerPoint.getInstance()
+						.fireWarn(this, "compositeSender.hasNext() == false but part request not done");
 				return true;
 			}
 			part = compositeSender.getNext();
@@ -273,12 +273,12 @@ public class Requester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception ex) {
 			// delete composites
 			this.compositeReceiver = null;
 			this.compositeSender = null;
-			this.scmpCallback.callback(th);
-			if (th instanceof IdleTimeoutException) {
+			this.scmpCallback.callback(ex);
+			if (ex instanceof IdleTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {
@@ -288,8 +288,7 @@ public class Requester implements IRequester {
 		}
 
 		/**
-		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester
-		 * anymore.
+		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester anymore.
 		 */
 		private void freeConnection() {
 			try {
@@ -300,13 +299,12 @@ public class Requester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if
-		 * connection has a curious state.
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection
+		 * has a curious state.
 		 */
 		private void disconnectConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool()
-						.forceClosingConnection(connectionCtx.getConnection());
+				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

@@ -56,7 +56,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	@Before
-	public void setup() throws Throwable {
+	public void setup() throws Exception {
 		super.setup();
 		this.registerConfig = new RequesterConfigPool();
 		this.responderConfig = new ResponderConfigPool();
@@ -68,12 +68,12 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	@After
-	public void tearDown() throws Throwable {
+	public void tearDown() throws Exception {
 		deRegisterServiceAfter();
 		super.tearDown();
 	}
 
-	public void registerServiceBefore() throws Throwable {
+	public void registerServiceBefore() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(registerRequester, "publish-simulation");
 		registerServiceCall.setMaxSessions(10);
@@ -84,11 +84,11 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
-	public void deRegisterServiceAfter() throws Throwable {
+	public void deRegisterServiceAfter() throws Exception {
 		this.deRegisterServiceAfter("publish-simulation");
 	}
 
-	public void deRegisterServiceAfter(String serviceName) throws Throwable {
+	public void deRegisterServiceAfter(String serviceName) throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerRequester, serviceName);
 		deRegisterServiceCall.invoke(this.attachCallback);

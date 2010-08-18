@@ -36,8 +36,8 @@ public interface ISCMPCallback {
 	/**
 	 * Callback. This method gets informed in case of an error.
 	 * 
-	 * @param th
-	 *            the Throwable
+	 * @param ex
+	 *            the ex
 	 */
-	public abstract void callback(Throwable th);
+	public abstract void callback(Exception ex);
 }

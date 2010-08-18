@@ -102,8 +102,8 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	public void destroy() {
 		try {
 			this.channel.close();
-		} catch (Throwable th) {
-			ExceptionPoint.getInstance().fireException(this, th);
+		} catch (Exception ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
 			return;
 		}
 		this.channelFactory.releaseExternalResources();

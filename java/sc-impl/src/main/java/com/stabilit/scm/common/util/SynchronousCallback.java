@@ -70,14 +70,14 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(Throwable th) {
+	public void callback(Exception ex) {
 		// TODO activate later - very bad for testing purpose
 		// if (this.synchronous == false) {
 		// // offering is only allowed if someone is expecting a message - prevents race conditions, an answer might
 		// // arrive late after operation timeout already run out, can be ignored
 		// return;
 		// }
-		SCMPMessage fault = new SCMPFault(th);
+		SCMPMessage fault = new SCMPFault(ex);
 		if (this.answer.offer(fault)) {
 			// queue empty object can be added
 			return;

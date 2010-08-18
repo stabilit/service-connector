@@ -58,7 +58,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Throwable {
+	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 

@@ -64,7 +64,7 @@ public class ClnAPISyncSessionTestCase {
 			try {
 				// disconnects from SC
 				sc.detach();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				sc = null;
 			}
 		}

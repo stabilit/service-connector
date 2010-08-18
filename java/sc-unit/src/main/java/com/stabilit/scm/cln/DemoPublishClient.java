@@ -49,7 +49,7 @@ public class DemoPublishClient extends Thread {
 		}
 
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception e) {
 		}
 	}
 }

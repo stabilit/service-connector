@@ -39,11 +39,11 @@ public class EncodingDecodingException extends Exception {
 	/**
 	 * Instantiates a new encoding decoding exception.
 	 * 
-	 * @param cause
+	 * @param exception
 	 *            the cause
 	 */
-	public EncodingDecodingException(Throwable cause) {
-		super(cause);
+	public EncodingDecodingException(Exception exception) {
+		super(exception);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class EncodingDecodingException extends Exception {
 	 * @param cause
 	 *            the cause
 	 */
-	public EncodingDecodingException(String message, Throwable cause) {
+	public EncodingDecodingException(String message, Exception cause) {
 		super(message, cause);
 	}
 }

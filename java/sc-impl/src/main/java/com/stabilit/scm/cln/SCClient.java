@@ -32,6 +32,8 @@ import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
@@ -116,7 +118,12 @@ public class SCClient implements ISCClient {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		attachCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			this.callback = null;
+			SCMPFault fault = (SCMPFault) reply;
+			throw fault.getCause();
+		}
 	}
 
 	/** {@inheritDoc} */

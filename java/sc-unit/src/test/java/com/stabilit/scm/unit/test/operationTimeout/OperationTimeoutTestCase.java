@@ -57,7 +57,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 			cp.setCloseOnFree(true);
 			cp.setMinConnections(5);
 			cp.initMinConnections();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		clnAttachBefore();

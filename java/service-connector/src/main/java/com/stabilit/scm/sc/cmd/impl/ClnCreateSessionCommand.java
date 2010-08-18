@@ -58,7 +58,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Throwable {
+	public void run(IRequest request, IResponse response) throws Exception {
 		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

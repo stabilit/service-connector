@@ -144,12 +144,12 @@ public class SCTest {
 		return map;
 	}
 
-	public static void checkReply(SCMPMessage message) throws Throwable {
+	public static void checkReply(SCMPMessage message) throws Exception {
 		if (message.isFault()) {
 			SCMPFault fault = (SCMPFault) message;
-			Throwable th = fault.getCause();
-			if (th != null) {
-				throw th;
+			Exception ex = fault.getCause();
+			if (ex != null) {
+				throw ex;
 			}
 			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}

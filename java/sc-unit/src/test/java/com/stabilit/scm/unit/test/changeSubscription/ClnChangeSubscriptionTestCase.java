@@ -48,7 +48,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 	}
 
 	@Before
-	public void setup() throws Throwable {
+	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
 			this.config = new RequesterConfigPool();
@@ -60,13 +60,13 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 			} else {
 				run = 0;
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Test
-	public void subscribe() throws Throwable {
+	public void subscribe() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
 				"publish-simulation");
 

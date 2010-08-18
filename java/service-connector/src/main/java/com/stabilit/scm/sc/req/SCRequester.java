@@ -56,8 +56,8 @@ public class SCRequester implements IRequester {
 	}
 
 	/**
-	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the
-	 * time a reply is received. Handles freeing up earlier requested connections.
+	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
+	 * reply is received. Handles freeing up earlier requested connections.
 	 */
 	private class SCRequesterSCMPCallback implements ISCMPCallback {
 
@@ -81,21 +81,20 @@ public class SCRequester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception ex) {
 			// first handle connection - that user has a connection to work, if he has only 1
-			if (th instanceof IdleTimeoutException) {
+			if (ex instanceof IdleTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {
 				// another exception occurred - just free the connection
 				this.freeConnection();
 			}
-			this.scmpCallback.callback(th);
+			this.scmpCallback.callback(ex);
 		}
 
 		/**
-		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester
-		 * anymore.
+		 * Free connection. Orders connectionPool to give the connection free. Its not used by the requester anymore.
 		 */
 		private void freeConnection() {
 			try {
@@ -106,13 +105,12 @@ public class SCRequester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if
-		 * connection has a curious state.
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection
+		 * has a curious state.
 		 */
 		private void disconnectConnection() {
 			try {
-				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(
-						connectionCtx.getConnection());
+				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(this, e);
 			}

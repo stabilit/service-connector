@@ -44,7 +44,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	}
 
 	@Test
-	public void deRegisterServiceCall() throws Throwable {
+	public void deRegisterServiceCall() throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
@@ -66,7 +66,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	}
 
 	@Test
-	public void secondDeRegisterServiceCall() throws Throwable {
+	public void secondDeRegisterServiceCall() throws Exception {
 		super.deRegisterServiceAfter();
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");

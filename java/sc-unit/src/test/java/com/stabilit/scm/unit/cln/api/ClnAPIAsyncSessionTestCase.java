@@ -65,7 +65,7 @@ public class ClnAPIAsyncSessionTestCase {
 			try {
 				// disconnects from SC
 				sc.detach();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				sc = null;
 			}
 		}
@@ -83,8 +83,8 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 
 		@Override
-		public void callback(Throwable th) {
-			ExceptionPoint.getInstance().fireException(this, th);
+		public void callback(Exception ex) {
+			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}
 

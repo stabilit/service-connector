@@ -46,20 +46,20 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 	}
 
 	@Before
-	public void setup() throws Throwable {
+	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new Requester(this.testContext);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Test
-	public void receiveLargeMessage() throws Throwable {
+	public void receiveLargeMessage() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
 				"publish-simulation");
 

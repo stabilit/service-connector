@@ -134,8 +134,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable th) {
+				ExceptionPoint.getInstance().fireException(this, th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

@@ -174,8 +174,8 @@ public class ConnectionPool implements IConnectionPool {
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
-		} catch (Throwable th) {
-			throw new ConnectionPoolConnectException("Unable to establish new connection.", th);
+		} catch (Exception ex) {
+			throw new ConnectionPoolConnectException("Unable to establish new connection.", ex);
 		}
 		return connection;
 	}

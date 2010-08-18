@@ -162,7 +162,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception th) {
 			SCMPMessage fault = null;
 			if (th instanceof IdleTimeoutException) {
 				// operation timeout handling

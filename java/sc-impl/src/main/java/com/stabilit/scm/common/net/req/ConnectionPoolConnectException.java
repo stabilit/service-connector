@@ -32,10 +32,10 @@ public class ConnectionPoolConnectException extends Exception {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param cause
+	 * @param exception
 	 *            the cause
 	 */
-	public ConnectionPoolConnectException(String message, Throwable cause) {
-		super(message, cause);
+	public ConnectionPoolConnectException(String message, Exception exception) {
+		super(message, exception);
 	}
 }

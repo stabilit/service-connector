@@ -85,7 +85,7 @@ public class SrvDataAsyncTestCase extends SuperSessionTestCase {
 		}
 
 		@Override
-		public void callback(Throwable th) {
+		public void callback(Exception ex) {
 			SrvDataAsyncTestCase.pendingRequest = false;
 		}
 	}

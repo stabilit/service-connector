@@ -21,32 +21,20 @@ package com.stabilit.scm.common.scmp;
  */
 public interface ISCMPSynchronousCallback extends ISCMPCallback {
 
-	/**
-	 * Callback.
-	 * 
-	 * @param scmpReply
-	 *            the scmp reply
-	 * @throws Exception
-	 *             the exception
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public abstract void callback(SCMPMessage scmpReply) throws Exception;
 
-	/**
-	 * Callback.
-	 * 
-	 * @param th
-	 *            the error
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public abstract void callback(Throwable th);
+	public abstract void callback(Exception ex);
 
 	/**
 	 * Gets the message synchronous. Waits until message/fault received or operation timeout occurs. Longest time to
 	 * wait depends on Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS.
 	 * 
 	 * @return the message sync
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public abstract SCMPMessage getMessageSync() throws Exception;
 
@@ -59,7 +47,7 @@ public interface ISCMPSynchronousCallback extends ISCMPCallback {
 	 * @param timeoutInMillis
 	 *            the timeout in milliseconds
 	 * @return the message sync
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public abstract SCMPMessage getMessageSync(int timeoutInMillis) throws Exception;
 

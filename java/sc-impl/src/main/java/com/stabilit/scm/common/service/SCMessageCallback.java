@@ -44,7 +44,7 @@ public abstract class SCMessageCallback implements ISCMessageCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract void callback(Throwable th);
+	public abstract void callback(Exception ex);
 
 	/** {@inheritDoc} */
 	@Override

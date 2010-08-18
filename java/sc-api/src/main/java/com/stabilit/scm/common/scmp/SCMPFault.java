@@ -25,11 +25,11 @@ import com.stabilit.scm.common.util.DateTimeUtility;
  */
 public class SCMPFault extends SCMPMessage {
 
-	private Throwable throwable;
+	private Exception exception;
 
-	public SCMPFault(Throwable throwable) {
+	public SCMPFault(Exception exception) {
 		super();
-		this.throwable = throwable;
+		this.exception = exception;
 	}
 
 	/**
@@ -62,10 +62,12 @@ public class SCMPFault extends SCMPMessage {
 	}
 
 	/**
-	 * @return the throwable
+	 * Gets the cause.
+	 * 
+	 * @return the exception
 	 */
-	public Throwable getCause() {
-		return throwable;
+	public Exception getCause() {
+		return exception;
 	}
 
 	/**

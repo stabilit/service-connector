@@ -228,7 +228,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			}
 
 			@Override
-			public void callback(Throwable th) {
+			public void callback(Exception ex) {
 				// nothing to do in callback
 			}
 		}

@@ -196,7 +196,7 @@ public abstract class CommandAdapter implements ICommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Throwable {
+	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
 

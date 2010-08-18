@@ -39,7 +39,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 	}
 
 	@Test
-	public void sessionTimeout() throws Throwable {
+	public void sessionTimeout() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
@@ -66,7 +66,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 	}
 
 	@Test
-	public void noSessionTimeout() throws Throwable {
+	public void noSessionTimeout() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");

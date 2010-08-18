@@ -63,7 +63,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Throwable {
+	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String mask = (String) request.getAttribute(SCMPHeaderAttributeKey.MASK);
@@ -242,7 +242,10 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reply
 						.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message
 								.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
-				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, message.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+				String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+				if (messageInfo != null) {
+					reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+				}
 				reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
 				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
 						.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));

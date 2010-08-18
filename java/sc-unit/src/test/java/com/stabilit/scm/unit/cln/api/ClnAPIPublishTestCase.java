@@ -60,7 +60,7 @@ public class ClnAPIPublishTestCase {
 				// disconnects from SC
 				publishServiceA.unsubscribe();
 				sc.detach();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				sc = null;
 			}
 		}
@@ -87,7 +87,7 @@ public class ClnAPIPublishTestCase {
 				// disconnects from SC
 				publishServiceA.unsubscribe();
 				sc.detach();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				sc = null;
 			}
 		}
@@ -107,8 +107,8 @@ public class ClnAPIPublishTestCase {
 		}
 
 		@Override
-		public void callback(Throwable th) {
-			Assert.fail(th.toString());
+		public void callback(Exception ex) {
+			Assert.fail(ex.toString());
 		}
 	}
 }

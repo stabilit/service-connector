@@ -42,12 +42,15 @@ public interface ICommand extends IFactoryable {
 
 	/**
 	 * Run command.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 * @throws Throwable the throwable
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void run(IRequest request, IResponse response) throws Throwable;
+	public void run(IRequest request, IResponse response) throws Exception;
 
 	/**
 	 * Checks if command is asynchronous.
