@@ -106,9 +106,9 @@ public class AttachDetachClientToSCTest {
 	}
 	
 	@Test
-	public void attachDetach_cycle100Times_notAttached() throws Exception
+	public void attachDetach_cycle1000Times_notAttached() throws Exception
 	{
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 1000; i++) {
 			client.attach(host, port8080);
 			client.detach();
 		}

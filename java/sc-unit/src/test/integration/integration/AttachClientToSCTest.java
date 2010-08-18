@@ -533,12 +533,12 @@ public class AttachClientToSCTest {
 		assertEquals(true, client.isAttached());
 	}
 	
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void attach_hostLocalhostPort8080KeepAlive0_notAttached() throws Exception {
 		try {
 			client.attach("localhost", 8080, 0);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
+			assertEquals(true, client.isAttached());
 			throw e;
 		}
 	}
