@@ -19,6 +19,9 @@ public class SCMessageTest {
 
 	private ISCMessage message;
 
+	/**
+	 * @throws java.lang.Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		message = new SCMessage();
@@ -94,16 +97,14 @@ public class SCMessageTest {
 		assertEquals(1048576, ((byte[]) message.getData()).length);
 	}
 
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void setMessageInfo_nullParam_nullMessageInfo() {
 		message.setMessageInfo(null);
-		assertEquals(null, message.getMessageInfo());
 	}
 
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void setMessageInfo_emptyParam_length0MessageInfo() {
 		message.setMessageInfo("");
-		assertEquals(0, message.getMessageInfo().length());
 	}
 
 	@Test

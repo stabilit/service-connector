@@ -7,7 +7,6 @@ import java.security.InvalidParameterException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.SCServer;
 
@@ -15,6 +14,9 @@ public class SCServerTest {
 
 	private ISCServer server;
 
+	/**
+	 * @throws java.lang.Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();

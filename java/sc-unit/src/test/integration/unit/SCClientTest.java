@@ -29,7 +29,6 @@ public class SCClientTest {
 	private ISCClient client;
 
 	private static final String host = "localhost";
-	private static final int port = 8000;
 	/**
 	 * @throws java.lang.Exception
 	 */
