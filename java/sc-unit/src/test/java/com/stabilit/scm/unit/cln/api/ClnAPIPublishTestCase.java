@@ -52,7 +52,7 @@ public class ClnAPIPublishTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
+			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

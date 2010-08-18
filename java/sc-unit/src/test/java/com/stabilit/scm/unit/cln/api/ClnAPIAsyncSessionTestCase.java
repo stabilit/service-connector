@@ -23,10 +23,8 @@ import org.junit.Test;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
@@ -81,13 +79,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 		@Override
 		public void callback(ISCMessage msg) {
-			try {
-				IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
-				ISC serviceConnector = sessionContext.getServiceConnector();
-				System.out.println(msg);
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-			}
+			System.out.println(msg);
 		}
 
 		@Override
