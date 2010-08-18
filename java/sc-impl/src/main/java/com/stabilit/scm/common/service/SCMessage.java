@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
+import java.security.InvalidParameterException;
+
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
  * 
@@ -57,6 +59,12 @@ public class SCMessage implements ISCMessage {
 	/** {@inheritDoc} */
 	@Override
 	public void setMessageInfo(String messageInfo) {
+		if (messageInfo == null) {
+			throw new InvalidParameterException("Message info must be set");
+		}
+		if (messageInfo.getBytes().length < 256) {
+			throw new InvalidParameterException("Message info too long, over 256 bytes");
+		}
 		this.messageInfo = messageInfo;
 	}
 

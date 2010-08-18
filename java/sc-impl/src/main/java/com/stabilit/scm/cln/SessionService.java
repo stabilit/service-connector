@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import java.security.InvalidParameterException;
+
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -35,8 +37,8 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 /**
- * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
- * functions.
+ * The Class SessionService. SessionService is a remote interface in client API to a session service and provides
+ * communication functions.
  * 
  * @author JTraber
  */
@@ -61,6 +63,18 @@ public class SessionService extends Service implements ISessionService {
 	public void createSession(String sessionInfo, int echoTimeoutInSeconds, int echoIntervalInSeconds) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
+		}
+		if (sessionInfo == null) {
+			throw new InvalidParameterException("Session info must be set.");
+		}
+		if (sessionInfo.getBytes().length < 256) {
+			throw new InvalidParameterException("Session info too long, over 256 bytes.");
+		}
+		if (echoTimeoutInSeconds < 1 || echoTimeoutInSeconds > 3600) {
+			throw new InvalidParameterException("Echo Timout not within limits 1 to 3600.");
+		}
+		if (echoIntervalInSeconds < 1 || echoIntervalInSeconds > 3600) {
+			throw new InvalidParameterException("Echo Interval not within limits 1 to 3600.");
 		}
 		this.msgId.reset();
 		this.callback = new ServiceCallback();
@@ -96,6 +110,9 @@ public class SessionService extends Service implements ISessionService {
 	/** {@inheritDoc} */
 	@Override
 	public SCMessage execute(ISCMessage requestMsg) throws Exception {
+		if (requestMsg == null) {
+			throw new InvalidParameterException("Message must be set.");
+		}
 		if (pendingRequest) {
 			// already executed before - reply still outstanding
 			throw new SCServiceException(
@@ -131,6 +148,12 @@ public class SessionService extends Service implements ISessionService {
 	/** {@inheritDoc} */
 	@Override
 	public void execute(ISCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
+		if (messageCallback == null) {
+			throw new InvalidParameterException("Callback must be set.");
+		}
+		if (requestMsg == null) {
+			throw new InvalidParameterException("Message must be set.");
+		}
 		if (pendingRequest) {
 			// already executed before - reply still outstanding
 			throw new SCServiceException(

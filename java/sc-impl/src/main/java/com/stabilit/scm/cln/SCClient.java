@@ -174,18 +174,27 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public IFileService newFileService(String serviceName) {
+		if (serviceName == null) {
+			throw new InvalidParameterException("Service name must be set");
+		}
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ISessionService newSessionService(String serviceName) {
+		if (serviceName == null) {
+			throw new InvalidParameterException("Service name must be set");
+		}
 		return new SessionService(serviceName, this.context);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public IPublishService newPublishService(String serviceName) {
+		if (serviceName == null) {
+			throw new InvalidParameterException("Service name must be set");
+		}
 		return new PublishService(serviceName, this.context);
 	}
 
@@ -201,7 +210,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public int getMaxConnections() {
-		return this.connectionPool.getMaxConnections();
+		return this.maxConnections;
 	}
 
 	/** {@inheritDoc} */

@@ -32,6 +32,9 @@ import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
 
+/**
+ * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.
+ */
 public class SCAsyncSessionServiceExample {
 
 	private static boolean messageReceived = false;
@@ -77,6 +80,9 @@ public class SCAsyncSessionServiceExample {
 		}
 	}
 
+	/**
+	 * The Class ExampleCallback. Callback used for asynchronously execution.
+	 */
 	private class ExampleCallback extends SCMessageCallback {
 
 		public ExampleCallback(IService service) {

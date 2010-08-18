@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import java.security.InvalidParameterException;
+
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -57,6 +59,15 @@ public class PublishService extends Service implements IPublishService {
 	/** {@inheritDoc} */
 	@Override
 	public void changeSubscription(String mask) throws Exception {
+		if (mask == null) {
+			throw new InvalidParameterException("Mask must be set.");
+		}
+		if (mask.getBytes().length < 256) {
+			throw new InvalidParameterException("Mask too long, over 256 bytes.");
+		}
+		if (mask.indexOf('%') != -1) {
+			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+		}
 		if (this.subscribed == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
@@ -79,6 +90,27 @@ public class PublishService extends Service implements IPublishService {
 	@Override
 	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback) throws Exception {
+		if (mask == null) {
+			throw new InvalidParameterException("Mask must be set.");
+		}
+		if (mask.getBytes().length < 256) {
+			throw new InvalidParameterException("Mask too long, over 256 bytes.");
+		}
+		if (mask.indexOf('%') != -1) {
+			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+		}
+		if (sessionInfo == null) {
+			throw new InvalidParameterException("Session info must be set.");
+		}
+		if (sessionInfo.getBytes().length < 256) {
+			throw new InvalidParameterException("Session info too long, over 256 bytes.");
+		}
+		if (noDataInterval < 1 || noDataInterval > 3600) {
+			throw new InvalidParameterException("No data interval not within limits 1 to 3600.");
+		}
+		if (callback == null) {
+			throw new InvalidParameterException("Callback must be set.");
+		}
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
