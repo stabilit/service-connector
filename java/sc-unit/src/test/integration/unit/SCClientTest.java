@@ -45,6 +45,7 @@ public class SCClientTest {
 		assertEquals(Constants.DEFAULT_CLIENT_CON, client.getConnectionType());
 		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
 		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
+		assertEquals(false, client.isAttached());
 		assertNotNull(client.getContext());		
 	}
 	

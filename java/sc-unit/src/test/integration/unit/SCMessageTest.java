@@ -97,13 +97,14 @@ public class SCMessageTest {
 		assertEquals(1048576, ((byte[]) message.getData()).length);
 	}
 
-	@Test(expected = InvalidParameterException.class)
-	public void setMessageInfo_nullParam_nullMessageInfo() {
+	@Test
+	public void setMessageInfo_nullParam_acceptValue() {
 		message.setMessageInfo(null);
+		assertEquals(null, message.getMessageInfo());
 	}
 
 	@Test(expected = InvalidParameterException.class)
-	public void setMessageInfo_emptyParam_length0MessageInfo() {
+	public void setMessageInfo_emptyParam_throwInvalidParamException() {
 		message.setMessageInfo("");
 	}
 
