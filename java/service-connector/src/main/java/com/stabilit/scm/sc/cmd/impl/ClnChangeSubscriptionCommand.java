@@ -68,17 +68,20 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		ISCMPSynchronousCallback callback = new CommandCallback();
 		server.changeSubscription(reqMessage, callback);
 		SCMPMessage reply = callback.getMessageSync();
-		// no specific error handling in case of fault - everything is or will be done anyway
-		
-		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.FALSE.equals(rejectSessionFlag)) {
-			// session has not been rejected
-			String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-			SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
-			IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
-			queue.changeSubscription(sessionId, filterMask);
+
+		if (reply.isFault() == false) {
+			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+				// session has not been rejected
+				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
+				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
+				queue.changeSubscription(sessionId, filterMask);
+			} else {
+				// session has been rejected - remove session id from header
+				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			}
 		} else {
-			// session has been rejected - remove session id from header
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		}
 		// forward reply to client

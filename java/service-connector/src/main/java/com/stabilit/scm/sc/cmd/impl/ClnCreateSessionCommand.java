@@ -75,19 +75,22 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		ISCMPSynchronousCallback callback = new CommandCallback();
 		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
-		// no specific error handling in case of fault - everything is or will be done anyway
 
-		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.FALSE.equals(rejectSessionFlag)) {
-			// session has not been rejected, add server to session
-			session.setServer(server);
-			session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
-			session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
-			// finally add session to the registry
-			SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-			sessionRegistry.addSession(session.getId(), session);
+		if (reply.isFault() == false) {
+			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+				// session has not been rejected, add server to session
+				session.setServer(server);
+				session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
+				session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
+				// finally add session to the registry
+				SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+				sessionRegistry.addSession(session.getId(), session);
+			} else {
+				// session has been rejected - remove session id from header
+				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			}
 		} else {
-			// session has been rejected - remove session id from header
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		}
 		// forward server reply to client

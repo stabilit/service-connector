@@ -67,7 +67,7 @@ public class SessionService extends Service implements ISessionService {
 		if (sessionInfo == null) {
 			throw new InvalidParameterException("Session info must be set.");
 		}
-		if (sessionInfo.getBytes().length < 256) {
+		if (sessionInfo.getBytes().length > 256) {
 			throw new InvalidParameterException("Session info too long, over 256 bytes.");
 		}
 		if (echoTimeoutInSeconds < 1 || echoTimeoutInSeconds > 3600) {

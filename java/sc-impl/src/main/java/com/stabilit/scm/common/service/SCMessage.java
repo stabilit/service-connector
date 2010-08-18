@@ -59,10 +59,7 @@ public class SCMessage implements ISCMessage {
 	/** {@inheritDoc} */
 	@Override
 	public void setMessageInfo(String messageInfo) {
-		if (messageInfo == null) {
-			throw new InvalidParameterException("Message info must be set");
-		}
-		if (messageInfo.getBytes().length < 256) {
+		if (messageInfo != null && messageInfo.getBytes().length > 256) {
 			throw new InvalidParameterException("Message info too long, over 256 bytes");
 		}
 		this.messageInfo = messageInfo;

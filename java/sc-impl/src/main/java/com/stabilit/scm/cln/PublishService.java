@@ -62,7 +62,7 @@ public class PublishService extends Service implements IPublishService {
 		if (mask == null) {
 			throw new InvalidParameterException("Mask must be set.");
 		}
-		if (mask.getBytes().length < 256) {
+		if (mask.getBytes().length > 256) {
 			throw new InvalidParameterException("Mask too long, over 256 bytes.");
 		}
 		if (mask.indexOf('%') != -1) {
@@ -93,7 +93,7 @@ public class PublishService extends Service implements IPublishService {
 		if (mask == null) {
 			throw new InvalidParameterException("Mask must be set.");
 		}
-		if (mask.getBytes().length < 256) {
+		if (mask.getBytes().length > 256) {
 			throw new InvalidParameterException("Mask too long, over 256 bytes.");
 		}
 		if (mask.indexOf('%') != -1) {
@@ -102,7 +102,7 @@ public class PublishService extends Service implements IPublishService {
 		if (sessionInfo == null) {
 			throw new InvalidParameterException("Session info must be set.");
 		}
-		if (sessionInfo.getBytes().length < 256) {
+		if (sessionInfo.getBytes().length > 256) {
 			throw new InvalidParameterException("Session info too long, over 256 bytes.");
 		}
 		if (noDataInterval < 1 || noDataInterval > 3600) {

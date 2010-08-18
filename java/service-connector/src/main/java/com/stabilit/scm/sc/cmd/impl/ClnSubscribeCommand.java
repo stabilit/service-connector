@@ -80,23 +80,27 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		ISCMPSynchronousCallback callback = new CommandCallback();
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session);
 		SCMPMessage reply = callback.getMessageSync();
-		// no specific error handling in case of fault - everything is or will be done anyway
-		
-		boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-		if (Boolean.FALSE.equals(rejectSessionFlag)) {
-			// session has not been rejected, add server to session
-			session.setServer(server);
-			// finally add subscription to the registry
-			SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
-			subscriptionSessionRegistry.addSession(session.getId(), session);
 
-			SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
+		if (reply.isFault() == false) {
+			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+				// session has not been rejected, add server to session
+				session.setServer(server);
+				// finally add subscription to the registry
+				SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry
+						.getCurrentInstance();
+				subscriptionSessionRegistry.addSession(session.getId(), session);
 
-			IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
-			IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
-			subscriptionQueue.subscribe(session.getId(), filterMask, timerRun);
+				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
+
+				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
+				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
+				subscriptionQueue.subscribe(session.getId(), filterMask, timerRun);
+			} else {
+				// session has been rejected - remove session id from header
+				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			}
 		} else {
-			// session has been rejected - remove session id from header
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		}
 		// forward reply to client
