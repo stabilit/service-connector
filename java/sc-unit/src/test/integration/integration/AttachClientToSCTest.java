@@ -510,7 +510,7 @@ public class AttachClientToSCTest {
 	
 //	since all mandatory combinations are tested, we can omit all combinations
 //	and test only those the attribute keepAlive could have some effect on
-//	other combinations are useless
+//	other combinations are useless. Really
 	
 	public void attach_hostLocalhostPort8080KeepAlive1_attached() throws Exception {
 		client.attach("localhost", 8080, 1);
