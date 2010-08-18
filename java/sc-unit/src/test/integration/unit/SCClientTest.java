@@ -4,16 +4,18 @@
 package unit;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
+import com.stabilit.scm.cln.service.IFileService;
+import com.stabilit.scm.cln.service.IPublishService;
+import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.IFileService;
-import com.stabilit.scm.common.service.IPublishService;
-import com.stabilit.scm.common.service.ISCClient;
 import com.stabilit.scm.common.conf.Constants;
 
 /**
@@ -31,30 +33,18 @@ public class SCClientTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		client = new SCClient(host, port);
+		client = new SCClient();
 	}
 	
 	@Test
-	public void construtor_setValuesProperly_valuesSet()
+	public void construtor_setInitialValues_valuesSet()
 	{
-		assertEquals(host, client.getHost());
-		assertEquals(port, client.getPort());
-		assertEquals(Constants.DEFAULT_CLIENT_CON, client.getConnectionType());
-		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveInterval());
-		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
-		assertNotNull(client.getContext());		
-	}
-	
-	@Test
-	public void constructor_setWeirdValues_valuesSet()
-	{
-		client = new SCClient(null, -1, "", 0);
 		assertEquals(null, client.getHost());
 		assertEquals(-1, client.getPort());
-		assertEquals("", client.getConnectionType());
-		assertEquals(0, client.getKeepAliveInterval());
+		assertEquals(Constants.DEFAULT_CLIENT_CON, client.getConnectionType());
+		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
 		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
-		assertNotNull(client.getContext());
+		assertNotNull(client.getContext());		
 	}
 	
 	@Test
