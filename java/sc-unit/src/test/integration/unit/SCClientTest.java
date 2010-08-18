@@ -8,6 +8,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.security.InvalidParameterException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,10 +49,10 @@ public class SCClientTest {
 		assertNotNull(client.getContext());		
 	}
 	
-	@Test
-	public void newFileService_NullParam_returnsIFileService()
+	@Test(expected = InvalidParameterException.class)
+	public void newFileService_NullParam_throwsInvalidParamException()
 	{
-		assertTrue(client.newFileService(null) instanceof IFileService);
+		client.newFileService(null);
 	}
 	
 	@Test
@@ -65,10 +67,10 @@ public class SCClientTest {
 		assertTrue(client.newFileService(host) instanceof IFileService);
 	}
 
-	@Test
-	public void newPublishService_NullParam_returnsIPublishService()
+	@Test(expected = InvalidParameterException.class)
+	public void newPublishService_NullParam_throwsInvalidParamException()
 	{		
-		assertTrue(client.newPublishService(null) instanceof IPublishService);
+		client.newPublishService(null);
 	}
 	
 	@Test
@@ -83,10 +85,10 @@ public class SCClientTest {
 		assertTrue(client.newPublishService(host) instanceof IPublishService);
 	}
 
-	@Test
-	public void newSessionService_NullParam_returnsISessionService()
+	@Test(expected = InvalidParameterException.class)
+	public void newSessionService_NullParam_throwsInvalidParamException()
 	{
-		assertTrue(client.newSessionService(null) instanceof ISessionService);
+		client.newSessionService(null);
 	}
 	
 	@Test
@@ -129,18 +131,16 @@ public class SCClientTest {
 		assertEquals(host, client.getConnectionType());
 	}
 	
-	@Test
-	public void setMaxConnections_0Param_return0()
+	@Test(expected = InvalidParameterException.class)
+	public void setMaxConnections_0Param_throwsInvalidParamException()
 	{
 		client.setMaxConnections(0);
-		assertEquals(0, client.getMaxConnections());
 	}
 	
-	@Test
-	public void setMaxConnections_minParam_returnMin()
+	@Test(expected = InvalidParameterException.class)
+	public void setMaxConnections_minParam_throwsInvalidParamException()
 	{
 		client.setMaxConnections(Integer.MIN_VALUE);
-		assertEquals(Integer.MIN_VALUE, client.getMaxConnections());
 	}
 	
 	@Test
@@ -150,11 +150,10 @@ public class SCClientTest {
 		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
 	}
 	
-	@Test
-	public void setMaxConnections_minus1Param_returnMinus1()
+	@Test(expected = InvalidParameterException.class)
+	public void setMaxConnections_minus1Param_throwsInvalidParamException()
 	{
 		client.setMaxConnections(-1);
-		assertEquals(-1, client.getMaxConnections());
 	}
 	
 	@Test
