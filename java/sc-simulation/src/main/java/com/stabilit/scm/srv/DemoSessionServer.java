@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.rr;
+package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCServer;

@@ -1,8 +1,6 @@
 package com.stabilit.scm.srv;
 
 import com.stabilit.scm.sc.LoggerConfigurator;
-import com.stabilit.scm.srv.ps.DemoPublishServer;
-import com.stabilit.scm.srv.rr.DemoSessionServer;
 
 public class SessionAndPublishServer {
 

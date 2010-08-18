@@ -19,12 +19,13 @@
 /**
  * 
  */
-package com.stabilit.scm.srv.ps;
+package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
+import com.stabilit.scm.srv.ps.SCPublishServer;
 
 public class DemoPublishServer {
 	private ISCPublishServer publishSrv = null;
