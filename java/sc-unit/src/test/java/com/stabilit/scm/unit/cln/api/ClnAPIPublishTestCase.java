@@ -30,7 +30,7 @@ import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessageCallback;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
-public class ClnAPIPublishSubscribeTestCase {
+public class ClnAPIPublishTestCase {
 
 	private int publishedMessageCounter = 0;
 

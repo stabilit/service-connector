@@ -78,6 +78,7 @@ public class SCSimplePublishingServiceExample {
 
 		@Override
 		public void callback(Throwable th) {
+			th.printStackTrace();
 		}
 	}
 }

@@ -29,8 +29,8 @@ import com.stabilit.scm.common.net.req.netty.http.NettyHttpConnection;
 import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpConnection;
 
 /**
- * A factory for creating connection objects. Provides access to concrete client instances. Possible connection
- * types are shown as constants below.
+ * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types
+ * are shown as constants below.
  */
 public class ConnectionFactory extends Factory {
 
@@ -41,10 +41,10 @@ public class ConnectionFactory extends Factory {
 	/** ConnectionFactory instance */
 	private static final ConnectionFactory instance = new ConnectionFactory();
 
-	/** Netty stuff */
-	/*
-	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	/**
+	 * NETTY stuff<br>
+	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections
+	 * on a socket. A worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 	/** The Constant timer, responsible component to observe timeouts in a connection. */
@@ -100,8 +100,11 @@ public class ConnectionFactory extends Factory {
 	}
 
 	/**
-	 * Shutdown connection factory. This method shuts down every resource needed by connections. Should only be
-	 * used if whole application shuts down.
+	 * Shutdown connection factory.<br>
+	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down.
+	 * Be very careful if you use this method - every connection in relation to this channelFactory must be closed
+	 * otherwise you end up in indefinitely loop. In most cases closing the connections is good enough NETTY will
+	 * release other resources.
 	 */
 	public static void shutdownConnectionFactory() {
 		ConnectionFactory.channelFactory.releaseExternalResources();

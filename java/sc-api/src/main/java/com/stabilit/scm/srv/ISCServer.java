@@ -99,6 +99,13 @@ public interface ISCServer extends ISC {
 	public abstract void setImmediateConnect(boolean immediateConnect);
 
 	/**
+	 * Checks if is immediate connect.
+	 * 
+	 * @return true, if is immediate connect
+	 */
+	public abstract boolean isImmediateConnect();
+
+	/**
 	 * Start server.
 	 * 
 	 * @param host

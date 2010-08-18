@@ -47,6 +47,8 @@ public class SCClient implements ISCClient {
 	private String host;
 	/** The port of the SC. */
 	private int port;
+	/** The max connections to use in pool. */
+	private int maxConnections;
 	/** The keep alive interval. */
 	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
@@ -73,6 +75,7 @@ public class SCClient implements ISCClient {
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.context = new ServiceConnectorContext();
 		this.callback = null;
+		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.connectionPool = null;
 	}
 
@@ -108,6 +111,7 @@ public class SCClient implements ISCClient {
 		this.host = host;
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		this.connectionPool = new ConnectionPool(host, port, this.conType, keepAliveIntervalInSeconds);
+		this.connectionPool.setMaxConnections(this.maxConnections);
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
@@ -127,8 +131,6 @@ public class SCClient implements ISCClient {
 		this.callback = null;
 		// destroy connection pool
 		this.connectionPool.destroy();
-		// destroy connection resource
-		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/**
@@ -193,7 +195,7 @@ public class SCClient implements ISCClient {
 		if (maxConnections < 1) {
 			throw new InvalidParameterException("Max connections must be greater than zero");
 		}
-		this.connectionPool.setMaxConnections(maxConnections);
+		this.maxConnections = maxConnections;
 	}
 
 	/** {@inheritDoc} */

@@ -26,7 +26,7 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
-public class ClnAPISessionTestCase {
+public class ClnAPISyncSessionTestCase {
 
 	@Before
 	public void setUp() {

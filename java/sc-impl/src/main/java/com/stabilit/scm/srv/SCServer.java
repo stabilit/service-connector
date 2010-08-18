@@ -200,8 +200,6 @@ public class SCServer implements ISCServer {
 		this.srvServiceRegistry.removeSrvService(serviceName);
 		// destroy the connection pool
 		this.connectionPool.destroy();
-		// destroy connection resource
-		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/** {@inheritDoc} */
@@ -246,6 +244,12 @@ public class SCServer implements ISCServer {
 	@Override
 	public void setImmediateConnect(boolean immediateConnect) {
 		this.immediateConnect = immediateConnect;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isImmediateConnect() {
+		return this.immediateConnect;
 	}
 
 	/** {@inheritDoc} */
