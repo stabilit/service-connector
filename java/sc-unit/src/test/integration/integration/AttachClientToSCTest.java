@@ -11,6 +11,7 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.net.req.ConnectionPoolConnectException;
 import com.stabilit.scm.common.service.ISC;
+import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.sc.SC;
 
 public class AttachClientToSCTest {
@@ -25,19 +26,29 @@ public class AttachClientToSCTest {
 	public void setUp() throws Exception {
 		SC.main(new String[] { "-filename", "scIntegration.properties" });
 		client = new SCClient();
-		System.out.println();
 	}
 
 //	region hostName == "localhost" (set as only one in 
 //	scIntegration.properties), all ports
-	
+	@Test
 	public void attach_localhost8080_attached() throws Exception {
 		client.attach("localhost", 8080);
 		assertEquals(true, client.isAttached());
 	}
 
+	@Test(expected = SCServiceException.class)
+	public void attach_hostLocalhostPort9000_attached() throws Exception {
+		try {
+			client.attach("localhost", 9000);
+		} catch (Exception e) {
+			assertEquals(false, client.isAttached());
+			throw e;
+		}
+	}
+	
 	@Test
-	public void attach_localhost9000_attached() throws Exception {
+	public void attach_changeConnectionTypeHostLocalhostPort9000_attached() throws Exception {
+		((SCClient)client).setConnectionType("netty.tcp");
 		client.attach("localhost", 9000);
 		assertEquals(true, client.isAttached());
 	}
