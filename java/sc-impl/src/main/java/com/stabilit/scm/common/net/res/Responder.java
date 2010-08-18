@@ -54,19 +54,19 @@ public class Responder implements IResponder {
 	/** {@inheritDoc} */
 	@Override
 	public void runAsync() throws Exception {
-		endpoint.runAsync();
+		this.endpoint.runAsync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void runSync() throws Exception {
-		endpoint.runSync();
+		this.endpoint.runSync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
-		endpoint.destroy();
+		this.endpoint.destroy();
 	}
 
 	@Override

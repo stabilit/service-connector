@@ -121,6 +121,12 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
+	public boolean isAttached() {
+		return this.callback != null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void detach() throws Exception {
 		if (this.callback == null) {
 			throw new SCServiceException("detach not possible - client not attached.");

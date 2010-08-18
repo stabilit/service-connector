@@ -44,6 +44,8 @@ public class SetupTestCases {
 	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
+	private static ISCServer scSim1ConSrv;
+	private static ISCServer scSim10ConSrv;
 
 	private SetupTestCases() {
 	}
@@ -137,23 +139,28 @@ public class SetupTestCases {
 	}
 
 	private static void startSessionServer1Connections() throws Exception {
-		ISCServer scSrv = new SCServer();
+		scSim1ConSrv = new SCServer();
 		// connect to SC as server
-		scSrv.setMaxSessions(10);
-		scSrv.setImmediateConnect(true);
-		scSrv.startServer("localhost", 7000, 0);
+		scSim1ConSrv.setMaxSessions(10);
+		scSim1ConSrv.setImmediateConnect(true);
+		scSim1ConSrv.startServer("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSrv.registerService("localhost", 9000, "simulation", srvCallback);
+		scSim1ConSrv.registerService("localhost", 9000, "simulation", srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
-		ISCServer scSrv = new SCServer();
+		scSim10ConSrv = new SCServer();
 		// connect to SC as server
-		scSrv.setMaxSessions(10);
-		scSrv.setImmediateConnect(true);
-		scSrv.startServer("localhost", 7000, 0);
+		scSim10ConSrv.setMaxSessions(10);
+		scSim10ConSrv.setImmediateConnect(true);
+		scSim10ConSrv.startServer("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSrv.registerService("localhost", 9000, "simulation", srvCallback);
+		scSim10ConSrv.registerService("localhost", 9000, "simulation", srvCallback);
+	}
+	
+	public static void registerSessionServiceEnable() throws Exception {
+		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSim10ConSrv.registerService("localhost", 9000, "enableService", srvCallback);
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {

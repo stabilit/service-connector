@@ -80,8 +80,8 @@ public abstract class SuperTestCase {
 
 	@Override
 	protected void finalize() throws Throwable {
-		SetupTestCases.killPublishServer();
 		this.testContext.getConnectionPool().destroy();
+		SetupTestCases.killPublishServer();
 		req = null;
 	}
 }

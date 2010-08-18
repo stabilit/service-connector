@@ -60,6 +60,13 @@ public interface ISCClient extends ISC {
 	public abstract void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 
 	/**
+	 * Checks if client is attached to SC.
+	 * 
+	 * @return true, if is attached
+	 */
+	public abstract boolean isAttached();
+
+	/**
 	 * Detach from SC.
 	 * 
 	 * @throws Exception

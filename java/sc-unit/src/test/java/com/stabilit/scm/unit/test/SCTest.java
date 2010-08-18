@@ -46,6 +46,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.unit.test.attach.AttachTestCase;
 import com.stabilit.scm.unit.test.attach.DetachTestCase;
 import com.stabilit.scm.unit.test.group.GroupCallTestCase;
+import com.stabilit.scm.unit.test.manage.ManageTestCase;
 import com.stabilit.scm.unit.test.messageId.MessageIdTestCase;
 import com.stabilit.scm.unit.test.pool.ConnectionPoolTestCase;
 import com.stabilit.scm.unit.test.register.DeRegisterServiceTestCase;
@@ -73,7 +74,8 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		SrvDataSyncTestCase.class, // 
 		SrvDataLargeSyncTestCase.class, // 
 		SrvDataAsyncTestCase.class,// 
-		SrvDataLargeAsyncTestCase.class, //  
+		SrvDataLargeAsyncTestCase.class, //
+		ManageTestCase.class, //
 		ConnectionPoolTestCase.class, // 
 		MessageIdTestCase.class,// 
 		SCVersionToSCTestCase.class, // 
@@ -101,7 +103,8 @@ public class SCTest {
 
 	public static void verifyError(SCMPMessage result, SCMPError error, String additionalInfo, SCMPMsgType msgType) {
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(error.getErrorText() + additionalInfo, result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		Assert.assertEquals(error.getErrorText() + additionalInfo, result
+				.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 

@@ -37,9 +37,13 @@ import com.stabilit.scm.sc.service.Service;
  */
 public class ManageCommand extends CommandAdapter {
 
+	/** The Constant DISABLE. */
 	private static final String DISABLE = "disable";
+	/** The Constant ENABLE. */
 	private static final String ENABLE = "enable";
+	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = "(" + ENABLE + "|" + DISABLE + ")=(.*)";
+	/** The Constant MANAGE_PATTER. */
 	private static final Pattern MANAGE_PATTER = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
 	/**
@@ -76,9 +80,9 @@ public class ManageCommand extends CommandAdapter {
 			return;
 		}
 
-		String serviceName = m.group(0);
 		String stateString = m.group(1);
-
+		String serviceName = m.group(2);
+		
 		if (stateString.equalsIgnoreCase(ENABLE)) {
 			// enable service is requested
 			if (disabledServiceRegistry.containsKey(serviceName)) {

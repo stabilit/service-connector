@@ -55,7 +55,7 @@ public interface IResponder {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void destroy() throws Exception;
+	public void destroy();
 
 	/**
 	 * Sets the responder configuration.

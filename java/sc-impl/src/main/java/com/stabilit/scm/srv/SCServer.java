@@ -80,6 +80,8 @@ public class SCServer implements ISCServer {
 	private SCMPMessageId msgId;
 	/** The server started state. */
 	private boolean serverStarted;
+	/** The responder. */
+	private IResponder responder;
 
 	public SCServer() {
 		this.serverStarted = false;
@@ -175,9 +177,7 @@ public class SCServer implements ISCServer {
 
 		registerServiceCall.setMaxSessions(this.maxSessions);
 		registerServiceCall.setPortNumber(this.localServerPort);
-		if (this.immediateConnect) {
-			registerServiceCall.setImmediateConnect(true);
-		}
+		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		registerServiceCall.invoke(this.callback);
 		this.callback.getMessageSync();
@@ -224,10 +224,10 @@ public class SCServer implements ISCServer {
 		respConfig.setPort(port);
 		respConfig.setKeepAliveInterval(keepAliveIntervalInSeconds);
 
-		IResponder resp = new Responder(respConfig);
+		responder = new Responder(respConfig);
 		try {
-			resp.create();
-			resp.runAsync();
+			responder.create();
+			responder.runAsync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
