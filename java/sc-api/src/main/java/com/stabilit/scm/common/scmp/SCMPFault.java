@@ -42,16 +42,6 @@ public class SCMPFault extends SCMPMessage {
 	/**
 	 * Instantiates a new SCMP fault message.
 	 * 
-	 * @param map
-	 *            the map
-	 */
-	public SCMPFault(Map<String, String> header) {
-		this.header = header;
-	}
-
-	/**
-	 * Instantiates a new SCMP fault message.
-	 * 
 	 * @param error
 	 *            the error code
 	 * @param additionalInfo

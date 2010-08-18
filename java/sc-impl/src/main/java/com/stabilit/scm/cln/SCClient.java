@@ -117,7 +117,12 @@ public class SCClient implements ISCClient {
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
-		attachCall.invoke(this.callback);
+		try {
+			attachCall.invoke(this.callback);
+		} catch (Exception e) {
+			this.callback = null;
+			throw new SCServiceException("attach client failed", e);
+		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			this.callback = null;
@@ -136,10 +141,16 @@ public class SCClient implements ISCClient {
 	@Override
 	public void detach() throws Exception {
 		if (this.callback == null) {
-			throw new SCServiceException("detach not possible - client not attached.");
+			// detach not possible - client not attached just ignore
+			return;
 		}
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
-		detachCall.invoke(this.callback);
+		try {
+			detachCall.invoke(this.callback);
+		} catch (Exception e) {
+			this.callback = null;
+			throw new SCServiceException("detach client failed", e);
+		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		this.callback = null;
 		// destroy connection pool

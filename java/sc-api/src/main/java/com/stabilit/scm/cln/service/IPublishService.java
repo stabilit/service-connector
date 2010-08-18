@@ -83,4 +83,11 @@ public interface IPublishService extends IService {
 	 */
 	public abstract void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback) throws Exception;
+
+	/**
+	 * Checks if is subscribed.
+	 * 
+	 * @return true, if is subscribed
+	 */
+	public abstract boolean isSubscribed();
 }

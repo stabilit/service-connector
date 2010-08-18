@@ -125,6 +125,11 @@ public class PublishService extends Service implements IPublishService {
 		if (authenticationId != null) {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
+		try {
+			subscribeCall.invoke(this.callback);
+		} catch (Exception e) {
+			throw new SCServiceException("subscribe failed", e);
+		}
 		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
@@ -133,6 +138,12 @@ public class PublishService extends Service implements IPublishService {
 		}
 		this.sessionId = reply.getSessionId();
 		this.receivePublication();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isSubscribed() {
+		return this.subscribed;
 	}
 
 	/**
@@ -152,14 +163,23 @@ public class PublishService extends Service implements IPublishService {
 	@Override
 	public void unsubscribe() throws Exception {
 		if (this.subscribed == false) {
-			throw new SCServiceException("unsubscrib not possible - not subscribed");
+			// unsubscribe not possible - not subscribed on this service just ignore
+			return;
 		}
 		this.subscribed = false;
 		this.msgId.incrementMsgSequenceNr();
 		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		unsubscribeCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		try {
+			unsubscribeCall.invoke(this.callback);
+		} catch (Exception e) {
+			throw new SCServiceException("subscribe failed", e);
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("subscribe failed", fault.getCause());
+		}
 		this.msgId = null;
 		this.callback = null;
 	}
