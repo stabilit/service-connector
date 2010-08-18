@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv;
 
+import java.security.InvalidParameterException;
+
 import com.stabilit.scm.common.service.ISC;
 
 /**
@@ -26,7 +28,7 @@ import com.stabilit.scm.common.service.ISC;
 public interface ISCServer extends ISC {
 
 	/**
-	 * Register service.
+	 * Register service on SC.
 	 * 
 	 * @param scHost
 	 *            the sc host
@@ -38,25 +40,31 @@ public interface ISCServer extends ISC {
 	 *            the sc callback
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             scPort is not within limits 1 to 0xFFFF, scHost unset, serviceName unset
 	 */
 	public abstract void registerService(String scHost, int scPort, String serviceName, ISCServerCallback scCallback)
 			throws Exception;
 
 	/**
-	 * Deregister service.
+	 * Deregister service from SC.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             serviceName unset
 	 */
 	public abstract void deregisterService(String serviceName) throws Exception;
 
 	/**
-	 * Sets the max sessions.
+	 * Sets the max sessions server can handle.
 	 * 
 	 * @param maxSessions
 	 *            the new max sessions
+	 * @throws InvalidParameterException
+	 *             max session is smaller than one
 	 */
 	public abstract void setMaxSessions(int maxSessions);
 
@@ -82,7 +90,8 @@ public interface ISCServer extends ISC {
 	public abstract String getLocalServerHost();
 
 	/**
-	 * Sets the immediate connect.
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
+	 * connection to server at the time registerService is received.
 	 * 
 	 * @param immediateConnect
 	 *            the new immediate connect
@@ -93,11 +102,13 @@ public interface ISCServer extends ISC {
 	 * Start server.
 	 * 
 	 * @param host
-	 *            the host
+	 *            the host to bind the listener
 	 * @param port
-	 *            the port
+	 *            the port to bin the listener
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 1 to 0xFFFF, host unset
 	 */
 	public abstract void startServer(String host, int port) throws Exception;
 
@@ -105,13 +116,14 @@ public interface ISCServer extends ISC {
 	 * Start server.
 	 * 
 	 * @param host
-	 *            the host
+	 *            the host to bind the listener
 	 * @param port
-	 *            the port
-	 * @param keepAliveIntervalInSeconds
-	 *            the keep alive interval in seconds
+	 *            the port to bin the listener
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 1 to 0xFFFF, host unset<br>
+	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
 	 */
 	public abstract void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 

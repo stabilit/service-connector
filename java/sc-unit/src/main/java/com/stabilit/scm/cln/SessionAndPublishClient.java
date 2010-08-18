@@ -1,7 +1,5 @@
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.ps.DemoPublishClient;
-import com.stabilit.scm.cln.rr.DemoSessionClient;
 
 public class SessionAndPublishClient {
 

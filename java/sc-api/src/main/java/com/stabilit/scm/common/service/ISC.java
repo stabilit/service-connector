@@ -29,7 +29,7 @@ package com.stabilit.scm.common.service;
 public interface ISC {
 
 	/**
-	 * Gets the context.
+	 * Gets the context of current communication part in use.
 	 * 
 	 * @return the context
 	 */

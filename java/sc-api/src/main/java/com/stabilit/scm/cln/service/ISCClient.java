@@ -16,18 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import java.security.InvalidParameterException;
+
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 
 /**
- * The Interface IServiceConnector.
+ * The Interface ISCClient. Interface for any kind of client.
  * 
  * @author JTraber
  */
 public interface ISCClient extends ISC {
 
 	/**
-	 * Attach.
+	 * Attach client to SC.
 	 * 
 	 * @param host
 	 *            the host
@@ -35,11 +37,13 @@ public interface ISCClient extends ISC {
 	 *            the port
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             scPort is not within limits 1 to 0xFFFF, scHost unset
 	 */
 	public abstract void attach(String host, int port) throws Exception;
 
 	/**
-	 * Attach.
+	 * Attach client to SC.
 	 * 
 	 * @param host
 	 *            the host
@@ -49,11 +53,14 @@ public interface ISCClient extends ISC {
 	 *            the keep alive interval in seconds
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 1 to 0xFFFF, host unset<br>
+	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
 	 */
 	public abstract void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 
 	/**
-	 * Disconnects from SC.
+	 * Detach from SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -107,6 +114,8 @@ public interface ISCClient extends ISC {
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
+	 * @throws InvalidParameterException
+	 *             maxConnections smaller one
 	 */
 	public abstract void setMaxConnections(int maxConnections);
 

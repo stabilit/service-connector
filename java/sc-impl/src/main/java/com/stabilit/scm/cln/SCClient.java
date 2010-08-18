@@ -51,7 +51,7 @@ public class SCClient implements ISCClient {
 	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
 	private IConnectionPool connectionPool;
-	/** Identifies low level component to use for communication default for clients is "netty.http". */
+	/** Identifies low level component to use for communication default for clients is {netty.http}. */
 	private String conType;
 	/** The requester. */
 	protected IRequester requester;
@@ -70,7 +70,7 @@ public class SCClient implements ISCClient {
 		this.host = null;
 		this.port = -1;
 		this.conType = Constants.DEFAULT_CLIENT_CON;
-		this.keepAliveIntervalInSeconds = 0;
+		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.context = new ServiceConnectorContext();
 		this.callback = null;
 		this.connectionPool = null;
@@ -82,22 +82,27 @@ public class SCClient implements ISCClient {
 		return context;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void attach(String host, int port) throws Exception {
 		this.attach(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+		if (this.callback != null) {
+			throw new SCServiceException(
+					"already attached before - detach first, attaching in sequence is not allowed.");
+		}
 		if (port < 1 || port > 0xFFFF) {
 			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
 		}
 		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
 			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
 		}
-		if (this.callback != null) {
-			throw new SCServiceException(
-					"already attached before - detach first, attaching in sequence is not allowed.");
+		if (host == null) {
+			throw new InvalidParameterException("Host must be set.");
 		}
 		this.port = port;
 		this.host = host;
@@ -126,7 +131,11 @@ public class SCClient implements ISCClient {
 		ConnectionFactory.shutdownConnectionFactory();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the connection type. Default {netty.http}
+	 * 
+	 * @return the connection type in use
+	 */
 	@Override
 	public String getConnectionType() {
 		return conType;
@@ -181,6 +190,9 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void setMaxConnections(int maxConnections) {
+		if (maxConnections < 1) {
+			throw new InvalidParameterException("Max connections must be greater than zero");
+		}
 		this.connectionPool.setMaxConnections(maxConnections);
 	}
 

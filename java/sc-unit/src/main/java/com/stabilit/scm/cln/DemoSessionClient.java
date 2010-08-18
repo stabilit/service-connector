@@ -1,4 +1,4 @@
-package com.stabilit.scm.cln.rr;
+package com.stabilit.scm.cln;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
