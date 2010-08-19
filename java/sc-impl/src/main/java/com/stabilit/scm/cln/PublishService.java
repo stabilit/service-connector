@@ -130,7 +130,6 @@ public class PublishService extends Service implements IPublishService {
 		} catch (Exception e) {
 			throw new SCServiceException("subscribe failed", e);
 		}
-		subscribeCall.invoke(this.callback);
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			SCMPFault fault = (SCMPFault) reply;

@@ -84,8 +84,10 @@ public class ConnectionPool implements IConnectionPool {
 		this.host = host;
 		this.port = port;
 		this.connectionType = conType;
-		this.closeOnFree = false; // default = false
+		// default = false connection will not be closed at the time they are freed
+		this.closeOnFree = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
+		// the minimum of connection is 1 per default - means there is always one connection active
 		this.minConnections = 1;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
