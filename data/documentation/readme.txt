@@ -13,3 +13,9 @@ Special configuration in current version
 - the SC is configured by sc.properties default: http localhost/8000 tcp localhost/9000¨
 - demo client connects to 8000
 - demo server connects to 9000
+
+
+Stabilit SVN access
+	http://www.stabilit.ch/svn/repos/sc/trunk 
+	U: six-exchange 
+	P: scdevelopment
