@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
-import java.util.Map;
-
 import com.stabilit.scm.common.util.DateTimeUtility;
 
 /**
