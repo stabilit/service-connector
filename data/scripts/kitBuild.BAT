@@ -1,10 +1,12 @@
 @echo off
-cd C:\stabilit\projects\EUREX\SC\dev
-del sc.zip
+del ..\..\sc.zip
 
 rem Build Kit
 rem kick-off maven to build all
+call mvn-all.bat
 
+cd C:\stabilit\projects\EUREX\SC\dev
 rem Create Installation Kit
 echo -
 "C:\Program Files\WinZip\wzzip" -yp -ex -rP sc.zip @data\scripts\kitList.txt -x@data\scripts\kitExcludeList.txt
+cd C:\stabilit\projects\EUREX\SC\dev\data\scripts
