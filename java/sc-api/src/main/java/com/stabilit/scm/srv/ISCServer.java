@@ -30,10 +30,6 @@ public interface ISCServer extends ISC {
 	/**
 	 * Register service on SC.
 	 * 
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
 	 * @param serviceName
 	 *            the service name
 	 * @param scCallback
@@ -41,10 +37,9 @@ public interface ISCServer extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             scPort is not within limits 1 to 0xFFFF, scHost unset, serviceName unset
+	 *             serviceName unset, callback unset
 	 */
-	public abstract void registerService(String scHost, int scPort, String serviceName, ISCServerCallback scCallback)
-			throws Exception;
+	public abstract void registerService(String serviceName, ISCServerCallback scCallback) throws Exception;
 
 	/**
 	 * Deregister service from SC.
@@ -76,18 +71,38 @@ public interface ISCServer extends ISC {
 	public abstract int getMaxSessions();
 
 	/**
-	 * Gets the local server port.
+	 * Gets the port of SC.
 	 * 
-	 * @return the local server port
+	 * @return the SC port
 	 */
-	public abstract int getLocalServerPort();
+	public abstract int getSCPort();
 
 	/**
-	 * Gets the local server host.
+	 * Sets the SC port.
 	 * 
-	 * @return the local server host
+	 * @param scPort
+	 *            the new SC port
+	 * @throws InvalidParameterException
+	 *             port is not within limits 1 to 0xFFFF
 	 */
-	public abstract String getLocalServerHost();
+	public abstract void setSCPort(int scPort);
+
+	/**
+	 * Gets the host of the SC.
+	 * 
+	 * @return the SC host
+	 */
+	public abstract String getSCHost();
+
+	/**
+	 * Sets the SC host.
+	 * 
+	 * @param scHost
+	 *            the new SC host
+	 * @throws InvalidParameterException
+	 *             host unset
+	 */
+	public abstract void setSCHost(String scHost);
 
 	/**
 	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
@@ -133,6 +148,13 @@ public interface ISCServer extends ISC {
 	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
 	 */
 	public abstract void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
+
+	/**
+	 * Checks if is started.
+	 * 
+	 * @return true, if is started
+	 */
+	public abstract boolean isStarted();
 
 	/** {@inheritDoc} */
 	@Override

@@ -35,9 +35,12 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
+import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
 
@@ -114,18 +117,6 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getHost() {
-		return this.scHost;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getPort() {
-		return this.scPort;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public int getKeepAliveIntervalInSeconds() {
 		return this.keepAliveIntervalInSeconds;
 	}
@@ -147,10 +138,13 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String scHost, int scPort, String serviceName, ISCServerCallback scCallback)
-			throws Exception {
+	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
 		if (this.serverStarted == false) {
 			throw new InvalidActivityException("Start server has to be called before register service is allowed.");
+		}
+		if (this.scHost == null || this.scPort == -1) {
+			throw new InvalidActivityException(
+					"Host and port to SC must be configued by setters before calling register service.");
 		}
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
@@ -164,14 +158,14 @@ public class SCServer implements ISCServer {
 		if (scCallback == null) {
 			throw new InvalidParameterException("Callback must be set");
 		}
-		this.scHost = scHost;
-		this.scPort = scPort;
-		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType,
-				this.keepAliveIntervalInSeconds);
-		// register service only needs one connection
-		this.connectionPool.setMaxConnections(1);
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
-
+		if (this.connectionPool == null) {
+			// register called first time - initialize connection pool & requester
+			this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType,
+					this.keepAliveIntervalInSeconds);
+			// register service only needs one connection
+			this.connectionPool.setMaxConnections(1);
+			this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+		}
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
 
@@ -179,8 +173,16 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setPortNumber(this.localServerPort);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
-		registerServiceCall.invoke(this.callback);
-		this.callback.getMessageSync();
+		try {
+			registerServiceCall.invoke(this.callback);
+		} catch (Exception e) {
+			throw new SCServiceException("register service failed", e);
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("register service failed", fault.getCause());
+		}
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, scCallback);
 		this.srvServiceRegistry.addSrvService(serviceName, srvService);
@@ -192,14 +194,20 @@ public class SCServer implements ISCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
 		}
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(this.requester, serviceName);
-		deRegisterServiceCall.invoke(this.callback);
-		this.callback.getMessageSync();
 		// remove srvService from registry
 		this.srvServiceRegistry.removeSrvService(serviceName);
-		// destroy the connection pool
-		this.connectionPool.destroy();
+		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+				.newInstance(this.requester, serviceName);
+		try {
+			deRegisterServiceCall.invoke(this.callback);
+		} catch (Exception e) {
+			throw new SCServiceException("deregister service failed", e);
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("deregister service failed", fault.getCause());
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -230,6 +238,7 @@ public class SCServer implements ISCServer {
 			responder.runAsync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
+			return;
 		}
 		this.serverStarted = true;
 	}
@@ -238,6 +247,12 @@ public class SCServer implements ISCServer {
 	@Override
 	public void startServer(String host, int port) throws Exception {
 		this.startServer(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isStarted() {
+		return this.serverStarted;
 	}
 
 	/** {@inheritDoc} */
@@ -254,14 +269,44 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getLocalServerHost() {
+	public String getSCHost() {
+		return this.scHost;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getSCPort() {
+		return this.scPort;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setSCHost(String scHost) {
+		if (scHost == null) {
+			throw new InvalidParameterException("Host must be set.");
+		}
+		this.scHost = scHost;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getHost() {
 		return this.localServerHost;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public int getLocalServerPort() {
+	public int getPort() {
 		return this.localServerPort;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setSCPort(int scPort) {
+		if (scPort < 1 || scPort > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		}
+		this.scPort = scPort;
 	}
 
 	/**

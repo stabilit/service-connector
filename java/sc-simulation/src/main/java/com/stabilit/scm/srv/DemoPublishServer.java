@@ -23,8 +23,6 @@ package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.srv.ISCPublishServer;
-import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.ps.SCPublishServer;
 
 public class DemoPublishServer {
@@ -44,8 +42,10 @@ public class DemoPublishServer {
 			this.publishSrv.setMaxSessions(10);
 			this.publishSrv.setImmediateConnect(true);
 			this.publishSrv.startServer("localhost", 7000, 0);
+			this.publishSrv.setSCHost("localhost");
+			this.publishSrv.setSCPort(9000);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerService("localhost", 9000, serviceName, srvCallback);
+			this.publishSrv.registerService(serviceName, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();

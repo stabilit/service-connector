@@ -96,6 +96,9 @@ public class ManageTestCase extends SuperAttachTestCase {
 		deleteSessionCall.invoke(callback);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
+
+		// deregister a server for enableService
+		SetupTestCases.deregisterSessionServiceEnable();
 	}
 
 	private Object createSession() throws Exception {

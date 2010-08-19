@@ -121,11 +121,13 @@ public class SCClient implements ISCClient {
 			attachCall.invoke(this.callback);
 		} catch (Exception e) {
 			this.callback = null;
+			this.connectionPool.destroy();
 			throw new SCServiceException("attach client failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			this.callback = null;
+			this.connectionPool.destroy();
 			SCMPFault fault = (SCMPFault) reply;
 			throw new SCServiceException("attach client failed", fault.getCause());
 		}
@@ -140,24 +142,27 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void detach() throws Exception {
-		if (this.callback == null) {
-			// detach not possible - client not attached just ignore
-			return;
-		}
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		try {
-			detachCall.invoke(this.callback);
-		} catch (Exception e) {
+			if (this.callback == null) {
+
+				// detach not possible - client not attached just ignore
+				return;
+			}
+			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
+			try {
+				detachCall.invoke(this.callback);
+			} catch (Exception e) {
+				throw new SCServiceException("detach client failed", e);
+			}
+			SCMPMessage reply = this.callback.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCServiceException("detach client failed", fault.getCause());
+			}
+		} finally {
 			this.callback = null;
-			throw new SCServiceException("detach client failed", e);
-		}
-		SCMPMessage reply = this.callback.getMessageSync();
-		this.callback = null;
-		// destroy connection pool
-		this.connectionPool.destroy();
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("detach client failed", fault.getCause());
+			// destroy connection pool
+			this.connectionPool.destroy();
 		}
 	}
 

@@ -22,9 +22,6 @@
 package com.stabilit.scm.srv;
 
 import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCSessionServerCallback;
-import com.stabilit.scm.srv.SCServer;
 
 public class DemoSessionServer {
 	private ISCServer scSrv = null;
@@ -44,7 +41,9 @@ public class DemoSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startServer("localhost", 7000, 0);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", 9000, serviceName, srvCallback);
+			this.scSrv.setSCHost("localhost");
+			this.scSrv.setSCPort(9000);
+			this.scSrv.registerService(serviceName, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.shutdown();

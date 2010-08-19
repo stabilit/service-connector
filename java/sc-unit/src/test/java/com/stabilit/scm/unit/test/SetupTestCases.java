@@ -144,8 +144,10 @@ public class SetupTestCases {
 		scSim1ConSrv.setMaxSessions(10);
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.startServer("localhost", 7000, 0);
+		scSim1ConSrv.setSCHost("localhost");
+		scSim1ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerService("localhost", 9000, "simulation", srvCallback);
+		scSim1ConSrv.registerService("simulation", srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -154,13 +156,19 @@ public class SetupTestCases {
 		scSim10ConSrv.setMaxSessions(10);
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.startServer("localhost", 7000, 0);
+		scSim10ConSrv.setSCHost("localhost");
+		scSim10ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("localhost", 9000, "simulation", srvCallback);
+		scSim10ConSrv.registerService("simulation", srvCallback);
 	}
-	
+
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("localhost", 9000, "enableService", srvCallback);
+		scSim10ConSrv.registerService("enableService", srvCallback);
+	}
+
+	public static void deregisterSessionServiceEnable() throws Exception {
+		scSim10ConSrv.deregisterService("enableService");
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
@@ -247,8 +255,10 @@ public class SetupTestCases {
 		publishSrv.setMaxSessions(10);
 		publishSrv.setImmediateConnect(true);
 		publishSrv.startServer("localhost", 7000, 0);
+		publishSrv.setSCHost("localhost");
+		publishSrv.setSCPort(9000);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService("localhost", 9000, serviceName, publishCallback);
+		publishSrv.registerService(serviceName, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();
