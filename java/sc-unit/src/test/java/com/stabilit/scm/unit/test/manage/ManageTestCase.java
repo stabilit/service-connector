@@ -100,6 +100,15 @@ public class ManageTestCase extends SuperAttachTestCase {
 		// deregister a server for enableService
 		SetupTestCases.deregisterSessionServiceEnable();
 	}
+	
+//	@Test
+//	public void shutdownSCByManageCMD() throws Exception {
+//		// enable enableService by manage call
+//		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+//		ManageTestCallback callback = new ManageTestCallback();
+//		manageCall.setRequestBody("kill");
+//		manageCall.invoke(callback);
+//	}
 
 	private Object createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL

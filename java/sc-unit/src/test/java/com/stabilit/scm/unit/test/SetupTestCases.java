@@ -46,6 +46,7 @@ public class SetupTestCases {
 	private static boolean large = false;
 	private static ISCServer scSim1ConSrv;
 	private static ISCServer scSim10ConSrv;
+	private static ISCServer scSimEnableSrv;
 
 	private SetupTestCases() {
 	}
@@ -154,34 +155,38 @@ public class SetupTestCases {
 	private static void startSessionServer1Connections() throws Exception {
 		scSim1ConSrv = new SCServer();
 		// connect to SC as server
-		scSim1ConSrv.setMaxSessions(10);
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startServer("localhost", 7000, 0);
+		scSim1ConSrv.startListener("localhost", 7000, 10);
 		scSim1ConSrv.setSCHost("localhost");
 		scSim1ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerService("simulation", srvCallback);
+		scSim1ConSrv.registerService("simulation", 0, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
 		scSim10ConSrv = new SCServer();
 		// connect to SC as server
-		scSim10ConSrv.setMaxSessions(10);
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.startServer("localhost", 7000, 0);
+		scSim10ConSrv.startListener("localhost", 7000, 10);
 		scSim10ConSrv.setSCHost("localhost");
 		scSim10ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("simulation", srvCallback);
+		scSim10ConSrv.registerService("simulation", 0, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
+		scSimEnableSrv = new SCServer();
+		// connect to SC as server
+		scSimEnableSrv.setImmediateConnect(true);
+		scSimEnableSrv.startListener("localhost", 7000, 10);
+		scSimEnableSrv.setSCHost("localhost");
+		scSimEnableSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("enableService", srvCallback);
+		scSimEnableSrv.registerService("enableService", 0, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSim10ConSrv.deregisterService("enableService");
+		scSimEnableSrv.deregisterService();
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
@@ -265,13 +270,12 @@ public class SetupTestCases {
 		String serviceName = "publish-simulation";
 		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
-		publishSrv.setMaxSessions(10);
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startServer("localhost", 7000, 0);
+		publishSrv.startListener("localhost", 7000, 10);
 		publishSrv.setSCHost("localhost");
 		publishSrv.setSCPort(9000);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService(serviceName, publishCallback);
+		publishSrv.registerService(serviceName, 0, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();
