@@ -96,6 +96,19 @@ public class SetupTestCases {
 		}
 	}
 
+	public static void setupSCOverFile(String propertyFileName) {
+		if (setupTestCases == null) {
+			try {
+				init();
+				setupTestCases = new SetupTestCases();
+				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				SC.main(new String[] { "-filename", propertyFileName });
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static void setupSCSessionServer1Connections() {
 		if (setupTestCases == null) {
 			try {
