@@ -41,6 +41,8 @@ public class ManageCommand extends CommandAdapter {
 	private static final String DISABLE = "disable";
 	/** The Constant ENABLE. */
 	private static final String ENABLE = "enable";
+	/** The Constant SHUTDOWN. */
+	private static final String KILL = "kill";
 	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = "(" + ENABLE + "|" + DISABLE + ")=(.*)";
 	/** The Constant MANAGE_PATTER. */
@@ -74,6 +76,10 @@ public class ManageCommand extends CommandAdapter {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
+		if (bodyString.equalsIgnoreCase(KILL)) {
+			System.exit(0);
+		}
+
 		Matcher m = MANAGE_PATTER.matcher(bodyString);
 		if (!m.matches()) {
 			// given string has bad format
@@ -82,7 +88,7 @@ public class ManageCommand extends CommandAdapter {
 
 		String stateString = m.group(1);
 		String serviceName = m.group(2);
-		
+
 		if (stateString.equalsIgnoreCase(ENABLE)) {
 			// enable service is requested
 			if (disabledServiceRegistry.containsKey(serviceName)) {

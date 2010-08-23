@@ -109,7 +109,7 @@ public final class SC {
 						SC.class,
 						"Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
 								+ respConfig.getPort());
-				resp.runAsync();
+				resp.startListenAsync();
 			} catch (Exception e) {
 				ExceptionPoint.getInstance().fireException(SC.class, e);
 			}
