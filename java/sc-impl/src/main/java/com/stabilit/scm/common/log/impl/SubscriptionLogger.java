@@ -26,13 +26,11 @@ import com.stabilit.scm.common.listener.SubscriptionEvent;
 import com.stabilit.scm.common.log.ILogger;
 import com.stabilit.scm.common.log.ILoggerDecorator;
 
-public class SubscriptionLogger implements ISubscriptionListener,
-		ILoggerDecorator {
+public class SubscriptionLogger implements ISubscriptionListener, ILoggerDecorator {
 
 	/** The concrete logger implementation to use. */
 	private ILogger logger;
 
-	private Formatter format;
 	private String NO_DATA_TIMEOUT_EVENT_STR = "no data timeout by class %s - for sessionId %s";
 	private String FIRE_POLL_EVENT_STR = "fire poll by class %s - for sessionId %s, polled message %s, now %s messages in queue";
 	private String FIRE_ADD_EVENT_STR = "fire add by class %s - add message %s, now %s messages in queue";
@@ -40,15 +38,15 @@ public class SubscriptionLogger implements ISubscriptionListener,
 
 	SubscriptionLogger(ILogger logger) {
 		this.logger = logger.newInstance(this);
-		this.format = null;
 	}
 
 	@Override
 	public void noDataTimeoutEvent(SubscriptionEvent subEvent) {
 		try {
-			format = new Formatter();
-			format.format(NO_DATA_TIMEOUT_EVENT_STR, subEvent.getSource()
-					.getClass().getName(), subEvent.getSessionId());
+			Formatter format = new Formatter();
+			format
+					.format(NO_DATA_TIMEOUT_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent
+							.getSessionId());
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
@@ -59,10 +57,9 @@ public class SubscriptionLogger implements ISubscriptionListener,
 	@Override
 	public void firePoll(SubscriptionEvent subEvent) {
 		try {
-			format = new Formatter();
-			format.format(FIRE_POLL_EVENT_STR, subEvent.getSource().getClass()
-					.getName(), subEvent.getSessionId(), subEvent
-					.getQueueItem(), subEvent.getQueueSize());
+			Formatter format = new Formatter();
+			format.format(FIRE_POLL_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getSessionId(),
+					subEvent.getQueueItem(), subEvent.getQueueSize());
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
@@ -74,9 +71,8 @@ public class SubscriptionLogger implements ISubscriptionListener,
 	public void fireAdd(SubscriptionEvent subEvent) {
 		try {
 			Formatter format = new Formatter();
-			format.format(FIRE_ADD_EVENT_STR, subEvent.getSource().getClass()
-					.getName(), subEvent.getQueueItem(), subEvent
-					.getQueueSize());
+			format.format(FIRE_ADD_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getQueueItem(),
+					subEvent.getQueueSize());
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
@@ -88,8 +84,7 @@ public class SubscriptionLogger implements ISubscriptionListener,
 	public void fireRemove(SubscriptionEvent subEvent) {
 		try {
 			Formatter format = new Formatter();
-			format.format(FIRE_REMOVE_EVENT_STR, subEvent.getSource()
-					.getClass().getName(), subEvent.getQueueSize());
+			format.format(FIRE_REMOVE_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getQueueSize());
 			this.logger.log(format.toString());
 			format.close();
 		} catch (IOException e) {
