@@ -66,25 +66,26 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		Channel channel = ctx.getChannel();
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-		IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
-		SCMPMessage scmpReq = request.getMessage();
-		String sessionId = scmpReq.getSessionId();
-		SCMPMessageId messageId = NettyTcpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
-
-		if (scmpReq == null) {
-			// no scmp protocol used - nothing to return
-			return;
-		}
-		if (scmpReq.isKeepAlive()) {
-			scmpReq.setIsReply(true);
-			response.setSCMP(scmpReq);
-			response.write();
-			return;
-		}
 		try {
+			Channel channel = ctx.getChannel();
+			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
+			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
+			IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
+			SCMPMessage scmpReq = request.getMessage();
+			String sessionId = scmpReq.getSessionId();
+			SCMPMessageId messageId = NettyTcpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
+
+			if (scmpReq == null) {
+				// no scmp protocol used - nothing to return
+				return;
+			}
+			if (scmpReq.isKeepAlive()) {
+				scmpReq.setIsReply(true);
+				response.setSCMP(scmpReq);
+				response.write();
+				return;
+			}
+
 			// needs to set a key in thread local to identify thread later and get access to the responder
 			ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
 			respRegistry.setThreadLocal(channel.getParent().getId());
@@ -161,27 +162,26 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				ExceptionPoint.getInstance().fireException(this, ex);
 				ex.setFaultResponse(response);
 			}
+			if (response.isLarge()) {
+				// response is large, create a large response for reply
+				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
+				SCMPMessage firstSCMP = compositeSender.getFirst();
+				response.setSCMP(firstSCMP);
+				// handling messageId
+				if (SCMPMessageId.necessaryToWrite(firstSCMP.getMessageType())) {
+					// override messageId now - because parts need to be sent
+					messageId.incrementPartSequenceNr();
+					firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+				}
+				// adding compositeReceiver to the composite registry
+				NettyTcpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
+			}
 		} catch (Throwable th) {
 			ExceptionPoint.getInstance().fireException(this, th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
-		}
-
-		if (response.isLarge()) {
-			// response is large, create a large response for reply
-			SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
-			SCMPMessage firstSCMP = compositeSender.getFirst();
-			response.setSCMP(firstSCMP);
-			// handling messageId
-			if (SCMPMessageId.necessaryToWrite(firstSCMP.getMessageType())) {
-				// override messageId now - because parts need to be sent
-				messageId.incrementPartSequenceNr();
-				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
-			}
-			// adding compositeReceiver to the composite registry
-			NettyTcpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
 		}
 		response.write();
 	}

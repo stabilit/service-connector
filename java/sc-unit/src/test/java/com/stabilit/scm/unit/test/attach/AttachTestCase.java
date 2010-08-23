@@ -28,6 +28,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.unit.test.SCTest;
 import com.stabilit.scm.unit.test.SuperTestCase;
 
 public class AttachTestCase extends SuperTestCase {
@@ -49,7 +50,7 @@ public class AttachTestCase extends SuperTestCase {
 		AttachTestCallback callback = new AttachTestCallback();
 		attachCall.invoke(callback);
 		SCMPMessage result = callback.getMessageSync();
-
+		SCTest.checkReply(result);
 		/*********************************** Verify attach response msg **********************************/
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.ATTACH.getValue());
@@ -58,7 +59,7 @@ public class AttachTestCase extends SuperTestCase {
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(callback);
-		callback.getMessageSync();
+		SCTest.checkReply(callback.getMessageSync());
 	}
 
 	private class AttachTestCallback extends SynchronousCallback {

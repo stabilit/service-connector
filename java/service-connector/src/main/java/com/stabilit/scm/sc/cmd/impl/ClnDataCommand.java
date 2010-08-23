@@ -85,8 +85,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
 			try {
+				SCMPMessage message = request.getMessage();
 				// messageId
 				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {

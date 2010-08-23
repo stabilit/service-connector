@@ -20,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
-
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.
  * 
@@ -50,16 +48,11 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage getMessage() {
-		if (message == null) {
-			try {
-				load();
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
-				return null;
-			}
+	public SCMPMessage getMessage() throws Exception {
+		if (this.message == null) {
+			load();
 		}
-		return message;
+		return this.message;
 	}
 
 	/** {@inheritDoc} */

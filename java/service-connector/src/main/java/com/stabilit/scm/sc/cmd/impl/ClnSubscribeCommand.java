@@ -26,6 +26,7 @@ import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -212,7 +213,20 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		@Override
 		public void timeout() {
 			// extracting sessionId from request message
-			SCMPMessage reqMsg = request.getMessage();
+			SCMPMessage reqMsg;
+			try {
+				reqMsg = request.getMessage();
+			} catch (Exception e1) {
+				SCMPFault fault = new SCMPFault(e1);
+				response.setSCMP(fault);
+				try {
+					// send message back to client
+					this.response.write();
+				} catch (Exception e) {
+					ExceptionPoint.getInstance().fireException(this, e);
+				}
+				return;
+			}
 			String sessionId = reqMsg.getSessionId();
 
 			// tries polling from queue

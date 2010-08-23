@@ -161,8 +161,10 @@ public class SCClient implements ISCClient {
 			}
 		} finally {
 			this.callback = null;
-			// destroy connection pool
-			this.connectionPool.destroy();
+			if (this.connectionPool != null) {
+				// destroy connection pool
+				this.connectionPool.destroy();
+			}
 		}
 	}
 
