@@ -26,7 +26,6 @@ import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.net.req.ConnectionFactory;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -255,15 +254,6 @@ public class SCClient implements ISCClient {
 	@Override
 	public int getMaxConnections() {
 		return this.maxConnections;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		this.connectionPool.destroy();
-		// destroy connection resource
-		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/**

@@ -107,7 +107,7 @@ public class ConnectionFactory extends Factory {
 	 * release other resources.
 	 */
 	public static void shutdownConnectionFactory() {
-		ConnectionFactory.channelFactory.releaseExternalResources();
 		ConnectionFactory.timer.stop();
+		ConnectionFactory.channelFactory.releaseExternalResources();
 	}
 }

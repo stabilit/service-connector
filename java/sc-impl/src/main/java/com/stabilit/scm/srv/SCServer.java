@@ -27,7 +27,6 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.net.req.ConnectionFactory;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -327,15 +326,6 @@ public class SCServer implements ISCServer {
 	 */
 	public void setConnectionType(String conType) {
 		this.conType = conType;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		this.connectionPool.destroy();
-		// destroy connection resource
-		ConnectionFactory.shutdownConnectionFactory();
 	}
 
 	/**
