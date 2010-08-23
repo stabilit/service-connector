@@ -132,8 +132,8 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String serviceName, int keepAliveIntervalInSeconds, ISCServerCallback scCallback)
-			throws Exception {
+	public void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
+			ISCServerCallback scCallback) throws Exception {
 		if (this.listening == false) {
 			throw new InvalidActivityException("Start server has to be called before register service is allowed.");
 		}
@@ -141,9 +141,12 @@ public class SCServer implements ISCServer {
 			throw new SCServiceException(
 					"already registered before - deregister first, registering in sequence is not allowed.");
 		}
-		if (this.scHost == null || this.scPort == -1) {
+		if (scHost == null || scPort == -1) {
 			throw new InvalidActivityException(
 					"Host and port to SC must be configued by setters before calling register service.");
+		}
+		if (scPort < 1 || scPort > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
 		}
 		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
 			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
@@ -151,18 +154,13 @@ public class SCServer implements ISCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
 		}
-		if (scPort < 1 || scPort > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
-		}
-		if (scHost == null) {
-			throw new InvalidParameterException("Host must be set.");
-		}
 		if (scCallback == null) {
 			throw new InvalidParameterException("Callback must be set");
 		}
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		this.serviceName = serviceName;
-
+		this.scHost = scHost;
+		this.scPort = scPort;
 		// register called first time - initialize connection pool & requester
 		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType,
 				this.keepAliveIntervalInSeconds);
@@ -307,15 +305,6 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setSCHost(String scHost) {
-		if (scHost == null) {
-			throw new InvalidParameterException("Host must be set.");
-		}
-		this.scHost = scHost;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String getHost() {
 		return this.localServerHost;
 	}
@@ -324,15 +313,6 @@ public class SCServer implements ISCServer {
 	@Override
 	public int getPort() {
 		return this.localServerPort;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setSCPort(int scPort) {
-		if (scPort < 1 || scPort > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
-		}
-		this.scPort = scPort;
 	}
 
 	/**

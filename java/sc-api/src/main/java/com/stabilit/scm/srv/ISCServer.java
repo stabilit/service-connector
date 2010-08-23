@@ -30,6 +30,10 @@ public interface ISCServer extends ISC {
 	/**
 	 * Register service on SC.
 	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
 	 * @param serviceName
 	 *            the service name
 	 * @param keepAliveIntervalInSeconds
@@ -38,8 +42,10 @@ public interface ISCServer extends ISC {
 	 *            the sc callback
 	 * @throws Exception
 	 *             the exception
+	 *             @throws InvalidParameterException
+	 *             port is not within limits 1 to 0xFFFF, host unset
 	 */
-	public abstract void registerService(String serviceName, int keepAliveIntervalInSeconds,
+	public abstract void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
 			ISCServerCallback scCallback) throws Exception;
 
 	/**
@@ -65,31 +71,11 @@ public interface ISCServer extends ISC {
 	public abstract int getSCPort();
 
 	/**
-	 * Sets the SC port.
-	 * 
-	 * @param scPort
-	 *            the new SC port
-	 * @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF
-	 */
-	public abstract void setSCPort(int scPort);
-
-	/**
 	 * Gets the host of the SC.
 	 * 
 	 * @return the SC host
 	 */
 	public abstract String getSCHost();
-
-	/**
-	 * Sets the SC host.
-	 * 
-	 * @param scHost
-	 *            the new SC host
-	 * @throws InvalidParameterException
-	 *             host unset
-	 */
-	public abstract void setSCHost(String scHost);
 
 	/**
 	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
@@ -129,7 +115,7 @@ public interface ISCServer extends ISC {
 	 * @return true, if is started
 	 */
 	public abstract boolean listening();
-	
+
 	/**
 	 * Stop listening.
 	 */

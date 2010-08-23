@@ -21,10 +21,12 @@ import java.security.InvalidParameterException;
 import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
+import com.stabilit.scm.cln.service.ISCManage;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
+import com.stabilit.scm.common.call.SCMPManageCall;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
@@ -42,8 +44,10 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-public class SCClient implements ISCClient {
+public class SCClient implements ISCClient, ISCManage {
 
+	/** The Constant KILL_INSTRUCTION. */
+	private static final String KILL_INSTRUCTION = "kill";
 	/** The host of the SC. */
 	private String host;
 	/** The port of the SC. */
@@ -143,7 +147,6 @@ public class SCClient implements ISCClient {
 	public void detach() throws Exception {
 		try {
 			if (this.callback == null) {
-
 				// detach not possible - client not attached just ignore
 				return;
 			}
@@ -254,6 +257,50 @@ public class SCClient implements ISCClient {
 	@Override
 	public int getMaxConnections() {
 		return this.maxConnections;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void disableService() {
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void enableService() {
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void killSC() throws SCServiceException {
+		this.manageCall(KILL_INSTRUCTION);
+	}
+
+	/**
+	 * Process a manage call.
+	 * 
+	 * @param instruction
+	 *            the instruction
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	private void manageCall(String instruction) throws SCServiceException {
+		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		this.callback = new SCClientCallback();
+		try {
+			manageCall.setRequestBody(instruction);
+			manageCall.invoke(this.callback);
+		} catch (Exception e) {
+			this.callback = null;
+			this.connectionPool.destroy();
+			throw new SCServiceException("kill SC failed", e);
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			this.callback = null;
+			this.connectionPool.destroy();
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("kill SC failed", fault.getCause());
+		}
 	}
 
 	/**

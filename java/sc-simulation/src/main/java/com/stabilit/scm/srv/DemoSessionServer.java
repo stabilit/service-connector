@@ -40,9 +40,7 @@ public class DemoSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 7000, 10);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.setSCHost("localhost");
-			this.scSrv.setSCPort(9000);
-			this.scSrv.registerService(serviceName, 0, srvCallback);
+			this.scSrv.registerService("localhost", 9000, serviceName, 0, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.shutdown();

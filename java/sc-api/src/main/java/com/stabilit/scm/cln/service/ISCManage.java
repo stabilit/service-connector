@@ -14,50 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.cln.service;
 
-package com.stabilit.scm.srv;
 
-import java.security.InvalidParameterException;
-
-/**
- * The Interface ISCPublishServer. Top interface for any publish service.
- * 
- * @author JTraber
- */
-public interface ISCPublishServer extends ISCServer {
-
-	/**
-	 * Publish data.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param mask
-	 *            the mask
-	 * @param data
-	 *            the data
-	 * @throws Exception
-	 *             the exception
-	 */
-	public abstract void publish(String serviceName, String mask, Object data) throws Exception;
-
-	/**
-	 * Register service on SC.
-	 * 
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
-	 * @param serviceName
-	 *            the service name
-	 * @param keepAliveIntervalInSeconds
-	 *            the keep alive interval in seconds
-	 * @param scCallback
-	 *            the sc callback
-	 * @throws Exception
-	 *             the exception
-	 *             @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF, host unset
-	 */
-	public abstract void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
-			ISCPublishServerCallback scCallback) throws Exception;
+public interface ISCManage {
+	
+	public abstract void enableService();
+	
+	public abstract void disableService();
+	
+	public abstract void killSC() throws Exception;
 }
