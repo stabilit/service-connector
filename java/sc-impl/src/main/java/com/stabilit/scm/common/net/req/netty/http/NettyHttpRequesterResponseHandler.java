@@ -63,24 +63,26 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			return;
 		}
 		// message not expected - race condition
-		LoggerPoint.getInstance()
-				.fireWarn(this, "message received but no reply was outstanding - race condition.");
+		LoggerPoint.getInstance().fireWarn(this, "message received but no reply was outstanding - race condition.");
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Exception ex = (Exception) e.getCause();
-		if (this.pendingRequest) {
-			this.pendingRequest = false;
-			this.scmpCallback.callback(ex);
-			return;
+		Throwable th = e.getCause();
+		if (th instanceof Exception) {
+			Exception ex = (Exception) th;
+			if (this.pendingRequest) {
+				this.pendingRequest = false;
+				this.scmpCallback.callback(ex);
+				return;
+			}
+			if (ex instanceof IdleTimeoutException) {
+				// idle timed out no pending request outstanding - ignore exception
+				return;
+			}
 		}
-		if (ex instanceof IdleTimeoutException) {
-			// idle timed out no pending request outstanding - ignore exception
-			return;
-		}
-		ExceptionPoint.getInstance().fireException(this, ex);
+		ExceptionPoint.getInstance().fireException(this, th);
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {
@@ -91,8 +93,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			content.readBytes(buffer);
 			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(
-					buffer);
+			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
+					.newInstance(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);

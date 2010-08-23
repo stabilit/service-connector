@@ -43,10 +43,13 @@ public interface ISCPublishServer extends ISCServer {
 	 * 
 	 * @param serviceName
 	 *            the service name
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
 	 * @param scCallback
 	 *            the sc callback
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void registerService(String serviceName, ISCPublishServerCallback scCallback) throws Exception;
+	public abstract void registerService(String serviceName, int keepAliveIntervalInSeconds,
+			ISCPublishServerCallback scCallback) throws Exception;
 }

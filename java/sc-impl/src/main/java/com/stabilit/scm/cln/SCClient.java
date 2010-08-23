@@ -57,7 +57,7 @@ public class SCClient implements ISCClient {
 	/** Identifies low level component to use for communication default for clients is {netty.http}. */
 	private String conType;
 	/** The requester. */
-	protected IRequester requester;
+	private IRequester requester;
 	/** The context. */
 	private ServiceConnectorContext context;
 	/** The callback. */

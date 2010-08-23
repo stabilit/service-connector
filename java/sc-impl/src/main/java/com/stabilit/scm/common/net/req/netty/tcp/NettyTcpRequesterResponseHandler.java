@@ -68,17 +68,20 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Exception ex = (Exception) e.getCause();
-		if (this.pendingRequest) {
-			this.pendingRequest = false;
-			this.scmpCallback.callback(ex);
-			return;
+		Throwable th = e.getCause();
+		if (th instanceof Exception) {
+			Exception ex = (Exception) th;
+			if (this.pendingRequest) {
+				this.pendingRequest = false;
+				this.scmpCallback.callback(ex);
+				return;
+			}
+			if (ex instanceof IdleTimeoutException) {
+				// idle timed out no pending request outstanding - ignore exception
+				return;
+			}
 		}
-		if (ex instanceof IdleTimeoutException) {
-			// idle timed out no pending request outstanding - ignore exception
-			return;
-		}
-		ExceptionPoint.getInstance().fireException(this, ex);
+		ExceptionPoint.getInstance().fireException(this, th);
 	}
 
 	private void callback(ChannelBuffer channelBuffer) throws Exception {

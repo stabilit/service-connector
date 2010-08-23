@@ -69,14 +69,14 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void runAsync() {
+	public void startsListenAsync() {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void runSync() throws InterruptedException {
+	public void startListenSync() throws InterruptedException {
 		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds server to registry
 		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
@@ -90,7 +90,7 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void run() {
 		try {
-			runSync();
+			startListenSync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			this.destroy();
@@ -100,12 +100,19 @@ public class NettyTcpEnpoint extends EndpointAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
+		this.stoppListening();
+		this.channelFactory.releaseExternalResources();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void stoppListening() {
 		try {
 			this.channel.close();
 		} catch (Exception ex) {
 			ExceptionPoint.getInstance().fireException(this, ex);
+			return;
 		}
-		this.channelFactory.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */

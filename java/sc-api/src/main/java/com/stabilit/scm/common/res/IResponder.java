@@ -34,20 +34,25 @@ public interface IResponder {
 	public void create() throws Exception;
 
 	/**
-	 * Run asynchronously. Starts responder in another thread.
+	 * Start listen asynchronous. Starts responder in a separate thread.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void runAsync() throws Exception;
+	public void startListenAsync() throws Exception;
 
 	/**
-	 * Run sync. Starts responder in incoming thread.
+	 * Start listener synchronous. Starts responder in current thread. Does not give back control.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void runSync() throws Exception;
+	public void startListenSync() throws Exception;
+	
+	/**
+	 * Stop listening.
+	 */
+	public void stopListening();
 
 	/**
 	 * Destroys responder.

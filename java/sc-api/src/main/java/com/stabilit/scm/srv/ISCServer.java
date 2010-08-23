@@ -32,36 +32,23 @@ public interface ISCServer extends ISC {
 	 * 
 	 * @param serviceName
 	 *            the service name
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
 	 * @param scCallback
 	 *            the sc callback
 	 * @throws Exception
 	 *             the exception
-	 * @throws InvalidParameterException
-	 *             serviceName unset, callback unset
 	 */
-	public abstract void registerService(String serviceName, ISCServerCallback scCallback) throws Exception;
+	public abstract void registerService(String serviceName, int keepAliveIntervalInSeconds,
+			ISCServerCallback scCallback) throws Exception;
 
 	/**
 	 * Deregister service from SC.
 	 * 
-	 * @param serviceName
-	 *            the service name
 	 * @throws Exception
 	 *             the exception
-	 * @throws InvalidParameterException
-	 *             serviceName unset
 	 */
-	public abstract void deregisterService(String serviceName) throws Exception;
-
-	/**
-	 * Sets the max sessions server can handle.
-	 * 
-	 * @param maxSessions
-	 *            the new max sessions
-	 * @throws InvalidParameterException
-	 *             max session is smaller than one
-	 */
-	public abstract void setMaxSessions(int maxSessions);
+	public abstract void deregisterService() throws Exception;
 
 	/**
 	 * Gets the max sessions.
@@ -127,34 +114,33 @@ public interface ISCServer extends ISC {
 	 *            the host to bind the listener
 	 * @param port
 	 *            the port to bin the listener
+	 * @param maxSessions
+	 *            the max sessions
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
 	 *             port is not within limits 1 to 0xFFFF, host unset
 	 */
-	public abstract void startServer(String host, int port) throws Exception;
-
-	/**
-	 * Start server.
-	 * 
-	 * @param host
-	 *            the host to bind the listener
-	 * @param port
-	 *            the port to bin the listener
-	 * @throws Exception
-	 *             the exception
-	 * @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF, host unset<br>
-	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
-	 */
-	public abstract void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
+	public abstract void startListener(String host, int port, int maxSessions) throws Exception;
 
 	/**
 	 * Checks if is started.
 	 * 
 	 * @return true, if is started
 	 */
-	public abstract boolean isStarted();
+	public abstract boolean listening();
+	
+	/**
+	 * Stop listening.
+	 */
+	public abstract void stopListening();
+
+	/**
+	 * Registered.
+	 * 
+	 * @return true, if successful
+	 */
+	public abstract boolean registered();
 
 	/** {@inheritDoc} */
 	@Override

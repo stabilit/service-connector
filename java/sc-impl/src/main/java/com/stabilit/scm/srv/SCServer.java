@@ -60,6 +60,7 @@ public class SCServer implements ISCServer {
 	private SCServerContext context;
 
 	// fields for register service
+	private String serviceName;
 	/** The requester. */
 	protected IRequester requester;
 	/** The max sessions. */
@@ -80,13 +81,15 @@ public class SCServer implements ISCServer {
 	protected SrvServerCallback callback;
 	/** The message id. */
 	private SCMPMessageId msgId;
-	/** The server started state. */
-	private boolean serverStarted;
+	/** The server listening state. */
+	private boolean listening;
+	/** The server register state. */
+	private boolean registered;
 	/** The responder. */
 	private IResponder responder;
 
 	public SCServer() {
-		this.serverStarted = false;
+		this.listening = false;
 		this.scHost = null;
 		this.scPort = -1;
 		this.conType = Constants.DEFAULT_SERVER_CON;
@@ -95,6 +98,7 @@ public class SCServer implements ISCServer {
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.localServerHost = null;
 		this.localServerPort = -1;
+		this.serviceName = null;
 		this.maxSessions = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.context = new SCServerContext();
 		this.msgId = new SCMPMessageId();
@@ -122,28 +126,27 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setMaxSessions(int maxSessions) {
-		if (maxSessions < 1) {
-			throw new InvalidParameterException("Max sessions must be greater than 0.");
-		}
-		this.maxSessions = maxSessions;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public int getMaxSessions() {
 		return maxSessions;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String serviceName, ISCServerCallback scCallback) throws Exception {
-		if (this.serverStarted == false) {
+	public void registerService(String serviceName, int keepAliveIntervalInSeconds, ISCServerCallback scCallback)
+			throws Exception {
+		if (this.listening == false) {
 			throw new InvalidActivityException("Start server has to be called before register service is allowed.");
+		}
+		if (this.registered == true) {
+			throw new SCServiceException(
+					"already registered before - deregister first, registering in sequence is not allowed.");
 		}
 		if (this.scHost == null || this.scPort == -1) {
 			throw new InvalidActivityException(
 					"Host and port to SC must be configued by setters before calling register service.");
+		}
+		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
+			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
 		}
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
@@ -157,14 +160,16 @@ public class SCServer implements ISCServer {
 		if (scCallback == null) {
 			throw new InvalidParameterException("Callback must be set");
 		}
-		if (this.connectionPool == null) {
-			// register called first time - initialize connection pool & requester
-			this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType,
-					this.keepAliveIntervalInSeconds);
-			// register service only needs one connection
-			this.connectionPool.setMaxConnections(1);
-			this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
-		}
+		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
+		this.serviceName = serviceName;
+
+		// register called first time - initialize connection pool & requester
+		this.connectionPool = new ConnectionPool(this.scHost, this.scPort, this.conType,
+				this.keepAliveIntervalInSeconds);
+		// register service only needs one connection
+		this.connectionPool.setMaxConnections(1);
+		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(this.requester, serviceName);
 
@@ -175,83 +180,105 @@ public class SCServer implements ISCServer {
 		try {
 			registerServiceCall.invoke(this.callback);
 		} catch (Exception e) {
+			this.connectionPool.destroy();
 			throw new SCServiceException("register service failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
+			this.connectionPool.destroy();
 			SCMPFault fault = (SCMPFault) reply;
 			throw new SCServiceException("register service failed", fault.getCause());
 		}
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, scCallback);
 		this.srvServiceRegistry.addSrvService(serviceName, srvService);
+		this.registered = true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void deregisterService(String serviceName) throws Exception {
-		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set");
-		}
-		// remove srvService from registry
-		this.srvServiceRegistry.removeSrvService(serviceName);
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
-				.newInstance(this.requester, serviceName);
+	public void deregisterService() throws Exception {
 		try {
-			deRegisterServiceCall.invoke(this.callback);
-		} catch (Exception e) {
-			throw new SCServiceException("deregister service failed", e);
-		}
-		SCMPMessage reply = this.callback.getMessageSync();
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("deregister service failed", fault.getCause());
+			if (this.registered == false) {
+				// sc server not registered - deregister not necessary
+				return;
+			}
+			// remove srvService from registry
+			this.srvServiceRegistry.removeSrvService(this.serviceName);
+			SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+					.newInstance(this.requester, this.serviceName);
+			try {
+				deRegisterServiceCall.invoke(this.callback);
+			} catch (Exception e) {
+				throw new SCServiceException("deregister service failed", e);
+			}
+			SCMPMessage reply = this.callback.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCServiceException("deregister service failed", fault.getCause());
+			}
+		} finally {
+			this.registered = false;
+			if (this.connectionPool != null) {
+				// destroy connection pool
+				this.connectionPool.destroy();
+			}
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void startServer(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+	public void startListener(String host, int port, int maxSessions) throws Exception {
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());
 		respConfig.setConnectionType(this.conType);
 
 		if (port < 1 || port > 0xFFFF) {
 			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
 		}
-		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
-			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
+		if (maxSessions < 1) {
+			throw new InvalidParameterException("Max sessions must be greater than 0.");
 		}
 		if (host == null) {
 			throw new InvalidParameterException("Host must be set.");
 		}
+		this.maxSessions = maxSessions;
 		this.localServerHost = host;
 		this.localServerPort = port;
-		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		respConfig.setHost(host);
 		respConfig.setPort(port);
-		respConfig.setKeepAliveInterval(keepAliveIntervalInSeconds);
 
 		responder = new Responder(respConfig);
 		try {
 			responder.create();
-			responder.runAsync();
+			responder.startListenAsync();
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);
 			return;
 		}
-		this.serverStarted = true;
+		this.listening = true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void startServer(String host, int port) throws Exception {
-		this.startServer(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+	public void stopListening() {
+		if (this.listening == false) {
+			// server is not listening
+			return;
+		}
+		this.listening = false;
+		this.responder.stopListening();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean isStarted() {
-		return this.serverStarted;
+	public boolean listening() {
+		return this.listening;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean registered() {
+		return this.registered;
 	}
 
 	/** {@inheritDoc} */
