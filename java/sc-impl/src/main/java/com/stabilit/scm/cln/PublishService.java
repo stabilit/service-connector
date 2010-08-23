@@ -202,6 +202,11 @@ public class PublishService extends Service implements IPublishService {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage reply) {
+			if (this.synchronous) {
+				// interested thread waits for message
+				super.callback(reply);
+				return;
+			}
 			if (PublishService.this.subscribed == false) {
 				// client is not subscribed anymore - stop continuing
 				return;

@@ -73,7 +73,7 @@ public class SubscriptionLogger implements ISubscriptionListener,
 	@Override
 	public void fireAdd(SubscriptionEvent subEvent) {
 		try {
-			format = new Formatter();
+			Formatter format = new Formatter();
 			format.format(FIRE_ADD_EVENT_STR, subEvent.getSource().getClass()
 					.getName(), subEvent.getQueueItem(), subEvent
 					.getQueueSize());
@@ -87,7 +87,7 @@ public class SubscriptionLogger implements ISubscriptionListener,
 	@Override
 	public void fireRemove(SubscriptionEvent subEvent) {
 		try {
-			format = new Formatter();
+			Formatter format = new Formatter();
 			format.format(FIRE_REMOVE_EVENT_STR, subEvent.getSource()
 					.getClass().getName(), subEvent.getQueueSize());
 			this.logger.log(format.toString());

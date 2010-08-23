@@ -40,7 +40,7 @@ public class DemoPublishServer {
 			this.publishSrv = new SCPublishServer();
 			// connect to SC as server
 			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startListener("localhost", 7000, 10);
+			this.publishSrv.startListener("localhost", 7200, 10);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
 			this.publishSrv.registerService("localhost", 9000, serviceName, 0, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
@@ -108,6 +108,11 @@ public class DemoPublishServer {
 		@Override
 		public ISCMessage subscribe(ISCMessage message) {
 			System.out.println("PublishServer.SrvCallback.subscribe()");
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			return message;
 		}
 
@@ -116,7 +121,7 @@ public class DemoPublishServer {
 			System.out.println("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message
-			if (data.getClass() == String.class) {
+			if (data != null && data.getClass() == String.class) {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {

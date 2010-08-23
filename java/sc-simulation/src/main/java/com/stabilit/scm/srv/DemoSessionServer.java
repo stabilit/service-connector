@@ -38,7 +38,7 @@ public class DemoSessionServer {
 
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startListener("localhost", 7000, 10);
+			this.scSrv.startListener("localhost", 7100, 10);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", 9000, serviceName, 0, srvCallback);
 		} catch (Exception e) {
