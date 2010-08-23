@@ -39,13 +39,12 @@ public class DemoPublishServer {
 		try {
 			this.publishSrv = new SCPublishServer();
 			// connect to SC as server
-			this.publishSrv.setMaxSessions(10);
 			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startServer("localhost", 7000, 0);
+			this.publishSrv.startListener("localhost", 7000, 10);
 			this.publishSrv.setSCHost("localhost");
 			this.publishSrv.setSCPort(9000);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerService(serviceName, srvCallback);
+			this.publishSrv.registerService(serviceName, 0, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();
@@ -88,7 +87,7 @@ public class DemoPublishServer {
 	private void shutdown() {
 		DemoPublishServer.killPublishServer = true;
 		try {
-			this.publishSrv.deregisterService(serviceName);
+			this.publishSrv.deregisterService();
 		} catch (Exception e) {
 			this.publishSrv = null;
 		}
@@ -123,7 +122,7 @@ public class DemoPublishServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.outerContext.getServer().deregisterService(serviceName);
+						this.outerContext.getServer().deregisterService();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

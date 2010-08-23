@@ -37,13 +37,12 @@ public class DemoSessionServer {
 			this.scSrv = new SCServer();
 
 			// connect to SC as server
-			this.scSrv.setMaxSessions(10);
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startServer("localhost", 7000, 0);
+			this.scSrv.startListener("localhost", 7000, 10);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.setSCHost("localhost");
 			this.scSrv.setSCPort(9000);
-			this.scSrv.registerService(serviceName, srvCallback);
+			this.scSrv.registerService(serviceName, 0, srvCallback);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.shutdown();
@@ -52,7 +51,7 @@ public class DemoSessionServer {
 
 	private void shutdown() {
 		try {
-			this.scSrv.deregisterService(serviceName);
+			this.scSrv.deregisterService();
 		} catch (Exception e) {
 			this.scSrv = null;
 		}
@@ -90,7 +89,7 @@ public class DemoSessionServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						KillThread kill = new KillThread(this.outerContext.getServer(), serviceName);
+						KillThread kill = new KillThread(this.outerContext.getServer());
 						kill.start();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -116,11 +115,9 @@ public class DemoSessionServer {
 	private class KillThread extends Thread {
 
 		private ISCServer server;
-		private String serviceName;
 
-		public KillThread(ISCServer server, String serviceName) {
+		public KillThread(ISCServer server) {
 			this.server = server;
-			this.serviceName = serviceName;
 		}
 
 		@Override
@@ -128,7 +125,7 @@ public class DemoSessionServer {
 			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
-				this.server.deregisterService(this.serviceName);
+				this.server.deregisterService();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
