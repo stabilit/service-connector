@@ -157,10 +157,8 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.startListener("localhost", 7000, 10);
-		scSim1ConSrv.setSCHost("localhost");
-		scSim1ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerService("simulation", 0, srvCallback);
+		scSim1ConSrv.registerService("localhost", 9000, "simulation", 0, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -168,10 +166,8 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.startListener("localhost", 7000, 10);
-		scSim10ConSrv.setSCHost("localhost");
-		scSim10ConSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("simulation", 0, srvCallback);
+		scSim10ConSrv.registerService("localhost", 9000, "simulation", 0, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
@@ -179,10 +175,8 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
 		scSimEnableSrv.startListener("localhost", 7000, 10);
-		scSimEnableSrv.setSCHost("localhost");
-		scSimEnableSrv.setSCPort(9000);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSimEnableSrv.registerService("enableService", 0, srvCallback);
+		scSimEnableSrv.registerService("localhost", 9000, "enableService", 0, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
@@ -272,10 +266,8 @@ public class SetupTestCases {
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
 		publishSrv.startListener("localhost", 7000, 10);
-		publishSrv.setSCHost("localhost");
-		publishSrv.setSCPort(9000);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService(serviceName, 0, publishCallback);
+		publishSrv.registerService("localhost", 9000, serviceName, 0, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();
