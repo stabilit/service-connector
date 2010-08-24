@@ -15,3 +15,5 @@ Special configuration in current version
 - the SC is configured by sc.properties default: http localhost/8000 tcp localhost/9000¨
 - demo client connects to 8000
 - demo server connects to 9000
+- sc version is set to 1.0-000
+- scmp version is set to 1.0
