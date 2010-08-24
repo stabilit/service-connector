@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedChannelException;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -191,11 +192,18 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
-		Exception ex = (Exception) e.getCause();
-		if (ex instanceof HasFaultResponseException) {
-			((HasFaultResponseException) ex).setFaultResponse(response);
+		Throwable th = e.getCause();
+		if (th instanceof ClosedChannelException) {
+			// never reply in case of channel closed exception
+			return;
+		}
+		if (th instanceof HasFaultResponseException) {
+			((HasFaultResponseException) th).setFaultResponse(response);
 			response.write();
 		}
+		SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, th.getMessage());
+		response.setSCMP(fault);
+		response.write();
 	}
 
 	/** {@inheritDoc} */

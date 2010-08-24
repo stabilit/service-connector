@@ -77,7 +77,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public void startListenSync() throws InterruptedException {
-		this.channel = this.bootstrap.bind(new InetSocketAddress(host, this.port));
+		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		// adds responder to registry
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		responderRegistry.addResponder(this.channel.getId(), this.resp);

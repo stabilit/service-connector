@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.res.netty.http;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedChannelException;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -193,10 +194,19 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
-		if (e instanceof HasFaultResponseException) {
+		Throwable th = e.getCause();
+		if (th instanceof ClosedChannelException) {
+			// never reply in case of channel closed exception
+			return;
+		}
+		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) e).setFaultResponse(response);
 			response.write();
+			return;
 		}
+		SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, th.getMessage());
+		response.setSCMP(fault);
+		response.write();
 	}
 
 	/** {@inheritDoc} */
@@ -252,6 +262,16 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 	}
 
+	/**
+	 * Send unknown request error.
+	 * 
+	 * @param response
+	 *            the response
+	 * @param scmpReq
+	 *            the scmp req
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
 		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
@@ -260,6 +280,17 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		response.write();
 	}
 
+	/**
+	 * Gets the composite receiver.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @return the composite receiver
+	 * @throws Exception
+	 *             the exception
+	 */
 	private SCMPCompositeReceiver getCompositeReceiver(IRequest request, IResponse response) throws Exception {
 		SCMPMessage scmpReq = request.getMessage();
 		String sessionId = scmpReq.getSessionId();
