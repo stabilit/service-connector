@@ -146,9 +146,9 @@ public class RegisterServiceCommand extends CommandAdapter {
 				// immmediateConnect
 				boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnect);
-				// portNr - portNr >= 1 && portNr <= 0xFFFF
+				// portNr - portNr >= 0 && portNr <= 0xFFFF
 				String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-				int portNrInt = ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+				int portNrInt = ValidatorUtility.validateInt(0, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 				request.setAttribute(SCMPHeaderAttributeKey.PORT_NR, portNrInt);
 				// scVersion
 				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);

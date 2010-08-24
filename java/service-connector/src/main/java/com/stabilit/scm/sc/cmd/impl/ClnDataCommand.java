@@ -22,13 +22,10 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.IResponderCallback;
-import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -126,9 +123,8 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 	/**
 	 * The Class ClnDataCommandCallback.
 	 */
-	private class ClnDataCommandCallback implements ISCMPCallback {
+	private class ClnDataCommandCallback extends CommandCallback {
 
-		private static final String ERROR_STRING = "clnDataCommand execution failed";
 		/** The callback. */
 		private IResponderCallback callback;
 		/** The request. */
@@ -158,19 +154,6 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void callback(Exception th) {
-			SCMPMessage fault = null;
-			if (th instanceof IdleTimeoutException) {
-				// operation timeout handling
-				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING);
-			} else {
-				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING);
-			}
-			this.callback(fault);
 		}
 	}
 }
