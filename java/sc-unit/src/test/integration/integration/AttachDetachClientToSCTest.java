@@ -2,7 +2,9 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,7 +17,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachDetachClientToSCTest {
 
-	private static ISCClient client;
+	private ISCClient client;
 
 	private static final String host = "localhost";
 	private static final int port8080 = 8080;
@@ -29,17 +31,17 @@ public class AttachDetachClientToSCTest {
 			String userDir = System.getProperty("user.dir");
 			String javaHome = System.getProperty("java.home");
 			javaHome += "\\..\\bin\\";
-			// p = r.exec("cmd /c start src\\test\\resources\\startSC.bat");
-			
+		    
 			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
 			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
 			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
 			  "\\src\\test\\resources\\scIntegration.properties";
-			 //command = "java -Dlog4j.configuration=file:C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\log4j.properties -jar C:\\Repository\\stabilit\\sc\\java\\sc-unit\\..\\service-connector\\target\\sc.jar -filename C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\scIntegration.properties";
-			//String command = "cmd /c start java -Dlog4j.configuration=file:src\\test\\resources\\log4j.properties -jar ..\\service-connector\\target\\sc.jar -filename src\\test\\resources\\scIntegration.propertis";
-			System.out.println(command);
+//			command = "java -Dlog4j.configuration=file:C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\log4j.properties -jar C:\\Repository\\stabilit\\sc\\java\\sc-unit\\..\\service-connector\\target\\sc.jar -filename C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\scIntegration.properties";
+//			String command = "cmd /c start java -Dlog4j.configuration=file:src\\test\\resources\\log4j.properties -jar ..\\service-connector\\target\\sc.jar -filename src\\test\\resources\\scIntegration.propertis";
+//			System.out.println(command);
 			p = Runtime.getRuntime().exec(command);
 			//p = Runtime.getRuntime().exec(new String[] {"java", "-Dlog4j.configuration=file:" + userDir + "\\src\\test\\resources\\log4j.properties",  "-jar", userDir + "\\..\\service-connector\\target\\sc.jar", "-filename", userDir + "\\src\\test\\resources\\scIntegration.properties"});
+
 			// lets the SC load before starting communication
 			try {
 				Thread.sleep(1000);
@@ -58,10 +60,13 @@ public class AttachDetachClientToSCTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		client = new SCClient();
+		SCClient endClient = new SCClient();
 		try {
-			((SCClient) client).killSC();
+			endClient.attach("localhost", port8080);
+			((SCClient) endClient).killSC();
 		} catch (SCServiceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
