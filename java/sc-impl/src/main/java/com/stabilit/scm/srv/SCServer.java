@@ -135,7 +135,7 @@ public class SCServer implements ISCServer {
 	public void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
 			ISCServerCallback scCallback) throws Exception {
 		if (this.listening == false) {
-			throw new InvalidActivityException("Start server has to be called before register service is allowed.");
+			throw new InvalidActivityException("Listener should first be started before register service is allowed.");
 		}
 		if (this.registered == true) {
 			throw new SCServiceException(
