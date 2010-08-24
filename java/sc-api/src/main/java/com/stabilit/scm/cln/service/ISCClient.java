@@ -38,7 +38,7 @@ public interface ISCClient extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             scPort is not within limits 1 to 0xFFFF, scHost unset
+	 *             scPort is not within limits 0 to 0xFFFF, scHost unset
 	 */
 	public abstract void attach(String host, int port) throws Exception;
 
@@ -54,7 +54,7 @@ public interface ISCClient extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF, host unset<br>
+	 *             port is not within limits 0 to 0xFFFF, host unset<br>
 	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
 	 */
 	public abstract void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
@@ -125,6 +125,12 @@ public interface ISCClient extends ISC {
 	 *             maxConnections smaller one
 	 */
 	public abstract void setMaxConnections(int maxConnections);
+	
+	public abstract void enableService();
+	
+	public abstract void disableService();
+	
+	public abstract void killSC() throws Exception;
 
 	/**
 	 * Gets the max connections.

@@ -43,7 +43,7 @@ public interface ISCServer extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 *             @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF, host unset
+	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
 	public abstract void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
 			ISCServerCallback scCallback) throws Exception;
@@ -105,7 +105,7 @@ public interface ISCServer extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             port is not within limits 1 to 0xFFFF, host unset
+	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
 	public abstract void startListener(String host, int port, int maxSessions) throws Exception;
 
