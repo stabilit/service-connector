@@ -363,6 +363,18 @@ public class ConnectionPool implements IConnectionPool {
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getHost() {
+		return this.host;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public int getPort() {
+		return this.port;
+	}
 
 	/**
 	 * The Class IdleCallback. Gets informed when connection runs into an idle timeout.

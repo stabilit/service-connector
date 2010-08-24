@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.srv;
 
+import com.stabilit.scm.common.net.req.IRequester;
+
 /**
  * The Class SrvService. Represent of a service on backend server.
  * 
@@ -28,10 +30,8 @@ package com.stabilit.scm.srv;
  */
 public class SrvService {
 
-	/** The sc host. */
-	private String scHost;
-	/** The sc port. */
-	private int scPort;
+	/** The requester which connects to SC. */
+	private IRequester requester;
 	/** The service name. */
 	private String serviceName;
 	/** The callback. */
@@ -57,42 +57,32 @@ public class SrvService {
 	 * @param callback
 	 *            the callback
 	 */
-	public SrvService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
+	public SrvService(String serviceName, int maxSessions, int maxConnections, IRequester requester,
 			ISCServerCallback callback) {
 		super();
-		this.scHost = scHost;
-		this.scPort = scPort;
+		this.requester = requester;
 		this.serviceName = serviceName;
 		this.callback = callback;
 		this.maxConnections = maxConnections;
 		this.maxSessions = maxSessions;
-	}	
-	
-	/**
-	 * Gets the sc host.
-	 *
-	 * @return the sc host
-	 */
-	public String getScHost() {
-		return scHost;
 	}
 
 	/**
-	 * Gets the sc port.
-	 *
-	 * @return the sc port
+	 * Gets the requester.
+	 * 
+	 * @return the requester
 	 */
-	public int getScPort() {
-		return scPort;
+	public IRequester getRequester() {
+		return this.requester;
 	}
-	
+
 	/**
 	 * Gets the service name.
 	 * 
 	 * @return the service name
 	 */
 	public String getServiceName() {
-		return serviceName;
+		return this.serviceName;
 	}
 
 	/**
@@ -101,7 +91,7 @@ public class SrvService {
 	 * @return the max sessions
 	 */
 	public int getMaxSessions() {
-		return maxSessions;
+		return this.maxSessions;
 	}
 
 	/**
@@ -110,7 +100,7 @@ public class SrvService {
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
-		return maxConnections;
+		return this.maxConnections;
 	}
 
 	/**
@@ -119,6 +109,6 @@ public class SrvService {
 	 * @return the callback
 	 */
 	public ISCServerCallback getCallback() {
-		return callback;
+		return this.callback;
 	}
 }

@@ -166,14 +166,17 @@ public interface ISCClient extends ISC {
 	 * @return the max connections used in pool
 	 */
 	public abstract int getMaxConnections();
+	
+	/**
+	 * Gets the context.
+	 *
+	 * @return the context
+	 */
+	public abstract ISCContext getContext();
 
 	/** {@inheritDoc} */
 	@Override
 	public abstract String getConnectionType();
-
-	/** {@inheritDoc} */
-	@Override
-	public abstract ISCContext getContext();
 
 	/** {@inheritDoc} */
 	@Override

@@ -83,8 +83,6 @@ public final class DisabledServiceRegistry extends Registry<String, Service> {
 	 * @return the service
 	 */
 	public Service removeService(String key) {
-		Service service = this.getService(key);
-		super.remove(key);
-		return service;
+		return super.remove(key);
 	}
 }

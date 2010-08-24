@@ -75,11 +75,11 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	 * @param key
 	 *            the key
 	 */
-	protected void remove(K key) {
+	protected V remove(K key) {
 		if (key == null) {
-			return;
+			return null;
 		}
-		this.registryMap.remove(key);
+		return this.registryMap.remove(key);
 	}
 
 	/**

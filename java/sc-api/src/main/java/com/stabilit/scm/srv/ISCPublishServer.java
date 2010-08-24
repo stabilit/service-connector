@@ -17,6 +17,7 @@
 
 package com.stabilit.scm.srv;
 
+import java.security.InvalidParameterException;
 
 /**
  * The Interface ISCPublishServer. Top interface for any publish service.
@@ -48,14 +49,12 @@ public interface ISCPublishServer extends ISCServer {
 	 *            the sc port
 	 * @param serviceName
 	 *            the service name
-	 * @param maxSessions
-	 *            the max sessions
-	 * @param maxConnections
-	 *            the max connections
 	 * @param scCallback
 	 *            the sc callback
 	 * @throws Exception
 	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
 	public abstract void registerService(String scHost, int scPort, String serviceName, int maxSessions,
 			int maxConnections, ISCPublishServerCallback scCallback) throws Exception;

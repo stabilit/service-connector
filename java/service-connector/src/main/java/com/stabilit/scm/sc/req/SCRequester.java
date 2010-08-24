@@ -54,6 +54,12 @@ public class SCRequester implements IRequester {
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public IRequesterContext getContext() {
+		return reqContext;
+	}
 
 	/**
 	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a

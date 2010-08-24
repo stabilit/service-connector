@@ -43,4 +43,11 @@ public interface IRequester {
 	 * @return the string
 	 */
 	public String toHashCodeString();
+
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
+	public abstract IRequesterContext getContext();
 }

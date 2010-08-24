@@ -82,7 +82,7 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	 * @param key
 	 *            the key
 	 */
-	public void removeSrvService(String key) {
-		super.remove(key);
+	public SrvService removeSrvService(String key) {
+		return super.remove(key);
 	}
 }

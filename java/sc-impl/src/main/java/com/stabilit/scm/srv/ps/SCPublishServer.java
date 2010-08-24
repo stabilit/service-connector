@@ -26,6 +26,7 @@ import com.stabilit.scm.common.call.SCMPPublishCall;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SCServer;
+import com.stabilit.scm.srv.SrvService;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
@@ -35,8 +36,9 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 	/** {@inheritDoc} */
 	@Override
 	public void publish(String serviceName, String mask, Object data) throws Exception {
-		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
-				serviceName);
+		SrvService srvService = this.srvServiceRegistry.getSrvService(serviceName);
+		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService
+				.getRequester(), serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
 		publishCall.invoke(this.callback);

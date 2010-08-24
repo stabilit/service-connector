@@ -123,6 +123,20 @@ public interface IConnectionPool {
 	public abstract int getKeepAliveInterval();
 
 	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
+	public abstract String getHost();
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public abstract int getPort();
+
+	/**
 	 * Gets the number of busy connections at this time.
 	 * 
 	 * @return the busy connections

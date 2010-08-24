@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
-import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
@@ -86,12 +85,9 @@ public class Requester implements IRequester {
 		}
 	}
 
-	/**
-	 * Gets the context.
-	 * 
-	 * @return the context
-	 */
-	public IContext getContext() {
+	/** {@inheritDoc} */
+	@Override
+	public IRequesterContext getContext() {
 		return reqContext;
 	}
 

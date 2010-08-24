@@ -29,13 +29,6 @@ package com.stabilit.scm.common.service;
 public interface ISC {
 
 	/**
-	 * Gets the context of current communication part in use.
-	 * 
-	 * @return the context
-	 */
-	public abstract ISCContext getContext();
-
-	/**
 	 * Gets the connection type. Possible values {netty.http, netty.tcp}.
 	 * 
 	 * @return the connection type which identifies low level communication technology
