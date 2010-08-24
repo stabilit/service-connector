@@ -118,6 +118,13 @@ public class SCClientTest {
 	}
 
 	@Test
+	public void setConnectionType_whiteCharParam_returnEmptyString()
+	{
+		((SCClient)client).setConnectionType(" ");
+		assertEquals(" ", client.getConnectionType());
+	}
+	
+	@Test
 	public void setConnectionType_OneCharParam_returnGivenParam()
 	{
 		((SCClient)client).setConnectionType("a");
