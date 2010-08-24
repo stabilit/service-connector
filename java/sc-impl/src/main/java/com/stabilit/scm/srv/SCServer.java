@@ -34,6 +34,7 @@ import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
@@ -41,6 +42,7 @@ import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
 
 /**
@@ -141,9 +143,8 @@ public class SCServer implements ISCServer {
 			throw new SCServiceException(
 					"already registered before - deregister first, registering in sequence is not allowed.");
 		}
-		if (scHost == null || scPort == -1) {
-			throw new InvalidActivityException(
-					"Host and port to SC must be configued by setters before calling register service.");
+		if (scHost == null) {
+			throw new InvalidParameterException("scHost must be set.");
 		}
 		if (scPort < 0 || scPort > 0xFFFF) {
 			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
@@ -154,6 +155,8 @@ public class SCServer implements ISCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("Service name must be set");
 		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		if (scCallback == null) {
 			throw new InvalidParameterException("Callback must be set");
 		}
