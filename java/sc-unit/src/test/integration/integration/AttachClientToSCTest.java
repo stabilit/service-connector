@@ -1,31 +1,78 @@
 package integration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
+import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.net.req.ConnectionPoolConnectException;
-import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.sc.SC;
 
 public class AttachClientToSCTest {
 
-	private ISC sc;
-	private ISCClient client;
+	private static ISCClient client;
+	private static Process p;
+	private Exception ex;
 
+	@BeforeClass
+	public static void oneTimeSetUp() {
+		try {
+			String userDir = System.getProperty("user.dir");
+			
+			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
+			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
+			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
+			  "\\src\\test\\resources\\scIntegration.properties";
+			System.out.println(command);
+			p = Runtime.getRuntime().exec(command);
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@AfterClass
+	public static void oneTimeTearDown() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		client = new SCClient();
+		try {
+			((SCClient) client).killSC();
+		} catch (SCServiceException e) {
+			e.printStackTrace();
+		}
+		
+		p.destroy();
+	}
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
-		SC.main(new String[] { "-filename", "scIntegration.properties" });
+	public void setUp() throws Exception {		
 		client = new SCClient();
+	}
+
+	@After
+	public void tearDown() throws Exception {
 	}
 
 //	region hostName == "localhost" (set as only one in 
@@ -35,7 +82,7 @@ public class AttachClientToSCTest {
 		client.attach("localhost", 8080);
 		assertEquals(true, client.isAttached());
 	}
-
+	
 	@Test(expected = SCServiceException.class)
 	public void attach_hostLocalhostPort9000_attached() throws Exception {
 		try {
@@ -53,14 +100,15 @@ public class AttachClientToSCTest {
 		assertEquals(true, client.isAttached());
 	}
 
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void attach_hostLocalhostPort0_notAttachedThrowsException() throws Exception {
 		try {
 			client.attach("localhost", 0);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
-			throw e;
+			ex = e;
 		}
+		assertEquals(false, client.isAttached());
+		assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test(expected = InvalidParameterException.class)
@@ -74,26 +122,27 @@ public class AttachClientToSCTest {
 		}
 	}
 
-	@Test(expected = ConnectionPoolConnectException.class)
+	@Test
 	public void attach_hostLocalhostPort1_notAttachedThrowsException() throws Exception {
 		try {
 			client.attach("localhost", 1);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
-			throw e;
+			ex = e;
 		}
+		assertEquals(false, client.isAttached());
+		assertEquals(true, ex instanceof SCServiceException);
 	}
 
-	@Test(expected = ConnectionPoolConnectException.class)
+	@Test
 	public void attach_hostLocalhostPortMaxAllowed_notAttachedThrowsException()
 			throws Exception {
 		try {
 			client.attach("localhost", 0xFFFF);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
-			throw e;
+			ex = e;
 		}
-
+		assertEquals(false, client.isAttached());
+		assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test(expected = InvalidParameterException.class)
@@ -230,14 +279,15 @@ public class AttachClientToSCTest {
 //	region hostName == "", all ports
 	
 	
-	@Test(expected = ConnectionPoolConnectException.class)
+	@Test
 	public void attach_hostEmptyPort8080_notAttachedThrowsException() throws Exception {
 		try {
 			client.attach("", 8080);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
-			throw e;
+			ex = e;
 		}
+		assertEquals(false, client.isAttached());
+		assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test(expected = ConnectionPoolConnectException.class)
