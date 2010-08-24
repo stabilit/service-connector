@@ -164,7 +164,44 @@ public final class ValidatorUtility {
 		int length = stringValue.getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
-			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits");
+			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits "
+					+ minSizeInc + " to " + maxSizeInc);
 		}
+	}
+
+	/**
+	 * Validate allowed characters.
+	 * 
+	 * @param stringValue
+	 *            the string value
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateAllowedCharacters(String stringValue, SCMPError error) throws SCMPValidatorException {
+		if (stringValue == null) {
+			throw new SCMPValidatorException(error, "StringValue must be set");
+		}
+		byte[] buffer = stringValue.getBytes();
+
+		for (int i = 0; i < buffer.length; i++) {
+			if (ValidatorUtility.isCharacterAllowed(buffer[i]) == false) {
+				throw new SCMPValidatorException(error, "String value contains forbidden character "
+						+ new String(buffer));
+			}
+		}
+	}
+
+	/**
+	 * Checks if is character is allowed.
+	 * 
+	 * @param ch
+	 *            the character to check
+	 * @return true, if is character allowed
+	 */
+	public static boolean isCharacterAllowed(byte ch) {
+		// check if character is in allowed range and not the equal sign (61)
+		return ch != 61 && ch >= 32 && ch < 127;
 	}
 }
