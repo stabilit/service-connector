@@ -15,7 +15,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachDetachClientToSCTest {
 
-	private ISCClient client;
+	private static ISCClient client;
 
 	private static final String host = "localhost";
 	private static final int port8080 = 8080;
@@ -23,26 +23,26 @@ public class AttachDetachClientToSCTest {
 
 	private static Process p = null;
 
-	private static Runtime r;
-
 	@BeforeClass
 	public static void oneTimeSetUp() {
-		r = Runtime.getRuntime();
 		try {
-			// p = r.exec("cmd /c start src\\test\\resources\\startSC.bat");
 			String userDir = System.getProperty("user.dir");
-			String command = "cmd /c start java -Dlog4j.configuration=file:"
-					+ userDir
-					+ "\\src\\test\\resources\\log4j.properties -jar "
-					+ userDir
-					+ "\\..\\service-connector\\target\\sc.jar -filename "
-					+ userDir
-					+ "\\src\\test\\resources\\scIntegration.properties";
+			String javaHome = System.getProperty("java.home");
+			javaHome += "\\..\\bin\\";
+			// p = r.exec("cmd /c start src\\test\\resources\\startSC.bat");
+			
+			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
+			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
+			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
+			  "\\src\\test\\resources\\scIntegration.properties";
+			 //command = "java -Dlog4j.configuration=file:C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\log4j.properties -jar C:\\Repository\\stabilit\\sc\\java\\sc-unit\\..\\service-connector\\target\\sc.jar -filename C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\scIntegration.properties";
+			//String command = "cmd /c start java -Dlog4j.configuration=file:src\\test\\resources\\log4j.properties -jar ..\\service-connector\\target\\sc.jar -filename src\\test\\resources\\scIntegration.propertis";
 			System.out.println(command);
-			p = r.exec(command);
+			p = Runtime.getRuntime().exec(command);
+			//p = Runtime.getRuntime().exec(new String[] {"java", "-Dlog4j.configuration=file:" + userDir + "\\src\\test\\resources\\log4j.properties",  "-jar", userDir + "\\..\\service-connector\\target\\sc.jar", "-filename", userDir + "\\src\\test\\resources\\scIntegration.properties"});
 			// lets the SC load before starting communication
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -53,13 +53,25 @@ public class AttachDetachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		client = new SCClient();
+		try {
+			((SCClient) client).killSC();
+		} catch (SCServiceException e) {
+			e.printStackTrace();
+		}
+		
 		p.destroy();
 	}
 
 	/**
 	 * @throws java.lang.Exception
 	 * 
-	 *             Create a new SCClient for each test method.
+	 * Create a new SCClient for each test method.
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -72,6 +84,7 @@ public class AttachDetachClientToSCTest {
 		assertEquals(false, client.isAttached());
 		client.attach(host, port8080);
 		assertEquals(true, client.isAttached());
+		client.detach();
 	}
 
 	@Test
@@ -181,65 +194,54 @@ public class AttachDetachClientToSCTest {
 
 	@Test(timeout = 8000)
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
-		int i = 0;
-		try {
-			for (; i < 10; i++) {
-				System.err.println("Before attach, cycle: " + i);
-				client.attach(host, port8080);
-				System.err.println("After attach, cycle: " + i);
-				client.detach();
-			}
-			assertEquals(false, client.isAttached());
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			printStrackStrace(e);
+		for (int i = 0; i < 10; i++) {
+			client.attach(host, port8080);
+			client.detach();
 		}
-		System.err.println("Iteration number:\t" + i);
+		assertEquals(false, client.isAttached());
 	}
 
 	@Test
 	public void attachDetach_cycle100Times_notAttached() throws Exception {
-		int i = 0;
-		try {
-			for (; i < 100; i++) {
-				System.err.println("Before attach, cycle: " + i);
-				client.attach(host, port8080);
-				System.err.println("After attach, cycle: " + i);
-				client.detach();
-			}
-			assertEquals(false, client.isAttached());
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			printStrackStrace(e);
+		for (int i = 0; i < 99; i++) {
+			client.attach(host, port8080);
+			client.detach();
 		}
-		System.err.println("Iteration number:\t" + i);
+		client.attach(host, port8080);
+		assertEquals(true, client.isAttached());
+		client.detach();
+		assertEquals(false, client.isAttached());
 	}
 
 	@Test
 	public void attachDetach_cycle500Times_notAttached() throws Exception {
-		int i = 0;
-		try {
-			for (; i < 500; i++) {
-				System.err.println("Before attach, cycle: " + i);
-				client.attach(host, port8080);
-				System.err.println("After attach, cycle: " + i);
-				client.detach();
-			}
-			assertEquals(false, client.isAttached());
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			printStrackStrace(e);
+		for (int i = 0; i < 499; i++) {
+			client.attach(host, port8080);
+			client.detach();
 		}
-		System.err.println("Iteration number:\t" + i);
+		client.attach(host, port8080);
+		assertEquals(true, client.isAttached());
+		client.detach();
+		assertEquals(false, client.isAttached());
 	}
-
-	public void printStrackStrace(Exception e) {
-		while (e.getCause() != null) {
-			System.err.println();
-			System.err.println();
-			e = (Exception) e.getCause();
-			System.err.println(e.getMessage());
-			e.printStackTrace();
+	
+	@Test
+	public void attach_1000ClientsAttachedBeforeDetach_allAttached() throws Exception {
+		ISCClient[] clients = new SCClient[1000];
+		int i = 0;
+		for (; i < 1000; i++) {
+			clients[i] = new SCClient();
+			clients[i].attach(host, port8080);
+		}
+		i = 0;
+		for (; i < 1000; i++) {
+			assertEquals(true, clients[i].isAttached());
+		}
+		for (; i < 1000; i++) {
+			clients[i].detach();			
+		}
+		for (; i < 1000; i++) {
+			assertEquals(false, clients[i].isAttached());
 		}
 	}
 }

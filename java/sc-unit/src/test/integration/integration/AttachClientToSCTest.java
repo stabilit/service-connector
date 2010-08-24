@@ -1,12 +1,9 @@
 package integration;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
-
-import javax.activity.InvalidActivityException;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,8 +13,6 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.net.req.ConnectionPoolConnectException;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachClientToSCTest {

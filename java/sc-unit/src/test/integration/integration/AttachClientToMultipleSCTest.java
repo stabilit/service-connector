@@ -11,16 +11,14 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachClientToMultipleSCTest {
 	private static ISCClient client1;
 	private static ISCClient client2;
 
-
 	private static final String localhost = "localhost";
 	private static final String host = "localhost";
-	private static final int port0 = 0;
+	private static final int port1 = 1;
 	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
 	private static final int port65535 = 65535;
@@ -33,16 +31,13 @@ public class AttachClientToMultipleSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 
-			String command = "cmd /c start java -Dlog4j.configuration=file:"
-					+ userDir
-					+ "\\src\\test\\resources\\log4j.properties -jar "
-					+ userDir
-					+ "\\..\\service-connector\\target\\sc.jar -filename "
-					+ userDir + "\\src\\test\\resources\\";
+			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
+					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
+					+ "\\src\\test\\resources\\";
 			System.out.println(command);
 			p = Runtime.getRuntime().exec(command + "scIntegration.properties");
-			r = Runtime.getRuntime().exec(
-					command + "scIntegrationChanged.properties");
+			r = Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -65,7 +60,6 @@ public class AttachClientToMultipleSCTest {
 		r.destroy();
 	}
 
-
 	/**
 	 * @throws java.lang.Exception
 	 * 
@@ -78,174 +72,166 @@ public class AttachClientToMultipleSCTest {
 	}
 
 	@Test
-	public void attach_changesState_initiallyNotAttachedThenAttachedToBoth()
-			throws Exception {
+	public void attachDetach_changesState_fromNotAttachedToAttachedToBoth() throws Exception {
 		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 		client1.attach(localhost, port8080);
 		assertEquals(true, client1.isAttached());
-		client2.attach(host, port0);		
+		assertEquals(false, client2.isAttached());
+		client2.attach(host, port1);
+		assertEquals(true, client1.isAttached());
 		assertEquals(true, client2.isAttached());
 		client1.detach();
 		client2.detach();
+		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 	}
 
 	@Test
-	public void detach_changesState_fromAttachedToNotAttached()
+	public void attach_withDifferentConnectionTypesHttpFirst_fromNotAttachedToAttached()
 			throws Exception {
+		((SCClient) client2).setConnectionType("netty.tcp");
 		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 		client1.attach(localhost, port8080);
 		assertEquals(true, client1.isAttached());
-		client1.attach();
+		assertEquals(false, client2.isAttached());
+		client2.attach(host, port65535);
+		assertEquals(true, client1.isAttached());
+		assertEquals(true, client2.isAttached());
+		client1.detach();
 		client2.detach();
 		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 	}
 
 	@Test
-	public void attach_twiceSameParams_throwsExceptionAttached()
+	public void attach_withDifferentConnectionTypesTcpFirst_fromNotAttachedToAttached()
 			throws Exception {
-		Exception ex = null;
-		client1.attach(localhost, port8080);
-		try {
-			client1.attach(localhost, port8080);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client1.isAttached());
-		client1.detach();
-	}
-
-	@Test
-	public void attach_twiceDifferentParamsHttpFirst_throwsExceptionAttached()
-			throws Exception {
-		Exception ex = null;
-		client1.attach(localhost, port8080);
 		((SCClient) client1).setConnectionType("netty.tcp");
-		try {
-			client1.attach(localhost, port9000);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client1.isAttached());
-		client1.detach();
-	}
-
-	@Test
-	public void attach_twiceDifferentParamsTcpFirst_throwsExceptionAttached()
-			throws Exception {
-		Exception ex = null;
-		((SCClient) client1).setConnectionType("netty.tcp");
+		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 		client1.attach(localhost, port9000);
-		((SCClient) client1).setConnectionType("netty.http");
-		try {
-			client1.attach(localhost, port8080);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(true, client1.isAttached());
+		assertEquals(false, client2.isAttached());
+		client2.attach(host, port1);
+		assertEquals(true, client1.isAttached());
+		assertEquals(true, client2.isAttached());
 		client1.detach();
-	}
-
-	@Test
-	public void detach_withoutAttach_notAttached() throws Exception {
-		client1.detach();
+		client2.detach();
 		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
 	}
 
 	@Test
-	public void detach_validAttachPort8080_notAttached() throws Exception {
-		try {
-			client1.attach(localhost, port8080);
-		} finally {
-			client1.detach();
-			assertEquals(false, client1.isAttached());
-		}
-	}
-
-	@Test
-	public void detach_validAttachPort9000_notAttached() throws Exception {
+	public void attach_tcpConnectionType_fromNotAttachedToAttached() throws Exception {
 		((SCClient) client1).setConnectionType("netty.tcp");
-		try {
-			client1.attach(localhost, port9000);
-		} finally {
+		((SCClient) client2).setConnectionType("netty.tcp");
+		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
+		client1.attach(localhost, port9000);
+		assertEquals(true, client1.isAttached());
+		assertEquals(false, client2.isAttached());
+		client2.attach(host, port65535);
+		assertEquals(true, client1.isAttached());
+		assertEquals(true, client2.isAttached());
+		client1.detach();
+		client2.detach();
+		assertEquals(false, client1.isAttached());
+		assertEquals(false, client2.isAttached());
+	}
+
+	@Test
+	public void attachDetach_onTwoSCsHttp_periodicallyAttached() throws Exception {
+		for (int i = 0; i < 100; i++) {
+			client1.attach(localhost, port8080);
+			client2.attach(host, port1);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
 			client1.detach();
+			client2.detach();
 			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
 		}
 	}
 
 	@Test
-	public void detach_afterDoubleAttemptedAttachDetach_throwsExceptionNotAttached()
-			throws Exception {
-		Exception ex = null;
-		client1.attach(localhost, port8080);
-		assertEquals(true, client1.isAttached());
-		try {
-			((SCClient) client1).setConnectionType("netty.tcp");
+	public void attachDetach_onTwoSCsTcp_periodicallyAttached() throws Exception {
+		((SCClient) client1).setConnectionType("netty.tcp");
+		((SCClient) client2).setConnectionType("netty.tcp");
+		for (int i = 0; i < 100; i++) {
 			client1.attach(localhost, port9000);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client1.isAttached());
-		client1.detach();
-		assertEquals(false, client1.isAttached());
-	}
-
-	// TODO solve the issue of running this together with the rest and failing
-
-	@Test(timeout = 8000)
-	public void attachDetach_cycle10Times_notAttached() throws Exception {
-		for (int i = 0; i < 10; i++) {
-			client1.attach(localhost, port8080);
+			client2.attach(host, port65535);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
 			client1.detach();
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
 		}
-		assertEquals(false, client1.isAttached());
+	}
+	
+	@Test
+	public void attachDetach_onTwoSCsBoth_periodicallyAttached() throws Exception {
+		((SCClient) client1).setConnectionType("netty.tcp");
+		for (int i = 0; i < 100; i++) {
+			client1.attach(localhost, port9000);
+			client2.attach(host, port1);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
+			client1.detach();
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
+		}
 	}
 
 	@Test
-	public void attachDetach_cycle100Times_notAttached() throws Exception {
-		for (int i = 0; i < 99; i++) {
-			client1.attach(localhost, port8080);
+	public void attachDetach_onTwoSCsChangingTypes_periodicallyAttached() throws Exception {
+		((SCClient) client1).setConnectionType("netty.tcp");
+		for (int i = 0; i < 50; i++) {
+			client1.attach(localhost, port9000);
+			client2.attach(host, port1);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
 			client1.detach();
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
+			((SCClient) client1).setConnectionType("netty.http");
+			((SCClient) client2).setConnectionType("netty.tcp");
+			client1.attach(localhost, port8080);
+			client2.attach(host, port65535);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
+			client1.detach();
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
+			((SCClient) client1).setConnectionType("netty.tcp");
+			((SCClient) client2).setConnectionType("netty.http");
 		}
-		client1.attach(localhost, port8080);
-		assertEquals(true, client1.isAttached());
-		client1.detach();
-		assertEquals(false, client1.isAttached());
 	}
 
 	@Test
-	public void attachDetach_cycle500Times_notAttached() throws Exception {
-		for (int i = 0; i < 499; i++) {
+	public void attachDetach_onTwoSCsChangingSCs_periodicallyAttached() throws Exception {
+		for (int i = 0; i < 50; i++) {
 			client1.attach(localhost, port8080);
+			client2.attach(host, port1);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
 			client1.detach();
-		}
-		client1.attach(localhost, port8080);
-		assertEquals(true, client1.isAttached());
-		client1.detach();
-		assertEquals(false, client1.isAttached());
-	}
-
-	@Test
-	public void attach_1000ClientsAttachedBeforeDetach_allAttached()
-			throws Exception {
-		ISCClient[] clients = new SCClient[1000];
-		int i = 0;
-		for (; i < 1000; i++) {
-			clients[i] = new SCClient();
-			clients[i].attach(localhost, port8080);
-		}
-		i = 0;
-		for (; i < 1000; i++) {
-			assertEquals(true, clients[i].isAttached());
-		}
-		for (; i < 1000; i++) {
-			clients[i].detach();
-		}
-		for (; i < 1000; i++) {
-			assertEquals(false, clients[i].isAttached());
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
+			client1.attach(localhost, port1);
+			client2.attach(host, port8080);
+			assertEquals(true, client1.isAttached());
+			assertEquals(true, client2.isAttached());
+			client1.detach();
+			client2.detach();
+			assertEquals(false, client1.isAttached());
+			assertEquals(false, client2.isAttached());
 		}
 	}
 }
