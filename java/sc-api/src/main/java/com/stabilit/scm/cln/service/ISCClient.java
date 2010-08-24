@@ -20,6 +20,7 @@ import java.security.InvalidParameterException;
 
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
+import com.stabilit.scm.common.service.SCServiceException;
 
 /**
  * The Interface ISCClient. Interface for any kind of client.
@@ -124,12 +125,39 @@ public interface ISCClient extends ISC {
 	 * @throws InvalidParameterException
 	 *             maxConnections smaller one
 	 */
-	public abstract void setMaxConnections(int maxConnections);
-	
-	public abstract void enableService();
-	
-	public abstract void disableService();
-	
+	public abstract void setMaxConnections(int maxConnections) throws SCServiceException;
+
+	/**
+	 * Enable service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
+	public abstract void enableService(String serviceName) throws SCServiceException;
+
+	/**
+	 * Disable service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
+	public abstract void disableService(String serviceName) throws SCServiceException;
+
+	/**
+	 * Checks if is service enabled.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return true, if is service enabled
+	 */
+	public abstract boolean isServiceEnabled(String serviceName) throws SCServiceException;
+
+	/**
+	 * Kill sc.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public abstract void killSC() throws Exception;
 
 	/**

@@ -45,8 +45,6 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  */
 public class SCClient implements ISCClient {
 
-	/** The Constant KILL_INSTRUCTION. */
-	private static final String KILL_INSTRUCTION = "kill";
 	/** The host of the SC. */
 	private String host;
 	/** The port of the SC. */
@@ -260,18 +258,26 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public void disableService() {
+	public void disableService(String serviceName) throws SCServiceException {
+		String bodyString = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
+		
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void enableService() {
+	public void enableService(String serviceName) throws SCServiceException {
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
+		return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void killSC() throws SCServiceException {
-		this.manageCall(KILL_INSTRUCTION);
+		this.manageCall(Constants.KILL);
 	}
 
 	/**
@@ -282,7 +288,7 @@ public class SCClient implements ISCClient {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	private void manageCall(String instruction) throws SCServiceException {
+	private String manageCall(String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		try {
@@ -293,6 +299,16 @@ public class SCClient implements ISCClient {
 			this.connectionPool.destroy();
 			throw new SCServiceException("kill SC failed", e);
 		}
+		if (instruction.equalsIgnoreCase(Constants.KILL)) {
+			// kill sc doesn't reply a message
+			return null;
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("manage failed", fault.getCause());
+		}
+		return (String) reply.getBody();
 	}
 
 	/**

@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -37,14 +38,8 @@ import com.stabilit.scm.sc.service.Service;
  */
 public class ManageCommand extends CommandAdapter {
 
-	/** The Constant DISABLE. */
-	private static final String DISABLE = "disable";
-	/** The Constant ENABLE. */
-	private static final String ENABLE = "enable";
-	/** The Constant SHUTDOWN. */
-	private static final String KILL = "kill";
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + ENABLE + "|" + DISABLE + ")=(.*)";
+	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")=(.*)";
 	/** The Constant MANAGE_PATTER. */
 	private static final Pattern MANAGE_PATTER = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
@@ -76,7 +71,8 @@ public class ManageCommand extends CommandAdapter {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
-		if (bodyString.equalsIgnoreCase(KILL)) {
+		if (bodyString.equalsIgnoreCase(Constants.KILL)) {
+			// kill sc requested
 			System.exit(0);
 		}
 
@@ -89,7 +85,7 @@ public class ManageCommand extends CommandAdapter {
 		String stateString = m.group(1);
 		String serviceName = m.group(2);
 
-		if (stateString.equalsIgnoreCase(ENABLE)) {
+		if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
 			// enable service is requested
 			if (disabledServiceRegistry.containsKey(serviceName)) {
 				Service service = disabledServiceRegistry.removeService(serviceName);

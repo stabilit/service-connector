@@ -172,6 +172,15 @@ public final class Constants {
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 	/** The Constant FIX_VERSION_LENGTH_IN_HEADLINE. */
 	public static final int FIX_VERSION_LENGTH_IN_HEADLINE = 3;
+	
+	/** The Constant DISABLE. */
+	public static final String DISABLE = "disable";
+	/** The Constant ENABLE. */
+	public static final String ENABLE = "enable";
+	/** The Constant SHUTDOWN. */
+	public static final String KILL = "kill";
+	/** The Constant EQUAL_SIGN. */
+	public static final String EQUAL_SIGN = "=";
 
 	/**
 	 * @return the serviceLevelOperationTimeoutMillis

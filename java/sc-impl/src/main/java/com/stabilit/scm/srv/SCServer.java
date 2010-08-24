@@ -269,13 +269,13 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean listening() {
+	public boolean isListening() {
 		return this.listening;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean registered() {
+	public boolean isRegistered() {
 		return this.registered;
 	}
 

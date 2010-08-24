@@ -110,11 +110,11 @@ public interface ISCServer extends ISC {
 	public abstract void startListener(String host, int port, int maxSessions) throws Exception;
 
 	/**
-	 * Checks if is started.
-	 * 
-	 * @return true, if is started
+	 * Checks if is listening.
+	 *
+	 * @return true, if is listening
 	 */
-	public abstract boolean listening();
+	public abstract boolean isListening();
 
 	/**
 	 * Stop listening.
@@ -122,11 +122,11 @@ public interface ISCServer extends ISC {
 	public abstract void stopListening();
 
 	/**
-	 * Registered.
-	 * 
-	 * @return true, if successful
+	 * Checks if is registered.
+	 *
+	 * @return true, if is registered
 	 */
-	public abstract boolean registered();
+	public abstract boolean isRegistered();
 
 	/** {@inheritDoc} */
 	@Override
