@@ -259,13 +259,13 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void disableService(String serviceName) throws SCServiceException {
-		String bodyString = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
-		
+		this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void enableService(String serviceName) throws SCServiceException {
+		this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/** {@inheritDoc} */
