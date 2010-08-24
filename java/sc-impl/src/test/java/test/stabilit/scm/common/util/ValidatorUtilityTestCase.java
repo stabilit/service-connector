@@ -188,7 +188,7 @@ public class ValidatorUtilityTestCase {
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
 			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 1 is not within limits]", e.getMessage());
+					+ " [StringValue length 1 is not within limits 2 to 4]", e.getMessage());
 		}
 
 		try {
@@ -197,7 +197,7 @@ public class ValidatorUtilityTestCase {
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
 			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 3 is not within limits]", e.getMessage());
+					+ " [StringValue length 3 is not within limits 1 to 2]", e.getMessage());
 		}
 	}
 }
