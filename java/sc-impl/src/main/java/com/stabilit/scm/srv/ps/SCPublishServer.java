@@ -45,8 +45,8 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String scHost, int scPort, String serviceName, int keepAliveIntervalInSeconds,
+	public void registerService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
 			ISCPublishServerCallback scCallback) throws Exception {
-		super.registerService(scHost, scPort, serviceName, keepAliveIntervalInSeconds, scCallback);
+		super.registerService(scHost, scPort, serviceName, maxSessions, maxConnections, scCallback);
 	}
 }

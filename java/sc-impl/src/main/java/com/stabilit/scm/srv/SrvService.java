@@ -28,25 +28,64 @@ package com.stabilit.scm.srv;
  */
 public class SrvService {
 
+	/** The sc host. */
+	private String scHost;
+	/** The sc port. */
+	private int scPort;
 	/** The service name. */
 	private String serviceName;
 	/** The callback. */
 	private ISCServerCallback callback;
+	/** The max sessions. */
+	private int maxSessions;
+	/** The max connections. */
+	private int maxConnections;
 
 	/**
 	 * Instantiates a new srv service.
 	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
 	 * @param serviceName
 	 *            the service name
+	 * @param maxSessions
+	 *            the max sessions
+	 * @param maxConnections
+	 *            the max connections
 	 * @param callback
 	 *            the callback
 	 */
-	public SrvService(String serviceName, ISCServerCallback callback) {
+	public SrvService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
+			ISCServerCallback callback) {
 		super();
+		this.scHost = scHost;
+		this.scPort = scPort;
 		this.serviceName = serviceName;
 		this.callback = callback;
+		this.maxConnections = maxConnections;
+		this.maxSessions = maxSessions;
+	}	
+	
+	/**
+	 * Gets the sc host.
+	 *
+	 * @return the sc host
+	 */
+	public String getScHost() {
+		return scHost;
 	}
 
+	/**
+	 * Gets the sc port.
+	 *
+	 * @return the sc port
+	 */
+	public int getScPort() {
+		return scPort;
+	}
+	
 	/**
 	 * Gets the service name.
 	 * 
@@ -54,6 +93,24 @@ public class SrvService {
 	 */
 	public String getServiceName() {
 		return serviceName;
+	}
+
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @return the max sessions
+	 */
+	public int getMaxSessions() {
+		return maxSessions;
+	}
+
+	/**
+	 * Gets the max connections.
+	 * 
+	 * @return the max connections
+	 */
+	public int getMaxConnections() {
+		return maxConnections;
 	}
 
 	/**

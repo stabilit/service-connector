@@ -156,31 +156,31 @@ public class SetupTestCases {
 		scSim1ConSrv = new SCServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startListener("localhost", 7000, 10);
+		scSim1ConSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerService("localhost", 9000, "simulation", 0, srvCallback);
+		scSim1ConSrv.registerService("localhost", 9000, "simulation", 10, 10, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
 		scSim10ConSrv = new SCServer();
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.startListener("localhost", 7000, 10);
+		scSim10ConSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("localhost", 9000, "simulation", 0, srvCallback);
+		scSim10ConSrv.registerService("localhost", 9000, "simulation", 10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		scSimEnableSrv = new SCServer();
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
-		scSimEnableSrv.startListener("localhost", 7000, 10);
+		scSimEnableSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSimEnableSrv.registerService("localhost", 9000, "enableService", 0, srvCallback);
+		scSimEnableSrv.registerService("localhost", 9000, "enableService", 10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSimEnableSrv.deregisterService();
+		scSimEnableSrv.deregisterService("enableService");
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
@@ -265,9 +265,9 @@ public class SetupTestCases {
 		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startListener("localhost", 7000, 10);
+		publishSrv.startListener("localhost", 7000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService("localhost", 9000, serviceName, 0, publishCallback);
+		publishSrv.registerService("localhost", 9000, serviceName, 10, 10, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

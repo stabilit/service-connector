@@ -103,11 +103,26 @@ public final class ValidatorUtility {
 		} catch (NumberFormatException ex) {
 			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
 		}
-
-		if (intValue < lowerLimitInc) {
-			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " too low");
-		}
+		ValidatorUtility.validateInt(lowerLimitInc, intValue, error);
 		return intValue;
+	}
+
+	/**
+	 * Validate integer.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower limit inclusive
+	 * @param intValue
+	 *            the integer value
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public static void validateInt(int lowerLimitInc, int intValue, SCMPError error) throws SCMPValidatorException {
+		if (intValue < lowerLimitInc) {
+			throw new SCMPValidatorException(error, "IntValue " + intValue + " too low");
+		}
 	}
 
 	/**
@@ -136,11 +151,29 @@ public final class ValidatorUtility {
 		} catch (NumberFormatException ex) {
 			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
 		}
-
-		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
-			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " not within limits");
-		}
+		ValidatorUtility.validateInt(lowerLimitInc, intValue, upperLimitInc, error);
 		return intValue;
+	}
+
+	/**
+	 * Validate integer.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower limit inclusive
+	 * @param intValue
+	 *            the integer value
+	 * @param upperLimitInc
+	 *            the upper limit inclusive
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public static void validateInt(int lowerLimitInc, int intValue, int upperLimitInc, SCMPError error)
+			throws SCMPValidatorException {
+		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
+			throw new SCMPValidatorException(error, "IntValue " + intValue + " not within limits");
+		}
 	}
 
 	/**
