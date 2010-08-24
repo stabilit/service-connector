@@ -21,7 +21,6 @@ import java.security.InvalidParameterException;
 import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.ISCManage;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -44,7 +43,7 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-public class SCClient implements ISCClient, ISCManage {
+public class SCClient implements ISCClient {
 
 	/** The Constant KILL_INSTRUCTION. */
 	private static final String KILL_INSTRUCTION = "kill";
@@ -103,8 +102,8 @@ public class SCClient implements ISCClient, ISCManage {
 			throw new SCServiceException(
 					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
-		if (port < 1 || port > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		if (port < 0 || port > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
 		}
 		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
 			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
@@ -293,13 +292,6 @@ public class SCClient implements ISCClient, ISCManage {
 			this.callback = null;
 			this.connectionPool.destroy();
 			throw new SCServiceException("kill SC failed", e);
-		}
-		SCMPMessage reply = this.callback.getMessageSync();
-		if (reply.isFault()) {
-			this.callback = null;
-			this.connectionPool.destroy();
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("kill SC failed", fault.getCause());
 		}
 	}
 

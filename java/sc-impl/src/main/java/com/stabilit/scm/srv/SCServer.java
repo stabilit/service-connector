@@ -145,8 +145,8 @@ public class SCServer implements ISCServer {
 			throw new InvalidActivityException(
 					"Host and port to SC must be configued by setters before calling register service.");
 		}
-		if (scPort < 1 || scPort > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		if (scPort < 0 || scPort > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
 		}
 		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
 			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
@@ -230,8 +230,8 @@ public class SCServer implements ISCServer {
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());
 		respConfig.setConnectionType(this.conType);
 
-		if (port < 1 || port > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 1 and 0xFFFF.");
+		if (port < 0 || port > 0xFFFF) {
+			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
 		}
 		if (maxSessions < 1) {
 			throw new InvalidParameterException("Max sessions must be greater than 0.");
