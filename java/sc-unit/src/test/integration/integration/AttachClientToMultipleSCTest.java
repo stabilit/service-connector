@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
+import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachClientToMultipleSCTest {
 	private static ISCClient client1;
@@ -23,9 +24,6 @@ public class AttachClientToMultipleSCTest {
 	private static final int port9000 = 9000;
 	private static final int port65535 = 65535;
 
-	private static Process p = null;
-	private static Process r;
-
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		try {
@@ -36,8 +34,8 @@ public class AttachClientToMultipleSCTest {
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\";
 			System.out.println(command);
-			p = Runtime.getRuntime().exec(command + "scIntegration.properties");
-			r = Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
+			Runtime.getRuntime().exec(command + "scIntegration.properties");
+			Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -50,14 +48,18 @@ public class AttachClientToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
+		SCClient endClient1 = new SCClient();
+		SCClient endClient2 = new SCClient();
 		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
+			endClient1.attach(localhost, port8080);
+			endClient2.attach(host, port1);
+			((SCClient) endClient1).killSC();
+			((SCClient) endClient2).killSC();
+		} catch (SCServiceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		p.destroy();
-		r.destroy();
 	}
 
 	/**

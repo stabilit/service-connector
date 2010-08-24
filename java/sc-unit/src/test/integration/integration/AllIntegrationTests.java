@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { AttachClientToSCTest.class, AttachDetachClientToSCTest.class , 
-	AttachClientToMultipleSCTest.class})
+@Suite.SuiteClasses( { AttachClientToSCTest.class, AttachDetachClientToSCTest.class,
+		AttachClientToSCConnectionTypeTCPTest.class, AttachClientToMultipleSCTest.class })
 public class AllIntegrationTests {
 }

@@ -2,9 +2,7 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,24 +21,16 @@ public class AttachDetachClientToSCTest {
 	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
 
-	private static Process p = null;
-
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		try {
-			String userDir = System.getProperty("user.dir");
-			String javaHome = System.getProperty("java.home");
-			javaHome += "\\..\\bin\\";
-		    
+			String userDir = System.getProperty("user.dir");		    
 			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
 			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
 			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
 			  "\\src\\test\\resources\\scIntegration.properties";
-//			command = "java -Dlog4j.configuration=file:C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\log4j.properties -jar C:\\Repository\\stabilit\\sc\\java\\sc-unit\\..\\service-connector\\target\\sc.jar -filename C:\\Repository\\stabilit\\sc\\java\\sc-unit\\src\\test\\resources\\scIntegration.properties";
-//			String command = "cmd /c start java -Dlog4j.configuration=file:src\\test\\resources\\log4j.properties -jar ..\\service-connector\\target\\sc.jar -filename src\\test\\resources\\scIntegration.propertis";
-//			System.out.println(command);
-			p = Runtime.getRuntime().exec(command);
-			//p = Runtime.getRuntime().exec(new String[] {"java", "-Dlog4j.configuration=file:" + userDir + "\\src\\test\\resources\\log4j.properties",  "-jar", userDir + "\\..\\service-connector\\target\\sc.jar", "-filename", userDir + "\\src\\test\\resources\\scIntegration.properties"});
+			
+			Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
 			try {
@@ -55,11 +45,6 @@ public class AttachDetachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		SCClient endClient = new SCClient();
 		try {
 			endClient.attach("localhost", port8080);
@@ -69,8 +54,6 @@ public class AttachDetachClientToSCTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		p.destroy();
 	}
 
 	/**
@@ -82,7 +65,7 @@ public class AttachDetachClientToSCTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 	}
-
+	
 	@Test
 	public void attach_changesState_initiallyNotAttachedThenAttached()
 			throws Exception {
@@ -195,9 +178,7 @@ public class AttachDetachClientToSCTest {
 		assertEquals(false, client.isAttached());
 	}
 
-	// TODO solve the issue of running this together with the rest and failing
-
-	@Test(timeout = 8000)
+	@Test
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
 		for (int i = 0; i < 10; i++) {
 			client.attach(host, port8080);
