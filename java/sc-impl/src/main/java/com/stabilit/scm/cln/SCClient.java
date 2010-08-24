@@ -259,24 +259,40 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void disableService(String serviceName) throws SCServiceException {
+		if (this.callback == null) {
+			// disableService not possible - client not attached
+			throw new SCServiceException("client not attached - disableService not possible.");
+		}
 		this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void enableService(String serviceName) throws SCServiceException {
+		if (this.callback == null) {
+			// enableService not possible - client not attached
+			throw new SCServiceException("client not attached - enableService not possible.");
+		}
 		this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
+		if (this.callback == null) {
+			// isServiceEnabled not possible - client not attached
+			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
+		}
 		return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void killSC() throws SCServiceException {
+		if (this.callback == null) {
+			// killSC not possible - client not attached
+			throw new SCServiceException("client not attached - killSC not possible.");
+		}
 		this.manageCall(Constants.KILL);
 	}
 
