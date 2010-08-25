@@ -38,6 +38,7 @@ import org.jboss.netty.util.Timer;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -58,6 +59,9 @@ public class NettyHttpConnection implements IConnection {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
+	
+	/** The Constant connectionLogger. */
+	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	
 	/** The url. */
 	private URL url;
@@ -151,10 +155,12 @@ public class NettyHttpConnection implements IConnection {
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
+			logger.error("connect "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
+		//if (connectionLogger.isInfoEnabled()) connectionLogger.info(this.logConnect());	//TODO TRN
 		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
 		this.connected = true;
 	}
@@ -167,10 +173,12 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
+			logger.error("disconnect "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
+		//if (connectionLogger.isInfoEnabled()) connectionLogger.info(this.logDisconnect());	//TODO TRN
 		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
 	}
 
@@ -182,6 +190,7 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception ex) {
+			logger.error("destroy "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}
@@ -213,10 +222,12 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
+			logger.error("send "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}
+		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logWrite());	//TODO TRN
 		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
 		return;
 	}

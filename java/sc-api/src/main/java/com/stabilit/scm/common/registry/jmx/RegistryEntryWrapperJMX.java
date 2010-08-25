@@ -20,8 +20,6 @@ import java.beans.ConstructorProperties;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.registry.Registry;
-
 /**
  * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.
  * 

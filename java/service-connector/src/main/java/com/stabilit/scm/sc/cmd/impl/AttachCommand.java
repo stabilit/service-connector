@@ -18,6 +18,8 @@ package com.stabilit.scm.sc.cmd.impl;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -39,6 +41,9 @@ import com.stabilit.scm.common.util.ValidatorUtility;
  */
 public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(AttachCommand.class);
+	
 	/**
 	 * Instantiates a new AttachCommand.
 	 */
@@ -88,8 +93,9 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 				ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException valExc = new SCMPValidatorException();
 				valExc.setMessageType(getKey());
 				valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

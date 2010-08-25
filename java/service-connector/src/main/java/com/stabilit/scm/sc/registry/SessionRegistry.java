@@ -21,7 +21,6 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;

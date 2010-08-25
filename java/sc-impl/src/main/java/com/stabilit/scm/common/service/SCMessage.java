@@ -20,8 +20,6 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpResponderRequestHandler;
-
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
  * 

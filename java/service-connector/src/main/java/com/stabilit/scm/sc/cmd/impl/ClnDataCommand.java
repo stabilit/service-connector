@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
@@ -41,6 +43,9 @@ import com.stabilit.scm.sc.service.Session;
  */
 public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ClnDataCommand.class);
+	
 	/**
 	 * Instantiates a new ClnDataCommand.
 	 */
@@ -111,8 +116,9 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

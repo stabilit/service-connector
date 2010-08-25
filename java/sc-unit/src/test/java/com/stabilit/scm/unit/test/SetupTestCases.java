@@ -18,6 +18,8 @@ package com.stabilit.scm.unit.test;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
@@ -33,6 +35,7 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.ps.SCPublishServer;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 import com.stabilit.scm.unit.TestUnitServerCommandFactory;
 
 /**
@@ -40,6 +43,9 @@ import com.stabilit.scm.unit.TestUnitServerCommandFactory;
  */
 public class SetupTestCases {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SetupTestCases.class);
+	
 	private static SetupTestCases setupTestCases = null;
 	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
@@ -333,8 +339,9 @@ public class SetupTestCases {
 					}
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
+				} catch (Exception ex) {
+					logger.error("callback "+ex.getMessage(), ex);
+					ExceptionPoint.getInstance().fireException(this, ex);
 				}
 			}
 		}

@@ -28,7 +28,6 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
-import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**
@@ -96,8 +95,9 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	public void run() {
 		try {
 			startListenSync();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+		} catch (Exception ex) {
+			logger.error("run "+ex.getMessage(), ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			this.destroy();
 		}
 	}
@@ -115,6 +115,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			this.channel.close();
 		} catch (Exception ex) {
+			logger.error("stoppListening "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			return;
 		}

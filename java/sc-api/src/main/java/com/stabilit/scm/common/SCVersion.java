@@ -20,7 +20,6 @@ import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.scmp.SCMPError;
 

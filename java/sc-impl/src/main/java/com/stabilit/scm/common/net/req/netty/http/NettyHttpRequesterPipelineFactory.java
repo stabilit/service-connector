@@ -31,7 +31,6 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyIdleTimeoutHandler;
-import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 
 /**
  * A factory for creating NettyHttpRequesterPipeline objects.

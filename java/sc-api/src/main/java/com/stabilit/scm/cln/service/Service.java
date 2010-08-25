@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.service;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPMessageId;

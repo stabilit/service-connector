@@ -1,12 +1,14 @@
 package com.stabilit.scm.common.log;
 
 /**
- * The Enum Loggers. All available Loggers beside class loggers in SCM.
+ * The Enum Loggers. All available log4j Loggers beside class loggers in SCM.
  */
 public enum Loggers {
 
 	CONNECTION("connection"), //
-	SESSION("session");
+	SESSION("session"),
+	SUBSCRIPTION("subscription"),
+	PERFORMANCE("performance");
 
 	/** The value. */
 	private String value;

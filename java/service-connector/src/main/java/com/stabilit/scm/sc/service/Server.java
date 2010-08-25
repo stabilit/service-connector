@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPSrvAbortSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvChangeSubscriptionCall;
@@ -51,6 +53,9 @@ import com.stabilit.scm.sc.req.SCRequester;
  */
 public class Server {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(Server.class);
+	
 	/** The host. */
 	private String host;
 	/** The port number. */
@@ -64,6 +69,7 @@ public class Server {
 	/** The max sessions. */
 	private int maxSessions;	
 	/** The max connections. */
+	@SuppressWarnings("unused")
 	private int maxConnections;
 	/** The requester. */
 	private IRequester requester;

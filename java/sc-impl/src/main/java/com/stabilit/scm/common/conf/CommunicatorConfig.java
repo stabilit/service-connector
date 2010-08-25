@@ -18,8 +18,6 @@ package com.stabilit.scm.common.conf;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.call.SCMPSrvUnsubscribeCall;
-
 /**
  * The Class CommunicatorConfig.
  * 

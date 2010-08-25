@@ -71,8 +71,9 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 					return null;
 				}
 				this.decodeState = DecodeState.SIZE;
-			} catch (FrameDecoderException e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (FrameDecoderException ex) {
+				logger.error("decode "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				decodeState = DecodeState.EXC;
 				throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);
 			}

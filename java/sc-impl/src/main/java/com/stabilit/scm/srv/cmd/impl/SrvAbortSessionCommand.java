@@ -32,7 +32,6 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
-import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
 /**
@@ -127,8 +126,9 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

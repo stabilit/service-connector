@@ -22,6 +22,8 @@ import java.util.List;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
@@ -46,6 +48,9 @@ import com.stabilit.scm.sc.service.ServiceLoader;
  */
 public final class SC {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SC.class);
+	
 	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 
 	/**
@@ -110,8 +115,9 @@ public final class SC {
 						"Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
 								+ respConfig.getPort());
 				resp.startListenAsync();
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(SC.class, e);
+			} catch (Exception ex) {
+				logger.error("run "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(SC.class, ex);
 			}
 		}
 	}
@@ -137,6 +143,7 @@ public final class SC {
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
 			mbs.registerMBean(loggerConfigurator, mxbeanNameLogging);
 		} catch (Throwable th) {
+			logger.error("initializeJMX "+th.getMessage(), th);
 			ExceptionPoint.getInstance().fireException(SC.class, th);
 		}
 	}

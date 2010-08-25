@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.factory.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.sc.cmd.impl.AttachCommand;
@@ -42,6 +44,9 @@ import com.stabilit.scm.sc.cmd.impl.RegisterServiceCommand;
  */
 public class ServiceConnectorCommandFactory extends CommandFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceConnectorCommandFactory.class);
+	
 	/**
 	 * Instantiates a new service connector command factory.
 	 */

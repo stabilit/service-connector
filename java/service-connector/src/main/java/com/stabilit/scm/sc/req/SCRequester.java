@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.req;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
@@ -32,6 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class SCRequester implements IRequester {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCRequester.class);
+	
 	/** The context. */
 	private IRequesterContext reqContext;
 
@@ -105,8 +110,9 @@ public class SCRequester implements IRequester {
 		private void freeConnection() {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Exception ex) {
+				logger.error("freeConnection "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
 
@@ -117,8 +123,9 @@ public class SCRequester implements IRequester {
 		private void disconnectConnection() {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Exception ex) {
+				logger.error("disconnectConnection "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
 	}

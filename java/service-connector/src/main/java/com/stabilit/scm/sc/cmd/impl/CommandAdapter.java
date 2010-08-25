@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.NullCommandValidator;
@@ -46,6 +48,9 @@ import com.stabilit.scm.sc.service.SessionService;
  */
 public abstract class CommandAdapter implements ICommand {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CommandAdapter.class);
+	
 	/** The command validator. */
 	protected ICommandValidator commandValidator;
 	/** The session registry. */

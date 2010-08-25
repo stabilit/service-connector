@@ -19,7 +19,6 @@ package com.stabilit.scm.common.cmd.factory;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.ICommand;
-import com.stabilit.scm.common.cmd.NullCommandValidator;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.IRequest;

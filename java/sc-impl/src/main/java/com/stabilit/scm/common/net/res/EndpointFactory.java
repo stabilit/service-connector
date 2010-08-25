@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpRequesterResponseHandler;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
 import com.stabilit.scm.common.res.IEndpoint;

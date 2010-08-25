@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.IFilterMask;
@@ -25,6 +27,9 @@ import com.stabilit.scm.common.service.IFilterMask;
  */
 public class SCMPMessageFilterMask implements IFilterMask<SCMPMessage> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPMessageFilterMask.class);
+	
 	/** The mask in bytes. */
 	private byte[] mask;
 

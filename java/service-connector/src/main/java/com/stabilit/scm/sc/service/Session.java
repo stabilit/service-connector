@@ -18,6 +18,8 @@ package com.stabilit.scm.sc.service;
 
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.util.TimerTaskWrapper;
 
 /**
@@ -26,6 +28,9 @@ import com.stabilit.scm.common.util.TimerTaskWrapper;
  */
 public class Session {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(Session.class);
+	
 	/** The id. */
 	private String id;
 	/** The server. */

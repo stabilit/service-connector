@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -32,6 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DetachCommand.class);
+	
 	/**
 	 * Instantiates a new DetachCommand.
 	 */

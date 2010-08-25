@@ -34,7 +34,6 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
-import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
 /**
@@ -124,8 +123,9 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

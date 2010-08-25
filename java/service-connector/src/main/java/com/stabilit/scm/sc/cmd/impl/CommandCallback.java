@@ -1,5 +1,7 @@
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -12,6 +14,9 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  */
 public class CommandCallback extends SynchronousCallback {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CommandCallback.class);
+	
 	/** The Constant ERROR_STRING. */
 	private static final String ERROR_STRING = "executing command timed out";
 

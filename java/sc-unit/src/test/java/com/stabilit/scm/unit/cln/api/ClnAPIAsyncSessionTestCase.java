@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.unit.cln.api;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,9 @@ import com.stabilit.scm.common.service.SCMessageCallback;
 import com.stabilit.scm.unit.test.SetupTestCases;
 
 public class ClnAPIAsyncSessionTestCase {
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ClnAPIAsyncSessionTestCase.class);
 
 	@Before
 	public void setUp() {
@@ -84,6 +88,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 		@Override
 		public void callback(Exception ex) {
+			logger.error("callback "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}

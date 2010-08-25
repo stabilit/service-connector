@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.sc.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -32,6 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class SessionService extends Service {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SessionService.class);
+	
 	/**
 	 * Instantiates a new session service.
 	 * 

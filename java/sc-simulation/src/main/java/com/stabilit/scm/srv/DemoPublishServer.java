@@ -21,11 +21,17 @@
  */
 package com.stabilit.scm.srv;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ps.SCPublishServer;
 
 public class DemoPublishServer {
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
+	
 	private ISCPublishServer publishSrv = null;
 	private String serviceName = "publish-simulation";
 	private static boolean killPublishServer = false;
@@ -46,8 +52,9 @@ public class DemoPublishServer {
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+		} catch (Exception ex) {
+			logger.error("runPublishServer "+ex.getMessage(), ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			this.shutdown();
 		}
 	}
@@ -74,8 +81,9 @@ public class DemoPublishServer {
 					Object data = "publish message nr " + ++index;
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
+				} catch (Exception ex) {
+					logger.error("run "+ex.getMessage(), ex);
+					ExceptionPoint.getInstance().fireException(this, ex);
 					return;
 				}
 			}

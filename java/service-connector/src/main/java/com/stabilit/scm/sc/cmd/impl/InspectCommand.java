@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.registry.Registry;
@@ -35,6 +37,9 @@ import com.stabilit.scm.sc.registry.SessionRegistry;
  */
 public class InspectCommand extends CommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(InspectCommand.class);
+	
 	/**
 	 * Instantiates a new InspectCommand.
 	 */

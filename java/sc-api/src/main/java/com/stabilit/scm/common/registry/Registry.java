@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
 import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
 

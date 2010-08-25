@@ -18,7 +18,6 @@ package com.stabilit.scm.sc.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.registry.Registry;

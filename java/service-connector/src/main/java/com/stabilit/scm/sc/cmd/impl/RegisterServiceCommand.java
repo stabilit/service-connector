@@ -19,6 +19,8 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -44,6 +46,9 @@ import com.stabilit.scm.sc.service.Service;
  */
 public class RegisterServiceCommand extends CommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceCommand.class);
+	
 	/**
 	 * Instantiates a new RegisterServiceCommand.
 	 */
@@ -85,6 +90,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 				server.immediateConnect();
 			}
 		} catch (Exception ex) {
+			logger.error("run "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
@@ -173,8 +179,9 @@ public class RegisterServiceCommand extends CommandAdapter {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

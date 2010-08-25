@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -39,6 +41,9 @@ import com.stabilit.scm.sc.registry.ServiceRegistry;
  */
 public class ServiceLoader {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceLoader.class);
+	
 	/**
 	 * Loads services from a file.
 	 * 

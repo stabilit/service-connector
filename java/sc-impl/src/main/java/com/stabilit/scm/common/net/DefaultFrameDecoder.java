@@ -18,7 +18,6 @@ package com.stabilit.scm.common.net;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.CommunicatorConfigPool;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;

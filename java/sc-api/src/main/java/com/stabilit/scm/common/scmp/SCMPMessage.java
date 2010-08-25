@@ -369,6 +369,7 @@ public class SCMPMessage {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Exception ex) {
+			logger.error("getHeaderInt "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			return null;
 		}

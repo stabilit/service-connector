@@ -18,7 +18,6 @@ package com.stabilit.scm.common.cmd;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 

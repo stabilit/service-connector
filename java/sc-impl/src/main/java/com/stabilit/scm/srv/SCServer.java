@@ -78,8 +78,6 @@ public class SCServer implements ISCServer {
 	/** The local server port. */
 	private int localServerPort;
 
-	static Logger log = Logger.getLogger(Loggers.SESSION.getValue());
-
 	public SCServer() {
 		this.listening = false;
 		this.conType = Constants.DEFAULT_SERVER_CON;
@@ -222,8 +220,9 @@ public class SCServer implements ISCServer {
 		try {
 			responder.create();
 			responder.startListenAsync();
-		} catch (Exception e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+		} catch (Exception ex) {
+			logger.error("startListener "+ex.getMessage(), ex);
+			ExceptionPoint.getInstance().fireException(this, ex);
 			return;
 		}
 		this.listening = true;

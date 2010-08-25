@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.registry;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Service;
 
@@ -24,6 +26,9 @@ import com.stabilit.scm.sc.service.Service;
  */
 public final class DisabledServiceRegistry extends Registry<String, Service> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DisabledServiceRegistry.class);
+	
 	/** The instance. */
 	private static DisabledServiceRegistry instance = new DisabledServiceRegistry();
 

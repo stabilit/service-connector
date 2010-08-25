@@ -29,7 +29,6 @@ import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
  * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together
@@ -178,8 +177,9 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					}
 				}
 				this.outputStream.flush();
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Exception ex) {
+				logger.error("getBody "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				return null;
 			}
 			this.outputStream.toByteArray();
@@ -195,8 +195,9 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					}
 				}
 				this.writer.flush();
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Exception ex) {
+				logger.error("getBody "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				return null;
 			}
 			return this.writer.toString();

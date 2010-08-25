@@ -22,8 +22,6 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.scmp.internal.SCMPSendPart;
-
 /**
  * The Class DateTimeUtility. Provides basic date time operations.
  */

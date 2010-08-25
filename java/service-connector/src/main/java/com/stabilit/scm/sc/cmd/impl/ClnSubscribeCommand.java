@@ -16,11 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -49,6 +52,12 @@ import com.stabilit.scm.sc.service.Session;
  */
 public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
+	
+	/** The Constant sessionLogger. */
+	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
+	
 	/**
 	 * Instantiates a ClnSubscribeCommand.
 	 */
@@ -153,8 +162,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;
@@ -222,8 +232,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				try {
 					// send message back to client
 					this.response.write();
-				} catch (Exception e) {
-					ExceptionPoint.getInstance().fireException(this, e);
+				} catch (Exception ex) {
+					logger.error("timeout "+ex.getMessage(), ex);
+					ExceptionPoint.getInstance().fireException(this, ex);
 				}
 				return;
 			}
@@ -236,6 +247,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
+				subscriptionLogger.debug("send no data for "+sessionId);
 				SubscriptionPoint.getInstance().fireSubscriptionNoDataTimeout(this, sessionId);
 			} else {
 				// set up reply
@@ -270,8 +282,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			try {
 				// send message back to client
 				this.response.write();
-			} catch (Exception e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Exception ex) {
+				logger.error("timeout "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
 	}

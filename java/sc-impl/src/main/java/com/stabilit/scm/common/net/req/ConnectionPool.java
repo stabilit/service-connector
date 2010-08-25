@@ -359,6 +359,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
+			logger.error("connectionIdle "+e.getMessage(), e);
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
 	}

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -28,6 +30,9 @@ import com.stabilit.scm.sc.registry.SubscriptionQueue;
  */
 public class PublishService extends Service {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(PublishService.class);
+	
 	/** The subscription queue. */
 	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 

@@ -29,7 +29,6 @@ import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.SrvService;
-import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.

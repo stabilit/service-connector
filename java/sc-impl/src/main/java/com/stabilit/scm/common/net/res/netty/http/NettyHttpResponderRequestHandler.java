@@ -166,6 +166,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
+				logger.error("messageReceived "+ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				ex.setFaultResponse(response);
 			}
@@ -197,6 +198,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
+		logger.error("exceptionCaught "+e.getCause().getMessage(), e.getCause());
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
@@ -250,6 +252,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	 *            the error
 	 */
 	public void callback(IResponse response, Exception ex) {
+		logger.error("callback "+ex.getMessage(), ex);
 		ExceptionPoint.getInstance().fireException(this, ex);
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
@@ -261,8 +264,9 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 		try {
 			response.write();
-		} catch (Throwable thr) {
-			ExceptionPoint.getInstance().fireException(this, thr);
+		} catch (Throwable th) {
+			logger.error("callback "+th.getMessage(), th);
+			ExceptionPoint.getInstance().fireException(this, th);
 		}
 	}
 

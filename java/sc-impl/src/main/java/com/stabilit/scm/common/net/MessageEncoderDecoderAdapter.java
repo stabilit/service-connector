@@ -151,6 +151,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				return scmpMsg;
 			}
 		} catch (Exception e) {
+			logger.error("decode "+e.getMessage(), e);
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
 		SCMPPoint.getInstance().fireDecode(this, scmpMsg);

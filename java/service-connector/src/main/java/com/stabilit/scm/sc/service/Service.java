@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class Service.
  * 
@@ -32,6 +34,9 @@ import java.util.List;
  */
 public abstract class Service {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(Service.class);
+	
 	/** The type. */
 	private ServiceType type;
 	/** The name. */

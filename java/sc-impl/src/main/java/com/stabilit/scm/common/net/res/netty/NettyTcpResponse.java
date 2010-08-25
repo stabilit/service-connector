@@ -25,6 +25,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.ResponseAdapter;
@@ -38,6 +39,9 @@ public class NettyTcpResponse extends ResponseAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
+	
+	/** The Constant connectionLogger. */
+	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	
 	/** The event from Netty framework. */
 	private ChannelEvent event;
@@ -95,6 +99,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
+		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logWrite());	//TODO TRN
 		ConnectionPoint.getInstance().fireWrite(this,
 				((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 				buffer.toByteBuffer().array());

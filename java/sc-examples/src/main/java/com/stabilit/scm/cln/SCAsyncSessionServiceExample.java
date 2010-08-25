@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.cln;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceContext;
@@ -31,12 +33,16 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
+import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
  * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.
  */
 public class SCAsyncSessionServiceExample {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCAsyncSessionServiceExample.class);
+	
 	private static boolean messageReceived = false;
 
 	public static void main(String[] args) {
@@ -99,6 +105,7 @@ public class SCAsyncSessionServiceExample {
 
 		@Override
 		public void callback(Exception ex) {
+			logger.error("callback "+ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}

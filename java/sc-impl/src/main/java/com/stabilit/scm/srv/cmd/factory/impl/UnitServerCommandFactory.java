@@ -19,7 +19,6 @@ package com.stabilit.scm.srv.cmd.factory.impl;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.srv.SrvServiceRegistry;
 import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 

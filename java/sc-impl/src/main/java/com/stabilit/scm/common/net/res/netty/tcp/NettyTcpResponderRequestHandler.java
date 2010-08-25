@@ -164,6 +164,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
+				logger.error("messageReceived "+ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				ex.setFaultResponse(response);
 			}
@@ -195,6 +196,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(e);
+		logger.error("exceptionCaught "+e.getCause().getMessage(), e.getCause());
 		ExceptionPoint.getInstance().fireException(this, e.getCause());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
@@ -246,6 +248,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	 *            the error
 	 */
 	public void callback(IResponse response, Exception ex) {
+		logger.error("callback "+ex.getMessage(), ex);
 		ExceptionPoint.getInstance().fireException(this, ex);
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);

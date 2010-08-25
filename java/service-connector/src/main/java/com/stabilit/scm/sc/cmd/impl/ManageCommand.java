@@ -19,6 +19,8 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
@@ -38,6 +40,9 @@ import com.stabilit.scm.sc.service.Service;
  */
 public class ManageCommand extends CommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
+	
 	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")=(.*)";
 	/** The Constant MANAGE_PATTER. */

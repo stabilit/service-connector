@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -35,9 +36,11 @@ import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.Requester;
+import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.unit.TestContext;
@@ -49,6 +52,12 @@ import com.stabilit.scm.unit.util.ReflectionUtil;
  */
 @RunWith(Parameterized.class)
 public abstract class MTSuperTestCase {
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
+	
+	/** The Constant connectionLogger. */
+	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 
 	protected String fileName;
 	protected int maxRequesters;
@@ -115,6 +124,7 @@ public abstract class MTSuperTestCase {
 	@Override
 	protected void finalize() throws Throwable {
 		this.testContext.getConnectionPool().destroy();
+		connectionLogger.info("Clear All");
 		ConnectionPoint.getInstance().clearAll();
 		reqList = null;
 	}

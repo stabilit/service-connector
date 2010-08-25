@@ -30,6 +30,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.ResponseAdapter;
@@ -43,6 +44,9 @@ public class NettyHttpResponse extends ResponseAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponse.class);
+	
+	/** The Constant connectionLogger. */
+	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	
 	/** The event from Netty framework. */
 	private ChannelEvent event;
@@ -105,6 +109,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);
+		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logWrite());	//TODO TRN
 		ConnectionPoint.getInstance().fireWrite(this,
 				((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 				buffer.toByteBuffer().array());

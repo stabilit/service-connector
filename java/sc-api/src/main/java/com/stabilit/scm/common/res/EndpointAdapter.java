@@ -18,8 +18,6 @@ package com.stabilit.scm.common.res;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
-
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
  * 

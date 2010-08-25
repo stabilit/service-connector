@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 
 /**

@@ -30,7 +30,6 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.SrvServiceRegistry;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 /**
  * The Class SrvCommandAdapter. Command adapter for every kind of command on server.

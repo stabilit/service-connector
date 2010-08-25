@@ -19,6 +19,8 @@ package com.stabilit.scm.sc.cmd.impl;
 import java.net.InetSocketAddress;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
@@ -43,6 +45,9 @@ import com.stabilit.scm.sc.service.Session;
  */
 public class DeRegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DeRegisterServiceCommand.class);
+	
 	private static final String ABORT_SESSION_ERROR_STRING = SCMPError.SESSION_ABORT.getErrorText()
 			+ "[deregister service]";
 
@@ -140,8 +145,9 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable e) {
-				ExceptionPoint.getInstance().fireException(this, e);
+			} catch (Throwable ex) {
+				logger.error("validate "+ex.getMessage(), ex);
+				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

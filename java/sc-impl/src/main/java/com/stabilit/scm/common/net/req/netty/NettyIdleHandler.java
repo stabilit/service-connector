@@ -28,9 +28,9 @@ import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
-import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.srv.IIdleCallback;
 
 /**
@@ -40,6 +40,9 @@ public class NettyIdleHandler extends IdleStateHandler {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyIdleHandler.class);
+
+	/** The Constant connectionLogger. */
+	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	
 	private IConnectionContext connectionContext;
 
@@ -61,6 +64,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 			throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
+		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(connection.logKeepAlive());	//TODO TRN
 		ConnectionPoint.getInstance().fireKeepAlive(this, this.connectionContext.getConnection());
 		IIdleCallback callback = this.connectionContext.getIdleCallback();
 		callback.connectionIdle(connection);

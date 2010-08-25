@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.sc.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.util.IReversibleEnum;
 import com.stabilit.scm.common.util.ReverseEnumMap;
 
@@ -31,6 +33,9 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
 	SESSION_SERVICE("session"), PUBLISH_SERVICE("publish"), FILE_SERVICE("file"), UNDEFINED("undefined");
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceType.class);
+	
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */

@@ -133,6 +133,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				ex.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw ex;
 			} catch (Throwable th) {
+				logger.error("validate "+th.getMessage(), th);
 				ExceptionPoint.getInstance().fireException(this, th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());

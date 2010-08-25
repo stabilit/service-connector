@@ -22,8 +22,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.res.EndpointAdapter;
-
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.
  * 

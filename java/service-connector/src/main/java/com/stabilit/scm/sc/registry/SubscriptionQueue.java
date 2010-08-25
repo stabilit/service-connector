@@ -21,8 +21,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
@@ -44,6 +47,12 @@ import com.stabilit.scm.sc.service.IPublishTimerRun;
  */
 public class SubscriptionQueue<E> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
+	
+	/** The Constant subscriptionLogger. */
+	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
+	
 	/** The timer instance to observe all timeouts in relation to this queue. */
 	private Timer timer;
 	/** The data queue. */
@@ -72,6 +81,7 @@ public class SubscriptionQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
+		subscriptionLogger.debug("insert "+message);
 		SubscriptionPoint.getInstance().fireAdd(this, message, this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
@@ -112,6 +122,7 @@ public class SubscriptionQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
+		subscriptionLogger.debug("poll "+message);
 		SubscriptionPoint.getInstance().firePoll(this, sessionId, message, this.dataQueue.getSize());
 		return message;
 	}
@@ -156,6 +167,7 @@ public class SubscriptionQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
+			subscriptionLogger.debug("remove ");
 			SubscriptionPoint.getInstance().fireRemove(this, this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
