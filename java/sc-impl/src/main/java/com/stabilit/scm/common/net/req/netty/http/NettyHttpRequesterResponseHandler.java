@@ -18,6 +18,7 @@ package com.stabilit.scm.common.net.req.netty.http;
 
 import java.io.ByteArrayInputStream;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -41,6 +42,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterResponseHandler.class);
+	
 	private ISCMPCallback scmpCallback;
 	private volatile boolean pendingRequest;
 

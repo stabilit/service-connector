@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -40,6 +42,9 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
  */
 public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvUnsubscribeCommand.class);
+	
 	/**
 	 * Instantiates a new SrvUnsubscribeCommand.
 	 */

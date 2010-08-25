@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.res.netty.http;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
@@ -27,6 +28,7 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
+import com.stabilit.scm.common.net.res.netty.NettyTcpResponse;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
 /**
@@ -36,6 +38,9 @@ import com.stabilit.scm.common.res.EndpointAdapter;
  */
 public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpEndpoint.class);
+	
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
 	/** The channel. */

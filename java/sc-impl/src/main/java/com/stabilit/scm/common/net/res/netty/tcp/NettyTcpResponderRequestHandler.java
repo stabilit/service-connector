@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.res.netty.tcp;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -60,6 +61,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandler implements IResponderCallback {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
+	
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
 

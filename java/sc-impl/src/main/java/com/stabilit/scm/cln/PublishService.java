@@ -18,6 +18,8 @@ package com.stabilit.scm.cln;
 
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -40,6 +42,9 @@ import com.stabilit.scm.common.service.SCServiceException;
  */
 public class PublishService extends Service implements IPublishService {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(PublishService.class);
+	
 	private boolean subscribed = false;
 
 	/**

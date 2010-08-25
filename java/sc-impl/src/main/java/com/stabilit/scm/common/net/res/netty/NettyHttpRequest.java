@@ -19,12 +19,14 @@ package com.stabilit.scm.common.net.res.netty;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
+import com.stabilit.scm.common.net.res.SCMPSessionCompositeRegistry;
 import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -34,6 +36,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class NettyHttpRequest extends RequestAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpRequest.class);
+	
 	/** The request. */
 	private HttpRequest request;
 

@@ -16,8 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpRequesterResponseHandler;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
 import com.stabilit.scm.common.res.IEndpoint;
@@ -28,6 +31,9 @@ import com.stabilit.scm.common.res.IEndpoint;
  */
 public class EndpointFactory extends Factory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
+	
 	/** EndpointFactory instance */
 	private static final EndpointFactory instance = new EndpointFactory();
 	/** The Constant NETTY_TCP. */

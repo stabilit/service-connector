@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -55,6 +56,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class NettyHttpConnection implements IConnection {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
+	
 	/** The url. */
 	private URL url;
 	/** The bootstrap. */

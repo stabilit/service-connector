@@ -16,9 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.factory.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
+import com.stabilit.scm.srv.ps.SCPublishServer;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvSubscribeCommand;
 import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
@@ -30,6 +33,9 @@ import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
  */
 public class PublishServerCommandFactory extends CommandFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(PublishServerCommandFactory.class);
+	
 	/**
 	 * Instantiates a new publish server command factory.
 	 */

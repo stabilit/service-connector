@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.service.SCMessageFault;
+
 /**
  * The Class ConsoleUtil. Helper class to extract content of virtual machine arguments.
  * 
@@ -23,6 +27,9 @@ package com.stabilit.scm.common.util;
  */
 public class ConsoleUtil {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ConsoleUtil.class);
+	
 	/**
 	 * Gets the arguments.
 	 * 

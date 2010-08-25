@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.cln;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -35,6 +37,9 @@ import com.stabilit.scm.common.util.SynchronousCallback;
  */
 public class ServiceCallback extends SynchronousCallback {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceCallback.class);
+	
 	/** The message callback. */
 	private ISCMessageCallback messageCallback;
 	/** The service which is using the callback. */

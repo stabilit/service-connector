@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.res.IResponder;
 
@@ -26,6 +28,9 @@ import com.stabilit.scm.common.res.IResponder;
  */
 public final class ResponderRegistry extends Registry<Object, IResponder> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ResponderRegistry.class);	
+	
 	/** The instance. */
 	private static ResponderRegistry instance = new ResponderRegistry();
 	/** The thread local. Space to store any data for a single thread. */

@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
@@ -46,6 +48,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
+	
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
@@ -29,6 +31,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  */
 public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSessionCompositeItem> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);	
+	
 	/** The instance. */
 	private final static SCMPSessionCompositeRegistry instance = new SCMPSessionCompositeRegistry();
 

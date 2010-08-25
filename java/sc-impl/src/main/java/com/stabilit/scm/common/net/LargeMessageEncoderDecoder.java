@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
@@ -33,6 +35,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
  */
 public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(LargeMessageEncoderDecoder.class);
+	
 	/**
 	 * Instantiates a new large message encoder decoder.
 	 */

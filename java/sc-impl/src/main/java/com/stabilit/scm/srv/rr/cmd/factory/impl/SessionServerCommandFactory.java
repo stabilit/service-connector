@@ -16,9 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.factory.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
+import com.stabilit.scm.srv.ps.cmd.impl.SrvUnsubscribeCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDataCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
@@ -31,6 +34,9 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
  */
 public class SessionServerCommandFactory extends CommandFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SessionServerCommandFactory.class);
+	
 	/**
 	 * Instantiates a new session server command factory.
 	 */

@@ -19,6 +19,8 @@ package com.stabilit.scm.common.conf;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class RequesterConfigPool. RequesterConfigPool may hold more than one configuration for a requester, is
  * represented by <code>RequesterConfig</code>.
@@ -27,6 +29,9 @@ import java.util.List;
  */
 public class RequesterConfigPool extends CommunicatorConfigPool {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RequesterConfigPool.class);
+	
 	/**
 	 * Loads configuration from a file.
 	 * 

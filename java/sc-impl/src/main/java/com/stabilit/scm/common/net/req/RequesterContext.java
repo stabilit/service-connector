@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.common.net.req;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
@@ -28,6 +30,9 @@ import com.stabilit.scm.common.scmp.SCMPMessageId;
  */
 public class RequesterContext implements IRequesterContext {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
+	
 	private IConnectionPool connectionPool;
 	private SCMPMessageId msgId;
 

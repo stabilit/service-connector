@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.registry.Registry;
 
 /**
@@ -25,6 +27,9 @@ import com.stabilit.scm.common.registry.Registry;
  */
 public class SrvServiceRegistry extends Registry<String, SrvService> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvServiceRegistry.class);
+	
 	/** The instance. */
 	private static SrvServiceRegistry instance = new SrvServiceRegistry();
 

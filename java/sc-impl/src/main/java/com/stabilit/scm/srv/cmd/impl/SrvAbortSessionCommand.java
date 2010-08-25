@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -30,6 +32,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
 /**
@@ -40,6 +43,9 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
  */
 public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvAbortSessionCommand.class);
+	
 	/**
 	 * Instantiates a new SrvAbortSessionCommand.
 	 */

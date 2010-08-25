@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
@@ -34,6 +36,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  */
 public class Requester implements IRequester {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(Requester.class);
+	
 	/** The context. */
 	protected IRequesterContext reqContext;
 

@@ -19,6 +19,8 @@ package com.stabilit.scm.common.call;
 import java.net.InetAddress;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -32,6 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPClnEchoCall.class);
+	
 	/**
 	 * Instantiates a SCMPClnEchoCall.
 	 */

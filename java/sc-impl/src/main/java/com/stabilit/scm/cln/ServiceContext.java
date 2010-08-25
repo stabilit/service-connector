@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.service.ISC;
@@ -27,6 +29,9 @@ import com.stabilit.scm.common.service.ISCContext;
  */
 public class ServiceContext implements IServiceContext {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceContext.class);
+	
 	/** The service connector context. */
 	private ISCContext serviceConnectorContext;
 	/** The service. */

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
@@ -28,6 +30,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
  */
 public class SCMPSessionCompositeItem {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeItem.class);	
+	
 	/** The receiver. */
 	private SCMPCompositeReceiver receiver;
 	/** The sender. */

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class LinkedQueue. Base Queue to implement consumer/producer modules.
  * 
@@ -23,6 +25,10 @@ package com.stabilit.scm.common.util;
  *            the element type
  */
 public class LinkedQueue<E> {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(LinkedQueue.class);
+	
 	/**
 	 * The first actual node, if it exists, is always at this.head.next. After each take, the old first node becomes the
 	 * this.head.

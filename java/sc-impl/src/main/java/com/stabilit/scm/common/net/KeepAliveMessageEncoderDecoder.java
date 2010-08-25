@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
@@ -31,6 +33,9 @@ import com.stabilit.scm.common.scmp.SCMPKeepAlive;
  */
 public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
+	
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */

@@ -20,6 +20,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -36,7 +38,10 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * @author JTraber
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
-
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SynchronousCallback.class);
+	
 	/** Queue to store the answer. */
 	protected final BlockingQueue<SCMPMessage> answer;
 	/** The synchronous, marks if somebody waits for the message. */

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector
  * in case of an error situation.
@@ -24,6 +26,9 @@ package com.stabilit.scm.common.service;
  */
 public class SCMessageFault extends SCMessage {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMessageFault.class);
+	
 	/** The application error code. */
 	private String appErrorCode;
 	/** The application error text. */

@@ -18,6 +18,8 @@ package com.stabilit.scm.cln;
 
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -48,6 +50,9 @@ import com.stabilit.scm.common.util.ValidatorUtility;
  */
 public class SCClient implements ISCClient {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCClient.class);
+	
 	/** The host of the SC. */
 	private String host;
 	/** The port of the SC. */

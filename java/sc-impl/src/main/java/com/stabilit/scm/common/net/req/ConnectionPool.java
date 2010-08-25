@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
@@ -47,6 +49,9 @@ import com.stabilit.scm.srv.IIdleCallback;
  */
 public class ConnectionPool implements IConnectionPool {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ConnectionPool.class);
+	
 	/** The port. */
 	private int port;
 	/** The host. */

@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res.netty.tcp;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -30,6 +31,9 @@ import com.stabilit.scm.common.net.res.SCMPBasedFrameDecoder;
  */
 public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
+	
 	/** {@inheritDoc} */
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {

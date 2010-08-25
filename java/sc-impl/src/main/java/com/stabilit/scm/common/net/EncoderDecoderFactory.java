@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -27,6 +29,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public final class EncoderDecoderFactory extends Factory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(EncoderDecoderFactory.class);
 	/** The Constant LARGE, key for large encoder decoder. */
 	private static final String LARGE = "large";
 	private static final String  KEEP_ALIVE = "keepAlive";

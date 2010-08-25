@@ -54,6 +54,9 @@ import com.stabilit.scm.srv.cmd.factory.impl.UnitServerCommandFactory;
  */
 public class SCServer implements ISCServer {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCServer.class);
+	
 	/** Identifies low level component to use for communication default for severs is {netty.tcp}. */
 	private String conType;
 	/** The srv service registry. */

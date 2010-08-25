@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.conf;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.call.SCMPSrvUnsubscribeCall;
+
 /**
  * The Class CommunicatorConfig.
  * 
@@ -23,6 +27,9 @@ package com.stabilit.scm.common.conf;
  */
 public class CommunicatorConfig implements ICommunicatorConfig {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
+	
 	/** The communicator name. */
 	private String communicatorName;
 	/** The port. */

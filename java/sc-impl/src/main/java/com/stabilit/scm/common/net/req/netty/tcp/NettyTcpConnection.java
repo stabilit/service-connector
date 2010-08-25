@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.req.netty.tcp;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -37,6 +38,7 @@ import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
+import com.stabilit.scm.common.net.req.netty.NettyIdleTimeoutHandler;
 import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -47,6 +49,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class NettyTcpConnection implements IConnection {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
+	
 	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
 	/** The channel. */

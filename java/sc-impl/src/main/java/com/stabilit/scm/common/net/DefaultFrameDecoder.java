@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.conf.CommunicatorConfigPool;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
@@ -26,6 +29,9 @@ import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
  * @author JTraber
  */
 public class DefaultFrameDecoder implements IFrameDecoder {
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DefaultFrameDecoder.class);
 	
 	/**
 	 * Instantiates a new default frame decoder.

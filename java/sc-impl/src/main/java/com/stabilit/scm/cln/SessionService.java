@@ -18,6 +18,8 @@ package com.stabilit.scm.cln;
 
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
@@ -44,6 +46,9 @@ import com.stabilit.scm.common.service.SCServiceException;
  */
 public class SessionService extends Service implements ISessionService {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SessionService.class);
+	
 	/**
 	 * Instantiates a new session service.
 	 * 

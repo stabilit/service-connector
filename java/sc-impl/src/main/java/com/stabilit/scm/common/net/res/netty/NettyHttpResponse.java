@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.res.netty;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
@@ -40,6 +41,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class NettyHttpResponse extends ResponseAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpResponse.class);
+	
 	/** The event from Netty framework. */
 	private ChannelEvent event;
 	/** The encoder decoder. */

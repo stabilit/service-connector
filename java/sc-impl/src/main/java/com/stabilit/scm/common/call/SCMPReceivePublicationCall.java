@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.common.call;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -32,6 +34,9 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPReceivePublicationCall.class);
+	
 	/**
 	 * Instantiates a new sCMP receive publication call.
 	 */

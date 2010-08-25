@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.res.IEndpoint;
 import com.stabilit.scm.common.res.IResponder;
@@ -28,6 +30,9 @@ import com.stabilit.scm.common.res.IResponder;
  */
 public class Responder implements IResponder {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(Responder.class);	
+	
 	/** The responder configuration. */
 	private ICommunicatorConfig respConfig;
 	/** The endpoint connection. */

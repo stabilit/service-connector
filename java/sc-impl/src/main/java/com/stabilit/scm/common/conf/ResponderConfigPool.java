@@ -19,6 +19,8 @@ package com.stabilit.scm.common.conf;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class ResponderConfigPool. ResponderConfigPool configuration may hold more than one configuration for a
  * responder, is represented by <code>ResponderConfig</code>.
@@ -27,6 +29,9 @@ import java.util.List;
  */
 public class ResponderConfigPool extends CommunicatorConfigPool {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ResponderConfigPool.class);
+	
 	/**
 	 * Load.
 	 * 

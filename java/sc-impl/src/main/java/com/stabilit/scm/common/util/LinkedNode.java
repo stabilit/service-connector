@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.util;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class LinkedNode. Represents a node of the LinkedQueue construct.
  * 
@@ -24,6 +26,9 @@ package com.stabilit.scm.common.util;
  */
 public class LinkedNode<T> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(LinkedNode.class);
+	
 	/** The value of the node. */
 	public T value;
 	/** The next node in queue. */

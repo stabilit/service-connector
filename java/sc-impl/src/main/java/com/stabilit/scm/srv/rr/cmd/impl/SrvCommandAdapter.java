@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
@@ -28,12 +30,16 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.srv.SrvService;
 import com.stabilit.scm.srv.SrvServiceRegistry;
+import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 /**
  * The Class SrvCommandAdapter. Command adapter for every kind of command on server.
  */
 public abstract class SrvCommandAdapter implements ICommand {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
+	
 	/** The command validator. */
 	protected ICommandValidator commandValidator;
 	/** The session composite registry. */

@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.res;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandler;
@@ -35,6 +36,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
  */
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);	
+	
 	/** The decode state. */
 	private DecodeState decodeState;
 	/** The scmp frame decoder. */

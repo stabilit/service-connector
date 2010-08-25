@@ -18,6 +18,7 @@ package com.stabilit.scm.common.net.req.netty.tcp;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -35,6 +36,9 @@ import com.stabilit.scm.common.net.res.SCMPBasedFrameDecoder;
  */
 public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpRequesterPipelineFactory.class);
+	
 	/** The timer to observe timeouts. */
 	private Timer timer;
 	private IConnectionContext context;

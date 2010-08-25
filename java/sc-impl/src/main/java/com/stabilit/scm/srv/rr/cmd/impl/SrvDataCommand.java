@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.rr.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -42,6 +44,9 @@ import com.stabilit.scm.srv.SrvService;
  */
 public class SrvDataCommand extends SrvCommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvDataCommand.class);
+	
 	/**
 	 * Instantiates a new SrvDataCommand.
 	 */

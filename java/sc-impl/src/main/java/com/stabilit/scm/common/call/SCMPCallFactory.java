@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.call;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.call.ISCMPCall;
 
 /**
@@ -25,6 +27,9 @@ import com.stabilit.scm.cln.call.ISCMPCall;
  */
 public final class SCMPCallFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPCallFactory.class);
+	
 	/**
 	 * Instantiates a new SCMPCallFactory.
 	 */

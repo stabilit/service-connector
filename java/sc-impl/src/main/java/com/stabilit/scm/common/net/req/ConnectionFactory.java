@@ -18,6 +18,7 @@ package com.stabilit.scm.common.net.req;
 
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
@@ -34,6 +35,9 @@ import com.stabilit.scm.common.net.req.netty.tcp.NettyTcpConnection;
  */
 public class ConnectionFactory extends Factory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ConnectionFactory.class);
+	
 	/** The Constant NETTY_TCP. */
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */

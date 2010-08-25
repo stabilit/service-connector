@@ -18,6 +18,10 @@ package com.stabilit.scm.common.service;
 
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpResponderRequestHandler;
+
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
  * 
@@ -25,6 +29,9 @@ import java.security.InvalidParameterException;
  */
 public class SCMessage implements ISCMessage {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMessage.class);
+	
 	/** The message info. */
 	private String messageInfo;
 	/** The compressed - regards data part of the message. */

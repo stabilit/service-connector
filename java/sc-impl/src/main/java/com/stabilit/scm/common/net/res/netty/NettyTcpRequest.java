@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.res.netty;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
@@ -29,11 +30,14 @@ import com.stabilit.scm.common.scmp.RequestAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Tcp frame.
+ * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame.
  * Based on JBoss Netty.
  */
 public class NettyTcpRequest extends RequestAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpRequest.class);
+	
 	/** The request. */
 	private ChannelBuffer request;
 

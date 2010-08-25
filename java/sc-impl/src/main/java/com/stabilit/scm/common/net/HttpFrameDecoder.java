@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 
@@ -26,6 +28,9 @@ import com.stabilit.scm.common.factory.IFactoryable;
  */
 public class HttpFrameDecoder extends DefaultFrameDecoder {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(HttpFrameDecoder.class);
+	
 	/**
 	 * Instantiates a new http frame decoder.
 	 */

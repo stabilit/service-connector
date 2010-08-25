@@ -21,18 +21,24 @@
  */
 package com.stabilit.scm.srv.ps;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPPublishCall;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
  */
 public class SCPublishServer extends SCServer implements ISCPublishServer {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
+	
 	/** {@inheritDoc} */
 	@Override
 	public void publish(String serviceName, String mask, Object data) throws Exception {

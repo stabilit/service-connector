@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.scmp.SCMPError;
 
@@ -30,6 +32,10 @@ import com.stabilit.scm.common.scmp.SCMPError;
  * @author JTraber
  */
 public final class ValidatorUtility {
+	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ValidatorUtility.class);
+	
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */

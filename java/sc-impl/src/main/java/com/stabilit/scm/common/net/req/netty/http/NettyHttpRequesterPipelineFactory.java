@@ -18,6 +18,7 @@ package com.stabilit.scm.common.net.req.netty.http;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -30,6 +31,7 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.netty.NettyIdleHandler;
 import com.stabilit.scm.common.net.req.netty.NettyIdleTimeoutHandler;
+import com.stabilit.scm.common.net.req.netty.NettyOperationListener;
 
 /**
  * A factory for creating NettyHttpRequesterPipeline objects.
@@ -38,6 +40,9 @@ import com.stabilit.scm.common.net.req.netty.NettyIdleTimeoutHandler;
  */
 public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterPipelineFactory.class);
+	
 	/** The timer to observe timeouts. */
 	private Timer timer;
 	private IConnectionContext context;

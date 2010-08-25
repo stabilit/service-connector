@@ -21,6 +21,8 @@
  */
 package com.stabilit.scm.srv;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.net.req.IRequester;
 
 /**
@@ -30,6 +32,9 @@ import com.stabilit.scm.common.net.req.IRequester;
  */
 public class SrvService {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvService.class);
+	
 	/** The requester which connects to SC. */
 	private IRequester requester;
 	/** The service name. */

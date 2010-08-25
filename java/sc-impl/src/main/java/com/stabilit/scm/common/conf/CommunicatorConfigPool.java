@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.scmp.SCMPError;
 
@@ -34,6 +36,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
  */
 public abstract class CommunicatorConfigPool {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CommunicatorConfigPool.class);
+	
 	/** The Constant DISABLE. */
 	private static final String DISABLE = "disable";
 	/** The properties. */

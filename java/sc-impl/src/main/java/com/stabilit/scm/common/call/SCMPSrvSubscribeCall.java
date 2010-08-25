@@ -23,6 +23,8 @@ package com.stabilit.scm.common.call;
 
 import java.net.InetAddress;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -37,6 +39,9 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public class SCMPSrvSubscribeCall extends SCMPServerCallAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPSrvSubscribeCall.class);
+	
 	/**
 	 * Instantiates a new SCMPSrvSubscribeCall.
 	 */

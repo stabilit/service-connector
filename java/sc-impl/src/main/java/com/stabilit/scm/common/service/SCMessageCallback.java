@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.service;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.IService;
 
 /**
@@ -25,6 +27,9 @@ import com.stabilit.scm.cln.service.IService;
  */
 public abstract class SCMessageCallback implements ISCMessageCallback {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMessageCallback.class);
+	
 	/** The service which is using the message callback. */
 	private IService service;
 

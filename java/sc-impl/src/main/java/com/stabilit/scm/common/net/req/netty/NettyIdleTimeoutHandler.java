@@ -23,6 +23,7 @@ package com.stabilit.scm.common.net.req.netty;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.timeout.IdleState;
@@ -34,6 +35,9 @@ import org.jboss.netty.util.Timer;
  */
 public class NettyIdleTimeoutHandler extends IdleStateHandler {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyIdleTimeoutHandler.class);
+	
 	/**
 	 * @param timer
 	 * @param readerIdleTime

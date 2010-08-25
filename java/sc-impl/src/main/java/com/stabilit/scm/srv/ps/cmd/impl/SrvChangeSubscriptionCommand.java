@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.srv.ps.cmd.impl;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -32,6 +34,7 @@ import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SrvService;
+import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
 
 /**
@@ -42,6 +45,9 @@ import com.stabilit.scm.srv.rr.cmd.impl.SrvCommandAdapter;
  */
 public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SrvChangeSubscriptionCommand.class);
+	
 	/**
 	 * Instantiates a new SrvChangeSubscriptionCommand.
 	 */

@@ -19,6 +19,7 @@ package com.stabilit.scm.common.net.res.netty;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
@@ -30,11 +31,14 @@ import com.stabilit.scm.common.scmp.ResponseAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Tcp
+ * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP
  * frame. Based on JBoss Netty.
  */
 public class NettyTcpResponse extends ResponseAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
+	
 	/** The event from Netty framework. */
 	private ChannelEvent event;
 	/** The encoder decoder. */

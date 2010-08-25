@@ -20,6 +20,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
@@ -34,6 +35,9 @@ import com.stabilit.scm.common.net.CommunicationException;
  */
 public class NettyOperationListener implements ChannelFutureListener {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(NettyOperationListener.class);
+	
 	/** Queue to store the answer. */
 	private final BlockingQueue<ChannelFuture> answer = new ArrayBlockingQueue<ChannelFuture>(1);
 

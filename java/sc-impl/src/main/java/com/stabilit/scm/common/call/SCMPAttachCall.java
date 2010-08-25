@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.call;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.cln.SessionService;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -32,6 +35,9 @@ import com.stabilit.scm.common.util.DateTimeUtility;
  */
 public class SCMPAttachCall extends SCMPCallAdapter {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPAttachCall.class);
+	
 	/**
 	 * Instantiates a new SCMPAttachCall.
 	 */

@@ -18,12 +18,17 @@ package com.stabilit.scm.common.util;
 
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class TimerTaskWrapper. Wraps TimerTaks from JDK. Is used to time a process. TimerTaks times out and calls the
  * target ITimerRun.
  */
 public class TimerTaskWrapper extends TimerTask {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(TimerTaskWrapper.class);
+	
 	/** The target to run when time is out. */
 	private ITimerRun target;
 

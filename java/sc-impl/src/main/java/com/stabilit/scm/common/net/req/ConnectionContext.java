@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.net.req;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
+import com.stabilit.scm.common.net.MessageEncoderDecoderAdapter;
 import com.stabilit.scm.srv.IIdleCallback;
 
 /**
@@ -26,6 +29,9 @@ import com.stabilit.scm.srv.IIdleCallback;
  */
 public class ConnectionContext implements IConnectionContext {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ConnectionContext.class);
+	
 	/** The connection. */
 	private IConnection connection;
 	/** The idle timeout. */
