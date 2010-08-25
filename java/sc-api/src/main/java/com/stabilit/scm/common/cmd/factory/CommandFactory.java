@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd.factory;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.ICommand;
+import com.stabilit.scm.common.cmd.NullCommandValidator;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -27,6 +30,9 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
  */
 public abstract class CommandFactory extends Factory {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(CommandFactory.class);
+	
 	/** The command factory. */
 	protected static CommandFactory commandFactory = null;
 

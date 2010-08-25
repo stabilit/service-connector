@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.cmd;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.SCMPError;
 
@@ -27,6 +30,9 @@ import com.stabilit.scm.common.scmp.SCMPError;
  */
 public final class NullCommandValidator implements ICommandValidator {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(NullCommandValidator.class);
+	
 	/** The null command validator. */
 	private static ICommandValidator nullCommandValidator = new NullCommandValidator();
 

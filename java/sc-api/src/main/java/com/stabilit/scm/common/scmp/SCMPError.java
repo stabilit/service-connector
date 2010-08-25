@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Enum SCMPError. Defines possible errors in SCM.
  * 
@@ -104,6 +106,9 @@ public enum SCMPError {
 	/** The CONNECTION_EXCEPTION. */
 	CONNECTION_EXCEPTION("610", "Connection error.");
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPError.class);
+	
 	/** The error code. Should not be integer because it is transmitted over the line */
 	private String errorCode;
 	/** The error text. */

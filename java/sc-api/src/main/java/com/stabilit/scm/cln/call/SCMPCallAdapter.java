@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.call;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -32,6 +35,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
  */
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPCallAdapter.class);
+	
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
 	/** The session id to use for the call. */

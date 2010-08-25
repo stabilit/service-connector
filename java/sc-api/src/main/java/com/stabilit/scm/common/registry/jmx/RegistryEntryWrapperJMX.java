@@ -18,6 +18,10 @@ package com.stabilit.scm.common.registry.jmx;
 
 import java.beans.ConstructorProperties;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.registry.Registry;
+
 /**
  * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.
  * 
@@ -25,6 +29,9 @@ import java.beans.ConstructorProperties;
  */
 public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(RegistryEntryWrapperJMX.class);
+	
 	/** The map bean. */
 	Object obj;
 

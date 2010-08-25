@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.util.DateTimeUtility;
 
 /**
@@ -23,6 +25,9 @@ import com.stabilit.scm.common.util.DateTimeUtility;
  */
 public class SCMPFault extends SCMPMessage {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPFault.class);
+	
 	private Exception exception;
 
 	public SCMPFault(Exception exception) {

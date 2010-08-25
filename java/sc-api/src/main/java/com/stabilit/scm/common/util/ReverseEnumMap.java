@@ -19,6 +19,8 @@ package com.stabilit.scm.common.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 /**
  * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum}
  * constant.
@@ -31,6 +33,9 @@ import java.util.Map;
  */
 public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(ReverseEnumMap.class);
+	
 	/** The reverse map. */
 	private final Map<K, V> reverseMap = new HashMap<K, V>();
 

@@ -18,6 +18,8 @@ package com.stabilit.scm.common.scmp.internal;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -28,6 +30,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class SCMPPart extends SCMPMessage {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPPart.class);
+	
 	/**
 	 * Instantiates a new SCMPPart.
 	 */

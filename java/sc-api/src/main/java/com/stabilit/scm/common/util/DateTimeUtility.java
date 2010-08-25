@@ -20,11 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.scmp.internal.SCMPSendPart;
+
 /**
  * The Class DateTimeUtility. Provides basic date time operations.
  */
 public final class DateTimeUtility {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(DateTimeUtility.class);
+	
 	/** The Constant SDF. */
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 

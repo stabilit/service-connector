@@ -18,6 +18,9 @@ package com.stabilit.scm.common;
 
 import java.text.DecimalFormat;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.scmp.SCMPError;
 
@@ -33,6 +36,9 @@ public enum SCVersion {
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCVersion.class);
+	
 	/** The Constant df. */
 	private static final DecimalFormat df = new DecimalFormat("000");
 

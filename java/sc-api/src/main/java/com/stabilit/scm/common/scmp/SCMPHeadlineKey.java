@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Enum SCMPHeadlineKey. Defines possible headline key in SCMP.
  * 
@@ -40,6 +42,9 @@ public enum SCMPHeadlineKey {
 	/** The KRS. KEEP ALIVE RESPONSE. */
 	KRS;
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPHeadlineKey.class);
+	
 	/**
 	 * Gets the msg header key by string.
 	 * 

@@ -19,6 +19,8 @@ package com.stabilit.scm.common.scmp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.SCVersion;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
@@ -31,6 +33,9 @@ import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
  */
 public class SCMPMessage {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPMessage.class);
+	
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
 	/** The actual SC_VERSION. */

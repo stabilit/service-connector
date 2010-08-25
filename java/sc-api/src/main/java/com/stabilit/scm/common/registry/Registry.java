@@ -19,6 +19,9 @@ package com.stabilit.scm.common.registry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.registry.jmx.IRegistryMXBean;
 import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
 
@@ -33,6 +36,9 @@ import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
  */
 public abstract class Registry<K, V> implements IRegistryMXBean {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(Registry.class);
+	
 	/** The registry map. */
 	private Map<K, V> registryMap;
 

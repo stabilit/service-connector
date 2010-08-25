@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 
 /**
@@ -30,6 +32,9 @@ public enum SCMPVersion {
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
 	TEST(0x33, 0x32);
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPVersion.class);
+	
 	/** The release. */
 	private byte release;
 	/** The version. */

@@ -20,6 +20,10 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.res.EndpointAdapter;
+
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.
  * 
@@ -27,6 +31,9 @@ import java.util.Map;
  */
 public abstract class RequestAdapter implements IRequest {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(RequestAdapter.class);
+	
 	/** The scmp message. */
 	private SCMPMessage message;
 	/** The map bean. MapBean to store any data. */

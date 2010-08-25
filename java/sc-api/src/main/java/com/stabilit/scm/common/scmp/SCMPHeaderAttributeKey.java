@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Enum SCMPHeaderAttributeKey. Defines possible header attributes in SCMP.
  * 
@@ -96,6 +98,9 @@ public enum SCMPHeaderAttributeKey {
 	/** The SESSION_INFO. */
 	SESSION_INFO("sin");
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPHeaderAttributeKey.class);
+	
 	/** The value. */
 	private String value;
 

@@ -19,6 +19,9 @@ package com.stabilit.scm.common.factory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 
 /**
@@ -34,6 +37,9 @@ import com.stabilit.scm.common.listener.LoggerPoint;
  * @author JTraber
  */
 public abstract class Factory {
+	
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(Factory.class);
 
 	/** The Constant DEFAULT. Key for default instance. */
 	protected static final String DEFAULT = "default";

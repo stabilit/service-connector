@@ -22,11 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
  * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together
@@ -36,6 +39,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class SCMPCompositeReceiver extends SCMPMessage {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPCompositeReceiver.class);
+	
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */

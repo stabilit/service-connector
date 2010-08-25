@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.res;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.registry.jmx.RegistryEntryWrapperJMX;
+
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
  * 
@@ -23,6 +27,9 @@ package com.stabilit.scm.common.res;
  */
 public abstract class EndpointAdapter implements IEndpoint {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(EndpointAdapter.class);
+	
 	/** The responder. */
 	protected IResponder resp;
 

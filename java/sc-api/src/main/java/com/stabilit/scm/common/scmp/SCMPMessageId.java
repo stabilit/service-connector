@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class SCMPMessageId. Responsible to provide correct message id for a specific request/response. Message id is
  * unique for every message. Format: messageSequenceNr / partSequenceNr.
@@ -24,6 +26,9 @@ package com.stabilit.scm.common.scmp;
  */
 public class SCMPMessageId {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPMessageId.class);
+	
 	/** The message sequence number. */
 	private int msgSequenceNr;
 	/** The part sequence number. */

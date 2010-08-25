@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class ResponseAdapter. Provides basic functionality for responses.
  * 
@@ -23,6 +25,9 @@ package com.stabilit.scm.common.scmp;
  */
 public abstract class ResponseAdapter implements IResponse {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(ResponseAdapter.class);
+	
 	/** The scmp. */
 	protected SCMPMessage scmp;
 

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.util.IReversibleEnum;
 import com.stabilit.scm.common.util.ReverseEnumMap;
 
@@ -33,6 +35,9 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	/** undefined. */
 	UNDEFINED("undefined");
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPBodyType.class);
+	
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */

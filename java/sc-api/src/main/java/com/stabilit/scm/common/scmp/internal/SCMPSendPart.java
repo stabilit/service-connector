@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.scmp.internal;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
@@ -26,6 +28,9 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  */
 public class SCMPSendPart extends SCMPPart {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(SCMPSendPart.class);
+	
 	/** The offset where body starts. */
 	private int offset;
 	/** The size of this specific part SCMP. */

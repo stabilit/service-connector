@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.conf;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.listener.LoggerPoint;
 
 /**
@@ -25,6 +28,9 @@ import com.stabilit.scm.common.listener.LoggerPoint;
  */
 public final class Constants {
 
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(Constants.class);
+	
 	private Constants() {
 		// instantiating not allowed
 	}
