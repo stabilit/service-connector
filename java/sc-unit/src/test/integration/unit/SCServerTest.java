@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.SCServer;
 
@@ -18,6 +19,16 @@ public class SCServerTest {
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();
+	}
+	
+	@Test
+	public void constructor_noAction_defaultParameters(){
+		assertEquals(false, server.isListening());
+		assertEquals(Constants.DEFAULT_SERVER_CON, server.getConnectionType());
+		assertEquals(true, server.isImmediateConnect());
+		assertEquals(null, server.getHost());
+		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, server.getKeepAliveIntervalInSeconds());
+		assertEquals(-1, server.getPort());		
 	}
 
 	@Test

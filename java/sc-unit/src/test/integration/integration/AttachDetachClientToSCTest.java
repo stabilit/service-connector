@@ -25,54 +25,42 @@ public class AttachDetachClientToSCTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
-		try {
-			String userDir = System.getProperty("user.dir");		    
-			String command = "java -Dlog4j.configuration=file:" + userDir +
-			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
-			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
-			  "\\src\\test\\resources\\scIntegration.properties";
-			
-			p = Runtime.getRuntime().exec(command);
+		
+		String userDir = System.getProperty("user.dir");
+		String command = "java -Dlog4j.configuration=file:" + userDir
+		+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
+		+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
+		+ "\\src\\test\\resources\\scIntegration.properties";
 
+		try {
+			p = Runtime.getRuntime().exec(command);
+			
 			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Thread.sleep(1000);
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		/*SCClient endClient = new SCClient();
-		try {
-			endClient.attach("localhost", port8080);
-//			((SCClient) endClient).killSC();
-		} catch (SCServiceException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		p.destroy();
 	}
 
 	/**
 	 * @throws java.lang.Exception
 	 * 
-	 * Create a new SCClient for each test method.
+	 *             Create a new SCClient for each test method.
 	 */
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
 	}
-	
-	
+
 	@Test
-	public void attach_changesState_initiallyNotAttachedThenAttached()
-			throws Exception {
+	public void attach_changesState_initiallyNotAttachedThenAttached() throws Exception {
 		assertEquals(false, client.isAttached());
 		client.attach(host, port8080);
 		assertEquals(true, client.isAttached());
@@ -80,8 +68,7 @@ public class AttachDetachClientToSCTest {
 	}
 
 	@Test
-	public void detach_changesState_fromAttachedToNotAttached()
-			throws Exception {
+	public void detach_changesState_fromAttachedToNotAttached() throws Exception {
 		assertEquals(false, client.isAttached());
 		client.attach(host, port8080);
 		assertEquals(true, client.isAttached());
@@ -90,8 +77,7 @@ public class AttachDetachClientToSCTest {
 	}
 
 	@Test
-	public void attach_twiceSameParams_throwsExceptionAttached()
-			throws Exception {
+	public void attach_twiceSameParams_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
 		client.attach(host, port8080);
 		try {
@@ -105,8 +91,7 @@ public class AttachDetachClientToSCTest {
 	}
 
 	@Test
-	public void attach_twiceDifferentParamsHttpFirst_throwsExceptionAttached()
-			throws Exception {
+	public void attach_twiceDifferentParamsHttpFirst_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
 		client.attach(host, port8080);
 		((SCClient) client).setConnectionType("netty.tcp");
@@ -121,8 +106,7 @@ public class AttachDetachClientToSCTest {
 	}
 
 	@Test
-	public void attach_twiceDifferentParamsTcpFirst_throwsExceptionAttached()
-			throws Exception {
+	public void attach_twiceDifferentParamsTcpFirst_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(host, port9000);
@@ -214,7 +198,7 @@ public class AttachDetachClientToSCTest {
 		client.detach();
 		assertEquals(false, client.isAttached());
 	}
-	
+
 	@Test
 	public void attach_1000ClientsAttachedBeforeDetach_allAttached() throws Exception {
 		ISCClient[] clients = new SCClient[1000];
@@ -228,7 +212,7 @@ public class AttachDetachClientToSCTest {
 			assertEquals(true, clients[i].isAttached());
 		}
 		for (; i < 1000; i++) {
-			clients[i].detach();			
+			clients[i].detach();
 		}
 		for (; i < 1000; i++) {
 			assertEquals(false, clients[i].isAttached());
