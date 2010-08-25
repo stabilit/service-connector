@@ -83,6 +83,18 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]",
 				SCMPMsgType.REGISTER_SERVICE);
+		
+		// maxConnections 0 value
+		registerServiceCall.setPortNumber(9100);
+		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(0);
+		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveInterval(360);
+		registerServiceCall.invoke(this.registerCallback);
+		fault = this.registerCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, " [IntValue 0 too low]",
+				SCMPMsgType.REGISTER_SERVICE);
 
 		// port too high 10000
 		registerServiceCall.setMaxSessions(10);
