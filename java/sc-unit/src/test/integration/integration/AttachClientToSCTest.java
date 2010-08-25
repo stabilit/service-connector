@@ -18,18 +18,19 @@ import com.stabilit.scm.common.service.SCServiceException;
 public class AttachClientToSCTest {
 
 	private static ISCClient client;
+	private static Process p;
 	private Exception ex;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		try {
 			String userDir = System.getProperty("user.dir");		    
-			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
+			String command = "java -Dlog4j.configuration=file:" + userDir +
 			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
 			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
 			  "\\src\\test\\resources\\scIntegration.properties";
 			
-			Runtime.getRuntime().exec(command);
+			p = Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
 			try {
@@ -44,15 +45,7 @@ public class AttachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		SCClient endClient = new SCClient();
-		try {
-			endClient.attach("localhost", 8080);
-			((SCClient) endClient).killSC();
-		} catch (SCServiceException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		p.destroy();
 	}
 
 	/**

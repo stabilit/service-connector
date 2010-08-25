@@ -15,6 +15,8 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachDetachClientToSCTest {
 
+	private static Process p;
+
 	private ISCClient client;
 
 	private static final String host = "localhost";
@@ -25,12 +27,12 @@ public class AttachDetachClientToSCTest {
 	public static void oneTimeSetUp() {
 		try {
 			String userDir = System.getProperty("user.dir");		    
-			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir +
+			String command = "java -Dlog4j.configuration=file:" + userDir +
 			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
 			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
 			  "\\src\\test\\resources\\scIntegration.properties";
 			
-			Runtime.getRuntime().exec(command);
+			p = Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
 			try {
@@ -45,15 +47,16 @@ public class AttachDetachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		SCClient endClient = new SCClient();
+		/*SCClient endClient = new SCClient();
 		try {
 			endClient.attach("localhost", port8080);
-			((SCClient) endClient).killSC();
+//			((SCClient) endClient).killSC();
 		} catch (SCServiceException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
+		p.destroy();
 	}
 
 	/**
@@ -65,6 +68,7 @@ public class AttachDetachClientToSCTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 	}
+	
 	
 	@Test
 	public void attach_changesState_initiallyNotAttachedThenAttached()

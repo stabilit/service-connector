@@ -11,11 +11,12 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachClientToMultipleSCTest {
 	private static ISCClient client1;
 	private static ISCClient client2;
+	private static Process p;
+	private static Process r;
 
 	private static final String localhost = "localhost";
 	private static final String host = "localhost";
@@ -29,13 +30,13 @@ public class AttachClientToMultipleSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 
-			String command = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+			String command = "java -Dlog4j.configuration=file:" + userDir
 					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\";
 			System.out.println(command);
-			Runtime.getRuntime().exec(command + "scIntegration.properties");
-			Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
+			p = Runtime.getRuntime().exec(command + "scIntegration.properties");
+			r = Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -48,7 +49,7 @@ public class AttachClientToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		SCClient endClient1 = new SCClient();
+		/*SCClient endClient1 = new SCClient();
 		SCClient endClient2 = new SCClient();
 		try {
 			endClient1.attach(localhost, port8080);
@@ -59,7 +60,9 @@ public class AttachClientToMultipleSCTest {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
+		p.destroy();
+		r.destroy();
 	}
 
 	/**
