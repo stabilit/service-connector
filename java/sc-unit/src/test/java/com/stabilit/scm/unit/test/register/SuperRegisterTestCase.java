@@ -77,6 +77,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(registerRequester, "publish-simulation");
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);

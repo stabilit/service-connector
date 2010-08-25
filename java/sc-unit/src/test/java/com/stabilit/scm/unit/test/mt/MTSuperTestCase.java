@@ -81,6 +81,7 @@ public abstract class MTSuperTestCase {
 		SCMPRegisterServiceCall registerService = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 		registerService.setMaxSessions(9);
+		registerService.setMaxConnections(9);
 		registerService.setPortNumber(7000);
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(360);

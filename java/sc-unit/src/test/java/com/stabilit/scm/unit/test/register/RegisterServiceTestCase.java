@@ -63,6 +63,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		// keep alive interval not set
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.invoke(this.registerCallback);
@@ -74,6 +75,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		// maxSessions 0 value
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(0);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 		registerServiceCall.invoke(this.registerCallback);
@@ -84,6 +86,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		// port too high 10000
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
@@ -105,6 +108,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 				.newInstance(req, "publish-simulation");
 
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
@@ -154,6 +158,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 				.newInstance(req, "publish-simulation");
 
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
@@ -163,6 +168,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(req,
 				"publish-simulation");
 		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
