@@ -20,6 +20,8 @@ import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
 import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
@@ -27,6 +29,7 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -71,6 +74,8 @@ public class SCServer implements ISCServer {
 	private String localServerHost;
 	/** The local server port. */
 	private int localServerPort;
+
+	static Logger log = Logger.getLogger(Loggers.SESSION.getValue());
 
 	public SCServer() {
 		this.listening = false;
@@ -192,15 +197,18 @@ public class SCServer implements ISCServer {
 	/** {@inheritDoc} */
 	@Override
 	public void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+		if (this.listening == true) {
+			throw new InvalidActivityException("listener is already started not allowed to start again.");
+		}
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());
 		respConfig.setConnectionType(this.conType);
-		
+
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
 		}
 		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(0, keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
-		
+
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		this.localServerHost = host;
 		this.localServerPort = port;
@@ -224,6 +232,7 @@ public class SCServer implements ISCServer {
 		if (this.listening == false) {
 			// server is not listening
 			return;
+
 		}
 		this.listening = false;
 		this.responder.stopListening();
