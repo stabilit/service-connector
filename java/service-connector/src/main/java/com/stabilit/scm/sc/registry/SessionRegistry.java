@@ -19,9 +19,13 @@ package com.stabilit.scm.sc.registry;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.SessionPoint;
+import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -40,6 +44,12 @@ import com.stabilit.scm.sc.service.Session;
  */
 public class SessionRegistry extends Registry<String, Session> {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
+	
+	/** The Constant sessionLogger. */
+	protected final static Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
+	
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
 	/** The timer. Timer instance is responsible to observe session timeouts. */
@@ -71,6 +81,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public void addSession(String key, Session session) {
 		SessionPoint.getInstance().fireCreate(this, session.getId());
+		sessionLogger.info("new session [" + session.getId() + "]");
 		this.put(key, session);
 		if (session.getEchoIntervalSeconds() != 0) {
 			// session timeout necessary needs to be set up
@@ -98,6 +109,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		Session session = super.get(key);
 		this.cancelSessionTimeout(session);
 		super.remove(key);
+		sessionLogger.info("end session [" + key + "]");
 		SessionPoint.getInstance().fireDelete(this, (String) key);
 	}
 
@@ -160,7 +172,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * broken.
 	 */
 	private class SessionTimerRun implements ITimerRun {
-
+		
 		/** Error text in case of a session abortion. */
 		private static final String ABORT_SESSION_ERROR_STRING = "session timed out";
 		/** The session. */
