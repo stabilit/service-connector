@@ -18,6 +18,7 @@ import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 
 /**
@@ -138,33 +139,33 @@ public class SCClientTest {
 		assertEquals(host, client.getConnectionType());
 	}
 	
-	@Test(expected = InvalidParameterException.class)
-	public void setMaxConnections_0Param_throwsInvalidParamException()
+	@Test(expected = SCMPValidatorException.class)
+	public void setMaxConnections_0Param_throwsInvalidParamException() throws SCMPValidatorException
 	{
 		client.setMaxConnections(0);
 	}
 	
-	@Test(expected = InvalidParameterException.class)
-	public void setMaxConnections_minParam_throwsInvalidParamException()
+	@Test(expected = SCMPValidatorException.class)
+	public void setMaxConnections_minParam_throwsInvalidParamException() throws SCMPValidatorException
 	{
 		client.setMaxConnections(Integer.MIN_VALUE);
 	}
 	
 	@Test
-	public void setMaxConnections_maxParam_returnMax()
+	public void setMaxConnections_maxParam_returnMax() throws SCMPValidatorException
 	{
 		client.setMaxConnections(Integer.MAX_VALUE);
 		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
 	}
 	
-	@Test(expected = InvalidParameterException.class)
-	public void setMaxConnections_minus1Param_throwsInvalidParamException()
+	@Test(expected = SCMPValidatorException.class)
+	public void setMaxConnections_minus1Param_throwsInvalidParamException() throws SCMPValidatorException
 	{
 		client.setMaxConnections(-1);
 	}
 	
 	@Test
-	public void setMaxConnections_1Param_return1()
+	public void setMaxConnections_1Param_return1() throws SCMPValidatorException
 	{
 		client.setMaxConnections(1);
 		assertEquals(1, client.getMaxConnections());
