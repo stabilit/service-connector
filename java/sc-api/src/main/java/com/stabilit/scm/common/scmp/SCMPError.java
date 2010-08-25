@@ -52,6 +52,8 @@ public enum SCMPError {
 	HV_WRONG_IPLIST_FORMAT("420", "Invalid iplist format."),
 	/** The HV_WRONG_MAX_SESSIONS. */
 	HV_WRONG_MAX_SESSIONS("420", "Invalid maxSessions field."),
+	/** The HV_WRONG_MAX_CONNECTIONS. */
+	HV_WRONG_MAX_CONNECTIONS("420", "Invalid maxConnections field."),
 	/** The HV_WRONG_ECHO_TIMEOUT. */
 	HV_WRONG_ECHO_TIMEOUT("420", "Invalid echoTimeout field."),
 	/** The HV_WRONG_ECHO_INTERVAL. */

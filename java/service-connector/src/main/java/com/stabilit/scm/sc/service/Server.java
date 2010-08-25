@@ -62,7 +62,9 @@ public class Server {
 	/** The service. */
 	private Service service;
 	/** The max sessions. */
-	private int maxSessions;
+	private int maxSessions;	
+	/** The max connections. */
+	private int maxConnections;
 	/** The requester. */
 	private IRequester requester;
 	/** The connectionPool. */
@@ -80,7 +82,7 @@ public class Server {
 	 * @param maxSessions
 	 *            the max sessions
 	 */
-	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions,
+	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions, int maxConnections,
 			int keepAliveInterval) {
 		this.service = null;
 		this.sessions = Collections.synchronizedList(new ArrayList<Session>());
@@ -88,13 +90,14 @@ public class Server {
 		this.socketAddress = socketAddress;
 		this.portNr = portNr;
 		this.maxSessions = maxSessions;
+		this.maxConnections = maxConnections;
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		IResponder responder = responderRegistry.getCurrentResponder();
 		ICommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
 		this.host = socketAddress.getHostName();
 		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
-		this.cp.setMaxConnections(maxSessions);
+		this.cp.setMaxConnections(maxConnections);
 		this.requester = new SCRequester(new RequesterContext(this.cp, null));
 	}
 

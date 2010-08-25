@@ -72,11 +72,13 @@ public class RegisterServiceCommand extends CommandAdapter {
 		Server server = this.getServerByKeyAndValidateNotRegistered(serverKey);
 
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
+		int maxConnections = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 		int portNr = (Integer) request.getAttribute(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		// create new server
-		server = new Server(socketAddress, serviceName, portNr, maxSessions, keepAliveInterval);
+		// TODO maxConnections
+		server = new Server(socketAddress, serviceName, portNr, maxSessions, maxConnections, keepAliveInterval);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately
@@ -143,6 +145,11 @@ public class RegisterServiceCommand extends CommandAdapter {
 				String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 				int maxSessionsInt = ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 				request.setAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessionsInt);
+				// maxConnections - validate with lower limit 1
+				String maxConnections = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
+				int maxConnectionsInt = ValidatorUtility.validateInt(1, maxConnections,
+						SCMPError.HV_WRONG_MAX_CONNECTIONS);
+				request.setAttribute(SCMPHeaderAttributeKey.MAX_CONNECTIONS, maxConnectionsInt);
 				// immmediateConnect
 				boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 				request.setAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT, immediateConnect);

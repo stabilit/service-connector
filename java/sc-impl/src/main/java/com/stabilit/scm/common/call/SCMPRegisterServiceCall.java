@@ -100,6 +100,16 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	}
 
 	/**
+	 * Sets the max connections.
+	 * 
+	 * @param maxConnections
+	 *            the new max connections
+	 */
+	public void setMaxConnections(int maxConnections) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS, maxConnections);
+	}
+
+	/**
 	 * Sets the keep alive interval.
 	 * 
 	 * @param keepAliveInterval

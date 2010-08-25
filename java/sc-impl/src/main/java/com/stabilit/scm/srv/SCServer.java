@@ -125,7 +125,7 @@ public class SCServer implements ISCServer {
 		ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 		ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 		if (scCallback == null) {
-			throw new InvalidParameterException("Callback must be set");
+			throw new InvalidParameterException("callback must be set");
 		}
 		// register called first time - initialize connection pool & requester
 		IConnectionPool connectionPool = new ConnectionPool(scHost, scPort, this.conType,
@@ -138,6 +138,7 @@ public class SCServer implements ISCServer {
 				.newInstance(requester, serviceName);
 
 		registerServiceCall.setMaxSessions(maxSessions);
+		registerServiceCall.setMaxConnections(maxConnections);
 		registerServiceCall.setPortNumber(this.localServerPort);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
@@ -193,16 +194,13 @@ public class SCServer implements ISCServer {
 	public void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCServer.class.getSimpleName());
 		respConfig.setConnectionType(this.conType);
-
-		if (port < 0 || port > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
-		}
-		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
-			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
-		}
+		
 		if (host == null) {
-			throw new InvalidParameterException("Host must be set.");
+			throw new InvalidParameterException("host must be set.");
 		}
+		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(0, keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+		
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		this.localServerHost = host;
 		this.localServerPort = port;

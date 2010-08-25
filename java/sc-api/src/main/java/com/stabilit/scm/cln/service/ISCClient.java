@@ -18,6 +18,7 @@ package com.stabilit.scm.cln.service;
 
 import java.security.InvalidParameterException;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
@@ -125,7 +126,7 @@ public interface ISCClient extends ISC {
 	 * @throws InvalidParameterException
 	 *             maxConnections smaller one
 	 */
-	public abstract void setMaxConnections(int maxConnections) throws SCServiceException;
+	public abstract void setMaxConnections(int maxConnections) throws SCMPValidatorException;
 
 	/**
 	 * Enable service.
@@ -166,10 +167,10 @@ public interface ISCClient extends ISC {
 	 * @return the max connections used in pool
 	 */
 	public abstract int getMaxConnections();
-	
+
 	/**
 	 * Gets the context.
-	 *
+	 * 
 	 * @return the context
 	 */
 	public abstract ISCContext getContext();

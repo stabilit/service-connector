@@ -26,17 +26,20 @@ import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
 import com.stabilit.scm.common.call.SCMPManageCall;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.SynchronousCallback;
+import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
  * The Class SCClient. Client to an SC.
@@ -100,20 +103,18 @@ public class SCClient implements ISCClient {
 			throw new SCServiceException(
 					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
-		if (port < 0 || port > 0xFFFF) {
-			throw new InvalidParameterException("Port is not within 0 and 0xFFFF.");
-		}
-		if (keepAliveIntervalInSeconds < 0 || keepAliveIntervalInSeconds > 3600) {
-			throw new InvalidParameterException("Keep alive interval is not within 0 and 3600.");
-		}
 		if (host == null) {
-			throw new InvalidParameterException("Host must be set.");
+			throw new InvalidParameterException("host must be set.");
 		}
+		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(0, keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		this.port = port;
 		this.host = host;
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 		this.connectionPool = new ConnectionPool(host, port, this.conType, keepAliveIntervalInSeconds);
 		this.connectionPool.setMaxConnections(this.maxConnections);
+		// keep always one connection active from client to SC
+		this.connectionPool.setMinConnections(1);
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
@@ -209,7 +210,7 @@ public class SCClient implements ISCClient {
 	@Override
 	public IFileService newFileService(String serviceName) throws Exception {
 		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set");
+			throw new InvalidParameterException("service name must be set");
 		}
 		if (this.callback == null) {
 			throw new SCServiceException("newFileService not possible - client not attached.");
@@ -221,7 +222,7 @@ public class SCClient implements ISCClient {
 	@Override
 	public ISessionService newSessionService(String serviceName) throws Exception {
 		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set");
+			throw new InvalidParameterException("service name must be set");
 		}
 		if (this.callback == null) {
 			throw new SCServiceException("newSessionService not possible - client not attached.");
@@ -233,7 +234,7 @@ public class SCClient implements ISCClient {
 	@Override
 	public IPublishService newPublishService(String serviceName) throws Exception {
 		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set");
+			throw new InvalidParameterException("service name must be set");
 		}
 		if (this.callback == null) {
 			throw new SCServiceException("newPublishService not possible - client not attached.");
@@ -243,10 +244,8 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setMaxConnections(int maxConnections) {
-		if (maxConnections < 1) {
-			throw new InvalidParameterException("Max connections must be greater than zero");
-		}
+	public void setMaxConnections(int maxConnections) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		this.maxConnections = maxConnections;
 	}
 

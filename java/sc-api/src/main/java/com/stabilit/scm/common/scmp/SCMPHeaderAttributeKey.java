@@ -69,6 +69,8 @@ public enum SCMPHeaderAttributeKey {
 	MASK("msk"),
 	/** The MAX_SESSIONS. */
 	MAX_SESSIONS("mxs"),
+	/** The MAX_CONNECTIONS. */
+	MAX_CONNECTIONS("mxc"),
 	/** The NO_DATA. */
 	NO_DATA("nod"),
 	/** The NO_DATA_INTERVAL. */
