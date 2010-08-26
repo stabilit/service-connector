@@ -52,7 +52,7 @@ public class ClnAPIAsyncSessionTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach("localhost", 8080);
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 360, 60);
+			sessionServiceA.createSession("sessionInfo", 60, 360);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);

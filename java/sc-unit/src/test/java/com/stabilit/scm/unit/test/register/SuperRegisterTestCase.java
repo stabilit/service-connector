@@ -81,7 +81,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.attachCallback);
+		registerServiceCall.invoke(this.attachCallback, 3);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
@@ -92,7 +92,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	public void deRegisterServiceAfter(String serviceName) throws Exception {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerRequester, serviceName);
-		deRegisterServiceCall.invoke(this.attachCallback);
+		deRegisterServiceCall.invoke(this.attachCallback, 3);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 

@@ -67,7 +67,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		subscribeCall.setRequestBody("large");
-		subscribeCall.invoke(this.callback);
+		subscribeCall.invoke(this.callback, 3);
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
@@ -85,7 +85,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 			// receive publication first message
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 					.newInstance(this.req, "publish-simulation", sessionId);
-			receivePublicationCall.invoke(this.callback);
+			receivePublicationCall.invoke(this.callback, 3);
 			reply = this.callback.getMessageSync();
 			Assert.assertTrue(reply.isLargeMessage());
 			Assert.assertEquals(sb.toString(), reply.getBody());

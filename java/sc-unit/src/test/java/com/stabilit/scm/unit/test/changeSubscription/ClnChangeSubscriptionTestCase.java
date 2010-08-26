@@ -73,7 +73,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------------------");
-		subscribeCall.invoke(this.callback);
+		subscribeCall.invoke(this.callback, 3);
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
@@ -83,7 +83,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 			// receive publication - no data
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 					.newInstance(this.req, "publish-simulation", sessionId);
-			receivePublicationCall.invoke(this.callback);
+			receivePublicationCall.invoke(this.callback, 3);
 			reply = this.callback.getMessageSync();
 			Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
@@ -91,13 +91,13 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.req, "publish-simulation", sessionId);
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
-		changeSubscriptionCall.invoke(this.callback);
+		changeSubscriptionCall.invoke(this.callback, 3);
 		SCTest.checkReply(this.callback.getMessageSync());
 
 		// receive publication first message
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.req, "publish-simulation", sessionId);
-		receivePublicationCall.invoke(this.callback);
+		receivePublicationCall.invoke(this.callback, 3);
 		reply = this.callback.getMessageSync();
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		Assert.assertEquals("publish message nr " + (2 + run), reply.getBody());
@@ -106,7 +106,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
 					this.req, "publish-simulation", sessionId);
-			receivePublicationCall.invoke(this.callback);
+			receivePublicationCall.invoke(this.callback, 3);
 			reply = this.callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 			Assert.assertEquals("publish message nr " + (2 + i + run), reply.getBody());

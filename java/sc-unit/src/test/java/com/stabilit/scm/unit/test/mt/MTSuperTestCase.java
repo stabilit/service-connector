@@ -94,7 +94,7 @@ public abstract class MTSuperTestCase {
 		registerService.setPortNumber(7000);
 		registerService.setImmediateConnect(true);
 		registerService.setKeepAliveInterval(360);
-		registerService.invoke(this.callback);
+		registerService.invoke(this.callback, 3);
 		this.callback.getMessageSync();
 	}
 
@@ -116,7 +116,7 @@ public abstract class MTSuperTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(registerReq, "simulation");
 
-		deRegisterServiceCall.invoke(this.callback);
+		deRegisterServiceCall.invoke(this.callback, 3);
 		this.callback.getMessageSync();
 		this.testContext.getConnectionPool().destroy();
 	}

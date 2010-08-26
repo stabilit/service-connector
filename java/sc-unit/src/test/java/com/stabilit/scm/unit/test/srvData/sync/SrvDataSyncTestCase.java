@@ -51,7 +51,7 @@ public class SrvDataSyncTestCase extends SuperSessionTestCase {
 					"simulation", this.sessionId);
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
-			clnDataCall.invoke(this.sessionCallback);
+			clnDataCall.invoke(this.sessionCallback, 3);
 			SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 
 			Assert.assertEquals("message data test case", scmpReply.getBody());

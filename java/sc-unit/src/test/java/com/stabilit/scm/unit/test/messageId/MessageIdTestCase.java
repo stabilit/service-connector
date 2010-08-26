@@ -49,7 +49,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 			clnDataCall.setMessagInfo("message info");
 			clnDataCall.setRequestBody("get Data (query)");
 			clnDataCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, this.msgId.getCurrentMessageID());
-			clnDataCall.invoke(this.sessionCallback);
+			clnDataCall.invoke(this.sessionCallback, 3);
 			SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 			String sessionId = clnDataCall.getRequest().getSessionId();
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
@@ -66,7 +66,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		clnDataCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, this.msgId.getCurrentMessageID());
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(reqData.toString());
-		clnDataCall.invoke(this.sessionCallback);
+		clnDataCall.invoke(this.sessionCallback, 3);
 		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
 		Assert.assertEquals((index + 3) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 
@@ -83,7 +83,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation", this.sessionId);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody(reqData.toString());
-		clnDataCall.invoke(this.sessionCallback);
+		clnDataCall.invoke(this.sessionCallback, 3);
 		scmpReply = this.sessionCallback.getMessageSync();
 		Assert.assertEquals((index + 6) + "", scmpReply.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 	}

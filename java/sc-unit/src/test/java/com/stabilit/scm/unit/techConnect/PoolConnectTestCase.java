@@ -37,7 +37,6 @@ public class PoolConnectTestCase {
 		SetupTestCases.setupSCOverFile("scPerf.properties");
 	}
 
-	
 	public void connect() throws Exception {
 		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 0);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
@@ -57,10 +56,10 @@ public class PoolConnectTestCase {
 			}
 		}
 	}
-	
+
 	@Test
 	public void connectNewPool() throws Exception {
-		
+
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
 		for (int i = 0; i < 500000; i++) {
@@ -80,7 +79,6 @@ public class PoolConnectTestCase {
 			}
 		}
 	}
-
 
 	private class ConnectCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class

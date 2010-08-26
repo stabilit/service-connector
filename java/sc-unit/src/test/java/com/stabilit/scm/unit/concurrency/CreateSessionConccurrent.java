@@ -70,16 +70,15 @@ public class CreateSessionConccurrent extends MTSuperTestCase {
 				.newInstance(requester, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
 		// create session and keep sessionId
-		createSessionCall.invoke(this.callback);
+		createSessionCall.invoke(this.callback, 3);
 		this.callback.getMessageSync();
 	}
 
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(requester);
 
-		attachCall.invoke(this.callback);
+		attachCall.invoke(this.callback, 3);
 		this.callback.getMessageSync();
 	}
 

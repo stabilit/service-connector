@@ -48,7 +48,7 @@ public class PerformanceSessionServiceTestCase {
 			sc.attach("localhost", 8080);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 60, 10);
+			sessionServiceA.createSession("sessionInfo", 10, 60);
 
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];

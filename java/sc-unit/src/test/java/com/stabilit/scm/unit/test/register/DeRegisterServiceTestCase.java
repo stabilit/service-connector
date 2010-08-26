@@ -48,11 +48,11 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
-		deRegisterServiceCall.invoke(this.attachCallback);
+		deRegisterServiceCall.invoke(this.attachCallback, 3);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspectCall.invoke(this.attachCallback);
+		inspectCall.invoke(this.attachCallback, 3);
 		SCMPMessage inspect = this.attachCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
@@ -71,7 +71,7 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
-		deRegisterServiceCall.invoke(this.attachCallback);
+		deRegisterServiceCall.invoke(this.attachCallback, 3);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		Assert

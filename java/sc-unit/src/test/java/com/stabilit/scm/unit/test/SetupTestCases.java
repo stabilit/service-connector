@@ -65,7 +65,9 @@ public class SetupTestCases {
 
 	public static void deleteLog() {
 		File logDir = new File("log");
-
+		if (logDir.isDirectory() == false) {
+			return;
+		}
 		for (File file : logDir.listFiles()) {
 			if (file.isFile()) {
 				if (file.getAbsolutePath().endsWith(".log")) {

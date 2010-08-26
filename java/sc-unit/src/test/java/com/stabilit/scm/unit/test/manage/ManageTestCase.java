@@ -54,7 +54,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
 		ManageTestCallback callback = new ManageTestCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
-		manageCall.invoke(callback);
+		manageCall.invoke(callback, 3);
 		SCMPMessage result = callback.getMessageSync();
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.MANAGE.getValue());
@@ -71,7 +71,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
 		callback = new ManageTestCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
-		manageCall.invoke(callback);
+		manageCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.MANAGE.getValue());
@@ -86,14 +86,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 				this.serviceName, sessionId);
 		clnDataCall.setMessagInfo("message info");
 		clnDataCall.setRequestBody("get Data (query)");
-		clnDataCall.invoke(callback);
+		clnDataCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
 
 		// delete session one
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, this.serviceName, sessionId);
-		deleteSessionCall.invoke(callback);
+		deleteSessionCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
 
@@ -116,8 +116,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
-		createSessionCall.invoke(this.attachCallback);
+		createSessionCall.invoke(this.attachCallback, 3);
 		return this.attachCallback.getMessageSync();
 	}
 

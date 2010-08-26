@@ -50,16 +50,16 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 		sb.append("reflect: ");
 		groupCall.setRequestBody(sb.toString());
-		groupCall.invoke(this.sessionCallback);
+		groupCall.invoke(this.sessionCallback, 3);
 		this.sessionCallback.getMessageSync();
 
 		for (int i = 0; i < 10; i++) {
 			sb.append(i);
 			groupCall.setRequestBody(String.valueOf(i));
-			groupCall.invoke(this.sessionCallback);
+			groupCall.invoke(this.sessionCallback, 3);
 			this.sessionCallback.getMessageSync();
 		}
-		groupCall.closeGroup(this.sessionCallback); // send REQ (no body content)
+		groupCall.closeGroup(this.sessionCallback, 3); // send REQ (no body content)
 		SCMPMessage res = this.sessionCallback.getMessageSync();
 
 		Assert.assertEquals(sb.toString(), res.getBody());
@@ -80,18 +80,18 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 		for (int i = 0; i < 19000; i++) {
 			sb.append(i);
 		}
-		
+
 		expected.append(sb.toString());
 		groupCall.setRequestBody(sb.toString());
-		groupCall.invoke(this.sessionCallback);
-		this.sessionCallback.getMessageSync();
-		
-		expected.append("end");
-		groupCall.setRequestBody("end");
-		groupCall.invoke(this.sessionCallback);
+		groupCall.invoke(this.sessionCallback, 3);
 		this.sessionCallback.getMessageSync();
 
-		groupCall.closeGroup(this.sessionCallback); // send REQ (no body content)
+		expected.append("end");
+		groupCall.setRequestBody("end");
+		groupCall.invoke(this.sessionCallback, 3);
+		this.sessionCallback.getMessageSync();
+
+		groupCall.closeGroup(this.sessionCallback, 3); // send REQ (no body content)
 		SCMPMessage res = this.sessionCallback.getMessageSync();
 
 		Assert.assertEquals(expected.length() + "", res.getBodyLength() + "");

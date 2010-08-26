@@ -66,7 +66,7 @@ public class SessionTimerTestCase {
 			sc.attach("localhost", 8080);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 60, 5);
+			sessionServiceA.createSession("sessionInfo", 60, 1);
 
 			Thread.sleep(8000);
 

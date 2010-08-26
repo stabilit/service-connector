@@ -66,7 +66,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		SCMPMessage fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL, " [IntValue must be set]",
@@ -78,19 +78,19 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setMaxConnections(10);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]",
 				SCMPMsgType.REGISTER_SERVICE);
-		
+
 		// maxConnections 0 value
 		registerServiceCall.setPortNumber(9100);
 		registerServiceCall.setMaxSessions(10);
 		registerServiceCall.setMaxConnections(0);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, " [IntValue 0 too low]",
@@ -102,7 +102,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setPortNumber(910000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_PORTNR, " [IntValue 910000 not within limits]",
@@ -125,11 +125,11 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		this.registerCallback.getMessageSync();
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspectCall.invoke(this.registerCallback);
+		inspectCall.invoke(this.registerCallback, 3);
 		SCMPMessage inspect = this.registerCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
@@ -146,12 +146,12 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
-		deRegisterServiceCall.invoke(this.registerCallback);
+		deRegisterServiceCall.invoke(this.registerCallback, 3);
 		this.registerCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspectCall.invoke(this.registerCallback);
+		inspectCall.invoke(this.registerCallback, 3);
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
@@ -174,7 +174,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setPortNumber(7000);
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		this.registerCallback.getMessageSync();
 
 		registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL.newInstance(req,
@@ -185,7 +185,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(360);
 
-		registerServiceCall.invoke(this.registerCallback);
+		registerServiceCall.invoke(this.registerCallback, 3);
 		SCMPFault message = (SCMPFault) this.registerCallback.getMessageSync();
 		Assert
 				.assertEquals(SCMPMsgType.REGISTER_SERVICE.getValue(), message
@@ -195,7 +195,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
-		deRegisterServiceCall.invoke(this.registerCallback);
+		deRegisterServiceCall.invoke(this.registerCallback, 3);
 		this.registerCallback.getMessageSync();
 	}
 

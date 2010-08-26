@@ -48,7 +48,7 @@ public class AttachTestCase extends SuperTestCase {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
 		AttachTestCallback callback = new AttachTestCallback();
-		attachCall.invoke(callback);
+		attachCall.invoke(callback, 3);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.checkReply(result);
 		/*********************************** Verify attach response msg **********************************/
@@ -58,7 +58,7 @@ public class AttachTestCase extends SuperTestCase {
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
-		detachCall.invoke(callback);
+		detachCall.invoke(callback, 3);
 		SCTest.checkReply(callback.getMessageSync());
 	}
 

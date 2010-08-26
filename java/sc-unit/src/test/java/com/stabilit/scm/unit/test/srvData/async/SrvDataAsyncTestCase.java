@@ -56,7 +56,7 @@ public class SrvDataAsyncTestCase extends SuperSessionTestCase {
 			clnDataCall.setRequestBody("get Data (query)");
 			SrvDataTestCaseCallback callback = new SrvDataTestCaseCallback(clnDataCall);
 			SrvDataAsyncTestCase.pendingRequest = true;
-			clnDataCall.invoke(callback);
+			clnDataCall.invoke(callback, 3);
 			while (SrvDataAsyncTestCase.pendingRequest == true);
 		}
 	}

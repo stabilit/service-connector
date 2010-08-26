@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.RequesterConfigPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.Requester;
@@ -40,8 +39,6 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 
 	public OperationTimeoutTestCase(String fileName) {
 		super(fileName);
-		// Operation timeout in SC 2 second
-		Constants.setOperationTimeoutMillis(2000);
 	}
 
 	@Override
@@ -70,18 +67,19 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be lower than SC operation timeout, 1 second
-		createSessionCall.setRequestBody("wait:" + 500);
+		createSessionCall.setRequestBody("wait:" + 2000);
 		ISCMPSynchronousCallback callback = new SynchronousCallback() {
 		};
-		createSessionCall.invoke(callback);
+		createSessionCall.invoke(callback, 2);
 
 		// timeout on callback must be the lowest value, 1/2 seconds
-		SCMPFault fault = (SCMPFault) callback.getMessageSync(200);
-		Assert.assertEquals("time for receiving message run out. Getting message synchronous failed.", fault.getCause()
-				.getMessage());
+		SCMPFault fault = (SCMPFault) callback.getMessageSync(20000);
+		Assert
+				.assertEquals(
+						"Request Timeout. The client did not produce a request within the time that the server was prepared to wait. [Getting message synchronous failed]",
+						fault.getCause().getMessage());
 		// wait for CCS to be received to late but initiates freeing the connection
 		Thread.sleep(2000);
 		// verify all connections freed properly
@@ -97,13 +95,12 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be higher than SC operation timeout
 		createSessionCall.setRequestBody("wait:" + 8000);
 		ISCMPSynchronousCallback callback = new SynchronousCallback() {
 		};
-		createSessionCall.invoke(callback);
+		createSessionCall.invoke(callback, 3);
 
 		// time to wait on client must be lower than operation timeout on SC & waiting time on server
 		SCMPFault responseMessage = (SCMPFault) callback.getMessageSync(500);
@@ -125,13 +122,12 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be higher than SC operation timeout
 		createSessionCall.setRequestBody("wait:" + 3000);
 		ISCMPSynchronousCallback callback = new SynchronousCallback() {
 		};
-		createSessionCall.invoke(callback);
+		createSessionCall.invoke(callback, 3);
 		// time to wait on client is default operation timeout & runs out first
 		SCMPMessage msg = callback.getMessageSync();
 
@@ -160,13 +156,12 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.setEchoTimeoutSeconds(10);
 
 		// time to wait in create session on server must be lower than SC operation timeout, 1 second
 		createSessionCall.setRequestBody("wait:" + 4000);
 		ISCMPSynchronousCallback callback = new SynchronousCallback() {
 		};
-		createSessionCall.invoke(callback);
+		createSessionCall.invoke(callback, 3);
 		// wait for CCS to be received to late but initiates freeing the connection
 		Thread.sleep(3000);
 		// verify all connections freed properly
