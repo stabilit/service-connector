@@ -29,12 +29,11 @@ public class AttachClientToMultipleSCTest {
 	public static void oneTimeSetUp() {
 		try {
 			String userDir = System.getProperty("user.dir");
-
 			String command = "java -Dlog4j.configuration=file:" + userDir
 					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\";
-			System.out.println(command);
+
 			p = Runtime.getRuntime().exec(command + "scIntegration.properties");
 			r = Runtime.getRuntime().exec(command + "scIntegrationChanged.properties");
 			try {

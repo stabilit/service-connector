@@ -3,6 +3,7 @@ package integration;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
 
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -23,6 +25,7 @@ public class RegisterServiceServerToSC {
 	private Exception ex;
 	private String serviceName = "simulation";
 	private String host = "localhost";
+	private int port9000 = 9000;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -59,12 +62,12 @@ public class RegisterServiceServerToSC {
 		server = new SCServer();
 	}
 
-	// region hostName == "localhost" (set as only one in
+	// region host == "localhost" (set as only one in
 	// scIntegration.properties), all ports
 	@Test
 	public void registerService_withoutStartListener_throwsException() {
 		try {
-			server.registerService(host, 8080, "simulation", 1, 1, new CallBack());
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -72,24 +75,41 @@ public class RegisterServiceServerToSC {
 	}
 
 	@Test
-	public void registerService_withStartListenerToSameHostAndPort_throwsException()
-			throws Exception {
-		server.startListener(host, 9000, 1);
+	public void registerService_withStartListenerToSameHostAndPort_throwsException() {
 		try {
-			server.registerService(host, 9000, serviceName, 1, 1, new CallBack());
+			server.startListener(host, port9000, 1);
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, server.isRegistered(serviceName));
-//		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, ex instanceof SCServiceException);
+		try {
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		// assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test
-	public void registerService_withStartListenerToSameHostDifferentPort_notRegisteredthrowsException()
+	public void registerService_sameHostDifferentPortSCalreadyListeningOnGivenPort_notRegisteredthrowsException()
+			throws Exception {
+		try {
+			server.startListener(host, 8080, 1);
+		} catch (Exception e) {
+			ex = e;
+		}
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_ToDifferentHostSamePortServiceNameNotInSCProperties_throwsException()
 			throws Exception {
 		server.startListener(host, 8080, 1);
 		try {
-			server.registerService(host, 9000, "Name", 1, 1, new CallBack());
+			server.registerService(host, port9000, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -98,25 +118,525 @@ public class RegisterServiceServerToSC {
 	}
 
 	@Test
-	public void registerService_withStartListenerToDifferentHostSamePort_throwsException()
+	public void registerService_withValidParamsInSCProperties_registered() throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_differentHostForListenerParamsInSCProperties_registered()
 			throws Exception {
-		server.startListener(host, 8080, 1);
+		server.startListener("host", 9001, 0);
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_nullCallBack_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, 9000, "Name", 1, 1, new CallBack());
+			server.registerService(host, port9000, serviceName, 1, 1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof InvalidParameterException);
+	}
+
+	@Test
+	public void registerService_invalidHost_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("something", port9000, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_emptyHost_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("", port9000, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_whiteSpaceHost_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(" ", port9000, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_noHost_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(null, port9000, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof InvalidParameterException);
+	}
+
+	@Test
+	public void registerService_portNotInSCProperties_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 9002, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test
-	public void registerService_withValidParams_isRegistered()
+	public void registerService_port0NotInSCProps_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 0, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_port1NotInSCProps_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 1, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_portMinus1OutOfRange_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, 9000, serviceName, 1, 1, new CallBack());
+		try {
+			server.registerService(host, -1, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_portMaxAllowedNotInSCProps_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 0xFFFF, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_portMaxAllowedPlus1_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 0xFFFF + 1, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_portIntMaxOutOfRange_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, Integer.MAX_VALUE, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_portIntMinOutOfRange_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, Integer.MIN_VALUE, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_noServiceName_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, null, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(null));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_validServiceNameInSCProps_registered() throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, "P01_RTXS_sc1", 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
+	}
+
+	@Test
+	public void registerService_emptyServiceName_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, "", 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(""));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_whiteSpaceServiceName_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, " ", 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(" "));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_arbitraryServiceNameNotInSCProps_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, "Name", 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+
+	@Test
+	public void registerService_maxSessions0_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 0, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxSessionsMinus1_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, -1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxSessionsIntMax_registered() throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
+	@Test
+	public void registerService_maxSessionsIntMin_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, Integer.MIN_VALUE, 1,
+					new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnections0_notRegisteredThrowsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, 0, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnectionsMinus1_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, -1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnectionsIntMin_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, Integer.MIN_VALUE,
+					new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnectionsIntMaxSessions1_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, Integer.MAX_VALUE,
+					new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnections2Sessions1_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, 2, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnectionsSameAsSessionsIntMax_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, Integer.MAX_VALUE,
+				new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_maxConnectionsSameAsSessions2_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, 2, 2, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_maxConnectionsLessThanSessionsIntMax_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE,
+				Integer.MAX_VALUE - 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_maxConnectionsLessThanSessions2_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, 2, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+
+	@Test
+	public void registerService_maxConnectionsMoreThanSessionsIntMax_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, Integer.MAX_VALUE - 1,
+					Integer.MAX_VALUE, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void registerService_maxConnectionsMoreThanSessions2_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, 2, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrong_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("host", 9001, "Name", -1, -1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptHost_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, 9001, "Name", -1, -1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptHostAndPort_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, "Name", -1, -1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptHostAndPortAndServiceName_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, -1, -1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExcepHostPortServiceNameMaxSessions_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, -1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptHostPortServiceNameMaxSessionsMaxConnections_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1, 1, null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof InvalidParameterException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptCallBack_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("host", 9001, "Name", -1, -1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptCallBackMaxConnectionsMaxSessions_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("host", 9001, "Name", 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered("Name"));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+	
+	@Test
+	public void registerService_allParamsWrongExceptCallBackMaxConnectionsMaxSessionsServiceName_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService("host", 9001, serviceName, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
 	
 
 	// region end
