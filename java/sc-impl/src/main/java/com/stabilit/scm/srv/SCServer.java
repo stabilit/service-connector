@@ -149,7 +149,7 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setImmediateConnect(true);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		try {
-			registerServiceCall.invoke(callback);
+			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			connectionPool.destroy();
 			throw new SCServiceException("register service failed", e);
@@ -168,19 +168,19 @@ public class SCServer implements ISCServer {
 	/** {@inheritDoc} */
 	@Override
 	public void deregisterService(String serviceName) throws Exception {
+		if (this.srvServiceRegistry.containsKey(serviceName) == false) {
+			// sc server not registered - deregister not necessary
+			return;
+		}
 		IRequester req = null;
 		try {
-			if (this.srvServiceRegistry.containsKey(serviceName) == false) {
-				// sc server not registered - deregister not necessary
-				return;
-			}
 			// remove srvService from registry
 			SrvService srvService = this.srvServiceRegistry.removeSrvService(serviceName);
 			req = srvService.getRequester();
 			SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 					.newInstance(req, serviceName);
 			try {
-				deRegisterServiceCall.invoke(this.callback);
+				deRegisterServiceCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 			} catch (Exception e) {
 				throw new SCServiceException("deregister service failed", e);
 			}
