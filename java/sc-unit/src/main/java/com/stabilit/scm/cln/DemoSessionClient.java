@@ -1,6 +1,5 @@
 package com.stabilit.scm.cln;
 
-import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
@@ -26,7 +25,7 @@ public class DemoSessionClient extends Thread {
 		try {
 			sc.attach("localhost", 8000);
 			sessionService = sc.newSessionService("simulation");
-			sessionService.createSession("sessionInfo", 60, 60);
+			sessionService.createSession("sessionInfo", 300, 60);
 
 			int index = 0;
 			while (true) {
