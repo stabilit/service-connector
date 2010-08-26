@@ -45,7 +45,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnDataCommand.class);
-	
+
 	/**
 	 * Instantiates a new ClnDataCommand.
 	 */
@@ -69,7 +69,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 
 		Server server = session.getServer();
 		// try sending to backend server
-		server.sendData(message, callback);
+		server.sendData(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		return;
 	}
 
@@ -99,6 +99,10 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
@@ -117,7 +121,7 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

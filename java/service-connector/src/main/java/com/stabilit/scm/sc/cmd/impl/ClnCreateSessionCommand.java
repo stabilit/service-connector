@@ -47,7 +47,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnCreateSessionCommand.class);
-	
+
 	/**
 	 * Instantiates a new ClnCreateSessionCommand.
 	 */
@@ -77,7 +77,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		// tries allocating a server for this session
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session);
+		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session, (Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -122,6 +123,10 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -138,7 +143,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

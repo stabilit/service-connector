@@ -33,7 +33,6 @@ import com.stabilit.scm.common.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvEchoCall;
 import com.stabilit.scm.common.call.SCMPSrvSubscribeCall;
 import com.stabilit.scm.common.call.SCMPSrvUnsubscribeCall;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.ctx.IContext;
 import com.stabilit.scm.common.net.req.ConnectionPool;
@@ -56,7 +55,7 @@ public class Server {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Server.class);
-	
+
 	/** The host. */
 	private String host;
 	/** The port number. */
@@ -70,7 +69,6 @@ public class Server {
 	/** The max sessions. */
 	private int maxSessions;
 	/** The max connections. */
-	@SuppressWarnings("unused")
 	private int maxConnections;
 	/** The requester. */
 	private IRequester requester;
@@ -78,6 +76,8 @@ public class Server {
 	private IConnectionPool cp;
 	/** The sessions, list of sessions allocated to the server. */
 	private List<Session> sessions;
+	/** The operation timeout multiplier. */
+	private double operationTimeoutMultiplier;
 
 	/**
 	 * Instantiates a new server.
@@ -102,6 +102,7 @@ public class Server {
 		IResponder responder = responderRegistry.getCurrentResponder();
 		ICommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
+		this.operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
 		this.host = socketAddress.getHostName();
 		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
 		this.cp.setMaxConnections(maxConnections);
@@ -139,11 +140,11 @@ public class Server {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback) {
+	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
 		try {
-			createSessionCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception e) {
 			// create session failed
 			callback.callback(e);
@@ -158,12 +159,12 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPCallback callback) {
+	public void deleteSession(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(requester, message);
 
 		try {
-			deleteSessionCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception e) {
 			// delete session failed
 			callback.callback(e);
@@ -178,11 +179,11 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback) {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
-			subscribeCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception e) {
 			// subscribe failed
 			callback.callback(e);
@@ -197,12 +198,12 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPCallback callback) {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
 		try {
-			unsubscribeCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception e) {
 			// unsubscribe failed
 			callback.callback(e);
@@ -217,12 +218,12 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void changeSubscription(SCMPMessage message, ISCMPCallback callback) {
+	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(requester, message);
 
 		try {
-			changeSubscriptionCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception e) {
 			// changeSubscription failed
 			callback.callback(e);
@@ -237,10 +238,10 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void sendData(SCMPMessage message, ISCMPCallback callback) {
+	public void sendData(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
 		try {
-			srvDataCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			srvDataCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);
@@ -255,10 +256,10 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void serverEcho(SCMPMessage message, ISCMPCallback callback) {
+	public void serverEcho(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvEchoCall srvEchoCall = (SCMPSrvEchoCall) SCMPCallFactory.SRV_ECHO_CALL.newInstance(requester, message);
 		try {
-			srvEchoCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			srvEchoCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception th) {
 			callback.callback(th);
 		}
@@ -272,11 +273,11 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback) {
+	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
 		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION
 				.newInstance(requester, message);
 		try {
-			srvAbortSessionCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			srvAbortSessionCall.invoke(callback, timeoutInSeconds);
 		} catch (Exception th) {
 			callback.callback(th);
 		}

@@ -56,8 +56,8 @@ public enum SCMPError {
 	HV_WRONG_MAX_SESSIONS("420", "Invalid maxSessions field."),
 	/** The HV_WRONG_MAX_CONNECTIONS. */
 	HV_WRONG_MAX_CONNECTIONS("420", "Invalid maxConnections field."),
-	/** The HV_WRONG_ECHO_TIMEOUT. */
-	HV_WRONG_ECHO_TIMEOUT("420", "Invalid echoTimeout field."),
+	/** The HV_WRONG_OPERATION_TIMEOUT. */
+	HV_WRONG_OPERATION_TIMEOUT("420", "Invalid operation timeout field."),
 	/** The HV_WRONG_ECHO_INTERVAL. */
 	HV_WRONG_ECHO_INTERVAL("420", "Invalid echoInterval field."),
 	/** The HV_WRONG_PORTNR. */
@@ -108,7 +108,7 @@ public enum SCMPError {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPError.class);
-	
+
 	/** The error code. Should not be integer because it is transmitted over the line */
 	private String errorCode;
 	/** The error text. */

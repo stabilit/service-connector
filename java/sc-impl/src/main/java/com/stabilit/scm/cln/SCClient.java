@@ -36,7 +36,7 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
@@ -52,7 +52,7 @@ public class SCClient implements ISCClient {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCClient.class);
-	
+
 	/** The host of the SC. */
 	private String host;
 	/** The port of the SC. */
@@ -134,8 +134,9 @@ public class SCClient implements ISCClient {
 		if (reply.isFault()) {
 			this.callback = null;
 			this.connectionPool.destroy();
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("attach client failed", fault.getCause());
+			throw new SCServiceException("attach client failed : "
+					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+
 		}
 	}
 
@@ -148,11 +149,11 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void detach() throws Exception {
+		if (this.callback == null) {
+			// detach not possible - client not attached just ignore
+			return;
+		}
 		try {
-			if (this.callback == null) {
-				// detach not possible - client not attached just ignore
-				return;
-			}
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
 				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -161,15 +162,13 @@ public class SCClient implements ISCClient {
 			}
 			SCMPMessage reply = this.callback.getMessageSync();
 			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCServiceException("detach client failed", fault.getCause());
+				throw new SCServiceException("detach client failed : "
+						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			this.callback = null;
-			if (this.connectionPool != null) {
-				// destroy connection pool
-				this.connectionPool.destroy();
-			}
+			// destroy connection pool
+			this.connectionPool.destroy();
 		}
 	}
 
@@ -325,8 +324,7 @@ public class SCClient implements ISCClient {
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("manage failed", fault.getCause());
+			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		return (String) reply.getBody();
 	}

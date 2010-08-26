@@ -76,6 +76,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		currentPart = new SCMPPart();
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
+		currentPart.setHeader(request, SCMPHeaderAttributeKey.OP_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
 		this.add(messagePart);

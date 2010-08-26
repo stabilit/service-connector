@@ -36,7 +36,7 @@ public class SessionService extends Service {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionService.class);
-	
+
 	/**
 	 * Instantiates a new session service.
 	 * 
@@ -56,12 +56,14 @@ public class SessionService extends Service {
 	 *            the callback
 	 * @param session
 	 *            the session
+	 * @param timeout
+	 *            the timeout
 	 * @return the server
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session) throws Exception {
+			Session session, int timeout) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -70,7 +72,7 @@ public class SessionService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.createSession(msgToForward, callback);
+				server.createSession(msgToForward, callback, timeout);
 				server.addSession(session);
 				return server;
 			}

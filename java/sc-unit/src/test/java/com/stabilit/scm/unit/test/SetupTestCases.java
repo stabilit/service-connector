@@ -35,7 +35,6 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
 import com.stabilit.scm.srv.ps.SCPublishServer;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 import com.stabilit.scm.unit.TestUnitServerCommandFactory;
 
 /**

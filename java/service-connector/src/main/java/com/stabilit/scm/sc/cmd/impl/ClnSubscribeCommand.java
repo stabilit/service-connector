@@ -54,10 +54,10 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
-	
+
 	/** The Constant sessionLogger. */
 	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-	
+
 	/**
 	 * Instantiates a ClnSubscribeCommand.
 	 */
@@ -88,7 +88,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session);
+		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, (Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -147,6 +148,10 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 					// percent sign in mask not allowed
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed " + mask);
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 				ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -163,7 +168,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
@@ -233,7 +238,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 					// send message back to client
 					this.response.write();
 				} catch (Exception ex) {
-					logger.error("timeout "+ex.getMessage(), ex);
+					logger.error("timeout " + ex.getMessage(), ex);
 					ExceptionPoint.getInstance().fireException(this, ex);
 				}
 				return;
@@ -247,7 +252,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
-				subscriptionLogger.debug("send no data for "+sessionId);
+				subscriptionLogger.debug("send no data for " + sessionId);
 				SubscriptionPoint.getInstance().fireSubscriptionNoDataTimeout(this, sessionId);
 			} else {
 				// set up reply
@@ -283,7 +288,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				// send message back to client
 				this.response.write();
 			} catch (Exception ex) {
-				logger.error("timeout "+ex.getMessage(), ex);
+				logger.error("timeout " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}

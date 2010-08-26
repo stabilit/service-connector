@@ -32,6 +32,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -45,7 +46,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnEchoCommand.class);
-	
+
 	/**
 	 * Instantiates a new ClnEchoCommand.
 	 */
@@ -69,7 +70,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 
 		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		server.serverEcho(message, callback);
+		server.serverEcho(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage result = callback.getMessageSync(session.getEchoTimeoutSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
 
 		if (result.isFault()) {
@@ -108,18 +109,22 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 			} catch (HasFaultResponseException ex) {
-				ExceptionPoint.getInstance().fireException(this, new Exception("genau2"));	// TODO TRN ??
+				ExceptionPoint.getInstance().fireException(this, new Exception("genau2")); // TODO TRN ??
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

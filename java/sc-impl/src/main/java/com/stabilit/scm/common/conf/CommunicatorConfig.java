@@ -27,7 +27,7 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
-	
+
 	/** The communicator name. */
 	private String communicatorName;
 	/** The port. */
@@ -38,8 +38,9 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	private String connectionType;
 	/** The max pool size. */
 	private int maxPoolSize;
-
+	/** The keep alive interval. */
 	private int keepAliveInterval;
+	private double operationTimeoutMultiplier;
 
 	/**
 	 * Instantiates a new communicator configuration.
@@ -47,8 +48,8 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 	CommunicatorConfig() {
 	}
 
-	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType,
-			int maxPoolSize, int keepAliveInterval, int keepAliveTimeout) {
+	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
+			int keepAliveInterval, int keepAliveTimeout) {
 		super();
 		this.communicatorName = communicatorName;
 		this.port = port;
@@ -56,6 +57,7 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.connectionType = connectionType;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
+		this.operationTimeoutMultiplier = 0;
 	}
 
 	/**
@@ -151,11 +153,33 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.maxPoolSize = maxPoolSize;
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public int getKeepAliveInterval() {
 		return keepAliveInterval;
 	}
 
+	/**
+	 * Sets the keep alive interval.
+	 *
+	 * @param keepAliveInterval the new keep alive interval
+	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
+	}
+
+	/**
+	 * Sets the operation timeout multiplier.
+	 *
+	 * @param operationTimeoutMultiplier the new operation timeout multiplier
+	 */
+	public void setOperationTimeoutMultiplier(double operationTimeoutMultiplier) {
+		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public double getOperationTimeoutMultiplier() {
+		return operationTimeoutMultiplier;
 	}
 }

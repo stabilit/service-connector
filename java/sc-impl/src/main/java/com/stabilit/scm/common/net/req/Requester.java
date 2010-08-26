@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.net.req;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
@@ -98,11 +99,11 @@ public class Requester implements IRequester {
 			connection.send(message, requesterCallback);
 		}
 		// setting up operation timeout after successful send
-		TimerTaskWrapper task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 		RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
 		reqCallback.setTimeoutSeconds(timeoutInSeconds);
-		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		timer.schedule(task, (long) timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */
@@ -137,7 +138,7 @@ public class Requester implements IRequester {
 		/** The message id. */
 		private SCMPMessageId msgId;
 		/** The operation timeout task. */
-		private TimerTaskWrapper operationTimeoutTask;
+		private TimerTask operationTimeoutTask;
 		/** The timeout in seconds. */
 		private int timeoutInSeconds;
 
@@ -321,7 +322,6 @@ public class Requester implements IRequester {
 			try {
 				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
-				logger.error("freeConnection "+e.getMessage(), e);
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
@@ -334,7 +334,6 @@ public class Requester implements IRequester {
 			try {
 				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
-				logger.error("disconnectConnection "+e.getMessage(), e);
 				ExceptionPoint.getInstance().fireException(this, e);
 			}
 		}
@@ -345,7 +344,7 @@ public class Requester implements IRequester {
 		 * @param operationTimeoutTask
 		 *            the new operation timeout task
 		 */
-		public void setOperationTimeoutTask(TimerTaskWrapper operationTimeoutTask) {
+		public void setOperationTimeoutTask(TimerTask operationTimeoutTask) {
 			this.operationTimeoutTask = operationTimeoutTask;
 		}
 

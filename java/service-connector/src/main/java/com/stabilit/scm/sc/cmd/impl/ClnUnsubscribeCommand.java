@@ -30,6 +30,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.registry.SubscriptionQueue;
 import com.stabilit.scm.sc.registry.SubscriptionSessionRegistry;
 import com.stabilit.scm.sc.service.Server;
@@ -73,7 +74,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		server.unsubscribe(message, callback);
+		server.unsubscribe(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway
 		
@@ -105,6 +106,10 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {

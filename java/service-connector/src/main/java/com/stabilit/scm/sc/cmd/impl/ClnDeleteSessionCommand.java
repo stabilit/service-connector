@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -30,6 +31,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.util.ValidatorUtility;
 import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
@@ -43,7 +45,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnDeleteSessionCommand.class);
-	
+
 	/**
 	 * Instantiates a new ClnDeleteSessionCommand.
 	 */
@@ -70,7 +72,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		server.deleteSession(message, callback);
+		server.deleteSession(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
@@ -86,7 +88,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
 					+ " [delete session failed]");
-			server.serverAbortSession(message, callback);
+			server.serverAbortSession(message, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			server.destroy();
 		}
 		// free server from session
@@ -117,6 +119,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
@@ -127,7 +133,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

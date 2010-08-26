@@ -35,7 +35,7 @@ public class SCMPMessage {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPMessage.class);
-	
+
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
 	/** The actual SC_VERSION. */
@@ -369,7 +369,7 @@ public class SCMPMessage {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Exception ex) {
-			logger.error("getHeaderInt "+ex.getMessage(), ex);
+			logger.error("getHeaderInt " + ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			return null;
 		}

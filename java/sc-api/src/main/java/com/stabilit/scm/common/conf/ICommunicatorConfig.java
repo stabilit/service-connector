@@ -44,6 +44,11 @@ public interface ICommunicatorConfig {
 	 */
 	public abstract String getHost();
 
+	/**
+	 * Gets the connection type.
+	 *
+	 * @return the connection type
+	 */
 	public String getConnectionType();
 
 	/**
@@ -52,11 +57,18 @@ public interface ICommunicatorConfig {
 	 * @return the max pool size
 	 */
 	public int getMaxPoolSize();
-	
+
 	/**
 	 * Gets the keep alive interval.
-	 *
+	 * 
 	 * @return the keep alive interval
 	 */
 	public int getKeepAliveInterval();
+
+	/**
+	 * Gets the operation timeout multiplier.
+	 * 
+	 * @return the operation timeout multiplier
+	 */
+	public abstract double getOperationTimeoutMultiplier();
 }

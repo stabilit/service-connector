@@ -38,7 +38,7 @@ public abstract class CommunicatorConfigPool {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfigPool.class);
-	
+
 	/** The Constant DISABLE. */
 	private static final String DISABLE = "disable";
 	/** The properties. */
@@ -58,7 +58,6 @@ public abstract class CommunicatorConfigPool {
 		this.props = null;
 		this.loggerKey = null;
 		this.loggable = true;
-
 	}
 
 	/**
@@ -93,41 +92,42 @@ public abstract class CommunicatorConfigPool {
 					+ topLevelPropsKey);
 		}
 
-		String[] resps = respNames.split(Constants.COMMA_OR_SEMICOLON);
+		String[] communicators = respNames.split(Constants.COMMA_OR_SEMICOLON);
 		comConfigList = new ArrayList<ICommunicatorConfig>();
 
-		for (String respName : resps) {
-			respName = respName.trim(); // remove blanks in name
-			CommunicatorConfig reqConfig = new CommunicatorConfig(respName);
+		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
+		double operationTimeoutMultiplier = Constants.DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
+		if (operationTimeoutString != null) {
+			operationTimeoutMultiplier = Double.parseDouble(operationTimeoutString);
+		}
 
-			comConfigList.add(reqConfig);
+		for (String commName : communicators) {
+			commName = commName.trim(); // remove blanks in name
+			CommunicatorConfig commConfig = new CommunicatorConfig(commName);
 
-			int port = Integer.parseInt((String) props.get(respName + Constants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) props.get(respName + Constants.MAX_CONNECTION_POOL_SIZE);
+			comConfigList.add(commConfig);
+
+			int port = Integer.parseInt((String) props.get(commName + Constants.PORT_QUALIFIER));
+			String maxPoolSizeValue = (String) props.get(commName + Constants.MAX_CONNECTION_POOL_SIZE);
 
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
-				reqConfig.setMaxPoolSize(maxPoolSize);
+				commConfig.setMaxPoolSize(maxPoolSize);
 			}
 
-			String keepAliveIntervalValue = (String) props.get(respName + Constants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) props.get(commName + Constants.KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = 0;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}
-			reqConfig.setKeepAliveInterval(keepAliveInterval);
+			commConfig.setKeepAliveInterval(keepAliveInterval);
 
-			reqConfig.setPort(port);
-			reqConfig.setHost((String) props.get(respName + Constants.HOST_QUALIFIER));
-			reqConfig.setConnectionType((String) props.get(respName + Constants.CONNECTION_TYPE_QUALIFIER));
+			commConfig.setPort(port);
+			commConfig.setHost((String) props.get(commName + Constants.HOST_QUALIFIER));
+			commConfig.setConnectionType((String) props.get(commName + Constants.CONNECTION_TYPE_QUALIFIER));
+			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
 		this.loggerKey = props.getProperty(Constants.ROOT_LOGGER_QUALIFIER);
-//		TODO operation timeout
-//		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
-//		if (operationTimeoutString != null) {
-//			int operationTimeout = Integer.parseInt(operationTimeoutString);
-//			Constants.setOperationTimeoutMillis(operationTimeout);
-//		}
 
 		String loggable = props.getProperty(Constants.ROOT_LOGGING_QUALIFIER);
 		if (DISABLE.equals(loggable)) {

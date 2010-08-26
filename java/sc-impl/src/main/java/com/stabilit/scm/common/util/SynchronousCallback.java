@@ -110,7 +110,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		SCMPMessage reply = null;
 		try {
 			// the method poll() from BlockingQueue waits inside
-			reply = this.answer.poll(timeoutInMillis, TimeUnit.MILLISECONDS);
+			reply = this.answer.poll((long) timeoutInMillis, TimeUnit.MILLISECONDS);
 			// reset synchronous mode
 			this.synchronous = false;
 			if (reply == null) {

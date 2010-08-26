@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
-import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEnpoint;
+import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEndpoint;
 import com.stabilit.scm.common.res.IEndpoint;
 
 /**
@@ -58,7 +58,7 @@ public class EndpointFactory extends Factory {
 		add(DEFAULT, nettyHttpEndpoint);
 		add(NETTY_HTTP, nettyHttpEndpoint);
 		// jboss netty tcp endpoint
-		IEndpoint nettyTCPEndpoint = new NettyTcpEnpoint();
+		IEndpoint nettyTCPEndpoint = new NettyTcpEndpoint();
 		add(NETTY_TCP, nettyTCPEndpoint);
 	}
 

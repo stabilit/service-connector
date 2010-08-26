@@ -49,10 +49,10 @@ public class SubscriptionQueue<E> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
-	
+
 	/** The Constant subscriptionLogger. */
 	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-	
+
 	/** The timer instance to observe all timeouts in relation to this queue. */
 	private Timer timer;
 	/** The data queue. */
@@ -81,7 +81,7 @@ public class SubscriptionQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
-		subscriptionLogger.debug("insert "+message);
+		subscriptionLogger.debug("insert " + message);
 		SubscriptionPoint.getInstance().fireAdd(this, message, this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
@@ -122,7 +122,7 @@ public class SubscriptionQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		subscriptionLogger.debug("poll "+message);
+		subscriptionLogger.debug("poll " + message);
 		SubscriptionPoint.getInstance().firePoll(this, sessionId, message, this.dataQueue.getSize());
 		return message;
 	}

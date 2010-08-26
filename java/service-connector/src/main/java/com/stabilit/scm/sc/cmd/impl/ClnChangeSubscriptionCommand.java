@@ -47,7 +47,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
-	
+
 	/**
 	 * Instantiates a new ClnChangeSubscriptionCommand.
 	 */
@@ -71,7 +71,8 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		Server server = session.getServer();
 
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		server.changeSubscription(reqMessage, callback);
+		server.changeSubscription(reqMessage, callback, (Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -115,6 +116,10 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
+				// operation timeout
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
@@ -127,7 +132,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

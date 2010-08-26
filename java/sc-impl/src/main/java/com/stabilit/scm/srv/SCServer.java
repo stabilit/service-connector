@@ -38,7 +38,7 @@ import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.service.SCServiceException;
@@ -55,7 +55,7 @@ public class SCServer implements ISCServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCServer.class);
-	
+
 	/** Identifies low level component to use for communication default for severs is {netty.tcp}. */
 	private String conType;
 	/** The srv service registry. */
@@ -156,8 +156,8 @@ public class SCServer implements ISCServer {
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			connectionPool.destroy();
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("register service failed", fault.getCause());
+			throw new SCServiceException("register service failed : "
+					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvService(serviceName, maxSessions, maxConnections, requester, scCallback);
@@ -185,8 +185,8 @@ public class SCServer implements ISCServer {
 			}
 			SCMPMessage reply = this.callback.getMessageSync();
 			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCServiceException("deregister service failed", fault.getCause());
+				throw new SCServiceException("deregister service failed : "
+						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			// destroy connection pool
@@ -220,7 +220,7 @@ public class SCServer implements ISCServer {
 			responder.create();
 			responder.startListenAsync();
 		} catch (Exception ex) {
-			logger.error("startListener "+ex.getMessage(), ex);
+			logger.error("startListener " + ex.getMessage(), ex);
 			ExceptionPoint.getInstance().fireException(this, ex);
 			return;
 		}

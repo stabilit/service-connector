@@ -25,6 +25,7 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -47,7 +48,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DeRegisterServiceCommand.class);
-	
+
 	private static final String ABORT_SESSION_ERROR_STRING = SCMPError.SESSION_ABORT.getErrorText()
 			+ "[deregister service]";
 
@@ -90,7 +91,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 			this.sessionRegistry.removeSession(session);
 			server.removeSession(session);
 			abortMsg.setSessionId(session.getId());
-			server.serverAbortSession(abortMsg, callback);
+			server.serverAbortSession(abortMsg, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 		}
 		// release all resources used by server, disconnects requester
 		server.destroy();
@@ -146,7 +147,7 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate "+ex.getMessage(), ex);
+				logger.error("validate " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());

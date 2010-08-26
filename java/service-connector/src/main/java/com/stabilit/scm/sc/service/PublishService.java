@@ -72,7 +72,7 @@ public class PublishService extends Service {
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session) throws Exception {
+			Session session, int timeoutInSeconds) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -81,7 +81,7 @@ public class PublishService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.subscribe(msgToForward, callback);
+				server.subscribe(msgToForward, callback, timeoutInSeconds);
 				server.addSession(session);
 				return server;
 			}

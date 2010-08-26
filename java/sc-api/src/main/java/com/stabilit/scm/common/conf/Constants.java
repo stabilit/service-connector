@@ -53,7 +53,7 @@ public final class Constants {
 	
 	
 	
-	
+	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
 	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
 	 * level of architecture. Time unit is seconds.
@@ -63,7 +63,7 @@ public final class Constants {
 	 * OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when communication should
 	 * work very fast. Often used in emergency cases and in situation where reply of operation is irrelevant.
 	 */
-	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 1000;
+	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 200;
 	/**
 	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.

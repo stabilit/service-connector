@@ -17,6 +17,8 @@
 package com.stabilit.scm.sc.req;
 
 import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
@@ -42,7 +44,7 @@ public class SCRequester implements IRequester {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCRequester.class);
-	
+
 	/** The context. */
 	private IRequesterContext reqContext;
 	/** The Constant timer, triggers all operation timeout for sending. */
@@ -61,11 +63,11 @@ public class SCRequester implements IRequester {
 		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
 		connection.send(message, requesterCallback);
 		// setting up operation timeout after successful send
-		TimerTaskWrapper task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 		SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
 		reqCallback.setTimeoutSeconds(timeoutInSeconds);
-		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		timer.schedule(task, (long) (timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR));
 	}
 
 	/** {@inheritDoc} */
@@ -91,7 +93,7 @@ public class SCRequester implements IRequester {
 		/** The connection context. */
 		private IConnectionContext connectionCtx;
 		/** The operation timeout task. */
-		private TimerTaskWrapper operationTimeoutTask;
+		private TimerTask operationTimeoutTask;
 		/** The timeout in seconds. */
 		private int timeoutInSeconds;
 
@@ -135,7 +137,7 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("freeConnection "+ex.getMessage(), ex);
+				logger.error("freeConnection " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
@@ -148,7 +150,7 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("disconnectConnection "+ex.getMessage(), ex);
+				logger.error("disconnectConnection " + ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
 			}
 		}
@@ -159,7 +161,7 @@ public class SCRequester implements IRequester {
 		 * @param operationTimeoutTask
 		 *            the new operation timeout task
 		 */
-		public void setOperationTimeoutTask(TimerTaskWrapper operationTimeoutTask) {
+		public void setOperationTimeoutTask(TimerTask operationTimeoutTask) {
 			this.operationTimeoutTask = operationTimeoutTask;
 		}
 
