@@ -95,7 +95,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync() {
-		return this.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		return this.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */
