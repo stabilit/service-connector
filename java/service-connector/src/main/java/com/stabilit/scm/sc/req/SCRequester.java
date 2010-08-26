@@ -16,8 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.req;
 
+import java.util.Timer;
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
@@ -25,7 +27,11 @@ import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.net.req.IRequesterContext;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.util.ITimerRun;
+import com.stabilit.scm.common.util.TimerTaskWrapper;
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
@@ -39,6 +45,8 @@ public class SCRequester implements IRequester {
 	
 	/** The context. */
 	private IRequesterContext reqContext;
+	/** The Constant timer, triggers all operation timeout for sending. */
+	protected final static Timer timer = new Timer("OperationTimerSCRequester");
 
 	public SCRequester(IRequesterContext context) {
 		this.reqContext = context;
@@ -46,12 +54,18 @@ public class SCRequester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, ISCMPCallback callback) throws Exception {
+	public void send(SCMPMessage message, int timeoutInSeconds, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
 		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
 		connection.send(message, requesterCallback);
+		// setting up operation timeout after successful send
+		TimerTaskWrapper task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+		SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
+		reqCallback.setOperationTimeoutTask(task);
+		reqCallback.setTimeoutSeconds(timeoutInSeconds);
+		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */
@@ -59,7 +73,7 @@ public class SCRequester implements IRequester {
 	public synchronized String toHashCodeString() {
 		return " [" + this.hashCode() + "]";
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public IRequesterContext getContext() {
@@ -70,21 +84,29 @@ public class SCRequester implements IRequester {
 	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
 	 * reply is received. Handles freeing up earlier requested connections.
 	 */
-	private class SCRequesterSCMPCallback implements ISCMPCallback {
+	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimerRun {
 
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
 		/** The connection context. */
 		private IConnectionContext connectionCtx;
+		/** The operation timeout task. */
+		private TimerTaskWrapper operationTimeoutTask;
+		/** The timeout in seconds. */
+		private int timeoutInSeconds;
 
 		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
+			this.operationTimeoutTask = null;
+			this.timeoutInSeconds = 0;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
+			// cancel operation timeout
+			this.operationTimeoutTask.cancel();
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
 			this.scmpCallback.callback(scmpReply);
@@ -93,6 +115,8 @@ public class SCRequester implements IRequester {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Exception ex) {
+			// cancel operation timeout
+			this.operationTimeoutTask.cancel();
 			// first handle connection - that user has a connection to work, if he has only 1
 			if (ex instanceof IdleTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
@@ -126,6 +150,46 @@ public class SCRequester implements IRequester {
 			} catch (Exception ex) {
 				logger.error("disconnectConnection "+ex.getMessage(), ex);
 				ExceptionPoint.getInstance().fireException(this, ex);
+			}
+		}
+
+		/**
+		 * Sets the operation timeout task.
+		 * 
+		 * @param operationTimeoutTask
+		 *            the new operation timeout task
+		 */
+		public void setOperationTimeoutTask(TimerTaskWrapper operationTimeoutTask) {
+			this.operationTimeoutTask = operationTimeoutTask;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getTimeoutSeconds() {
+			return this.timeoutInSeconds;
+		}
+
+		/**
+		 * Sets the timeout seconds.
+		 * 
+		 * @param timeoutInSeconds
+		 *            the new timeout seconds
+		 */
+		public void setTimeoutSeconds(int timeoutInSeconds) {
+			this.timeoutInSeconds = timeoutInSeconds;
+		}
+
+		/**
+		 * Operation timeout run out. Clean up. Close connection and inform upper level by callback.
+		 */
+		@Override
+		public void timeout() {
+			this.disconnectConnection();
+			SCMPFault fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, "getting message took too long");
+			try {
+				this.scmpCallback.callback(fault);
+			} catch (Exception e) {
+				this.scmpCallback.callback(e);
 			}
 		}
 	}

@@ -73,7 +73,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
-		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
@@ -86,7 +85,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (Boolean.FALSE.equals(rejectSessionFlag)) {
 				// session has not been rejected, add server to session
 				session.setServer(server);
-				session.setEchoTimeoutSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT));
 				session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
 				// finally add session to the registry
 				SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
@@ -130,11 +128,6 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				// sessionInfo
 				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-				// echoTimeout
-				String echoTimeoutValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT.getValue());
-				int echoTimeout = ValidatorUtility.validateInt(1, echoTimeoutValue, 3600,
-						SCMPError.HV_WRONG_ECHO_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 				// echoInterval
 				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
