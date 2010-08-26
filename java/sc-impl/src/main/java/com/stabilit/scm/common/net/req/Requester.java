@@ -103,7 +103,7 @@ public class Requester implements IRequester {
 		RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
 		reqCallback.setTimeoutSeconds(timeoutInSeconds);
-		timer.schedule(task, (long) timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */
