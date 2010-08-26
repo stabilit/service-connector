@@ -26,6 +26,7 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDataCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
@@ -65,7 +66,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void createSession(String sessionInfo, int echoTimeoutInSeconds, int echoIntervalInSeconds) throws Exception {
+	public void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
@@ -76,7 +77,7 @@ public class SessionService extends Service implements ISessionService {
 		if (sessionInfoLength < 1 || sessionInfoLength > 256) {
 			throw new InvalidParameterException("Session info not within 1 to 256 bytes.");
 		}
-		if (echoTimeoutInSeconds < 1 || echoTimeoutInSeconds > 3600) {
+		if (timeoutInSeconds < 1 || timeoutInSeconds > 3600) {
 			throw new InvalidParameterException("Echo Timeout not within limits 1 to 3600.");
 		}
 		if (echoIntervalInSeconds < 1 || echoIntervalInSeconds > 3600) {
@@ -87,10 +88,9 @@ public class SessionService extends Service implements ISessionService {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
-		createSessionCall.setEchoTimeoutSeconds(echoTimeoutInSeconds);
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		try {
-			createSessionCall.invoke(this.callback);
+			createSessionCall.invoke(this.callback, timeoutInSeconds);
 		} catch (Exception e) {
 			throw new SCServiceException("create session failed", e);
 		}
@@ -113,7 +113,7 @@ public class SessionService extends Service implements ISessionService {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		try {
-			deleteSessionCall.invoke(this.callback);
+			deleteSessionCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.callback = null;
 			throw new SCServiceException("delete session failed", e);
@@ -151,7 +151,7 @@ public class SessionService extends Service implements ISessionService {
 		clnDataCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
 		try {
-			clnDataCall.invoke(this.callback);
+			clnDataCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -197,7 +197,7 @@ public class SessionService extends Service implements ISessionService {
 		clnDataCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(this, messageCallback);
 		try {
-			clnDataCall.invoke(scmpCallback);
+			clnDataCall.invoke(scmpCallback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);

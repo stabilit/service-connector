@@ -38,10 +38,10 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * @author JTraber
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SynchronousCallback.class);
-	
+
 	/** Queue to store the answer. */
 	protected final BlockingQueue<SCMPMessage> answer;
 	/** The synchronous, marks if somebody waits for the message. */
@@ -95,7 +95,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync() {
-		return this.getMessageSync(Constants.getServiceLevelOperationTimeoutMillis());
+		return this.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/** {@inheritDoc} */

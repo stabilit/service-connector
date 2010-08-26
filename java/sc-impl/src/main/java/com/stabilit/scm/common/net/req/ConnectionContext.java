@@ -18,7 +18,6 @@ package com.stabilit.scm.common.net.req;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.srv.IIdleCallback;
 
 /**
@@ -64,13 +63,6 @@ public class ConnectionContext implements IConnectionContext {
 	@Override
 	public int getIdleTimeout() {
 		return this.idleTimeout;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getOperationTimeoutMillis() {
-		// operation timeout & observation is used to detect operation timeout
-		return Constants.getOperationTimeoutMillis();
 	}
 
 	/** {@inheritDoc} */

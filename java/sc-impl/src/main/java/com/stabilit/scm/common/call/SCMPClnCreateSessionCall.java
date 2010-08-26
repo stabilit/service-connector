@@ -58,10 +58,10 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		super.invoke(scmpCallback);
+		super.invoke(scmpCallback, timeoutInSeconds);
 	}
 
 	/** {@inheritDoc} */
@@ -84,16 +84,6 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
-	}
-
-	/**
-	 * Sets the echo timeout seconds.
-	 * 
-	 * @param echoTimeout
-	 *            the new echo timeout seconds
-	 */
-	public void setEchoTimeoutSeconds(int echoTimeout) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_TIMEOUT, echoTimeout);
 	}
 
 	/**

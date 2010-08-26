@@ -43,13 +43,13 @@ public class SCSyncSessionServiceExample {
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
-			sessionServiceA.createSession("sessionInfo", 60, 300);
+			sessionServiceA.createSession("sessionInfo", 300, 60);
 
 			ISCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
 			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
-			
+
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
 			sessionServiceA.deleteSession();

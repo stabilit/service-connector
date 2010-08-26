@@ -61,7 +61,7 @@ public class SCAsyncSessionServiceExample {
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
-			sessionServiceA.createSession("sessionInfo", 60, 300);
+			sessionServiceA.createSession("sessionInfo", 300, 60);
 
 			ISCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");

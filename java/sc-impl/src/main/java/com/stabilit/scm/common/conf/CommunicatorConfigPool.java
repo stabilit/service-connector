@@ -122,11 +122,12 @@ public abstract class CommunicatorConfigPool {
 			reqConfig.setConnectionType((String) props.get(respName + Constants.CONNECTION_TYPE_QUALIFIER));
 		}
 		this.loggerKey = props.getProperty(Constants.ROOT_LOGGER_QUALIFIER);
-		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
-		if (operationTimeoutString != null) {
-			int operationTimeout = Integer.parseInt(operationTimeoutString);
-			Constants.setOperationTimeoutMillis(operationTimeout);
-		}
+//		TODO operation timeout
+//		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
+//		if (operationTimeoutString != null) {
+//			int operationTimeout = Integer.parseInt(operationTimeoutString);
+//			Constants.setOperationTimeoutMillis(operationTimeout);
+//		}
 
 		String loggable = props.getProperty(Constants.ROOT_LOGGING_QUALIFIER);
 		if (DISABLE.equals(loggable)) {

@@ -41,13 +41,6 @@ public interface IConnectionContext extends IContext {
 	public abstract int getIdleTimeout();
 
 	/**
-	 * Gets the operation timeout milliseconds.
-	 * 
-	 * @return the operation timeout milliseconds
-	 */
-	public abstract int getOperationTimeoutMillis();
-
-	/**
 	 * Gets the idle callback.
 	 * 
 	 * @return the idle callback

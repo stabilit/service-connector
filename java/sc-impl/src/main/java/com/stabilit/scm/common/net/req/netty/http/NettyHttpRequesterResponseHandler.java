@@ -65,6 +65,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+		
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			this.callback((HttpResponse) e.getMessage());

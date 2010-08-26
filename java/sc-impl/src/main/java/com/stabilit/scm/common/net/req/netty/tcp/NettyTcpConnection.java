@@ -51,7 +51,7 @@ public class NettyTcpConnection implements IConnection {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
-	
+
 	/** The Constant connectionLogger. */
 	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	

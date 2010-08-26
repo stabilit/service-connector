@@ -59,7 +59,7 @@ public class NettyHttpConnection implements IConnection {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
-	
+
 	/** The Constant connectionLogger. */
 	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	

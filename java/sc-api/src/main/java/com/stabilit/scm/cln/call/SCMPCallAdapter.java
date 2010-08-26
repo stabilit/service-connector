@@ -128,15 +128,16 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public void closeGroup(ISCMPCallback callback) {
+	public void closeGroup(ISCMPCallback callback, int timeoutInSeconds) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback callback) throws Exception {
+	public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
-		this.requester.send(this.requestMessage, callback);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OP_TIMEOUT, timeoutInSeconds);
+		this.requester.send(this.requestMessage, timeoutInSeconds, callback);
 		return;
 	}
 
@@ -190,7 +191,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void invoke(ISCMPCallback callback) throws Exception {
+		public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				LoggerPoint.getInstance().fireWarn(this, "tried to invoke groupCall but state of group is closed");
 			}
@@ -199,7 +200,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 			if (callSCMP.isLargeMessage()) {
 				// parent call is large no need to change anything
-				this.parentCall.invoke(callback);
+				this.parentCall.invoke(callback, timeoutInSeconds);
 				return;
 			}
 			if (callSCMP.isPart() == false) {
@@ -210,7 +211,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}
-			this.parentCall.invoke(callback);
+			this.parentCall.invoke(callback, timeoutInSeconds);
 			return;
 		}
 
@@ -222,7 +223,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void closeGroup(ISCMPCallback callback) throws Exception {
+		public void closeGroup(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
 			// send empty closing REQ
 			SCMPMessage message = new SCMPMessage();
@@ -230,7 +231,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			message.setBody(null);
 			message.setInternalStatus(SCMPInternalStatus.GROUP);
 			SCMPCallAdapter.this.requestMessage = message;
-			this.parentCall.invoke(callback);
+			this.parentCall.invoke(callback, timeoutInSeconds);
 			return;
 		}
 

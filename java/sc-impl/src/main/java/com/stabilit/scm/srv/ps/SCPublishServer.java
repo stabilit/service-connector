@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPPublishCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.SCServer;
@@ -46,7 +47,7 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 				.getRequester(), serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
-		publishCall.invoke(this.callback);
+		publishCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		this.callback.getMessageSync();
 	}
 

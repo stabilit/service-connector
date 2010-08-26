@@ -27,15 +27,19 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 public interface IRequester {
 
 	/**
-	 * Send and receive response asynchronous
+	 * Send and receive response asynchronous.
 	 * 
 	 * @param scmp
 	 *            the scmp
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @param callback
+	 *            the callback
 	 * @return the scmp
 	 * @throws Exception
 	 *             exception in sending/receiving process
 	 */
-	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
+	public void send(SCMPMessage scmp, int timeoutInSeconds, ISCMPCallback callback) throws Exception;
 
 	/**
 	 * Returns a hash code which identifies client connection.

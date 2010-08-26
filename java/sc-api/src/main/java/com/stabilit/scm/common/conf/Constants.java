@@ -29,7 +29,7 @@ public final class Constants {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(Constants.class);
-	
+
 	private Constants() {
 		// instantiating not allowed
 	}
@@ -50,40 +50,25 @@ public final class Constants {
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 50;
 
+	
+	
+	
+	
 	/**
-	 * OPERATION_TIMEOUT_MILLIS: Pay attention variable might be set different when configuration gets loaded.
-	 * Setting is only allowed one time. Needed on lowest level of communication. Used to detect operation timeout,
-	 * can be ignored if no request is outstanding. If a request is outstanding the connection is busy and also
-	 * blocked. Hand timeout at least up to requester callback to give connection free. OPERATION_TIMEOUT_MILLIS
-	 * should be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS so that most of operation timeout can be
-	 * detected on lower level.<br>
-	 **/
-	private static int OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT;
-	/**
-	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect operation timeout on service level. Actually it
-	 * should never happen. Operation timeout should be detected in lower level by idle timeout. Therefore a
-	 * difference is summed up.
-	 **/
-	private static int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = Constants.OPERATION_TIMEOUT_MILLIS
-			+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
-	/** OPERATION_TIMEOUT_MILLIS_DEFAULT: Default value for OPERATION_TIMEOUT_MILLIS **/
-	private static final int OPERATION_TIMEOUT_MILLIS_DEFAULT = 180000;
-	/**
-	 * OPERATION_TIMEOUT_DIFFERENCE: Difference between SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS and
-	 * IDLE_TIMEOUT_MILLIS.
+	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
+	 * level of architecture. Time unit is seconds.
 	 */
-	private static final int OPERATION_TIMEOUT_DIFFERENCE = 5000;
+	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
 	/**
-	 * SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when
-	 * communication should work very fast. Often used in emergency cases and in situation where reply of operation
-	 * is irrelevant.
+	 * OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when communication should
+	 * work very fast. Often used in emergency cases and in situation where reply of operation is irrelevant.
 	 */
-	public static final int SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT = 3000;
+	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 1000;
 	/**
-	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a
-	 * single WRITE/READ/CLOSE/OPEN can have. Should be low/short.
+	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
+	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
-	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 3000;
+	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
 	public static final int CONNECT_TIMEOUT_MILLIS = 1000;
 
@@ -177,7 +162,7 @@ public final class Constants {
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 	/** The Constant FIX_VERSION_LENGTH_IN_HEADLINE. */
 	public static final int FIX_VERSION_LENGTH_IN_HEADLINE = 3;
-	
+
 	/** The Constant DISABLE. */
 	public static final String DISABLE = "disable";
 	/** The Constant ENABLE. */
@@ -188,41 +173,6 @@ public final class Constants {
 	public static final String EQUAL_SIGN = "=";
 
 	/**
-	 * @return the serviceLevelOperationTimeoutMillis
-	 */
-	public static int getServiceLevelOperationTimeoutMillis() {
-		return Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS;
-	}
-
-	/**
-	 * Sets the operation timeout milliseconds.
-	 * 
-	 * @param operationTimeoutMillis
-	 *            the new operation timeout milliseconds
-	 */
-	public static void setOperationTimeoutMillis(int operationTimeoutMillis) {
-		if (Constants.OPERATION_TIMEOUT_MILLIS != Constants.OPERATION_TIMEOUT_MILLIS_DEFAULT) {
-			// setting OPERATION_TIMEOUT_MILLIS only allowed one time
-			LoggerPoint.getInstance().fireWarn(Constants.class,
-					"setOperationTimeoutMillis called two times - not allowed.");
-			return;
-		}
-		Constants.OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis;
-		// OPERATION_TIMEOUT_MILLIS needs to be lower than SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS
-		Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS = operationTimeoutMillis
-				+ Constants.OPERATION_TIMEOUT_DIFFERENCE;
-	}
-
-	/**
-	 * Gets the operation timeout milliseconds.
-	 * 
-	 * @return the operation timeout milliseconds
-	 */
-	public static int getOperationTimeoutMillis() {
-		return Constants.OPERATION_TIMEOUT_MILLIS;
-	}
-
-	/**
 	 * Sets the large message limit.
 	 * 
 	 * @param largeMessageLimit
@@ -231,8 +181,7 @@ public final class Constants {
 	public static void setLargeMessageLimit(int largeMessageLimit) {
 		if (Constants.LARGE_MESSAGE_LIMIT != Constants.DEFAULT_LARGE_MESSAGE_LIMIT) {
 			// setting LARGE_MESSAGE_LIMIT only allowed one time
-			LoggerPoint.getInstance().fireWarn(Constants.class,
-					"setLargeMessageLimit called two times - not allowed.");
+			LoggerPoint.getInstance().fireWarn(Constants.class, "setLargeMessageLimit called two times - not allowed.");
 			return;
 		}
 		Constants.LARGE_MESSAGE_LIMIT = largeMessageLimit;

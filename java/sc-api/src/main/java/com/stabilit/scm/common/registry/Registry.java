@@ -104,6 +104,9 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	 * @return true, if successful
 	 */
 	public boolean containsKey(K key) {
+		if (key == null) {
+			return false;
+		}
 		return registryMap.containsKey(key);
 	}
 

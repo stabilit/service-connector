@@ -51,7 +51,7 @@ public class ConnectionPool implements IConnectionPool {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ConnectionPool.class);
-	
+
 	/** The port. */
 	private int port;
 	/** The host. */
@@ -355,7 +355,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS_SHORT);
+			callback.getMessageSync(Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
@@ -369,13 +369,13 @@ public class ConnectionPool implements IConnectionPool {
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String getHost() {
 		return this.host;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public int getPort() {
