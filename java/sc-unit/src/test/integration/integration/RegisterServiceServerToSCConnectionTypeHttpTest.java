@@ -18,14 +18,14 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
-public class RegisterServiceServerToSC {
+public class RegisterServiceServerToSCConnectionTypeHttpTest {
 
 	private static Process p;
 	private ISCServer server;
 	private Exception ex;
 	private String serviceName = "simulation";
 	private String host = "localhost";
-	private int port9000 = 9000;
+	private int port8080 = 8080;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -60,14 +60,15 @@ public class RegisterServiceServerToSC {
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();
+		((SCServer) server).setConnectionType("netty.http");
 	}
-
+//TODO solve issue with listeners on taken ports
 	// region host == "localhost" (set as only one in
 	// scIntegration.properties), all ports
 	@Test
 	public void registerService_withoutStartListener_throwsException() {
 		try {
-			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -77,13 +78,13 @@ public class RegisterServiceServerToSC {
 	@Test
 	public void registerService_withStartListenerToSameHostAndPort_throwsException() {
 		try {
-			server.startListener(host, port9000, 1);
+			server.startListener(host, port8080, 1);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -95,11 +96,11 @@ public class RegisterServiceServerToSC {
 	public void registerService_sameHostDifferentPortSCalreadyListeningOnGivenPort_notRegisteredthrowsException()
 			throws Exception {
 		try {
-			server.startListener(host, 8080, 1);
+			server.startListener(host, 9000, 1);
 		} catch (Exception e) {
 			ex = e;
 		}
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(false, server.isRegistered(serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
@@ -107,9 +108,9 @@ public class RegisterServiceServerToSC {
 	@Test
 	public void registerService_ToDifferentHostSamePortServiceNameNotInSCProperties_throwsException()
 			throws Exception {
-		server.startListener(host, 8080, 1);
+		server.startListener(host, 9000, 1);
 		try {
-			server.registerService(host, port9000, "Name", 1, 1, new CallBack());
+			server.registerService(host, port8080, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -120,7 +121,7 @@ public class RegisterServiceServerToSC {
 	@Test
 	public void registerService_withValidParamsInSCProperties_registered() throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -128,7 +129,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_differentHostForListenerParamsInSCProperties_registered()
 			throws Exception {
 		server.startListener("host", 9001, 0);
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -136,7 +137,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_nullCallBack_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 1, null);
+			server.registerService(host, port8080, serviceName, 1, 1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -148,7 +149,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_invalidHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService("something", port9000, serviceName, 1, 1, new CallBack());
+			server.registerService("something", port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -160,7 +161,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_emptyHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService("", port9000, serviceName, 1, 1, new CallBack());
+			server.registerService("", port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -172,7 +173,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_whiteSpaceHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(" ", port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(" ", port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -184,7 +185,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_noHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(null, port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(null, port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -297,7 +298,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_noServiceName_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, null, 1, 1, new CallBack());
+			server.registerService(host, port8080, null, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -308,7 +309,7 @@ public class RegisterServiceServerToSC {
 	@Test
 	public void registerService_validServiceNameInSCProps_registered() throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, "P01_RTXS_sc1", 1, 1, new CallBack());
+		server.registerService(host, port8080, "P01_RTXS_sc1", 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
 	}
 
@@ -316,7 +317,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_emptyServiceName_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, "", 1, 1, new CallBack());
+			server.registerService(host, port8080, "", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -329,7 +330,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, " ", 1, 1, new CallBack());
+			server.registerService(host, port8080, " ", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -342,7 +343,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, "Name", 1, 1, new CallBack());
+			server.registerService(host, port8080, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -354,7 +355,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxSessions0_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 0, 1, new CallBack());
+			server.registerService(host, port8080, serviceName, 0, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -366,7 +367,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxSessionsMinus1_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, -1, 1, new CallBack());
+			server.registerService(host, port8080, serviceName, -1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -377,7 +378,7 @@ public class RegisterServiceServerToSC {
 	@Test
 	public void registerService_maxSessionsIntMax_registered() throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, Integer.MAX_VALUE, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -385,7 +386,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxSessionsIntMin_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, Integer.MIN_VALUE, 1,
+			server.registerService(host, port8080, serviceName, Integer.MIN_VALUE, 1,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -398,7 +399,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxConnections0_notRegisteredThrowsException() throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 0, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, 0, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -411,7 +412,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, -1, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, -1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -424,7 +425,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, Integer.MIN_VALUE,
+			server.registerService(host, port8080, serviceName, 1, Integer.MIN_VALUE,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -438,7 +439,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, Integer.MAX_VALUE,
+			server.registerService(host, port8080, serviceName, 1, Integer.MAX_VALUE,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -452,7 +453,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 2, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -464,7 +465,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxConnectionsSameAsSessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, Integer.MAX_VALUE,
+		server.registerService(host, port8080, serviceName, Integer.MAX_VALUE, Integer.MAX_VALUE,
 				new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
@@ -473,7 +474,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxConnectionsSameAsSessions2_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, 2, 2, new CallBack());
+		server.registerService(host, port8080, serviceName, 2, 2, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -481,7 +482,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxConnectionsLessThanSessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE,
+		server.registerService(host, port8080, serviceName, Integer.MAX_VALUE,
 				Integer.MAX_VALUE - 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
@@ -490,7 +491,7 @@ public class RegisterServiceServerToSC {
 	public void registerService_maxConnectionsLessThanSessions2_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, 2, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 2, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -499,7 +500,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, Integer.MAX_VALUE - 1,
+			server.registerService(host, port8080, serviceName, Integer.MAX_VALUE - 1,
 					Integer.MAX_VALUE, new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -513,7 +514,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 2, new CallBack());
+			server.registerService(host, port8080, serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -552,7 +553,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, "Name", -1, -1, null);
+			server.registerService(host, port8080, "Name", -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -565,7 +566,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, -1, -1, null);
+			server.registerService(host, port8080, serviceName, -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -578,7 +579,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, -1, null);
+			server.registerService(host, port8080, serviceName, 1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -591,7 +592,7 @@ public class RegisterServiceServerToSC {
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		try {
-			server.registerService(host, port9000, serviceName, 1, 1, null);
+			server.registerService(host, port8080, serviceName, 1, 1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
