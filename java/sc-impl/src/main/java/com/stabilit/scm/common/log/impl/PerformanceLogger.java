@@ -16,83 +16,85 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IPerformanceListener;
-import com.stabilit.scm.common.listener.PerformanceEvent;
-import com.stabilit.scm.common.log.ILogger;
-import com.stabilit.scm.common.log.ILoggerDecorator;
+import org.apache.log4j.Logger;
 
-/**
- * The Class PerformanceLogger. Provides functionality of logging an <code>PerformanceEvent</code>.
- */
-public class PerformanceLogger implements IPerformanceListener, ILoggerDecorator {
+import com.stabilit.scm.common.log.IPerformanceLogger;
+import com.stabilit.scm.common.log.Loggers;
 
-	/** The thread local is needed to save timestamps in running thread. */
-	private ThreadLocal<PerformanceEvent> threadLocal;
+public class PerformanceLogger implements IPerformanceLogger {
 
-	/** The concrete logger implementation to use. */
-	private ILogger logger;
+	private static final Logger perfLogger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
+	private static final IPerformanceLogger PERFORMANCE_LOGGER = new PerformanceLogger();
 
-	private Formatter format;
-	private String END_STR = "perf by class %s.%s time(ms) %s.%s";
+	/** The thread local is needed to save time in running thread. */
+	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
+	private static String END_STR = "perf by class %s.%s time(ms) %s.%s started %s.%s";
 
 	/**
-	 * Instantiates a new performance logger. Only visible in package for Factory.
-	 * 
-	 * @param logger
-	 *            the logger
+	 * Instantiates a new performance logger. Private for singelton use.
 	 */
-	PerformanceLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
-		this.threadLocal = new ThreadLocal<PerformanceEvent>();
-		this.format = null;
+	private PerformanceLogger() {
+	}
+
+	public static IPerformanceLogger getInstance() {
+		return PerformanceLogger.PERFORMANCE_LOGGER;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void begin(PerformanceEvent performanceEvent) {
-		this.threadLocal.set(performanceEvent);
-	}
-
-	/** {@inheritDoc} */
-	public synchronized void end(PerformanceEvent performanceEvent) {
-		try {
-			PerformanceEvent beginEvent = this.threadLocal.get();
-			String beginMethodName = beginEvent.getMethodName();
-			long beginTime = beginEvent.getTime();
-			long endTime = performanceEvent.getTime();
-			Object source = performanceEvent.getSource();
-
-			format = new Formatter();
-			format.format(END_STR, source.getClass().getSimpleName(), beginMethodName, String
-					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-			this.logger.log(format.toString());
-			format.close();
-
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+	public synchronized void begin(String source, String methodName) {
+		if (PerformanceLogger.perfLogger.isDebugEnabled() == false) {
+			return;
 		}
+		this.threadLocal.set(new PerformanceItem(source, methodName, System.nanoTime()));
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ILoggerDecorator newInstance() {
-		return this;
+	public synchronized void end(String source, String methodName) {
+		if (PerformanceLogger.perfLogger.isDebugEnabled() == false) {
+			return;
+		}
+		PerformanceItem beginItem = this.threadLocal.get();
+		if (beginItem == null) {
+			return;
+		}
+		String beginMethodName = beginItem.getMethodName();
+		long beginTime = beginItem.getTime();
+		long endTime = System.nanoTime();
+		String beginSource = beginItem.getSource();
+
+		Formatter format = new Formatter();
+		format.format(END_STR, source, beginMethodName, String.valueOf((endTime - beginTime) / 1000000), String
+				.valueOf((endTime - beginTime) % 1000000), beginSource, beginMethodName);
+		PerformanceLogger.perfLogger.debug(format.toString());
+		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public String getLogDir() {
-		return Constants.LOG_DIR;
-	}
+	private class PerformanceItem {
+		private String source;
+		private String methodName;
+		private long time;
 
-	/** {@inheritDoc} */
-	@Override
-	public String getLogFileName() {
-		return Constants.PERFORMANCE_LOG_FILE_NAME;
+		public PerformanceItem(String source, String methodName, long time) {
+			super();
+			this.source = source;
+			this.methodName = methodName;
+			this.time = time;
+		}
+
+		public String getSource() {
+			return source;
+		}
+
+		public String getMethodName() {
+			return methodName;
+		}
+
+		public long getTime() {
+			return time;
+		}
 	}
 }

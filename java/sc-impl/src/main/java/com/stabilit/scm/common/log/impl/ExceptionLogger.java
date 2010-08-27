@@ -16,66 +16,50 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionEvent;
-import com.stabilit.scm.common.listener.IExceptionListener;
-import com.stabilit.scm.common.log.ILogger;
-import com.stabilit.scm.common.log.ILoggerDecorator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
-/**
- * The Class ExceptionLogger. Provides functionality of logging an <code>ExceptionEvent</code>.
- */
-public class ExceptionLogger implements IExceptionListener, ILoggerDecorator {
+import com.stabilit.scm.common.log.IExceptionLogger;
 
-	/** The concrete logger implementation to use. */
-	private ILogger logger;
+public class ExceptionLogger implements IExceptionLogger {
 
-	private Formatter format;
-	private String EXC_STR = "exception by %s - %s:%s";
+	private static final IExceptionLogger EXCEPTION_LOGGER = new ExceptionLogger();
+	
+	private static String EXC_STR = "exception by %s - %s:%s";
 
 	/**
-	 * Instantiates a new exception logger. Only visible in package for Factory.
-	 * 
-	 * @param logger
-	 *            the logger
+	 * Instantiates a new exception logger. Private for singelton use.
 	 */
-	ExceptionLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
-		this.format = null;
+	private ExceptionLogger() {
+	}
+
+	public static IExceptionLogger getInstance() {
+		return ExceptionLogger.EXCEPTION_LOGGER;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void exceptionEvent(ExceptionEvent exceptionEvent) {
-		try {
-			format = new Formatter();
-			format.format(EXC_STR, exceptionEvent.getSource().getClass(), exceptionEvent.getThrowable(), exceptionEvent
-					.getThrowable().getCause());
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public synchronized void logDebugException(Logger logger, String source, Throwable throwable) {
+		if (logger.isDebugEnabled() == false) {
+			return;
 		}
+		Formatter format = new Formatter();
+		format.format(EXC_STR, source, throwable, throwable.getCause());
+		logger.debug(format.toString());
+		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ILoggerDecorator newInstance() {
-		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogDir() {
-		return Constants.LOG_DIR;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogFileName() {
-		return Constants.EXCEPTION_LOG_FILE_NAME;
+	public synchronized void logErrorException(Logger logger, String source, Throwable throwable) {
+		if (logger.isEnabledFor(Level.ERROR) == false) {
+			return;
+		}
+		Formatter format = new Formatter();
+		format.format(EXC_STR, source, throwable, throwable.getCause());
+		logger.error(format.toString());
+		format.close();
 	}
 }

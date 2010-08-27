@@ -16,98 +16,79 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import java.io.IOException;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.ISubscriptionListener;
-import com.stabilit.scm.common.listener.SubscriptionEvent;
-import com.stabilit.scm.common.log.ILogger;
-import com.stabilit.scm.common.log.ILoggerDecorator;
+import org.apache.log4j.Logger;
 
-public class SubscriptionLogger implements ISubscriptionListener, ILoggerDecorator {
+import com.stabilit.scm.common.log.ISubscriptionLogger;
+import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
-	/** The concrete logger implementation to use. */
-	private ILogger logger;
+public class SubscriptionLogger implements ISubscriptionLogger {
 
-	private String NO_DATA_TIMEOUT_EVENT_STR = "no data timeout by class %s - for sessionId %s";
-	private String FIRE_POLL_EVENT_STR = "fire poll by class %s - for sessionId %s, polled message %s, now %s messages in queue";
-	private String FIRE_ADD_EVENT_STR = "fire add by class %s - add message %s, now %s messages in queue";
-	private String FIRE_REMOVE_EVENT_STR = "remove by class %s - remove message, now %s messages in queue";
+	private static final Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
+	private static final ISubscriptionLogger SUBSCRIPTION_LOGGER = new SubscriptionLogger();
 
-	SubscriptionLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
+	private static String NO_DATA_TIMEOUT_EVENT_STR = "no data timeout by class %s - for sessionId %s";
+	private static String FIRE_POLL_EVENT_STR = "fire poll by class %s - for sessionId %s, polled message %s, now %s messages in queue";
+	private static String FIRE_ADD_EVENT_STR = "fire add by class %s - add message %s, now %s messages in queue";
+	private static String FIRE_REMOVE_EVENT_STR = "remove by class %s - remove message, now %s messages in queue";
+
+	/**
+	 * Instantiates a new subscription logger. Private for singelton use.
+	 */
+	private SubscriptionLogger() {
 	}
 
-	@Override
-	public void noDataTimeoutEvent(SubscriptionEvent subEvent) {
-		try {
-			Formatter format = new Formatter();
-			format
-					.format(NO_DATA_TIMEOUT_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent
-							.getSessionId());
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-		}
-	}
-
-	@Override
-	public void firePoll(SubscriptionEvent subEvent) {
-		try {
-			Formatter format = new Formatter();
-			format.format(FIRE_POLL_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getSessionId(),
-					subEvent.getQueueItem(), subEvent.getQueueSize());
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-		}
-	}
-
-	@Override
-	public void fireAdd(SubscriptionEvent subEvent) {
-		try {
-			Formatter format = new Formatter();
-			format.format(FIRE_ADD_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getQueueItem(),
-					subEvent.getQueueSize());
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-		}
-	}
-
-	@Override
-	public void fireRemove(SubscriptionEvent subEvent) {
-		try {
-			Formatter format = new Formatter();
-			format.format(FIRE_REMOVE_EVENT_STR, subEvent.getSource().getClass().getName(), subEvent.getQueueSize());
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
-		}
-
+	public static ISubscriptionLogger getInstance() {
+		return SubscriptionLogger.SUBSCRIPTION_LOGGER;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ILoggerDecorator newInstance() {
-		return this;
+	public void logNoDataTimeout(String source, String sessionId) {
+		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+			return;
+		}
+		Formatter format = new Formatter();
+		format.format(NO_DATA_TIMEOUT_EVENT_STR, source, sessionId);
+		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getLogDir() {
-		return Constants.LOG_DIR;
+	public void logPoll(String source, String sessionId, SCMPMessage queueMessage, int queueSize) {
+		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+			return;
+		}
+		Formatter format = new Formatter();
+		format.format(FIRE_POLL_EVENT_STR, source, sessionId, queueMessage, queueSize);
+		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getLogFileName() {
-		return Constants.SUBSCRIPTION_LOG_FILE_NAME;
+	public void logAdd(String source, SCMPMessage queueMessage, int queueSize) {
+		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+			return;
+		}
+		Formatter format = new Formatter();
+		format.format(FIRE_ADD_EVENT_STR, source, queueMessage, queueSize);
+		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.close();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void logRemove(String source, int queueSize) {
+		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+			return;
+		}
+		Formatter format = new Formatter();
+		format.format(FIRE_REMOVE_EVENT_STR, source, queueSize);
+		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.close();
 	}
 }

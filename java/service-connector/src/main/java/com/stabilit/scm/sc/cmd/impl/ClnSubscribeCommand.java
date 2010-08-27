@@ -22,8 +22,8 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.SubscriptionPoint;
-import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.ISubscriptionLogger;
+import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -54,9 +54,6 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
-
-	/** The Constant sessionLogger. */
-	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 
 	/**
 	 * Instantiates a ClnSubscribeCommand.
@@ -252,8 +249,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
-				subscriptionLogger.debug("send no data for " + sessionId);
-				SubscriptionPoint.getInstance().fireSubscriptionNoDataTimeout(this, sessionId);
+				// logging
+				ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+				subscriptionLogger.logNoDataTimeout(this.getClass().getName(), sessionId);
 			} else {
 				// set up reply
 				SCMPMessage reply = null;

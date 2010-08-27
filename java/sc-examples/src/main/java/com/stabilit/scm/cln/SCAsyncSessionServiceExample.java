@@ -106,6 +106,7 @@ public class SCAsyncSessionServiceExample {
 		@Override
 		public void callback(Exception ex) {
 			logger.error("callback "+ex.getMessage(), ex);
+			//ExceptionLogger.getInstance().logException(logger, this, ex);	//TODO TRN
 			ExceptionPoint.getInstance().fireException(this, ex);
 		}
 	}

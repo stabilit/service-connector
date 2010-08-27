@@ -34,6 +34,8 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.log.IPerformanceLogger;
+import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.net.res.SCMPSessionCompositeRegistry;
@@ -62,7 +64,8 @@ import com.stabilit.scm.common.scmp.internal.SCMPPart;
 public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandler implements IResponderCallback {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
+	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 	
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
@@ -155,13 +158,13 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				if (LoggerPoint.getInstance().isDebug()) {
 					LoggerPoint.getInstance().fireDebug(this, "Run command [" + command.getKey() + "]");
 				}
-				PerformancePoint.getInstance().fireBegin(command, "run");
+				performanceLogger.begin(this.getClass().getName(), "run");
 				if (command.isAsynchronous()) {
 					((IAsyncCommand) command).run(request, response, this);
 					return;
 				}
 				command.run(request, response);
-				PerformancePoint.getInstance().fireEnd(command, "run");
+				performanceLogger.end(this.getClass().getName(), "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
 				logger.error("messageReceived "+ex.getMessage(), ex);

@@ -6,8 +6,8 @@ package com.stabilit.scm.common.log;
 public enum Loggers {
 
 	CONNECTION("connection"), //
-	SESSION("session"),
-	SUBSCRIPTION("subscription"),
+	SESSION("session"), //
+	SUBSCRIPTION("subscription"), //
 	PERFORMANCE("performance");
 
 	/** The value. */

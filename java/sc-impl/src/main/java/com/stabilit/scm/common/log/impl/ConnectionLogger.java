@@ -20,144 +20,120 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ConnectionEvent;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.IConnectionListener;
-import com.stabilit.scm.common.log.ILogger;
-import com.stabilit.scm.common.log.ILoggerDecorator;
+import org.apache.log4j.Logger;
 
-/**
- * The Class ConnectionLogger. Provides functionality of logging a <code>ConnectionEvent</code>.
- */
-public class ConnectionLogger implements IConnectionListener, ILoggerDecorator {
+import com.stabilit.scm.common.log.IConnectionLogger;
+import com.stabilit.scm.common.log.Loggers;
 
-	/** The concrete logger implementation to use. */
-	private ILogger logger;
+public class ConnectionLogger implements IConnectionLogger {
 
-	private Formatter format;
-	private String CONNECT_EVENT_STR = "connect by class %s - %s:%s";
-	private String DISCONNECT_EVENT_STR = "disconnect by class %s - %s:%s";
-	private String READ_EVENT_STR = "read by class %s - %s:%s : %s";
-	private String WRITE_EVENT_STR = "write by class %s - %s:%s : %s";
-	private String KEEP_ALIVE_STR = "keep alive by class %s - number of keep alive: %s";
+	/** The Constant connectionLogger. */
+	private static final Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private static final IConnectionLogger CONNECTION_LOGGER = new ConnectionLogger();
+
+	private static String CONNECT_STR = "connect by class %s - %s:%s";
+	private static String DISCONNECT_STR = "disconnect by class %s - %s:%s";
+	private static String READ_STR = "read by class %s - %s:%s : %s";
+	private static String WRITE_STR = "write by class %s - %s:%s : %s";
+	private static String KEEP_ALIVE_STR = "keep alive by class %s - number of keep alive: %s";
 
 	/**
-	 * Instantiates a new connection logger. Only visible in package for Factory.
-	 * 
-	 * @param logger
-	 *            the logger
+	 * Instantiates a new connection logger. Private for singelton use.
 	 */
-	ConnectionLogger(ILogger logger) {
-		this.logger = logger.newInstance(this);
-		this.format = null;
+	private ConnectionLogger() {
+	}
+
+	public static IConnectionLogger getInstance() {
+		return ConnectionLogger.CONNECTION_LOGGER;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void connectEvent(ConnectionEvent connectionEvent) {
+	public synchronized void logConnect(String source, int port) {
+		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+			return;
+		}
 		try {
-			format = new Formatter();
-			format.format(CONNECT_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-					.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()));
-			this.logger.log(format.toString());
+			Formatter format = new Formatter();
+			format.format(CONNECT_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port));
+			ConnectionLogger.connectionLogger.debug(format.toString());
 			format.close();
 		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+			// TODO JOT exception logging
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void disconnectEvent(ConnectionEvent connectionEvent) {
+	public synchronized void logDisconnect(String source, int port) {
+		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+			return;
+		}
 		try {
-			format = new Formatter();
-			format.format(DISCONNECT_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-					.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()));
-			this.logger.log(format.toString());
+			Formatter format = new Formatter();
+			format.format(DISCONNECT_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port));
+			ConnectionLogger.connectionLogger.debug(format.toString());
 			format.close();
 		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+			// TODO JOT exception logging
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void readEvent(ConnectionEvent connectionEvent) {
+	public synchronized void logRead(String source, int port, byte[] data, int offset, int length) {
+		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+			return;
+		}
 		try {
-			int length = connectionEvent.getLength();
-			format = new Formatter();
+			Formatter format = new Formatter();
 
 			if (length > 0) {
-				format.format(READ_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
-						(byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length));
+				format.format(READ_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port),
+						new String(data, offset, length));
 			} else {
-				format.format(READ_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
-						(byte[]) connectionEvent.getData()));
+				format.format(READ_STR, source.getClass().getClass().getName(), InetAddress.getLocalHost().toString(),
+						String.valueOf(port), new String(data, offset, length));
 			}
-			this.logger.log(format.toString());
+			ConnectionLogger.connectionLogger.debug(format.toString());
 			format.close();
 		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+			// TODO JOT exception logging
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void writeEvent(ConnectionEvent connectionEvent) {
+	public synchronized void logWrite(String source, int port, byte[] data, int offset, int length) {
+		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+			return;
+		}
 		try {
-			int length = connectionEvent.getLength();
-			format = new Formatter();
+			Formatter format = new Formatter();
 
 			if (length > 0) {
-				format.format(WRITE_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
-						(byte[]) connectionEvent.getData(), connectionEvent.getOffset(), length));
+				format.format(WRITE_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port),
+						new String(data, offset, length));
 			} else {
-				format.format(WRITE_EVENT_STR, connectionEvent.getSource().getClass().getName(), InetAddress
-						.getLocalHost().toString(), String.valueOf(connectionEvent.getPort()), new String(
-						(byte[]) connectionEvent.getData()));
+				format.format(WRITE_STR, source.getClass().getClass().getName(), InetAddress.getLocalHost().toString(),
+						String.valueOf(port), new String(data, offset, length));
 			}
-			this.logger.log(format.toString());
+			ConnectionLogger.connectionLogger.debug(format.toString());
 			format.close();
 		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+			// TODO JOT exception logging
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void keepAliveEvent(ConnectionEvent connectionEvent) throws Exception {
-		try {
-			format = new Formatter();
-
-			format.format(KEEP_ALIVE_STR, connectionEvent.getSource().getClass().getName(), connectionEvent
-					.getConnection().getNrOfIdlesInSequence());
-
-			this.logger.log(format.toString());
-			format.close();
-		} catch (IOException e) {
-			ExceptionPoint.getInstance().fireException(this, e);
+	public synchronized void logKeepAlive(String source, int nrOfIdles) {
+		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+			return;
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ILoggerDecorator newInstance() {
-		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogDir() {
-		return Constants.LOG_DIR;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogFileName() {
-		return Constants.CONNECTION_LOG_FILE_NAME;
+		Formatter format = new Formatter();
+		format.format(KEEP_ALIVE_STR, source, nrOfIdles);
+		ConnectionLogger.connectionLogger.debug(format.toString());
+		format.close();
 	}
 }

@@ -83,14 +83,14 @@ public final class LoggerFactory extends Factory {
 			this.add(LOG4J_KEY, logger);
 
 			// Connection logger
-			loggerDecorator = new ConnectionLogger((ILogger) this.getInstance(key));
-			this.add(ConnectionLogger.class, loggerDecorator);
+			loggerDecorator = new ConnectionLoggerOBSOLETE((ILogger) this.getInstance(key));
+			this.add(ConnectionLoggerOBSOLETE.class, loggerDecorator);
 			// Exception logger
-			loggerDecorator = new ExceptionLogger((ILogger) this.getInstance(key));
-			this.add(ExceptionLogger.class, loggerDecorator);
+			loggerDecorator = new ExceptionLoggerOBSOLETE((ILogger) this.getInstance(key));
+			this.add(ExceptionLoggerOBSOLETE.class, loggerDecorator);
 			// Performance logger
-			loggerDecorator = new PerformanceLogger((ILogger) this.getInstance(key));
-			this.add(PerformanceLogger.class, loggerDecorator);
+			loggerDecorator = new PerformanceLoggerOBSOLETE((ILogger) this.getInstance(key));
+			this.add(PerformanceLoggerOBSOLETE.class, loggerDecorator);
 			// Session logger
 			loggerDecorator = new SessionLogger((ILogger) this.getInstance(key));
 			this.add(SessionLogger.class, loggerDecorator);
@@ -98,8 +98,8 @@ public final class LoggerFactory extends Factory {
 			loggerDecorator = new TopLogger((ILogger) this.getInstance(key));
 			this.add(TopLogger.class, loggerDecorator);
 			// Subscription logger
-			loggerDecorator = new SubscriptionLogger((ILogger) this.getInstance(key));
-			this.add(SubscriptionLogger.class, loggerDecorator);
+			loggerDecorator = new SubscriptionLoggerOBSOLETE((ILogger) this.getInstance(key));
+			this.add(SubscriptionLoggerOBSOLETE.class, loggerDecorator);
 			this.add(DEFAULT, loggerDecorator);
 		} catch (Exception e) {
 			ExceptionPoint.getInstance().fireException(this, e);

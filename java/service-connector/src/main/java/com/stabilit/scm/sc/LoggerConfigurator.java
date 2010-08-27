@@ -38,12 +38,12 @@ import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.listener.StatisticsPoint;
 import com.stabilit.scm.common.listener.SubscriptionPoint;
 import com.stabilit.scm.common.log.Level;
-import com.stabilit.scm.common.log.impl.ConnectionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
+import com.stabilit.scm.common.log.impl.ConnectionLoggerOBSOLETE;
+import com.stabilit.scm.common.log.impl.ExceptionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.LoggerFactory;
-import com.stabilit.scm.common.log.impl.PerformanceLogger;
+import com.stabilit.scm.common.log.impl.PerformanceLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.SubscriptionLogger;
+import com.stabilit.scm.common.log.impl.SubscriptionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.TopLogger;
 
 /**
@@ -109,7 +109,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// connectionListener is already turned on - no action necessary
 			return;
 		}
-		this.connectionListener = (IConnectionListener) loggerFactory.newInstance(ConnectionLogger.class);
+		this.connectionListener = (IConnectionListener) loggerFactory.newInstance(ConnectionLoggerOBSOLETE.class);
 		ConnectionPoint.getInstance().addListener(this.connectionListener);
 	}
 
@@ -131,7 +131,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// exceptionListener is already turned on - no action necessary
 			return;
 		}
-		this.exceptionListener = (IExceptionListener) loggerFactory.newInstance(ExceptionLogger.class);
+		this.exceptionListener = (IExceptionListener) loggerFactory.newInstance(ExceptionLoggerOBSOLETE.class);
 		ExceptionPoint.getInstance().addListener(this.exceptionListener);
 	}
 
@@ -186,7 +186,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// performanceListener is already turned on - no action necessary
 			return;
 		}
-		this.performanceListener = (IPerformanceListener) loggerFactory.newInstance(PerformanceLogger.class);
+		this.performanceListener = (IPerformanceListener) loggerFactory.newInstance(PerformanceLoggerOBSOLETE.class);
 		PerformancePoint.getInstance().addListener(this.performanceListener);
 		PerformancePoint.getInstance().setOn(true);
 	}
@@ -232,7 +232,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// subscriptionListener is already turned on - no action necessary
 			return;
 		}
-		this.subscriptionListener = (ISubscriptionListener) loggerFactory.newInstance(SubscriptionLogger.class);
+		this.subscriptionListener = (ISubscriptionListener) loggerFactory.newInstance(SubscriptionLoggerOBSOLETE.class);
 		SubscriptionPoint.getInstance().addListener(this.subscriptionListener);
 	}
 
