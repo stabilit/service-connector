@@ -22,7 +22,6 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
@@ -77,6 +76,12 @@ public class Requester implements IRequester {
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
 			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
 					msgId);
+			// setting up operation timeout after successful send
+			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			reqCallback.setOperationTimeoutTask(task);
+			reqCallback.setTimeoutSeconds(timeoutInSeconds);
+			timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 			// extract first part message & send
 			SCMPMessage part = compositeSender.getFirst();
 			// handling messageId
@@ -88,6 +93,12 @@ public class Requester implements IRequester {
 			connection.send(part, requesterCallback);
 		} else {
 			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
+			// setting up operation timeout after successful send
+			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			reqCallback.setOperationTimeoutTask(task);
+			reqCallback.setTimeoutSeconds(timeoutInSeconds);
+			timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 			if (message.isGroup()) {
 				// increment messageId in case of group call
 				msgId.incrementPartSequenceNr();
@@ -99,12 +110,6 @@ public class Requester implements IRequester {
 			// process send
 			connection.send(message, requesterCallback);
 		}
-		// setting up operation timeout after successful send
-		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-		RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
-		reqCallback.setOperationTimeoutTask(task);
-		reqCallback.setTimeoutSeconds(timeoutInSeconds);
-		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */
