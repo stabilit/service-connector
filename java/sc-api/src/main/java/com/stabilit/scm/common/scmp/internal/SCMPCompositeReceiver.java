@@ -24,7 +24,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -149,6 +150,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** {@inheritDoc} */
 	@Override
 	public Object getBody() {
+		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+		
 		if (this.outputStream != null) {
 			return this.outputStream.toByteArray();
 		}
@@ -178,8 +181,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.outputStream.flush();
 			} catch (Exception ex) {
-				logger.error("getBody "+ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
 				return null;
 			}
 			this.outputStream.toByteArray();
@@ -196,8 +198,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception ex) {
-				logger.error("getBody "+ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
 				return null;
 			}
 			return this.writer.toString();

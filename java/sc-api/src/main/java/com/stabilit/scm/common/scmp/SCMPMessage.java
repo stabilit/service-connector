@@ -23,7 +23,8 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.SCVersion;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**
@@ -369,8 +370,8 @@ public class SCMPMessage {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Exception ex) {
-			logger.error("getHeaderInt " + ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
 			return null;
 		}
 		return intValue;

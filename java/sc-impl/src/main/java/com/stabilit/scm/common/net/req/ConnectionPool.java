@@ -244,7 +244,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		} finally {
 			connection.destroy();
 		}
@@ -261,7 +261,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		}
 	}
 
@@ -276,7 +276,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		}
 	}
 
@@ -306,7 +306,7 @@ public class ConnectionPool implements IConnectionPool {
 				}
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 				return;
 			}
 			this.freeConnections.add(connection);
@@ -363,8 +363,8 @@ public class ConnectionPool implements IConnectionPool {
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
-			logger.error("connectionIdle "+e.getMessage(), e);
-			ExceptionPoint.getInstance().fireException(this, e);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		}
 	}
 

@@ -28,7 +28,9 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
@@ -107,8 +109,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 					.newInstance(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.error("callback "+ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			this.scmpCallback.callback(ex);
 			return;
 		}

@@ -37,7 +37,6 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;
@@ -160,7 +159,7 @@ public class NettyHttpConnection implements IConnection {
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
@@ -178,8 +177,8 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
-			logger.error("disconnect " + ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
@@ -195,8 +194,8 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception ex) {
-			logger.error("destroy " + ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 		}
 	}
 
@@ -227,8 +226,8 @@ public class NettyHttpConnection implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
-			logger.error("send " + ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}

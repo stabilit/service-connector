@@ -34,6 +34,8 @@ import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.PerformancePoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.net.res.SCMPSessionCompositeRegistry;
@@ -163,8 +165,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				PerformancePoint.getInstance().fireEnd(command, "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
-				logger.error("messageReceived "+ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {
@@ -236,6 +238,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 			response.write();
 		} catch (Exception ex) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			this.callback(response, ex);
 		}
 	}
@@ -262,8 +266,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		try {
 			response.write();
 		} catch (Throwable th) {
-			logger.error("callback "+th.getMessage(), th);
-			ExceptionPoint.getInstance().fireException(this, th);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
 		}
 	}
 
