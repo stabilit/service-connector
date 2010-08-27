@@ -25,16 +25,16 @@ public class AttachDetachClientToSCTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
-		
+
 		String userDir = System.getProperty("user.dir");
 		String command = "java -Dlog4j.configuration=file:" + userDir
-		+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
-		+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
-		+ "\\src\\test\\resources\\scIntegration.properties";
+				+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
+				+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
+				+ "\\src\\test\\resources\\scIntegration.properties";
 
 		try {
 			p = Runtime.getRuntime().exec(command);
-			
+
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 		} catch (IOException e) {
@@ -203,17 +203,25 @@ public class AttachDetachClientToSCTest {
 	public void attach_1000ClientsAttachedBeforeDetach_allAttached() throws Exception {
 		ISCClient[] clients = new SCClient[1000];
 		int i = 0;
-		for (; i < 1000; i++) {
-			clients[i] = new SCClient();
-			clients[i].attach(host, port8080);
+		for (; i < 100; i++) {
+			System.out.println("Attaching client " + i*10);
+			for (int j = 0; j < 10; j++) {
+				clients[j + (10 * i)] = new SCClient();
+				clients[j + (10 * i)].attach(host, port8080);
+			}
 		}
 		i = 0;
 		for (; i < 1000; i++) {
 			assertEquals(true, clients[i].isAttached());
 		}
-		for (; i < 1000; i++) {
-			clients[i].detach();
+		i = 0;
+		for (; i < 100; i++) {
+			System.out.println("Detaching client " + i*10);
+			for (int j = 0; j < 10; j++) {
+				clients[j + (10 * i)].detach();
+			}
 		}
+		i = 0;
 		for (; i < 1000; i++) {
 			assertEquals(false, clients[i].isAttached());
 		}
