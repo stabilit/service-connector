@@ -122,7 +122,8 @@ public class DemoPublishServer {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			}
 			return message;
 		}
@@ -140,7 +141,6 @@ public class DemoPublishServer {
 					} catch (Exception e) {
 						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
 						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
-						e.printStackTrace();	// TODO TRN printStackTrace
 					}
 				}
 			}

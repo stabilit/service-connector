@@ -22,11 +22,15 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.util.ValidatorUtility;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.
@@ -35,6 +39,9 @@ import com.stabilit.scm.common.util.ValidatorUtility;
  */
 public class ValidatorUtilityTestCase {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ValidatorUtilityTestCase.class);
+	
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */
@@ -55,7 +62,8 @@ public class ValidatorUtilityTestCase {
 			Date validDate = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
 		} catch (SCMPValidatorException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		}
 	}
 
