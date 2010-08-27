@@ -27,9 +27,10 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -92,8 +93,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				return;
 			}
 		}
-		logger.error("exceptionCaught "+th.getMessage(), th);
-		ExceptionPoint.getInstance().fireException(this, th);
+		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+		exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {
@@ -102,8 +103,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
-			//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logRead());	//TODO TRN
-			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
+			IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+			connectionLogger.logRead(this.getClass().getName(), -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
 					.newInstance(buffer);

@@ -21,7 +21,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -143,8 +144,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				logger.error("validate " + ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

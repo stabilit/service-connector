@@ -1,8 +1,12 @@
 package com.stabilit.scm.cln;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
@@ -10,6 +14,9 @@ import com.stabilit.scm.common.service.SCMessageCallback;
 
 public class DemoSessionClient extends Thread {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DemoSessionClient.class);
+	
 	private static boolean pendingRequest = false;
 
 	public static void main(String[] args) {
@@ -39,12 +46,15 @@ public class DemoSessionClient extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		} finally {
 			try {
 				sessionService.deleteSession();
 				sc.detach();
 			} catch (Exception e) {
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			}
 		}
 	}

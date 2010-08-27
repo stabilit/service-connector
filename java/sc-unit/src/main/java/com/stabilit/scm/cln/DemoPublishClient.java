@@ -1,13 +1,20 @@
 package com.stabilit.scm.cln;
 
+import org.apache.log4j.Logger;
+
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
 
 public class DemoPublishClient extends Thread {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DemoPublishClient.class);
+	
 	public static void main(String[] args) {
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
 		demoPublishClient.start();
@@ -27,12 +34,15 @@ public class DemoPublishClient extends Thread {
 			while (true)
 				;
 		} catch (Exception e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		} finally {
 			try {
 				publishService.unsubscribe();
 				sc.detach();
 			} catch (Exception e) {
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			}
 		}
 	}

@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -119,6 +121,8 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 				return fault;
 			}
 		} catch (Exception e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			SCMPFault fault = new SCMPFault(e);
 			return fault;
 		}
@@ -140,6 +144,8 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			// reset synchronous mode
 			this.synchronous = false;
 		} catch (Exception e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			SCMPFault fault = new SCMPFault(e);
 			return fault;
 		}

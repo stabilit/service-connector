@@ -24,7 +24,9 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
 import com.stabilit.scm.common.scmp.RequestAdapter;
@@ -62,8 +64,8 @@ public class NettyTcpRequest extends RequestAdapter {
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logRead());	//TODO TRN
-		ConnectionPoint.getInstance().fireRead(this, this.getLocalSocketAddress().getPort(), buffer);
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logRead(this.getClass().getName(), this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);

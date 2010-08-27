@@ -20,7 +20,8 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -133,8 +134,8 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				ex.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw ex;
 			} catch (Throwable th) {
-				logger.error("validate "+th.getMessage(), th);
-				ExceptionPoint.getInstance().fireException(this, th);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw validatorException;

@@ -29,8 +29,9 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IStatisticsListener;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.ConsoleUtil;
@@ -113,8 +114,8 @@ public final class SC {
 						+ respConfig.getPort());
 				resp.startListenAsync();
 			} catch (Exception ex) {
-				logger.error("run "+ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(SC.class, ex);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, "SC", ex);
 			}
 		}
 	}
@@ -140,8 +141,8 @@ public final class SC {
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
 			mbs.registerMBean(loggerConfigurator, mxbeanNameLogging);
 		} catch (Throwable th) {
-			logger.error("initializeJMX "+th.getMessage(), th);
-			ExceptionPoint.getInstance().fireException(SC.class, th);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "SC", th);
 		}
 	}
 }

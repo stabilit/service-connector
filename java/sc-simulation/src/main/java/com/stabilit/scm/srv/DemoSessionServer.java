@@ -21,9 +21,16 @@
  */
 package com.stabilit.scm.srv;
 
+import org.apache.log4j.Logger;
+
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 
 public class DemoSessionServer {
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DemoSessionServer.class);
+	
 	private ISCServer scSrv = null;
 	private String serviceName = "simulation";
 
@@ -42,7 +49,8 @@ public class DemoSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", 9000, serviceName, 10, 10, srvCallback);
 		} catch (Exception e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			this.shutdown();
 		}
 	}
@@ -51,6 +59,8 @@ public class DemoSessionServer {
 		try {
 			this.scSrv.deregisterService(serviceName);
 		} catch (Exception e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			this.scSrv = null;
 		}
 	}
@@ -90,13 +100,15 @@ public class DemoSessionServer {
 						KillThread kill = new KillThread(this.outerContext.getServer());
 						kill.start();
 					} catch (Exception e) {
-						e.printStackTrace();
+						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 					}
 				} else {
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 					}
 				}
 			}
@@ -125,7 +137,8 @@ public class DemoSessionServer {
 				Thread.sleep(2000);
 				this.server.deregisterService(serviceName);
 			} catch (Exception e) {
-				e.printStackTrace();
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			}
 		}
 	}

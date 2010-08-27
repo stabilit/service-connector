@@ -23,7 +23,8 @@ package com.stabilit.scm.srv;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ps.SCPublishServer;
 
@@ -53,8 +54,8 @@ public class DemoPublishServer {
 			Thread thread = new Thread(run);
 			thread.start();
 		} catch (Exception ex) {
-			logger.error("runPublishServer "+ex.getMessage(), ex);
-			ExceptionPoint.getInstance().fireException(this, ex);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			this.shutdown();
 		}
 	}
@@ -82,8 +83,8 @@ public class DemoPublishServer {
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
 				} catch (Exception ex) {
-					logger.error("run "+ex.getMessage(), ex);
-					ExceptionPoint.getInstance().fireException(this, ex);
+					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+					exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 					return;
 				}
 			}
@@ -95,6 +96,8 @@ public class DemoPublishServer {
 		try {
 			this.publishSrv.deregisterService(serviceName);
 		} catch (Exception e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 			this.publishSrv = null;
 		}
 	}
@@ -135,7 +138,9 @@ public class DemoPublishServer {
 					try {
 						this.outerContext.getServer().deregisterService(serviceName);
 					} catch (Exception e) {
-						e.printStackTrace();
+						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+						e.printStackTrace();	// TODO TRN printStackTrace
 					}
 				}
 			}

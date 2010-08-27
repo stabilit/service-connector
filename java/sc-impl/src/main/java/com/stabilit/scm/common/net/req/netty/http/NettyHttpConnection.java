@@ -165,7 +165,6 @@ public class NettyHttpConnection implements IConnection {
 		}
 		IConnectionLogger connectionlogger = ConnectionLogger.getInstance();
 		connectionlogger.logConnect(this.getClass().getName(), this.localSocketAddress.getPort());
-		// (ConnectionLogger.getInstance()).logConnection(this, this.localSocketAddress.getPort()); //TODO TRN template
 		this.connected = true;
 	}
 
@@ -182,8 +181,8 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		// if (connectionLogger.isInfoEnabled()) connectionLogger.info(this.logDisconnect()); //TODO TRN
-		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logDisconnect(this.getClass().getName(), this.localSocketAddress.getPort());
 	}
 
 	/** {@inheritDoc} */
@@ -231,8 +230,8 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}
-		// if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logWrite()); //TODO TRN
-		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(), buffer, 0, buffer.length); // logs
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logWrite(this.getClass().getName(), this.localSocketAddress.getPort(), buffer, 0, buffer.length);
 		return;
 	}
 

@@ -31,8 +31,10 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ConnectionPoint;
+import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -147,8 +149,8 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
-		//if (connectionLogger.isInfoEnabled()) connectionLogger.info(this.logConnect());	//TODO TRN
-		ConnectionPoint.getInstance().fireConnect(this, this.localSocketAddress.getPort());
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logConnect(this.getClass().getName(), this.localSocketAddress.getPort());
 		this.isConnected = true;
 	}
 
@@ -165,8 +167,8 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		//if (connectionLogger.isInfoEnabled()) connectionLogger.info(this.logDisconnect());	//TODO TRN
-		ConnectionPoint.getInstance().fireDisconnect(this, this.localSocketAddress.getPort());
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logDisconnect(this.getClass().getName(), this.localSocketAddress.getPort());		
 	}
 
 	/** {@inheritDoc} */
@@ -204,9 +206,9 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}
-		//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logWrite());	//TODO TRN
-		ConnectionPoint.getInstance().fireWrite(this, this.localSocketAddress.getPort(),
-				chBuffer.toByteBuffer().array());
+		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+		connectionLogger.logWrite(this.getClass().getName(), this.localSocketAddress.getPort(), 
+				chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		return;
 	}
 

@@ -23,7 +23,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;

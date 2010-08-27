@@ -26,9 +26,10 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.scm.common.listener.ConnectionPoint;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -90,8 +91,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				return;
 			}
 		}
-		logger.error("exceptionCaught "+th.getMessage(), th);
-		ExceptionPoint.getInstance().fireException(this, th);
+		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+		exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
 	}
 
 	private void callback(ChannelBuffer channelBuffer) throws Exception {
@@ -99,8 +100,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		try {
 			byte[] buffer = new byte[channelBuffer.readableBytes()];
 			channelBuffer.readBytes(buffer);
-			//if (connectionLogger.isDebugEnabled()) connectionLogger.debug(this.logRead());	//TODO TRN
-			ConnectionPoint.getInstance().fireRead(this, -1, buffer, 0, buffer.length);
+			IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+			connectionLogger.logRead(this.getClass().getName(), -1, buffer, 0, buffer.length);
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
 					.newInstance(buffer);

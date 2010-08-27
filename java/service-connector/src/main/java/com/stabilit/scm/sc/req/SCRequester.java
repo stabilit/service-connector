@@ -22,7 +22,8 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -137,8 +138,8 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("freeConnection " + ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			}
 		}
 
@@ -150,8 +151,8 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("disconnectConnection " + ex.getMessage(), ex);
-				ExceptionPoint.getInstance().fireException(this, ex);
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
 			}
 		}
 

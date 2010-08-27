@@ -33,9 +33,9 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.SCMPPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.IMessageLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.MessageLogger;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -154,8 +154,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				return scmpMsg;
 			}
 		} catch (Exception e) {
-			logger.error("decode "+e.getMessage(), e);
-			ExceptionPoint.getInstance().fireException(this, e);
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
 		}
 		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 		return scmpMsg;
