@@ -2,7 +2,6 @@ package integration;
 
 import static org.junit.Assert.*;
 
-
 import java.io.IOException;
 
 import org.junit.AfterClass;
@@ -14,12 +13,10 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
-
 public class RegisterServiceDeregisterServiceServerToSCTest {
 
 	private static Process p;
 	private ISCServer server;
-	private Exception ex;
 	private String serviceName = "simulation";
 	private String serviceNameAlt = "P01_RTXS_sc1";
 	private String host = "localhost";
@@ -30,7 +27,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 			String command = "java -Dlog4j.configuration=file:" + userDir
-					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
+					+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\scIntegration.properties";
 
@@ -60,48 +57,53 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		server = new SCServer();
 	}
 
-
 	@Test
-	public void deregisterService_withoutListenerArbitraryServiceName_notRegistered() throws Exception {
+	public void deregisterService_withoutListenerArbitraryServiceName_notRegistered()
+			throws Exception {
 		server.deregisterService("Name");
 		assertEquals(false, server.isRegistered("Name"));
 	}
-	
+
 	@Test
-	public void deregisterService_withoutRegisteringArbitraryServiceName_notRegistered() throws Exception {
+	public void deregisterService_withoutRegisteringArbitraryServiceName_notRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.deregisterService("Name");
 		assertEquals(false, server.isRegistered("Name"));
 	}
-	
+
 	@Test
-	public void deregisterService_withoutRegisteringServiceNameInSCProps_notRegistered() throws Exception {
+	public void deregisterService_withoutRegisteringServiceNameInSCProps_notRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.deregisterService(host);
 		assertEquals(false, server.isRegistered(host));
 	}
-	
+
 	@Test
-	public void deregisterService_withoutRegisteringServicewithNoHost_notRegistered() throws Exception {
+	public void deregisterService_withoutRegisteringServicewithNoHost_notRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.deregisterService(null);
 		assertEquals(false, server.isRegistered(null));
 	}
-	
+
 	@Test
-	public void deregisterService_withoutRegisteringServicewithEmptyHost_notRegistered() throws Exception {
+	public void deregisterService_withoutRegisteringServicewithEmptyHost_notRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.deregisterService("");
 		assertEquals(false, server.isRegistered(""));
 	}
-	
+
 	@Test
-	public void deregisterService_withoutRegisteringServicewithWhiteSpaceHost_notRegistered() throws Exception {
+	public void deregisterService_withoutRegisteringServicewithWhiteSpaceHost_notRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.deregisterService(" ");
 		assertEquals(false, server.isRegistered(" "));
 	}
-	
+
 	@Test
 	public void deregisterService_afterValidRegister_registeredThenNotRegistered() throws Exception {
 		server.startListener(host, 9001, 1);
@@ -110,17 +112,74 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		server.deregisterService(serviceName);
 		assertEquals(false, server.isRegistered(serviceName));
 	}
-	
+
 	@Test
-	public void deregisterService_afterValidRegisterDifferentServiceName_registeredThenNotRegistered() throws Exception {
+	public void deregisterService_afterValidRegisterDifferentServiceName_registeredThenNotRegistered()
+			throws Exception {
 		server.startListener(host, 9001, 1);
 		server.registerService(host, port9000, serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceNameAlt));
 		server.deregisterService(serviceNameAlt);
 		assertEquals(false, server.isRegistered(serviceNameAlt));
 	}
+
+	@Test
+	public void registerServiceDeregisterService_cycle500Times_registeredThenNotRegistered()
+			throws Exception {
+		server.startListener(host, 9001, 1);
+		for (int i = 0; i < 500; i++) {
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			server.deregisterService(serviceName);
+			assertEquals(false, server.isRegistered(serviceName));
+		}
+	}
 	
+	@Test
+	public void registerService_500ServersBeforeDeregister_registeredThenNotRegistered() throws Exception {
+		int cycles = 500;
+		ISCServer[] servers = new ISCServer[cycles];
+		for (int i = 0; i < cycles; i++) {
+			servers[i] = new SCServer();
+			servers[i].startListener(host, 9001, 0);
+		}
+		for (int i = 0; i < cycles; i++) {
+			servers[i].registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		}
+		for (int i = 0; i < cycles; i++) {
+			assertEquals(true, servers[i].isRegistered(serviceName));
+		}
+		for (int i = 0; i < cycles; i++) {
+			servers[i].deregisterService(serviceName);
+		}
+		for (int i = 0; i < cycles; i++) {
+			assertEquals(false, servers[i].isRegistered(serviceName));
+		}
+	}
 	
+	@Test
+	public void deregisterService_for50RegistrationsByOne_allwaysOneLessRegistered() throws Exception {
+		int cycles = 50;
+		ISCServer[] servers = new ISCServer[cycles];
+		for (int i = 0; i < cycles; i++) {
+			servers[i] = new SCServer();
+			servers[i].startListener(host, 9001, 0);
+		}
+		for (int i = 0; i < cycles; i++) {
+			servers[i].registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		}
+		for (int i = 0; i < cycles; i++) {
+			for (int j = i; j < cycles; j++) {
+				assertEquals(true, servers[j].isRegistered(serviceName));
+			}
+			for (int j = cycles - i - 1; j < cycles; j++) {
+				servers[j].deregisterService(serviceName);
+			}
+			for (int j = 0; j < cycles - i; j++) {
+				assertEquals(false, servers[j].isRegistered(serviceName));
+			}
+		}
+	}
 
 	// region end
 

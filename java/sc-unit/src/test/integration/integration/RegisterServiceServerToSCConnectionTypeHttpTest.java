@@ -32,7 +32,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 			String command = "java -Dlog4j.configuration=file:" + userDir
-					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
+					+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\scIntegration.properties";
 
@@ -350,6 +350,41 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 		assertEquals(false, server.isRegistered("Name"));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
+	
+	@Test
+	public void registerService_serviceNameLength32NotInSCProps_notRegisteredThrowsException()
+			throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 32; i++) {
+			sb.append("a");
+		}
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port8080, sb.toString(), 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(sb.toString()));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+	
+	@Test
+	public void registerService_serviceNameLength33TooLong_notRegisteredThrowsException()
+			throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 33; i++) {
+			sb.append("a");
+		}
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port8080, sb.toString(), 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(sb.toString()));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
 
 	@Test
 	public void registerService_maxSessions0_notRegisteredThrowsException() throws Exception {

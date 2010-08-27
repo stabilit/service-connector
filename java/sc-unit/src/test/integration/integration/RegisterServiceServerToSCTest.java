@@ -32,7 +32,7 @@ public class RegisterServiceServerToSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 			String command = "java -Dlog4j.configuration=file:" + userDir
-					+ "\\src\\test\\resources\\log4j.properties -jar " + userDir
+					+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 					+ "\\src\\test\\resources\\scIntegration.properties";
 
@@ -349,6 +349,40 @@ public class RegisterServiceServerToSCTest {
 		assertEquals(false, server.isRegistered("Name"));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
+	
+	@Test
+	public void registerService_serviceNameLength32NotInSCProps_notRegisteredThrowsException()
+			throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 32; i++) {
+			sb.append("a");
+		}
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, sb.toString(), 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(sb.toString()));
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+	
+	@Test
+	public void registerService_serviceNameLength33TooLong_notRegisteredThrowsException()
+			throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 33; i++) {
+			sb.append("a");
+		}
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, sb.toString(), 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(sb.toString()));
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
 
 	@Test
 	public void registerService_maxSessions0_notRegisteredThrowsException() throws Exception {
@@ -461,11 +495,19 @@ public class RegisterServiceServerToSCTest {
 	}
 
 	@Test
-	public void registerService_maxConnectionsSameAsSessionsIntMax_notRegisteredThrowsException()
+	public void registerService_maxConnectionsMAX1024SessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, Integer.MAX_VALUE,
+		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE, 1024,
 				new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+	
+	@Test
+	public void registerService_maxConnectionsSameAsSessions1024_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, 1024, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 
@@ -478,11 +520,20 @@ public class RegisterServiceServerToSCTest {
 	}
 
 	@Test
-	public void registerService_maxConnectionsLessThanSessionsIntMax_notRegisteredThrowsException()
+	public void registerService_maxConnections1023LessThanSessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		server.registerService(host, port9000, serviceName, Integer.MAX_VALUE,
-				Integer.MAX_VALUE - 1, new CallBack());
+				1023, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+	
+	@Test
+	public void registerService_maxConnections1023LessThanSessions1024_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		server.registerService(host, port9000, serviceName, 1024,
+				1023, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 	}
 

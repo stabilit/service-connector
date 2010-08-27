@@ -26,7 +26,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		try {
 			String userDir = System.getProperty("user.dir");		    
 			String command = "java -Dlog4j.configuration=file:" + userDir +
-			  "\\src\\test\\resources\\log4j.properties -jar " + userDir +
+			  "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir +
 			  "\\..\\service-connector\\target\\sc.jar -filename " + userDir +
 			  "\\src\\test\\resources\\scIntegration.properties";
 			
