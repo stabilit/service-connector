@@ -630,7 +630,7 @@ public class AttachClientToSCTest {
 		try {
 			client.attach("localhost", 8080, 0);
 		} catch (Exception e) {
-			assertEquals(true, client.isAttached());
+			assertEquals(false, client.isAttached());
 			throw e;
 		}
 	}

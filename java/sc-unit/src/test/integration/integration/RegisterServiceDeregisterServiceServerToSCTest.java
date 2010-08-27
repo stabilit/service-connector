@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,6 +56,11 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		server = null;
 	}
 
 	@Test
@@ -122,6 +128,16 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		server.deregisterService(serviceNameAlt);
 		assertEquals(false, server.isRegistered(serviceNameAlt));
 	}
+	
+	@Test
+	public void deregisterService_differentThanRegistered_registered() throws Exception {
+		server.startListener(host, 9001, 1);
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		server.deregisterService(serviceNameAlt);
+		assertEquals(true, server.isRegistered(serviceName));
+		server.deregisterService(serviceName);
+	}
 
 	@Test
 	public void registerServiceDeregisterService_cycle500Times_registeredThenNotRegistered()
@@ -136,51 +152,20 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	}
 	
 	@Test
-	public void registerService_500ServersBeforeDeregister_registeredThenNotRegistered() throws Exception {
+	public void registerService_500CyclesWithDeregister_registeredThenNotRegistered() throws Exception {
 		int cycles = 500;
 		ISCServer[] servers = new ISCServer[cycles];
 		for (int i = 0; i < cycles; i++) {
 			servers[i] = new SCServer();
 			servers[i].startListener(host, 9001, 0);
-		}
-		for (int i = 0; i < cycles; i++) {
 			servers[i].registerService(host, port9000, serviceName, 1, 1, new CallBack());
-		}
-		for (int i = 0; i < cycles; i++) {
 			assertEquals(true, servers[i].isRegistered(serviceName));
-		}
-		for (int i = 0; i < cycles; i++) {
 			servers[i].deregisterService(serviceName);
-		}
-		for (int i = 0; i < cycles; i++) {
 			assertEquals(false, servers[i].isRegistered(serviceName));
+			servers[i] = null;
 		}
 	}
 	
-	@Test
-	public void deregisterService_for50RegistrationsByOne_allwaysOneLessRegistered() throws Exception {
-		int cycles = 50;
-		ISCServer[] servers = new ISCServer[cycles];
-		for (int i = 0; i < cycles; i++) {
-			servers[i] = new SCServer();
-			servers[i].startListener(host, 9001, 0);
-		}
-		for (int i = 0; i < cycles; i++) {
-			servers[i].registerService(host, port9000, serviceName, 1, 1, new CallBack());
-		}
-		for (int i = 0; i < cycles; i++) {
-			for (int j = i; j < cycles; j++) {
-				assertEquals(true, servers[j].isRegistered(serviceName));
-			}
-			for (int j = cycles - i - 1; j < cycles; j++) {
-				servers[j].deregisterService(serviceName);
-			}
-			for (int j = 0; j < cycles - i; j++) {
-				assertEquals(false, servers[j].isRegistered(serviceName));
-			}
-		}
-	}
-
 	// region end
 
 	private class CallBack implements ISCServerCallback {

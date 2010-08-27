@@ -9,10 +9,10 @@ import com.stabilit.scm.srv.SCServer;
 public class StartSCServer {
 
 	private ISCServer scSrv = null;
-	private String serviceName = "simulation";
+	private String serviceName;
 
 	public static void main(String[] args) throws Exception {
-		DemoSessionServer sessionServer = new DemoSessionServer();
+		StartSCServer sessionServer = new StartSCServer();
 		sessionServer.runSessionServer();
 	}
 
@@ -26,6 +26,14 @@ public class StartSCServer {
 		} catch (Exception e) {
 			this.scSrv = null;
 		}
+	}
+	
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 	class SrvCallback implements ISCSessionServerCallback {

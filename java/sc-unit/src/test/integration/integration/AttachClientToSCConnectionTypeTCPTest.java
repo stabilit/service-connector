@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.SCServiceException;
 
 
@@ -81,10 +82,10 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	}
 
 	@Test
-	public void attach_changeConnectionTypeHostLocalhostPort8080_attached()
+	public void attach_changeConnectionTypeHostLocalhostPort9000_attached()
 			throws Exception {
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach("localhost", 8080);
+		client.attach("localhost", 9000);
 		assertEquals(true, client.isAttached());
 	}
 
@@ -100,15 +101,16 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		assertEquals(true, ex instanceof SCServiceException);
 	}
 
-	@Test(expected = InvalidParameterException.class)
+	@Test
 	public void attach_hostLocalhostPortMinus1_notAttachedThrowsException()
 			throws Exception {
 		try {
 			client.attach("localhost", -1);
 		} catch (Exception e) {
-			assertEquals(false, client.isAttached());
-			throw e;
+			ex = e;
 		}
+		assertEquals(false, client.isAttached());
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -135,7 +137,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		assertEquals(true, ex instanceof SCServiceException);
 	}
 
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void attach_hostLocalhostPortMaxAllowedPlus1_notAttachedThrowsException()
 			throws Exception {
 		try {
@@ -146,7 +148,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		}
 	}
 
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void attach_hostLocalhostPortIntMin_notAttachedThrowsException()
 			throws Exception {
 		try {
@@ -157,7 +159,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		}
 	}
 
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void attach_hostLocalhostPortIntMax_notAttachedThrowsException()
 			throws Exception {
 		try {
@@ -313,7 +315,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -349,7 +351,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -361,7 +363,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -373,7 +375,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	// region end
@@ -423,7 +425,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -458,7 +460,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -470,7 +472,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -482,7 +484,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	// region end
@@ -534,7 +536,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -571,7 +573,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -584,7 +586,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -597,7 +599,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	// region end
@@ -638,7 +640,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -657,7 +659,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -669,7 +671,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test
@@ -681,7 +683,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
-		assertEquals(true, ex instanceof InvalidParameterException);
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	// region end
