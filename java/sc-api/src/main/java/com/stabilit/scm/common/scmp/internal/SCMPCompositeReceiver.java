@@ -172,7 +172,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					if (bodyLength > 0) {
 						Object body = message.getBody();
 						if (body == null) {
-							LoggerPoint.getInstance().fireWarn(this, "bodyLength > 0 but body == null");
+							logger.warn("bodyLength > 0 but body == null");
 						}
 						this.outputStream.write((byte[]) body);
 					}

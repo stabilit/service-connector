@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.LoggerPoint;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.IIdleCallback;
@@ -191,7 +193,7 @@ public class ConnectionPool implements IConnectionPool {
 	@Override
 	public void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
-			LoggerPoint.getInstance().fireWarn(this, "connection does not exist - not possible to free");
+			logger.warn("connection does not exist in pool - not possible to free");
 			return;
 		}
 		if (closeOnFree && this.freeConnections.size() > 0) {
@@ -242,7 +244,8 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			LoggerPoint.getInstance().fireException(this, "connection destroy failed.");
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
 		} finally {
 			connection.destroy();
 		}
@@ -258,7 +261,8 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			LoggerPoint.getInstance().fireException(this, "connection disconnect failed.");
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
 		}
 	}
 
@@ -272,7 +276,8 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			LoggerPoint.getInstance().fireException(this, "disconnecting connection failed.");
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
 		}
 	}
 
@@ -301,8 +306,8 @@ public class ConnectionPool implements IConnectionPool {
 					return;
 				}
 			} catch (Exception e) {
-				LoggerPoint.getInstance().fireException(this,
-						"Exception when starting connection pool - create, connect connection failed");
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
 				return;
 			}
 			this.freeConnections.add(connection);

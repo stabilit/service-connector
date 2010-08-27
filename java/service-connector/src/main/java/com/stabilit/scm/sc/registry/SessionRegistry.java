@@ -217,7 +217,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			server.serverAbortSession(abortMessage, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			// removes session on server
 			session.getServer().removeSession(session);
-			LoggerPoint.getInstance().fireWarn(session, "session [" + session.getId() + "] aborted");
+			logger.warn("session [" + session.getId() + "] aborted");
 			SessionPoint.getInstance().fireAbort(session, session.getId());
 		}
 

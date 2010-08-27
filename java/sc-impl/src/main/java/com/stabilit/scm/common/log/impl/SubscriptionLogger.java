@@ -26,7 +26,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 
 public class SubscriptionLogger implements ISubscriptionLogger {
 
-	private static final Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
+	private static final Logger logger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 	private static final ISubscriptionLogger SUBSCRIPTION_LOGGER = new SubscriptionLogger();
 
 	private static String NO_DATA_TIMEOUT_EVENT_STR = "no data timeout by class %s - for sessionId %s";
@@ -46,49 +46,49 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public void logNoDataTimeout(String source, String sessionId) {
-		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+	public synchronized void logNoDataTimeout(String className, String sessionId) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(NO_DATA_TIMEOUT_EVENT_STR, source, sessionId);
-		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.format(NO_DATA_TIMEOUT_EVENT_STR, className, sessionId);
+		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void logPoll(String source, String sessionId, SCMPMessage queueMessage, int queueSize) {
-		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+	public synchronized void logPoll(String className, String sessionId, SCMPMessage queueMessage, int queueSize) {
+		if (SubscriptionLogger.logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(FIRE_POLL_EVENT_STR, source, sessionId, queueMessage, queueSize);
-		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.format(FIRE_POLL_EVENT_STR, className, sessionId, queueMessage, queueSize);
+		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void logAdd(String source, SCMPMessage queueMessage, int queueSize) {
-		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+	public synchronized void logAdd(String className, SCMPMessage queueMessage, int queueSize) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(FIRE_ADD_EVENT_STR, source, queueMessage, queueSize);
-		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.format(FIRE_ADD_EVENT_STR, className, queueMessage, queueSize);
+		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void logRemove(String source, int queueSize) {
-		if (SubscriptionLogger.subscriptionLogger.isDebugEnabled() == false) {
+	public synchronized void logRemove(String className, int queueSize) {
+		if (SubscriptionLogger.logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(FIRE_REMOVE_EVENT_STR, source, queueSize);
-		SubscriptionLogger.subscriptionLogger.debug(format.toString());
+		format.format(FIRE_REMOVE_EVENT_STR, className, queueSize);
+		logger.debug(format.toString());
 		format.close();
 	}
 }

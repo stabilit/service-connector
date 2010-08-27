@@ -82,7 +82,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 			 **/
 			this.sessionRegistry.removeSession(message.getSessionId());
 			server.removeSession(session);
-			LoggerPoint.getInstance().fireWarn(this, "echo failed - session destroyed " + sessionId);
+			logger.warn("echo failed - session destroyed " + sessionId);
 		}
 		result.removeHeader(SCMPHeaderAttributeKey.SRV_RES_ID);
 		result.setMessageType(getKey());

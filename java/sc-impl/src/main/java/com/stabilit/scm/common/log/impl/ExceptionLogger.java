@@ -41,24 +41,24 @@ public class ExceptionLogger implements IExceptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logDebugException(Logger logger, String source, Throwable throwable) {
+	public synchronized void logDebugException(Logger logger, String className, Throwable throwable) {
 		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(EXC_STR, source, throwable, throwable.getCause());
+		format.format(EXC_STR, className, throwable, throwable.getCause());
 		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logErrorException(Logger logger, String source, Throwable throwable) {
+	public synchronized void logErrorException(Logger logger, String className, Throwable throwable) {
 		if (logger.isEnabledFor(Level.ERROR) == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(EXC_STR, source, throwable, throwable.getCause());
+		format.format(EXC_STR, className, throwable, throwable.getCause());
 		logger.error(format.toString());
 		format.close();
 	}

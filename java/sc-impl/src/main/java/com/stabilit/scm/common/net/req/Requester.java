@@ -277,8 +277,7 @@ public class Requester implements IRequester {
 					 */
 					return true;
 				}
-				LoggerPoint.getInstance()
-						.fireWarn(this, "compositeSender.hasNext() == false but part request not done");
+				logger.warn("compositeSender.hasNext() == false but part request not done");
 				return true;
 			}
 			part = compositeSender.getNext();

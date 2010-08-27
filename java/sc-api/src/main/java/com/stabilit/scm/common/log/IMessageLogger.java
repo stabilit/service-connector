@@ -16,9 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log;
 
-public interface IPerformanceLogger {
+import com.stabilit.scm.common.scmp.SCMPMessage;
 
-	public abstract void begin(String className, String methodName);
+public interface IMessageLogger {
 
-	public abstract void end(String className, String methodName);
+	public abstract void logMessage(String className, SCMPMessage message);
+
 }

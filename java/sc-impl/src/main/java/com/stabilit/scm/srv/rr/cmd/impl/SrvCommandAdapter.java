@@ -92,10 +92,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 		if (srvService == null) {
 			// incoming srvService not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this,
-						"command error: no srvService found for serviceName :" + serviceName);
-			}
+			logger.warn("command error: no srvService found for serviceName :" + serviceName);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"no service found for " + serviceName);
 			scmpCommandException.setMessageType(this.getKey());

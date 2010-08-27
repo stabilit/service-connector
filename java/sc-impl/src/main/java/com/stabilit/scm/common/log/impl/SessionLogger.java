@@ -18,70 +18,76 @@ package com.stabilit.scm.common.log.impl;
 
 import java.util.Formatter;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ISessionListener;
-import com.stabilit.scm.common.listener.SessionEvent;
-import com.stabilit.scm.common.log.ILogger;
-import com.stabilit.scm.common.log.ILoggerDecorator;
+import org.apache.log4j.Logger;
 
-public class SessionLogger implements ISessionListener, ILoggerDecorator {
+import com.stabilit.scm.common.log.ISessionLogger;
+import com.stabilit.scm.common.log.Loggers;
 
-	/** The concrete logger implementation to use. */
-	private ILogger logger;
+public class SessionLogger implements ISessionLogger {
 
-	private Formatter createSessionFormat;
-	private Formatter deleteSessionFormat;
+	private static final Logger logger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final ISessionLogger SESSION_LOGGER = new SessionLogger();
+	
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
 	private String ABORT_SESSION_STR = "abort session:%s";
 
-	SessionLogger(ILogger logger) {
-		this.createSessionFormat = null;
-		this.logger = logger.newInstance(this);
+	/**
+	 * Instantiates a new connection logger. Private for singelton use.
+	 */
+	private SessionLogger() {
 	}
+
+	public static ISessionLogger getInstance() {
+		return SessionLogger.SESSION_LOGGER;
+	}
+	
 
 	/** {@inheritDoc} */
 	@Override
-	public void createSessionEvent(SessionEvent sessionEvent) throws Exception {
-		createSessionFormat = new Formatter();
-		createSessionFormat.format(CREATE_SESSION_STR, sessionEvent
-				.getSessionId());
-		this.logger.log(createSessionFormat.toString());
+	public synchronized void logCreateSession(String className, String sessionId) {
+		if (logger.isInfoEnabled() == false) {
+			return;
+		}
+		try {
+			Formatter format = new Formatter();
+			format.format(CREATE_SESSION_STR, sessionId);
+			logger.info(format.toString());
+			format.close();
+		} catch (Exception e) {
+			// TODO JOT exception logging
+		}
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
-	public void deleteSessionEvent(SessionEvent sessionEvent) throws Exception {
-		deleteSessionFormat = new Formatter();
-		deleteSessionFormat.format(DELETE_SESSION_STR, sessionEvent
-				.getSessionId());
-		this.logger.log(deleteSessionFormat.toString());
+	public synchronized void logDeleteSession(String className, String sessionId) {
+		if (logger.isInfoEnabled() == false) {
+			return;
+		}
+		try {
+			Formatter format = new Formatter();
+			format.format(DELETE_SESSION_STR, sessionId);
+			logger.info(format.toString());
+			format.close();
+		} catch (Exception e) {
+			// TODO JOT exception logging
+		}
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
-	public void abortSessionEvent(SessionEvent sessionEvent) throws Exception {
-		createSessionFormat = new Formatter();
-		createSessionFormat.format(ABORT_SESSION_STR, sessionEvent
-				.getSessionId());
-		this.logger.log(createSessionFormat.toString());
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ILoggerDecorator newInstance() {
-		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogDir() {
-		return Constants.LOG_DIR;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getLogFileName() {
-		return Constants.SESSION_LOG_FILE_NAME;
+	public synchronized void logAbortSession(String className, String sessionId) {
+		if (logger.isInfoEnabled() == false) {
+			return;
+		}
+		try {
+			Formatter format = new Formatter();
+			format.format(ABORT_SESSION_STR, sessionId);
+			logger.info(format.toString());
+			format.close();
+		} catch (Exception e) {
+			// TODO JOT exception logging
+		}
 	}
 }

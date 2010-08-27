@@ -25,7 +25,7 @@ import com.stabilit.scm.common.log.Loggers;
 
 public class PerformanceLogger implements IPerformanceLogger {
 
-	private static final Logger perfLogger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
+	private static final Logger logger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
 	private static final IPerformanceLogger PERFORMANCE_LOGGER = new PerformanceLogger();
 
 	/** The thread local is needed to save time in running thread. */
@@ -44,17 +44,17 @@ public class PerformanceLogger implements IPerformanceLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void begin(String source, String methodName) {
-		if (PerformanceLogger.perfLogger.isDebugEnabled() == false) {
+	public synchronized void begin(String className, String methodName) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
-		this.threadLocal.set(new PerformanceItem(source, methodName, System.nanoTime()));
+		this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void end(String source, String methodName) {
-		if (PerformanceLogger.perfLogger.isDebugEnabled() == false) {
+	public synchronized void end(String className, String methodName) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		PerformanceItem beginItem = this.threadLocal.get();
@@ -62,31 +62,32 @@ public class PerformanceLogger implements IPerformanceLogger {
 			return;
 		}
 		String beginMethodName = beginItem.getMethodName();
-		long beginTime = beginItem.getTime();
+		String beginClassName = beginItem.getClassName();
+				long beginTime = beginItem.getTime();
 		long endTime = System.nanoTime();
-		String beginSource = beginItem.getSource();
+		
 
 		Formatter format = new Formatter();
-		format.format(END_STR, source, beginMethodName, String.valueOf((endTime - beginTime) / 1000000), String
-				.valueOf((endTime - beginTime) % 1000000), beginSource, beginMethodName);
-		PerformanceLogger.perfLogger.debug(format.toString());
+		format.format(END_STR, className, beginMethodName, String.valueOf((endTime - beginTime) / 1000000), String
+				.valueOf((endTime - beginTime) % 1000000), beginClassName, beginMethodName);
+		logger.debug(format.toString());
 		format.close();
 	}
 
 	private class PerformanceItem {
-		private String source;
+		private String className;
 		private String methodName;
 		private long time;
 
-		public PerformanceItem(String source, String methodName, long time) {
+		public PerformanceItem(String className, String methodName, long time) {
 			super();
-			this.source = source;
+			this.className = className;
 			this.methodName = methodName;
 			this.time = time;
 		}
 
-		public String getSource() {
-			return source;
+		public String getClassName() {
+			return className;
 		}
 
 		public String getMethodName() {

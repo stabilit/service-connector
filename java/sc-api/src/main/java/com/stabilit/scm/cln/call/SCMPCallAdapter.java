@@ -193,7 +193,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		@Override
 		public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
-				LoggerPoint.getInstance().fireWarn(this, "tried to invoke groupCall but state of group is closed");
+				logger.warn("tried to invoke groupCall but state of group is closed");
 			}
 			SCMPMessage callSCMP = this.parentCall.getRequest();
 			SCMPCallAdapter.this.requestMessage.setInternalStatus(SCMPInternalStatus.GROUP);

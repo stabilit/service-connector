@@ -92,8 +92,8 @@ public final class LoggerFactory extends Factory {
 			loggerDecorator = new PerformanceLoggerOBSOLETE((ILogger) this.getInstance(key));
 			this.add(PerformanceLoggerOBSOLETE.class, loggerDecorator);
 			// Session logger
-			loggerDecorator = new SessionLogger((ILogger) this.getInstance(key));
-			this.add(SessionLogger.class, loggerDecorator);
+			loggerDecorator = new SessionLoggerOBSOLETE((ILogger) this.getInstance(key));
+			this.add(SessionLoggerOBSOLETE.class, loggerDecorator);
 			// Top logger
 			loggerDecorator = new TopLogger((ILogger) this.getInstance(key));
 			this.add(TopLogger.class, loggerDecorator);

@@ -181,7 +181,7 @@ public final class Constants {
 	public static void setLargeMessageLimit(int largeMessageLimit) {
 		if (Constants.LARGE_MESSAGE_LIMIT != Constants.DEFAULT_LARGE_MESSAGE_LIMIT) {
 			// setting LARGE_MESSAGE_LIMIT only allowed one time
-			LoggerPoint.getInstance().fireWarn(Constants.class, "setLargeMessageLimit called two times - not allowed.");
+			logger.error("setLargeMessageLimit called two times - not allowed.");
 			return;
 		}
 		Constants.LARGE_MESSAGE_LIMIT = largeMessageLimit;

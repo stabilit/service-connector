@@ -72,7 +72,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			return;
 		}
 		// message not expected - race condition
-		LoggerPoint.getInstance().fireWarn(this, "message received but no reply was outstanding - race condition.");
+		logger.error("message received but no reply was outstanding - race condition.");
 	}
 
 	/** {@inheritDoc} */

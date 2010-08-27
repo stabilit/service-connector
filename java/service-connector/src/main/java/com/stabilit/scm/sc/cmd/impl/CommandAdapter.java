@@ -82,9 +82,7 @@ public abstract class CommandAdapter implements ICommand {
 
 		if (session == null) {
 			// incoming session not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this, "command error: no session found for id :" + sessionId);
-			}
+			logger.warn("command error: no session found for id :" + sessionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"no session found for " + sessionId);
 			scmpCommandException.setMessageType(getKey());
@@ -108,10 +106,7 @@ public abstract class CommandAdapter implements ICommand {
 
 		if (session == null) {
 			// incoming session not found
-			if (LoggerPoint.getInstance().isWarn()) {
-				LoggerPoint.getInstance().fireWarn(this,
-						"command error: no subscription session found for id :" + sessionId);
-			}
+			logger.warn("command error: no subscription session found for id :" + sessionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"subscriptionQueue not found for " + sessionId);
 			scmpCommandException.setMessageType(getKey());

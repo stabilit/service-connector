@@ -27,8 +27,7 @@ import com.stabilit.scm.common.log.Loggers;
 
 public class ConnectionLogger implements IConnectionLogger {
 
-	/** The Constant connectionLogger. */
-	private static final Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private static final Logger logger = Logger.getLogger(Loggers.CONNECTION.getValue());
 	private static final IConnectionLogger CONNECTION_LOGGER = new ConnectionLogger();
 
 	private static String CONNECT_STR = "connect by class %s - %s:%s";
@@ -49,14 +48,14 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logConnect(String source, int port) {
-		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+	public synchronized void logConnect(String className, int port) {
+		if (logger.isInfoEnabled() == false) {
 			return;
 		}
 		try {
 			Formatter format = new Formatter();
-			format.format(CONNECT_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port));
-			ConnectionLogger.connectionLogger.debug(format.toString());
+			format.format(CONNECT_STR, className, InetAddress.getLocalHost().toString(), String.valueOf(port));
+			logger.info(format.toString());
 			format.close();
 		} catch (IOException e) {
 			// TODO JOT exception logging
@@ -65,14 +64,14 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logDisconnect(String source, int port) {
-		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+	public synchronized void logDisconnect(String className, int port) {
+		if (logger.isInfoEnabled() == false) {
 			return;
 		}
 		try {
 			Formatter format = new Formatter();
-			format.format(DISCONNECT_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port));
-			ConnectionLogger.connectionLogger.debug(format.toString());
+			format.format(DISCONNECT_STR, className, InetAddress.getLocalHost().toString(), String.valueOf(port));
+			logger.info(format.toString());
 			format.close();
 		} catch (IOException e) {
 			// TODO JOT exception logging
@@ -81,44 +80,21 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logRead(String source, int port, byte[] data, int offset, int length) {
-		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
-			return;
-		}
-		try {
-			Formatter format = new Formatter();
-
-			if (length > 0) {
-				format.format(READ_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port),
-						new String(data, offset, length));
-			} else {
-				format.format(READ_STR, source.getClass().getClass().getName(), InetAddress.getLocalHost().toString(),
-						String.valueOf(port), new String(data, offset, length));
-			}
-			ConnectionLogger.connectionLogger.debug(format.toString());
-			format.close();
-		} catch (IOException e) {
-			// TODO JOT exception logging
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void logWrite(String source, int port, byte[] data, int offset, int length) {
-		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+	public synchronized void logRead(String className, int port, byte[] data, int offset, int length) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		try {
 			Formatter format = new Formatter();
 
 			if (length > 0) {
-				format.format(WRITE_STR, source, InetAddress.getLocalHost().toString(), String.valueOf(port),
+				format.format(READ_STR, className, InetAddress.getLocalHost().toString(), String.valueOf(port),
 						new String(data, offset, length));
 			} else {
-				format.format(WRITE_STR, source.getClass().getClass().getName(), InetAddress.getLocalHost().toString(),
+				format.format(READ_STR, className, InetAddress.getLocalHost().toString(),
 						String.valueOf(port), new String(data, offset, length));
 			}
-			ConnectionLogger.connectionLogger.debug(format.toString());
+			logger.debug(format.toString());
 			format.close();
 		} catch (IOException e) {
 			// TODO JOT exception logging
@@ -127,13 +103,36 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logKeepAlive(String source, int nrOfIdles) {
-		if (ConnectionLogger.connectionLogger.isDebugEnabled() == false) {
+	public synchronized void logWrite(String className, int port, byte[] data, int offset, int length) {
+		if (logger.isDebugEnabled() == false) {
+			return;
+		}
+		try {
+			Formatter format = new Formatter();
+
+			if (length > 0) {
+				format.format(WRITE_STR, className, InetAddress.getLocalHost().toString(), String.valueOf(port),
+						new String(data, offset, length));
+			} else {
+				format.format(WRITE_STR, className, InetAddress.getLocalHost().toString(),
+						String.valueOf(port), new String(data, offset, length));
+			}
+			logger.debug(format.toString());
+			format.close();
+		} catch (IOException e) {
+			// TODO JOT exception logging
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void logKeepAlive(String className, int nrOfIdles) {
+		if (logger.isDebugEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(KEEP_ALIVE_STR, source, nrOfIdles);
-		ConnectionLogger.connectionLogger.debug(format.toString());
+		format.format(KEEP_ALIVE_STR, className, nrOfIdles);
+		logger.debug(format.toString());
 		format.close();
 	}
 }

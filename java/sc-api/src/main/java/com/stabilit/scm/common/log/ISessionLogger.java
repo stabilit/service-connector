@@ -16,9 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log;
 
-public interface IPerformanceLogger {
+public interface ISessionLogger {
 
-	public abstract void begin(String className, String methodName);
+	public abstract void logCreateSession(String className, String sessionId);
 
-	public abstract void end(String className, String methodName);
+	public abstract void logDeleteSession(String className, String sessionId);
+	
+	public abstract void logAbortSession(String className, String sessionId);
+
 }

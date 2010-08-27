@@ -42,7 +42,7 @@ import com.stabilit.scm.common.log.impl.ConnectionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.ExceptionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.LoggerFactory;
 import com.stabilit.scm.common.log.impl.PerformanceLoggerOBSOLETE;
-import com.stabilit.scm.common.log.impl.SessionLogger;
+import com.stabilit.scm.common.log.impl.SessionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.SubscriptionLoggerOBSOLETE;
 import com.stabilit.scm.common.log.impl.TopLogger;
 
@@ -210,7 +210,7 @@ public class LoggerConfigurator implements ILoggerConfiguratorMXBean {
 			// sessionListener is already turned on - no action necessary
 			return;
 		}
-		this.sessionListener = (ISessionListener) loggerFactory.newInstance(SessionLogger.class);
+		this.sessionListener = (ISessionListener) loggerFactory.newInstance(SessionLoggerOBSOLETE.class);
 		SessionPoint.getInstance().addListener(this.sessionListener);
 	}
 
