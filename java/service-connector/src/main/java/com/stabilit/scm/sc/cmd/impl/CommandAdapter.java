@@ -23,7 +23,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.NullCommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;

@@ -18,7 +18,6 @@ package com.stabilit.scm.cln.call;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;

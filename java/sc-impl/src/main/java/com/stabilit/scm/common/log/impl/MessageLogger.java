@@ -48,7 +48,7 @@ public class MessageLogger implements IMessageLogger {
 		if (logger.isInfoEnabled()) {
 			try {
 				Formatter format = new Formatter();
-				format.format(MSG_LONG_STR, message);
+				format.format(MSG_SHORT_STR, message);
 				logger.info(format.toString());
 				format.close();
 			} catch (Exception e) {

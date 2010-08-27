@@ -33,7 +33,6 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCMessageCallback;
-import com.stabilit.scm.sc.registry.SubscriptionQueue;
 
 /**
  * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.

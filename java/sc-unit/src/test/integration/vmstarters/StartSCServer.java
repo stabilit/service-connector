@@ -1,7 +1,6 @@
 package vmstarters;
 
 import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.srv.DemoSessionServer;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;

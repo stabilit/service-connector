@@ -31,7 +31,6 @@ import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.listener.DefaultStatisticsListener;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.IStatisticsListener;
-import com.stabilit.scm.common.listener.LoggerPoint;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.ConsoleUtil;

@@ -32,8 +32,6 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.listener.ExceptionPoint;
-import com.stabilit.scm.common.listener.LoggerPoint;
-import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.log.IPerformanceLogger;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.net.IResponderCallback;

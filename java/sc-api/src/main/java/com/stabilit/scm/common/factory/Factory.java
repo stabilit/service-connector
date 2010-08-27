@@ -21,8 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.listener.LoggerPoint;
-
 /**
  * The Class Factory. SuperClass for factories.<br>
  * <br>
