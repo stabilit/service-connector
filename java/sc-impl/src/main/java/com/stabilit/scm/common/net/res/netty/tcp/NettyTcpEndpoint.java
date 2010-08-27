@@ -114,7 +114,9 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void stoppListening() {
 		try {
-			this.channel.close();
+			if (this.channel != null) {
+				this.channel.close();
+			}
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
 			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);

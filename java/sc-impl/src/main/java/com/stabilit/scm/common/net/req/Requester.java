@@ -167,8 +167,6 @@ public class Requester implements IRequester {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
-			// cancel operation timeout
-			operationTimeoutTask.cancel();
 			// ------------------- handling large request --------------------
 			if (compositeSender != null) {
 				// handle large messages
@@ -187,6 +185,8 @@ public class Requester implements IRequester {
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
+				// cancel operation timeout
+				operationTimeoutTask.cancel();
 				// first handle connection - that user has a connection to work, if he has only 1
 				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
@@ -199,6 +199,8 @@ public class Requester implements IRequester {
 				this.compositeReceiver.add(scmpReply);
 				if (scmpReply.isPart() == false) {
 					// response received
+					// cancel operation timeout
+					operationTimeoutTask.cancel();
 					// first handle connection - that user has a connection to work, if he has only 1
 					this.freeConnection();
 					this.scmpCallback.callback(this.compositeReceiver);
@@ -213,8 +215,9 @@ public class Requester implements IRequester {
 			}
 
 			if (requestMsg.isPart()) {
-				// incoming message is a part groupCall is made by client - part
-				// response can be ignored
+				// incoming message is a part groupCall is made by client - part response can be ignored
+				// cancel operation timeout
+				operationTimeoutTask.cancel();
 				// first handle connection - that user has a connection to work, if he has only 1
 				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
@@ -227,6 +230,8 @@ public class Requester implements IRequester {
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}
+			// cancel operation timeout
+			operationTimeoutTask.cancel();
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
 			this.scmpCallback.callback(scmpReply);

@@ -30,7 +30,7 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
-import com.stabilit.scm.common.scmp.SCMPFault;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
@@ -38,6 +38,7 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides
@@ -49,7 +50,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionService.class);
-	
+
 	/**
 	 * Instantiates a new session service.
 	 * 
@@ -70,19 +71,9 @@ public class SessionService extends Service implements ISessionService {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
-		if (sessionInfo == null) {
-			throw new InvalidParameterException("Session info must be set.");
-		}
-		int sessionInfoLength = sessionInfo.getBytes().length;
-		if (sessionInfoLength < 1 || sessionInfoLength > 256) {
-			throw new InvalidParameterException("Session info not within 1 to 256 bytes.");
-		}
-		if (timeoutInSeconds < 1 || timeoutInSeconds > 3600) {
-			throw new InvalidParameterException("Echo Timeout not within limits 1 to 3600.");
-		}
-		if (echoIntervalInSeconds < 1 || echoIntervalInSeconds > 3600) {
-			throw new InvalidParameterException("Echo Interval not within limits 1 to 3600.");
-		}
+		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateInt(0, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(0, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
 		this.callback = new ServiceCallback();
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
@@ -92,12 +83,14 @@ public class SessionService extends Service implements ISessionService {
 		try {
 			createSessionCall.invoke(this.callback, timeoutInSeconds);
 		} catch (Exception e) {
+			this.callback = null;
 			throw new SCServiceException("create session failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("create session failed", fault.getCause());
+			this.callback = null;
+			throw new SCServiceException("create session failed"
+					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		this.sessionId = reply.getSessionId();
 	}
@@ -109,22 +102,24 @@ public class SessionService extends Service implements ISessionService {
 			// delete session not possible - no session on this service just ignore
 			return;
 		}
-		this.msgId.incrementMsgSequenceNr();
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.requester, this.serviceName, this.sessionId);
 		try {
-			deleteSessionCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
-		} catch (Exception e) {
+			this.msgId.incrementMsgSequenceNr();
+			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+					.newInstance(this.requester, this.serviceName, this.sessionId);
+			try {
+				deleteSessionCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			} catch (Exception e) {
+				throw new SCServiceException("delete session failed", e);
+			}
+			SCMPMessage reply = this.callback.getMessageSync();
+			if (reply.isFault()) {
+				throw new SCServiceException("create session failed"
+						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			}
+		} finally {
+			this.sessionId = null;
 			this.callback = null;
-			throw new SCServiceException("delete session failed", e);
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
-		if (reply.isFault()) {
-			this.callback = null;
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("create session failed", fault.getCause());
-		}
-		this.msgId = null;
 	}
 
 	/** {@inheritDoc} */
@@ -133,7 +128,7 @@ public class SessionService extends Service implements ISessionService {
 		if (requestMsg == null) {
 			throw new InvalidParameterException("Message must be set.");
 		}
-		if (pendingRequest) {
+		if (this.pendingRequest) {
 			// already executed before - reply still outstanding
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
@@ -160,8 +155,7 @@ public class SessionService extends Service implements ISessionService {
 		SCMPMessage reply = this.callback.getMessageSync();
 		this.pendingRequest = false;
 		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("execute failed", fault.getCause());
+			throw new SCServiceException("execute failed" + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
@@ -179,7 +173,7 @@ public class SessionService extends Service implements ISessionService {
 		if (requestMsg == null) {
 			throw new InvalidParameterException("Message must be set.");
 		}
-		if (pendingRequest) {
+		if (this.pendingRequest) {
 			// already executed before - reply still outstanding
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");

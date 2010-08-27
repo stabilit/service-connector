@@ -57,7 +57,7 @@ public interface ISCClient extends ISC {
 	 *             the exception
 	 * @throws InvalidParameterException
 	 *             port is not within limits 0 to 0xFFFF, host unset<br>
-	 *             keepAliveIntervalInSeconds not within limits 1 to 3600
+	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
 	 */
 	public abstract void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 

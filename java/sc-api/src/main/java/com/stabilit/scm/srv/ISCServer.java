@@ -120,7 +120,8 @@ public interface ISCServer extends ISC {
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset
+	 *             port is not within limits 0 to 0xFFFF, host unset<br>
+	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
 	 */
 	public abstract void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception;
 

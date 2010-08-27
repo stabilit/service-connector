@@ -66,6 +66,37 @@ public class NettyConnectTestCase {
 		}
 	}
 
+	@Test
+	public void connect1000WithoutDisconnect() throws Exception {
+		IConnection[] connections = new IConnection[1000];
+		for (int i = 0; i < 1000; i++) {
+			IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
+			connections[i] = connection;
+			connection.setHost("localhost");
+			connection.setPort(8080);
+			connection.setIdleTimeout(0);
+			IIdleCallback idleCallback = new IdleCallback();
+			IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
+			connection.setContext(connectionContext);
+			String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
+
+			connection.connect();
+			SCMPMessage message = new SCMPMessage();
+			message.setMessageType(SCMPMsgType.ATTACH);
+			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+			ConnectCallback callback = new ConnectCallback();
+			connection.send(message, callback);
+			callback.getMessageSync();
+			if (i % 100 == 0) {
+				System.out.println("connection nr " + i + " is done!");
+			}
+		}
+		for (int i = 0; i < 1000; i++) {
+			connections[i].disconnect();
+		}
+	}
+
 	private class ConnectCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
