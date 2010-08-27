@@ -14,15 +14,15 @@ import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
-public class RegisterServiceDeregisterServiceServerToSCTest {
+public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 
 	private static Process p;
 	private ISCServer server;
 	private String serviceName = "simulation";
 	private String serviceNameAlt = "P01_RTXS_sc1";
 	private String host = "localhost";
-	private int port8080 = 8080;
 	private int port9000 = 9000;
+	private int port8080 = 8080;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -57,6 +57,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();
+		((SCServer) server).setConnectionType("netty.http");
 	}
 	
 	@After
@@ -114,7 +115,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	@Test
 	public void deregisterService_afterValidRegister_registeredThenNotRegistered() throws Exception {
 		server.startListener(host, 9001, 1);
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 		assertEquals(false, server.isRegistered(serviceName));
@@ -124,7 +125,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	public void deregisterService_afterValidRegisterDifferentServiceName_registeredThenNotRegistered()
 			throws Exception {
 		server.startListener(host, 9001, 1);
-		server.registerService(host, port9000, serviceNameAlt, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceNameAlt));
 		server.deregisterService(serviceNameAlt);
 		assertEquals(false, server.isRegistered(serviceNameAlt));
@@ -133,7 +134,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	@Test
 	public void deregisterService_differentThanRegistered_registered() throws Exception {
 		server.startListener(host, 9001, 1);
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceNameAlt);
 		assertEquals(true, server.isRegistered(serviceName));
@@ -148,7 +149,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		for (int i = 0; i < cycles / 10; i++) {
 			System.out.println("RegisterDeregister service iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
-				server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+				server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));
@@ -163,17 +164,17 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 			System.out.println("RegisterDeregister changing connection type iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				server = new SCServer();
-				((SCServer) server).setConnectionType("netty.tcp");
+				((SCServer) server).setConnectionType("netty.http");
 				server.startListener(host, 9001, 0);
-				server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+				server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));
 				server = null;
 				server = new SCServer();
-				((SCServer) server).setConnectionType("netty.http");
+				((SCServer) server).setConnectionType("netty.tcp");
 				server.startListener(host, 9001, 0);
-				server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
+				server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));

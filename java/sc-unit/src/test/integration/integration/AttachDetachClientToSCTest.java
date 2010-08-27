@@ -201,9 +201,10 @@ public class AttachDetachClientToSCTest {
 
 	@Test
 	public void attach_1000ClientsAttachedBeforeDetach_allAttached() throws Exception {
-		ISCClient[] clients = new SCClient[1000];
+		int clientsCount = 1000;
+		ISCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
-		for (; i < 100; i++) {
+		for (; i < clientsCount / 10; i++) {
 			System.out.println("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
@@ -211,18 +212,18 @@ public class AttachDetachClientToSCTest {
 			}
 		}
 		i = 0;
-		for (; i < 1000; i++) {
+		for (; i < clientsCount; i++) {
 			assertEquals(true, clients[i].isAttached());
 		}
 		i = 0;
-		for (; i < 100; i++) {
+		for (; i < clientsCount / 10; i++) {
 			System.out.println("Detaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)].detach();
 			}
 		}
 		i = 0;
-		for (; i < 1000; i++) {
+		for (; i < clientsCount; i++) {
 			assertEquals(false, clients[i].isAttached());
 		}
 	}

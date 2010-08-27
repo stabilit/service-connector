@@ -7,6 +7,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses( { AttachClientToSCTest.class, AttachDetachClientToSCTest.class,
 		AttachClientToSCConnectionTypeTCPTest.class, AttachClientToMultipleSCTest.class,
 		RegisterServiceServerToSCTest.class, RegisterServiceDeregisterServiceServerToSCTest.class,
-		RegisterServiceServerToSCConnectionTypeHttpTest.class})
+		RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest.class,
+		RegisterServiceServerToSCConnectionTypeHttpTest.class,
+		RegisterServiceServerToMultipleSCTest.class })
 public class AllIntegrationTests {
 }
