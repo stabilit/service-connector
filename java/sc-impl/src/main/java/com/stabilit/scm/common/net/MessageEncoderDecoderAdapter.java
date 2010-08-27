@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
+import com.stabilit.scm.common.log.IMessageLogger;
+import com.stabilit.scm.common.log.impl.MessageLogger;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -54,7 +56,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
-
+	IMessageLogger messageLogger = MessageLogger.getInstance();
+	
 	/** {@inheritDoc} */
 	@Override
 	public Object decode(InputStream is) throws Exception {
@@ -131,7 +134,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
-			SCMPPoint.getInstance().fireDecode(this, scmpMsg);
+			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 			return scmpMsg;
 		}
 		// decoding body - depends on body type
@@ -154,7 +157,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			logger.error("decode "+e.getMessage(), e);
 			ExceptionPoint.getInstance().fireException(this, e);
 		}
-		SCMPPoint.getInstance().fireDecode(this, scmpMsg);
+		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 		return scmpMsg;
 	}
 

@@ -26,6 +26,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.listener.ExceptionPoint;
 import com.stabilit.scm.common.listener.SCMPPoint;
+import com.stabilit.scm.common.log.IMessageLogger;
+import com.stabilit.scm.common.log.impl.MessageLogger;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
@@ -58,7 +60,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-
+		IMessageLogger messageLogger = MessageLogger.getInstance();
+		
 		if (scmpMsg.isGroup() == false) {
 			// no group call reset internal status, if group call internal status already set
 			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
@@ -91,7 +94,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.write((byte[]) ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
+					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -103,7 +106,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.write(t); // write body
 					bw.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					SCMPPoint.getInstance().fireEncode(this, scmpMsg);
+					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 					return;
 				}
 				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
@@ -120,7 +123,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", e1);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		SCMPPoint.getInstance().fireEncode(this, scmpMsg);
+		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
 		return;
 	}
 }
