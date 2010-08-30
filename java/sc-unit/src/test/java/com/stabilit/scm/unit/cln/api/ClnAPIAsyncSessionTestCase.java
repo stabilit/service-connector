@@ -90,7 +90,7 @@ public class ClnAPIAsyncSessionTestCase {
 		@Override
 		public void callback(Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
 		}
 	}
 

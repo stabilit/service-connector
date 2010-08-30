@@ -243,7 +243,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "destroyConnection", e);
 		} finally {
 			connection.destroy();
 		}
@@ -260,7 +260,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "disconnectConnection", e);
 		}
 	}
 
@@ -275,7 +275,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.disconnect();
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "forceClosingConnection", e);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class ConnectionPool implements IConnectionPool {
 				}
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "initMinConnections", e);
 				return;
 			}
 			this.freeConnections.add(connection);
@@ -363,7 +363,7 @@ public class ConnectionPool implements IConnectionPool {
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "connectionIdle", e);
 		}
 	}
 

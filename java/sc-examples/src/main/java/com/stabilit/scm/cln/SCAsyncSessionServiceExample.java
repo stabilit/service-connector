@@ -99,14 +99,14 @@ public class SCAsyncSessionServiceExample {
 		public void callback(ISCMessage msg) {
 			IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
 			ISC serviceConnector = sessionContext.getServiceConnector();
-			System.out.println(msg);
+			// TODO TRN	System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}
 
 		@Override
 		public void callback(Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback",  ex);
 		}
 	}
 }

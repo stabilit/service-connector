@@ -96,7 +96,7 @@ public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException valExc = new SCMPValidatorException();
 				valExc.setMessageType(getKey());
 				valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

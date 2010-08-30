@@ -92,7 +92,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			}
 		}
 		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-		exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+		exceptionLogger.logErrorException(logger, this.getClass().getName(), "exceptionCaught", th);
 	}
 
 	private void callback(ChannelBuffer channelBuffer) throws Exception {
@@ -108,7 +108,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
 			this.scmpCallback.callback(ex);
 			return;
 		}

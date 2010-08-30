@@ -240,7 +240,7 @@ public class PublishService extends Service implements IPublishService {
 					PublishService.this.receivePublication();
 				} catch (Exception e) {
 					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logDebugException(logger, this.getClass().getName(), e);
+					exceptionLogger.logDebugException(logger, this.getClass().getName(), "callback", e);
 					SCMPFault fault = new SCMPFault(e);
 					super.callback(fault);
 					return;

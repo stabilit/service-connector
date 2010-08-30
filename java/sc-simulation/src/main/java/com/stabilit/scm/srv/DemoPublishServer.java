@@ -55,7 +55,7 @@ public class DemoPublishServer {
 			thread.start();
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "runPublishServer", ex);
 			this.shutdown();
 		}
 	}
@@ -84,7 +84,7 @@ public class DemoPublishServer {
 					server.publish(serviceName, mask, data);
 				} catch (Exception ex) {
 					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+					exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
 					return;
 				}
 			}
@@ -97,7 +97,7 @@ public class DemoPublishServer {
 			this.publishSrv.deregisterService(serviceName);
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "shutdown", e);
 			this.publishSrv = null;
 		}
 	}
@@ -112,25 +112,25 @@ public class DemoPublishServer {
 
 		@Override
 		public ISCMessage changeSubscription(ISCMessage message) {
-			System.out.println("PublishServer.SrvCallback.changeSubscription()");
+			// TODO TRN System.out.println("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
 		public ISCMessage subscribe(ISCMessage message) {
-			System.out.println("PublishServer.SrvCallback.subscribe()");
+			// TODO TRN System.out.println("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "subscribe", e);
 			}
 			return message;
 		}
 
 		@Override
 		public void unsubscribe(ISCMessage message) {
-			System.out.println("PublishServer.SrvCallback.unsubscribe()");
+			// TODO TRN System.out.println("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message
 			if (data != null && data.getClass() == String.class) {
@@ -140,7 +140,7 @@ public class DemoPublishServer {
 						this.outerContext.getServer().deregisterService(serviceName);
 					} catch (Exception e) {
 						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), "unsubscribe", e);
 					}
 				}
 			}

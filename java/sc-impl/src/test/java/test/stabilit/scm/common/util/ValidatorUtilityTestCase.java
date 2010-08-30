@@ -63,7 +63,7 @@ public class ValidatorUtilityTestCase {
 			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
 		} catch (SCMPValidatorException e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "validateLocalDateTimeTest", e);
 		}
 	}
 

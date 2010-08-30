@@ -92,7 +92,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 			}
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
 			communicationException.setMessageType(getKey());
@@ -182,7 +182,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

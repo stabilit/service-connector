@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 
 public interface IExceptionLogger {
 
-	public abstract void logDebugException(Logger logger, String className, Throwable throwable);
+	public abstract void logDebugException(Logger logger, String className, String methodName, Throwable throwable);
 
-	public abstract void logErrorException(Logger logger, String className, Throwable throwable);
+	public abstract void logErrorException(Logger logger, String className, String methodName, Throwable throwable);
 }

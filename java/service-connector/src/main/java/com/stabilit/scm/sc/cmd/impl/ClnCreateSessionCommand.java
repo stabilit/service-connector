@@ -145,7 +145,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

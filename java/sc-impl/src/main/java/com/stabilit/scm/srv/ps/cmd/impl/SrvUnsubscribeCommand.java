@@ -120,7 +120,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 				throw ex;
 			} catch (Throwable th) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

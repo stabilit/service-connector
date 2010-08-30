@@ -47,6 +47,7 @@ public class MessageLogger implements IMessageLogger {
 	public synchronized void logMessage(String className, SCMPMessage message) {
 		if (logger.isInfoEnabled()) {
 			try {
+				// TODO TRN (write out important attributes)
 				Formatter format = new Formatter();
 				format.format(MSG_SHORT_STR, message);
 				logger.info(format.toString());
@@ -57,6 +58,7 @@ public class MessageLogger implements IMessageLogger {
 		}
 		if (logger.isDebugEnabled()) {
 			try {
+				// TODO TRN (write out all attributes)
 				Formatter format = new Formatter();
 				format.format(MSG_LONG_STR, message);
 				logger.debug(format.toString());

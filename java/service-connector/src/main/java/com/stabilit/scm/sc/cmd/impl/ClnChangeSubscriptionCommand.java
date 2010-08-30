@@ -134,7 +134,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

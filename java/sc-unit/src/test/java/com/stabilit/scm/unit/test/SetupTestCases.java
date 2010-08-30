@@ -343,7 +343,7 @@ public class SetupTestCases {
 					server.publish(serviceName, mask, data);
 				} catch (Exception ex) {
 					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+					exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
 				}
 			}
 		}

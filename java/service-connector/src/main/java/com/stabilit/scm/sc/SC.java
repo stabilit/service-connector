@@ -115,7 +115,7 @@ public final class SC {
 				resp.startListenAsync();
 			} catch (Exception ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, "SC", ex);
+				exceptionLogger.logErrorException(logger, "SC", "run", ex);
 			}
 		}
 	}
@@ -142,7 +142,7 @@ public final class SC {
 			mbs.registerMBean(loggerConfigurator, mxbeanNameLogging);
 		} catch (Throwable th) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "SC", th);
+			exceptionLogger.logErrorException(logger, "SC", "initializeJMX", th);
 		}
 	}
 }

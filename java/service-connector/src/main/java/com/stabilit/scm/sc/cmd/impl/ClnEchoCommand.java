@@ -120,13 +120,13 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 				}
 			} catch (HasFaultResponseException ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

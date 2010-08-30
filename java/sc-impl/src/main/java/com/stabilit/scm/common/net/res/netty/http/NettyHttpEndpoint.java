@@ -98,7 +98,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 			startListenSync();
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
 			this.destroy();
 		}
 	}
@@ -119,7 +119,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 			}
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "stoppListening", ex);
 			return;
 		}
 	}

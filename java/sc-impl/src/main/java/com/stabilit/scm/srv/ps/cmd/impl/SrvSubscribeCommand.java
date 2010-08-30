@@ -135,7 +135,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				throw ex;
 			} catch (Throwable th) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw validatorException;

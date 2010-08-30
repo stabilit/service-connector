@@ -167,7 +167,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				throw ex;
 			} catch (Throwable ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;
@@ -237,7 +237,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 					this.response.write();
 				} catch (Exception ex) {
 					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+					exceptionLogger.logErrorException(logger, this.getClass().getName(), "timeout", ex);
 				}
 				return;
 			}
@@ -250,9 +250,6 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
-				// logging
-				ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-				subscriptionLogger.logNoDataTimeout(this.getClass().getName(), sessionId);
 			} else {
 				// set up reply
 				SCMPMessage reply = null;
@@ -288,7 +285,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				this.response.write();
 			} catch (Exception ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "timeout", ex);
 			}
 		}
 	}

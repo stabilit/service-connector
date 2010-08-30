@@ -90,13 +90,13 @@ public class SrvEchoCommand extends SrvCommandAdapter {
 				}
 			} catch (HasFaultResponseException ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable th) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

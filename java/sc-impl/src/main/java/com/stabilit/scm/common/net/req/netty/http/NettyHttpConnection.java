@@ -159,7 +159,7 @@ public class NettyHttpConnection implements IConnection {
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "connect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
@@ -177,7 +177,7 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
@@ -194,7 +194,7 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "destroy", ex);
 		}
 	}
 
@@ -226,7 +226,7 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "send", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}

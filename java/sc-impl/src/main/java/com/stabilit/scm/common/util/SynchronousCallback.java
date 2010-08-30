@@ -122,7 +122,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			}
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "getMessageSync", e);
 			SCMPFault fault = new SCMPFault(e);
 			return fault;
 		}
@@ -145,7 +145,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "getMessageSyncEverWaiting", e);
 			SCMPFault fault = new SCMPFault(e);
 			return fault;
 		}

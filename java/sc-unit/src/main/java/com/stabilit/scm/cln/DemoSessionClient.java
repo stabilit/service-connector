@@ -47,14 +47,14 @@ public class DemoSessionClient extends Thread {
 			}
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
 		} finally {
 			try {
 				sessionService.deleteSession();
 				sc.detach();
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
 			}
 		}
 	}

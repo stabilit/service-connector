@@ -333,7 +333,7 @@ public class Requester implements IRequester {
 				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "freeConnection", e);
 			}
 		}
 
@@ -346,7 +346,7 @@ public class Requester implements IRequester {
 				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "disconnectConnection", e);
 			}
 		}
 

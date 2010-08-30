@@ -139,7 +139,7 @@ public class SCRequester implements IRequester {
 				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "freeConnection", ex);
 			}
 		}
 
@@ -152,7 +152,7 @@ public class SCRequester implements IRequester {
 				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "disconnectConnection", ex);
 			}
 		}
 

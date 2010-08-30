@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log.impl;
 
-import java.util.Formatter;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -26,8 +24,6 @@ import com.stabilit.scm.common.log.IExceptionLogger;
 public class ExceptionLogger implements IExceptionLogger {
 
 	private static final IExceptionLogger EXCEPTION_LOGGER = new ExceptionLogger();
-	
-	private static String EXC_STR = "exception by %s - %s:%s";
 
 	/**
 	 * Instantiates a new exception logger. Private for singelton use.
@@ -41,25 +37,19 @@ public class ExceptionLogger implements IExceptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logDebugException(Logger logger, String className, Throwable throwable) {
+	public synchronized void logDebugException(Logger logger, String className, String methodName, Throwable throwable) {
 		if (logger.isDebugEnabled() == false) {
 			return;
 		}
-		Formatter format = new Formatter();
-		format.format(EXC_STR, className, throwable, throwable.getCause());
-		logger.debug(format.toString());
-		format.close();
+		logger.debug("*** ignore:"+className+"/"+methodName+" - "+throwable.getMessage(), throwable);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logErrorException(Logger logger, String className, Throwable throwable) {
+	public synchronized void logErrorException(Logger logger, String className, String methodName, Throwable throwable) {
 		if (logger.isEnabledFor(Level.ERROR) == false) {
 			return;
 		}
-		Formatter format = new Formatter();
-		format.format(EXC_STR, className, throwable, throwable.getCause());
-		logger.error(format.toString());
-		format.close();
+		logger.error("***:"+className+"/"+methodName+" - "+throwable.getMessage(), throwable);
 	}
 }

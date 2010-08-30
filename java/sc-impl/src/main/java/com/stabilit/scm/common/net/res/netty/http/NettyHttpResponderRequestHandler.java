@@ -165,7 +165,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "messageReceived", ex);
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {
@@ -184,7 +184,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 		} catch (Throwable th) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "messageReceived", th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
@@ -198,7 +198,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-		exceptionLogger.logErrorException(logger, this.getClass().getName(), e.getCause());
+		exceptionLogger.logErrorException(logger, this.getClass().getName(), "exceptionCaught", e.getCause());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
@@ -239,7 +239,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			response.write();
 		} catch (Exception ex) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
 			this.callback(response, ex);
 		}
 	}
@@ -254,7 +254,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	 */
 	public void callback(IResponse response, Exception ex) {
 		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-		exceptionLogger.logErrorException(logger, this.getClass().getName(), ex);
+		exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -266,7 +266,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		try {
 			response.write();
 		} catch (Throwable th) {
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), th);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", th);
 		}
 	}
 

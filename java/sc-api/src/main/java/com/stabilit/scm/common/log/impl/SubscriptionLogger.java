@@ -44,6 +44,7 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
+	// TODO TRN use this method in code
 	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
 		if (logger.isInfoEnabled() == false) {
 			return;
@@ -56,6 +57,7 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
+	// TODO TRN use this method in code
 	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
 		if (logger.isInfoEnabled() == false) {
 			return;
@@ -68,6 +70,7 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
+	// TODO TRN use this method in code
 	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
 		if (logger.isInfoEnabled() == false) {
 			return;

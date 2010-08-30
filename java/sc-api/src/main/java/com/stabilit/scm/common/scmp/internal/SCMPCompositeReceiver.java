@@ -181,7 +181,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.outputStream.flush();
 			} catch (Exception ex) {
-				exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logDebugException(logger, this.getClass().getName(), "getBody", ex);
 				return null;
 			}
 			this.outputStream.toByteArray();
@@ -198,7 +198,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception ex) {
-				exceptionLogger.logDebugException(logger, this.getClass().getName(), ex);
+				exceptionLogger.logDebugException(logger, this.getClass().getName(), "getBody", ex);
 				return null;
 			}
 			return this.writer.toString();

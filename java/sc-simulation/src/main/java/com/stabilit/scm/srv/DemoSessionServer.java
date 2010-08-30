@@ -50,7 +50,7 @@ public class DemoSessionServer {
 			this.scSrv.registerService("localhost", 9000, serviceName, 10, 10, srvCallback);
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "runSessionServer", e);
 			this.shutdown();
 		}
 	}
@@ -60,7 +60,7 @@ public class DemoSessionServer {
 			this.scSrv.deregisterService(serviceName);
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "shutdown", e);
 			this.scSrv = null;
 		}
 	}
@@ -75,18 +75,18 @@ public class DemoSessionServer {
 
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
-			System.out.println("SessionServer.SrvCallback.createSession()");
+			// TODO TRN System.out.println("SessionServer.SrvCallback.createSession()");
 			return message;
 		}
 
 		@Override
 		public void deleteSession(ISCMessage message) {
-			System.out.println("SessionServer.SrvCallback.deleteSession()");
+			// TODO TRN System.out.println("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
 		public void abortSession(ISCMessage message) {
-			System.out.println("SessionServer.SrvCallback.abortSession()");
+			// TODO TRN System.out.println("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
@@ -101,14 +101,14 @@ public class DemoSessionServer {
 						kill.start();
 					} catch (Exception e) {
 						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), "execute", e);
 					}
 				} else {
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+						exceptionLogger.logErrorException(logger, this.getClass().getName(), "execute", e);
 					}
 				}
 			}
@@ -138,7 +138,7 @@ public class DemoSessionServer {
 				this.server.deregisterService(serviceName);
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
 			}
 		}
 	}

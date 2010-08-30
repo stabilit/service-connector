@@ -35,14 +35,14 @@ public class DemoPublishClient extends Thread {
 				;
 		} catch (Exception e) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
 		} finally {
 			try {
 				publishService.unsubscribe();
 				sc.detach();
 			} catch (Exception e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), e);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
 			}
 		}
 	}

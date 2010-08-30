@@ -18,6 +18,9 @@ package com.stabilit.scm.common.conf;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
+
 /**
  * The Interface IConstants. SCM constants.
  * 
