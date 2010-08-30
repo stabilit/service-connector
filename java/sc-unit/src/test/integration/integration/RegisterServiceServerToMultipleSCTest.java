@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
