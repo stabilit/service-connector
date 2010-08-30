@@ -75,18 +75,18 @@ public class DemoSessionServer {
 
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
-			// TODO TRN System.out.println("SessionServer.SrvCallback.createSession()");
+			logger.info("SessionServer.SrvCallback.createSession()");
 			return message;
 		}
 
 		@Override
 		public void deleteSession(ISCMessage message) {
-			// TODO TRN System.out.println("SessionServer.SrvCallback.deleteSession()");
+			logger.info("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
 		public void abortSession(ISCMessage message) {
-			// TODO TRN System.out.println("SessionServer.SrvCallback.abortSession()");
+			logger.info("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override

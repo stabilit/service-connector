@@ -99,7 +99,7 @@ public class SCAsyncSessionServiceExample {
 		public void callback(ISCMessage msg) {
 			IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
 			ISC serviceConnector = sessionContext.getServiceConnector();
-			// TODO TRN	System.out.println(msg);
+			System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}
 

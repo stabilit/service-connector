@@ -112,13 +112,13 @@ public class DemoPublishServer {
 
 		@Override
 		public ISCMessage changeSubscription(ISCMessage message) {
-			// TODO TRN System.out.println("PublishServer.SrvCallback.changeSubscription()");
+			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
 		public ISCMessage subscribe(ISCMessage message) {
-			// TODO TRN System.out.println("PublishServer.SrvCallback.subscribe()");
+			logger.info("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
@@ -130,7 +130,7 @@ public class DemoPublishServer {
 
 		@Override
 		public void unsubscribe(ISCMessage message) {
-			// TODO TRN System.out.println("PublishServer.SrvCallback.unsubscribe()");
+			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message
 			if (data != null && data.getClass() == String.class) {
