@@ -14,103 +14,121 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.sc.cmd.impl;
+package com.stabilit.scm.srv.rr.cmd.impl;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
-import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
-import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPMessageId;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Session;
+import com.stabilit.scm.srv.ISCSessionServerCallback;
+import com.stabilit.scm.srv.SrvService;
 
 /**
- * The Class ClnDataCommand. Responsible for validation and execution of data command. Data command sends any data to a
- * server. Data command runs asynchronously and passes through any parts messages.
+ * The Class SrvExecuteCommand. Responsible for validation and execution of server execute command. 
  * 
  * @author JTraber
  */
-public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
+public class SrvExecuteCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnDataCommand.class);
-
+	protected final static Logger logger = Logger.getLogger(SrvExecuteCommand.class);
+	
 	/**
-	 * Instantiates a new ClnDataCommand.
+	 * Instantiates a new SrvExecuteCommand.
 	 */
-	public ClnDataCommand() {
-		this.commandValidator = new ClnDataCommandValidator();
+	public SrvExecuteCommand() {
+		this.commandValidator = new SrvExecuteCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_DATA;
+		return SCMPMsgType.SRV_EXECUTE;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
-		ClnDataCommandCallback callback = new ClnDataCommandCallback(request, response, responderCallback);
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		Session session = this.getSessionById(sessionId);
+	public void run(IRequest request, IResponse response) throws Exception {
+		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		// look up srvService
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		Server server = session.getServer();
-		// try sending to backend server
-		server.sendData(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
-		return;
-	}
+		SCMPMessage scmpMessage = request.getMessage();
+		// create scMessage
+		SCMessage scMessage = new SCMessage();
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(scmpMessage.getSessionId());
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean isAsynchronous() {
-		return true;
+		// inform callback with scMessages
+		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).execute(scMessage);
+
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		messageId.incrementMsgSequenceNr();
+		// set up reply
+		SCMPMessage reply = new SCMPMessage();
+		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+		reply.setMessageType(this.getKey());
+		String msgInfo = scReply.getMessageInfo();
+		if (msgInfo != null) {
+			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
+		}
+		reply.setBody(scReply.getData());
+
+		if (scReply.isFault()) {
+			SCMessageFault scFault = (SCMessageFault) scReply;
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		}
+		response.setSCMP(reply);
 	}
 
 	/**
-	 * The Class ClnDataCommandValidator.
+	 * The Class SrvExecuteCommandValidator.
 	 */
-	private class ClnDataCommandValidator implements ICommandValidator {
+	public class SrvExecuteCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
+			SCMPMessage message = request.getMessage();
+
 			try {
-				SCMPMessage message = request.getMessage();
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
+				// serviceName
+				String serviceName = (String) message.getServiceName();
+				if (serviceName == null || serviceName.equals("")) {
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+				}
 				// message info
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
 				if (messageInfo != null) {
 					ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 				}
@@ -121,50 +139,13 @@ public class ClnDataCommand extends CommandAdapter implements IPassThroughPartMs
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable ex) {
+			} catch (Throwable th) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
+				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
-		}
-	}
-
-	/**
-	 * The Class ClnDataCommandCallback.
-	 */
-	private class ClnDataCommandCallback extends CommandCallback {
-
-		/** The callback. */
-		private IResponderCallback callback;
-		/** The request. */
-		private IRequest request;
-		/** The response. */
-		private IResponse response;
-
-		/**
-		 * Instantiates a new ClnDataCommandCallback.
-		 * 
-		 * @param request
-		 *            the request
-		 * @param response
-		 *            the response
-		 * @param callback
-		 *            the callback
-		 */
-		public ClnDataCommandCallback(IRequest request, IResponse response, IResponderCallback callback) {
-			this.callback = callback;
-			this.request = request;
-			this.response = response;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void callback(SCMPMessage scmpReply) {
-			scmpReply.setMessageType(getKey());
-			this.response.setSCMP(scmpReply);
-			this.callback.callback(request, response);
 		}
 	}
 }

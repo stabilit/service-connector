@@ -14,14 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.unit.test.srvData.sync;
+package com.stabilit.scm.unit.test.srvExecute.async;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -31,7 +32,9 @@ import com.stabilit.scm.unit.test.session.SuperSessionTestCase;
 /**
  * @author JTraber
  */
-public class SrvDataSyncTestCase extends SuperSessionTestCase {
+public class SrvExecuteAsyncTestCase extends SuperSessionTestCase {
+
+	private static boolean pendingRequest = false;
 
 	/**
 	 * The Constructor.
@@ -39,30 +42,51 @@ public class SrvDataSyncTestCase extends SuperSessionTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public SrvDataSyncTestCase(String fileName) {
+	public SrvExecuteAsyncTestCase(String fileName) {
 		super(fileName);
 	}
 
 	@Test
-	public void multipleSrvDataTest() throws Exception {
+	public void multipleSrvExecuteTest() throws Exception {
 
 		for (int i = 0; i < 100; i++) {
-			SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req,
+			SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
 					"simulation", this.sessionId);
-			clnDataCall.setMessagInfo("message info");
-			clnDataCall.setRequestBody("get Data (query)");
-			clnDataCall.invoke(this.sessionCallback, 3);
-			SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+			clnExecuteCall.setMessagInfo("message info");
+			clnExecuteCall.setRequestBody("get Data (query)");
+			SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback(clnExecuteCall);
+			SrvExecuteAsyncTestCase.pendingRequest = true;
+			clnExecuteCall.invoke(callback, 3);
+			while (SrvExecuteAsyncTestCase.pendingRequest == true);
+		}
+	}
 
+	private class SrvExecuteTestCaseCallback implements ISCMPCallback {
+
+		private SCMPClnExecuteCall clnExecuteCall;
+
+		public SrvExecuteTestCaseCallback(SCMPClnExecuteCall clnExecuteCall) {
+			this.clnExecuteCall = clnExecuteCall;
+		}
+
+		@Override
+		public void callback(SCMPMessage scmpReply) throws Exception {
+			SrvExecuteAsyncTestCase.pendingRequest = false;
 			Assert.assertEquals("message data test case", scmpReply.getBody());
-			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply
+					.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			int bodyLength = "message data test case".length();
 			Assert.assertEquals(bodyLength + "", scmpReply.getBodyLength() + "");
-			Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), scmpReply.getMessageType());
-			String serviceName = clnDataCall.getRequest().getServiceName();
-			String sessionId = clnDataCall.getRequest().getSessionId();
+			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), scmpReply.getMessageType());
+			String serviceName = clnExecuteCall.getRequest().getServiceName();
+			String sessionId = clnExecuteCall.getRequest().getSessionId();
 			Assert.assertEquals(serviceName, scmpReply.getServiceName());
 			Assert.assertEquals(sessionId, scmpReply.getSessionId());
+		}
+
+		@Override
+		public void callback(Exception ex) {
+			SrvExecuteAsyncTestCase.pendingRequest = false;
 		}
 	}
 }

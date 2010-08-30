@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.scmp.SCMPBodyType;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -43,9 +43,9 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void groupCallTest() throws Exception {
-		SCMPClnDataCall dataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
 				this.sessionId);
-		ISCMPCall groupCall = dataCall.openGroup();
+		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("reflect: ");
@@ -65,15 +65,15 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sb.toString(), res.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), res.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals(sb.length() + "", res.getBodyLength() + "");
-		Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), res.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), res.getMessageType());
 	}
 
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
-		SCMPClnDataCall dataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
 				this.sessionId);
 
-		ISCMPCall groupCall = dataCall.openGroup();
+		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 		StringBuilder expected = new StringBuilder();
 		sb.append("reflect: ");
@@ -96,6 +96,6 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 		Assert.assertEquals(expected.length() + "", res.getBodyLength() + "");
 		Assert.assertEquals(expected.toString(), res.getBody());
-		Assert.assertEquals(SCMPMsgType.CLN_DATA.getValue(), res.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), res.getMessageType());
 	}
 }

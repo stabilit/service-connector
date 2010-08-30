@@ -28,7 +28,7 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPSrvAbortSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvChangeSubscriptionCall;
 import com.stabilit.scm.common.call.SCMPSrvCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPSrvDataCall;
+import com.stabilit.scm.common.call.SCMPSrvExecuteCall;
 import com.stabilit.scm.common.call.SCMPSrvDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPSrvEchoCall;
 import com.stabilit.scm.common.call.SCMPSrvSubscribeCall;
@@ -239,9 +239,9 @@ public class Server {
 	 *            the callback
 	 */
 	public void sendData(SCMPMessage message, ISCMPCallback callback, int timeoutInSeconds) {
-		SCMPSrvDataCall srvDataCall = (SCMPSrvDataCall) SCMPCallFactory.SRV_DATA_CALL.newInstance(requester, message);
+		SCMPSrvExecuteCall srvExecuteCall = (SCMPSrvExecuteCall) SCMPCallFactory.SRV_EXECUTE_CALL.newInstance(requester, message);
 		try {
-			srvDataCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
+			srvExecuteCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutInSeconds));
 		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);

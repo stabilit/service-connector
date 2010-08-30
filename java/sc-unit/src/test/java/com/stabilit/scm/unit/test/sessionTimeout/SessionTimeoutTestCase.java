@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPClnEchoCall;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -51,13 +51,13 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		String sessionId = responseMessage.getSessionId();
 		Thread.sleep(1200);
 		// session should not exist
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
 				sessionId);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setRequestBody("get Data (query)");
-		clnDataCall.invoke(this.attachCallback, 3);
+		clnExecuteCall.setMessagInfo("message info");
+		clnExecuteCall.setRequestBody("get Data (query)");
+		clnExecuteCall.invoke(this.attachCallback, 3);
 		SCMPMessage msg = this.attachCallback.getMessageSync();
-		SCTest.verifyError(msg, SCMPError.NOT_FOUND, " [no session found for " + sessionId + "]", SCMPMsgType.CLN_DATA);
+		SCTest.verifyError(msg, SCMPError.NOT_FOUND, " [no session found for " + sessionId + "]", SCMPMsgType.CLN_EXECUTE);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "simulation", sessionId);
@@ -84,11 +84,11 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 			Thread.sleep(400);
 		}
 		// session should still exist
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
 				sessionId);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setRequestBody("get Data (query)");
-		clnDataCall.invoke(this.attachCallback, 3);
+		clnExecuteCall.setMessagInfo("message info");
+		clnExecuteCall.setRequestBody("get Data (query)");
+		clnExecuteCall.invoke(this.attachCallback, 3);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL

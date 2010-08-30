@@ -50,10 +50,10 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	REGISTER_SERVICE("REG"),
 	/** The DEREGISTER_SERVICE. */
 	DEREGISTER_SERVICE("DRG"),
-	/** The CLN_DATA. */
-	CLN_DATA("CDA"),
-	/** The SRV_DATA. */
-	SRV_DATA("SDA"),
+	/** The CLN_EXECUTE. */
+	CLN_EXECUTE("CXE"),
+	/** The SRV_EXECUTE. */
+	SRV_EXECUTE("SXE"),
 	/** The CLN_ECHO. */
 	CLN_ECHO("CEC"),
 	/** The SRV_ECHO. */

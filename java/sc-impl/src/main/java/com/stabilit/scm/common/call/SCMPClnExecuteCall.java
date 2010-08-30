@@ -20,47 +20,69 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPSrvDataCall. Call send data to backend server.
+ * The Class SCMPClnExecuteCall. Call sends data to backend server over SC.
  * 
  * @author JTraber
  */
-public class SCMPSrvDataCall extends SCMPServerCallAdapter {
+public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPSrvDataCall.class);
+	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteCall.class);
 	
 	/**
-	 * Instantiates a new SCMPSrvDataCall.
+	 * Instantiates a new SCMPClnExecuteCall.
 	 */
-	public SCMPSrvDataCall() {
-		this(null, null);
+	public SCMPClnExecuteCall() {
+		this(null, null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPSrvDataCall.
+	 * Instantiates a new SCMPClnExecuteCall.
 	 * 
 	 * @param req
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *            the requester to use when invoking call
+	 * @param scSession
+	 *            the sc session
 	 */
-	public SCMPSrvDataCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
+	public SCMPClnExecuteCall(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvDataCall(req, receivedMessage);
+	public ISCMPCall newInstance(IRequester client, String serviceName, String sessionId) {
+		return new SCMPClnExecuteCall(client, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_DATA;
+		return SCMPMsgType.CLN_EXECUTE;
+	}
+
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param messageInfo
+	 *            the new message info
+	 */
+	public void setMessagInfo(String messageInfo) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
 	}
 }

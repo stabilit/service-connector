@@ -44,7 +44,7 @@ public class SCMPCompositeTestCase {
 
 		SCMPMessage request = new SCMPMessage();
 		request.setBody("request");
-		request.setMessageType(SCMPMsgType.CLN_DATA);
+		request.setMessageType(SCMPMsgType.CLN_EXECUTE);
 
 		SCMPPart firstPart = new SCMPPart();
 		String bodyString = "first part request";

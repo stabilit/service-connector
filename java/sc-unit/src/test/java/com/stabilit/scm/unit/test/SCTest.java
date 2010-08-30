@@ -56,10 +56,10 @@ import com.stabilit.scm.unit.test.scmpVersion.DecodeSCMPVersionTestCase;
 import com.stabilit.scm.unit.test.session.ClnCreateSessionTestCase;
 import com.stabilit.scm.unit.test.session.ClnDeleteSessionTestCase;
 import com.stabilit.scm.unit.test.sessionTimeout.SessionTimeoutTestCase;
-import com.stabilit.scm.unit.test.srvData.async.SrvDataAsyncTestCase;
-import com.stabilit.scm.unit.test.srvData.async.SrvDataLargeAsyncTestCase;
-import com.stabilit.scm.unit.test.srvData.sync.SrvDataLargeSyncTestCase;
-import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
+import com.stabilit.scm.unit.test.srvExecute.async.SrvExecuteAsyncTestCase;
+import com.stabilit.scm.unit.test.srvExecute.async.SrvExecuteLargeAsyncTestCase;
+import com.stabilit.scm.unit.test.srvExecute.sync.SrvExecuteLargeSyncTestCase;
+import com.stabilit.scm.unit.test.srvExecute.sync.SrvExecuteSyncTestCase;
 
 /**
  * @author JTraber
@@ -71,10 +71,10 @@ import com.stabilit.scm.unit.test.srvData.sync.SrvDataSyncTestCase;
 		ClnDeleteSessionTestCase.class, // 
 		RegisterServiceTestCase.class, // 
 		DeRegisterServiceTestCase.class, // 
-		SrvDataSyncTestCase.class, // 
-		SrvDataLargeSyncTestCase.class, // 
-		SrvDataAsyncTestCase.class,// 
-		SrvDataLargeAsyncTestCase.class, //
+		SrvExecuteSyncTestCase.class, // 
+		SrvExecuteLargeSyncTestCase.class, // 
+		SrvExecuteAsyncTestCase.class,// 
+		SrvExecuteLargeAsyncTestCase.class, //
 		ManageTestCase.class, //
 		ConnectionPoolTestCase.class, // 
 		MessageIdTestCase.class,// 

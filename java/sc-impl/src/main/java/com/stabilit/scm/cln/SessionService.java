@@ -24,7 +24,7 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
@@ -135,18 +135,18 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional
-			clnDataCall.setMessagInfo(msgInfo);
+			clnExecuteCall.setMessagInfo(msgInfo);
 		}
-		clnDataCall.setCompressed(requestMsg.isCompressed());
-		clnDataCall.setRequestBody(requestMsg.getData());
+		clnExecuteCall.setCompressed(requestMsg.isCompressed());
+		clnExecuteCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
 		try {
-			clnDataCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			clnExecuteCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -180,18 +180,18 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(this.requester,
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional
-			clnDataCall.setMessagInfo(msgInfo);
+			clnExecuteCall.setMessagInfo(msgInfo);
 		}
-		clnDataCall.setCompressed(requestMsg.isCompressed());
-		clnDataCall.setRequestBody(requestMsg.getData());
+		clnExecuteCall.setCompressed(requestMsg.isCompressed());
+		clnExecuteCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(this, messageCallback);
 		try {
-			clnDataCall.invoke(scmpCallback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			clnExecuteCall.invoke(scmpCallback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);

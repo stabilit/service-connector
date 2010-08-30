@@ -54,8 +54,8 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall INSPECT_CALL = new SCMPInspectCall();
 	/** The MANAGE_CALL. */
 	public static final ISCMPCall MANAGE_CALL = new SCMPManageCall();
-	/** The CLN_DATA_CALL. */
-	public static final ISCMPCall CLN_DATA_CALL = new SCMPClnDataCall();
+	/** The CLN_EXECUTE_CALL. */
+	public static final ISCMPCall CLN_EXECUTE_CALL = new SCMPClnExecuteCall();
 	/** The CLN_ECHO_CALL. */
 	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
 
@@ -78,8 +78,8 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall SRV_ABORT_SESSION = new SCMPSrvAbortSessionCall();
 	/** The Constant SRV_ECHO_CALL. */
 	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
-	/** The Constant SRV_DATA_CALL. */
-	public static final ISCMPCall SRV_DATA_CALL = new SCMPSrvDataCall();
+	/** The Constant SRV_EXECUTE_CALL. */
+	public static final ISCMPCall SRV_EXECUTE_CALL = new SCMPSrvExecuteCall();
 
 	/** The SRV_SUBSCRIBE_CALL. */
 	public static final ISCMPCall SRV_SUBSCRIBE_CALL = new SCMPSrvSubscribeCall();

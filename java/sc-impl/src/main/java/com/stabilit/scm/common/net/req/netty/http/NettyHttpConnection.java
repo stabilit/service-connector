@@ -36,7 +36,6 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.Loggers;

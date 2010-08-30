@@ -22,7 +22,7 @@ import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvDataCommand;
+import com.stabilit.scm.srv.rr.cmd.impl.SrvExecuteCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 
@@ -66,8 +66,8 @@ public class SessionServerCommandFactory extends CommandFactory {
 		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
 		ICommand srvEchoCommand = new SrvEchoCommand();
 		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
-		ICommand srvDataCommand = new SrvDataCommand();
-		commandFactory.addCommand(srvDataCommand.getKey(), srvDataCommand);
+		ICommand srvExecuteCommand = new SrvExecuteCommand();
+		commandFactory.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
 		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
 		commandFactory.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
 	}

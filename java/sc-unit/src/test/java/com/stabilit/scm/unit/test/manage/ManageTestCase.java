@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnDataCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPManageCall;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -82,11 +82,11 @@ public class ManageTestCase extends SuperAttachTestCase {
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		// try to send data over first created session - should work
-		SCMPClnDataCall clnDataCall = (SCMPClnDataCall) SCMPCallFactory.CLN_DATA_CALL.newInstance(req,
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
 				this.serviceName, sessionId);
-		clnDataCall.setMessagInfo("message info");
-		clnDataCall.setRequestBody("get Data (query)");
-		clnDataCall.invoke(callback, 3);
+		clnExecuteCall.setMessagInfo("message info");
+		clnExecuteCall.setRequestBody("get Data (query)");
+		clnExecuteCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
 

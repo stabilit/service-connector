@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.util.TimerTaskWrapper;
 
 /**
- * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
- * between a client and a server.
+ * The Class Session. Provides unique id and an attribute map to store data. 
+ * A session represents virtual relation between a client and a server.
  */
 public class Session {
 
