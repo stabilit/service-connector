@@ -41,7 +41,6 @@ public class SessionLogger implements ISessionLogger {
 	public static ISessionLogger getInstance() {
 		return SessionLogger.SESSION_LOGGER;
 	}
-	
 
 	/** {@inheritDoc} */
 	@Override

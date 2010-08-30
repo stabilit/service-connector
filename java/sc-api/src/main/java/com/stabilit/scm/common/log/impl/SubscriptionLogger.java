@@ -22,17 +22,15 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.Loggers;
-import com.stabilit.scm.common.scmp.SCMPMessage;
 
 public class SubscriptionLogger implements ISubscriptionLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 	private static final ISubscriptionLogger SUBSCRIPTION_LOGGER = new SubscriptionLogger();
 
-	private static String NO_DATA_TIMEOUT_EVENT_STR = "no data timeout by class %s - for sessionId %s";
-	private static String FIRE_POLL_EVENT_STR = "fire poll by class %s - for sessionId %s, polled message %s, now %s messages in queue";
-	private static String FIRE_ADD_EVENT_STR = "fire add by class %s - add message %s, now %s messages in queue";
-	private static String FIRE_REMOVE_EVENT_STR = "remove by class %s - remove message, now %s messages in queue";
+	private static String SUBSCRIBE_STR = "session:%s - subscribing to:%s - with mask:%s";
+	private static String CHANGE_SUBSCRIBE_STR = "session:%s - subscribed to:%s - new mask:%s";
+	private static String UNSUBSCRIBE_STR = "session:%s - unsubscribing from:%s";
 
 	/**
 	 * Instantiates a new subscription logger. Private for singelton use.
@@ -46,48 +44,36 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logNoDataTimeout(String className, String sessionId) {
-		if (logger.isDebugEnabled() == false) {
+	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
+		if (logger.isInfoEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(NO_DATA_TIMEOUT_EVENT_STR, className, sessionId);
+		format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
 		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logPoll(String className, String sessionId, SCMPMessage queueMessage, int queueSize) {
-		if (SubscriptionLogger.logger.isDebugEnabled() == false) {
+	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
+		if (logger.isInfoEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(FIRE_POLL_EVENT_STR, className, sessionId, queueMessage, queueSize);
+		format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
 		logger.debug(format.toString());
 		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logSubscribe(String className, SCMPMessage queueMessage, int queueSize) {
-		if (logger.isDebugEnabled() == false) {
+	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
+		if (logger.isInfoEnabled() == false) {
 			return;
 		}
 		Formatter format = new Formatter();
-		format.format(FIRE_ADD_EVENT_STR, className, queueMessage, queueSize);
-		logger.debug(format.toString());
-		format.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void logUnsubscribe(String className, int queueSize) {
-		if (SubscriptionLogger.logger.isDebugEnabled() == false) {
-			return;
-		}
-		Formatter format = new Formatter();
-		format.format(FIRE_REMOVE_EVENT_STR, className, queueSize);
+		format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
 		logger.debug(format.toString());
 		format.close();
 	}

@@ -16,15 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.common.log;
 
-import com.stabilit.scm.common.scmp.SCMPMessage;
 
 public interface ISubscriptionLogger {
 
-	public abstract void logNoDataTimeout(String className, String sessionId);
+	public abstract void logSubscribe(String serviceName, String sessionId, String mask);
 
-	public abstract void logPoll(String className, String sessionId, SCMPMessage queueMessage, int queueSize);
-
-	public abstract void logSubscribe(String className, SCMPMessage queueMessage, int queueSize);
-
-	public abstract void logUnsubscribe(String className, int queueSize);
+	public abstract void logChangeSubscribe(String serviceName, String sessionId, String mask);
+	
+	public abstract void logUnsubscribe(String serviceName, String sessionId);
 }
