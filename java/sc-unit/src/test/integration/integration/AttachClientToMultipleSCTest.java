@@ -49,27 +49,16 @@ public class AttachClientToMultipleSCTest {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "oneTimeSetUp",  e);
+				exceptionLogger.logErrorException(logger, "AttachClientToMultipleSCTest", "oneTimeSetUp",  e);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "AttachClientToMultipleSCTest", "oneTimeSetUp",  e);
 		}
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		/*SCClient endClient1 = new SCClient();
-		SCClient endClient2 = new SCClient();
-		try {
-			endClient1.attach(localhost, port8080);
-			endClient2.attach(host, port1);
-			((SCClient) endClient1).killSC();
-			((SCClient) endClient2).killSC();
-		} catch (SCServiceException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		p.destroy();
 		r.destroy();
 	}
