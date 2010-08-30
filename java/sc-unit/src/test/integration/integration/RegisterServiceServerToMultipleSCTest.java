@@ -97,14 +97,14 @@ public class RegisterServiceServerToMultipleSCTest {
 	}
 
 	@Test
-	public void registerService_withDifferentConnectionTypesHttpFirst_fromNotAttachedToAttached()
+	public void registerService_withDifferentConnectionTypesHttpFirst_registeredThenNot()
 			throws Exception {
 		server.startListener(host, 9001, 0);
-		((SCClient) server).setConnectionType("netty.http");
+		((SCServer) server).setConnectionType("netty.http");
 		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(false, server.isRegistered(serviceNameAlt));
-		((SCClient) server).setConnectionType("netty.tcp");
+		((SCServer) server).setConnectionType("netty.tcp");
 		server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(true, server.isRegistered(serviceNameAlt));
@@ -115,12 +115,13 @@ public class RegisterServiceServerToMultipleSCTest {
 	}
 
 	@Test
-	public void registerService_withDifferentConnectionTypesTcpFirst_fromNotAttachedToAttached()
+	public void registerService_withDifferentConnectionTypesTcpFirst_registeredThenNot()
 			throws Exception {
+		server.startListener(host, 9001, 0);
 		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(false, server.isRegistered(serviceNameAlt));
-		((SCClient) server).setConnectionType("netty.http");
+		((SCServer) server).setConnectionType("netty.http");
 		server.registerService(host, port1, serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(true, server.isRegistered(serviceNameAlt));
@@ -131,12 +132,13 @@ public class RegisterServiceServerToMultipleSCTest {
 	}
 
 	@Test
-	public void registerService_tcpConnectionType_fromNotAttachedToAttached() throws Exception {
-		((SCClient) server).setConnectionType("netty.http");
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+	public void registerService_httpConnectionType_registeredThenNot() throws Exception {
+		server.startListener(host, 9001, 0);
+		((SCServer) server).setConnectionType("netty.http");
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(false, server.isRegistered(serviceNameAlt));
-		server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+		server.registerService(host, port1, serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		assertEquals(true, server.isRegistered(serviceNameAlt));
 		server.deregisterService(serviceName);
@@ -145,6 +147,103 @@ public class RegisterServiceServerToMultipleSCTest {
 		assertEquals(false, server.isRegistered(serviceNameAlt));
 	}
 
+	@Test
+	public void registerServiceDeregisterService_onTwoSCsHttp_periodicallyRegistered() throws Exception {
+		server.startListener(host, 9001, 0);
+		((SCServer) server).setConnectionType("netty.http");
+		for (int i = 0; i < 100; i++) {
+			server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port1, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+		}
+	}
+
+	@Test
+	public void registerServiceDeregisterService_onTwoSCsTcp_periodicallyRegistered() throws Exception {
+		server.startListener(host, 9001, 0);
+		for (int i = 0; i < 100; i++) {
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+		}
+	}
+	
+	@Test
+	public void registerServiceDeregisterService_onTwoSCsBoth_periodicallyRegistered() throws Exception {
+		server.startListener(host, 9001, 0);
+		for (int i = 0; i < 100; i++) {
+			((SCServer) server).setConnectionType("netty.tcp");
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			((SCServer) server).setConnectionType("netty.http");
+			server.registerService(host, port1, serviceName, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceName));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceName);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceName));
+		}
+	}
+
+	@Test
+	public void registerServiceDeregisterService_onTwoSCsChangingConnectionTypes_periodicallyRegistered() throws Exception {
+		server.startListener(host, 9001, 0);
+		for (int i = 0; i < 50; i++) {
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			((SCServer) server).setConnectionType("netty.http");
+			server.registerService(host, port1, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+			server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
+			((SCServer) server).setConnectionType("netty.tcp");
+			server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+			((SCServer) server).setConnectionType("netty.tcp");
+		}
+	}
+
+	@Test
+	public void registerServiceDeregisterService_onTwoSCsChangingServices_periodicallyRegistered() throws Exception {
+		server.startListener(host, 9001, 0);
+		for (int i = 0; i < 50; i++) {
+			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+			server.registerService(host, port65535, serviceName, 1, 1, new CallBack());
+			server.registerService(host, port9000, serviceNameAlt, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(serviceName));
+			assertEquals(true, server.isRegistered(serviceNameAlt));
+			server.deregisterService(serviceName);
+			server.deregisterService(serviceNameAlt);
+			assertEquals(false, server.isRegistered(serviceName));
+			assertEquals(false, server.isRegistered(serviceNameAlt));
+		}
+	}
+	
 	private class CallBack implements ISCServerCallback {
 	}
 }
