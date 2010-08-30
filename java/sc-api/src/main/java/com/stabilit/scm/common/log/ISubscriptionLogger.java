@@ -24,7 +24,7 @@ public interface ISubscriptionLogger {
 
 	public abstract void logPoll(String className, String sessionId, SCMPMessage queueMessage, int queueSize);
 
-	public abstract void logAdd(String className, SCMPMessage queueMessage, int queueSize);
+	public abstract void logSubscribe(String className, SCMPMessage queueMessage, int queueSize);
 
-	public abstract void logRemove(String className, int queueSize);
+	public abstract void logUnsubscribe(String className, int queueSize);
 }

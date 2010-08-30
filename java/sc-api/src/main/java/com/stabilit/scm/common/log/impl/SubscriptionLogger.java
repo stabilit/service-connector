@@ -70,7 +70,7 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logAdd(String className, SCMPMessage queueMessage, int queueSize) {
+	public synchronized void logSubscribe(String className, SCMPMessage queueMessage, int queueSize) {
 		if (logger.isDebugEnabled() == false) {
 			return;
 		}
@@ -82,7 +82,7 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void logRemove(String className, int queueSize) {
+	public synchronized void logUnsubscribe(String className, int queueSize) {
 		if (SubscriptionLogger.logger.isDebugEnabled() == false) {
 			return;
 		}

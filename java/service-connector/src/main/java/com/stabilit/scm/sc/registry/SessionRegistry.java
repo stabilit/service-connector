@@ -23,7 +23,8 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.listener.SessionPoint;
-import com.stabilit.scm.common.log.Loggers;
+import com.stabilit.scm.common.log.ISessionLogger;
+import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -44,9 +45,6 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
-	
-	/** The Constant sessionLogger. */
-	protected final static Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
 	
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
@@ -78,8 +76,8 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		SessionPoint.getInstance().fireCreate(this, session.getId());
-		sessionLogger.info("new session [" + session.getId() + "]");
+		ISessionLogger sessionLogger = SessionLogger.getInstance();
+		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 		if (session.getEchoIntervalSeconds() != 0) {
 			// session timeout necessary needs to be set up
@@ -107,8 +105,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		Session session = super.get(key);
 		this.cancelSessionTimeout(session);
 		super.remove(key);
-		sessionLogger.info("end session [" + key + "]");
-		SessionPoint.getInstance().fireDelete(this, (String) key);
+		ISessionLogger sessionLogger = SessionLogger.getInstance();
+		sessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
 	}
 
 	/**
