@@ -28,8 +28,6 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.listener.DefaultStatisticsListener;
-import com.stabilit.scm.common.listener.IStatisticsListener;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.res.Responder;
@@ -51,7 +49,7 @@ public final class SC {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SC.class);
 	
-	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
+	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 
 	/**
 	 * Instantiates a new service connector.
@@ -88,13 +86,7 @@ public final class SC {
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load(fileName);
 
-		LoggerConfigurator loggerConfigurator = new LoggerConfigurator(config);
-
-		if (config.loggable()) {
-			// logging enabled
-			loggerConfigurator.addAllLoggers();
-		}
-		SC.initializeJMX(loggerConfigurator);
+		SC.initializeJMX();
 
 		// load services
 		ServiceLoader.load(fileName);
@@ -123,23 +115,19 @@ public final class SC {
 	/**
 	 * Initialize java management interface stuff.
 	 * 
-	 * @param loggerConfigurator
-	 *            the logger configurator
 	 */
-	private static void initializeJMX(LoggerConfigurator loggerConfigurator) {
+	private static void initializeJMX() {
 		try {
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
 			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
 			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.scm.registry:type=ServerRegistry");
-			ObjectName mxbeanNameLogging = new ObjectName("com.stabilit.scm:type=LoggerConfigurator");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
-			mbs.registerMBean(loggerConfigurator, mxbeanNameLogging);
 		} catch (Throwable th) {
 			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
 			exceptionLogger.logErrorException(logger, "SC", "initializeJMX", th);

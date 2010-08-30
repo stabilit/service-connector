@@ -18,9 +18,6 @@ package com.stabilit.scm.common.conf;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
-
 /**
  * The Interface IConstants. SCM constants.
  * 
@@ -78,10 +75,6 @@ public final class Constants {
 
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
-	/** The Constant ROOT_LOGGER_QUALIFIER. */
-	public static final String ROOT_LOGGER_QUALIFIER = "root.logger";
-	/** The Constant ROOT_LOGGING_QUALIFIER. */
-	public static final String ROOT_LOGGING_QUALIFIER = "root.logging";
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
 	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
@@ -106,23 +99,6 @@ public final class Constants {
 	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
 	/** The Constant KEEP_ALIVE_INTERVAL. */
 	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
-
-	/** The logging directory. */
-	public static final String LOG_DIR = "log/";
-	/** The file name of connection log file. */
-	public static final String CONNECTION_LOG_FILE_NAME = "con.log";
-	/** The file name of subscription log file. */
-	public static final String SUBSCRIPTION_LOG_FILE_NAME = "sub.log";
-	/** The file name of exception log file. */
-	public static final String EXCEPTION_LOG_FILE_NAME = "exc.log";
-	/** The file name of general log file. */
-	public static final String GENERAL_LOG_FILE_NAME = "gen.log";
-	/** The file name of performance log file. */
-	public static final String PERFORMANCE_LOG_FILE_NAME = "prf.log";
-	/** The file name of warning log file. */
-	public static final String TOP_LOG_FILE_NAME = "top.log";
-	/** The Constant SESSION_LOG_FILE_NAME. */
-	public static final String SESSION_LOG_FILE_NAME = "ses.log";
 
 	/** The ACCEPT_PARAMS. */
 	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";

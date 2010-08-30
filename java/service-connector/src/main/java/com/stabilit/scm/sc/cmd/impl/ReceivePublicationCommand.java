@@ -74,7 +74,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IPassTh
 		// looks up subscription queue
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
 		// tries polling message
-		SCMPMessage message = subscriptionQueue.poll(sessionId);
+		SCMPMessage message = subscriptionQueue.getMessage(sessionId);
 		if (message != null) {
 			// message found in subscription queue set up reply
 			SCMPMessage reply = new SCMPMessage();

@@ -56,6 +56,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
 
+	/** The Constant subscriptionLogger. */
+	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+	
 	/**
 	 * Instantiates a ClnSubscribeCommand.
 	 */
@@ -103,6 +106,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
 
 				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
+				subscriptionLogger.logSubscribe(serviceName, session.getId(), mask);
 				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
 				subscriptionQueue.subscribe(session.getId(), filterMask, timerRun);
 			} else {
@@ -244,7 +248,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 			String sessionId = reqMsg.getSessionId();
 
 			// tries polling from queue
-			SCMPMessage message = this.subscriptionQueue.poll(sessionId);
+			SCMPMessage message = this.subscriptionQueue.getMessage(sessionId);
 			if (message == null) {
 				// no message found on queue - subscription timeout set up no data message
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);

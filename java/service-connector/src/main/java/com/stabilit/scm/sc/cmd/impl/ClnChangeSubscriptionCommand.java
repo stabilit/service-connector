@@ -22,7 +22,9 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
+import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -49,6 +51,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
 
+	/** The Constant subscriptionLogger. */
+	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+	
 	/**
 	 * Instantiates a new ClnChangeSubscriptionCommand.
 	 */
@@ -67,7 +72,8 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
-
+		String serviceName = reqMessage.getServiceName();
+		
 		Session session = this.getSubscriptionSessionById(sessionId);
 		Server server = session.getServer();
 
@@ -83,6 +89,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
 				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
+				subscriptionLogger.logChangeSubscribe(serviceName, sessionId, newMask);
 				queue.changeSubscription(sessionId, filterMask);
 			} else {
 				// session has been rejected - remove session id from header

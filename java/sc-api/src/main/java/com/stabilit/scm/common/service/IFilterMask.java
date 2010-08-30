@@ -31,6 +31,6 @@ public interface IFilterMask<T> {
 	 *            the object
 	 * @return true, if successful
 	 */
-	boolean matches(T obj);
+	public boolean matches(T obj);
 
 }

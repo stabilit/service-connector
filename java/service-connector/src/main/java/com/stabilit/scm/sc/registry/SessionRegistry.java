@@ -22,7 +22,6 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.log.ISessionLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
 import com.stabilit.scm.common.registry.Registry;
@@ -45,6 +44,9 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
+	
+	/** The Constant sessionLogger. */
+	private final static ISessionLogger sessionLogger = SessionLogger.getInstance();
 	
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
@@ -76,7 +78,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		ISessionLogger sessionLogger = SessionLogger.getInstance();
 		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 		if (session.getEchoIntervalSeconds() != 0) {
@@ -105,7 +106,6 @@ public class SessionRegistry extends Registry<String, Session> {
 		Session session = super.get(key);
 		this.cancelSessionTimeout(session);
 		super.remove(key);
-		ISessionLogger sessionLogger = SessionLogger.getInstance();
 		sessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
 	}
 
@@ -214,8 +214,8 @@ public class SessionRegistry extends Registry<String, Session> {
 			server.serverAbortSession(abortMessage, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			// removes session on server
 			session.getServer().removeSession(session);
-			logger.warn("session [" + session.getId() + "] aborted");
-			SessionPoint.getInstance().fireAbort(session, session.getId());
+			ISessionLogger sessionLogger = SessionLogger.getInstance();
+			sessionLogger.logAbortSession(this.getClass().getName(), session.getId());
 		}
 
 		/** {@inheritDoc} */

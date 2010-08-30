@@ -24,8 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.listener.SubscriptionPoint;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
@@ -50,9 +48,6 @@ public class SubscriptionQueue<E> {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
 
-	/** The Constant subscriptionLogger. */
-	protected final static Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-
 	/** The timer instance to observe all timeouts in relation to this queue. */
 	private Timer timer;
 	/** The data queue. */
@@ -70,19 +65,18 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Adds a new message to the queue.
+	 * Inserts a new message into the queue.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public void add(E message) {
+	public void insert(E message) {
 		if (message == null) {
 			// inserting null value not allowed
 			return;
 		}
 		this.dataQueue.insert(message);
-		subscriptionLogger.debug("insert " + message);
-		SubscriptionPoint.getInstance().fireAdd(this, message, this.dataQueue.getSize());
+		logger.debug("insert - queue size:"+ this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -102,13 +96,13 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Poll. Tries polling a message. If no message available null will be returned.
+	 * Return message if any. If no message is available null will be returned.
 	 * 
 	 * @param sessionId
 	 *            the session id
 	 * @return the e
 	 */
-	public E poll(String sessionId) {
+	public E getMessage(String sessionId) {
 		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
 		LinkedNode<E> node = ptr.getNode();
 		if (node == null) {
@@ -122,8 +116,7 @@ public class SubscriptionQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		subscriptionLogger.debug("poll " + message);
-		SubscriptionPoint.getInstance().firePoll(this, sessionId, message, this.dataQueue.getSize());
+		logger.debug("getMessage - queue size:"+ this.dataQueue.getSize());
 		return message;
 	}
 
@@ -167,8 +160,7 @@ public class SubscriptionQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
-			subscriptionLogger.debug("remove ");
-			SubscriptionPoint.getInstance().fireRemove(this, this.dataQueue.getSize());
+			logger.debug("remove - queue size:"+ this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}

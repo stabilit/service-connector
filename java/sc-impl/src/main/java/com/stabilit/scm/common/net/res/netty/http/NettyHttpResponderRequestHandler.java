@@ -32,9 +32,10 @@ import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.listener.PerformancePoint;
 import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.IPerformanceLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
+import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.net.res.SCMPSessionCompositeRegistry;
@@ -64,6 +65,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponderRequestHandler.class);
+	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 	
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
@@ -71,7 +73,9 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
+
 		NettyHttpResponse response = new NettyHttpResponse(event);
+
 		try {
 			HttpRequest httpRequest = (HttpRequest) event.getMessage();
 			Channel channel = ctx.getChannel();
@@ -154,14 +158,13 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
 				commandValidator.validate(request);
-				logger.debug("Run command [" + command.getKey() + "]");
-				PerformancePoint.getInstance().fireBegin(command, "run");
+				performanceLogger.begin(this.getClass().getName(), "run");
 				if (command.isAsynchronous()) {
 					((IAsyncCommand) command).run(request, response, this);
 					return;
 				}
 				command.run(request, response);
-				PerformancePoint.getInstance().fireEnd(command, "run");
+				performanceLogger.end(this.getClass().getName(), "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
 				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();

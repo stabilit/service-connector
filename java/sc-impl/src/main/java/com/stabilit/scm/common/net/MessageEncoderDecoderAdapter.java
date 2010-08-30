@@ -53,10 +53,12 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 	
+	/** The Constant messageLogger. */
+	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
+	
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
-	IMessageLogger messageLogger = MessageLogger.getInstance();
 	
 	/** {@inheritDoc} */
 	@Override

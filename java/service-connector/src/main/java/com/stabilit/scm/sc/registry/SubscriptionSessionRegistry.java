@@ -18,11 +18,8 @@ package com.stabilit.scm.sc.registry;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.listener.SessionPoint;
 import com.stabilit.scm.common.log.ISessionLogger;
-import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.SessionLogger;
-import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.sc.service.Session;
 
@@ -35,6 +32,9 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SubscriptionSessionRegistry.class);
+	
+	/** The Constant sessionLogger. */
+	private final static ISessionLogger sessionLogger = SessionLogger.getInstance();
 	
 	/** The instance. */
 	private static SubscriptionSessionRegistry instance = new SubscriptionSessionRegistry();
@@ -57,7 +57,6 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		ISessionLogger sessionLogger = SessionLogger.getInstance();
 		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 	}
@@ -80,7 +79,6 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 	 */
 	public void removeSession(String key) {
 		super.remove(key);
-		ISessionLogger sessionLogger = SessionLogger.getInstance();
 		sessionLogger.logDeleteSession(this.getClass().getName(), key);
 	}
 

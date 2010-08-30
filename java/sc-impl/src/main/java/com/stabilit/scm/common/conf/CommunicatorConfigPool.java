@@ -39,16 +39,12 @@ public abstract class CommunicatorConfigPool {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfigPool.class);
 
-	/** The Constant DISABLE. */
-	private static final String DISABLE = "disable";
 	/** The properties. */
 	private Properties props;
 	/** The requester configuration list. */
 	private List<ICommunicatorConfig> comConfigList;
 	/** The logger key. */
 	private String loggerKey;
-	/** The logging state on/off. */
-	private boolean loggable;
 
 	/**
 	 * Instantiates a new communicator configuration pool.
@@ -57,7 +53,6 @@ public abstract class CommunicatorConfigPool {
 		this.comConfigList = null;
 		this.props = null;
 		this.loggerKey = null;
-		this.loggable = true;
 	}
 
 	/**
@@ -127,12 +122,6 @@ public abstract class CommunicatorConfigPool {
 			commConfig.setConnectionType((String) props.get(commName + Constants.CONNECTION_TYPE_QUALIFIER));
 			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
-		this.loggerKey = props.getProperty(Constants.ROOT_LOGGER_QUALIFIER);
-
-		String loggable = props.getProperty(Constants.ROOT_LOGGING_QUALIFIER);
-		if (DISABLE.equals(loggable)) {
-			this.loggable = false;
-		}
 
 		String largeMsgLimitValue = props.getProperty(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);
 		if (largeMsgLimitValue != null) {
@@ -170,15 +159,6 @@ public abstract class CommunicatorConfigPool {
 	 */
 	public String getLoggerKey() {
 		return loggerKey;
-	}
-
-	/**
-	 * Logging on or off.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean loggable() {
-		return this.loggable;
 	}
 
 	/**

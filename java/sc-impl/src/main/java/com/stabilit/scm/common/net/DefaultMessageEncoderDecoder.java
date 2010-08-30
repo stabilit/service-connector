@@ -42,6 +42,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
 	
+	/** The Constant messageLogger. */
+	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
+	
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */
@@ -60,7 +63,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-		IMessageLogger messageLogger = MessageLogger.getInstance();
 		
 		if (scmpMsg.isGroup() == false) {
 			// no group call reset internal status, if group call internal status already set

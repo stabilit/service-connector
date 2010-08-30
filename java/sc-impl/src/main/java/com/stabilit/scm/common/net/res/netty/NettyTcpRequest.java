@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
 
-import com.stabilit.scm.common.listener.ConnectionPoint;
 import com.stabilit.scm.common.log.IConnectionLogger;
 import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;

@@ -23,8 +23,6 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.listener.DefaultStatisticsListener;
-import com.stabilit.scm.common.listener.IStatisticsListener;
 import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
@@ -47,7 +45,7 @@ public class SetupTestCases {
 	protected final static Logger logger = Logger.getLogger(SetupTestCases.class);
 	
 	private static SetupTestCases setupTestCases = null;
-	public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
+	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
 	private static ISCServer scSim1ConSrv;

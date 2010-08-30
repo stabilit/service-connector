@@ -154,7 +154,6 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
 				commandValidator.validate(request);
-				logger.debug("Run command [" + command.getKey() + "]");
 				performanceLogger.begin(this.getClass().getName(), "run");
 				if (command.isAsynchronous()) {
 					((IAsyncCommand) command).run(request, response, this);

@@ -73,7 +73,7 @@ public class PublishCommand extends CommandAdapter implements IPassThroughPartMs
 		PublishService service = this.validatePublishService(serviceName);
 		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
 		// throws an exception if failed
-		queue.add(message);
+		queue.insert(message);
 
 		// reply to server
 		SCMPMessage reply = null;

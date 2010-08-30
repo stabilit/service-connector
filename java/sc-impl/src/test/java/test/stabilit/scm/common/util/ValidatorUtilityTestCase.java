@@ -30,7 +30,6 @@ import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.

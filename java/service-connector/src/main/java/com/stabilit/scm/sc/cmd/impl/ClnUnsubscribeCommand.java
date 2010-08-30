@@ -22,7 +22,9 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.ExceptionLogger;
+import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -46,6 +48,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
 	
+	/** The Constant subscriptionLogger. */
+	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+	
 	public ClnUnsubscribeCommand() {
 		this.commandValidator = new ClnUnsubscribeCommandValidator();
 	}
@@ -59,8 +64,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
+		SCMPMessage reqMessage = request.getMessage();
+		String sessionId = reqMessage.getSessionId();
 		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
 
 		// lookup session and checks properness
@@ -68,6 +73,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		// looks up subscription queue and stops publish mechanism
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
 		subscriptionQueue.unsubscribe(sessionId);
+		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		subscriptionLogger.logUnsubscribe(serviceName, sessionId);
 		// delete entry from session registry
 		this.subscriptionRegistry.removeSession(session);
 
@@ -75,7 +82,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback();
-		server.unsubscribe(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		server.unsubscribe(reqMessage, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway
 		

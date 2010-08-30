@@ -74,7 +74,7 @@ public abstract class SuperTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		SetupTestCases.statisticsListener.clearAll();
+		// TODO TRN statistics SetupTestCases.statisticsListener.clearAll();
 		this.testContext.getConnectionPool().destroy();
 	}
 
