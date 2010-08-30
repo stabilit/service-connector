@@ -140,7 +140,7 @@ public class SCClientTest {
 	}
 	
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_0Param_throwsInvalidParamException() throws SCMPValidatorException
+	public void setMaxConnections_0Param_throwsSCMPValidatorException() throws SCMPValidatorException
 	{
 		client.setMaxConnections(0);
 	}

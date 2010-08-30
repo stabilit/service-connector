@@ -4,17 +4,23 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
 public class RegisterServiceDeregisterServiceServerToSCTest {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceServerToSCTest.class);
 
 	private static Process p;
 	private ISCServer server;
@@ -36,13 +42,14 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 			p = Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCTest", "oneTimeSetUp",  e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCTest", "oneTimeSetUp",  e);
 		}
 	}
 
@@ -58,7 +65,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	public void setUp() throws Exception {
 		server = new SCServer();
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		server = null;
@@ -129,7 +136,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 		server.deregisterService(serviceNameAlt);
 		assertEquals(false, server.isRegistered(serviceNameAlt));
 	}
-	
+
 	@Test
 	public void deregisterService_differentThanRegistered_registered() throws Exception {
 		server.startListener(host, 9001, 1);
@@ -155,9 +162,10 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 			}
 		}
 	}
-	
+
 	@Test
-	public void registerService_500CyclesWithChangingConnectionType_registeredThenNotRegistered() throws Exception {
+	public void registerService_500CyclesWithChangingConnectionType_registeredThenNotRegistered()
+			throws Exception {
 		int cycles = 250;
 		for (int i = 0; i < cycles / 10; i++) {
 			System.out.println("RegisterDeregister changing connection type iteration:\t" + i * 10);
@@ -181,7 +189,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 			}
 		}
 	}
-	
+
 	// region end
 
 	private class CallBack implements ISCServerCallback {

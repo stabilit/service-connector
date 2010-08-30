@@ -4,18 +4,24 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
 public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest.class);
+	
 	private static Process p;
 	private ISCServer server;
 	private String serviceName = "simulation";
@@ -39,10 +45,12 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
 		}
 	}
 

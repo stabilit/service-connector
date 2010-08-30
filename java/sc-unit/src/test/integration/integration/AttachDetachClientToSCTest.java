@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -11,10 +12,15 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachDetachClientToSCTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(AttachDetachClientToSCTest.class);
+	
 	private static Process p;
 
 	private ISCClient client;
@@ -38,9 +44,11 @@ public class AttachDetachClientToSCTest {
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "AttachDetachClientToSCTest", "oneTimeSetUp",  e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "AttachDetachClientToSCTest", "oneTimeSetUp",  e);
 		}
 	}
 

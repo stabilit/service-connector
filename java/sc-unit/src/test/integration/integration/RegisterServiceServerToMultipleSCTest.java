@@ -4,26 +4,35 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.scm.cln.SCClient;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
 public class RegisterServiceServerToMultipleSCTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToMultipleSCTest.class);
+	
 	private static Process p;
 	private static Process r;
 	private ISCServer server;
 	private String serviceName = "simulation";
 	private String serviceNameAlt = "P01_RTXS_sc1";
 	private String host = "localhost";
+	private int port65535 = 65535;
 	private int port9000 = 9000;
-	private int port65535 = 1;
+	private int port8080 = 8080;
+	private int port1 = 1;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -41,13 +50,13 @@ public class RegisterServiceServerToMultipleSCTest {
 					cmdP0 + "log4jSC1.properties" + cmdP1 + "scIntegrationChanged.properties");
 
 			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToMultipleSCTest", "oneTimeSetUp",  e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToMultipleSCTest", "oneTimeSetUp",  e);
 		}
 	}
 
@@ -82,6 +91,55 @@ public class RegisterServiceServerToMultipleSCTest {
 		server.deregisterService(serviceName);
 		assertEquals(false, server.isRegistered(serviceName));
 		assertEquals(true, server.isRegistered(serviceNameAlt));
+		server.deregisterService(serviceNameAlt);
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+	}
+
+	@Test
+	public void registerService_withDifferentConnectionTypesHttpFirst_fromNotAttachedToAttached()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		((SCClient) server).setConnectionType("netty.http");
+		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+		((SCClient) server).setConnectionType("netty.tcp");
+		server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(true, server.isRegistered(serviceNameAlt));
+		server.deregisterService(serviceName);
+		server.deregisterService(serviceNameAlt);
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+	}
+
+	@Test
+	public void registerService_withDifferentConnectionTypesTcpFirst_fromNotAttachedToAttached()
+			throws Exception {
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+		((SCClient) server).setConnectionType("netty.http");
+		server.registerService(host, port1, serviceNameAlt, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(true, server.isRegistered(serviceNameAlt));
+		server.deregisterService(serviceName);
+		server.deregisterService(serviceNameAlt);
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+	}
+
+	@Test
+	public void registerService_tcpConnectionType_fromNotAttachedToAttached() throws Exception {
+		((SCClient) server).setConnectionType("netty.http");
+		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(false, server.isRegistered(serviceNameAlt));
+		server.registerService(host, port65535, serviceNameAlt, 1, 1, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		assertEquals(true, server.isRegistered(serviceNameAlt));
+		server.deregisterService(serviceName);
 		server.deregisterService(serviceNameAlt);
 		assertEquals(false, server.isRegistered(serviceName));
 		assertEquals(false, server.isRegistered(serviceNameAlt));

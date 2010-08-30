@@ -7,6 +7,7 @@ import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,6 +15,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -21,6 +24,9 @@ import com.stabilit.scm.srv.SCServer;
 
 public class RegisterServiceServerToSCConnectionTypeHttpTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCConnectionTypeHttpTest.class);
+	
 	private static Process p;
 	private ISCServer server;
 	private Exception ex;
@@ -40,13 +46,14 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 			p = Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
 		}
 	}
 
@@ -63,7 +70,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 		server = new SCServer();
 		((SCServer) server).setConnectionType("netty.http");
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		server = null;
@@ -174,7 +181,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 	@Test
 	public void registerService_emptyHostTranslatesAsLocalhost_registered() throws Exception {
 		server.startListener(host, 9001, 0);
-			server.registerService("", port8080, serviceName, 1, 1, new CallBack());
+		server.registerService("", port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 	}

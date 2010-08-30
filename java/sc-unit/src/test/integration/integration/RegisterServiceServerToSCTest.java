@@ -7,6 +7,7 @@ import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,12 +15,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
 
 public class RegisterServiceServerToSCTest {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCTest.class);
 
 	private static Process p;
 	private ISCServer server;
@@ -40,13 +46,14 @@ public class RegisterServiceServerToSCTest {
 			p = Runtime.getRuntime().exec(command);
 
 			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCTest", "oneTimeSetUp",  e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCTest", "oneTimeSetUp",  e);
 		}
 	}
 

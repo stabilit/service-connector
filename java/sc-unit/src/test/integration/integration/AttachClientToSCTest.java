@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,10 +15,15 @@ import org.junit.Test;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.log.IExceptionLogger;
+import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachClientToSCTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(AttachClientToSCTest.class);
+	
 	private static ISCClient client;
 	private static Process p;
 	private Exception ex;
@@ -37,10 +43,12 @@ public class AttachClientToSCTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+				exceptionLogger.logErrorException(logger, "AttachClientToSCTest", "oneTimeSetUp",  e);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
+			exceptionLogger.logErrorException(logger, "AttachClientToSCTest", "oneTimeSetUp",  e);
 		}
 	}
 

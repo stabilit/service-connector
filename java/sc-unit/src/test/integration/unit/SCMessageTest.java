@@ -42,6 +42,7 @@ public class SCMessageTest {
 		assertEquals(null, message.getData());
 		assertEquals(null, message.getSessionId());
 		assertEquals(true, message.isCompressed());
+		assertEquals(false, message.isFault());
 	}
 
 	@Test
@@ -52,10 +53,6 @@ public class SCMessageTest {
 		assertEquals(obj, message.getData());
 		assertEquals(null, message.getSessionId());
 		assertEquals(true, message.isCompressed());
-	}
-
-	@Test
-	public void isFault_notFaultyMessage_false() {
 		assertEquals(false, message.isFault());
 	}
 
