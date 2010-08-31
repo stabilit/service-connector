@@ -32,9 +32,7 @@ import com.stabilit.scm.common.cmd.ICommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.IPerformanceLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.PerformanceLogger;
 import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
@@ -167,8 +165,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				performanceLogger.end(this.getClass().getName(), "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "messageReceived", ex);
+				logger.error("messageReceived", ex);
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {
@@ -186,8 +183,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
 			}
 		} catch (Throwable th) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "messageReceived", th);
+			logger.error("messageReceived", th);
 			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, th.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
@@ -200,8 +196,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
-		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-		exceptionLogger.logErrorException(logger, this.getClass().getName(), "exceptionCaught", e.getCause());
+		logger.error("exceptionCaught", e.getCause());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
@@ -241,8 +236,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 			response.write();
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
+			logger.error("callback", ex);
 			this.callback(response, ex);
 		}
 	}
@@ -256,8 +250,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	 *            the error
 	 */
 	public void callback(IResponse response, Exception ex) {
-		IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-		exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
+		logger.error("callback", ex);
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -269,7 +262,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		try {
 			response.write();
 		} catch (Throwable th) {
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", th);
+			logger.error("callback", th);
 		}
 	}
 

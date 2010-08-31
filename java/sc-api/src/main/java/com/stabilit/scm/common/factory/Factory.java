@@ -105,8 +105,8 @@ public abstract class Factory {
 	public IFactoryable newInstance(Object key) {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
-			// if key is not found return default
-			logger.warn("key : " + key + " not found in baseInstances of factory, returned default instance");
+			// if key is not found return default TODO TRN => throw exception !!
+			logger.fatal("key : " + key + " not found in baseInstances of factory, returned default instance");
 			return this.getInstance(DEFAULT);
 		}
 		// invoke the base instance constructor

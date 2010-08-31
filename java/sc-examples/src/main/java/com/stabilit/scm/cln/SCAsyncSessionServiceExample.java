@@ -27,8 +27,6 @@ import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.IServiceContext;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISC;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
@@ -105,8 +103,7 @@ public class SCAsyncSessionServiceExample {
 
 		@Override
 		public void callback(Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback",  ex);
+			logger.error("callback", ex);
 		}
 	}
 }

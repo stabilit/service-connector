@@ -15,8 +15,6 @@ import org.junit.Test;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 
 
@@ -44,12 +42,10 @@ public class AttachClientToSCConnectionTypeTCPTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, "AttachClientToSCConnectionTypeTCPTest", "oneTimeSetUp",  e);
+				logger.error("oneTimeSetUp", e);
 			}
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "AttachClientToSCConnectionTypeTCPTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		}
 	}
 

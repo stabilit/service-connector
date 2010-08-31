@@ -28,8 +28,6 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.ConsoleUtil;
@@ -106,8 +104,7 @@ public final class SC {
 						+ respConfig.getPort());
 				resp.startListenAsync();
 			} catch (Exception ex) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, "SC", "run", ex);
+				logger.error("run", ex);
 			}
 		}
 	}
@@ -129,8 +126,7 @@ public final class SC {
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
 		} catch (Throwable th) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "SC", "initializeJMX", th);
+			logger.error("initializeJMX", th);
 		}
 	}
 }

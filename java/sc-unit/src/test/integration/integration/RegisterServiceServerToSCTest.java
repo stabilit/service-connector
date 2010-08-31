@@ -15,8 +15,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -49,11 +47,9 @@ public class RegisterServiceServerToSCTest {
 
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "RegisterServiceServerToSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		}
 	}
 

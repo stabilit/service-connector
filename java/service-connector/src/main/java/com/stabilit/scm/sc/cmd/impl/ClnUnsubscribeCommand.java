@@ -21,9 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.ISubscriptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -128,8 +126,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable ex) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
+				logger.error("validate", ex);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

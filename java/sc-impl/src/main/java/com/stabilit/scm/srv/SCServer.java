@@ -28,8 +28,6 @@ import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.CommunicatorConfig;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.req.ConnectionPool;
 import com.stabilit.scm.common.net.req.IConnectionPool;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -221,8 +219,7 @@ public class SCServer implements ISCServer {
 			responder.create();
 			responder.startListenAsync();
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "startListener", ex);
+			logger.error("startListener", ex);
 			return;
 		}
 		this.listening = true;

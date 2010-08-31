@@ -25,8 +25,6 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
@@ -89,8 +87,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 		@Override
 		public void callback(Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "callback", ex);
+			logger.error("callback", ex);
 		}
 	}
 

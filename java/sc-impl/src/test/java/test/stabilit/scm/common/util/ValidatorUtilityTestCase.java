@@ -26,8 +26,6 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
@@ -60,9 +58,8 @@ public class ValidatorUtilityTestCase {
 		try {
 			Date validDate = ValidatorUtility.validateLocalDateTime(localDateTimeString);
 			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
-		} catch (SCMPValidatorException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "validateLocalDateTimeTest", e);
+		} catch (SCMPValidatorException ex) {
+			logger.error("validateLocalDateTimeTest", ex);
 		}
 	}
 

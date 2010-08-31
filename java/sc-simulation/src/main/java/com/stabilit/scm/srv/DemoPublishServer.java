@@ -23,8 +23,6 @@ package com.stabilit.scm.srv;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ps.SCPublishServer;
 
@@ -54,8 +52,7 @@ public class DemoPublishServer {
 			Thread thread = new Thread(run);
 			thread.start();
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "runPublishServer", ex);
+			logger.error("runPublishServer", ex);
 			this.shutdown();
 		}
 	}
@@ -83,8 +80,7 @@ public class DemoPublishServer {
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
 				} catch (Exception ex) {
-					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
+					logger.error("run", ex);
 					return;
 				}
 			}
@@ -95,9 +91,8 @@ public class DemoPublishServer {
 		DemoPublishServer.killPublishServer = true;
 		try {
 			this.publishSrv.deregisterService(serviceName);
-		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "shutdown", e);
+		} catch (Exception ex) {
+			logger.error("shutdown", ex);
 			this.publishSrv = null;
 		}
 	}
@@ -121,9 +116,8 @@ public class DemoPublishServer {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "subscribe", e);
+			} catch (InterruptedException ex) {
+				logger.error("subscribe", ex);
 			}
 			return message;
 		}
@@ -138,9 +132,8 @@ public class DemoPublishServer {
 				if (dataString.equals("kill server")) {
 					try {
 						this.outerContext.getServer().deregisterService(serviceName);
-					} catch (Exception e) {
-						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), "unsubscribe", e);
+					} catch (Exception ex) {
+						logger.error("unsubscribe", ex);
 					}
 				}
 			}

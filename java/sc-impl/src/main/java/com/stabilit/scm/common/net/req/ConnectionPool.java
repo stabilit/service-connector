@@ -23,8 +23,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.scmp.SCMPKeepAlive;
 import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.srv.IIdleCallback;
@@ -242,8 +240,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "destroyConnection", e);
+			logger.error("destroyConnection", e);
 		} finally {
 			connection.destroy();
 		}
@@ -259,8 +256,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "disconnectConnection", e);
+			logger.error("disconnectConnection", e);
 		}
 	}
 
@@ -274,8 +270,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "forceClosingConnection", e);
+			logger.error("forceClosingConnection", e);
 		}
 	}
 
@@ -304,8 +299,7 @@ public class ConnectionPool implements IConnectionPool {
 					return;
 				}
 			} catch (Exception e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "initMinConnections", e);
+				logger.error("initMinConnections", e);
 				return;
 			}
 			this.freeConnections.add(connection);
@@ -362,8 +356,7 @@ public class ConnectionPool implements IConnectionPool {
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "connectionIdle", e);
+			logger.error("connectionIdle", e);
 		}
 	}
 

@@ -26,8 +26,6 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.EndpointAdapter;
 
@@ -97,8 +95,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			startListenSync();
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
+			logger.error("run", ex);
 			this.destroy();
 		}
 	}
@@ -118,8 +115,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 				this.channel.close();
 			}
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "stoppListening", ex);
+			logger.error("stoppListening", ex);
 			return;
 		}
 	}

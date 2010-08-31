@@ -23,8 +23,6 @@ package com.stabilit.scm.srv;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 
 public class DemoSessionServer {
@@ -49,8 +47,7 @@ public class DemoSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", 9000, serviceName, 10, 10, srvCallback);
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "runSessionServer", e);
+			logger.error("runSessionServer", e);
 			this.shutdown();
 		}
 	}
@@ -59,8 +56,7 @@ public class DemoSessionServer {
 		try {
 			this.scSrv.deregisterService(serviceName);
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "shutdown", e);
+			logger.error("shutdown", e);
 			this.scSrv = null;
 		}
 	}
@@ -100,15 +96,13 @@ public class DemoSessionServer {
 						KillThread kill = new KillThread(this.outerContext.getServer());
 						kill.start();
 					} catch (Exception e) {
-						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), "execute", e);
+						logger.error("execute", e);
 					}
 				} else {
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
-						IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-						exceptionLogger.logErrorException(logger, this.getClass().getName(), "execute", e);
+						logger.error("execute", e);
 					}
 				}
 			}
@@ -137,8 +131,7 @@ public class DemoSessionServer {
 				Thread.sleep(2000);
 				this.server.deregisterService(serviceName);
 			} catch (Exception e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
+				logger.error("run", e);
 			}
 		}
 	}

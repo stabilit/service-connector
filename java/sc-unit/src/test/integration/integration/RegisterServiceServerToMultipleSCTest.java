@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
@@ -51,11 +49,9 @@ public class RegisterServiceServerToMultipleSCTest {
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "RegisterServiceServerToMultipleSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "RegisterServiceServerToMultipleSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		}
 	}
 

@@ -23,8 +23,6 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.sc.SC;
@@ -340,8 +338,7 @@ public class SetupTestCases {
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
 				} catch (Exception ex) {
-					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
+					logger.error("run", ex);
 				}
 			}
 		}

@@ -28,8 +28,6 @@ import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
 import com.stabilit.scm.common.call.SCMPClnUnsubscribeCall;
 import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
 import com.stabilit.scm.common.scmp.SCMPFault;
@@ -239,8 +237,7 @@ public class PublishService extends Service implements IPublishService {
 				try {
 					PublishService.this.receivePublication();
 				} catch (Exception e) {
-					IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-					exceptionLogger.logDebugException(logger, this.getClass().getName(), "callback", e);
+					logger.info("callback "+ e.getMessage());
 					SCMPFault fault = new SCMPFault(e);
 					super.callback(fault);
 					return;

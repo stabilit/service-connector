@@ -12,8 +12,6 @@ import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class AttachDetachClientToSCTest {
@@ -44,11 +42,9 @@ public class AttachDetachClientToSCTest {
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "AttachDetachClientToSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		} catch (InterruptedException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "AttachDetachClientToSCTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		}
 	}
 

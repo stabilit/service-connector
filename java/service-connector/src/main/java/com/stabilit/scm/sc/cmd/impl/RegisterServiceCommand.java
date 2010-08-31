@@ -24,8 +24,6 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPCommandException;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
@@ -91,8 +89,7 @@ public class RegisterServiceCommand extends CommandAdapter {
 				server.immediateConnect();
 			}
 		} catch (Exception ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", ex);
+			logger.error("run", ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
 			communicationException.setMessageType(getKey());
@@ -180,9 +177,8 @@ public class RegisterServiceCommand extends CommandAdapter {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable ex) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "validate", ex);
+			} catch (Throwable th) {
+				logger.error("validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

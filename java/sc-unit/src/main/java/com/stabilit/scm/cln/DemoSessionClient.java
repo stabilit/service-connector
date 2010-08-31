@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCMessage;
@@ -46,15 +44,13 @@ public class DemoSessionClient extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
+			logger.error("run", e);
 		} finally {
 			try {
 				sessionService.deleteSession();
 				sc.detach();
 			} catch (Exception e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, this.getClass().getName(), "run", e);
+				logger.error("run", e);
 			}
 		}
 	}

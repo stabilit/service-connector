@@ -24,9 +24,7 @@ import java.io.OutputStreamWriter;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.factory.IFactoryable;
-import com.stabilit.scm.common.log.IExceptionLogger;
 import com.stabilit.scm.common.log.IMessageLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.log.impl.MessageLogger;
 import com.stabilit.scm.common.scmp.SCMPHeadlineKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
@@ -119,8 +117,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				bw.flush();
 			}
 		} catch (IOException ex) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(), "encode", ex);
+			logger.error("encode", ex);
 			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}

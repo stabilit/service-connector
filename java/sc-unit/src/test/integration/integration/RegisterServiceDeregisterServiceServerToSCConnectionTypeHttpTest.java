@@ -1,6 +1,6 @@
 package integration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
 import com.stabilit.scm.srv.SCServer;
@@ -45,12 +43,10 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-				exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
+				logger.error("oneTimeSetUp", e);
 			}
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest", "oneTimeSetUp",  e);
+			logger.error("oneTimeSetUp", e);
 		}
 	}
 
