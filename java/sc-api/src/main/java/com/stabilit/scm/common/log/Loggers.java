@@ -21,11 +21,11 @@ package com.stabilit.scm.common.log;
  */
 public enum Loggers {
 
-	CONNECTION("connection"), //
-	SESSION("session"), //
-	SUBSCRIPTION("subscription"), //
-	MESSAGE("message"), //
-	PERFORMANCE("performance");
+	CONNECTION("ConnectionLogger"), //
+	SESSION("SessionLogger"), //
+	SUBSCRIPTION("SubscriptionLogger"), //
+	MESSAGE("MessageLogger"), //
+	PERFORMANCE("PerformanceLogger");
 
 	/** The value. */
 	private String value;
