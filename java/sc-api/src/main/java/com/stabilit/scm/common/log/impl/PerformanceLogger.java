@@ -30,7 +30,7 @@ public class PerformanceLogger implements IPerformanceLogger {
 
 	/** The thread local is needed to save time in running thread. */
 	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
-	private static String END_STR = "perf by class %s.%s time(ms) %s.%s started %s.%s";
+	private static String END_STR = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
 
 	/**
 	 * Instantiates a new performance logger. Private for singelton use.
@@ -68,8 +68,8 @@ public class PerformanceLogger implements IPerformanceLogger {
 		
 
 		Formatter format = new Formatter();
-		format.format(END_STR, className, beginMethodName, String.valueOf((endTime - beginTime) / 1000000), String
-				.valueOf((endTime - beginTime) % 1000000), beginClassName, beginMethodName);
+		format.format(END_STR, beginClassName, beginMethodName, className, methodName, 
+				String.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
 		logger.debug(format.toString());
 		format.close();
 	}
