@@ -2,8 +2,6 @@ package vmstarters;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
@@ -13,15 +11,19 @@ public class StartSCSessionServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(StartSCSessionServer.class);
-	
+
 	private ISCServer scSrv = null;
 	private String serviceName;
 	private int port = 9000;
 
 	public static void main(String[] args) throws Exception {
 		StartSCSessionServer sessionServer = new StartSCSessionServer();
-		sessionServer.port = Integer.parseInt(args[0]);
-		sessionServer.setServiceName(args[1]);
+		try {
+			sessionServer.port = Integer.parseInt(args[0]);
+			sessionServer.setServiceName(args[1]);
+		} catch (Exception e) {
+			logger.error("main", e);
+		}
 		sessionServer.runSessionServer();
 	}
 
@@ -30,13 +32,17 @@ public class StartSCSessionServer {
 			this.scSrv = new SCServer();
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startListener("localhost", 7100, 0);
+			this.scSrv.startListener("localhost", 30000, 0);
+
+			System.out.println(this.scSrv.isListening());
+
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", port, serviceName, 10, 10, srvCallback);
+
+			System.out.println(this.scSrv.isRegistered(serviceName));
+
 		} catch (Exception e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, this.getClass().getName(),
-					"runSessionServer", e);
+			logger.error("runSessionServer", e);
 			this.shutdown();
 		}
 	}
@@ -68,8 +74,6 @@ public class StartSCSessionServer {
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
 			System.out.println("SessionServer.SrvCallback.createSession()");
-			System.out.println(scSrv.isRegistered(serviceName));
-			
 			return message;
 		}
 
@@ -94,13 +98,13 @@ public class StartSCSessionServer {
 						KillThread kill = new KillThread(this.outerContext.getServer());
 						kill.start();
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("execute", e);
 					}
 				} else {
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("execute", e);
 					}
 				}
 			}
@@ -129,7 +133,7 @@ public class StartSCSessionServer {
 				Thread.sleep(2000);
 				this.server.deregisterService(serviceName);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("run", e);
 			}
 		}
 	}

@@ -108,6 +108,7 @@ public class SCMessageTest {
 	@Test
 	public void setMessageInfo_whiteCharParam_throwInvalidParamException() {
 		message.setMessageInfo(" ");
+		assertEquals(" ", message.getMessageInfo());
 	}
 
 	@Test

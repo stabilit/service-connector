@@ -18,12 +18,9 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.log.IExceptionLogger;
-import com.stabilit.scm.common.log.impl.ExceptionLogger;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.sc.service.SessionService;
 
 public class MockedServerClientToSCTest {
 	/** The Constant logger. */
@@ -59,13 +56,9 @@ public class MockedServerClientToSCTest {
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 		} catch (IOException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "MockedServerClientToSCTest", "oneTimeSetUp",
-					e);
+			logger.error("oneTimeSetUp - IOExc", e);
 		} catch (InterruptedException e) {
-			IExceptionLogger exceptionLogger = ExceptionLogger.getInstance();
-			exceptionLogger.logErrorException(logger, "MockedServerClientToSCTest", "oneTimeSetUp",
-					e);
+			logger.error("oneTimeSetUp - InterruptExc", e);
 		}
 	}
 
@@ -346,5 +339,137 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageCompressedTrue_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setCompressed(true);
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageCompressedFalse_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setCompressed(false);
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageSessionIdEmptyString_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		((SCMessage) message).setSessionId("");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageSessionIdWhiteSpaceString_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		((SCMessage) message).setSessionId(" ");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageSessionIdSingleChar_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		((SCMessage) message).setSessionId("a");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageSessionIdArbitraryString_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void execute_messageSessionIdLikeSessionIdString_returnsTheSameMessage() throws Exception {
+
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService.execute(message);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(false, response.isFault());
+	}
+	
+	@Test
+	public void sessionId_uniqueCheckFor1000sessions_allSessionsHaveUniqueSessionIds() throws Exception {
+		ISCMessage message = new SCMessage("a");
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
 	}
 }

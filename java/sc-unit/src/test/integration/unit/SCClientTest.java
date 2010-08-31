@@ -17,7 +17,6 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.IFileService;
 import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 
@@ -84,24 +83,6 @@ public class SCClientTest {
 	public void newPublishService_ArbitraryStringParam_returnsIPublishService() throws Exception
 	{
 		assertTrue(client.newPublishService(host) instanceof IPublishService);
-	}
-
-	@Test(expected = InvalidParameterException.class)
-	public void newSessionService_NullParam_throwsInvalidParamException() throws Exception
-	{
-		client.newSessionService(null);
-	}
-	
-	@Test
-	public void newSessionService_EmptyStringParam_returnsISessionService() throws Exception
-	{
-		assertTrue(client.newSessionService("") instanceof ISessionService);
-	}
-
-	@Test
-	public void newSessionService_ArbitraryStringParam_returnsISessionService() throws Exception
-	{
-		assertTrue(client.newSessionService(host) instanceof ISessionService);
 	}
 
 	@Test
