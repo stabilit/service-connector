@@ -61,6 +61,6 @@ public class SCMPSrvExecuteCall extends SCMPServerCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_EXECUTE;
+		return SCMPMsgType.SRV_EXECUTE;
 	}
 }
