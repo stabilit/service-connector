@@ -36,7 +36,7 @@ import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SrvService;
 
 /**
- * The Class SrvExecuteCommand. Responsible for validation and execution of server execute command. 
+ * The Class SrvExecuteCommand. Responsible for validation and execution of server execute command.
  * 
  * @author JTraber
  */
@@ -44,7 +44,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvExecuteCommand.class);
-	
+
 	/**
 	 * Instantiates a new SrvExecuteCommand.
 	 */
@@ -85,6 +85,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
+		reply.setHeader(SCMPHeaderAttributeKey.COMPRESSION, scReply.isCompressed());
 		String msgInfo = scReply.getMessageInfo();
 		if (msgInfo != null) {
 			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
