@@ -63,6 +63,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponderRequestHandler.class);
+	
+	/** The Constant performanceLogger. */
 	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 	
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry

@@ -63,7 +63,7 @@ public class PerformanceLogger implements IPerformanceLogger {
 		}
 		String beginMethodName = beginItem.getMethodName();
 		String beginClassName = beginItem.getClassName();
-				long beginTime = beginItem.getTime();
+		long beginTime = beginItem.getTime();
 		long endTime = System.nanoTime();
 		
 

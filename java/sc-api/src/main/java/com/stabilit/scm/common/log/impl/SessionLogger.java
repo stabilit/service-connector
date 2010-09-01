@@ -45,16 +45,15 @@ public class SessionLogger implements ISessionLogger {
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logCreateSession(String className, String sessionId) {
-		if (logger.isInfoEnabled() == false) {
-			return;
-		}
-		try {
-			Formatter format = new Formatter();
-			format.format(CREATE_SESSION_STR, sessionId);
-			logger.info(format.toString());
-			format.close();
-		} catch (Exception e) {
-			// TODO JOT exception logging
+		if (logger.isInfoEnabled()) {
+			try {
+				Formatter format = new Formatter();
+				format.format(CREATE_SESSION_STR, sessionId);
+				logger.info(format.toString());
+				format.close();
+			} catch (Exception e) {
+				// TODO JOT exception logging
+			}
 		}
 	}
 	
