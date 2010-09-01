@@ -25,7 +25,6 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -42,7 +41,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
 	
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	/** The event from Netty framework. */
 	private ChannelEvent event;
@@ -100,8 +99,10 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logWrite(this.getClass().getName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
-				buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+		if (connectionLogger.isDebugEnabled()) {
+			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
+					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
+					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+		}
 	}
 }

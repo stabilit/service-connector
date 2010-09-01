@@ -37,7 +37,6 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -51,7 +50,8 @@ import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyHttpClientConnection. Concrete connection implementation with JBoss Netty for Http.
+ * The Class NettyHttpClientConnection. Concrete connection implementation with
+ * JBoss Netty for Http.
  * 
  * @author JTraber
  */
@@ -61,7 +61,7 @@ public class NettyHttpConnection implements IConnection {
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
 
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
 	/** The url. */
 	private URL url;
@@ -92,8 +92,9 @@ public class NettyHttpConnection implements IConnection {
 	/** The timer to observe timeouts, static because should be shared. */
 	private static Timer timer;
 	/*
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts
-	 * incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and
+	 * Worker Threads. A boss thread accepts incoming connections on a socket. A
+	 * worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 
@@ -150,8 +151,7 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
-					.getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS).getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -159,8 +159,10 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
-		IConnectionLogger connectionlogger = ConnectionLogger.getInstance();
-		connectionlogger.logConnect(this.getClass().getName(), this.localSocketAddress.getPort());
+		if (connectionLogger.isInfoEnabled()) {
+			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort());
+		}
 		this.connected = true;
 	}
 
@@ -176,8 +178,10 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logDisconnect(this.getClass().getName(), this.localSocketAddress.getPort());
+		if (connectionLogger.isInfoEnabled()) {
+			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort());
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -220,11 +224,12 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			logger.error("send", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
-					+ this.localSocketAddress);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
 		}
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logWrite(this.getClass().getName(), this.localSocketAddress.getPort(), buffer, 0, buffer.length);
+		if (connectionLogger.isDebugEnabled()) {
+			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort(), buffer, 0, buffer.length);
+		}
 		return;
 	}
 

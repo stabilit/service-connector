@@ -27,7 +27,6 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -44,10 +43,10 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterResponseHandler.class);
-	
+
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
-	
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+
 	private ISCMPCallback scmpCallback;
 	private volatile boolean pendingRequest;
 
@@ -64,7 +63,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		
+
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			this.callback((HttpResponse) e.getMessage());
@@ -86,11 +85,12 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
-				// idle timed out no pending request outstanding - ignore exception
+				// idle timed out no pending request outstanding - ignore
+				// exception
 				return;
 			}
 		}
-		logger.info("exceptionCaught "+ th.getMessage());
+		logger.info("exceptionCaught " + th.getMessage());
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {
@@ -99,14 +99,14 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
-			IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-			connectionLogger.logRead(this.getClass().getName(), -1, buffer, 0, buffer.length);
+			if (connectionLogger.isDebugEnabled()) {
+				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
-					.newInstance(buffer);
+			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.info("callback "+ ex.getMessage());
+			logger.info("callback " + ex.getMessage());
 			this.scmpCallback.callback(ex);
 			return;
 		}

@@ -18,13 +18,17 @@ package com.stabilit.scm.common.log;
 
 public interface IConnectionLogger {
 
-	public abstract void logConnect(String className, int port);
+	public abstract void logConnect(String className, String hostName, int port);
 
-	public abstract void logDisconnect(String className, int port);
+	public abstract void logDisconnect(String className, String hostName, int port);
 
-	public abstract void logRead(String className, int port, byte[] data, int offset, int length);
+	public abstract void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length);
 
-	public abstract void logWrite(String className, int port, byte[] data, int offset, int length);
+	public abstract void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length);
 
-	public abstract void logKeepAlive(String className, int nrOfIdles);
+	public abstract void logKeepAlive(String className, String hostName, int port, int nrOfIdles);
+	
+	public abstract boolean isDebugEnabled();
+	
+	public abstract boolean isInfoEnabled();
 }

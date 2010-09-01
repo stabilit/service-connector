@@ -31,7 +31,6 @@ import org.jboss.netty.util.Timer;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.CommunicationException;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
@@ -53,7 +52,7 @@ public class NettyTcpConnection implements IConnection {
 	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
 
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
@@ -145,8 +144,9 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logConnect(this.getClass().getName(), this.localSocketAddress.getPort());
+		if (connectionLogger.isInfoEnabled()) {
+			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(), this.localSocketAddress.getPort());
+		}
 		this.isConnected = true;
 	}
 
@@ -162,8 +162,9 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logDisconnect(this.getClass().getName(), this.localSocketAddress.getPort());		
+		if (connectionLogger.isInfoEnabled()) {
+			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(), this.localSocketAddress.getPort());
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -199,9 +200,10 @@ public class NettyTcpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logWrite(this.getClass().getName(), this.localSocketAddress.getPort(), 
-				chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
+		if (connectionLogger.isDebugEnabled()) {
+			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
+		}
 		return;
 	}
 

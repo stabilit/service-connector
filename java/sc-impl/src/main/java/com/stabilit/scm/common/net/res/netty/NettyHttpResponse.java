@@ -30,7 +30,6 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -38,17 +37,17 @@ import com.stabilit.scm.common.scmp.ResponseAdapter;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
- * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http
- * frame. Based on JBoss Netty.
+ * The Class NettyHttpResponse is responsible for writing a response to a
+ * ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss Netty.
  */
 public class NettyHttpResponse extends ResponseAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponse.class);
-	
+
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
-	
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+
 	/** The event from Netty framework. */
 	private ChannelEvent event;
 	/** The encoder decoder. */
@@ -110,7 +109,10 @@ public class NettyHttpResponse extends ResponseAdapter {
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);
-		IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-		connectionLogger.logWrite(this.getClass().getName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(), buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+		if (connectionLogger.isDebugEnabled()) {
+			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
+					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
+					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+		}
 	}
 }

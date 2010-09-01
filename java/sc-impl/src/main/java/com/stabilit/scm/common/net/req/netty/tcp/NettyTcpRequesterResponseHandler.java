@@ -26,7 +26,6 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import com.stabilit.scm.common.log.IConnectionLogger;
-import com.stabilit.scm.common.log.Loggers;
 import com.stabilit.scm.common.log.impl.ConnectionLogger;
 import com.stabilit.scm.common.net.EncoderDecoderFactory;
 import com.stabilit.scm.common.net.IEncoderDecoder;
@@ -45,7 +44,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	protected final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
 	
 	/** The Constant connectionLogger. */
-	protected final static Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	private ISCMPCallback scmpCallback;
 	private volatile boolean pendingRequest;
@@ -96,8 +95,9 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		try {
 			byte[] buffer = new byte[channelBuffer.readableBytes()];
 			channelBuffer.readBytes(buffer);
-			IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-			connectionLogger.logRead(this.getClass().getName(), -1, buffer, 0, buffer.length);
+			if (connectionLogger.isDebugEnabled()) {
+				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory()
 					.newInstance(buffer);
