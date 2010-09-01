@@ -40,7 +40,7 @@ public class NettyConnectTestCase {
 	}
 
 	@Test
-	public void connect() throws Exception {
+	public void connectDisconnect50000() throws Exception {
 		IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
 		connection.setHost("localhost");
 		connection.setPort(8080);
