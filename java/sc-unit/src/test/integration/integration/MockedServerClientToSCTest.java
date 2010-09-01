@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -467,9 +468,40 @@ public class MockedServerClientToSCTest {
 	
 	@Test
 	public void sessionId_uniqueCheckFor1000sessions_allSessionsHaveUniqueSessionIds() throws Exception {
+		int clientsCount = 1000;
 		ISCMessage message = new SCMessage("a");
 		
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		ISCClient[] clients = new ISCClient[clientsCount];
+		String[] sessionIds = new String[clientsCount];
+		
+		int i = 0;
+		for (; i < clientsCount / 10; i++) {
+			System.out.println("Attaching client " + i*10);
+			for (int j = 0; j < 10; j++) {
+				clients[j + (10 * i)] = new SCClient();
+				clients[j + (10 * i)].attach(host, port8080);
+			}
+		}
+		for (i = 0; i < clientsCount / 10; i++) {
+			System.out.println("Creating session " + i*10);
+			for (int j = 0; j < 10; j++) {
+				ISessionService sessionService = clients[j + (10 * i)].newSessionService(serviceName);
+				sessionService.createSession("sessionInfo", 300, 60);
+				sessionIds[j + (10 * i)] = sessionService.execute(message).getSessionId();
+			}
+		}
+		Arrays.sort(sessionIds);
+		int counter = 0;
+
+		for (i = 1; i < clientsCount; i++)
+		{
+			if (clients[i].equals(clients[i -1])) {
+				counter++;
+			}
+		}
+		assertEquals(0, counter);
 	}
+	
+	
 }
+ 

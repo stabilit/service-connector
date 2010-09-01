@@ -37,7 +37,7 @@ public class StartSCSessionServer {
 			System.out.println(this.scSrv.isListening());
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", port, serviceName, 10, 10, srvCallback);
+			this.scSrv.registerService("localhost", port, serviceName, 1000, 1000, srvCallback);
 
 			System.out.println(this.scSrv.isRegistered(serviceName));
 
