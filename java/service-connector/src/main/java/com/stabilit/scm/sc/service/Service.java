@@ -36,7 +36,7 @@ public abstract class Service {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Service.class);
-	
+
 	/** The type. */
 	private ServiceType type;
 	/** The name. */
@@ -132,5 +132,23 @@ public abstract class Service {
 			sb.append(server);
 		}
 		return sb.toString();
+	}
+
+	public int getCountAllocatedSessions() {
+		int allocatedSessions = 0;
+
+		for (Server server : listOfServers) {
+			allocatedSessions += server.getSessions().size();
+		}
+		return allocatedSessions;
+	}
+
+	public int getCountAvailableSessions() {
+		int availableSessions = 0;
+
+		for (Server server : listOfServers) {
+			availableSessions += server.getMaxSessions();
+		}
+		return availableSessions;
 	}
 }

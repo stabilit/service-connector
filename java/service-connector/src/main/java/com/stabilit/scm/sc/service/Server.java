@@ -288,6 +288,7 @@ public class Server {
 	 */
 	public void destroy() {
 		this.cp.destroy();
+		this.sessions = null;
 		this.requester = null;
 	}
 

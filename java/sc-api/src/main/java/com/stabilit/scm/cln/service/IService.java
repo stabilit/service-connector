@@ -31,4 +31,11 @@ public interface IService {
 	 * @return the context
 	 */
 	public abstract IContext getContext();
+
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
+	public abstract String getSessionId();
 }

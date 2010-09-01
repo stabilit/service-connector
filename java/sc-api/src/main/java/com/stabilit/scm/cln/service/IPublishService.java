@@ -90,4 +90,12 @@ public interface IPublishService extends IService {
 	 * @return true, if is subscribed
 	 */
 	public abstract boolean isSubscribed();
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract IServiceContext getContext();
+
+	/** {@inheritDoc} */
+	@Override
+	public abstract String getSessionId();
 }

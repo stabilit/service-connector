@@ -22,9 +22,10 @@ import org.junit.Test;
 
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPManageCall;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -44,7 +45,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 	}
 
 	@Test
-	public void manageCommand() throws Exception {
+	public void manageCommandEnableDisable() throws Exception {
 		// try to create a session on service enableService - should fail
 		SCMPFault fault = (SCMPFault) this.createSession();
 		SCTest.verifyError(fault, SCMPError.NOT_FOUND, " [service not found for enableService]",
@@ -100,15 +101,81 @@ public class ManageTestCase extends SuperAttachTestCase {
 		// deregister a server for enableService
 		SetupTestCases.deregisterSessionServiceEnable();
 	}
-	
-//	@Test
-//	public void shutdownSCByManageCMD() throws Exception {
-//		// enable enableService by manage call
-//		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-//		ManageTestCallback callback = new ManageTestCallback();
-//		manageCall.setRequestBody("kill");
-//		manageCall.invoke(callback);
-//	}
+
+	@Test
+	public void manageCommandState() throws Exception {
+		// enable enableService by manage call
+		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		ManageTestCallback callback = new ManageTestCallback();
+		manageCall.setRequestBody("enable=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		SCMPMessage result = callback.getMessageSync();
+
+		// state of enableService
+		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		callback = new ManageTestCallback();
+		manageCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		result = callback.getMessageSync();
+		Assert.assertEquals("true", result.getBody().toString());
+
+		// disable enableService by manage call
+		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		callback = new ManageTestCallback();
+		manageCall.setRequestBody("disable=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		result = callback.getMessageSync();
+	}
+
+	@Test
+	public void manageCommandSessions() throws Exception {
+		// enable enableService by manage call
+		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		ManageTestCallback callback = new ManageTestCallback();
+		manageCall.setRequestBody("enable=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		SCMPMessage result = callback.getMessageSync();
+
+		// register a server for enableService
+		SetupTestCases.registerSessionServiceEnable();
+
+		// try to create a session on service enableService - should work
+		result = (SCMPMessage) this.createSession();
+		String sessionId = result.getSessionId();
+
+		// sessions of enableService
+		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		callback = new ManageTestCallback();
+		manageCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		result = callback.getMessageSync();
+		Assert.assertEquals("10/1", result.getBody().toString());
+
+		// delete session one
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
+				.newInstance(req, this.serviceName, sessionId);
+		deleteSessionCall.invoke(callback, 3);
+		result = callback.getMessageSync();
+
+		// deregister a server for enableService
+		SetupTestCases.deregisterSessionServiceEnable();
+
+		// disable enableService by manage call
+		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		callback = new ManageTestCallback();
+		manageCall.setRequestBody("disable=" + this.serviceName);
+		manageCall.invoke(callback, 3);
+		result = callback.getMessageSync();
+	}
+
+	// @Test
+	// public void shutdownSCByManageCMD() throws Exception {
+	// // enable enableService by manage call
+	// SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+	// ManageTestCallback callback = new ManageTestCallback();
+	// manageCall.setRequestBody("kill");
+	// manageCall.invoke(callback);
+	// }
 
 	private Object createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL

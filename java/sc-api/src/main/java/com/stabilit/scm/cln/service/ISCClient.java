@@ -153,6 +153,8 @@ public interface ISCClient extends ISC {
 	 */
 	public abstract boolean isServiceEnabled(String serviceName) throws SCServiceException;
 
+	public abstract String workload(String serviceName) throws SCServiceException;
+	
 	/**
 	 * Kill sc.
 	 * 

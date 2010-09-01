@@ -32,7 +32,7 @@ public class SCMPSrvAbortSessionCall extends SCMPServerCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvAbortSessionCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPSrvAbortSessionCall.
 	 */
@@ -55,7 +55,7 @@ public class SCMPSrvAbortSessionCall extends SCMPServerCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, SCMPMessage message) {
-		return null;
+		return new SCMPSrvAbortSessionCall(req, message);
 	}
 
 	/** {@inheritDoc} */

@@ -30,7 +30,7 @@ public abstract class Service {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(Service.class);
-	
+
 	/** The service name. */
 	protected String serviceName;
 	/** The session id, identifies current session context. */
@@ -76,5 +76,14 @@ public abstract class Service {
 	 */
 	public IServiceContext getContext() {
 		return this.serviceContext;
+	}
+
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
+	public String getSessionId() {
+		return this.sessionId;
 	}
 }

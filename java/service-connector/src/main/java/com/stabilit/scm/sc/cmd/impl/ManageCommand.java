@@ -42,7 +42,7 @@ public class ManageCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
-	
+
 	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")=(.*)";
 	/** The Constant MANAGE_PATTER. */
@@ -67,6 +67,8 @@ public class ManageCommand extends CommandAdapter {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
 
+		// TODO not found error message JOT
+
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -79,6 +81,27 @@ public class ManageCommand extends CommandAdapter {
 		if (bodyString.equalsIgnoreCase(Constants.KILL)) {
 			// kill sc requested
 			System.exit(0);
+		}
+
+		if (bodyString.startsWith(Constants.STATE)) {
+			// state for service requested
+			String serviceName = bodyString.substring(6);
+			if (serviceRegistry.containsKey(serviceName)) {
+				scmpReply.setBody(Boolean.TRUE.toString());
+			} else {
+				scmpReply.setBody(Boolean.FALSE.toString());
+			}
+			return;
+		}
+
+		if (bodyString.startsWith(Constants.SESSIONS)) {
+			// state for service requested
+			String serviceName = bodyString.substring(9);
+			if (serviceRegistry.containsKey(serviceName)) {
+				Service service = serviceRegistry.getService(serviceName);
+				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
+			}
+			return;
 		}
 
 		Matcher m = MANAGE_PATTER.matcher(bodyString);

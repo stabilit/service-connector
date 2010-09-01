@@ -75,4 +75,8 @@ public interface ISessionService extends IService {
 	/** {@inheritDoc} */
 	@Override
 	public abstract IServiceContext getContext();
+	
+	/** {@inheritDoc} */
+	@Override
+	public abstract String getSessionId();
 }

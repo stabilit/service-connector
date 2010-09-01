@@ -85,10 +85,9 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServiceCommand.ABORT_SESSION_ERROR_STRING);
 
-		// aborts session on server
+		// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
 		for (Session session : serverSessions) {
 			this.sessionRegistry.removeSession(session);
-			server.removeSession(session);
 			abortMsg.setSessionId(session.getId());
 			server.serverAbortSession(abortMsg, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 		}

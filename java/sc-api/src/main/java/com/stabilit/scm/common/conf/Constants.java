@@ -144,6 +144,10 @@ public final class Constants {
 	public static final String DISABLE = "disable";
 	/** The Constant ENABLE. */
 	public static final String ENABLE = "enable";
+	/** The Constant STATE. */
+	public static final String STATE = "state";
+	/** The Constant SESSIONS. */
+	public static final String SESSIONS = "sessions";
 	/** The Constant SHUTDOWN. */
 	public static final String KILL = "kill";
 	/** The Constant EQUAL_SIGN. */
