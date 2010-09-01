@@ -15,12 +15,14 @@ public class StartSCSessionServer {
 	private ISCServer scSrv = null;
 	private String serviceName;
 	private int port = 9000;
+	private int maxCons = 10;
 
 	public static void main(String[] args) throws Exception {
 		StartSCSessionServer sessionServer = new StartSCSessionServer();
 		try {
 			sessionServer.port = Integer.parseInt(args[0]);
 			sessionServer.setServiceName(args[1]);
+			sessionServer.maxCons = Integer.parseInt(args[2]);
 		} catch (Exception e) {
 			logger.error("main", e);
 		}
@@ -34,12 +36,12 @@ public class StartSCSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 30000, 0);
 
-			System.out.println(this.scSrv.isListening());
+			System.out.println("Is listening:\t" + this.scSrv.isListening());
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", port, serviceName, 1000, 1000, srvCallback);
+			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons() , srvCallback);
 
-			System.out.println(this.scSrv.isRegistered(serviceName));
+			System.out.println("Is registered:\t" + this.scSrv.isRegistered(serviceName));
 
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -61,6 +63,14 @@ public class StartSCSessionServer {
 
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
+	}
+
+	public void setMaxCons(int maxCons) {
+		this.maxCons = maxCons;
+	}
+
+	public int getMaxCons() {
+		return maxCons;
 	}
 
 	class SrvCallback implements ISCSessionServerCallback {
@@ -128,10 +138,11 @@ public class StartSCSessionServer {
 
 		@Override
 		public void run() {
-			// sleep for 2 seconds before killing the server
+			// sleep for before killing the server
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(100);
 				this.server.deregisterService(serviceName);
+				System.out.println("Shutting down");
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

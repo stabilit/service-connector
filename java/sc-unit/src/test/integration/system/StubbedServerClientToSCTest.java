@@ -1,9 +1,8 @@
-package integration;
+package system;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
@@ -23,9 +22,9 @@ import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
-public class MockedServerClientToSCTest {
+public class StubbedServerClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(MockedServerClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(StubbedServerClientToSCTest.class);
 
 	private static Process p;
 
@@ -86,8 +85,8 @@ public class MockedServerClientToSCTest {
 		new Thread("SERVER") {
 			public void run() {
 				try {
-					StartSCSessionServer
-							.main(new String[] { String.valueOf(port9000), serviceName });
+					StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
+							String.valueOf(10) });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -99,33 +98,10 @@ public class MockedServerClientToSCTest {
 	@After
 	public void tearDown() throws Exception {
 		// r.destroy();
-	}
-
-	@Test(expected = InvalidParameterException.class)
-	public void newSessionService_NullParam_throwsInvalidParamException() throws Exception {
-		client.newSessionService(null);
-	}
-
-	@Test
-	public void newSessionService_emptyStringParam_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService("") instanceof ISessionService);
-	}
-
-	@Test
-	public void newSessionService_whiteSpaceStringParam_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(" ") instanceof ISessionService);
-	}
-
-	@Test
-	public void newSessionService_ArbitraryStringParam_returnsISessionService() throws Exception {
-		assertEquals(
-				true,
-				client.newSessionService("The quick brown fox jumps over a lazy dog.") instanceof ISessionService);
-	}
-
-	@Test
-	public void newSessionService_validServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+		ISessionService session = client.newSessionService(serviceName);
+		session.createSession("sessionInfo", 300, 60);
+		session.execute(new SCMessage("kill server"));
+		Thread.sleep(1000);
 	}
 
 	@Test
@@ -188,6 +164,31 @@ public class MockedServerClientToSCTest {
 	}
 
 	@Test
+	public void createSession_256LongSessionInfo_passes() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 256; i++) {
+			sb.append('a');
+		}
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession(sb.toString(), 300, 60);
+	}
+
+	@Test
+	public void createSession_257LongSessionInfo_throwsException() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 257; i++) {
+			sb.append('a');
+		}
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession(sb.toString(), 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
 	public void deleteSession_beforeCreateSession_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.deleteSession();
@@ -218,7 +219,7 @@ public class MockedServerClientToSCTest {
 			}
 		}
 	}
-	
+
 	@Test
 	public void execute_messageDataNull_returnsTheSameMessageData() throws Exception {
 
@@ -233,7 +234,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageDataEmptyString_returnsTheSameMessageData() throws Exception {
 
@@ -248,7 +249,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageDataSingleChar_returnsTheSameMessageData() throws Exception {
 
@@ -263,7 +264,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageDataArbitrary_returnsTheSameMessageData() throws Exception {
 
@@ -278,7 +279,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageData1MBArray_returnsTheSameMessageData() throws Exception {
 
@@ -309,7 +310,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSingleCharMessageInfo_returnsTheSameMessage() throws Exception {
 
@@ -325,7 +326,7 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageArbitraryMessageInfo_returnsTheSameMessage() throws Exception {
 
@@ -341,14 +342,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageCompressedTrue_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(true);
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -358,14 +359,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageCompressedFalse_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(false);
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -375,14 +376,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSessionIdEmptyString_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("");
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -393,14 +394,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSessionIdWhiteSpaceString_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId(" ");
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -411,14 +412,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSessionIdSingleChar_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("a");
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -429,14 +430,14 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSessionIdArbitraryString_returnsTheSameMessage() throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -447,14 +448,15 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
-	public void execute_messageSessionIdLikeSessionIdString_returnsTheSameMessage() throws Exception {
+	public void execute_messageSessionIdLikeSessionIdString_returnsTheSameMessage()
+			throws Exception {
 
 		ISCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
-		
+
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
@@ -465,27 +467,48 @@ public class MockedServerClientToSCTest {
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
-	
+
 	@Test
-	public void sessionId_uniqueCheckFor1000sessions_allSessionsHaveUniqueSessionIds() throws Exception {
+	public void sessionId_uniqueCheckFor1000sessions_allSessionsHaveUniqueSessionIds()
+			throws Exception {
 		int clientsCount = 1000;
-		ISCMessage message = new SCMessage("a");
 		
+		// destroy server with only 10 max connections
+		ISessionService session = client.newSessionService(serviceName);
+		session.createSession("sessionInfo", 300, 60);
+		session.execute(new SCMessage("kill server"));
+		
+		//start server with 1000 connections 
+		new Thread("SERVER") {
+			public void run() {
+				try {
+					StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
+							String.valueOf(1000) });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		Thread.sleep(4000);
+		
+		ISCMessage message = new SCMessage("a");
+
 		ISCClient[] clients = new ISCClient[clientsCount];
 		String[] sessionIds = new String[clientsCount];
-		
+
 		int i = 0;
 		for (; i < clientsCount / 10; i++) {
-			System.out.println("Attaching client " + i*10);
+			System.out.println("Attaching client " + i * 10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
 				clients[j + (10 * i)].attach(host, port8080);
 			}
 		}
 		for (i = 0; i < clientsCount / 10; i++) {
-			System.out.println("Creating session " + i*10);
+			System.out.println("Creating session " + i * 10);
 			for (int j = 0; j < 10; j++) {
-				ISessionService sessionService = clients[j + (10 * i)].newSessionService(serviceName);
+				ISessionService sessionService = clients[j + (10 * i)]
+						.newSessionService(serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 				sessionIds[j + (10 * i)] = sessionService.execute(message).getSessionId();
 			}
@@ -493,15 +516,19 @@ public class MockedServerClientToSCTest {
 		Arrays.sort(sessionIds);
 		int counter = 0;
 
-		for (i = 1; i < clientsCount; i++)
-		{
-			if (clients[i].equals(clients[i -1])) {
+		for (i = 1; i < clientsCount; i++) {
+			if (clients[i].equals(clients[i - 1])) {
 				counter++;
 			}
 		}
 		assertEquals(0, counter);
 	}
-	
-	
+
+	@Test
+	public void sessionId_unuiqueCheckFor1000IdsByOneClient_allSessionIdsAreUnique()
+			throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+	}
 }
- 
