@@ -29,7 +29,7 @@ public class StubbedServerClientToSCTest {
 	private static Process p;
 
 	private static String userDir;
-	private Process r;
+//	private Process r;
 
 	private ISCClient client;
 
@@ -74,14 +74,12 @@ public class StubbedServerClientToSCTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		client = new SCClient();
-		client.attach(host, port8080);
-		/*
-		 * String command = "java -classpath " + userDir +
-		 * "\\target\\classes vmstarters.StartSCSessionServer 9000 " +
-		 * serviceName; System.out.println(command); r =
-		 * Runtime.getRuntime().exec(command);
-		 */
+		
+//		  String command = "java -classpath " + userDir +
+//		  "\\target\\classes vmstarters.StartSCSessionServer 9000 " +
+//		  serviceName; System.out.println(command);
+//		  r = Runtime.getRuntime().exec(command);
+		 
 		new Thread("SERVER") {
 			public void run() {
 				try {
@@ -92,12 +90,31 @@ public class StubbedServerClientToSCTest {
 				}
 			}
 		}.start();
-		Thread.sleep(1000);
+		
+		client = new SCClient();
+		client.attach(host, port8080);
+		while (true) {
+			String sessions = client.workload(serviceName);
+			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
+				break;
+			}
+			Thread.sleep(500);
+		}
+		System.out.println("Service is enabled!");
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		// r.destroy();
+		System.out.println("TearDown");
+		while (true) {
+			String sessions = client.workload(serviceName);
+			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
+				break;
+			}
+			Thread.sleep(500);
+		}
+		System.out.println("TearDown proceed");
 		ISessionService session = client.newSessionService(serviceName);
 		session.createSession("sessionInfo", 300, 60);
 		session.execute(new SCMessage("kill server"));
@@ -206,6 +223,18 @@ public class StubbedServerClientToSCTest {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(" ", 300, 60);
 		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_twice_throwsExceptioin() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+		try {
+			sessionService.createSession("sessionInfo", 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test
@@ -510,14 +539,14 @@ public class StubbedServerClientToSCTest {
 				ISessionService sessionService = clients[j + (10 * i)]
 						.newSessionService(serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
-				sessionIds[j + (10 * i)] = sessionService.execute(message).getSessionId();
+				sessionIds[j + (10 * i)] = sessionService.getSessionId();
 			}
 		}
 		Arrays.sort(sessionIds);
 		int counter = 0;
 
 		for (i = 1; i < clientsCount; i++) {
-			if (clients[i].equals(clients[i - 1])) {
+			if (sessionIds[i].equals(sessionIds[i - 1])) {
 				counter++;
 			}
 		}
@@ -525,10 +554,30 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void sessionId_unuiqueCheckFor1000IdsByOneClient_allSessionIdsAreUnique()
+	public void sessionId_uniqueCheckFor1000IdsByOneClient_allSessionIdsAreUnique()
 			throws Exception {
+		int clientsCount = 1000;
+		
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		String[] sessions = new String[clientsCount];
+		
+		for (int i = 0; i < clientsCount / 10; i++) {
+			System.out.println("Creating session " + i * 10);
+			for (int j = 0; j < 10; j++) {
+				sessionService.createSession("sessionInfo", 300, 60);
+				sessions[j + (10 * i)] = sessionService.getSessionId();
+				sessionService.deleteSession();
+			}
+		}
+		
+		Arrays.sort(sessions);
+		int counter = 0;
 
+		for (int i = 1; i < clientsCount; i++) {
+			if (sessions[i].equals(sessions[i - 1])) {
+				counter++;
+			}
+		}
+		assertEquals(0, counter);
 	}
 }

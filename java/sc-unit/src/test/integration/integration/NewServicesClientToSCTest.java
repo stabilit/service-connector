@@ -26,7 +26,8 @@ public class NewServicesClientToSCTest {
 	private static Process p;
 
 	private String serviceName = "simulation";
-
+	private String serviceNameAlt = "P01_RTXS_sc1";
+	
 	private String host = "localhost";
 
 	private int port8080 = 8080;
@@ -97,6 +98,26 @@ public class NewServicesClientToSCTest {
 	public void newSessionService_validServiceName_returnsISessionService() throws Exception {
 		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
 	}
+	
+	@Test
+	public void newSessionService_twice_returnsISessionService() throws Exception {
+		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+	}
+	
+	@Test
+	public void newSessionService_twiceDifferentServiceName_returnsISessionService() throws Exception {
+		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(serviceNameAlt) instanceof ISessionService);
+	}
+	
+	@Test
+	public void newSessionService_1000TimesDifferentServiceName_returnsISessionService() throws Exception {
+		for (int i = 0; i < 500; i++) {
+			assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+			assertEquals(true, client.newSessionService(serviceNameAlt) instanceof ISessionService);
+		}
+	}
 
 	@Test(expected = InvalidParameterException.class)
 	public void newPublishService_NullParam_throwsInvalidParamException() throws Exception {
@@ -124,6 +145,26 @@ public class NewServicesClientToSCTest {
 	public void newPublishService_validServiceName_returnsIPublishService() throws Exception {
 		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
 	}
+	
+	@Test
+	public void newPublishService_twice_returnsIPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+	}
+	
+	@Test
+	public void newPublishService_twiceDifferentServiceName_returnsIPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(serviceNameAlt) instanceof IPublishService);
+	}
+	
+	@Test
+	public void newPublishService_1000TimesDifferentServiceName_returnsIPublishService() throws Exception {
+		for (int i = 0; i < 500; i++) {
+			assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+			assertEquals(true, client.newPublishService(serviceNameAlt) instanceof IPublishService);
+		}
+	}
 
 	@Test(expected = InvalidParameterException.class)
 	public void newFileService_NullParam_throwsInvalidParamException() throws Exception {
@@ -150,5 +191,25 @@ public class NewServicesClientToSCTest {
 	@Test
 	public void newFileService_validServiceName_returnsIFileService() throws Exception {
 		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+	}
+	
+	@Test
+	public void newFileService_twice_returnsIFileService() throws Exception {
+		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+	}
+	
+	@Test
+	public void newFileService_twiceDifferentServiceName_returnsIFileService() throws Exception {
+		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(serviceNameAlt) instanceof IFileService);
+	}
+	
+	@Test
+	public void newFileService_1000TimesDifferentServiceName_returnsIFileService() throws Exception {
+		for (int i = 0; i < 500; i++) {
+			assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+			assertEquals(true, client.newFileService(serviceNameAlt) instanceof IFileService);
+		}
 	}
 }
