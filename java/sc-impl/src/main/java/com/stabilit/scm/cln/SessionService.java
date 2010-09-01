@@ -24,8 +24,8 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.cln.service.Service;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.scm.common.call.SCMPClnExecuteCall;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
@@ -89,8 +89,11 @@ public class SessionService extends Service implements ISessionService {
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			this.callback = null;
-			throw new SCServiceException("create session failed"
+			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
 	}
@@ -135,8 +138,8 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(
+				this.requester, this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional
@@ -180,8 +183,8 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(
+				this.requester, this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional

@@ -45,7 +45,7 @@ public class PublishService extends Service implements IPublishService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishService.class);
-	
+
 	private boolean subscribed = false;
 	private int noDataInterval;
 
@@ -174,22 +174,26 @@ public class PublishService extends Service implements IPublishService {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
 		}
-		this.subscribed = false;
-		this.msgId.incrementMsgSequenceNr();
-		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(this.requester, this.serviceName, this.sessionId);
 		try {
-			unsubscribeCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
-		} catch (Exception e) {
-			throw new SCServiceException("subscribe failed", e);
+			this.subscribed = false;
+			this.msgId.incrementMsgSequenceNr();
+			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
+					.newInstance(this.requester, this.serviceName, this.sessionId);
+			try {
+				unsubscribeCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			} catch (Exception e) {
+				throw new SCServiceException("subscribe failed", e);
+			}
+			SCMPMessage reply = this.callback.getMessageSync();
+			if (reply.isFault()) {
+				SCMPFault fault = (SCMPFault) reply;
+				throw new SCServiceException("subscribe failed", fault.getCause());
+			}
+		} finally {
+			this.sessionId = null;
+			this.msgId = null;
+			this.callback = null;
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("subscribe failed", fault.getCause());
-		}
-		this.msgId = null;
-		this.callback = null;
 	}
 
 	/**
@@ -237,7 +241,7 @@ public class PublishService extends Service implements IPublishService {
 				try {
 					PublishService.this.receivePublication();
 				} catch (Exception e) {
-					logger.info("callback "+ e.getMessage());
+					logger.info("callback " + e.getMessage());
 					SCMPFault fault = new SCMPFault(e);
 					super.callback(fault);
 					return;
