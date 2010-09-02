@@ -17,7 +17,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class EnableDisableServiceClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachDetachClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(EnableDisableServiceClientToSCTest.class);
 
 	private static Process p;
 

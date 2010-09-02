@@ -20,7 +20,7 @@ import com.stabilit.scm.cln.service.ISessionService;
 
 public class NewServicesClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(NewServicesClientToSCTest.class);
 
 	private static ISCClient client;
 	private static Process p;
