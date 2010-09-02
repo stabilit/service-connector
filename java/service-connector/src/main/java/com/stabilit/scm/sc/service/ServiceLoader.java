@@ -43,7 +43,7 @@ public class ServiceLoader {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceLoader.class);
-	
+
 	/**
 	 * Loads services from a file.
 	 * 
@@ -101,9 +101,11 @@ public class ServiceLoader {
 
 			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
+				logger.debug("state enable for service: " + serviceName);
 				// enable is not set - means true or true itself
 				serviceRegistry.addService(service.getServiceName(), service);
 			} else {
+				logger.debug("state disable for service: " + serviceName);
 				// enable is false - so add to disabledServiceRegistry
 				disabledServiceRegistry.addService(service.getServiceName(), service);
 			}

@@ -82,10 +82,13 @@ public class InspectCommand extends CommandAdapter {
 		if (bodyString.startsWith(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
+			logger.debug("state requested for service : " + serviceName);
 			if (serviceRegistry.containsKey(serviceName)) {
 				scmpReply.setBody(Boolean.TRUE.toString());
+				logger.debug("state true for service : " + serviceName);
 			} else {
 				scmpReply.setBody(Boolean.FALSE.toString());
+				logger.debug("state false for service : " + serviceName);
 			}
 			response.setSCMP(scmpReply);
 			return;
@@ -94,6 +97,7 @@ public class InspectCommand extends CommandAdapter {
 		if (bodyString.startsWith(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
+			logger.debug("sessions requested for service : " + serviceName);
 			if (serviceRegistry.containsKey(serviceName)) {
 				Service service = serviceRegistry.getService(serviceName);
 				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
