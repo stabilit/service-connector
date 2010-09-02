@@ -180,7 +180,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				logger.info("getBody "+ ex.getMessage());
 				return null;
 			}
-			this.outputStream.toByteArray();
+			return this.outputStream.toByteArray();
 		}
 		if (firstScmp.isString()) {
 			this.writer = new StringWriter();
