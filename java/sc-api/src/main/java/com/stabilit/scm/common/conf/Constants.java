@@ -78,7 +78,7 @@ public final class Constants {
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
 	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMillis";
+	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The HOST. */
