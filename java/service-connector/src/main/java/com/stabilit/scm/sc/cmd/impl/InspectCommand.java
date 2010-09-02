@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -28,6 +29,7 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Service;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
@@ -39,7 +41,7 @@ public class InspectCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(InspectCommand.class);
-	
+
 	/**
 	 * Instantiates a new InspectCommand.
 	 */
@@ -60,16 +62,45 @@ public class InspectCommand extends CommandAdapter {
 		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 
-		String inspectString = "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
-		inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
-		inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
-
+		SCMPMessage reqMsg = request.getMessage();
+		String bodyString = (String) reqMsg.getBody();
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
-		// dump internal registries
-		scmpReply.setBody(inspectString);
-		response.setSCMP(scmpReply);
+
+		if (bodyString == null) {
+			String inspectString = "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
+			inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
+			inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
+
+			// dump internal registries
+			scmpReply.setBody(inspectString);
+			response.setSCMP(scmpReply);
+			return;
+		}
+
+		if (bodyString.startsWith(Constants.STATE)) {
+			// state for service requested
+			String serviceName = bodyString.substring(6);
+			if (serviceRegistry.containsKey(serviceName)) {
+				scmpReply.setBody(Boolean.TRUE.toString());
+			} else {
+				scmpReply.setBody(Boolean.FALSE.toString());
+			}
+			response.setSCMP(scmpReply);
+			return;
+		}
+
+		if (bodyString.startsWith(Constants.SESSIONS)) {
+			// state for service requested
+			String serviceName = bodyString.substring(9);
+			if (serviceRegistry.containsKey(serviceName)) {
+				Service service = serviceRegistry.getService(serviceName);
+				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
+			}
+			response.setSCMP(scmpReply);
+			return;
+		}
 	}
 
 	/**

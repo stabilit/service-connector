@@ -83,27 +83,6 @@ public class ManageCommand extends CommandAdapter {
 			System.exit(0);
 		}
 
-		if (bodyString.startsWith(Constants.STATE)) {
-			// state for service requested
-			String serviceName = bodyString.substring(6);
-			if (serviceRegistry.containsKey(serviceName)) {
-				scmpReply.setBody(Boolean.TRUE.toString());
-			} else {
-				scmpReply.setBody(Boolean.FALSE.toString());
-			}
-			return;
-		}
-
-		if (bodyString.startsWith(Constants.SESSIONS)) {
-			// state for service requested
-			String serviceName = bodyString.substring(9);
-			if (serviceRegistry.containsKey(serviceName)) {
-				Service service = serviceRegistry.getService(serviceName);
-				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
-			}
-			return;
-		}
-
 		Matcher m = MANAGE_PATTER.matcher(bodyString);
 		if (!m.matches()) {
 			// given string has bad format
