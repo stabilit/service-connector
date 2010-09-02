@@ -83,6 +83,7 @@ public class StubbedServerClientToSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ISCClient client = new SCClient();
+		client.attach(host, port8080);
 		while (true) {
 			String sessions = client.workload(serviceName);
 			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
@@ -134,6 +135,7 @@ public class StubbedServerClientToSCTest {
 	@After
 	public void tearDown() throws Exception {
 		// r.destroy();
+		client.detach();
 		System.out.println("5.\tTearDown");
 	}
 
@@ -202,7 +204,7 @@ public class StubbedServerClientToSCTest {
 	@Test
 	public void createSession_whiteSpaceSessionInfo_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(" ", 300, 60);
+		sessionService.createSession(" ", 787, 999);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 		System.out.println("4.\tWhite space - end of method");
@@ -226,6 +228,7 @@ public class StubbedServerClientToSCTest {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(sb.toString(), 300, 60);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
@@ -575,4 +578,5 @@ public class StubbedServerClientToSCTest {
 		}
 		assertEquals(0, counter);
 	}
+	
 }
