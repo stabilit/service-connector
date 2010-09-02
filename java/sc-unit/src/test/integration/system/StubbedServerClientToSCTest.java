@@ -281,6 +281,12 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
+	public void createSession_twiceWithDifferentSessionServices_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+	}
+
+	@Test
 	public void createSession_1000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		for (int i = 0; i < 100; i++) {
@@ -293,7 +299,7 @@ public class StubbedServerClientToSCTest {
 			}
 		}
 	}
-
+	
 	@Test
 	public void execute_messageDataNull_returnsTheSameMessageData() throws Exception {
 
@@ -540,62 +546,6 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
-	}
-
-	@Test
-	public void sessionId_uniqueCheckFor1000sessions_allSessionsHaveUniqueSessionIds()
-			throws Exception {
-		int clientsCount = 1000;
-		
-		// destroy server with only 10 max connections
-		ISessionService session = client.newSessionService(serviceName);
-		session.createSession("sessionInfo", 300, 60);
-		session.execute(new SCMessage("kill server"));
-		
-		//start server with 1000 connections 
-		new Thread("SERVER") {
-			public void run() {
-				try {
-					StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
-							String.valueOf(1000) });
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
-		Thread.sleep(4000);
-		
-		ISCMessage message = new SCMessage("a");
-
-		ISCClient[] clients = new ISCClient[clientsCount];
-		String[] sessionIds = new String[clientsCount];
-
-		int i = 0;
-		for (; i < clientsCount / 10; i++) {
-			System.out.println("Attaching client " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				clients[j + (10 * i)] = new SCClient();
-				clients[j + (10 * i)].attach(host, port8080);
-			}
-		}
-		for (i = 0; i < clientsCount / 10; i++) {
-			System.out.println("Creating session " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				ISessionService sessionService = clients[j + (10 * i)]
-						.newSessionService(serviceName);
-				sessionService.createSession("sessionInfo", 300, 60);
-				sessionIds[j + (10 * i)] = sessionService.getSessionId();
-			}
-		}
-		Arrays.sort(sessionIds);
-		int counter = 0;
-
-		for (i = 1; i < clientsCount; i++) {
-			if (sessionIds[i].equals(sessionIds[i - 1])) {
-				counter++;
-			}
-		}
-		assertEquals(0, counter);
 	}
 
 	@Test
