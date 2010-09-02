@@ -118,7 +118,8 @@ public class EnableDisableServiceClientToSCTest {
 	public void disableService_unabledService_passes() throws Exception {
 		assertEquals(false, client.isServiceEnabled(newServiceName));
 		client.enableService(newServiceName);
-		assertEquals(false, client.isServiceEnabled(newServiceName));
+		assertEquals(true, client.isServiceEnabled(newServiceName));
+		client.disableService(newServiceName);
 	}
 	
 	@Test

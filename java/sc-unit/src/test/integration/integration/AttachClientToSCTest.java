@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -59,10 +58,6 @@ public class AttachClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	// region hostName == "localhost" (set as only one in
