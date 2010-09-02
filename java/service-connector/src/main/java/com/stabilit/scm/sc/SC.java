@@ -28,6 +28,8 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ICommunicatorConfig;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
+import com.stabilit.scm.common.log.ILoggingManagerMXBean;
+import com.stabilit.scm.common.log.impl.LoggingManager;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.ConsoleUtil;
@@ -119,11 +121,14 @@ public final class SC {
 			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
 			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
 			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.scm.registry:type=ServerRegistry");
+			ObjectName mxbeanNameLoggingManager = new ObjectName("com.stabilit.scm.logging:type=LoggingManager");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
+			ILoggingManagerMXBean loggingManager = new LoggingManager();			
+			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 		} catch (Throwable th) {
 			logger.error("initializeJMX", th);
 		}
