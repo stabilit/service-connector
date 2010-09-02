@@ -39,7 +39,8 @@ public class StartSCSessionServer {
 			System.out.println("1.\tIs listening:\t" + this.scSrv.isListening());
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons() , srvCallback);
+			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons(),
+					srvCallback);
 
 			System.out.println("2.\tIs registered:\t" + this.scSrv.isRegistered(serviceName));
 
@@ -110,21 +111,24 @@ public class StartSCSessionServer {
 		@Override
 		public ISCMessage execute(ISCMessage request) {
 			Object data = request.getData();
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-				if (dataString.equals("kill server")) {
-					try {
-						KillThread kill = new KillThread(this.outerContext.getServer());
-						kill.start();
-					} catch (Exception e) {
-						logger.error("execute", e);
-					}
-				} else {
-					try {
-						Thread.sleep(300);
-					} catch (InterruptedException e) {
-						logger.error("execute", e);
+
+			if (data != null) {
+				// watch out for kill server message
+				if (data.getClass() == String.class) {
+					String dataString = (String) data;
+					if (dataString.equals("kill server")) {
+						try {
+							KillThread kill = new KillThread(this.outerContext.getServer());
+							kill.start();
+						} catch (Exception e) {
+							logger.error("execute", e);
+						}
+					} else {
+						try {
+							Thread.sleep(300);
+						} catch (InterruptedException e) {
+							logger.error("execute", e);
+						}
 					}
 				}
 			}
