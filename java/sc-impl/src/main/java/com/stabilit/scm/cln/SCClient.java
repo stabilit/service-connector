@@ -286,7 +286,7 @@ public class SCClient implements ISCClient {
 			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
-		String body = this.manageCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
 		if (body.equalsIgnoreCase(Boolean.TRUE.toString())) {
 			return true;
 		}
@@ -300,7 +300,7 @@ public class SCClient implements ISCClient {
 			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
-		return this.manageCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
+		return this.inspectCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/** {@inheritDoc} */
@@ -311,6 +311,28 @@ public class SCClient implements ISCClient {
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
 		this.manageCall(Constants.KILL);
+	}
+
+	private String inspectCall(String instruction) throws SCServiceException {
+		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		this.callback = new SCClientCallback();
+		try {
+			manageCall.setRequestBody(instruction);
+			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		} catch (Exception e) {
+			this.callback = null;
+			this.connectionPool.destroy();
+			throw new SCServiceException("kill SC failed", e);
+		}
+		if (instruction.equalsIgnoreCase(Constants.KILL)) {
+			// kill sc doesn't reply a message
+			return null;
+		}
+		SCMPMessage reply = this.callback.getMessageSync();
+		if (reply.isFault()) {
+			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		}
+		return (String) reply.getBody();
 	}
 
 	/**
