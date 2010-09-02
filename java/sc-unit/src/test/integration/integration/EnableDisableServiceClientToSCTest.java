@@ -24,7 +24,8 @@ public class EnableDisableServiceClientToSCTest {
 	private ISCClient client;
 
 	private String serviceName = "simulation";
-	private String newServiceName = "notExistingService";
+	private String serviceNameAlt = "P01_RTXS_sc1";
+	private String newServiceName = "notEnabledService";
 
 	private Exception ex;
 
@@ -128,5 +129,55 @@ public class EnableDisableServiceClientToSCTest {
 		client.enableService(serviceName);
 	}
 	
-
+	@Test
+	public void enableService_notExistingService_notEnabled() throws Exception {
+		assertEquals(false, client.isServiceEnabled("notExistingService"));
+		client.enableService("notExistingService");
+		assertEquals(false, client.isServiceEnabled("notExistingService"));
+	}
+	
+	@Test
+	public void disableService_notExistingService_notEnabled() throws Exception {
+		assertEquals(false, client.isServiceEnabled("notExistingService"));
+		client.disableService("notExistingService");
+		assertEquals(false, client.isServiceEnabled("notExistingService"));
+	}
+	
+	@Test
+	public void enableDisableService_anotherExistingService_switchesStates() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceNameAlt));
+		client.disableService(serviceNameAlt);
+		assertEquals(false, client.isServiceEnabled(serviceNameAlt));
+		client.enableService(serviceNameAlt);
+		assertEquals(true, client.isServiceEnabled(serviceNameAlt));
+	}
+	
+	@Test
+	public void enableDisableService_1000Times_switchesStates() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		for (int i = 0; i < 100; i++) {
+			System.out.println("Enabling/disabling service, iteration:\t" + i*10);
+			for (int j = 0; j < 10; j++) {
+				client.disableService(serviceName);
+				assertEquals(false, client.isServiceEnabled(serviceName));
+				client.enableService(serviceName);
+				assertEquals(true, client.isServiceEnabled(serviceName));
+			}
+		}
+	}
+	
+	@Test
+	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
+		ISCClient client2 = new SCClient();
+		client2.attach(host, port8080);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		assertEquals(false, client.isServiceEnabled(serviceName));
+		assertEquals(false, client2.isServiceEnabled(serviceName));
+		client2.enableService(serviceName);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client2.detach();
+	}
 }
