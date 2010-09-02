@@ -24,6 +24,7 @@ import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPClnExecuteCall;
+import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.call.SCMPManageCall;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -112,10 +113,10 @@ public class ManageTestCase extends SuperAttachTestCase {
 		SCMPMessage result = callback.getMessageSync();
 
 		// state of enableService
-		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		callback = new ManageTestCallback();
-		manageCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
-		manageCall.invoke(callback, 3);
+		inspectCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
+		inspectCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		Assert.assertEquals("true", result.getBody().toString());
 
@@ -144,10 +145,10 @@ public class ManageTestCase extends SuperAttachTestCase {
 		String sessionId = result.getSessionId();
 
 		// sessions of enableService
-		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		callback = new ManageTestCallback();
-		manageCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
-		manageCall.invoke(callback, 3);
+		inspectCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
+		inspectCall.invoke(callback, 3);
 		result = callback.getMessageSync();
 		Assert.assertEquals("10/1", result.getBody().toString());
 
