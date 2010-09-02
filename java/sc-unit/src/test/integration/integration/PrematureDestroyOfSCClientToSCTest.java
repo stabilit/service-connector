@@ -4,9 +4,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
@@ -21,18 +19,11 @@ public class PrematureDestroyOfSCClientToSCTest {
 	
 	private static ISCClient client;
 	private static Process p;
-	private Exception ex;
 
 	private String host = "localhost";
 	private int port8080 = 8080;
 
-	@BeforeClass
-	public static void oneTimeSetUp() {
-	}
-
-	@AfterClass
-	public static void oneTimeTearDown() {
-	}
+	private String serviceName = "simulation";
 
 	/**
 	 * @throws java.lang.Exception
@@ -67,21 +58,49 @@ public class PrematureDestroyOfSCClientToSCTest {
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void attach_AfterSCDestroy_throwsException() throws Exception {
+	public void attach_afterSCDestroy_throwsException() throws Exception {
 		p.destroy();
 		client.attach(host, port8080);
 	}
 	
 	@Test
-	public void detach_BeforeAttachAfterSCDestroy_passes() throws Exception {
+	public void detach_beforeAttachAfterSCDestroy_passes() throws Exception {
 		p.destroy();
 		client.detach();
 	}
 	
 	@Test(expected = SCServiceException.class)
-	public void detach_AfterSCDestroy_throwsException() throws Exception {
+	public void detach_afterSCDestroy_throwsException() throws Exception {
 		client.attach(host, port8080);
 		p.destroy();
 		client.detach();
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void enableService_afterSCDestroy_throwsException() throws Exception {
+		client.attach(host, port8080);
+		p.destroy();
+		client.enableService(serviceName);
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void disableService_afterSCDestroy_throwsException() throws Exception {
+		client.attach(host, port8080);
+		p.destroy();
+		client.enableService(serviceName);
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void workload_afterSCDestroy_throwsException() throws Exception {
+		client.attach(host, port8080);
+		p.destroy();
+		client.workload(serviceName);
+	}
+	
+	@Test
+	public void setMaxConnection_afterAttachAfterSCDestroy_passes() throws Exception {
+		client.attach(host, port8080);
+		p.destroy();
+		client.setMaxConnections(10);
 	}
 }
