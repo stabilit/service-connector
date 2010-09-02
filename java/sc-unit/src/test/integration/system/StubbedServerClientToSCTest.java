@@ -36,10 +36,12 @@ public class StubbedServerClientToSCTest {
 	private static final String host = "localhost";
 	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
-	private String serviceName = "simulation";
+	private static String serviceName = "simulation";
 	private String serviceNameAlt = "P01_RTXS_sc1";
 
 	private Exception ex;
+
+	private static Thread serverThread;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -55,6 +57,22 @@ public class StubbedServerClientToSCTest {
 
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
+			
+			serverThread = new Thread("SERVER") {
+				public void run() {
+					try {
+						StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
+								String.valueOf(100) });
+					} catch (Exception e) {
+						logger.error("running server thread", e);
+					}
+				}
+			};
+			serverThread.start();
+			
+			// lets the Server load before starting communication
+			Thread.sleep(1000);
+
 		} catch (IOException e) {
 			logger.error("oneTimeSetUp - IOExc", e);
 		} catch (InterruptedException e) {
@@ -63,7 +81,21 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() {
+	public static void oneTimeTearDown() throws Exception {
+		ISCClient client = new SCClient();
+		while (true) {
+			String sessions = client.workload(serviceName);
+			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
+				break;
+			}
+			Thread.sleep(500);
+		}
+		System.out.println("6.\tTearDown proceed");
+		ISessionService session = client.newSessionService(serviceName);
+		session.createSession("sessionInfo", 300, 60);
+		session.execute(new SCMessage("kill server"));
+		Thread.sleep(500);
+
 		p.destroy();
 	}
 
@@ -79,46 +111,30 @@ public class StubbedServerClientToSCTest {
 //		  "\\target\\classes vmstarters.StartSCSessionServer 9000 " +
 //		  serviceName; System.out.println(command);
 //		  r = Runtime.getRuntime().exec(command);
-		 
-		new Thread("SERVER") {
-			public void run() {
+		try {
+			client = new SCClient();
+			while (!client.isAttached()) {
+				System.out.println("2.5\tAttaching");
 				try {
-					StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
-							String.valueOf(10) });
-				} catch (Exception e) {
-					e.printStackTrace();
+					client.attach(host, port8080);
+				} catch (Exception e) {}
+			}
+			while (true) {
+				String sessions = client.workload(serviceName);
+				if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
+					break;
 				}
+				Thread.sleep(500);
 			}
-		}.start();
-		
-		client = new SCClient();
-		client.attach(host, port8080);
-		while (true) {
-			String sessions = client.workload(serviceName);
-			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
-				break;
-			}
-			Thread.sleep(500);
+		} finally {
+			System.out.println("3.\tService is enabled!");
 		}
-		System.out.println("Service is enabled!");
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		// r.destroy();
-		System.out.println("TearDown");
-		while (true) {
-			String sessions = client.workload(serviceName);
-			if (Integer.parseInt(sessions.substring(0, sessions.indexOf('/'))) > 0) {
-				break;
-			}
-			Thread.sleep(500);
-		}
-		System.out.println("TearDown proceed");
-		ISessionService session = client.newSessionService(serviceName);
-		session.createSession("sessionInfo", 300, 60);
-		session.execute(new SCMessage("kill server"));
-		Thread.sleep(1000);
+		System.out.println("5.\tTearDown");
 	}
 
 	@Test
@@ -130,6 +146,9 @@ public class StubbedServerClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+		System.out.println("4.\tend of method");
 	}
 
 	@Test
@@ -141,6 +160,9 @@ public class StubbedServerClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	System.out.println("4.\tend of method");
 	}
 
 	@Test
@@ -154,30 +176,45 @@ public class StubbedServerClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	System.out.println("4.\tend of method");
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void createSession_nullSessionInfo_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(null, 300, 60);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	System.out.println("4.\tNull session info - end of method");
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void createSession_emptySessionInfo_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("", 300, 60);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+		System.out.println("4.\tEmpty - end of method");
 	}
 
 	@Test
 	public void createSession_whiteSpaceSessionInfo_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(" ", 300, 60);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+		System.out.println("4.\tWhite space - end of method");
 	}
 
 	@Test
 	public void createSession_arbitrarySpaceSessionInfo_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 60);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+		System.out.println("4.\tWhite space - end of method");
 	}
 
 	@Test
@@ -188,6 +225,7 @@ public class StubbedServerClientToSCTest {
 		}
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(sb.toString(), 300, 60);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -203,12 +241,14 @@ public class StubbedServerClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
 	public void deleteSession_beforeCreateSession_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -216,6 +256,7 @@ public class StubbedServerClientToSCTest {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -223,6 +264,7 @@ public class StubbedServerClientToSCTest {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(" ", 300, 60);
 		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 	
 	@Test
@@ -235,6 +277,7 @@ public class StubbedServerClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -244,7 +287,9 @@ public class StubbedServerClientToSCTest {
 			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);
+				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 				sessionService.deleteSession();
+				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			}
 		}
 	}

@@ -36,12 +36,12 @@ public class StartSCSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 30000, 0);
 
-			System.out.println("Is listening:\t" + this.scSrv.isListening());
+			System.out.println("1.\tIs listening:\t" + this.scSrv.isListening());
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons() , srvCallback);
 
-			System.out.println("Is registered:\t" + this.scSrv.isRegistered(serviceName));
+			System.out.println("2.\tIs registered:\t" + this.scSrv.isRegistered(serviceName));
 
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -142,7 +142,9 @@ public class StartSCSessionServer {
 			try {
 				Thread.sleep(100);
 				this.server.deregisterService(serviceName);
-				System.out.println("Shutting down");
+				System.out.println("7.\tShutting down");
+				this.server.destroyServer();
+				System.out.println("8.\tDestroy");
 			} catch (Exception e) {
 				logger.error("run", e);
 			}
