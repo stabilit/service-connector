@@ -129,7 +129,7 @@ public interface ISCClient extends ISC {
 	public abstract void setMaxConnections(int maxConnections) throws SCMPValidatorException;
 
 	/**
-	 * Enable service.
+	 * Enable service on SC.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -137,7 +137,7 @@ public interface ISCClient extends ISC {
 	public abstract void enableService(String serviceName) throws SCServiceException;
 
 	/**
-	 * Disable service.
+	 * Disable service on SC.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -145,7 +145,7 @@ public interface ISCClient extends ISC {
 	public abstract void disableService(String serviceName) throws SCServiceException;
 
 	/**
-	 * Checks if is service enabled.
+	 * Checks if service is enabled on SC.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -153,8 +153,17 @@ public interface ISCClient extends ISC {
 	 */
 	public abstract boolean isServiceEnabled(String serviceName) throws SCServiceException;
 
+	/**
+	 * Workload. Returns the number of available and allocated sessions for given service name. e.g 4/2.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the string
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
 	public abstract String workload(String serviceName) throws SCServiceException;
-	
+
 	/**
 	 * Kill sc.
 	 * 

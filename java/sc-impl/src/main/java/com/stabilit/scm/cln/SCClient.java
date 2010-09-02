@@ -27,6 +27,7 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.call.SCMPAttachCall;
 import com.stabilit.scm.common.call.SCMPCallFactory;
 import com.stabilit.scm.common.call.SCMPDetachCall;
+import com.stabilit.scm.common.call.SCMPInspectCall;
 import com.stabilit.scm.common.call.SCMPManageCall;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
@@ -287,7 +288,7 @@ public class SCClient implements ISCClient {
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
 		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
-		if (body.equalsIgnoreCase(Boolean.TRUE.toString())) {
+		if (Boolean.TRUE.toString().equalsIgnoreCase(body)) {
 			return true;
 		}
 		return false;
@@ -314,11 +315,11 @@ public class SCClient implements ISCClient {
 	}
 
 	private String inspectCall(String instruction) throws SCServiceException {
-		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
 		this.callback = new SCClientCallback();
 		try {
-			manageCall.setRequestBody(instruction);
-			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			inspectCall.setRequestBody(instruction);
+			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
@@ -330,7 +331,7 @@ public class SCClient implements ISCClient {
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
-			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			throw new SCServiceException("inspect failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		return (String) reply.getBody();
 	}

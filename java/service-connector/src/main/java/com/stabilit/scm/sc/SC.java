@@ -46,7 +46,7 @@ public final class SC {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SC.class);
-	
+
 	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 
 	/**
@@ -111,7 +111,6 @@ public final class SC {
 
 	/**
 	 * Initialize java management interface stuff.
-	 * 
 	 */
 	private static void initializeJMX() {
 		try {
