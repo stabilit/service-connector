@@ -85,7 +85,9 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
-		reply.setHeader(SCMPHeaderAttributeKey.COMPRESSION, scReply.isCompressed());
+		if (scReply.isCompressed()) {
+			reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
 		String msgInfo = scReply.getMessageInfo();
 		if (msgInfo != null) {
 			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
