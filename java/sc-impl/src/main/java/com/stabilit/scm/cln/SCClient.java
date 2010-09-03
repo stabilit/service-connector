@@ -41,7 +41,6 @@ import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.common.util.SynchronousCallback;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
@@ -71,7 +70,7 @@ public class SCClient implements ISCClient {
 	/** The context. */
 	private ServiceConnectorContext context;
 	/** The callback. */
-	private SCClientCallback callback;
+	private ServiceCallback callback;
 
 	/**
 	 * Instantiates a new SC client.
@@ -123,7 +122,7 @@ public class SCClient implements ISCClient {
 		this.connectionPool.setMinConnections(1);
 		this.requester = new Requester(new RequesterContext(this.context.getConnectionPool(), null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		this.callback = new SCClientCallback();
+		this.callback = new ServiceCallback(true);
 		try {
 			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 		} catch (Exception e) {
@@ -316,7 +315,7 @@ public class SCClient implements ISCClient {
 
 	private String inspectCall(String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
-		this.callback = new SCClientCallback();
+		this.callback = new ServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
 			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -346,7 +345,7 @@ public class SCClient implements ISCClient {
 	 */
 	private String manageCall(String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
-		this.callback = new SCClientCallback();
+		this.callback = new ServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
 			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -382,12 +381,5 @@ public class SCClient implements ISCClient {
 		public ISCClient getServiceConnector() {
 			return SCClient.this;
 		}
-	}
-
-	/**
-	 * The Class SCClientCallback.
-	 */
-	private class SCClientCallback extends SynchronousCallback {
-		// nothing to implement in this case - everything is done by super-class
 	}
 }
