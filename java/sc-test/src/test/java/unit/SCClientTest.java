@@ -6,16 +6,11 @@ package unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.IFileService;
-import com.stabilit.scm.cln.service.IPublishService;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
@@ -49,42 +44,6 @@ public class SCClientTest {
 		assertNotNull(client.getContext());		
 	}
 	
-	@Test(expected = InvalidParameterException.class)
-	public void newFileService_NullParam_throwsInvalidParamException() throws Exception
-	{
-		client.newFileService(null);
-	}
-	
-	@Test
-	public void newFileService_EmptyStringParam_returnsIFileService() throws Exception
-	{
-		assertTrue(client.newFileService(new String()) instanceof IFileService);
-	}
-
-	@Test
-	public void newFileService_ArbitraryStringParam_returnsIFileService() throws Exception
-	{
-		assertTrue(client.newFileService(host) instanceof IFileService);
-	}
-
-	@Test(expected = InvalidParameterException.class)
-	public void newPublishService_NullParam_throwsInvalidParamException() throws Exception
-	{		
-		client.newPublishService(null);
-	}
-	
-	@Test
-	public void newPublishService_EmptyStringParam_returnsIPublishService() throws Exception
-	{
-		assertTrue(client.newPublishService("") instanceof IPublishService);
-	}
-
-	@Test
-	public void newPublishService_ArbitraryStringParam_returnsIPublishService() throws Exception
-	{
-		assertTrue(client.newPublishService(host) instanceof IPublishService);
-	}
-
 	@Test
 	public void setConnectionType_NullParam_returnNull()
 	{
