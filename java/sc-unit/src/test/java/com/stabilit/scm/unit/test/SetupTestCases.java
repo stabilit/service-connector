@@ -41,7 +41,7 @@ public class SetupTestCases {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SetupTestCases.class);
-	
+
 	private static SetupTestCases setupTestCases = null;
 	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
@@ -57,6 +57,10 @@ public class SetupTestCases {
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load("sc.properties");
 		deleteLog();
+		scSimEnableSrv = new SCServer();
+		// connect to SC as server
+		scSimEnableSrv.setImmediateConnect(true);
+		scSimEnableSrv.startListener("localhost", 7001, 0);
 	}
 
 	public static void deleteLog() {
@@ -175,10 +179,6 @@ public class SetupTestCases {
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
-		scSimEnableSrv = new SCServer();
-		// connect to SC as server
-		scSimEnableSrv.setImmediateConnect(true);
-		scSimEnableSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSimEnableSrv.registerService("localhost", 9000, "enableService", 10, 10, srvCallback);
 	}
