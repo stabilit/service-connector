@@ -36,10 +36,10 @@ public class RegisterServiceServerToMultipleSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 			String cmdP0 = "java -Dlog4j.configuration=file:" + userDir
-					+ "\\src\\test\\resources\\";
+					+ "\\src\\main\\resources\\";
 			String cmdP1 = " -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
-					+ "\\src\\test\\resources\\";
+					+ "\\src\\main\\resources\\";
 
 			p = Runtime.getRuntime().exec(
 					cmdP0 + "log4jSC0.properties" + cmdP1 + "scIntegration.properties");

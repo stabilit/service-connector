@@ -38,9 +38,9 @@ public class EnableDisableServiceClientToSCTest {
 
 		String userDir = System.getProperty("user.dir");
 		String command = "java -Dlog4j.configuration=file:" + userDir
-				+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
+				+ "\\src\\main\\resources\\log4jSC0.properties -jar " + userDir
 				+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
-				+ "\\src\\test\\resources\\scIntegration.properties";
+				+ "\\src\\main\\resources\\scIntegration.properties";
 
 		try {
 			p = Runtime.getRuntime().exec(command);
@@ -171,6 +171,22 @@ public class EnableDisableServiceClientToSCTest {
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
 		ISCClient client2 = new SCClient();
 		client2.attach(host, port8080);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		assertEquals(false, client.isServiceEnabled(serviceName));
+		assertEquals(false, client2.isServiceEnabled(serviceName));
+		client2.enableService(serviceName);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client2.detach();
+	}
+	
+	@Test
+	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
+		ISCClient client2 = new SCClient();
+		((SCClient) client2).setConnectionType("netty.tcp");
+		client2.attach(host, port9000);
 		assertEquals(true, client.isServiceEnabled(serviceName));
 		assertEquals(true, client2.isServiceEnabled(serviceName));
 		client.disableService(serviceName);

@@ -7,8 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
@@ -25,7 +23,6 @@ public class PrematureDestroyOfSCServerToSCTest {
 	private static Process p;
 
 	private String host = "localhost";
-	private int port8080 = 8080;
 	private int port9000 = 9000;
 
 	private String serviceName = "simulation";
@@ -38,9 +35,9 @@ public class PrematureDestroyOfSCServerToSCTest {
 		try {
 			String userDir = System.getProperty("user.dir");
 			String command = "java -Dlog4j.configuration=file:" + userDir
-					+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
+					+ "\\src\\main\\resources\\log4jSC0.properties -jar " + userDir
 					+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
-					+ "\\src\\test\\resources\\scIntegration.properties";
+					+ "\\src\\main\\resources\\scIntegration.properties";
 
 			p = Runtime.getRuntime().exec(command);
 
