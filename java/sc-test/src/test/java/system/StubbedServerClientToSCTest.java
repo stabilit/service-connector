@@ -30,7 +30,6 @@ public class StubbedServerClientToSCTest {
 	private static Process r;
 
 	private static String userDir;
-//	private Process r;
 
 	private ISCClient client;
 
@@ -49,11 +48,11 @@ public class StubbedServerClientToSCTest {
 	public static void oneTimeSetUp() {
 
 		userDir = System.getProperty("user.dir");
-		String commandSC = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+		String commandSC = "java -Dlog4j.configuration=file:" + userDir
 				+ "\\src\\main\\resources\\log4jSC0.properties -jar " + userDir
 				+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
 				+ "\\src\\main\\resources\\scIntegration.properties";
-		String commandSrv = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+		String commandSrv = "java -Dlog4j.configuration=file:" + userDir
 		+ "\\src\\main\\resources\\log4jSrv.properties -jar " + userDir
 		+ "\\target\\test-server.jar " + port9000 + " " + serviceName + " " + 100;
 		

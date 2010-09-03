@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -93,14 +94,14 @@ public class RegisterServiceServerToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, ex instanceof SCMPCommunicationException);
 		try {
 			server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(serviceName));
-		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, ex instanceof InvalidActivityException);
 		server.deregisterService(serviceName);
 	}
 

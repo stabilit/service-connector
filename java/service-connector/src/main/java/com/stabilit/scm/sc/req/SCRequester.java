@@ -60,13 +60,13 @@ public class SCRequester implements IRequester {
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
 		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
-		connection.send(message, requesterCallback);
 		// setting up operation timeout after successful send
 		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 		SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
 		reqCallback.setTimeoutSeconds(timeoutInSeconds);
 		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		connection.send(message, requesterCallback);
 	}
 
 	/** {@inheritDoc} */

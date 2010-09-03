@@ -88,6 +88,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			}
 		}
 		logger.info("exceptionCaught "+ th.getMessage());
+		logger.error("@me", th);
 	}
 
 	private void callback(ChannelBuffer channelBuffer) throws Exception {

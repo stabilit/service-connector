@@ -105,6 +105,7 @@ public class SessionService extends Service implements ISessionService {
 			// delete session not possible - no session on this service just ignore
 			return;
 		}
+		this.callback = new ServiceCallback(true);
 		try {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
