@@ -7,6 +7,7 @@ Issues not implemented in current version
 - SC cascading
 - Server with less connections than sessions (attr. maxConnections)
 - operation timeout
+- compression of messages
 
 Special configuration in current version
 - keep alive timeout (kpi) is default set to 0 means inactive
