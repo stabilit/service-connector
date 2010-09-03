@@ -27,6 +27,7 @@ public class StubbedServerClientToSCTest {
 	protected final static Logger logger = Logger.getLogger(StubbedServerClientToSCTest.class);
 
 	private static Process p;
+	private static Process r;
 
 	private static String userDir;
 //	private Process r;
@@ -43,21 +44,28 @@ public class StubbedServerClientToSCTest {
 
 	private static Thread serverThread;
 
+
 	@BeforeClass
 	public static void oneTimeSetUp() {
 
 		userDir = System.getProperty("user.dir");
-		String command = "java -Dlog4j.configuration=file:" + userDir
-				+ "\\src\\test\\resources\\log4jSC0.properties -jar " + userDir
+		String commandSC = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+				+ "\\src\\main\\resources\\log4jSC0.properties -jar " + userDir
 				+ "\\..\\service-connector\\target\\sc.jar -filename " + userDir
-				+ "\\src\\test\\resources\\scIntegration.properties";
+				+ "\\src\\main\\resources\\scIntegration.properties";
+		String commandSrv = "cmd /c start java -Dlog4j.configuration=file:" + userDir
+		+ "\\src\\main\\resources\\log4jSrv.properties -jar " + userDir
+		+ "\\target\\test-server.jar " + port9000 + " " + serviceName + " " + 100;
+		
 
 		try {
-			p = Runtime.getRuntime().exec(command);
+			p = Runtime.getRuntime().exec(commandSC);
 
 			// lets the SC load before starting communication
 			Thread.sleep(1000);
 			
+			r = Runtime.getRuntime().exec(commandSrv);
+/*			
 			serverThread = new Thread("SERVER") {
 				public void run() {
 					try {
@@ -72,12 +80,13 @@ public class StubbedServerClientToSCTest {
 			
 			// lets the Server load before starting communication
 			Thread.sleep(1000);
-
+*/
 		} catch (IOException e) {
 			logger.error("oneTimeSetUp - IOExc", e);
 		} catch (InterruptedException e) {
 			logger.error("oneTimeSetUp - InterruptExc", e);
 		}
+		
 	}
 
 	@AfterClass
@@ -97,6 +106,7 @@ public class StubbedServerClientToSCTest {
 		session.execute(new SCMessage("kill server"));
 		Thread.sleep(500);
 
+		r.destroy();
 		p.destroy();
 	}
 

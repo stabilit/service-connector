@@ -85,22 +85,12 @@ public class StartSCSessionServer {
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
 			logger.debug("SessionServer.SrvCallback.createSession()");
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				logger.debug("createSession", e);
-			}
 			return message;
 		}
 
 		@Override
 		public void deleteSession(ISCMessage message) {
 			logger.debug("SessionServer.SrvCallback.deleteSession()");
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				logger.debug("deleteSession", e);
-			}
 		}
 
 		@Override
