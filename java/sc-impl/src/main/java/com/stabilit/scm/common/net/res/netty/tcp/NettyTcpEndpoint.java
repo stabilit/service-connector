@@ -17,7 +17,9 @@
 package com.stabilit.scm.common.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -26,8 +28,10 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.net.res.ResponderRegistry;
 import com.stabilit.scm.common.res.EndpointAdapter;
+import com.stabilit.scm.common.scmp.SCMPError;
 
 /**
  * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss Netty for Tcp.
@@ -37,7 +41,9 @@ import com.stabilit.scm.common.res.EndpointAdapter;
 public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpEndpoint.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpEndpoint.class);
+	/** Queue to store the answer. */
+	private ArrayBlockingQueue<Boolean> answer;
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
@@ -60,6 +66,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		this.channel = null;
 		this.port = 0;
 		this.host = null;
+		this.answer = new ArrayBlockingQueue<Boolean>(1);
 	}
 
 	/** {@inheritDoc} */
@@ -72,18 +79,38 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void startsListenAsync() {
+	public void startsListenAsync() throws Exception {
 		Thread serverThread = new Thread(this);
 		serverThread.start();
+		Boolean bool = null;
+		try {
+			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"listener could not start up succesfully");
+		}
+		if (bool == null) {
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
+		}
+		if (bool == false) {
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"listener could not start up succesfully");
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void startListenSync() throws InterruptedException {
-		this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
-		// adds server to registry
-		ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-		serverRegistry.addResponder(this.channel.getId(), this.resp);
+	public synchronized void startListenSync() throws Exception {
+		try {
+			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
+			// adds server to registry
+			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
+			serverRegistry.addResponder(this.channel.getId(), this.resp);
+		} catch (Exception ex) {
+			this.answer.add(Boolean.FALSE);
+			throw ex;
+		}
+		this.answer.add(Boolean.TRUE);
 		synchronized (this) {
 			wait();
 		}

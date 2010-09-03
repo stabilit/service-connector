@@ -37,16 +37,19 @@ public interface IEndpoint extends ICommunicationPoint {
 
 	/**
 	 * Starts listen asynchronous. Starts listener in a separate thread.
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void startsListenAsync();
+	public void startsListenAsync() throws Exception;
 
 	/**
 	 * Start listen synchronous. Starts listener in current thread. Does not give back control.
 	 * 
-	 * @throws InterruptedException
-	 *             the interrupted exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void startListenSync() throws InterruptedException;
+	public void startListenSync() throws Exception;
 
 	/**
 	 * Stop listening.
