@@ -67,7 +67,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 		Server server = session.getServer();
 
 		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
-		ISCMPSynchronousCallback callback = new CommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		server.serverEcho(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage result = callback.getMessageSync(session.getEchoTimeoutSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
 

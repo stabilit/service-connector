@@ -39,7 +39,7 @@ public class ServiceCallback extends SynchronousCallback {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceCallback.class);
-	
+
 	/** The message callback. */
 	private ISCMessageCallback messageCallback;
 	/** The service which is using the callback. */
@@ -50,6 +50,17 @@ public class ServiceCallback extends SynchronousCallback {
 	 */
 	public ServiceCallback() {
 		this(null, null);
+	}
+
+	/**
+	 * Instantiates a new service callback.
+	 * 
+	 * @param synchronous
+	 *            the synchronous
+	 */
+	public ServiceCallback(boolean synchronous) {
+		this();
+		this.synchronous = synchronous;
 	}
 
 	/**

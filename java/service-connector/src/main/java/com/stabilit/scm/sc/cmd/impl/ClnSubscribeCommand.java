@@ -86,7 +86,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		int noDataInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		ISCMPSynchronousCallback callback = new CommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, (Integer) request
 				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage reply = callback.getMessageSync();

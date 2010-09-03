@@ -220,7 +220,7 @@ public class SCServer implements ISCServer {
 			responder.startListenAsync();
 		} catch (Exception ex) {
 			logger.error("startListener", ex);
-			return;
+			throw ex;
 		}
 		this.listening = true;
 	}

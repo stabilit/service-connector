@@ -79,7 +79,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		// unsubscribe on backend server
 		Server server = session.getServer();
 		SCMPMessage reply = null;
-		ISCMPSynchronousCallback callback = new CommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		server.unsubscribe(reqMessage, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway

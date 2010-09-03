@@ -75,7 +75,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		Session session = this.getSubscriptionSessionById(sessionId);
 		Server server = session.getServer();
 
-		ISCMPSynchronousCallback callback = new CommandCallback();
+		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		server.changeSubscription(reqMessage, callback, (Integer) request
 				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
 		SCMPMessage reply = callback.getMessageSync();

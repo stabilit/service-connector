@@ -75,7 +75,7 @@ public class SessionService extends Service implements ISessionService {
 		ValidatorUtility.validateInt(0, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(0, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
-		this.callback = new ServiceCallback();
+		this.callback = new ServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);

@@ -10,15 +10,23 @@ import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
  * The Class CommandCallback. CommandCallback might be used in a command if executing the command jobs needs a callback.
- * Error handling is adressed by this callback.
+ * Error handling is addressed by this callback.
  */
 public class CommandCallback extends SynchronousCallback {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommandCallback.class);
-	
+
 	/** The Constant ERROR_STRING. */
 	private static final String ERROR_STRING = "executing command timed out";
+
+	public CommandCallback() {
+		super();
+	}
+
+	public CommandCallback(boolean synchronous) {
+		this.synchronous = synchronous;
+	}
 
 	/** {@inheritDoc} */
 	@Override
