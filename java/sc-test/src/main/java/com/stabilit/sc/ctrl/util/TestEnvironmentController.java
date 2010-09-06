@@ -15,9 +15,32 @@ public class TestEnvironmentController {
 
 	private static String pidLogFile = "pid.log";
 	private static String fs;
+	private static String userDir;
 
 	public TestEnvironmentController() {
 		fs = System.getProperty("file.separator");
+		userDir = System.getProperty("user.dir");
+	}
+
+	public String getLog4jPath(String log4jSCProperties) {
+		String log4jPath = userDir + fs + "src" + fs + "main" + fs + "resources" + fs
+				+ log4jSCProperties;
+
+		return log4jPath;
+	}
+
+	public String getPidLogPath(String log4jSCProperties) {
+		String log4jPath = getLog4jPath(log4jSCProperties);
+		// Read properties file.
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream(log4jPath));
+		} catch (IOException e) {
+		}
+		String logDir = properties.getProperty("log.dir");
+		String fileName = userDir + fs + logDir + fs + pidLogFile;
+
+		return fileName;
 	}
 
 	/**
@@ -68,18 +91,8 @@ public class TestEnvironmentController {
 	}
 
 	public Process startSC(String log4jSCProperties, String scProperties) throws Exception {
-		String userDir = System.getProperty("user.dir");
-		String log4jPath = userDir + fs + "src" + fs + "main" + fs + "resources" + fs
-				+ log4jSCProperties;
-		// Read properties file.
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream(log4jPath));
-		} catch (IOException e) {
-		}
-		String logDir = properties.getProperty("log.dir");
-		String fileName = userDir + fs + logDir + fs + pidLogFile;
-
+		String log4jPath = getLog4jPath(log4jSCProperties);
+		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
@@ -97,24 +110,16 @@ public class TestEnvironmentController {
 		p.destroy();
 		return startSC(log4jSCProperties, scProperties);
 	}
-	
-	public Process startServer(String log4jSCProperties) throws Exception {
-		String userDir = System.getProperty("user.dir");
-		String log4jPath = userDir + fs + "src" + fs + "main" + fs + "resources" + fs
-				+ log4jSCProperties;
-		// Read properties file.
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream(log4jPath));
-		} catch (IOException e) {
-		}
-		String logDir = properties.getProperty("log.dir");
-		String fileName = userDir + fs + logDir + fs + pidLogFile;
 
+	public Process startServer(String log4jSCProperties, int port, String serviceName,
+			int maxConnections) throws Exception {
+		String log4jPath = getLog4jPath(log4jSCProperties);
+		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar";
+				+ "target" + fs + "test-server.jar " + port + " " + serviceName + " "
+				+ maxConnections + " " + fileName;
 		Process p = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);

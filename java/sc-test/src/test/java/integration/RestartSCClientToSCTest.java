@@ -1,5 +1,7 @@
 package integration;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,9 +36,6 @@ public class RestartSCClientToSCTest {
 		ctrl = new TestEnvironmentController();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		try {
@@ -50,11 +49,13 @@ public class RestartSCClientToSCTest {
 	@After
 	public void tearDown() throws Exception {
 		p.destroy();
+		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() {
+	public static void oneTimeTearDown() throws Exception {
 		p.destroy();
+		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -99,5 +100,19 @@ public class RestartSCClientToSCTest {
 		client.attach(host, port8080);
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		client.setMaxConnections(10);
+	}
+	
+	@Test
+	public void attach_afterAttachAndSCRestartAndDetach_attached() throws Exception {
+		client.attach(host, port8080);
+		assertEquals(true, client.isAttached());
+		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		try {
+			client.detach();
+		} catch (SCServiceException e) {
+		}
+		assertEquals(false, client.isAttached());
+		client.attach(host, port8080);
+		assertEquals(true, client.isAttached());
 	}
 }

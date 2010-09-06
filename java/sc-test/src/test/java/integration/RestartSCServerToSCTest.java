@@ -1,16 +1,15 @@
 package integration;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
@@ -29,15 +28,16 @@ public class RestartSCServerToSCTest {
 	private int port9000 = 9000;
 
 	private String serviceName = "simulation";
-	private static String fileName = "isSCStarted";
 	private static final String log4jSCProperties = "log4jSC0.properties";
 	private static final String scProperties = "scIntegration.properties";
 	
-	private static TestEnvironmentController ctrl = new TestEnvironmentController();
+	private static TestEnvironmentController ctrl;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
+	@BeforeClass
+	public static void oneTimeSetUp() throws Exception {
+		ctrl = new TestEnvironmentController();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		try {
@@ -51,34 +51,39 @@ public class RestartSCServerToSCTest {
 
 	@After
 	public void tearDown() throws Exception {
+		server.destroyServer();
 		p.destroy();
+		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
 	}
 	
 	@AfterClass
-	public static void oneTimeTearDown() {
+	public static void oneTimeTearDown() throws Exception {
 		p.destroy();
+		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
 	}
 
-	@Test(expected = SCServiceException.class)
-	public void registerService_afterSCDestroyValidValues_throwsException() throws Exception {
+	@Test
+	public void registerService_afterSCRestartValidValues_isRegistered() throws Exception {
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		server.deregisterService(serviceName);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void registerService_afterSCDestroyInvalidMaxSessions_throwsException() throws Exception {
+	public void registerService_afterSCRestartInvalidMaxSessions_throwsException() throws Exception {
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		server.registerService(host, port9000, serviceName, -1, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void registerService_afterSCDestroyInvalidHost_throwsException() throws Exception {
+	public void registerService_afterSCRestartInvalidHost_throwsException() throws Exception {
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		server.registerService("something", port9000, serviceName, 10, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void registerService_withImmediateConnectFalseAfterSCDestroyInvalidHost_throwsException()
+	public void registerService_withImmediateConnectFalseAfterSCRestartInvalidHost_throwsException()
 			throws Exception {
 		server.setImmediateConnect(false);
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
@@ -86,15 +91,38 @@ public class RestartSCServerToSCTest {
 	}
 
 	@Test
-	public void deregisterService_afterSCDestroy_passes() throws Exception {
+	public void deregisterService_afterSCRestart_passes() throws Exception {
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		server.deregisterService(serviceName);
 	}
 
 	@Test
-	public void deregisterService_afterRegisterAfterSCDestroy_throwsException() throws Exception {
+	public void deregisterService_afterRegisterAfterSCRestart_isRegistered() throws Exception {
 		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		try { 
+			server.deregisterService(serviceName);
+		} catch (SCServiceException e) {
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+	}
+	
+	@Test
+	public void isRegistered_afterRegisterAfterSCRestart_isRegistered() throws Exception {
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+	
+	@Test
+	public void registerService_afterRegisterAfterSCRestart_isRegistered() throws Exception {
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
+		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 	}
 
