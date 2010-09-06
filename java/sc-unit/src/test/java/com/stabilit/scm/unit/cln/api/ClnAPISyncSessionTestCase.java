@@ -44,7 +44,7 @@ public class ClnAPISyncSessionTestCase {
 			sc.attach("localhost", 8080);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 10, 60);
+			sessionServiceA.createSession("sessionInfo", 10, 10);
 
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];

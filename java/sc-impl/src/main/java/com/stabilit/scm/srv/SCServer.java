@@ -115,7 +115,7 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void registerService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
+	public synchronized void registerService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
 			ISCServerCallback scCallback) throws Exception {
 		if (this.listening == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
@@ -165,7 +165,7 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void deregisterService(String serviceName) throws Exception {
+	public synchronized void deregisterService(String serviceName) throws Exception {
 		if (this.srvServiceRegistry.containsKey(serviceName) == false) {
 			// sc server not registered - deregister not necessary
 			return;
@@ -195,7 +195,7 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+	public synchronized void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.listening == true) {
 			throw new InvalidActivityException("listener is already started not allowed to start again.");
 		}

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
+import java.util.Timer;
+
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.net.req.IRequester;
@@ -42,7 +44,7 @@ public abstract class Service {
 	/** The callback to use by service. */
 	protected ISCMPSynchronousCallback callback;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
-	protected boolean pendingRequest;
+	protected volatile boolean pendingRequest;
 	/** The message id. */
 	protected SCMPMessageId msgId;
 

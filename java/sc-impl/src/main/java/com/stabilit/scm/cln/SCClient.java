@@ -97,13 +97,13 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public void attach(String host, int port) throws Exception {
+	public synchronized void attach(String host, int port) throws Exception {
 		this.attach(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException(
 					"already attached before - detach first, attaching in sequence is not allowed.");
@@ -148,7 +148,7 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public void detach() throws Exception {
+	public synchronized void detach() throws Exception {
 		if (this.callback == null) {
 			// detach not possible - client not attached just ignore
 			return;
