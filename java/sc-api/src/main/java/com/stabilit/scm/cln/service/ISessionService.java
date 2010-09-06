@@ -42,6 +42,25 @@ public interface ISessionService extends IService {
 			throws Exception;
 
 	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @param timeoutInSeconds
+	 *            the echo timeout, time an SC has to observe for receiving echo reply from server. Echo gets executed
+	 *            to prevent session timeout.
+	 * @param data
+	 *            the data
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds, Object data)
+			throws Exception;
+
+	/**
 	 * Execute.
 	 * 
 	 * @param requestMsg
@@ -75,7 +94,7 @@ public interface ISessionService extends IService {
 	/** {@inheritDoc} */
 	@Override
 	public abstract IServiceContext getContext();
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public abstract String getSessionId();

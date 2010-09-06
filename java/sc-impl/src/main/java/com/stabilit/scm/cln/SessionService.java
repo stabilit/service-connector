@@ -67,7 +67,8 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds) throws Exception {
+	public void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds, Object data)
+			throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
@@ -80,6 +81,7 @@ public class SessionService extends Service implements ISessionService {
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
+		createSessionCall.setRequestBody(data);
 		try {
 			createSessionCall.invoke(this.callback, timeoutInSeconds);
 		} catch (Exception e) {
@@ -96,6 +98,12 @@ public class SessionService extends Service implements ISessionService {
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds) throws Exception {
+		this.createSession(sessionInfo, timeoutInSeconds, echoIntervalInSeconds, null);
 	}
 
 	/** {@inheritDoc} */
