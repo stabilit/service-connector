@@ -144,7 +144,7 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setMaxSessions(maxSessions);
 		registerServiceCall.setMaxConnections(maxConnections);
 		registerServiceCall.setPortNumber(this.localServerPort);
-		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setImmediateConnect(this.immediateConnect);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		try {
 			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);

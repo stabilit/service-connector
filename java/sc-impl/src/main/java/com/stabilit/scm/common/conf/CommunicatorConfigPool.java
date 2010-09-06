@@ -43,8 +43,8 @@ public abstract class CommunicatorConfigPool {
 	private Properties props;
 	/** The requester configuration list. */
 	private List<ICommunicatorConfig> comConfigList;
-	/** The logger key. */
-	private String loggerKey;
+	/** The test flag. */
+	private boolean testFlag;
 
 	/**
 	 * Instantiates a new communicator configuration pool.
@@ -52,7 +52,7 @@ public abstract class CommunicatorConfigPool {
 	public CommunicatorConfigPool() {
 		this.comConfigList = null;
 		this.props = null;
-		this.loggerKey = null;
+		this.testFlag = false;
 	}
 
 	/**
@@ -128,6 +128,11 @@ public abstract class CommunicatorConfigPool {
 			int largeMsgLimit = Integer.parseInt(largeMsgLimitValue);
 			Constants.setLargeMessageLimit(largeMsgLimit);
 		}
+
+		String testFlag = props.getProperty(Constants.ROOT_TEST_QUALIFIER);
+		if (testFlag != null) {
+			this.testFlag = true;
+		}
 	}
 
 	/**
@@ -153,20 +158,18 @@ public abstract class CommunicatorConfigPool {
 	}
 
 	/**
-	 * Gets the logger key.
-	 * 
-	 * @return the loggerKey
-	 */
-	public String getLoggerKey() {
-		return loggerKey;
-	}
-
-	/**
 	 * Gets the requester configuration list.
 	 * 
 	 * @return the requester configuration list
 	 */
 	public List<ICommunicatorConfig> getCommunicatorConfigList() {
 		return comConfigList;
+	}
+
+	/**
+	 * Checks if is test.
+	 */
+	public boolean isTest() {
+		return this.testFlag;
 	}
 }
