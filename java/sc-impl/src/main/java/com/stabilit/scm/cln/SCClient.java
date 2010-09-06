@@ -153,6 +153,7 @@ public class SCClient implements ISCClient {
 			// detach not possible - client not attached just ignore
 			return;
 		}
+		this.callback = new ServiceCallback(true);
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
