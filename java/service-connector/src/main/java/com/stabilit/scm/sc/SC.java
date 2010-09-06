@@ -16,12 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.management.ManagementFactory;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Category;
+import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
@@ -107,7 +113,12 @@ public final class SC {
 				resp.startListenAsync();
 			} catch (Exception ex) {
 				logger.error("run", ex);
+				throw ex;
 			}
+		}
+
+		if (config.isTest()) {
+			SC.writePIDFile();
 		}
 	}
 
@@ -127,10 +138,46 @@ public final class SC {
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
-			ILoggingManagerMXBean loggingManager = new LoggingManager();			
+			ILoggingManagerMXBean loggingManager = new LoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 		} catch (Throwable th) {
 			logger.error("initializeJMX", th);
+		}
+	}
+
+	/**
+	 * Writes a file. PID of SC gets written in. Is used for testing purpose to verify that SC is running properly.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	private static void writePIDFile() throws Exception {
+		String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+		long pid = Long.parseLong(processName.split("@")[0]);
+		FileWriter fw = null;
+		try {
+			Category rootLogger = logger.getParent();
+			Enumeration<?> appenders = rootLogger.getAllAppenders();
+			FileAppender fileAppender = null;
+			while (appenders.hasMoreElements()) {
+				Appender appender = (Appender) appenders.nextElement();
+				if (appender instanceof FileAppender) {
+					fileAppender = (FileAppender) appender;
+					break;
+				}
+			}
+			String fileName = fileAppender.getFile();
+			String path = fileName.substring(0, fileName.lastIndexOf("/"));
+
+			File pidFile = new File(path + "/pid.log");
+			fw = new FileWriter(pidFile);
+			fw.write("pid: " + pid);
+			fw.flush();
+			fw.close();
+		} finally {
+			if (fw != null) {
+				fw.close();
+			}
 		}
 	}
 }
