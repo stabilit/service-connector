@@ -100,9 +100,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry
 						.getCurrentInstance();
 				subscriptionSessionRegistry.addSession(session.getId(), session);
-
 				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
-
 				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
 				subscriptionLogger.logSubscribe(serviceName, session.getId(), mask);
 				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);

@@ -24,4 +24,6 @@ public interface ISubscriptionLogger {
 	public abstract void logChangeSubscribe(String serviceName, String sessionId, String mask);
 	
 	public abstract void logUnsubscribe(String serviceName, String sessionId);
+	
+	public abstract boolean isInfoEnabled();
 }

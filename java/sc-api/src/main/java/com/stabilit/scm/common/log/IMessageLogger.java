@@ -22,4 +22,5 @@ public interface IMessageLogger {
 
 	public abstract void logMessage(String className, SCMPMessage message);
 
+	public abstract boolean isDebugEnabled();
 }

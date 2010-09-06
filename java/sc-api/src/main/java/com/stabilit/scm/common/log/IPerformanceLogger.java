@@ -21,4 +21,6 @@ public interface IPerformanceLogger {
 	public abstract void begin(String className, String methodName);
 
 	public abstract void end(String className, String methodName);
+	
+	public abstract boolean isDebugEnabled();
 }

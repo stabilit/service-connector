@@ -24,4 +24,5 @@ public interface ISessionLogger {
 	
 	public abstract void logAbortSession(String className, String sessionId);
 
+	public abstract boolean isInfoEnabled();
 }

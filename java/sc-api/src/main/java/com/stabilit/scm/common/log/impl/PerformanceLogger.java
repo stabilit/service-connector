@@ -45,33 +45,37 @@ public class PerformanceLogger implements IPerformanceLogger {
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void begin(String className, String methodName) {
-		if (logger.isDebugEnabled() == false) {
-			return;
+		if (logger.isDebugEnabled()) {
+			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 		}
-		this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void end(String className, String methodName) {
-		if (logger.isDebugEnabled() == false) {
-			return;
-		}
-		PerformanceItem beginItem = this.threadLocal.get();
-		if (beginItem == null) {
-			return;
-		}
-		String beginMethodName = beginItem.getMethodName();
-		String beginClassName = beginItem.getClassName();
-		long beginTime = beginItem.getTime();
-		long endTime = System.nanoTime();
-		
+		if (logger.isDebugEnabled()) {
+			PerformanceItem beginItem = this.threadLocal.get();
+			if (beginItem == null) {
+				return;
+			}
+			String beginMethodName = beginItem.getMethodName();
+			String beginClassName = beginItem.getClassName();
+			long beginTime = beginItem.getTime();
+			long endTime = System.nanoTime();
 
-		Formatter format = new Formatter();
-		format.format(END_STR, beginClassName, beginMethodName, className, methodName, 
-				String.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-		logger.debug(format.toString());
-		format.close();
+			Formatter format = new Formatter();
+			format.format(END_STR, beginClassName, beginMethodName, className, methodName, String
+					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
+			logger.debug(format.toString());
+			format.close();
+		}
+
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isDebugEnabled() {
+		return logger.isDebugEnabled();
 	}
 
 	private class PerformanceItem {

@@ -31,16 +31,17 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**
- * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of object into/from stream.
+ * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of
+ * object into/from stream.
  */
 public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(LargeMessageEncoderDecoder.class);
-	
+
 	/** The Constant messageLogger. */
 	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
-	
+
 	/**
 	 * Instantiates a new large message encoder decoder.
 	 */
@@ -59,9 +60,10 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-		
+
 		if (scmpMsg.isGroup() == false) {
-			// no group call reset internal status, if group call internal status already set
+			// no group call reset internal status, if group call internal
+			// status already set
 			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
 		}
 
@@ -103,7 +105,9 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+					if (messageLogger.isDebugEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -119,7 +123,9 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+					if (messageLogger.isDebugEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
 					return;
 				}
 				// set internal status to save communication state
@@ -137,7 +143,9 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+		if (messageLogger.isDebugEnabled()) {
+			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+		}
 		return;
 	}
 }

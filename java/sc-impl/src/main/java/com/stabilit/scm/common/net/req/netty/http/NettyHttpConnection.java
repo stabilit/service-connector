@@ -55,7 +55,7 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public class NettyHttpConnection implements IConnection {
+public class NettyHttpConnection implements IConnection { 
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);

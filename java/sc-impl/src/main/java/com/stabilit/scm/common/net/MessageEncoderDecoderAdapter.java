@@ -50,14 +50,14 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
-	
+
 	/** The Constant messageLogger. */
 	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
-	
+
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Object decode(InputStream is) throws Exception {
@@ -109,8 +109,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (buffer[inLoopIndex] == 0x0A) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer,
-								index + 1, (inLoopIndex - 1) - index, CHARSET));
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer, index + 1,
+								(inLoopIndex - 1) - index, CHARSET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -134,7 +134,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
-			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+			if (messageLogger.isDebugEnabled()) {
+				messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+			}
 			return scmpMsg;
 		}
 		// decoding body - depends on body type
@@ -156,12 +158,13 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		} catch (Exception ex) {
 			logger.error("decode", ex);
 		}
-		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+		if (messageLogger.isDebugEnabled()) {
+			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+		}
 		return scmpMsg;
 	}
 
-	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize)
-			throws IOException {
+	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));

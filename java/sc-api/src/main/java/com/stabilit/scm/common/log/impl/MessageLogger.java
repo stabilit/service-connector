@@ -28,7 +28,7 @@ public class MessageLogger implements IMessageLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.MESSAGE.getValue());
 	private static final IMessageLogger MESSAGE_LOGGER = new MessageLogger();
-	
+
 	private String MSG_LONG_STR = "msg:%s";
 	private String MSG_SHORT_STR = "msg:%s";
 
@@ -41,32 +41,29 @@ public class MessageLogger implements IMessageLogger {
 	public static IMessageLogger getInstance() {
 		return MessageLogger.MESSAGE_LOGGER;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logMessage(String className, SCMPMessage message) {
 		if (logger.isInfoEnabled()) {
-			try {
-				// TODO TRN (write out important attributes)
-				Formatter format = new Formatter();
-				format.format(MSG_SHORT_STR, message);
-				logger.info(format.toString());
-				format.close();
-			} catch (Exception e) {
-				// TODO JOT exception logging
-			}
+			// TODO TRN (write out important attributes)
+			Formatter format = new Formatter();
+			format.format(MSG_SHORT_STR, message);
+			logger.info(format.toString());
+			format.close();
 		}
 		if (logger.isDebugEnabled()) {
-			try {
-				// TODO TRN (write out all attributes)
-				Formatter format = new Formatter();
-				format.format(MSG_LONG_STR, message);
-				logger.debug(format.toString());
-				format.close();
-			} catch (Exception e) {
-				// TODO JOT exception logging
-			}
+			// TODO TRN (write out all attributes)
+			Formatter format = new Formatter();
+			format.format(MSG_LONG_STR, message);
+			logger.debug(format.toString());
+			format.close();
 		}
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean isDebugEnabled() {
+		return logger.isDebugEnabled();
 	}
 }

@@ -31,7 +31,8 @@ import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.internal.SCMPInternalStatus;
 
 /**
- * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
+ * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of
+ * object into/from stream.
  * 
  * @author JTraber
  */
@@ -39,10 +40,10 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
-	
+
 	/** The Constant messageLogger. */
 	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
-	
+
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */
@@ -61,9 +62,10 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-		
+
 		if (scmpMsg.isGroup() == false) {
-			// no group call reset internal status, if group call internal status already set
+			// no group call reset internal status, if group call internal
+			// status already set
 			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
 		}
 
@@ -77,9 +79,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		} else {
 			headerKey = SCMPHeadlineKey.REQ;
 		}
-		
+
 		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
-		
+
 		int headerSize = sb.length();
 		// write body depends on body type
 		Object body = scmpMsg.getBody();
@@ -94,7 +96,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.write((byte[]) ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+					if (messageLogger.isDebugEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -106,7 +110,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.write(t); // write body
 					bw.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+					if (messageLogger.isDebugEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
 					return;
 				}
 				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
@@ -122,7 +128,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+		if (messageLogger.isDebugEnabled()) {
+			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+		}
 		return;
 	}
 }

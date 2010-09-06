@@ -45,36 +45,39 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
-		if (logger.isInfoEnabled() == false) {
-			return;
+		if (logger.isInfoEnabled()) {
+			Formatter format = new Formatter();
+			format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
+			logger.debug(format.toString());
+			format.close();
 		}
-		Formatter format = new Formatter();
-		format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
-		logger.debug(format.toString());
-		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
-		if (logger.isInfoEnabled() == false) {
-			return;
+		if (logger.isInfoEnabled()) {
+			Formatter format = new Formatter();
+			format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
+			logger.debug(format.toString());
+			format.close();
 		}
-		Formatter format = new Formatter();
-		format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
-		logger.debug(format.toString());
-		format.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
-		if (logger.isInfoEnabled() == false) {
-			return;
+		if (logger.isInfoEnabled()) {
+			Formatter format = new Formatter();
+			format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
+			logger.debug(format.toString());
+			format.close();
 		}
-		Formatter format = new Formatter();
-		format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
-		logger.debug(format.toString());
-		format.close();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isInfoEnabled() {
+		return logger.isInfoEnabled();
 	}
 }

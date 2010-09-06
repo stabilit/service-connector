@@ -27,7 +27,7 @@ public class SessionLogger implements ISessionLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.SESSION.getValue());
 	private static final ISessionLogger SESSION_LOGGER = new SessionLogger();
-	
+
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
 	private String ABORT_SESSION_STR = "abort session:%s";
@@ -46,46 +46,38 @@ public class SessionLogger implements ISessionLogger {
 	@Override
 	public synchronized void logCreateSession(String className, String sessionId) {
 		if (logger.isInfoEnabled()) {
-			try {
-				Formatter format = new Formatter();
-				format.format(CREATE_SESSION_STR, sessionId);
-				logger.info(format.toString());
-				format.close();
-			} catch (Exception e) {
-				// TODO JOT exception logging
-			}
+			Formatter format = new Formatter();
+			format.format(CREATE_SESSION_STR, sessionId);
+			logger.info(format.toString());
+			format.close();
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logDeleteSession(String className, String sessionId) {
-		if (logger.isInfoEnabled() == false) {
-			return;
-		}
-		try {
+		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
 			logger.info(format.toString());
 			format.close();
-		} catch (Exception e) {
-			// TODO JOT exception logging
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void logAbortSession(String className, String sessionId) {
-		if (logger.isInfoEnabled() == false) {
-			return;
-		}
-		try {
+		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
 			logger.info(format.toString());
 			format.close();
-		} catch (Exception e) {
-			// TODO JOT exception logging
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isInfoEnabled() {
+		return logger.isInfoEnabled();
 	}
 }

@@ -57,7 +57,7 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
+		sessionLogger.logCreateSession(this.getClass().getSimpleName(), session.getId());
 		this.put(key, session);
 	}
 
@@ -79,7 +79,7 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 	 */
 	public void removeSession(String key) {
 		super.remove(key);
-		sessionLogger.logDeleteSession(this.getClass().getName(), key);
+		sessionLogger.logDeleteSession(this.getClass().getSimpleName(), key);
 	}
 
 	/**

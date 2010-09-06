@@ -30,8 +30,8 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	private static String CONNECT_STR = "%s connect to:%s/%s";
 	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
-	private static String READ_STR = "%s read on:%s/%s buffer:%s";
-	private static String WRITE_STR = "%s write from:%s/%s buffer:%s";
+	private static String READ_STR = "%s read from:%s/%s buffer:%s";
+	private static String WRITE_STR = "%s write to:%s/%s buffer:%s";
 	private static String KEEP_ALIVE_STR = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**
@@ -67,10 +67,10 @@ public class ConnectionLogger implements IConnectionLogger {
 	@Override
 	public synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
-		if (length > 0) {
-			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
+		if (length > 100) {
+			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, 100));
 		} else {
-			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length)); //TODO TRN
+			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
 		logger.debug(format.toString());
 		format.close();
@@ -80,10 +80,10 @@ public class ConnectionLogger implements IConnectionLogger {
 	@Override
 	public synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
-		if (length > 0) {
-			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
+		if (length > 100) {
+			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, 100));
 		} else {
-			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length)); //TODO TRN
+			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
 		logger.debug(format.toString());
 		format.close();
