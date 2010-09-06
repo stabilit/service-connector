@@ -129,7 +129,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		if (messageLogger.isDebugEnabled()) {
-			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}

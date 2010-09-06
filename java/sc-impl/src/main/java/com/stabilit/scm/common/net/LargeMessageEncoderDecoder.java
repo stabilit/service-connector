@@ -144,7 +144,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		if (messageLogger.isDebugEnabled()) {
-			messageLogger.logMessage(this.getClass().getName(), scmpMsg);
+			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}
