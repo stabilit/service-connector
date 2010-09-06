@@ -57,6 +57,23 @@ public class RegisterServiceTestCase extends SuperTestCase {
 	}
 
 	@Test
+	public void failRegisterUnknownService() throws Exception {
+		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+				.newInstance(req, "notRegisteredServiceName");
+
+		registerServiceCall.setMaxSessions(10);
+		registerServiceCall.setMaxConnections(10);
+		registerServiceCall.setPortNumber(7000);
+		registerServiceCall.setImmediateConnect(true);
+		registerServiceCall.setKeepAliveInterval(360);
+
+		registerServiceCall.invoke(this.registerCallback, 3);
+		SCMPFault fault = (SCMPFault) this.registerCallback.getMessageSync();
+		Assert.assertTrue(fault.isFault());
+		SCTest.verifyError((SCMPFault) fault, SCMPError.NOT_FOUND, " [service not found for notRegisteredServiceName]", SCMPMsgType.REGISTER_SERVICE);
+	}
+
+	@Test
 	public void failRegisterServiceCallWrongHeader() throws Exception {
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "simulation2");
