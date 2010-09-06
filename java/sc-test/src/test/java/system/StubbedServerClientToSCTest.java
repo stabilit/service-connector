@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
+import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.sc.srv.StartSCSessionServer;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -29,24 +30,26 @@ public class StubbedServerClientToSCTest {
 	private static Process p;
 	private static Process r;
 
-	private static String userDir;
 
 	private ISCClient client;
 
+	private static String userDir;
 	private static final String host = "localhost";
 	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
-	private static String serviceName = "simulation";
-	private String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameAlt = "P01_RTXS_sc1";
+	
+	private static String fileName = "isServerStarted";
 
 	private Exception ex;
 
-	private static Thread serverThread;
-
-
+	private static TestEnvironmentController ctrl;
+	
 	@BeforeClass
 	public static void oneTimeSetUp() {
-
+		ctrl = new TestEnvironmentController();
+		
 		userDir = System.getProperty("user.dir");
 		String commandSC = "java -Dlog4j.configuration=file:" + userDir
 				+ "\\src\\main\\resources\\log4jSC0.properties -jar " + userDir
@@ -54,36 +57,27 @@ public class StubbedServerClientToSCTest {
 				+ "\\src\\main\\resources\\scIntegration.properties";
 		String commandSrv = "java -Dlog4j.configuration=file:" + userDir
 		+ "\\src\\main\\resources\\log4jSrv.properties -jar " + userDir
-		+ "\\target\\test-server.jar " + port9000 + " " + serviceName + " " + 100;
+		+ "\\target\\test-server.jar " + port9000 + " " + serviceName + " " + 100
+		+ " " + fileName;
 		
 
 		try {
+			//delete old file verifying start
+			ctrl.deleteFile(fileName);
+			
 			p = Runtime.getRuntime().exec(commandSC);
-
 			// lets the SC load before starting communication
-			Thread.sleep(1000);
+			ctrl.existsFile("???");
 			
 			r = Runtime.getRuntime().exec(commandSrv);
-/*			
-			serverThread = new Thread("SERVER") {
-				public void run() {
-					try {
-						StartSCSessionServer.main(new String[] { String.valueOf(port9000), serviceName,
-								String.valueOf(100) });
-					} catch (Exception e) {
-						logger.error("running server thread", e);
-					}
-				}
-			};
-			serverThread.start();
-			
-			// lets the Server load before starting communication
-			Thread.sleep(1000);
-*/
+			ctrl.existsFile(fileName);
+
 		} catch (IOException e) {
 			logger.error("oneTimeSetUp - IOExc", e);
 		} catch (InterruptedException e) {
 			logger.error("oneTimeSetUp - InterruptExc", e);
+		} catch (Exception e) {
+			logger.error("oneTimeSetUp", e);
 		}
 		
 	}
@@ -299,9 +293,9 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void createSession_1000times_passes() throws Exception {
+	public void createSession_10000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);

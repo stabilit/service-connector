@@ -2,6 +2,7 @@ package com.stabilit.sc.srv;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
@@ -13,6 +14,7 @@ public class StartSCSessionServer {
 	protected final static Logger logger = Logger.getLogger(StartSCSessionServer.class);
 
 	private ISCServer scSrv = null;
+	private String startFile = null;
 	private String serviceName;
 	private int port = 9000;
 	private int maxCons = 10;
@@ -23,6 +25,7 @@ public class StartSCSessionServer {
 			sessionServer.port = Integer.parseInt(args[0]);
 			sessionServer.setServiceName(args[1]);
 			sessionServer.maxCons = Integer.parseInt(args[2]);
+			sessionServer.startFile = args[3];
 		} catch (Exception e) {
 			logger.error("main", e);
 		}
@@ -36,14 +39,13 @@ public class StartSCSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 30000, 0);
 
-			System.out.println("1.\tIs listening:\t" + this.scSrv.isListening());
-
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons(),
 					srvCallback);
 
-			System.out.println("2.\tIs registered:\t" + this.scSrv.isRegistered(serviceName));
-
+			//for testing whether the server already started 
+			new TestEnvironmentController().createFile(startFile);
+			
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 			this.shutdown();
@@ -95,7 +97,7 @@ public class StartSCSessionServer {
 
 		@Override
 		public void abortSession(ISCMessage message) {
-			System.out.println("SessionServer.SrvCallback.abortSession()");
+			logger.debug("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
@@ -111,12 +113,6 @@ public class StartSCSessionServer {
 							KillThread kill = new KillThread(this.outerContext.getServer());
 							kill.start();
 						} catch (Exception e) {
-							logger.error("execute", e);
-						}
-					} else {
-						try {
-							Thread.sleep(300);
-						} catch (InterruptedException e) {
 							logger.error("execute", e);
 						}
 					}
@@ -142,13 +138,11 @@ public class StartSCSessionServer {
 
 		@Override
 		public void run() {
-			// sleep for before killing the server
+			// sleep before killing the server
 			try {
 				Thread.sleep(100);
 				this.server.deregisterService(serviceName);
-				System.out.println("7.\tShutting down");
 				this.server.destroyServer();
-				System.out.println("8.\tDestroy");
 			} catch (Exception e) {
 				logger.error("run", e);
 			}
