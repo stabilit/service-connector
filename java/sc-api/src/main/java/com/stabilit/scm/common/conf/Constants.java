@@ -48,9 +48,6 @@ public final class Constants {
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
 
-	
-	
-	
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
 	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
@@ -77,6 +74,8 @@ public final class Constants {
 	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
 	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
+	/** The Constant ROOT_TEST_QUALIFIER. */
+	public static final String ROOT_TEST_QUALIFIER = "root.test";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
 	/** The CON. */

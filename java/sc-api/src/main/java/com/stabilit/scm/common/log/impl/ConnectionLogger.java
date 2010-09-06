@@ -30,8 +30,8 @@ public class ConnectionLogger implements IConnectionLogger {
 
 	private static String CONNECT_STR = "%s connect to:%s/%s";
 	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
-	private static String READ_STR = "%s read from:%s/%s buffer:%s";
-	private static String WRITE_STR = "%s write to:%s/%s buffer:%s";
+	private static String READ_STR = "%s read on:%s/%s buffer:%s";
+	private static String WRITE_STR = "%s write from:%s/%s buffer:%s";
 	private static String KEEP_ALIVE_STR = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**
