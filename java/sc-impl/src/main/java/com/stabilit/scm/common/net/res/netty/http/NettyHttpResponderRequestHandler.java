@@ -18,6 +18,8 @@ package com.stabilit.scm.common.net.res.netty.http;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
@@ -51,6 +53,10 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
+import com.stabilit.scm.sc.registry.ServerRegistry;
+import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
@@ -63,10 +69,10 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponderRequestHandler.class);
-	
+
 	/** The Constant performanceLogger. */
 	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-	
+
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
 
@@ -199,6 +205,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		logger.error("exceptionCaught", e.getCause());
+		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
@@ -332,5 +340,29 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			request.setMessage(compositeReceiver);
 		}
 		return compositeReceiver;
+	}
+
+	private void cleanUpDeadServer(String host, int port) {
+		String wildKey = "_" + host + "/" + port;
+		// TODO JOT
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		Set<String> keySet = serverRegistry.keySet();
+
+		for (String key : keySet) {
+			if (key.endsWith(wildKey)) {
+				Server server = serverRegistry.getServer(key);
+				// deregister server from service
+				server.getService().removeServer(server);
+				List<Session> serverSessions = server.getSessions();
+
+				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
+				for (Session session : serverSessions) {
+					SessionRegistry.getCurrentInstance().removeSession(session);
+				}
+				// release all resources used by server, disconnects requester
+				server.destroy();
+				serverRegistry.removeServer(key);
+			}
+		}
 	}
 }

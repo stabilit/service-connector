@@ -18,6 +18,8 @@ package com.stabilit.scm.common.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
@@ -50,6 +52,10 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeReceiver;
 import com.stabilit.scm.common.scmp.internal.SCMPCompositeSender;
 import com.stabilit.scm.common.scmp.internal.SCMPPart;
+import com.stabilit.scm.sc.registry.ServerRegistry;
+import com.stabilit.scm.sc.registry.SessionRegistry;
+import com.stabilit.scm.sc.service.Server;
+import com.stabilit.scm.sc.service.Session;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
@@ -62,10 +68,10 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
-	
+
 	/** The Constant performanceLogger. */
 	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-	
+
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
 
@@ -194,7 +200,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(e);
-		logger.info("exceptionCaught "+ e.getCause().getMessage());
+		logger.info("exceptionCaught " + e.getCause().getMessage());
+		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
 		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
@@ -245,7 +253,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	 *            the error
 	 */
 	public void callback(IResponse response, Exception ex) {
-		logger.error("callback "+ ex.getMessage());
+		logger.error("callback " + ex.getMessage());
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -305,5 +313,29 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			request.setMessage(compositeReceiver);
 		}
 		return compositeReceiver;
+	}
+
+	private void cleanUpDeadServer(String host, int port) {
+		String wildKey = "_" + host + "/" + port;
+		// TODO JOT
+		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
+		Set<String> keySet = serverRegistry.keySet();
+
+		for (String key : keySet) {
+			if (key.endsWith(wildKey)) {
+				Server server = serverRegistry.getServer(key);
+				// deregister server from service
+				server.getService().removeServer(server);
+				List<Session> serverSessions = server.getSessions();
+
+				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
+				for (Session session : serverSessions) {
+					SessionRegistry.getCurrentInstance().removeSession(session);
+				}
+				// release all resources used by server, disconnects requester
+				server.destroy();
+				serverRegistry.removeServer(key);
+			}
+		}
 	}
 }
