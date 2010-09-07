@@ -134,6 +134,11 @@ public abstract class Service {
 		return sb.toString();
 	}
 
+	/**
+	 * Gets the count allocated sessions.
+	 * 
+	 * @return the count allocated sessions
+	 */
 	public int getCountAllocatedSessions() {
 		int allocatedSessions = 0;
 
@@ -143,6 +148,11 @@ public abstract class Service {
 		return allocatedSessions;
 	}
 
+	/**
+	 * Gets the count available sessions.
+	 * 
+	 * @return the count available sessions
+	 */
 	public int getCountAvailableSessions() {
 		int availableSessions = 0;
 
