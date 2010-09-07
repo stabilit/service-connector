@@ -165,6 +165,7 @@ public class SessionService extends Service implements ISessionService {
 						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
+			this.pendingRequest = false;
 			this.sessionId = null;
 			this.callback = null;
 		}
@@ -273,6 +274,12 @@ public class SessionService extends Service implements ISessionService {
 
 	}
 
+	/**
+	 * Echo.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	private synchronized void echo() throws Exception {
 		if (this.pendingRequest) {
 			// an operation is running no echo necessary
