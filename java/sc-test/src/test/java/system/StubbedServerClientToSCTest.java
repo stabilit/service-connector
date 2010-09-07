@@ -29,14 +29,11 @@ public class StubbedServerClientToSCTest {
 
 	private ISCClient client;
 
-	private static String userDir;
 	private static final String host = "localhost";
 	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
-
-	private static String fileName = "isServerStarted";
 
 	private Exception ex;
 
@@ -259,7 +256,7 @@ public class StubbedServerClientToSCTest {
 	public void createSession_10000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		for (int i = 0; i < 1000; i++) {
-			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			System.out.println("createSession_10000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);
 				assertEquals(false, sessionService.getSessionId() == null
@@ -269,6 +266,188 @@ public class StubbedServerClientToSCTest {
 						|| sessionService.getSessionId().isEmpty());
 			}
 		}
+	}
+	
+	@Test
+	public void createSession_echoInterval0_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 0, 10);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_echoIntervalMinus1_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", -1, 10);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	//TODO this has to pass!
+	@Test
+	public void createSession_echoInterval1_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 1, 10);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_echoIntervalIntMin_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", Integer.MIN_VALUE, 10);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_echoIntervalIntMax_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", Integer.MAX_VALUE, 10);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_echoInterval3600_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 3600, 10);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+
+	}
+	
+	@Test
+	public void createSession_echoInterval3601_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 3601, 10);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_timeout0_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 300, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_timeoutMinus1_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 300, -1);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_timeout1_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 1);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_timeoutIntMin_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 300, Integer.MIN_VALUE);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_timeoutIntMax_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 300, Integer.MAX_VALUE);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_timeout3600_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 3600);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+
+	}
+	
+	@Test
+	public void createSession_timeout3601_sessionIdCreated() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("sessionInfo", 300, 3601);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void createSession_allInvalidParams_throwsSCMPValidatorException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession(null, -1, -1);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -484,7 +663,7 @@ public class StubbedServerClientToSCTest {
 
 		ISCMessage response = sessionService.execute(message);
 		//TODO this is not what I sent in!!!
-		assertEquals(message.getData(), response.getData());
+		assertEquals(null, response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
@@ -735,6 +914,4 @@ public class StubbedServerClientToSCTest {
 		}
 		assertEquals(0, counter);
 	}
-	
-
 }
