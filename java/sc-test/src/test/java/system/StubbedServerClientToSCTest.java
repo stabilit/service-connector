@@ -138,16 +138,16 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void createSession_whiteSpaceSessionInfo_passes() throws Exception {
+	public void createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(" ", 787, 999);
+		sessionService.createSession(" ", 300, 60);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_arbitrarySpaceSessionInfo_passes() throws Exception {
+	public void createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 60);
 		assertEquals(false, sessionService.getSessionId() == null
@@ -156,7 +156,7 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void createSession_256LongSessionInfo_passes() throws Exception {
+	public void createSession_256LongSessionInfo_sessionIdIsNotEmpty() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -186,7 +186,7 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void deleteSession_beforeCreateSession_passes() throws Exception {
+	public void deleteSession_beforeCreateSession_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
@@ -194,7 +194,7 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void deleteSession_afterValidCreateSession_passes() throws Exception {
+	public void deleteSession_afterValidCreateSession_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 		sessionService.deleteSession();
@@ -203,7 +203,7 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void createSession_afterCreateSessionWhiteSpaceSessionInfo_passes() throws Exception {
+	public void deleteSession_whiteSpaceSessionInfo_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession(" ", 300, 60);
 		sessionService.deleteSession();
@@ -226,9 +226,33 @@ public class StubbedServerClientToSCTest {
 	}
 
 	@Test
-	public void createSession_twiceWithDifferentSessionServices_passes() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+	public void createSession_twiceWithDifferentSessionServices_differentSessionIds() throws Exception {
+		ISessionService sessionService0 = client.newSessionService(serviceName);
+		ISessionService sessionService1 = client.newSessionService(serviceNameAlt);
+		
+		assertEquals(true, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		sessionService0.createSession("sessionInfo", 300, 60);
+		
+		assertEquals(false, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		sessionService1.createSession("sessionInfo", 300, 60);
+		
+		assertEquals(false, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(false, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		
+		sessionService0.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	@Test
@@ -238,6 +262,194 @@ public class StubbedServerClientToSCTest {
 			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);
+				assertEquals(false, sessionService.getSessionId() == null
+						|| sessionService.getSessionId().isEmpty());
+				sessionService.deleteSession();
+				assertEquals(true, sessionService.getSessionId() == null
+						|| sessionService.getSessionId().isEmpty());
+			}
+		}
+	}
+
+	@Test
+	public void createSession_emptySessionServiceNameDataOneChar_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService("");
+		try {
+			sessionService.createSession("sessionInfo", 300, 60, "a");
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_whiteSpaceSessionServiceNameDataOneChar_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(" ");
+		try {
+			sessionService.createSession("sessionInfo", 300, 60, "a");
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_arbitrarySessionServiceNameNotInSCPropsDataOneChar_throwsException()
+			throws Exception {
+		ISessionService sessionService = client
+				.newSessionService("The quick brown fox jumps over a lazy dog.");
+		try {
+			sessionService.createSession("sessionInfo", 300, 60, "a");
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test(expected = SCMPValidatorException.class)
+	public void createSession_nullSessionInfoDataOneChar_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession(null, 300, 60, "a");
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test(expected = SCMPValidatorException.class)
+	public void createSession_emptySessionInfoDataOneChar_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("", 300, 60, "a");
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_whiteSpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession(" ", 300, 60, "a");
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 60, "a");
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_256LongSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 256; i++) {
+			sb.append('a');
+		}
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession(sb.toString(), 300, 60, "a");
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_257LongSessionInfoDataOneChar_throwsException() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 257; i++) {
+			sb.append('a');
+		}
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession(sb.toString(), 300, 60, "a");
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+
+	@Test
+	public void deleteSession_afterValidCreateSessionDataOneChar_noSessionId() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60, "a");
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+
+	@Test
+	public void deleteSession_whiteSpaceSessionInfoDataOneChar_noSessionId() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession(" ", 300, 60, "a");
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+
+	@Test
+	public void createSession_twiceDataOneChar_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60, "a");
+		try {
+			sessionService.createSession("sessionInfo", 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+
+	@Test
+	public void createSession_twiceWithDifferentSessionServicesDataOneChar_differentSessionIds() throws Exception {
+		ISessionService sessionService0 = client.newSessionService(serviceName);
+		ISessionService sessionService1 = client.newSessionService(serviceNameAlt);
+		
+		assertEquals(true, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		sessionService0.createSession("sessionInfo", 300, 60, "a");
+		
+		assertEquals(false, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		sessionService1.createSession("sessionInfo", 300, 60, "a");
+		
+		assertEquals(false, sessionService0.getSessionId() == null
+				|| sessionService0.getSessionId().isEmpty());
+		assertEquals(false, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		
+		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		
+		sessionService0.deleteSession();
+		sessionService1.deleteSession();
+	}
+
+	@Test
+	public void createSession_1000times_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		for (int i = 0; i < 100; i++) {
+			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			for (int j = 0; j < 10; j++) {
+				sessionService.createSession("sessionInfo", 300, 10, "a");
 				assertEquals(false, sessionService.getSessionId() == null
 						|| sessionService.getSessionId().isEmpty());
 				sessionService.deleteSession();
@@ -271,6 +483,7 @@ public class StubbedServerClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		//TODO this is not what I sent in!!!
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -316,7 +529,7 @@ public class StubbedServerClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
-		assertEquals(message.getData(), response.getData());
+		assertEquals(((byte[])message.getData()).length, ((byte[])response.getData()).length);
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(false, response.isFault());
@@ -418,7 +631,7 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
 
@@ -436,7 +649,7 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
 
@@ -454,7 +667,7 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
 
@@ -472,7 +685,7 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
 
@@ -491,7 +704,7 @@ public class StubbedServerClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.getSessionId(), response.getSessionId());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, response.isFault());
 	}
 
@@ -522,5 +735,6 @@ public class StubbedServerClientToSCTest {
 		}
 		assertEquals(0, counter);
 	}
+	
 
 }
