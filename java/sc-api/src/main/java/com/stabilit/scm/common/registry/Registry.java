@@ -17,6 +17,7 @@
 package com.stabilit.scm.common.registry;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
@@ -37,7 +38,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(Registry.class);
-	
+
 	/** The registry map. */
 	private Map<K, V> registryMap;
 
@@ -108,6 +109,17 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 			return false;
 		}
 		return registryMap.containsKey(key);
+	}
+
+	/**
+	 * Key set. The view's iterator is a "weakly consistent" iterator that will never throw
+	 * ConcurrentModificationException, and guarantees to traverse elements as they existed upon construction of the
+	 * iterator, and may (but is not guaranteed to) reflect any modifications subsequent to construction.
+	 * 
+	 * @return the set
+	 */
+	public Set<K> keySet() {
+		return this.registryMap.keySet();
 	}
 
 	/** {@inheritDoc} */
