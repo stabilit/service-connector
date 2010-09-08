@@ -86,6 +86,25 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception {
+		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds)
+			throws Exception {
+		this.createSession(sessionInfo, echoIntervalInSeconds, timeoutInSeconds, null);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception {
+		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, data);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds,
 			Object data) throws Exception {
 		if (this.callback != null) {
@@ -122,25 +141,6 @@ public class SessionService extends Service implements ISessionService {
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
 		this.timer.schedule(timerTask,
 				(int) (echoIntervalInSeconds * Constants.ECHO_TIMEOUT_MULTIPLIER * Constants.SEC_TO_MILISEC_FACTOR));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds)
-			throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, timeoutInSeconds, null);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, data);
 	}
 
 	/** {@inheritDoc} */
