@@ -55,7 +55,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	/** The SRV_EXECUTE. */
 	SRV_EXECUTE("SXE"),
 	/** The ECHO. */
-	ECHO("CEC"),
+	ECHO("ECH"),
 
 	/** The CLN_SUBSCRIBE. */
 	CLN_SUBSCRIBE("CSU"),
