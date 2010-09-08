@@ -59,9 +59,12 @@ public class SessionService extends Service implements ISessionService {
 	private Timer timer;
 	/** The timer run, runs when session need to be refreshed on SC. */
 	private ITimerRun timerRun;
+	/** The timer task. */
 	private TimerTask timerTask;
 	/** The session dead, marks state of a session. */
 	private volatile boolean sessionDead;
+
+//	private int scResponseTimeMillis;
 
 	/**
 	 * Instantiates a new session service.
@@ -82,7 +85,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds,
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds,
 			Object data) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
@@ -114,16 +117,17 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.sessionId = reply.getSessionId();
 		// trigger session timeout
-		this.timerRun = new SessionTimeouter((int) (echoIntervalInSeconds * 0.75));
+		this.timerRun = new SessionTimeouter((int) (echoIntervalInSeconds * Constants.ECHO_TIMEOUT_MULTIPLIER));
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(timerTask, (int) (echoIntervalInSeconds * 0.75 * Constants.SEC_TO_MILISEC_FACTOR));
+		this.timer.schedule(timerTask,
+				(int) (echoIntervalInSeconds * Constants.ECHO_TIMEOUT_MULTIPLIER * Constants.SEC_TO_MILISEC_FACTOR));
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void createSession(String sessionInfo, int timeoutInSeconds, int echoIntervalInSeconds)
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds)
 			throws Exception {
-		this.createSession(sessionInfo, timeoutInSeconds, echoIntervalInSeconds, null);
+		this.createSession(sessionInfo, echoIntervalInSeconds, timeoutInSeconds, null);
 	}
 
 	/** {@inheritDoc} */
