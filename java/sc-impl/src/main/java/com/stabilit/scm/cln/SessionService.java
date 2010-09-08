@@ -64,7 +64,7 @@ public class SessionService extends Service implements ISessionService {
 	/** The session dead, marks state of a session. */
 	private volatile boolean sessionDead;
 
-//	private int scResponseTimeMillis;
+	private int scResponseTimeMillis;
 
 	/**
 	 * Instantiates a new session service.
@@ -81,6 +81,7 @@ public class SessionService extends Service implements ISessionService {
 		this.timerRun = null;
 		this.timer = new Timer("SessionServiceTimeout");
 		this.sessionDead = false;
+		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;
 	}
 
 	/** {@inheritDoc} */
@@ -132,7 +133,25 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception {
+		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception {
+		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, data);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public synchronized void deleteSession() throws Exception {
+		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void deleteSession(int timeoutIntSeconds) throws Exception {
 		if (this.callback == null) {
 			// delete session not possible - no session on this service just ignore
 			return;
@@ -151,7 +170,7 @@ public class SessionService extends Service implements ISessionService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				deleteSessionCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+				deleteSessionCall.invoke(this.callback, timeoutIntSeconds);
 			} catch (Exception e) {
 				if (this.sessionDead) {
 					// ignore errors in state of dead session
@@ -177,7 +196,12 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized SCMessage execute(ISCMessage requestMsg) throws Exception {
+	public synchronized ISCMessage execute(ISCMessage requestMsg) throws Exception {
+		return this.execute(requestMsg, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	@Override
+	public ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}
@@ -205,7 +229,7 @@ public class SessionService extends Service implements ISessionService {
 		// invoke asynchronous
 		this.callback = new ServiceCallback(true);
 		try {
-			clnExecuteCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			clnExecuteCall.invoke(this.callback, timeoutInSeconds);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -230,11 +254,16 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback messageCallback) throws Exception {
+	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback) throws Exception {
+		this.execute(requestMsg, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	@Override
+	public void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}
-		if (messageCallback == null) {
+		if (callback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
 		if (requestMsg == null) {
@@ -258,9 +287,9 @@ public class SessionService extends Service implements ISessionService {
 		}
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
-		ISCMPCallback scmpCallback = new ServiceCallback(this, messageCallback);
+		ISCMPCallback scmpCallback = new ServiceCallback(this, callback);
 		try {
-			clnExecuteCall.invoke(scmpCallback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -275,7 +304,18 @@ public class SessionService extends Service implements ISessionService {
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
 		this.timer.schedule(new TimerTaskWrapper(this.timerRun), this.timerRun.getTimeoutSeconds()
 				* Constants.SEC_TO_MILISEC_FACTOR);
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void setSCResponseTimeMillis(int scResponseTimeMillis) {
+		this.scResponseTimeMillis = scResponseTimeMillis;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getSCResponseTimeMillis() {
+		return this.scResponseTimeMillis;
 	}
 
 	/**
@@ -295,7 +335,7 @@ public class SessionService extends Service implements ISessionService {
 				this.serviceName, this.sessionId);
 		this.callback = new ServiceCallback(true);
 		try {
-			clnEchoCall.invoke(this.callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
+			clnEchoCall.invoke(this.callback, this.scResponseTimeMillis);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);

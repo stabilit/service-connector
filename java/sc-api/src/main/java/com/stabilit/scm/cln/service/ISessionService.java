@@ -49,6 +49,19 @@ public interface ISessionService extends IService {
 	 * @param echoIntervalInSeconds
 	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
 	 *            Very important for SC to detect broken sessions.
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception;
+
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
 	 * @param timeoutInSeconds
 	 *            the echo timeout, time an SC has to observe for receiving echo reply from server. Echo gets executed
 	 *            to prevent session timeout.
@@ -59,6 +72,21 @@ public interface ISessionService extends IService {
 	 */
 	public abstract void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds, Object data)
 			throws Exception;
+
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @param data
+	 *            the data
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception;
 
 	/**
 	 * Execute.
@@ -75,6 +103,19 @@ public interface ISessionService extends IService {
 	 * Execute.
 	 * 
 	 * @param requestMsg
+	 *            the request message
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @return the ISCMessage
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception;
+
+	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
 	 *            the request ISCMessage
 	 * @param callback
 	 *            the callback
@@ -84,12 +125,37 @@ public interface ISessionService extends IService {
 	public abstract void execute(ISCMessage requestMsg, ISCMessageCallback callback) throws Exception;
 
 	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
+	 *            the request ISCMessage
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
+			throws Exception;
+
+	/**
 	 * Delete session.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	public abstract void deleteSession() throws Exception;
+
+	/**
+	 * Delete session.
+	 * 
+	 * @param timeoutIntSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void deleteSession(int timeoutIntSeconds) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override
@@ -98,4 +164,8 @@ public interface ISessionService extends IService {
 	/** {@inheritDoc} */
 	@Override
 	public abstract String getSessionId();
+
+	public abstract void setSCResponseTimeMillis(int scResponseTimeMillis);
+
+	public abstract int getSCResponseTimeMillis();
 }

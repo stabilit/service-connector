@@ -91,7 +91,7 @@ public abstract class CommunicatorConfigPool {
 		comConfigList = new ArrayList<ICommunicatorConfig>();
 
 		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
-		double operationTimeoutMultiplier = Constants.DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
+		double operationTimeoutMultiplier = Constants.OPERATION_TIMEOUT_MULTIPLIER;
 		if (operationTimeoutString != null) {
 			operationTimeoutMultiplier = Double.parseDouble(operationTimeoutString);
 		}
