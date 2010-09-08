@@ -57,7 +57,7 @@ public final class Constants {
 	public static final double OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
 	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
-	 * level of architecture. Time unit is seconds.
+	 * level of architecture. Time unit is seconds. Used if no timeout for operation is handed over by the user.
 	 */
 	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
 	/**

@@ -66,7 +66,12 @@ public class PublishService extends Service implements IPublishService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void changeSubscription(String mask) throws Exception {
+	public synchronized void changeSubscription(String mask) throws Exception {
+		this.changeSubscription(mask, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	@Override
+	public void changeSubscription(String mask, int timeoutInSeconds) throws Exception {
 		if (mask == null) {
 			throw new InvalidParameterException("Mask must be set.");
 		}
@@ -83,21 +88,34 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		changeSubscriptionCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds);
 		this.callback.getMessageSync();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback)
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback)
 			throws Exception {
-		this.subscribe(mask, sessionInfo, noDataInterval, null, callback);
+		this.subscribe(mask, sessionInfo, noDataInterval, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	@Override
+	public void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback,
+			int timeoutInSeconds) throws Exception {
+		this.subscribe(mask, sessionInfo, noDataInterval, null, callback, timeoutInSeconds);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback) throws Exception {
+		this.subscribe(mask, sessionInfo, noDataInterval, authenticationId, callback,
+				Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	@Override
+	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
+			ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		if (mask == null) {
 			throw new InvalidParameterException("Mask must be set.");
 		}
@@ -135,7 +153,7 @@ public class PublishService extends Service implements IPublishService {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
 		try {
-			subscribeCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			subscribeCall.invoke(this.callback, timeoutInSeconds);
 		} catch (Exception e) {
 			throw new SCServiceException("subscribe failed", e);
 		}
@@ -160,7 +178,7 @@ public class PublishService extends Service implements IPublishService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void receivePublication() throws Exception {
+	private synchronized void receivePublication() throws Exception {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
@@ -169,7 +187,13 @@ public class PublishService extends Service implements IPublishService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void unsubscribe() throws Exception {
+	public synchronized void unsubscribe() throws Exception {
+		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void unsubscribe(int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
@@ -180,7 +204,7 @@ public class PublishService extends Service implements IPublishService {
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				unsubscribeCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+				unsubscribeCall.invoke(this.callback, timeoutInSeconds);
 			} catch (Exception e) {
 				throw new SCServiceException("subscribe failed", e);
 			}

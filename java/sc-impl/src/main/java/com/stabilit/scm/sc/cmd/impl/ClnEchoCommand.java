@@ -31,26 +31,26 @@ import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
- * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
+ * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
  * 
  * @author JTraber
  */
-public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
+	protected final static Logger logger = Logger.getLogger(ClnEchoCommand.class);
 
 	/**
-	 * Instantiates a new EchoCommand.
+	 * Instantiates a new ClnEchoCommand.
 	 */
-	public EchoCommand() {
-		this.commandValidator = new EchoCommandValidator();
+	public ClnEchoCommand() {
+		this.commandValidator = new ClnEchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ECHO;
+		return SCMPMsgType.CLN_ECHO;
 	}
 
 	/** {@inheritDoc} */
@@ -66,9 +66,9 @@ public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 	}
 
 	/**
-	 * The Class EchoCommandValidator.
+	 * The Class ClnEchoCommandValidator.
 	 */
-	private class EchoCommandValidator implements ICommandValidator {
+	private class ClnEchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override

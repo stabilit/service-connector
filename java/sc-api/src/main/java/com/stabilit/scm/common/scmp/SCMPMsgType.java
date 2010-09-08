@@ -54,8 +54,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	CLN_EXECUTE("CXE"),
 	/** The SRV_EXECUTE. */
 	SRV_EXECUTE("SXE"),
-	/** The ECHO. */
-	ECHO("ECH"),
+	/** The CLN_ECHO. */
+	CLN_ECHO("CEC"),
 
 	/** The CLN_SUBSCRIBE. */
 	CLN_SUBSCRIBE("CSU"),
@@ -84,7 +84,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPMsgType.class);
-	
+
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */

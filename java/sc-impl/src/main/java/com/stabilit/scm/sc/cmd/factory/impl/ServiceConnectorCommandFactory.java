@@ -24,7 +24,7 @@ import com.stabilit.scm.sc.cmd.impl.AttachCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnChangeSubscriptionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnCreateSessionCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnDeleteSessionCommand;
-import com.stabilit.scm.sc.cmd.impl.EchoCommand;
+import com.stabilit.scm.sc.cmd.impl.ClnEchoCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnExecuteCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnSubscribeCommand;
 import com.stabilit.scm.sc.cmd.impl.ClnUnsubscribeCommand;
@@ -87,7 +87,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.addCommand(registerServiceCommand.getKey(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
 		commandFactory.addCommand(deRegisterServiceCommand.getKey(), deRegisterServiceCommand);
-		ICommand clnEchoCommand = new EchoCommand();
+		ICommand clnEchoCommand = new ClnEchoCommand();
 		commandFactory.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnExecuteCommand = new ClnExecuteCommand();
 		commandFactory.addCommand(clnExecuteCommand.getKey(), clnExecuteCommand);

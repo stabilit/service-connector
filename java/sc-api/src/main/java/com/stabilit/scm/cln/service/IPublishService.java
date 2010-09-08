@@ -41,12 +41,34 @@ public interface IPublishService extends IService {
 	public abstract void changeSubscription(String mask) throws Exception;
 
 	/**
+	 * Change subscription.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void changeSubscription(String mask, int timeoutInSeconds) throws Exception;
+
+	/**
 	 * Unsubscribe.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	public abstract void unsubscribe() throws Exception;
+
+	/**
+	 * Unsubscribe.
+	 * 
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void unsubscribe(int timeoutInSeconds) throws Exception;
 
 	/**
 	 * Subscribe.
@@ -74,6 +96,25 @@ public interface IPublishService extends IService {
 	 *            the session info
 	 * @param noDataInterval
 	 *            the no data interval
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback,
+			int timeoutInSeconds) throws Exception;
+
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
 	 * @param authenticationId
 	 *            the authentication id
 	 * @param callback
@@ -83,6 +124,27 @@ public interface IPublishService extends IService {
 	 */
 	public abstract void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback) throws Exception;
+
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param authenticationId
+	 *            the authentication id
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
+			ISCMessageCallback callback, int timeoutInSeconds) throws Exception;
 
 	/**
 	 * Checks if is subscribed.

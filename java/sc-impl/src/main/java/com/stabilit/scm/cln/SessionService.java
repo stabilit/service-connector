@@ -151,7 +151,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void deleteSession(int timeoutIntSeconds) throws Exception {
+	public synchronized void deleteSession(int timeoutIntSeconds) throws Exception {
 		if (this.callback == null) {
 			// delete session not possible - no session on this service just ignore
 			return;
@@ -201,7 +201,7 @@ public class SessionService extends Service implements ISessionService {
 	}
 
 	@Override
-	public ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception {
+	public synchronized ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}
@@ -259,7 +259,7 @@ public class SessionService extends Service implements ISessionService {
 	}
 
 	@Override
-	public void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
+	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}

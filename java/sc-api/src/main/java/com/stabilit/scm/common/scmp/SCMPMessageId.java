@@ -122,7 +122,7 @@ public class SCMPMessageId {
 		case SRV_DELETE_SESSION:
 		case CLN_EXECUTE:
 		case SRV_EXECUTE:
-		case ECHO:
+		case CLN_ECHO:
 		case CLN_SUBSCRIBE:
 		case SRV_SUBSCRIBE:
 		case CLN_CHANGE_SUBSCRIPTION:
