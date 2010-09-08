@@ -38,8 +38,6 @@ public final class Constants {
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
 	/** The Constant DEFAULT_PROPERTY_FILE_NAME. */
 	public static final String DEFAULT_PROPERTY_FILE_NAME = "sc.properties";
-	/** Protocol literal. */
-	public static final String HTTP = "http";
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE = "/";
 
@@ -102,10 +100,19 @@ public final class Constants {
 	/** The ACCEPT_PARAMS. */
 	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 
+	/** Protocol literal. */
+	public static final String HTTP = "http";
+	/** Protocol literal. */
+	public static final String TCP = "tcp";
+
+	/** The Constant NETTY_TCP. */
+	public static final String NETTY_TCP = "netty.tcp";
+	/** The Constant NETTY_HTTP. */
+	public static final String NETTY_HTTP = "netty.http";
 	/** The DEFAULT_CLIENT_CON. */
-	public static final String DEFAULT_CLIENT_CON = "netty.http";
+	public static final String DEFAULT_CLIENT_CON = NETTY_HTTP;
 	/** The DEFAULT_SERVER_CON. */
-	public static final String DEFAULT_SERVER_CON = "netty.tcp";
+	public static final String DEFAULT_SERVER_CON = NETTY_TCP;
 
 	/** The DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE, after keep alive occurs 10 times connection gets disconnected. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;

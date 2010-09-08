@@ -37,7 +37,7 @@ public class ConnectionFactory extends Factory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ConnectionFactory.class);
-	
+
 	/** The Constant NETTY_TCP. */
 	private static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
@@ -77,18 +77,11 @@ public class ConnectionFactory extends Factory {
 		// jboss netty http client
 		IConnection nettyHttpConnection = new NettyHttpConnection(ConnectionFactory.channelFactory,
 				ConnectionFactory.timer);
-		add(DEFAULT, nettyHttpConnection);
 		add(NETTY_HTTP, nettyHttpConnection);
 		// jboss netty tcp client
 		IConnection nettyTCPConnection = new NettyTcpConnection(ConnectionFactory.channelFactory,
 				ConnectionFactory.timer);
 		add(NETTY_TCP, nettyTCPConnection);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IConnection newInstance() {
-		return newInstance(DEFAULT);
 	}
 
 	/**

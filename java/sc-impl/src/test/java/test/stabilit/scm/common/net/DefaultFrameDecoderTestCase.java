@@ -19,6 +19,7 @@ package test.stabilit.scm.common.net;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
@@ -32,7 +33,7 @@ import com.stabilit.scm.common.net.IFrameDecoder;
 public class DefaultFrameDecoderTestCase {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = FrameDecoderFactory.getDefaultFrameDecoder();
+	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder(Constants.TCP);
 
 	/**
 	 * Singelton test.

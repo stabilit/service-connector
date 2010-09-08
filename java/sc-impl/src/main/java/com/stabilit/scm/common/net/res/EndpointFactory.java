@@ -18,6 +18,7 @@ package com.stabilit.scm.common.net.res;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
@@ -32,13 +33,8 @@ public class EndpointFactory extends Factory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
-	
 	/** EndpointFactory instance */
 	private static final EndpointFactory instance = new EndpointFactory();
-	/** The Constant NETTY_TCP. */
-	private static final String NETTY_TCP = "netty.tcp";
-	/** The Constant NETTY_HTTP. */
-	private static final String NETTY_HTTP = "netty.http";
 
 	/**
 	 * Gets the current instance.
@@ -55,16 +51,10 @@ public class EndpointFactory extends Factory {
 	private EndpointFactory() {
 		// jboss netty http endpoint
 		IEndpoint nettyHttpEndpoint = new NettyHttpEndpoint();
-		add(DEFAULT, nettyHttpEndpoint);
-		add(NETTY_HTTP, nettyHttpEndpoint);
+		add(Constants.NETTY_HTTP, nettyHttpEndpoint);
 		// jboss netty tcp endpoint
 		IEndpoint nettyTCPEndpoint = new NettyTcpEndpoint();
-		add(NETTY_TCP, nettyTCPEndpoint);
-	}
-
-	/** {@inheritDoc} */
-	public IEndpoint newInstance() {
-		return newInstance(DEFAULT);
+		add(Constants.NETTY_TCP, nettyTCPEndpoint);
 	}
 
 	/**

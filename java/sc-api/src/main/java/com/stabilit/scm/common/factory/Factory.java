@@ -34,23 +34,11 @@ import org.apache.log4j.Logger;
  * @author JTraber
  */
 public abstract class Factory {
-	
+
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(Factory.class);
-
-	/** The Constant DEFAULT. Key for default instance. */
-	protected static final String DEFAULT = "default";
 	/** The map stores base instances by a key. */
 	protected Map<Object, IFactoryable> baseInstances = new ConcurrentHashMap<Object, IFactoryable>();
-
-	/**
-	 * Gets the single instance of Factory.
-	 * 
-	 * @return single instance of Factory
-	 */
-	public IFactoryable getInstance() {
-		return getInstance(DEFAULT);
-	}
 
 	/**
 	 * Adds the.
@@ -89,15 +77,6 @@ public abstract class Factory {
 	/**
 	 * New instance.
 	 * 
-	 * @return an instance
-	 */
-	public IFactoryable newInstance() {
-		return newInstance(DEFAULT);
-	}
-
-	/**
-	 * New instance.
-	 * 
 	 * @param key
 	 *            the key
 	 * @return an instance
@@ -105,9 +84,8 @@ public abstract class Factory {
 	public IFactoryable newInstance(Object key) {
 		IFactoryable factoryInstance = this.getInstance(key);
 		if (factoryInstance == null) {
-			// if key is not found return default TODO TRN => throw exception !!
+			// if key is not found return default TODO TRN => throw exception !! -> DONE by JOT
 			logger.fatal("key : " + key + " not found in baseInstances of factory, returned default instance");
-			return this.getInstance(DEFAULT);
 		}
 		// invoke the base instance constructor
 		return factoryInstance.newInstance();

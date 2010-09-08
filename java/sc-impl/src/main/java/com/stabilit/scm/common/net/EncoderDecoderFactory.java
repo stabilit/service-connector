@@ -19,7 +19,6 @@ package com.stabilit.scm.common.net;
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.factory.Factory;
-import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -33,7 +32,8 @@ public final class EncoderDecoderFactory extends Factory {
 	protected final static Logger logger = Logger.getLogger(EncoderDecoderFactory.class);
 	/** The Constant LARGE, key for large encoder decoder. */
 	private static final String LARGE = "large";
-	private static final String  KEEP_ALIVE = "keepAlive";
+	private static final String KEEP_ALIVE = "keepAlive";
+	private static final String DEFAULT = "default";
 	/** The encoder decoder factory. */
 	private static EncoderDecoderFactory encoderDecoderFactory = new EncoderDecoderFactory();
 
@@ -61,11 +61,6 @@ public final class EncoderDecoderFactory extends Factory {
 		this.add(KEEP_ALIVE, encoderDecoder);
 	}
 
-	/** {@inheritDoc} */
-	public IFactoryable newInstance() {
-		return newInstance(DEFAULT);
-	}
-
 	/**
 	 * Checks if is large.
 	 * 
@@ -74,7 +69,7 @@ public final class EncoderDecoderFactory extends Factory {
 	 * @return true, if is large
 	 */
 	public boolean isLarge(SCMPMessage message) {
-		
+
 		if (message.isPart() || message.isBodyOffset()) {
 			// message is a part or has offset for reading body - message is part of large message
 			return true;

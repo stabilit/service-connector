@@ -18,9 +18,8 @@ package com.stabilit.scm.common.net;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.Factory;
-
-
 
 /**
  * The Class FrameDecoderFactory. Provides access to concrete frame decoders.
@@ -31,9 +30,6 @@ public final class FrameDecoderFactory extends Factory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FrameDecoderFactory.class);
-	
-	/** The Constant HTTP, key for HTTP frame decoder instance. */
-	private static final String HTTP = "http";
 	/** The decoder factory. */
 	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
 
@@ -51,18 +47,9 @@ public final class FrameDecoderFactory extends Factory {
 	 */
 	private FrameDecoderFactory() {
 		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add(DEFAULT, frameDecoder);
+		this.add(Constants.TCP, frameDecoder);
 		frameDecoder = new HttpFrameDecoder();
-		this.add(HTTP, frameDecoder);
-	}
-
-	/**
-	 * Gets the default frame decoder.
-	 * 
-	 * @return the default frame decoder
-	 */
-	public static IFrameDecoder getDefaultFrameDecoder() {
-		return (IFrameDecoder) decoderFactory.newInstance(DEFAULT);
+		this.add(Constants.HTTP, frameDecoder);
 	}
 
 	/**

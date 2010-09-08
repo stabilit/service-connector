@@ -19,6 +19,7 @@ package test.stabilit.scm.common.net;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
@@ -32,7 +33,7 @@ import com.stabilit.scm.common.net.IFrameDecoder;
 public class HttpFrameDecoderTestCase {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder("http");
+	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder(Constants.HTTP);
 
 	/**
 	 * Singelton test.
@@ -46,7 +47,8 @@ public class HttpFrameDecoderTestCase {
 	/**
 	 * Parses the frame size test.
 	 * 
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void parseFrameSizeTest() throws Exception {

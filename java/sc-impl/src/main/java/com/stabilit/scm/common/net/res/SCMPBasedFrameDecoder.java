@@ -23,6 +23,7 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.FrameDecoderException;
 import com.stabilit.scm.common.net.FrameDecoderFactory;
 import com.stabilit.scm.common.net.IFrameDecoder;
@@ -36,8 +37,8 @@ import com.stabilit.scm.common.scmp.SCMPError;
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);	
-	
+	protected final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);
+
 	/** The decode state. */
 	private DecodeState decodeState;
 	/** The scmp frame decoder. */
@@ -52,7 +53,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameSize = 0;
 		this.decodeState = DecodeState.READY;
 		// warning, returns always the same instance, singleton
-		this.scmpFrameDecoder = FrameDecoderFactory.getDefaultFrameDecoder();
+		this.scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(Constants.TCP);
 	}
 
 	/** {@inheritDoc} */
