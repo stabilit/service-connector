@@ -45,8 +45,16 @@ public final class Constants {
 	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000;
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
-
-	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
+	/**
+	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. Client API
+	 * needs to adapt echo timeout interval from client to get right interval for echo messages.
+	 */
+	public static final double ECHO_TIMEOUT_MULTIPLIER = 0.8;
+	/**
+	 * OPERATION_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the operation timeout. E.g. SC needs to adapt
+	 * operation timeout from client for operations to server.
+	 */
+	public static final double OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
 	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
 	 * level of architecture. Time unit is seconds.
