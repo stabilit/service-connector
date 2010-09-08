@@ -104,22 +104,31 @@ public class TestEnvironmentController {
 
 		return p;
 	}
-
+	
 	public Process restartSC(Process p, String log4jSCProperties, String scProperties)
 			throws Exception {
 		p.destroy();
 		return startSC(log4jSCProperties, scProperties);
 	}
+	
+	public void stopProcess(Process p, String log4jProperties) throws Exception {
+		p.destroy();
+		deleteFile(getPidLogPath(log4jProperties));
+	}
 
-	public Process startServer(String log4jSCProperties, int port, String serviceName,
-			int maxConnections) throws Exception {
+	public Process startServer(String log4jSCProperties, int port, int maxConnections,
+			String[] serviceNames) throws Exception {
 		String log4jPath = getLog4jPath(log4jSCProperties);
 		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
-
+		String services = "";
+		for (String service : serviceNames) {
+			services += " " + service;
+		}
+		
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ "target" + fs + "test-server.jar " + port + " " + serviceName + " "
-				+ maxConnections + " " + fileName;
+				+ "target" + fs + "test-server.jar " + port + " " + maxConnections + " "
+				+ fileName + services;
 		Process p = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);

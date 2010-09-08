@@ -1,5 +1,8 @@
 package com.stabilit.sc.srv;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
@@ -15,36 +18,59 @@ public class StartSCSessionServer {
 
 	private ISCServer scSrv = null;
 	private String startFile = null;
-	private String serviceName;
+	private String[] serviceNames;
 	private int port = 9000;
 	private int maxCons = 10;
 
 	public static void main(String[] args) throws Exception {
 		StartSCSessionServer sessionServer = new StartSCSessionServer();
-		try {
-			sessionServer.port = Integer.parseInt(args[0]);
-			sessionServer.setServiceName(args[1]);
-			sessionServer.maxCons = Integer.parseInt(args[2]);
-			sessionServer.startFile = args[3];
-		} catch (Exception e) {
-			logger.error("main", e);
-		}
-		sessionServer.runSessionServer();
+		
+		sessionServer.runSessionServer(args);
 	}
 
-	public void runSessionServer() {
+	public void runSessionServer(String[] args) {
 		try {
 			this.scSrv = new SCServer();
+
+			try {
+				this.port = Integer.parseInt(args[0]);
+				this.maxCons = Integer.parseInt(args[1]);
+				this.startFile = args[2];
+				this.serviceNames = new String[args.length - 3];
+				System.arraycopy(args, 3, serviceNames, 0, args.length - 3);
+			} catch (Exception e) {
+				logger.error("incorrect parameters", e);
+				throw e;
+			}
+			
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 30000, 0);
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons(),
-					srvCallback);
+			
+			for (String serviceName : serviceNames) {
+				this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons(),
+						srvCallback);
+			}
 
 			//for testing whether the server already started 
 			new TestEnvironmentController().createFile(startFile);
+			
+			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+			long pid = Long.parseLong(processName.split("@")[0]);
+			FileWriter fw = null;
+			try {
+				File pidFile = new File(startFile);
+				fw = new FileWriter(pidFile);
+				fw.write("pid: " + pid);
+				fw.flush();
+				fw.close();
+			} finally {
+				if (fw != null) {
+					fw.close();
+				}
+			}
 			
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -54,18 +80,12 @@ public class StartSCSessionServer {
 
 	private void shutdown() {
 		try {
-			this.scSrv.deregisterService(serviceName);
+			for (String serviceName : serviceNames) {
+				this.scSrv.deregisterService(serviceName);
+			}
 		} catch (Exception e) {
 			this.scSrv = null;
 		}
-	}
-
-	public String getServiceName() {
-		return serviceName;
-	}
-
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
 	}
 
 	public void setMaxCons(int maxCons) {
@@ -141,7 +161,9 @@ public class StartSCSessionServer {
 			// sleep before killing the server
 			try {
 				Thread.sleep(100);
-				this.server.deregisterService(serviceName);
+				for (String serviceName : serviceNames) {
+					this.server.deregisterService(serviceName);
+				}
 				this.server.destroyServer();
 			} catch (Exception e) {
 				logger.error("run", e);
