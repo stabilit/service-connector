@@ -291,7 +291,7 @@ public class SessionService extends Service implements ISessionService {
 				this.serviceName, this.sessionId);
 		this.callback = new ServiceCallback(true);
 		try {
-			clnEchoCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			clnEchoCall.invoke(this.callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);

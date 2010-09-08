@@ -76,7 +76,7 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 
 	/**

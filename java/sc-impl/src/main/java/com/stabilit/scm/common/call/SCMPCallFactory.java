@@ -76,8 +76,6 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall SRV_DELETE_SESSION_CALL = new SCMPSrvDeleteSessionCall();
 	/** The SRV_ABORT_SESSION. */
 	public static final ISCMPCall SRV_ABORT_SESSION = new SCMPSrvAbortSessionCall();
-	/** The Constant SRV_ECHO_CALL. */
-	public static final ISCMPCall SRV_ECHO_CALL = new SCMPSrvEchoCall();
 	/** The Constant SRV_EXECUTE_CALL. */
 	public static final ISCMPCall SRV_EXECUTE_CALL = new SCMPSrvExecuteCall();
 

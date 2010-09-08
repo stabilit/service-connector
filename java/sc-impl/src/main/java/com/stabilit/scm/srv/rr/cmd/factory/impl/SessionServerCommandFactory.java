@@ -23,7 +23,6 @@ import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.srv.cmd.impl.SrvAbortSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvCreateSessionCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvDeleteSessionCommand;
-import com.stabilit.scm.srv.rr.cmd.impl.SrvEchoCommand;
 import com.stabilit.scm.srv.rr.cmd.impl.SrvExecuteCommand;
 
 /**
@@ -35,7 +34,7 @@ public class SessionServerCommandFactory extends CommandFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionServerCommandFactory.class);
-	
+
 	/**
 	 * Instantiates a new session server command factory.
 	 */
@@ -64,8 +63,6 @@ public class SessionServerCommandFactory extends CommandFactory {
 		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
 		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();
 		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
-		ICommand srvEchoCommand = new SrvEchoCommand();
-		commandFactory.addCommand(srvEchoCommand.getKey(), srvEchoCommand);
 		ICommand srvExecuteCommand = new SrvExecuteCommand();
 		commandFactory.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
 		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();

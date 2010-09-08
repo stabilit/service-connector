@@ -21,41 +21,36 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
-import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
 import com.stabilit.scm.common.util.ValidatorUtility;
-import com.stabilit.scm.sc.service.Server;
-import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Forwards message to backend
- * server. Used to refresh session on SC.
+ * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
  * 
  * @author JTraber
  */
-public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnEchoCommand.class);
+	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
 
 	/**
-	 * Instantiates a new ClnEchoCommand.
+	 * Instantiates a new EchoCommand.
 	 */
-	public ClnEchoCommand() {
-		this.commandValidator = new ClnEchoCommandValidator();
+	public EchoCommand() {
+		this.commandValidator = new EchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 
 	/** {@inheritDoc} */
@@ -63,34 +58,17 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
-		Session session = this.getSessionById(sessionId);
-		Server server = session.getServer();
-
+		// refreshes the session timeout
+		this.getSessionById(sessionId);
 		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.serverEcho(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
-		SCMPMessage result = callback.getMessageSync(session.getEchoTimeoutSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
-
-		if (result.isFault()) {
-			/**
-			 * error in echo process<br>
-			 * 1. delete session on SC<br>
-			 * 2. remove session on server instance<br>
-			 * 3. EXC message to client<br>
-			 **/
-			this.sessionRegistry.removeSession(message.getSessionId());
-			server.removeSession(session);
-			logger.warn("echo failed - session destroyed " + sessionId);
-		}
-		result.removeHeader(SCMPHeaderAttributeKey.SRV_RES_ID);
-		result.setMessageType(getKey());
-		response.setSCMP(result);
+		message.setIsReply(true);
+		response.setSCMP(message);
 	}
 
 	/**
-	 * The Class ClnEchoCommandValidator.
+	 * The Class EchoCommandValidator.
 	 */
-	private class ClnEchoCommandValidator implements ICommandValidator {
+	private class EchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override

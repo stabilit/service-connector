@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.cln.service;
 
-import java.util.Timer;
-
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.net.req.IRequester;
