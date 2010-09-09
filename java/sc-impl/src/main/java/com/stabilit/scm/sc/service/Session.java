@@ -35,8 +35,6 @@ public class Session {
 	private String id;
 	/** The server. */
 	private Server server;
-	/** The echo timeout. */
-	private int echoTimeoutSeconds;
 	/** The echo interval. */
 	private int echoIntervalSeconds;
 	/** The session timeouter - observes session timeout. */
@@ -50,7 +48,6 @@ public class Session {
 		this.id = uuid.toString();
 		this.server = null;
 		this.echoIntervalSeconds = 0;
-		this.echoTimeoutSeconds = 0;
 		this.sessionTimeouter = null;
 	}
 
@@ -83,16 +80,6 @@ public class Session {
 	}
 
 	/**
-	 * Sets the echo timeout in seconds.
-	 * 
-	 * @param echoTimeoutSeconds
-	 *            the new echo timeout
-	 */
-	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) {
-		this.echoTimeoutSeconds = echoTimeoutSeconds;
-	}
-
-	/**
 	 * Sets the echo interval.
 	 * 
 	 * @param echoIntervalSeconds
@@ -100,15 +87,6 @@ public class Session {
 	 */
 	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
 		this.echoIntervalSeconds = echoIntervalSeconds;
-	}
-
-	/**
-	 * Gets the echo timeout seconds.
-	 * 
-	 * @return the echo timeout seconds
-	 */
-	public int getEchoTimeoutSeconds() {
-		return echoTimeoutSeconds;
 	}
 
 	/**

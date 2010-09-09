@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
@@ -85,7 +86,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 			if (Boolean.FALSE.equals(rejectSessionFlag)) {
 				// session has not been rejected, add server to session
 				session.setServer(server);
-				session.setEchoIntervalSeconds((Integer) request.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL));
+				session.setEchoIntervalSeconds((int) ((Integer) request
+						.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_TIMEOUT_MULTIPLIER));
 				// finally add session to the registry
 				SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 				sessionRegistry.addSession(session.getId(), session);

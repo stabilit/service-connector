@@ -71,7 +71,7 @@ public class Responder implements IResponder {
 	/** {@inheritDoc} */
 	@Override
 	public void stopListening() {
-		this.endpoint.stoppListening();
+		this.endpoint.stopListening();
 	}
 
 	/** {@inheritDoc} */

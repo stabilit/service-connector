@@ -133,6 +133,12 @@ public abstract class CommunicatorConfigPool {
 		if (testFlag != null) {
 			this.testFlag = true;
 		}
+
+		String echoTimeoutString = props.getProperty(Constants.ROOT_ECHO_TIMEOUT_QUALIFIER);
+		if (operationTimeoutString != null) {
+			double echoTimeoutMultiplier = Double.parseDouble(echoTimeoutString);
+			Constants.setEchoTimeoutMultiplier(echoTimeoutMultiplier);
+		}
 	}
 
 	/**

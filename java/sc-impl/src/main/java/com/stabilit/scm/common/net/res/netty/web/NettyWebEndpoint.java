@@ -128,13 +128,13 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
-		this.stoppListening();
+		this.stopListening();
 		this.channelFactory.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void stoppListening() {
+	public void stopListening() {
 		try {
 			if (this.channel != null) {
 				this.channel.close();
