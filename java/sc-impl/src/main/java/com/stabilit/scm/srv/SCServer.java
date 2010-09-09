@@ -115,8 +115,8 @@ public class SCServer implements ISCServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void registerService(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
-			ISCServerCallback scCallback) throws Exception {
+	public synchronized void registerService(String scHost, int scPort, String serviceName, int maxSessions,
+			int maxConnections, ISCServerCallback scCallback) throws Exception {
 		if (this.listening == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
 		}
@@ -219,6 +219,10 @@ public class SCServer implements ISCServer {
 			responder.create();
 			responder.startListenAsync();
 		} catch (Exception ex) {
+			this.keepAliveIntervalInSeconds = 0;
+			this.localServerHost = null;
+			this.localServerPort = 0;
+			this.listening = false;
 			logger.error("startListener", ex);
 			throw ex;
 		}
