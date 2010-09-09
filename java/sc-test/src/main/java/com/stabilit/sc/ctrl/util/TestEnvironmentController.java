@@ -96,28 +96,28 @@ public class TestEnvironmentController {
 		deleteFile(fileName);
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ ".." + fs + "sc-impl" + fs + "target" + fs + "sc.jar -filename "
-				+ userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
+				+ ".." + fs + "sc-impl" + fs + "target" + fs + "sc.jar -filename " + userDir + fs
+				+ "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		Process p = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);
 
 		return p;
 	}
-	
+
 	public Process restartSC(Process p, String log4jSCProperties, String scProperties)
 			throws Exception {
 		p.destroy();
 		return startSC(log4jSCProperties, scProperties);
 	}
-	
+
 	public void stopProcess(Process p, String log4jProperties) throws Exception {
 		p.destroy();
 		deleteFile(getPidLogPath(log4jProperties));
 	}
 
-	public Process startServer(String log4jSCProperties, int port, int maxConnections,
-			String[] serviceNames) throws Exception {
+	public Process startServer(String log4jSCProperties, int listenerPort, int port,
+			int maxConnections, String[] serviceNames) throws Exception {
 		String log4jPath = getLog4jPath(log4jSCProperties);
 		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
@@ -125,10 +125,10 @@ public class TestEnvironmentController {
 		for (String service : serviceNames) {
 			services += " " + service;
 		}
-		
+
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ "target" + fs + "test-server.jar " + port + " " + maxConnections + " "
-				+ fileName + services;
+				+ "target" + fs + "test-server.jar " + listenerPort + " " + port + " "
+				+ maxConnections + " " + fileName + services;
 		Process p = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);

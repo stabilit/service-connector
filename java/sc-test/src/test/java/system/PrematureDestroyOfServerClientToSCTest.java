@@ -52,7 +52,7 @@ public class PrematureDestroyOfServerClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			srv = ctrl.startServer(log4jSrvProperties, port9000, 100, new String[] {serviceName, serviceNameAlt});
+			srv = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}

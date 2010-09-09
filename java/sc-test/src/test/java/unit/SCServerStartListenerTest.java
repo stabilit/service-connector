@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,11 @@ public class SCServerStartListenerTest {
 	@Before
 	public void setUp() throws Exception {
 		server = new SCServer();
+	}
+	
+	@After
+	public void tearDown() {
+		server.destroyServer();
 	}
 
 	// region hostName == "localhost" (set as only one in

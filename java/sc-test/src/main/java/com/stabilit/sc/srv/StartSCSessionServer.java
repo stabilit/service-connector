@@ -20,6 +20,7 @@ public class StartSCSessionServer {
 	private String startFile = null;
 	private String[] serviceNames;
 	private int port = 9000;
+	private int listenerPort = 30000;
 	private int maxCons = 10;
 
 	public static void main(String[] args) throws Exception {
@@ -33,11 +34,12 @@ public class StartSCSessionServer {
 			this.scSrv = new SCServer();
 
 			try {
-				this.port = Integer.parseInt(args[0]);
-				this.maxCons = Integer.parseInt(args[1]);
-				this.startFile = args[2];
-				this.serviceNames = new String[args.length - 3];
-				System.arraycopy(args, 3, serviceNames, 0, args.length - 3);
+				this.listenerPort = Integer.parseInt(args[0]);
+				this.port = Integer.parseInt(args[1]);
+				this.maxCons = Integer.parseInt(args[2]);
+				this.startFile = args[3];
+				this.serviceNames = new String[args.length - 4];
+				System.arraycopy(args, 4, serviceNames, 0, args.length - 4);
 			} catch (Exception e) {
 				logger.error("incorrect parameters", e);
 				throw e;
@@ -45,12 +47,12 @@ public class StartSCSessionServer {
 			
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startListener("localhost", 30000, 0);
+			this.scSrv.startListener("localhost", listenerPort, 0);
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 			
-			for (String serviceName : serviceNames) {
-				this.scSrv.registerService("localhost", port, serviceName, 1000, getMaxCons(),
+			for (int i = 0; i < serviceNames.length; i++) {
+				this.scSrv.registerService("localhost", port, serviceNames[i], 1000, getMaxCons(),
 						srvCallback);
 			}
 
@@ -80,8 +82,8 @@ public class StartSCSessionServer {
 
 	private void shutdown() {
 		try {
-			for (String serviceName : serviceNames) {
-				this.scSrv.deregisterService(serviceName);
+			for (int i = 0; i < serviceNames.length; i++) {
+				this.scSrv.deregisterService(serviceNames[i]);
 			}
 		} catch (Exception e) {
 			this.scSrv = null;
@@ -161,8 +163,8 @@ public class StartSCSessionServer {
 			// sleep before killing the server
 			try {
 				Thread.sleep(100);
-				for (String serviceName : serviceNames) {
-					this.server.deregisterService(serviceName);
+				for (int i = 0; i < serviceNames.length; i++) {
+					this.server.deregisterService(serviceNames[i]);
 				}
 				this.server.destroyServer();
 			} catch (Exception e) {

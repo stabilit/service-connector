@@ -2,7 +2,6 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
@@ -11,6 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
@@ -25,31 +25,24 @@ public class AttachClientToSCTest {
 	private static Process p;
 	private Exception ex;
 
+	private static final String log4jSC0Properties = "log4jSC0.properties";
+	private static final String scProperties0 = "scIntegration.properties";
+	
+	private static TestEnvironmentController ctrl;
+
 	@BeforeClass
-	public static void oneTimeSetUp() {
+	public static void oneTimeSetUp() throws Exception {
+		ctrl = new TestEnvironmentController();
 		try {
-			String userDir = System.getProperty("user.dir");
-			String command = "java -Dlog4j.configuration=file:" + userDir
-					+ "/src/main/resources/log4jSC0.properties -jar " + userDir
-					+ "/../service-connector/target/sc.jar -filename " + userDir
-					+ "/src/main/resources/scIntegration.properties";
-
-			p = Runtime.getRuntime().exec(command);
-
-			// lets the SC load before starting communication
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				logger.error("oneTimeSetUp", e);
-			}
-		} catch (IOException e) {
+			p = ctrl.startSC(log4jSC0Properties, scProperties0);
+		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() {
-		p.destroy();
+	public static void oneTimeTearDown() throws Exception {
+		ctrl.stopProcess(p, log4jSC0Properties);
 	}
 
 	/**

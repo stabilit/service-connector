@@ -52,14 +52,12 @@ public class RestartSCServerToSCTest {
 	@After
 	public void tearDown() throws Exception {
 		server.destroyServer();
-		p.destroy();
-		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
+		ctrl.stopProcess(p, log4jSCProperties);
 	}
 	
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		p.destroy();
-		ctrl.deleteFile(ctrl.getPidLogPath(log4jSCProperties));
+		ctrl.stopProcess(p, log4jSCProperties);
 	}
 
 	@Test

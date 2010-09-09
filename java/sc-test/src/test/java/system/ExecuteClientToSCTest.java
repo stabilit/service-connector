@@ -43,7 +43,7 @@ public class ExecuteClientToSCTest {
 		ctrl = new TestEnvironmentController();
 		try {
 			p = ctrl.startSC(log4jSCProperties, scProperties);
-			r = ctrl.startServer(log4jSrvProperties, port9000, 100, new String[] {serviceName, serviceNameAlt});
+			r = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
