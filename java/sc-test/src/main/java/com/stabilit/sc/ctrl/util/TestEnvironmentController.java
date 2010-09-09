@@ -96,7 +96,7 @@ public class TestEnvironmentController {
 		deleteFile(fileName);
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ ".." + fs + "sc-impl" + fs + "target" + fs + "sc.jar -filename " + userDir + fs
+				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar -filename " + userDir + fs
 				+ "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		Process p = Runtime.getRuntime().exec(command);
 

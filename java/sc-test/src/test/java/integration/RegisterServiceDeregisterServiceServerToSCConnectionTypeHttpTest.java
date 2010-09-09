@@ -138,7 +138,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	@Test
 	public void registerServiceDeregisterService_cycle500Times_registeredThenNotRegistered()
 			throws Exception {
-		server.startListener(host, 9001, 1);
+		server.startListener(host, 9001, 10);
 		int cycles = 500;
 		for (int i = 0; i < cycles / 10; i++) {
 			System.out.println("RegisterDeregister service iteration:\t" + i * 10);
