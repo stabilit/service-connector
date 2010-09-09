@@ -23,6 +23,7 @@ import com.stabilit.scm.common.factory.Factory;
 import com.stabilit.scm.common.factory.IFactoryable;
 import com.stabilit.scm.common.net.res.netty.http.NettyHttpEndpoint;
 import com.stabilit.scm.common.net.res.netty.tcp.NettyTcpEndpoint;
+import com.stabilit.scm.common.net.res.netty.web.NettyWebEndpoint;
 import com.stabilit.scm.common.res.IEndpoint;
 
 /**
@@ -55,6 +56,9 @@ public class EndpointFactory extends Factory {
 		// jboss netty tcp endpoint
 		IEndpoint nettyTCPEndpoint = new NettyTcpEndpoint();
 		add(Constants.NETTY_TCP, nettyTCPEndpoint);
+		// jboss netty web endpoint
+		IEndpoint nettyWebEndpoint = new NettyWebEndpoint();
+		add(Constants.NETTY_WEB, nettyWebEndpoint);
 	}
 
 	/**
