@@ -166,8 +166,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				commandValidator.validate(request);
 				performanceLogger.begin(this.getClass().getSimpleName(), "run");
 				if (command.isAsynchronous()) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("run command async" + command.getKey());
+					}
 					((IAsyncCommand) command).run(request, response, this);
 					return;
+				}
+				if (logger.isDebugEnabled()) {
+					logger.debug("run command sync" + command.getKey());
 				}
 				command.run(request, response);
 				performanceLogger.end(this.getClass().getSimpleName(), "run");

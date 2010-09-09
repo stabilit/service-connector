@@ -23,10 +23,12 @@ import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.net.IResponderCallback;
+import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
@@ -35,9 +37,8 @@ import com.stabilit.scm.sc.service.Server;
 import com.stabilit.scm.sc.service.Session;
 
 /**
- * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. 
- * Execute command sends any data to the server. 
- * Execute command runs asynchronously and passes through any parts messages.
+ * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any
+ * data to the server. Execute command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
@@ -141,6 +142,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		/** The response. */
 		private IResponse response;
 
+		/** The Constant ERROR_STRING. */
+		private static final String ERROR_STRING = "executing command timed out";
+
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.
 		 * 
@@ -163,6 +167,19 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void callback(Exception ex) {
+			SCMPMessage fault = null;
+			if (ex instanceof IdleTimeoutException) {
+				// operation timeout handling
+				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING);
+			} else {
+				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING);
+			}
+			this.callback(fault);
 		}
 	}
 }

@@ -44,10 +44,10 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
-	
+
 	/** The Constant sessionLogger. */
 	private final static ISessionLogger sessionLogger = SessionLogger.getInstance();
-	
+
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
 	/** The timer. Timer instance is responsible to observe session timeouts. */
@@ -104,6 +104,9 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public void removeSession(String key) {
 		Session session = super.get(key);
+		if (session == null) {
+			return;
+		}
 		this.cancelSessionTimeout(session);
 		super.remove(key);
 		sessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
@@ -168,7 +171,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * broken.
 	 */
 	private class SessionTimerRun implements ITimerRun {
-		
+
 		/** Error text in case of a session abortion. */
 		private static final String ABORT_SESSION_ERROR_STRING = "session timed out";
 		/** The session. */

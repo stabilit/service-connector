@@ -180,6 +180,7 @@ public class ConnectionPool implements IConnectionPool {
 		try {
 			connection.connect(); // can throw an exception
 		} catch (Exception ex) {
+			logger.debug("Unable to establish new connection.", ex);
 			throw new ConnectionPoolConnectException("Unable to establish new connection.", ex);
 		}
 		return connection;
