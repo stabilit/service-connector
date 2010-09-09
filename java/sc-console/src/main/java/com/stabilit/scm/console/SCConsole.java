@@ -97,13 +97,18 @@ public class SCConsole {
 					break;
 				case SHOW:
 					System.out.println("show service " + commandValue + "...");
-					boolean enabled = client.isServiceEnabled(commandValue);
-					if (enabled) {
-						System.out.println("Service [" + commandValue
-								+ "] is enabled");
-					} else {
-						System.out.println("Service [" + commandValue
-								+ "] is disabled");
+					try {
+						boolean enabled = client.isServiceEnabled(commandValue);
+						if (enabled) {
+							System.out.println("Service [" + commandValue
+									+ "] is enabled");
+						} else {
+							System.out.println("Service [" + commandValue
+									+ "] is disabled");
+						}
+					} catch (Exception e) {
+						System.out.println("Serivce [" + commandValue + "] does not exist!");
+						//e.printStackTrace();
 					}
 					break;
 				}
