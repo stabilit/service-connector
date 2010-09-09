@@ -117,6 +117,8 @@ public final class Constants {
 	public static final String NETTY_TCP = "netty.tcp";
 	/** The Constant NETTY_HTTP. */
 	public static final String NETTY_HTTP = "netty.http";
+	/** The Constant NETTY_WEB. */
+	public static final String NETTY_WEB = "netty.web";
 	/** The DEFAULT_CLIENT_CON. */
 	public static final String DEFAULT_CLIENT_CON = NETTY_HTTP;
 	/** The DEFAULT_SERVER_CON. */
