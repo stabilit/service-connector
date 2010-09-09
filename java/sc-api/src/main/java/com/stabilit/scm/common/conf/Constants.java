@@ -71,7 +71,7 @@ public final class Constants {
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
-	public static final int CONNECT_TIMEOUT_MILLIS = 1000;
+	public static final int CONNECT_TIMEOUT_MILLIS = 4000;
 
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;
