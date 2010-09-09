@@ -69,7 +69,6 @@ public class PrematureDestroyOfServerClientToSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(sc, log4jSCProperties);
-		ctrl.deleteFile(ctrl.getPidLogPath(log4jSrvProperties));
 	}
 	
 	@Test
@@ -86,6 +85,21 @@ public class PrematureDestroyOfServerClientToSCTest {
 	}
 	
 	@Test
+	public void deleteSession_withoutServer_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 5);
+
+		ctrl.stopProcess(srv, log4jSrvProperties);
+
+		try {
+			sessionService.deleteSession();
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+	}
+	
+	@Test
 	public void execute_withoutServer_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 5);
@@ -96,21 +110,37 @@ public class PrematureDestroyOfServerClientToSCTest {
 			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
 			ex = e;
+			e.printStackTrace();
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 	}
 	
 	@Test
-	public void execute_withoutServer_timeoutTakes5Seconds() throws Exception {
+	public void deleteSession_withoutServerTimeoutTakes5Seconds_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 5, 5);
+
+		ctrl.stopProcess(srv, log4jSrvProperties);
+		
+		Thread.sleep(5000);
+		sessionService.deleteSession();
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void execute_withoutServer_timeoutTakes5SecondsThrowsException() throws Exception {
 		ctrl.stopProcess(srv, log4jSrvProperties);
 		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 5, 5);
+		
+		Thread.sleep(5000);
 		try {
-			sessionService.createSession("sessionInfo", 300, 5);
+			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
 			ex = e;
+			e.printStackTrace();
 		}
-		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(null, sessionService.getSessionId());
+		throw ex;
 	}
 
 }

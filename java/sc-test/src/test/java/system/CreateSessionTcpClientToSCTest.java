@@ -18,9 +18,9 @@ import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.SCServiceException;
 
-public class CreateSessionClientToSCTest {
+public class CreateSessionTcpClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CreateSessionClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(CreateSessionTcpClientToSCTest.class);
 
 	private static Process p;
 	private static Process r;
@@ -28,7 +28,6 @@ public class CreateSessionClientToSCTest {
 	private ISCClient client;
 
 	private static final String host = "localhost";
-	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
@@ -54,12 +53,14 @@ public class CreateSessionClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(host, port8080);
+		((SCClient) client).setConnectionType("netty.tcp");
+		client.attach(host, port9000);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		client.detach();
+		client = null;
 	}
 
 	@AfterClass
@@ -1200,7 +1201,68 @@ public class CreateSessionClientToSCTest {
 		}
 	}
 
-	//TODO napsat testy pro server, kterej preplnim connectionama
+	@Test
+	public void createSession_1000SessionsAtOnce_acceptAllOfThem() throws Exception {
+		int sessionsCount = 1000;
+		String[] sessions = new String[sessionsCount];
+		ISessionService[] sessionServices = new ISessionService[sessionsCount];
+		for (int i = 0; i < sessionsCount; i++) {
+			sessionServices[i] = client.newSessionService(serviceName);
+			sessionServices[i].createSession("sessionInfo", 300, 10);
+			sessions[i] = sessionServices[i].getSessionId();
+		}
+		for (int i = 0; i < sessionsCount; i++) {
+			sessionServices[i].deleteSession();
+		}
+		
+		Arrays.sort(sessions);
+		int counter = 0;
+
+		for (int i = 1; i < sessionsCount; i++) {
+			if (sessions[i].equals(sessions[i - 1])) {
+				counter++;
+			}
+		}
+		assertEquals(0, counter);
+	}
+	
+	@Test
+	public void createSession_1001SessionsAtOnce_exceedsConnectionsLimitThrowsException() throws Exception {
+		System.out.println(client.workload(serviceName));
+		int sessionsCount = 1001;
+		int ctr = 0;
+		String[] sessions = new String[sessionsCount];
+		ISessionService[] sessionServices = new ISessionService[sessionsCount];
+		try {
+			for (int i = 0; i < sessionsCount; i++) {
+				sessionServices[i] = client.newSessionService(serviceName);
+				sessionServices[i].createSession("sessionInfo", 300, 10);
+				sessions[i] = sessionServices[i].getSessionId();
+				ctr++;
+			}
+		} catch (Exception e) {
+			ex = e;
+		}
+		
+		for (int i = 0; i < ctr; i++) {
+			sessionServices[i].deleteSession();
+		}
+		
+		String[] successfulSessions = new String[ctr];
+		System.arraycopy(sessions, 0, successfulSessions, 0, ctr);
+		
+		Arrays.sort(successfulSessions);
+		int counter = 0;
+
+		for (int i = 1; i < ctr; i++) {
+			if (successfulSessions[i].equals(successfulSessions[i - 1])) {
+				counter++;
+			}
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(sessionsCount - 1, ctr);
+		assertEquals(0, counter);
+	}
 	
 	@Test
 	public void sessionId_uniqueCheckFor10000IdsByOneClient_allSessionIdsAreUnique()

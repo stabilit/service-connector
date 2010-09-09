@@ -2,7 +2,6 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;

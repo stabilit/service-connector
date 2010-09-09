@@ -2,8 +2,6 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -63,6 +61,7 @@ public class RegisterServiceServerToMultipleSCTest {
 
 	@After
 	public void tearDown() throws Exception {
+		server.destroyServer();
 		server = null;
 	}
 

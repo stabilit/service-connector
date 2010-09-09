@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.SCServer;
 
@@ -18,6 +19,8 @@ public class SCServerStartListenerTest {
 
 	private ISCServer server;
 	private Exception ex;
+	
+	private static final String googleIP = "74.125.43.104"; 
 
 	/**
 	 * @throws java.lang.Exception
@@ -349,28 +352,43 @@ public class SCServerStartListenerTest {
 	// region hostName == "a", all ports
 
 	@Test
-	public void startListener_hostAPort8080KeepAlive0_listening() throws Exception {
-		server.startListener("a", 8080, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(8080, server.getPort());
+	public void startListener_hostAPort8080KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 8080, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAlive0_listening() throws Exception {
-		server.startListener("a", 9000, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(9000, server.getPort());
+	public void startListener_hostAPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 9000, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostAPort0KeepAlive0_listening() throws Exception {
-		server.startListener("a", 0, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
+	public void startListener_hostAPort0KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 0, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
 		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
@@ -388,20 +406,30 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAlive0_listening() throws Exception {
-		server.startListener("a", 1, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(1, server.getPort());
+	public void startListener_hostAPort1KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 1, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostAPortMaxAllowedKeepAlive0_listening() throws Exception {
-		server.startListener("a", 0xFFFF, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(0xFFFF, server.getPort());
+	public void startListener_hostAPortMaxAllowedKeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 0xFFFF, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
@@ -444,30 +472,44 @@ public class SCServerStartListenerTest {
 	// region end
 	// region hostName == "The quick brown fox jumps over a lazy dog.", all
 	// ports
-
 	@Test
-	public void startListener_hostArbitraryPort8080KeepAlive0_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 8080, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(8080, server.getPort());
+	public void startListener_hostArbitraryPort8080KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 8080, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAlive0_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(9000, server.getPort());
+	public void startListener_hostArbitraryPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort0KeepAlive0_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 0, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
+	public void startListener_hostArbitraryPort0KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 0, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
 		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
@@ -485,20 +527,30 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAlive0_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 1, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(1, server.getPort());
+	public void startListener_hostArbitraryPort1KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 1, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostArbitraryPortMaxAllowedKeepAlive0_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 0xFFFF, 0);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(0xFFFF, server.getPort());
+	public void startListener_hostArbitraryPortMaxAllowedKeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 0xFFFF, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
@@ -534,6 +586,129 @@ public class SCServerStartListenerTest {
 		try {
 			server
 					.startListener("The quick brown fox jumps over a lazy dog.", Integer.MAX_VALUE,
+							0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isListening());
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+	
+	
+	@Test
+	public void startListener_hostGoogleIPPort8080KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener(googleIP, 8080, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener(googleIP, 9000, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPort0KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener(googleIP, 0, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPortMinus1KeepAlive0_notListeningThrowsException()
+			throws Exception {
+		try {
+			server.startListener(googleIP, -1, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isListening());
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPort1KeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener(googleIP, 1, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPortMaxAllowedKeepAlive0_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener(googleIP, 0xFFFF, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPortMaxAllowedPlus1KeepAlive0_notListeningThrowsException()
+			throws Exception {
+		try {
+			server.startListener(googleIP, 0xFFFF + 1, 0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isListening());
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void startListener_hosGoogleIPPortIntMinKeepAlive0_notListeningThrowsException()
+			throws Exception {
+		try {
+			server
+					.startListener(googleIP, Integer.MIN_VALUE,
+							0);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isListening());
+		assertEquals(true, ex instanceof SCMPValidatorException);
+	}
+
+	@Test
+	public void startListener_hostGoogleIPPortIntMaxKeepAlive0_notListeningThrowsException()
+			throws Exception {
+		try {
+			server
+					.startListener(googleIP, Integer.MAX_VALUE,
 							0);
 		} catch (Exception e) {
 			ex = e;
@@ -860,30 +1035,45 @@ public class SCServerStartListenerTest {
 	// region hostName == "a", all ports
 
 	@Test
-	public void startListener_hostAPort8080KeepAlive3600_listening() throws Exception {
-		server.startListener("a", 8080, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(8080, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
-	}
-
-	@Test
-	public void startListener_hostAPort9000KeepAlive3600_listening() throws Exception {
-		server.startListener("a", 9000, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(9000, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
-	}
-
-	@Test
-	public void startListener_hostAPort0KeepAlive3600_listening() throws Exception {
-		server.startListener("a", 0, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
+	public void startListener_hostAPort8080KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 8080, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
 		assertEquals(0, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostAPort9000KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 9000, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostAPort0KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 0, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
@@ -899,21 +1089,31 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAlive3600_listening() throws Exception {
-		server.startListener("a", 1, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(1, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+	public void startListener_hostAPort1KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 1, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostAPortMaxAllowedKeepAlive3600_listening() throws Exception {
-		server.startListener("a", 0xFFFF, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("a", server.getHost());
-		assertEquals(0xFFFF, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+	public void startListener_hostAPortMaxAllowedKeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("a", 0xFFFF, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
@@ -957,30 +1157,45 @@ public class SCServerStartListenerTest {
 	// ports
 
 	@Test
-	public void startListener_hostArbitraryPort8080KeepAlive3600_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 8080, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(8080, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
-	}
-
-	@Test
-	public void startListener_hostArbitraryPort9000KeepAlive3600_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(9000, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
-	}
-
-	@Test
-	public void startListener_hostArbitraryPort0KeepAlive3600_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 0, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
+	public void startListener_hostArbitraryPort8080KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 8080, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
 		assertEquals(0, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostArbitraryPort9000KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
+	}
+
+	@Test
+	public void startListener_hostArbitraryPort0KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 0, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
@@ -996,21 +1211,31 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAlive3600_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 1, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(1, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+	public void startListener_hostArbitraryPort1KeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 1, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostArbitraryPortMaxAllowedKeepAlive3600_listening() throws Exception {
-		server.startListener("The quick brown fox jumps over a lazy dog.", 0xFFFF, 3600);
-		assertEquals(true, server.isListening());
-		assertEquals("The quick brown fox jumps over a lazy dog.", server.getHost());
-		assertEquals(0xFFFF, server.getPort());
-		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
+	public void startListener_hostArbitraryPortMaxAllowedKeepAlive3600_notListeningThrowsException() throws Exception {
+		try {
+			server.startListener("The quick brown fox jumps over a lazy dog.", 0xFFFF, 3600);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPCommunicationException);
+		assertEquals(false, server.isListening());
+		assertEquals(null, server.getHost());
+		assertEquals(0, server.getPort());
+		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
@@ -1029,8 +1254,9 @@ public class SCServerStartListenerTest {
 	public void startListener_hostArbitraryPortIntMinKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", Integer.MIN_VALUE,
-					3600);
+			server
+					.startListener("The quick brown fox jumps over a lazy dog.", Integer.MIN_VALUE,
+							3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1042,15 +1268,16 @@ public class SCServerStartListenerTest {
 	public void startListener_hostArbitraryPortIntMaxKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", Integer.MAX_VALUE,
-					3600);
+			server
+					.startListener("The quick brown fox jumps over a lazy dog.", Integer.MAX_VALUE,
+							3600);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
+	
 	// region end
 	// region hostName == "localhost" (set as only one in
 	// scIntegration.properties), all ports
