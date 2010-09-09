@@ -42,10 +42,10 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
-	
+
 	/** The Constant connectionLogger. */
 	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-	
+
 	private ISCMPCallback scmpCallback;
 	private volatile boolean pendingRequest;
 
@@ -87,8 +87,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				return;
 			}
 		}
-		logger.info("exceptionCaught "+ th.getMessage());
-		logger.error("@me", th);
+		logger.info("exceptionCaught " + th.getMessage());
 	}
 
 	private void callback(ChannelBuffer channelBuffer) throws Exception {

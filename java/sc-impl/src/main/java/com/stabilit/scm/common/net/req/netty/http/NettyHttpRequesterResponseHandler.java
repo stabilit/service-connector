@@ -91,7 +91,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			}
 		}
 		logger.info("exceptionCaught " + th.getMessage());
-		logger.error("@me", th);
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {

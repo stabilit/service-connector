@@ -137,10 +137,9 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.sessionId = reply.getSessionId();
 		// trigger session timeout
-		this.timerRun = new SessionTimeouter((int) (echoIntervalInSeconds * Constants.ECHO_TIMEOUT_MULTIPLIER));
+		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(timerTask,
-				(int) (echoIntervalInSeconds * Constants.ECHO_TIMEOUT_MULTIPLIER * Constants.SEC_TO_MILISEC_FACTOR));
+		this.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILISEC_FACTOR));
 	}
 
 	/** {@inheritDoc} */
@@ -259,7 +258,8 @@ public class SessionService extends Service implements ISessionService {
 	}
 
 	@Override
-	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
+	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
+			throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}

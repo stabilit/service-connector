@@ -317,12 +317,14 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-		// TODO JOT
 		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {
 			if (key.endsWith(wildKey)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("clean up server: " + wildKey);
+				}
 				Server server = serverRegistry.getServer(key);
 				// deregister server from service
 				server.getService().removeServer(server);
