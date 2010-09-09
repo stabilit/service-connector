@@ -24,8 +24,11 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.registry.Registry;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.scm.sc.registry.DisabledServiceRegistry;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
 import com.stabilit.scm.sc.registry.SessionRegistry;
@@ -86,9 +89,12 @@ public class InspectCommand extends CommandAdapter {
 			if (serviceRegistry.containsKey(serviceName)) {
 				scmpReply.setBody(Boolean.TRUE.toString());
 				logger.debug("state true for service : " + serviceName);
-			} else {
+			} else if (DisabledServiceRegistry.getCurrentInstance().containsKey(serviceName)) {
 				scmpReply.setBody(Boolean.FALSE.toString());
 				logger.debug("state false for service : " + serviceName);
+			} else {
+				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "serviceName :" + serviceName);
+				logger.debug("not found for service : " + serviceName);
 			}
 			response.setSCMP(scmpReply);
 			return;
