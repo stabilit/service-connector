@@ -106,6 +106,10 @@ public class SCConsole {
 							System.out.println("Service [" + commandValue
 									+ "] is disabled");
 						}
+						// get workload
+						String sessions = client.workload(commandValue);
+						System.out.println("Service [" + commandValue
+								+ "] has " + sessions + " Sessions");
 					} catch (Exception e) {
 						System.out.println("Serivce [" + commandValue + "] does not exist!");
 						//e.printStackTrace();
