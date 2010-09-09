@@ -54,7 +54,7 @@ public interface IEndpoint extends ICommunicationPoint {
 	/**
 	 * Stop listening.
 	 */
-	public void stoppListening();
+	public void stopListening();
 
 	/**
 	 * Gets the responder.

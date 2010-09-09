@@ -46,10 +46,14 @@ public final class Constants {
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
 	/**
-	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. Client API
-	 * needs to adapt echo timeout interval from client to get right interval for echo messages.
+	 * DEFAULT_ECHO_TIMEOUT_MULTIPLIER: Default value if no ECHO_TIMEOUT_MULTIPLIER will be set by configuration.
 	 */
-	public static final double ECHO_TIMEOUT_MULTIPLIER = 0.8;
+	public static final double DEFAULT_ECHO_TIMEOUT_MULTIPLIER = 1.2;
+	/**
+	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
+	 * adapt echo timeout interval from client to get right interval for echo messages.
+	 */
+	public static double ECHO_TIMEOUT_MULTIPLIER = DEFAULT_ECHO_TIMEOUT_MULTIPLIER;
 	/**
 	 * OPERATION_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the operation timeout. E.g. SC needs to adapt
 	 * operation timeout from client for operations to server.
@@ -84,6 +88,8 @@ public final class Constants {
 	public static final String ROOT_TEST_QUALIFIER = "root.test";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
+	/** The Constant ROOT_ECHO_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_ECHO_TIMEOUT_QUALIFIER = "root.echoTimeoutMultiplier";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The HOST. */
@@ -182,5 +188,20 @@ public final class Constants {
 			return;
 		}
 		Constants.LARGE_MESSAGE_LIMIT = largeMessageLimit;
+	}
+
+	/**
+	 * Sets the echo timeout multiplier.
+	 * 
+	 * @param echoTimeoutMultiplier
+	 *            the new echo timeout multiplier
+	 */
+	public static void setEchoTimeoutMultiplier(double echoTimeoutMultiplier) {
+		if (Constants.ECHO_TIMEOUT_MULTIPLIER != Constants.DEFAULT_ECHO_TIMEOUT_MULTIPLIER) {
+			// setting ECHO_TIMEOUT_MULTIPLIER only allowed one time
+			logger.error("setEchoTimeoutMultiplier called two times - not allowed.");
+			return;
+		}
+		Constants.ECHO_TIMEOUT_MULTIPLIER = echoTimeoutMultiplier;
 	}
 }
