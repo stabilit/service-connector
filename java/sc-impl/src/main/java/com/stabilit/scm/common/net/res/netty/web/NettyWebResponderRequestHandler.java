@@ -17,20 +17,38 @@
 package com.stabilit.scm.common.net.res.netty.web;
 
 import org.apache.log4j.Logger;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.jboss.netty.handler.codec.http.HttpVersion;
 
 public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyWebResponderRequestHandler.class);
 
+	private int counter = 0;
+	
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		event.getChannel().write("Hello World!");
+		writeResponse(event, "Hello World " + ++counter);
+	}
+
+	private void writeResponse(MessageEvent event, String msg) {
+		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(msg.getBytes());
+		httpResponse.setContent(buffer);
+		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+		// Write the response.
+		event.getChannel().write(httpResponse);		
 	}
 
 	/** {@inheritDoc} */
@@ -38,4 +56,6 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		e.getChannel().write("Hello Error World!");
 	}
+	
+	
 }
