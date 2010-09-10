@@ -82,6 +82,10 @@ public enum SCMPError {
 	HV_WRONG_SC_ERROR_CODE("420", "Invalid sc error code field."),
 	/** The HV_WRONG_SC_ERROR_TEXT. */
 	HV_WRONG_SC_ERROR_TEXT("420", "Invalid sc error text field."),
+	/** The HV_WRONG_APP_ERROR_CODE. */
+	HV_WRONG_APP_ERROR_CODE("420", "Invalid application error code field."),
+	/** The HV_WRONG_APP_ERROR_TEXT. */
+	HV_WRONG_APP_ERROR_TEXT("420", "Invalid application error text field."),
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE("420", "Invalid configuration file."),
 
