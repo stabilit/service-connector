@@ -29,6 +29,7 @@ import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
 import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.scm.common.call.SCMPClnEchoCall;
 import com.stabilit.scm.common.call.SCMPClnExecuteCall;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
@@ -109,6 +110,13 @@ public class SessionService extends Service implements ISessionService {
 			Object data) throws Exception {
 		if (this.callback != null) {
 			throw new SCServiceException("session already created - delete session first.");
+		}
+		if (data != null) {
+			// validate body not bigger than 60 Kb
+			int length = (new SCMPMessage(data)).getBodyLength();
+			if (length < 1 || length > 60) {
+				throw new SCMPValidatorException(SCMPError.HV_ERROR, "data too big - over 60Kb");
+			}
 		}
 		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
