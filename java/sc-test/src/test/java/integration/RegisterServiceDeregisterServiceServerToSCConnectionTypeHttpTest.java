@@ -164,6 +164,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));
+				server.destroyServer();
 				server = null;
 				server = new SCServer();
 				((SCServer) server).setConnectionType("netty.tcp");
@@ -172,6 +173,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));
+				server.destroyServer();
 				server = null;
 			}
 		}

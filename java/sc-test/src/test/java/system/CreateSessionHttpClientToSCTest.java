@@ -16,6 +16,7 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class CreateSessionHttpClientToSCTest {
@@ -1338,5 +1339,16 @@ public class CreateSessionHttpClientToSCTest {
 			}
 		}
 		assertEquals(0, counter);
+	}
+	
+	@Test
+	public void createSession_rejectTheSession_s() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		sessionService.createSession("session666Info", 300, 10, "reject");
+
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		assertEquals("1000/0", client.workload(serviceName));
 	}
 }

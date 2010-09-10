@@ -6,7 +6,9 @@ import java.io.FileWriter;
 import org.apache.log4j.Logger;
 
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.service.ISCMessage;
+import com.stabilit.scm.common.service.SCMessageFault;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCSessionServerCallback;
 import com.stabilit.scm.srv.SCServer;
@@ -108,7 +110,24 @@ public class StartSCSessionServer {
 
 		@Override
 		public ISCMessage createSession(ISCMessage message) {
-			logger.debug("SessionServer.SrvCallback.createSession()");
+			logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
+			if (message.getData() != null && message.getData() instanceof String) {
+				String dataString = (String) message.getData();
+				if (dataString.equals("reject")) {
+					SCMessageFault response = new SCMessageFault();
+					response.setCompressed(message.isCompressed());
+					response.setData(message.getData());
+					response.setMessageInfo(message.getMessageInfo());
+					try {
+						response.setAppErrorCode(0);
+						response.setAppErrorText("\"This is the app error text\"");
+					} catch (SCMPValidatorException e) {
+						logger.error("rejecting create session", e);
+					}
+					logger.info("rejecting session");
+					return response;
+				}
+			}
 			return message;
 		}
 
@@ -136,6 +155,13 @@ public class StartSCSessionServer {
 							kill.start();
 						} catch (Exception e) {
 							logger.error("execute", e);
+						}
+					} else if (dataString.startsWith("timeout")) {
+						int millis = Integer.parseInt(dataString.split(" ")[1]);
+						try {
+							Thread.sleep(millis);
+						} catch (InterruptedException e) {
+							logger.error("sleep in execute", e);
 						}
 					}
 				}
