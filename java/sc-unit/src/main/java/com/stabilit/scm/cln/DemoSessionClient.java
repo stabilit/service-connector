@@ -28,7 +28,7 @@ public class DemoSessionClient extends Thread {
 		ISessionService sessionService = null;
 
 		try {
-			sc.attach("localhost", 8000);
+			sc.attach("localhost", 8080);
 			sessionService = sc.newSessionService("simulation");
 			sessionService.createSession("sessionInfo", 300, 60);
 
