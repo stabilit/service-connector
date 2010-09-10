@@ -79,6 +79,7 @@ public class ManageCommand extends CommandAdapter {
 		String bodyString = (String) reqMsg.getBody();
 
 		if (bodyString.equalsIgnoreCase(Constants.KILL)) {
+			logger.info("SC exiting ...");
 			// kill sc requested
 			System.exit(0);
 		}
@@ -93,15 +94,17 @@ public class ManageCommand extends CommandAdapter {
 		String serviceName = m.group(2);
 
 		if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
-			// enable service is requested
+			// enable service
 			if (disabledServiceRegistry.containsKey(serviceName)) {
+				logger.info("enable service: " + serviceName);
 				Service service = disabledServiceRegistry.removeService(serviceName);
 				serviceRegistry.addService(serviceName, service);
 			}
 			return;
 		}
 		if (serviceRegistry.containsKey(serviceName)) {
-			// disable service requested
+			// disable service
+			logger.info("disable service: " + serviceName);
 			Service service = serviceRegistry.removeService(serviceName);
 			disabledServiceRegistry.addService(serviceName, service);
 		}

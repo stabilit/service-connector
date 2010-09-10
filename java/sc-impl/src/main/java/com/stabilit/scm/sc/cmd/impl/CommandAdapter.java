@@ -144,7 +144,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (service == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"service not found for " + serviceName);
+					"service: "+serviceName+" not found");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -165,7 +165,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (service.getType() != ServiceType.SESSION_SERVICE) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"wrong service type requested " + serviceName);
+					"service: "+serviceName+" is not session service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -186,7 +186,7 @@ public abstract class CommandAdapter implements ICommand {
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"wrong service type requested " + serviceName);
+					"service: "+serviceName+" is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
