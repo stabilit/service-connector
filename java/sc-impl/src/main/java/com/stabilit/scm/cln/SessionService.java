@@ -129,13 +129,13 @@ public class SessionService extends Service implements ISessionService {
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		createSessionCall.setRequestBody(data);
 		try {
-			createSessionCall.invoke(this.callback, timeoutInSeconds);
+			createSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			throw new SCServiceException("create session failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
-		if (reply.isFault()) {
+		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			this.callback = null;
 			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -178,7 +178,7 @@ public class SessionService extends Service implements ISessionService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				deleteSessionCall.invoke(this.callback, timeoutInSeconds);
+				deleteSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 			} catch (Exception e) {
 				if (this.sessionDead) {
 					// ignore errors in state of dead session
@@ -238,7 +238,7 @@ public class SessionService extends Service implements ISessionService {
 		// invoke asynchronous
 		this.callback = new ServiceCallback(true);
 		try {
-			clnExecuteCall.invoke(this.callback, timeoutInSeconds);
+			clnExecuteCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -251,8 +251,7 @@ public class SessionService extends Service implements ISessionService {
 		}
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(new TimerTaskWrapper(this.timerRun), this.timerRun.getTimeoutSeconds()
-				* Constants.SEC_TO_MILISEC_FACTOR);
+		this.timer.schedule(new TimerTaskWrapper(this.timerRun), (long) this.timerRun.getTimeoutMillis());
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -300,7 +299,7 @@ public class SessionService extends Service implements ISessionService {
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(this, callback);
 		try {
-			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds);
+			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -313,8 +312,7 @@ public class SessionService extends Service implements ISessionService {
 		super.setRequestComplete();
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(new TimerTaskWrapper(this.timerRun), this.timerRun.getTimeoutSeconds()
-				* Constants.SEC_TO_MILISEC_FACTOR);
+		this.timer.schedule(new TimerTaskWrapper(this.timerRun), (long) this.timerRun.getTimeoutMillis());
 	}
 
 	/** {@inheritDoc} */
@@ -392,9 +390,8 @@ public class SessionService extends Service implements ISessionService {
 				SessionService.this.echo();
 				// trigger session timeout
 				SessionService.this.timerTask = new TimerTaskWrapper(SessionService.this.timerRun);
-				SessionService.this.timer.schedule(new TimerTaskWrapper(SessionService.this.timerRun), this
-						.getTimeoutSeconds()
-						* Constants.SEC_TO_MILISEC_FACTOR);
+				SessionService.this.timer.schedule(new TimerTaskWrapper(SessionService.this.timerRun), (long) this
+						.getTimeoutMillis());
 			} catch (Exception e) {
 				// echo failed - mark session as dead
 				SessionService.this.sessionDead = true;
@@ -404,7 +401,7 @@ public class SessionService extends Service implements ISessionService {
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeoutSeconds() {
+		public double getTimeoutMillis() {
 			return this.timeoutInSeconds;
 		}
 	}

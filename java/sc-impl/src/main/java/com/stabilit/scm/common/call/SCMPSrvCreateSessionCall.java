@@ -64,13 +64,13 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipList += "/" + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		super.invoke(scmpCallback, timeoutInSeconds);
+		super.invoke(scmpCallback, timeoutInMillis);
 	}
 
 	/** {@inheritDoc} */

@@ -36,7 +36,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnCreateSessionCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.
 	 */
@@ -58,10 +58,10 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		super.invoke(scmpCallback, timeoutInSeconds);
+		super.invoke(scmpCallback, timeoutInMillis);
 	}
 
 	/** {@inheritDoc} */

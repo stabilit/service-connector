@@ -124,7 +124,7 @@ public class SCClient implements ISCClient {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new ServiceCallback(true);
 		try {
-			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
@@ -157,7 +157,7 @@ public class SCClient implements ISCClient {
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
@@ -319,7 +319,7 @@ public class SCClient implements ISCClient {
 		this.callback = new ServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
@@ -349,7 +349,7 @@ public class SCClient implements ISCClient {
 		this.callback = new ServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
-			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();

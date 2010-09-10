@@ -86,7 +86,7 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds);
+		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 		this.callback.getMessageSync();
 	}
 
@@ -140,7 +140,7 @@ public class PublishService extends Service implements IPublishService {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
 		try {
-			subscribeCall.invoke(this.callback, timeoutInSeconds);
+			subscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			throw new SCServiceException("subscribe failed", e);
 		}
@@ -169,7 +169,8 @@ public class PublishService extends Service implements IPublishService {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
-		receivePublicationCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval);
+		receivePublicationCall.invoke(this.callback, Constants.SEC_TO_MILISEC_FACTOR
+				* Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval);
 	}
 
 	/** {@inheritDoc} */
@@ -192,7 +193,7 @@ public class PublishService extends Service implements IPublishService {
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				unsubscribeCall.invoke(this.callback, timeoutInSeconds);
+				unsubscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("subscribe failed", e);
 			}

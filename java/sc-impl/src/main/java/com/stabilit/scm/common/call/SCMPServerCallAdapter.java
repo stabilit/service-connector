@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.cln.call.ISCMPCall;
 import com.stabilit.scm.cln.call.SCMPCallAdapter;
 import com.stabilit.scm.common.net.req.IRequester;
+import com.stabilit.scm.common.scmp.ISCMPCallback;
+import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 
 /**
@@ -65,4 +67,11 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	@Override
 	public abstract ISCMPCall newInstance(IRequester req, SCMPMessage message);
 
+	/** {@inheritDoc} */
+	@Override
+	public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
+		super.invoke(callback, timeoutInMillis);
+		// no OP_TIMEOUT needed to send to server
+		this.requestMessage.removeHeader(SCMPHeaderAttributeKey.OP_TIMEOUT);
+	}
 }
