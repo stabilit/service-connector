@@ -30,12 +30,14 @@ import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.Requester;
 import com.stabilit.scm.common.net.req.RequesterContext;
+import com.stabilit.scm.common.scmp.SCMPError;
 import com.stabilit.scm.common.scmp.SCMPFault;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.scm.common.scmp.SCMPMessage;
 import com.stabilit.scm.common.service.ISCContext;
 import com.stabilit.scm.common.service.ISCMessageCallback;
 import com.stabilit.scm.common.service.SCServiceException;
+import com.stabilit.scm.common.util.ValidatorUtility;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
@@ -71,19 +73,15 @@ public class PublishService extends Service implements IPublishService {
 	}
 
 	@Override
-	public void changeSubscription(String mask, int timeoutInSeconds) throws Exception {
-		if (mask == null) {
-			throw new InvalidParameterException("Mask must be set.");
-		}
-		if (mask.getBytes().length > 256) {
-			throw new InvalidParameterException("Mask too long, over 256 bytes.");
-		}
-		if (mask.indexOf('%') != -1) {
-			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
-		}
+	public synchronized void changeSubscription(String mask, int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
+		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+		if (mask.indexOf('%') != -1) {
+			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.msgId.incrementMsgSequenceNr();
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
@@ -100,8 +98,8 @@ public class PublishService extends Service implements IPublishService {
 	}
 
 	@Override
-	public void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback,
-			int timeoutInSeconds) throws Exception {
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval,
+			ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		this.subscribe(mask, sessionInfo, noDataInterval, null, callback, timeoutInSeconds);
 	}
 
@@ -114,32 +112,21 @@ public class PublishService extends Service implements IPublishService {
 	}
 
 	@Override
-	public void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
 			ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
-		if (mask == null) {
-			throw new InvalidParameterException("Mask must be set.");
-		}
-		if (mask.getBytes().length > 256) {
-			throw new InvalidParameterException("Mask too long, over 256 bytes.");
-		}
-		if (mask.indexOf('%') != -1) {
-			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
-		}
-		if (sessionInfo == null) {
-			throw new InvalidParameterException("Session info must be set.");
-		}
-		if (sessionInfo.getBytes().length > 256) {
-			throw new InvalidParameterException("Session info too long, over 256 bytes.");
-		}
-		if (noDataInterval < 1 || noDataInterval > 3600) {
-			throw new InvalidParameterException("No data interval not within limits 1 to 3600.");
-		}
-		if (callback == null) {
-			throw new InvalidParameterException("Callback must be set.");
-		}
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
+		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+		if (mask.indexOf('%') != -1) {
+			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+		}
+		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateInt(1, noDataInterval, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+		if (callback == null) {
+			throw new InvalidParameterException("Callback must be set.");
+		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.subscribed = true;
 		this.noDataInterval = noDataInterval;
 		this.msgId.reset();
@@ -193,11 +180,12 @@ public class PublishService extends Service implements IPublishService {
 
 	/** {@inheritDoc} */
 	@Override
-	public void unsubscribe(int timeoutInSeconds) throws Exception {
+	public synchronized void unsubscribe(int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
 		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
 			this.subscribed = false;
 			this.msgId.incrementMsgSequenceNr();
