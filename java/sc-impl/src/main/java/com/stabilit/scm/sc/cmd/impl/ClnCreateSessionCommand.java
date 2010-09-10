@@ -79,8 +79,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = null;
 		try {
-			server = service.allocateServerAndCreateSession(reqMessage, callback, session, (Integer) request
-					.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+			server = service.allocateServerAndCreateSession(reqMessage, callback, session, ((Integer) request
+					.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {

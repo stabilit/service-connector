@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -56,7 +57,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 	/** The Constant subscriptionLogger. */
 	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-	
+
 	/**
 	 * Instantiates a ClnSubscribeCommand.
 	 */
@@ -87,8 +88,8 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, (Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, ((Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -182,7 +183,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	private class PublishTimerRun implements IPublishTimerRun {
 
 		/** The timeout. */
-		private int timeoutSeconds;
+		private double timeoutMillis;
 		/** The subscription queue. */
 		private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 		/** The request. */
@@ -195,20 +196,20 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		 * 
 		 * @param subscriptionPlace
 		 *            the subscription place
-		 * @param timeoutSeconds
+		 * @param timeoutMillis
 		 *            the timeout
 		 */
-		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, int timeoutSeconds) {
+		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, double timeoutMillis) {
 			this.request = null;
 			this.response = null;
-			this.timeoutSeconds = timeoutSeconds;
+			this.timeoutMillis = timeoutMillis;
 			this.subscriptionQueue = subscriptionPlace;
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeoutSeconds() {
-			return this.timeoutSeconds;
+		public double getTimeoutMillis() {
+			return this.timeoutMillis;
 		}
 
 		/** {@inheritDoc} */

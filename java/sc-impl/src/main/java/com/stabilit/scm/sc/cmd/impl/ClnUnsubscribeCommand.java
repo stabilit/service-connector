@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -45,10 +46,10 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
-	
+
 	/** The Constant subscriptionLogger. */
 	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-	
+
 	public ClnUnsubscribeCommand() {
 		this.commandValidator = new ClnUnsubscribeCommandValidator();
 	}
@@ -80,10 +81,11 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.unsubscribe(reqMessage, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		server.unsubscribe(reqMessage, callback,
+				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway
-		
+
 		server.removeSession(session);
 		// forward reply to client
 		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);

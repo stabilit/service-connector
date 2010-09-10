@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.log.ISubscriptionLogger;
 import com.stabilit.scm.common.log.impl.SubscriptionLogger;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -51,7 +52,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 
 	/** The Constant subscriptionLogger. */
 	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-	
+
 	/**
 	 * Instantiates a new ClnChangeSubscriptionCommand.
 	 */
@@ -71,13 +72,13 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 		String serviceName = reqMessage.getServiceName();
-		
+
 		Session session = this.getSubscriptionSessionById(sessionId);
 		Server server = session.getServer();
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.changeSubscription(reqMessage, callback, (Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		server.changeSubscription(reqMessage, callback, ((Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {

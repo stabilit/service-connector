@@ -24,6 +24,7 @@ import com.stabilit.scm.common.cmd.IAsyncCommand;
 import com.stabilit.scm.common.cmd.ICommandValidator;
 import com.stabilit.scm.common.cmd.IPassThroughPartMsg;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.IResponderCallback;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.HasFaultResponseException;
@@ -72,7 +73,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 
 		Server server = session.getServer();
 		// try sending to backend server
-		server.sendData(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		server.sendData(message, callback,
+				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		return;
 	}
 

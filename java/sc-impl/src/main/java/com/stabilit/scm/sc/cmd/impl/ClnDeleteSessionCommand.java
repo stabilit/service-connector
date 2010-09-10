@@ -71,7 +71,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.deleteSession(message, callback, (Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+		server.deleteSession(message, callback,
+				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
