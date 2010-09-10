@@ -24,8 +24,9 @@ public class NewServicesClientToSCTest {
 	private static ISCClient client;
 	private static Process p;
 
-	private String serviceName = "simulation";
-	private String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceNameNotEnabled = "notEnabledService";
 	
 	private String host = "localhost";
 
@@ -85,6 +86,11 @@ public class NewServicesClientToSCTest {
 	@Test
 	public void newSessionService_validServiceName_returnsISessionService() throws Exception {
 		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+	}
+	
+	@Test
+	public void newSessionService_validNotEnabledServiceName_returnsISessionService() throws Exception {
+		assertEquals(true, client.newSessionService(serviceNameNotEnabled) instanceof ISessionService);
 	}
 	
 	@Test

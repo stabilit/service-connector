@@ -544,7 +544,6 @@ public class ExecuteClientToSCTest {
 		sessionService.deleteSession();
 	}
 	
-	//TODO write this sort of tests
 	@Test
 	public void execute_timeout1_passes() throws Exception {
 		ISCMessage message = new SCMessage("Ahoj");
@@ -686,6 +685,8 @@ public class ExecuteClientToSCTest {
 		sessionService.deleteSession();
 	}
 	
+	//TODO adjust these tests
+
 	@Test
 	public void execute_timeoutExpires_throwsException() throws Exception {
 
@@ -760,4 +761,6 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 	}
+	
+	//TODO up to here.
 }

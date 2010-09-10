@@ -71,16 +71,30 @@ public class EnableSessionDisableSessionClientToSCTest {
 	}
 
 	@Test
-	public void createSession_emptySessionServiceName_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService("");
-		try {
-			sessionService.createSession("sessionInfo", 300, 60);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null
+	public void createSession_onEnabledSessionService_sessionIsCreated() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
+		assertEquals(true, client.isServiceEnabled(serviceName));
+	}
+	
+	@Test
+	public void createSession_onDisabledSessionService_throwsException() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceNameNotEnabled));
+		
+		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+		assertEquals(true, client.isServiceEnabled(serviceName));
 	}
 }

@@ -176,7 +176,6 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 				server.deregisterService(serviceName);
 				assertEquals(false, server.isRegistered(serviceName));
 				server.destroyServer();
-				server = null;
 			}
 		}
 	}
