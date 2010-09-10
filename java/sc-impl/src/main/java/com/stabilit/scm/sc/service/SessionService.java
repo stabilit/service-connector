@@ -73,6 +73,7 @@ public class SessionService extends Service {
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.createSession(msgToForward, callback, timeout);
+				// store session - successful creation is not done here remove in command if not successful!!
 				server.addSession(session);
 				return server;
 			}

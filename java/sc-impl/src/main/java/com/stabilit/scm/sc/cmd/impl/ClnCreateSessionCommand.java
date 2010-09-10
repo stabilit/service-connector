@@ -77,31 +77,45 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 
 		// tries allocating a server for this session
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		Server server = service.allocateServerAndCreateSession(reqMessage, callback, session, (Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
-		SCMPMessage reply = callback.getMessageSync();
+		Server server = null;
+		try {
+			server = service.allocateServerAndCreateSession(reqMessage, callback, session, (Integer) request
+					.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT));
+			SCMPMessage reply = callback.getMessageSync();
 
-		if (reply.isFault() == false) {
-			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSessionFlag)) {
-				// session has not been rejected, add server to session
-				session.setServer(server);
-				session.setEchoIntervalSeconds((int) ((Integer) request
-						.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_TIMEOUT_MULTIPLIER));
-				// finally add session to the registry
-				SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-				sessionRegistry.addSession(session.getId(), session);
+			if (reply.isFault() == false) {
+				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+				if (Boolean.FALSE.equals(rejectSessionFlag)) {
+					// session has not been rejected, add server to session
+					session.setServer(server);
+					session.setEchoIntervalSeconds((int) ((Integer) request
+							.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_TIMEOUT_MULTIPLIER));
+					// finally add session to the registry
+					SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+					sessionRegistry.addSession(session.getId(), session);
+				} else {
+					// session has been rejected - remove session id from header
+					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+					// creation failed remove from server
+					server.removeSession(session);
+				}
 			} else {
 				// session has been rejected - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+				// creation failed remove from server
+				server.removeSession(session);
 			}
-		} else {
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			// forward server reply to client
+			reply.setIsReply(true);
+			reply.setMessageType(getKey());
+			response.setSCMP(reply);
+		} catch (Exception e) {
+			if (server != null) {
+				// creation failed remove from server
+				server.removeSession(session);
+			}
+			throw e;
 		}
-		// forward server reply to client
-		reply.setIsReply(true);
-		reply.setMessageType(getKey());
-		response.setSCMP(reply);
 	}
 
 	/**
