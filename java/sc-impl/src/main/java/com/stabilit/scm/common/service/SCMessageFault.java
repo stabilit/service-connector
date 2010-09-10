@@ -18,9 +18,13 @@ package com.stabilit.scm.common.service;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.scm.common.util.ValidatorUtility;
+
 /**
- * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector
- * in case of an error situation.
+ * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector in
+ * case of an error situation.
  * 
  * @author JTraber
  */
@@ -28,9 +32,9 @@ public class SCMessageFault extends SCMessage {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessageFault.class);
-	
+
 	/** The application error code. */
-	private String appErrorCode;
+	private int appErrorCode;
 	/** The application error text. */
 	private String appErrorText;
 
@@ -45,7 +49,7 @@ public class SCMessageFault extends SCMessage {
 	 * 
 	 * @return the application error code
 	 */
-	public String getAppErrorCode() {
+	public int getAppErrorCode() {
 		return appErrorCode;
 	}
 
@@ -54,8 +58,10 @@ public class SCMessageFault extends SCMessage {
 	 * 
 	 * @param appErrorCode
 	 *            the new application error code
+	 * @throws SCMPValidatorException
 	 */
-	public void setAppErrorCode(String appErrorCode) {
+	public void setAppErrorCode(int appErrorCode) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
 		this.appErrorCode = appErrorCode;
 	}
 
@@ -73,8 +79,10 @@ public class SCMessageFault extends SCMessage {
 	 * 
 	 * @param appErrorText
 	 *            the new application error text
+	 * @throws SCMPValidatorException
 	 */
-	public void setAppErrorText(String appErrorText) {
+	public void setAppErrorText(String appErrorText) throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(1, appErrorText, 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
 		this.appErrorText = appErrorText;
 	}
 }
