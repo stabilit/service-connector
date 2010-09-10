@@ -23,8 +23,8 @@ public class CreateSessionHttpClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CreateSessionHttpClientToSCTest.class);
 
-	private static Process p;
-	private static Process r;
+	private static Process sc;
+	private static Process srv;
 
 	private ISCClient client;
 
@@ -33,6 +33,7 @@ public class CreateSessionHttpClientToSCTest {
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceNameNotEnabled = "notEnabledService";
 
 	private static final int dataLength = 61440;	// 60 kB
 	private Exception ex;
@@ -46,8 +47,8 @@ public class CreateSessionHttpClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(log4jSCProperties, scProperties);
-			r = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
+			sc = ctrl.startSC(log4jSCProperties, scProperties);
+			srv = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -69,8 +70,8 @@ public class CreateSessionHttpClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSCProperties);
-		ctrl.stopProcess(r, log4jSrvProperties);
+		ctrl.stopProcess(sc, log4jSCProperties);
+		ctrl.stopProcess(srv, log4jSrvProperties);
 	}
 
 	@Test
@@ -1342,13 +1343,58 @@ public class CreateSessionHttpClientToSCTest {
 	}
 	
 	@Test
-	public void createSession_rejectTheSession_s() throws Exception {
+	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		
-		sessionService.createSession("session666Info", 300, 10, "reject");
-
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		assertEquals("1000/0", client.workload(serviceName));
+		
+		// message "reject" translates on the server to reject the session
+		sessionService.createSession("sessionInfo", 300, 10, "reject");
+		
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+		}
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+			assertEquals(true, sessionService.getSessionId() == null
+					|| sessionService.getSessionId().isEmpty());
+		}
+
+		//send execute
+		try {
+			sessionService.execute(new SCMessage());
+		} catch (Exception e) {
+			ex = e;
+		}
+		
+		assertEquals(true, ex instanceof SCServiceException);
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_forNotEnabledService_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
+		//TODO create session
 	}
 }

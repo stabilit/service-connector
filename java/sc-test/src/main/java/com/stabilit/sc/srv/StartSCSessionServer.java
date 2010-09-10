@@ -159,6 +159,7 @@ public class StartSCSessionServer {
 					} else if (dataString.startsWith("timeout")) {
 						int millis = Integer.parseInt(dataString.split(" ")[1]);
 						try {
+							logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
 							Thread.sleep(millis);
 						} catch (InterruptedException e) {
 							logger.error("sleep in execute", e);

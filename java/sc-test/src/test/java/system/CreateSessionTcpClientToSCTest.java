@@ -16,6 +16,7 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class CreateSessionTcpClientToSCTest {
@@ -1304,6 +1305,55 @@ public class CreateSessionTcpClientToSCTest {
 			}
 		}
 		assertEquals(0, counter);
-		assertEquals("1000/0", client.workload(serviceName));
+	}
+	
+	@Test
+	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		
+		// message "reject" translates on the server to reject the session
+		sessionService.createSession("sessionInfo", 300, 10, "reject");
+		
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+		}
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+			assertEquals(true, sessionService.getSessionId() == null
+					|| sessionService.getSessionId().isEmpty());
+		}
+
+		//send execute
+		try {
+			sessionService.execute(new SCMessage());
+		} catch (Exception e) {
+			ex = e;
+		}
+		
+		assertEquals(true, ex instanceof SCServiceException);
+		sessionService.deleteSession();
 	}
 }
