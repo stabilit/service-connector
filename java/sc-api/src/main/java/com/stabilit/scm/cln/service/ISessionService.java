@@ -150,12 +150,12 @@ public interface ISessionService extends IService {
 	/**
 	 * Delete session.
 	 * 
-	 * @param timeoutIntSeconds
+	 * @param timeoutInSeconds
 	 *            the timeout in seconds
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void deleteSession(int timeoutIntSeconds) throws Exception;
+	public abstract void deleteSession(int timeoutInSeconds) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override
