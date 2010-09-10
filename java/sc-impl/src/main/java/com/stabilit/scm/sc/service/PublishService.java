@@ -32,7 +32,7 @@ public class PublishService extends Service {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishService.class);
-	
+
 	/** The subscription queue. */
 	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 
@@ -67,12 +67,14 @@ public class PublishService extends Service {
 	 *            the callback
 	 * @param session
 	 *            the session
+	 * @param timeoutMillis
+	 *            the timeout milliseconds
 	 * @return the server
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session, int timeoutInSeconds) throws Exception {
+			Session session, double timeoutMillis) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -81,7 +83,7 @@ public class PublishService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.subscribe(msgToForward, callback, timeoutInSeconds);
+				server.subscribe(msgToForward, callback, timeoutMillis);
 				server.addSession(session);
 				return server;
 			}

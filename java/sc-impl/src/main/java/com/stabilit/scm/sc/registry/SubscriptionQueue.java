@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.scmp.IRequest;
 import com.stabilit.scm.common.scmp.IResponse;
 import com.stabilit.scm.common.service.IFilterMask;
@@ -76,7 +75,7 @@ public class SubscriptionQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
-		logger.debug("insert - queue size:"+ this.dataQueue.getSize());
+		logger.debug("insert - queue size:" + this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -116,7 +115,7 @@ public class SubscriptionQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		logger.debug("getMessage - queue size:"+ this.dataQueue.getSize());
+		logger.debug("getMessage - queue size:" + this.dataQueue.getSize());
 		return message;
 	}
 
@@ -160,7 +159,7 @@ public class SubscriptionQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
-			logger.debug("remove - queue size:"+ this.dataQueue.getSize());
+			logger.debug("remove - queue size:" + this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}
@@ -366,22 +365,21 @@ public class SubscriptionQueue<E> {
 		 * Schedule. Activate timeout for no data message.
 		 */
 		public void schedule() {
-			this.schedule(this.timerRun.getTimeoutSeconds());
+			this.schedule(this.timerRun.getTimeoutMillis());
 		}
 
 		/**
 		 * Schedule. Activate subscription timeout with a given time.
 		 * 
-		 * @param timeout
+		 * @param timeoutMillis
 		 *            the timeout
 		 */
-		public void schedule(int timeout) {
+		public void schedule(double timeoutMillis) {
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
 			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
 			// schedules subscriptionTimeouter on subscription queue timer
-			SubscriptionQueue.this.timer
-					.schedule(this.subscriptionTimeouter, timeout * Constants.SEC_TO_MILISEC_FACTOR);
+			SubscriptionQueue.this.timer.schedule(this.subscriptionTimeouter, (long) timeoutMillis);
 		}
 
 		/**

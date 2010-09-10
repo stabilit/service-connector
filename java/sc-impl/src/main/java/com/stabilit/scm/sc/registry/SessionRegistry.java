@@ -223,7 +223,7 @@ public class SessionRegistry extends Registry<String, Session> {
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeoutSeconds() {
+		public double getTimeoutMillis() {
 			return this.timeoutSeconds;
 		}
 

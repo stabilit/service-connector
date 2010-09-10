@@ -21,7 +21,6 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.IConnection;
 import com.stabilit.scm.common.net.req.IConnectionContext;
 import com.stabilit.scm.common.net.req.IRequester;
@@ -55,7 +54,7 @@ public class SCRequester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, int timeoutInSeconds, ISCMPCallback callback) throws Exception {
+	public void send(SCMPMessage message, double timeoutInMillis, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
@@ -64,8 +63,8 @@ public class SCRequester implements IRequester {
 		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 		SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
-		reqCallback.setTimeoutSeconds(timeoutInSeconds);
-		timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		reqCallback.setTimeoutMillis(timeoutInMillis);
+		timer.schedule(task, (long) timeoutInMillis);
 		connection.send(message, requesterCallback);
 	}
 
@@ -93,14 +92,14 @@ public class SCRequester implements IRequester {
 		private IConnectionContext connectionCtx;
 		/** The operation timeout task. */
 		private TimerTask operationTimeoutTask;
-		/** The timeout in seconds. */
-		private int timeoutInSeconds;
+		/** The timeout in milliseconds. */
+		private double timeoutInMillis;
 
 		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
 			this.operationTimeoutTask = null;
-			this.timeoutInSeconds = 0;
+			this.timeoutInMillis = 0;
 		}
 
 		/** {@inheritDoc} */
@@ -164,18 +163,18 @@ public class SCRequester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeoutSeconds() {
-			return this.timeoutInSeconds;
+		public double getTimeoutMillis() {
+			return this.timeoutInMillis;
 		}
 
 		/**
-		 * Sets the timeout seconds.
+		 * Sets the timeout milliseconds.
 		 * 
-		 * @param timeoutInSeconds
+		 * @param timeoutInMillis
 		 *            the new timeout seconds
 		 */
-		public void setTimeoutSeconds(int timeoutInSeconds) {
-			this.timeoutInSeconds = timeoutInSeconds;
+		public void setTimeoutMillis(double timeoutInMillis) {
+			this.timeoutInMillis = timeoutInMillis;
 		}
 
 		/**
