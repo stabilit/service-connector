@@ -29,9 +29,12 @@ public class Statistics {
 	/** The instance. */
 	private static Statistics instance = new Statistics();
 	
-	private double nrMessages = 0;
-	private double nrBytes = 0;
+	private double totalMessages = 0;
+	private double totalBytes = 0;
 	private Timestamp creationDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+	private double cachedMessages = 0;
+	private double cachedBytes = 0;
+	private int cachedFiles = 0;
 	
 	/**
 	 * Instantiates a new statistic logger. Private for singelton use.
@@ -43,27 +46,57 @@ public class Statistics {
 		return instance;
 	}
 	
-	public double getNrMessages() {
-		return nrMessages;
+	public synchronized void incrementTotalMessages() {
+		totalMessages++;
 	}
 
-	public synchronized void incrementNrMessages() {
-		nrMessages++;
+	public synchronized void incrementTotalBytes(double nrBytes) {
+		totalBytes = totalBytes + nrBytes;
+	}
+
+	public synchronized void incrementCachedMessages() {
+		cachedMessages++;
+	}
+
+	public synchronized void incrementCachedBytes(double nrBytes) {
+		cachedBytes = cachedBytes + nrBytes;
+	}
+
+	public synchronized void decrementCachedBytes(double nrBytes) {
+		cachedBytes = cachedBytes - nrBytes;
+	}
+
+	public synchronized void incrementCachedFiles(int nrFiles) {
+		cachedFiles = cachedFiles + nrFiles;
 	}
 	
-	public double getNrBytes() {
-		return nrBytes;
+	public synchronized void decrementCachedFiles(int nrFiles) {
+		cachedFiles = cachedFiles + nrFiles;
 	}
 
-	public synchronized void addNrBytes(double bytes) {
-		nrBytes = nrBytes + bytes;
+	public double getTotalMessages() {
+		return totalMessages;
 	}
 
-	
+	public double getTotalBytes() {
+		return totalBytes;
+	}
+
 	public Timestamp getCreationDateTime() {
 		return creationDateTime;
 	}
 
+	public double getCachedMessages() {
+		return cachedMessages;
+	}
+
+	public double getCachedBytes() {
+		return cachedBytes;
+	}
+
+	public int getCachedFiles() {
+		return cachedFiles;
+	}
 	
 	
 	

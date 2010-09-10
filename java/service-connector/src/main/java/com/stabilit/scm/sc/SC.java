@@ -99,6 +99,9 @@ public final class SC {
 		
 		// load services
 		ServiceLoader.load(fileName);
+		
+		// clean up and initialize cache
+		//Cache cache = Cache.initialize();
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
