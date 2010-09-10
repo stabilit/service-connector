@@ -150,7 +150,7 @@ public class SessionService extends Service implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void deleteSession(int timeoutIntSeconds) throws Exception {
+	public synchronized void deleteSession(int timeoutInSeconds) throws Exception {
 		if (this.callback == null) {
 			// delete session not possible - no session on this service just ignore
 			return;
@@ -160,6 +160,7 @@ public class SessionService extends Service implements ISessionService {
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
@@ -169,7 +170,7 @@ public class SessionService extends Service implements ISessionService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				deleteSessionCall.invoke(this.callback, timeoutIntSeconds);
+				deleteSessionCall.invoke(this.callback, timeoutInSeconds);
 			} catch (Exception e) {
 				if (this.sessionDead) {
 					// ignore errors in state of dead session
@@ -212,6 +213,7 @@ public class SessionService extends Service implements ISessionService {
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
@@ -274,6 +276,7 @@ public class SessionService extends Service implements ISessionService {
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
+		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
