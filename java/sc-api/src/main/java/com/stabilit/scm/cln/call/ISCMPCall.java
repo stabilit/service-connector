@@ -78,13 +78,13 @@ public interface ISCMPCall {
 	 * 
 	 * @param callback
 	 *            the callback
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
+	 * @param timeoutMillis
+	 *            the timeout in milliseconds
 	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception;
+	public void invoke(ISCMPCallback callback, double timeoutMillis) throws Exception;
 
 	/**
 	 * Sets the body.
@@ -129,11 +129,11 @@ public interface ISCMPCall {
 	 * 
 	 * @param callback
 	 *            the callback
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
+	 * @param timeoutMillis
+	 *            the timeout in milliseconds
 	 * @return the result
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void closeGroup(ISCMPCallback callback, int timeoutInSeconds) throws Exception;
+	public void closeGroup(ISCMPCallback callback, double timeoutMillis) throws Exception;
 }

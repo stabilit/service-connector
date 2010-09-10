@@ -34,5 +34,5 @@ public interface ITimerRun {
 	 * 
 	 * @return the timeout
 	 */
-	public abstract int getTimeoutSeconds();
+	public abstract double getTimeoutMillis();
 }

@@ -18,6 +18,7 @@ package com.stabilit.scm.cln.call;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.IRequester;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
@@ -35,7 +36,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPCallAdapter.class);
-	
+
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
 	/** The session id to use for the call. */
@@ -127,16 +128,17 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public void closeGroup(ISCMPCallback callback, int timeoutInSeconds) {
+	public void closeGroup(ISCMPCallback callback, double timeoutMillis) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
+	public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OP_TIMEOUT, timeoutInSeconds);
-		this.requester.send(this.requestMessage, timeoutInSeconds, callback);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OP_TIMEOUT,
+				(int) (timeoutInMillis / Constants.SEC_TO_MILISEC_FACTOR));
+		this.requester.send(this.requestMessage, timeoutInMillis, callback);
 		return;
 	}
 
@@ -190,7 +192,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void invoke(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
+		public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				logger.warn("tried to invoke groupCall but state of group is closed");
 			}
@@ -199,7 +201,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 			if (callSCMP.isLargeMessage()) {
 				// parent call is large no need to change anything
-				this.parentCall.invoke(callback, timeoutInSeconds);
+				this.parentCall.invoke(callback, timeoutInMillis);
 				return;
 			}
 			if (callSCMP.isPart() == false) {
@@ -210,7 +212,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}
-			this.parentCall.invoke(callback, timeoutInSeconds);
+			this.parentCall.invoke(callback, timeoutInMillis);
 			return;
 		}
 
@@ -222,7 +224,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void closeGroup(ISCMPCallback callback, int timeoutInSeconds) throws Exception {
+		public void closeGroup(ISCMPCallback callback, double timeoutMillis) throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
 			// send empty closing REQ
 			SCMPMessage message = new SCMPMessage();
@@ -230,7 +232,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 			message.setBody(null);
 			message.setInternalStatus(SCMPInternalStatus.GROUP);
 			SCMPCallAdapter.this.requestMessage = message;
-			this.parentCall.invoke(callback, timeoutInSeconds);
+			this.parentCall.invoke(callback, timeoutMillis);
 			return;
 		}
 
