@@ -31,7 +31,7 @@ import com.stabilit.scm.common.scmp.SCMPError;
 public enum SCVersion {
 
 	/** The current version. */
-	CURRENT(1, 0, 0),
+	CURRENT(1, 0, 2),
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 
