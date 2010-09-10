@@ -384,4 +384,15 @@ public class ExecuteClientToSCTest {
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(false, response.isFault());
 	}
+	//TODO upravit server aby pouzil timeout
+	@Test
+	public void execute_timeoutExpires_throwsException() throws Exception {
+		ISCMessage message = new SCMessage("Ahoj");
+		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+
+		ISessionService sessionService0 = client.newSessionService(serviceName);
+		sessionService0.createSession("sessionInfo", 300, 60);
+
+		ISCMessage response = sessionService0.execute(message);
+	}
 }

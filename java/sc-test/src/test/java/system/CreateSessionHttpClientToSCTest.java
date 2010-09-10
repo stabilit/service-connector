@@ -33,6 +33,7 @@ public class CreateSessionHttpClientToSCTest {
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
 
+	private static final int dataLength = 61440;	// 60 kB
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
@@ -55,11 +56,14 @@ public class CreateSessionHttpClientToSCTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 		client.attach(host, port8080);
+		assertEquals("1000/0", client.workload(serviceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		assertEquals("1000/0", client.workload(serviceName));
 		client.detach();
+		client = null;
 	}
 
 	@AfterClass
@@ -216,6 +220,7 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
@@ -290,7 +295,6 @@ public class CreateSessionHttpClientToSCTest {
 				|| sessionService.getSessionId().isEmpty());
 	}
 	
-	//TODO this has to pass!
 	@Test
 	public void createSession_echoInterval1_sessionIdCreated() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
@@ -587,6 +591,7 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
@@ -775,6 +780,7 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
@@ -963,6 +969,7 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
@@ -1012,10 +1019,10 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test
-	public void createSession_emptySessionServiceNameData1MBByteArray_throwsException() throws Exception {
+	public void createSession_emptySessionServiceNameData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService("");
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+			sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1026,10 +1033,10 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test
-	public void createSession_whiteSpaceSessionServiceNameData1MBByteArray_throwsException() throws Exception {
+	public void createSession_whiteSpaceSessionServiceNameData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(" ");
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+			sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1040,12 +1047,12 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test
-	public void createSession_arbitrarySessionServiceNameNotInSCPropsData1MBByteArray_throwsException()
+	public void createSession_arbitrarySessionServiceNameNotInSCPropsData60kBByteArray_throwsException()
 			throws Exception {
 		ISessionService sessionService = client
 				.newSessionService("The quick brown fox jumps over a lazy dog.");
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+			sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1056,63 +1063,63 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void createSession_nullSessionInfoData1MBByteArray_throwsException() throws Exception {
+	public void createSession_nullSessionInfoData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(null, 300, 10, new byte[1048576]);
+		sessionService.createSession(null, 300, 10, new byte[dataLength]);
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void createSession_emptySessionInfoData1MBByteArray_throwsException() throws Exception {
+	public void createSession_emptySessionInfoData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("", 300, 10, new byte[1048576]);
+		sessionService.createSession("", 300, 10, new byte[dataLength]);
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_whiteSpaceSessionInfoData1MBByteArray_sessionIdIsNotEmpty() throws Exception {
+	public void createSession_whiteSpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(" ", 300, 10, new byte[1048576]);
+		sessionService.createSession(" ", 300, 10, new byte[dataLength]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_arbitrarySpaceSessionInfoData1MBByteArray_sessionIdIsNotEmpty() throws Exception {
+	public void createSession_arbitrarySpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 10, new byte[1048576]);
+		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 10, new byte[dataLength]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_256LongSessionInfoData1MBByteArray_sessionIdIsNotEmpty() throws Exception {
+	public void createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
 		}
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(sb.toString(), 300, 10, new byte[1048576]);
+		sessionService.createSession(sb.toString(), 300, 10, new byte[dataLength]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_257LongSessionInfoData1MBByteArray_throwsException() throws Exception {
+	public void createSession_257LongSessionInfoData60kBByteArray_throwsException() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
 		}
 		ISessionService sessionService = client.newSessionService(serviceName);
 		try {
-			sessionService.createSession(sb.toString(), 300, 10, new byte[1048576]);
+			sessionService.createSession(sb.toString(), 300, 10, new byte[dataLength]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1122,39 +1129,40 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test
-	public void deleteSession_afterValidCreateSessionData1MBByteArray_noSessionId() throws Exception {
+	public void deleteSession_afterValidCreateSessionData60kBByteArray_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+		sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
-	public void deleteSession_whiteSpaceSessionInfoData1MBByteArray_noSessionId() throws Exception {
+	public void deleteSession_whiteSpaceSessionInfoData60kBByteArray_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(" ", 300, 10, new byte[1048576]);
+		sessionService.createSession(" ", 300, 10, new byte[dataLength]);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
-	public void createSession_twiceData1MBByteArray_throwsException() throws Exception {
+	public void createSession_twiceData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+		sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+			sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_twiceWithDifferentSessionServicesData1MBByteArray_differentSessionIds() throws Exception {
+	public void createSession_twiceWithDifferentSessionServicesData60kBByteArray_differentSessionIds() throws Exception {
 		ISessionService sessionService0 = client.newSessionService(serviceName);
 		ISessionService sessionService1 = client.newSessionService(serviceNameAlt);
 		
@@ -1163,14 +1171,14 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 		
-		sessionService0.createSession("sessionInfo", 300, 10, new byte[1048576]);
+		sessionService0.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		
 		assertEquals(false, sessionService0.getSessionId() == null
 				|| sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 		
-		sessionService1.createSession("sessionInfo", 300, 10, new byte[1048576]);
+		sessionService1.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 		
 		assertEquals(false, sessionService0.getSessionId() == null
 				|| sessionService0.getSessionId().isEmpty());
@@ -1184,13 +1192,12 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	@Test
-	public void createSession_1000timesData1MBByteArray_passes() throws Exception {
+	public void createSession_1000timesData60kBByteArray_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		for (int i = 0; i < 100; i++) {
 			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
-				//TODO large messages not allowed in createSession
-				sessionService.createSession("sessionInfo", 300, 10, new byte[1048576]);
+				sessionService.createSession("sessionInfo", 300, 10, new byte[dataLength]);
 				assertEquals(false, sessionService.getSessionId() == null
 						|| sessionService.getSessionId().isEmpty());
 				sessionService.deleteSession();
@@ -1261,6 +1268,48 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(sessionsCount - 1, ctr);
 		assertEquals(0, counter);
+	}
+	
+	@Test
+	public void createSession_overBothConnectionTypes_passes() throws Exception {
+		ISCClient client2 = new SCClient();
+		((SCClient) client2).setConnectionType("netty.tcp");
+		client2.attach(host, port9000);
+		
+		ISessionService session1 = client.newSessionService(serviceName);
+		ISessionService session2 = client2.newSessionService(serviceName);
+		
+		session1.createSession("sessionInfo", 60, 10);
+		session2.createSession("sessionInfo", 60, 10);
+		
+		assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
+		
+		session1.deleteSession();
+		session2.deleteSession();
+		
+		assertEquals(session1.getSessionId(), session2.getSessionId());
+		client2.detach();
+	}
+	
+	@Test
+	public void createSession_overBothConnectionTypesDifferentServices_passes() throws Exception {
+		ISCClient client2 = new SCClient();
+		((SCClient) client2).setConnectionType("netty.tcp");
+		client2.attach(host, port9000);
+		
+		ISessionService session1 = client.newSessionService(serviceName);
+		ISessionService session2 = client2.newSessionService(serviceNameAlt);
+		
+		session1.createSession("sessionInfo", 60, 10);
+		session2.createSession("sessionInfo", 60, 10);
+		
+		assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
+		
+		session1.deleteSession();
+		session2.deleteSession();
+		
+		assertEquals(session1.getSessionId(), session2.getSessionId());
+		client2.detach();
 	}
 	
 	@Test

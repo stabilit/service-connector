@@ -19,7 +19,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 
 public class PrematureDestroyOfServerClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ExecuteClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfServerClientToSCTest.class);
 
 	private static Process sc;
 	private Process srv;
