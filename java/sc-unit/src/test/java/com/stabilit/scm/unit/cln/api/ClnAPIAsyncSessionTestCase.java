@@ -93,6 +93,5 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@After
 	public void tearDown() {
-		// TODO TRN System.out.println(SetupTestCases.statisticsListener);
 	}
 }

@@ -39,6 +39,7 @@ import com.stabilit.scm.common.log.impl.LoggingManager;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.util.ConsoleUtil;
+import com.stabilit.scm.common.util.Statistics;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ServerRegistry;
 import com.stabilit.scm.sc.registry.ServiceRegistry;
@@ -54,8 +55,6 @@ public final class SC {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SC.class);
-
-	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 
 	/**
 	 * Instantiates a new service connector.
@@ -92,8 +91,12 @@ public final class SC {
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load(fileName);
 
+		// initialize JMX
 		SC.initializeJMX();
 
+		// initialize statistics
+		Statistics statistics =  Statistics.getInstance();
+		
 		// load services
 		ServiceLoader.load(fileName);
 
@@ -105,12 +108,12 @@ public final class SC {
 		List<ICommunicatorConfig> respConfigList = config.getResponderConfigList();
 
 		for (ICommunicatorConfig respConfig : respConfigList) {
-			IResponder resp = new Responder(respConfig);
+			IResponder responder = new Responder(respConfig);
 			try {
-				resp.create();
+				responder.create();
 				logger.info("Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
 						+ respConfig.getPort());
-				resp.startListenAsync();
+				responder.startListenAsync();
 			} catch (Exception ex) {
 				logger.error("run", ex);
 				throw ex;

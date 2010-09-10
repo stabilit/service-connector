@@ -44,7 +44,6 @@ public class SetupTestCases {
 	protected final static Logger logger = Logger.getLogger(SetupTestCases.class);
 
 	private static SetupTestCases setupTestCases = null;
-	// TODO TRN statistics public static IStatisticsListener statisticsListener = new DefaultStatisticsListener();
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
 	private static ISCServer scSim1ConSrv;
