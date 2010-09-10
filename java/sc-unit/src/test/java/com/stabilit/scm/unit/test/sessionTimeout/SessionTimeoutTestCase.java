@@ -45,7 +45,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(1);
-		createSessionCall.invoke(this.attachCallback, 3);
+		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		SCTest.checkReply(responseMessage);
 		String sessionId = responseMessage.getSessionId();
@@ -55,13 +55,13 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 				sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("get Data (query)");
-		clnExecuteCall.invoke(this.attachCallback, 3);
+		clnExecuteCall.invoke(this.attachCallback, 1000);
 		SCMPMessage msg = this.attachCallback.getMessageSync();
 		SCTest.verifyError(msg, SCMPError.NOT_FOUND, " [no session found for " + sessionId + "]", SCMPMsgType.CLN_EXECUTE);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "simulation", sessionId);
-		deleteSessionCall.invoke(this.attachCallback, 3);
+		deleteSessionCall.invoke(this.attachCallback, 1000);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(1);
-		createSessionCall.invoke(this.attachCallback, 3);
+		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		SCTest.checkReply(responseMessage);
 		String sessionId = responseMessage.getSessionId();
@@ -79,7 +79,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		for (int i = 0; i < 5; i++) {
 			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
 					"simulation", sessionId);
-			clnEchoCall.invoke(this.attachCallback, 3);
+			clnEchoCall.invoke(this.attachCallback, 1000);
 			SCTest.checkReply(this.attachCallback.getMessageSync());
 			Thread.sleep(400);
 		}
@@ -88,11 +88,11 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 				sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("get Data (query)");
-		clnExecuteCall.invoke(this.attachCallback, 3);
+		clnExecuteCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "simulation", sessionId);
-		deleteSessionCall.invoke(this.attachCallback, 3);
+		deleteSessionCall.invoke(this.attachCallback, 1000);
 	}
 }

@@ -58,7 +58,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(sb.toString());
 		SynchronousCallback callback = new SrvExecuteTestCaseCallback();
-		clnExecuteCall.invoke(callback, 3);
+		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 
 		// create expected result
@@ -96,7 +96,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		String expectedBody = "message data test case";
 		clnExecuteCall.setRequestBody(sb.toString());
 		SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback();
-		clnExecuteCall.invoke(callback, 3);
+		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -121,7 +121,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		}
 		clnExecuteCall.setRequestBody(sb.toString());
 		SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback();
-		clnExecuteCall.invoke(callback, 3);
+		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 		
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));

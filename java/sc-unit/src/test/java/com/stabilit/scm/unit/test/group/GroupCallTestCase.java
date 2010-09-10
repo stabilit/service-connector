@@ -43,23 +43,23 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void groupCallTest() throws Exception {
-		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
-				this.sessionId);
+		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
+				"simulation", this.sessionId);
 		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("reflect: ");
 		groupCall.setRequestBody(sb.toString());
-		groupCall.invoke(this.sessionCallback, 3);
+		groupCall.invoke(this.sessionCallback, 1000);
 		this.sessionCallback.getMessageSync();
 
 		for (int i = 0; i < 10; i++) {
 			sb.append(i);
 			groupCall.setRequestBody(String.valueOf(i));
-			groupCall.invoke(this.sessionCallback, 3);
+			groupCall.invoke(this.sessionCallback, 1000);
 			this.sessionCallback.getMessageSync();
 		}
-		groupCall.closeGroup(this.sessionCallback, 3); // send REQ (no body content)
+		groupCall.closeGroup(this.sessionCallback, 1000); // send REQ (no body content)
 		SCMPMessage res = this.sessionCallback.getMessageSync();
 
 		Assert.assertEquals(sb.toString(), res.getBody());
@@ -70,8 +70,8 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
-		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
-				this.sessionId);
+		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
+				"simulation", this.sessionId);
 
 		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();
@@ -83,15 +83,15 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 
 		expected.append(sb.toString());
 		groupCall.setRequestBody(sb.toString());
-		groupCall.invoke(this.sessionCallback, 3);
+		groupCall.invoke(this.sessionCallback, 1000);
 		this.sessionCallback.getMessageSync();
 
 		expected.append("end");
 		groupCall.setRequestBody("end");
-		groupCall.invoke(this.sessionCallback, 3);
+		groupCall.invoke(this.sessionCallback, 1000);
 		this.sessionCallback.getMessageSync();
 
-		groupCall.closeGroup(this.sessionCallback, 3); // send REQ (no body content)
+		groupCall.closeGroup(this.sessionCallback, 1000); // send REQ (no body content)
 		SCMPMessage res = this.sessionCallback.getMessageSync();
 
 		Assert.assertEquals(expected.length() + "", res.getBodyLength() + "");

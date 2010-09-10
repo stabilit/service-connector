@@ -43,20 +43,20 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionIsEmpty() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInSeconds, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
 				return;
 			}
 		};
 
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
-		attachCall.invoke(callback, 3);
+		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " []", SCMPMsgType.ATTACH);
 	}
@@ -65,20 +65,20 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionIsIncompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "2.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInSeconds, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
 				return;
 			}
 		};
 
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
-		attachCall.invoke(callback, 3);
+		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [2.0-000]", SCMPMsgType.ATTACH);
 	}
@@ -87,20 +87,20 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersion1_1_000() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.1-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInSeconds, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
 				return;
 			}
 		};
 
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
-		attachCall.invoke(callback, 3);
+		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " [1.1-000]", SCMPMsgType.ATTACH);
 	}
@@ -109,20 +109,20 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersion0_9_000() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "0.9-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInSeconds, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
 				return;
 			}
 		};
 
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
-		attachCall.invoke(callback, 3);
+		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [0.9-000]", SCMPMsgType.ATTACH);
 	}
@@ -131,25 +131,25 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionCompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, int timeoutInSeconds) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInSeconds, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
 				return;
 			}
 		};
 
 		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
-		attachCall.invoke(callback, 3);
+		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		Assert.assertFalse(result.isFault());
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
-		detachCall.invoke(callback, 3);
+		detachCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
 		Assert.assertFalse(result.isFault());
 	}
