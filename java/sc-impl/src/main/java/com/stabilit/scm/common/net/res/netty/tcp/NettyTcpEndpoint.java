@@ -142,7 +142,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 				this.channel.close();
 			}
 		} catch (Exception ex) {
-			logger.error("stoppListening", ex);
+			logger.error("stopListening", ex);
 			return;
 		}
 	}
