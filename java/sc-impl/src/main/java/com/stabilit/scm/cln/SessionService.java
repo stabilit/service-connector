@@ -114,7 +114,7 @@ public class SessionService extends Service implements ISessionService {
 		if (data != null) {
 			// validate body not bigger than 60 Kb
 			int length = (new SCMPMessage(data)).getBodyLength();
-			if (length < 1 || length > 60) {
+			if (length < 1 || length > 61440) {
 				throw new SCMPValidatorException(SCMPError.HV_ERROR, "data too big - over 60Kb");
 			}
 		}
