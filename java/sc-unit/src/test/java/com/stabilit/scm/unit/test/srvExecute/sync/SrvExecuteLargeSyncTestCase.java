@@ -52,7 +52,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setRequestBody("appError");
 		clnExecuteCall.invoke(this.sessionCallback, 3);
 		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
-		Assert.assertEquals("appErrorCode", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		Assert.assertEquals("500", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		Assert.assertEquals("appErrorText", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 	}
 

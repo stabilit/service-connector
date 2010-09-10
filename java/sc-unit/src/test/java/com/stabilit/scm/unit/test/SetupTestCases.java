@@ -20,6 +20,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
 import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
@@ -245,8 +246,12 @@ public class SetupTestCases {
 				return message;
 			} else if (message.getData().toString().startsWith("appError")) {
 				SCMessageFault fault = new SCMessageFault();
-				fault.setAppErrorCode("appErrorCode");
-				fault.setAppErrorText("appErrorText");
+				try {
+					fault.setAppErrorCode(500);
+					fault.setAppErrorText("appErrorText");
+				} catch (SCMPValidatorException e) {
+					e.printStackTrace();
+				}
 				return fault;
 			} else if (message.getData().toString().startsWith("reflect")) {
 				return message;
