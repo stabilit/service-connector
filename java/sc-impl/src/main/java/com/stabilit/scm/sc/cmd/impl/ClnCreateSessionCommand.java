@@ -89,7 +89,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 					// session has not been rejected, add server to session
 					session.setServer(server);
 					session.setEchoIntervalSeconds((int) ((Integer) request
-							.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_TIMEOUT_MULTIPLIER));
+							.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_INTERVAL_MULTIPLIER));
 					// finally add session to the registry
 					SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 					sessionRegistry.addSession(session.getId(), session);

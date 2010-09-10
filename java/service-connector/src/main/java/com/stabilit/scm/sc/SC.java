@@ -123,7 +123,7 @@ public final class SC {
 			}
 		}
 
-		if (config.isTest()) {
+		if (config.writePID()) {
 			SC.writePIDFile();
 		}
 	}

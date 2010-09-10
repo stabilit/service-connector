@@ -48,12 +48,12 @@ public final class Constants {
 	/**
 	 * DEFAULT_ECHO_TIMEOUT_MULTIPLIER: Default value if no ECHO_TIMEOUT_MULTIPLIER will be set by configuration.
 	 */
-	public static final double DEFAULT_ECHO_TIMEOUT_MULTIPLIER = 1.2;
+	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/**
 	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
 	 * adapt echo timeout interval from client to get right interval for echo messages.
 	 */
-	public static double ECHO_TIMEOUT_MULTIPLIER = DEFAULT_ECHO_TIMEOUT_MULTIPLIER;
+	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/**
 	 * OPERATION_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the operation timeout. E.g. SC needs to adapt
 	 * operation timeout from client for operations to server.
@@ -85,11 +85,11 @@ public final class Constants {
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
 	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
 	/** The Constant ROOT_TEST_QUALIFIER. */
-	public static final String ROOT_TEST_QUALIFIER = "root.test";
+	public static final String ROOT_WRITEPID_QUALIFIER = "root.writePID";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
 	/** The Constant ROOT_ECHO_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_ECHO_TIMEOUT_QUALIFIER = "root.echoTimeoutMultiplier";
+	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The HOST. */
@@ -196,12 +196,12 @@ public final class Constants {
 	 * @param echoTimeoutMultiplier
 	 *            the new echo timeout multiplier
 	 */
-	public static void setEchoTimeoutMultiplier(double echoTimeoutMultiplier) {
-		if (Constants.ECHO_TIMEOUT_MULTIPLIER != Constants.DEFAULT_ECHO_TIMEOUT_MULTIPLIER) {
-			// setting ECHO_TIMEOUT_MULTIPLIER only allowed one time
-			logger.error("setEchoTimeoutMultiplier called two times - not allowed.");
+	public static void setEchoIntervalMultiplier(double echoInteralMultiplier) {
+		if (Constants.ECHO_INTERVAL_MULTIPLIER != Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER) {
+			// setting ECHO_INTERVAL_MULTIPLIER only allowed one time
+			logger.error("setEchoIntervalMultiplier called two times - not allowed.");
 			return;
 		}
-		Constants.ECHO_TIMEOUT_MULTIPLIER = echoTimeoutMultiplier;
+		Constants.ECHO_INTERVAL_MULTIPLIER = echoInteralMultiplier;
 	}
 }

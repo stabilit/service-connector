@@ -43,8 +43,8 @@ public abstract class CommunicatorConfigPool {
 	private Properties props;
 	/** The requester configuration list. */
 	private List<ICommunicatorConfig> comConfigList;
-	/** The test flag. */
-	private boolean testFlag;
+	/** The writePID flag. */
+	private boolean writePIDFlag;
 
 	/**
 	 * Instantiates a new communicator configuration pool.
@@ -52,7 +52,7 @@ public abstract class CommunicatorConfigPool {
 	public CommunicatorConfigPool() {
 		this.comConfigList = null;
 		this.props = null;
-		this.testFlag = false;
+		this.writePIDFlag = false;
 	}
 
 	/**
@@ -129,15 +129,15 @@ public abstract class CommunicatorConfigPool {
 			Constants.setLargeMessageLimit(largeMsgLimit);
 		}
 
-		String testFlag = props.getProperty(Constants.ROOT_TEST_QUALIFIER);
-		if (testFlag != null) {
-			this.testFlag = true;
+		String writePIDFlag = props.getProperty(Constants.ROOT_WRITEPID_QUALIFIER);
+		if (writePIDFlag != null) {
+			this.writePIDFlag = true;
 		}
 
-		String echoTimeoutString = props.getProperty(Constants.ROOT_ECHO_TIMEOUT_QUALIFIER);
+		String echoIntervalString = props.getProperty(Constants.ROOT_ECHO_INTERVAL_QUALIFIER);
 		if (operationTimeoutString != null) {
-			double echoTimeoutMultiplier = Double.parseDouble(echoTimeoutString);
-			Constants.setEchoTimeoutMultiplier(echoTimeoutMultiplier);
+			double echoIntervalMultiplier = Double.parseDouble(echoIntervalString);
+			Constants.setEchoIntervalMultiplier(echoIntervalMultiplier);
 		}
 	}
 
@@ -175,7 +175,7 @@ public abstract class CommunicatorConfigPool {
 	/**
 	 * Checks if is test.
 	 */
-	public boolean isTest() {
-		return this.testFlag;
+	public boolean writePID() {
+		return this.writePIDFlag;
 	}
 }
