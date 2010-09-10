@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.scm.sc.cmd.impl;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 import com.stabilit.scm.common.cmd.IAsyncCommand;
@@ -143,7 +145,11 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		private IResponse response;
 
 		/** The Constant ERROR_STRING. */
-		private static final String ERROR_STRING = "executing command timed out";
+		private static final String ERROR_STRING_TIMEOUT = "executing command timed out";
+		/** The Constant ERROR_STRING_CONNECTION. */
+		private static final String ERROR_STRING_CONNECTION = "broken connection";
+		/** The Constant ERROR_STRING_FAIL. */
+		private static final String ERROR_STRING_FAIL = "executing command failed";
 
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.
@@ -175,9 +181,11 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING);
+				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
+			} else if (ex instanceof IOException) {
+				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
 			} else {
-				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING);
+				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}
 			this.callback(fault);
 		}
