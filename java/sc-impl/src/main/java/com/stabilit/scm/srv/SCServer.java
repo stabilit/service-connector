@@ -147,7 +147,8 @@ public class SCServer implements ISCServer {
 		registerServiceCall.setImmediateConnect(this.immediateConnect);
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		try {
-			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILISEC_FACTOR);
 		} catch (Exception e) {
 			connectionPool.destroy();
 			throw new SCServiceException("register service failed", e);
@@ -178,7 +179,8 @@ public class SCServer implements ISCServer {
 			SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 					.newInstance(req, serviceName);
 			try {
-				deRegisterServiceCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+				deRegisterServiceCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+						* Constants.SEC_TO_MILISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("deregister service failed", e);
 			}

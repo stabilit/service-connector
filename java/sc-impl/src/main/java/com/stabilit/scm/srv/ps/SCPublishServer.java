@@ -38,7 +38,7 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void publish(String serviceName, String mask, Object data) throws Exception {
@@ -47,7 +47,8 @@ public class SCPublishServer extends SCServer implements ISCPublishServer {
 				.getRequester(), serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
-		publishCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		publishCall
+				.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
 		this.callback.getMessageSync();
 	}
 

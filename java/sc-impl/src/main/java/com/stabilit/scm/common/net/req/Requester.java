@@ -21,7 +21,6 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.net.req.netty.IdleTimeoutException;
 import com.stabilit.scm.common.scmp.ISCMPCallback;
 import com.stabilit.scm.common.scmp.SCMPError;
@@ -61,7 +60,7 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, int timeoutInSeconds, ISCMPCallback scmpCallback) throws Exception {
+	public void send(SCMPMessage message, double timeoutInMillis, ISCMPCallback scmpCallback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
@@ -78,8 +77,8 @@ public class Requester implements IRequester {
 			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 			reqCallback.setOperationTimeoutTask(task);
-			reqCallback.setTimeoutSeconds(timeoutInSeconds);
-			timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			reqCallback.setTimeoutMillis(timeoutInMillis);
+			timer.schedule(task, (long) timeoutInMillis);
 			// extract first part message & send
 			SCMPMessage part = compositeSender.getFirst();
 			// handling messageId
@@ -95,8 +94,8 @@ public class Requester implements IRequester {
 			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 			reqCallback.setOperationTimeoutTask(task);
-			reqCallback.setTimeoutSeconds(timeoutInSeconds);
-			timer.schedule(task, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			reqCallback.setTimeoutMillis(timeoutInMillis);
+			timer.schedule(task, (long) timeoutInMillis);
 			if (message.isGroup()) {
 				// increment messageId in case of group call
 				msgId.incrementPartSequenceNr();
@@ -143,8 +142,8 @@ public class Requester implements IRequester {
 		private SCMPMessageId msgId;
 		/** The operation timeout task. */
 		private TimerTask operationTimeoutTask;
-		/** The timeout in seconds. */
-		private int timeoutInSeconds;
+		/** The timeout in milliseconds. */
+		private double timeoutInMillis;
 
 		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
 				SCMPMessageId msgId) {
@@ -158,7 +157,7 @@ public class Requester implements IRequester {
 			this.requestMsg = reqMsg;
 			this.compositeSender = compositeSender;
 			this.msgId = msgId;
-			this.timeoutInSeconds = 0;
+			this.timeoutInMillis = 0;
 			this.operationTimeoutTask = null;
 		}
 
@@ -358,18 +357,18 @@ public class Requester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public int getTimeoutSeconds() {
-			return this.timeoutInSeconds;
+		public double getTimeoutMillis() {
+			return this.timeoutInMillis;
 		}
 
 		/**
-		 * Sets the timeout seconds.
+		 * Sets the timeout milliseconds.
 		 * 
-		 * @param timeoutInSeconds
-		 *            the new timeout seconds
+		 * @param timeoutInMillis
+		 *            the new timeout milliseconds
 		 */
-		public void setTimeoutSeconds(int timeoutInSeconds) {
-			this.timeoutInSeconds = timeoutInSeconds;
+		public void setTimeoutMillis(double timeoutInMillis) {
+			this.timeoutInMillis = timeoutInMillis;
 		}
 
 		/**
