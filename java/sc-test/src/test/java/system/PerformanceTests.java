@@ -27,7 +27,6 @@ public class PerformanceTests {
 	private ISCClient client;
 
 	private static final String host = "localhost";
-	private static final int port8080 = 8080;
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
@@ -51,7 +50,8 @@ public class PerformanceTests {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(host, port8080);
+		((SCClient) client).setConnectionType("netty.tcp");
+		client.attach(host, port9000);
 	}
 
 	@After
@@ -81,5 +81,6 @@ public class PerformanceTests {
 		long stop = System.currentTimeMillis();
 		
 		System.out.println("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+		assertEquals(true, stop - start < 25000);
 	}
 }

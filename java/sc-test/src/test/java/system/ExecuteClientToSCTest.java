@@ -83,7 +83,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(null, response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -113,7 +113,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(((byte[])message.getData()).length, ((byte[])response.getData()).length);
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -175,7 +175,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -191,7 +191,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -208,7 +208,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -243,7 +243,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -261,7 +261,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -279,7 +279,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -297,7 +297,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -317,7 +317,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 	
 	@Test
@@ -338,7 +338,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(message.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 
 	@Test
@@ -362,7 +362,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService0.getSessionId(), response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 	
 	@Test
@@ -386,7 +386,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService0.getSessionId(), response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 	}
 	
 	@Test
@@ -403,7 +403,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		
 		sessionService.deleteSession();
 	}
@@ -422,7 +422,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		
 		sessionService.deleteSession();
 	}
@@ -520,7 +520,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
 	
@@ -557,7 +557,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
 	
@@ -574,7 +574,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
 	
@@ -591,7 +591,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(false, response.isFault());
+		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
 	
