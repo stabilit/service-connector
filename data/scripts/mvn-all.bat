@@ -12,6 +12,10 @@ rem create service-connector sc.jar and copy to dist dir
 call mvn-assembly-cmd.bat ..\..\java\service-connector
 copy ..\..\java\service-connector\target\sc.jar ..\..\data\dist /y
 
+rem create sc-cosole scconsole.jar and copy to dist dir
+call mvn-assembly-cmd.bat ..\..\java\sc-console
+copy ..\..\java\sc-console\target\scconsole.jar ..\..\data\dist /y
+
 rem create sc-simulation server.jar and copy to dist dir
 call mvn-assembly-cmd.bat ..\..\java\sc-simulation
 copy ..\..\java\sc-simulation\target\server.jar ..\..\data\dist /y
