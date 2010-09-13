@@ -16,7 +16,6 @@ import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
 public class CreateSessionTcpClientToSCTest {
@@ -32,6 +31,7 @@ public class CreateSessionTcpClientToSCTest {
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceNameNotEnabled = "notEnabledService";
 
 	private static final int dataLength = 61440;	// 60 kB
 	private Exception ex;
@@ -117,21 +117,45 @@ public class CreateSessionTcpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
-	@Test(expected = SCMPValidatorException.class)
-	public void createSession_nullSessionInfo_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession(null, 300, 60);
+	@Test
+	public void createSession_notEnabledService_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
+		try {
+			sessionService.createSession("somehting", 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, ex instanceof SCServiceException);
 		sessionService.deleteSession();
 	}
 
-	@Test(expected = SCMPValidatorException.class)
-	public void createSession_emptySessionInfo_throwsException() throws Exception {
+	@Test
+	public void createSession_nullSessionInfo_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("", 300, 60);
+		try {
+			sessionService.createSession(null, 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, ex instanceof SCMPValidatorException);
+		sessionService.deleteSession();
+	}
+
+	@Test
+	public void createSession_emptySessionInfo_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		try {
+			sessionService.createSession("", 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
 
@@ -380,7 +404,6 @@ public class CreateSessionTcpClientToSCTest {
 				|| sessionService.getSessionId().isEmpty());
 	}
 	
-	//TODO this should pass!
 	@Test
 	public void createSession_timeout1_sessionIdCreated() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
@@ -1305,55 +1328,5 @@ public class CreateSessionTcpClientToSCTest {
 			}
 		}
 		assertEquals(0, counter);
-	}
-	
-	@Test
-	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		
-		// message "reject" translates on the server to reject the session
-		sessionService.createSession("sessionInfo", 300, 10, "reject");
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-	
-	@Test
-	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
-		
-		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
-		} catch (Exception e) {
-		}
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-	
-	@Test
-	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
-		
-		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
-		} catch (Exception e) {
-			assertEquals(true, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
-		}
-
-		//send execute
-		try {
-			sessionService.execute(new SCMessage());
-		} catch (Exception e) {
-			ex = e;
-		}
-		
-		assertEquals(true, ex instanceof SCServiceException);
-		sessionService.deleteSession();
 	}
 }

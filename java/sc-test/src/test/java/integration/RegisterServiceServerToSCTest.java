@@ -29,7 +29,8 @@ public class RegisterServiceServerToSCTest {
 	private static Process p;
 	private ISCServer server;
 	private Exception ex;
-	private String serviceName = "simulation";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameNotEnabled = "notEnabledService";
 	private String host = "localhost";
 	private int port9000 = 9000;
 
@@ -60,6 +61,7 @@ public class RegisterServiceServerToSCTest {
 
 	@After
 	public void tearDown() throws Exception {
+		server.destroyServer();
 		server = null;
 	}
 
@@ -96,48 +98,23 @@ public class RegisterServiceServerToSCTest {
 	}
 
 	@Test
-	public void registerService_sameHostDifferentPortSCalreadyListeningOnGivenPort_notRegisteredthrowsException()
-			throws Exception {
-		try {
-			server.startListener(host, 8080, 1);
-		} catch (Exception e) {
-			ex = e;
-		}
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
-		assertEquals(false, server.isRegistered(serviceName));
-		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(serviceName);
-	}
-
-	@Test
-	public void registerService_ToDifferentHostSamePortServiceNameNotInSCProperties_throwsException()
-			throws Exception {
-		server.startListener(host, 8080, 1);
-		try {
-			server.registerService(host, port9000, "Name", 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered("Name"));
-		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService("Name");
-	}
-
-	@Test
 	public void registerService_withValidParamsInSCProperties_registered() throws Exception {
 		server.startListener(host, 9001, 0);
 		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 	}
-
+	
 	@Test
-	public void registerService_differentHostForListenerParamsInSCProperties_registered()
-			throws Exception {
-		server.startListener("host", 9001, 0);
-		server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
-		assertEquals(true, server.isRegistered(serviceName));
-		server.deregisterService(serviceName);
+	public void registerService_withNotEnabledService_throwsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceNameNotEnabled, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(false, server.isRegistered(serviceNameNotEnabled));
 	}
 
 	@Test
@@ -562,12 +539,25 @@ public class RegisterServiceServerToSCTest {
 	}
 
 	@Test
-	public void registerService_maxConnections1024LessThanSessions1025_notRegisteredThrowsException()
+	public void registerService_maxConnections1024LessThanSessions1025_isRegistered()
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		server.registerService(host, port9000, serviceName, 1025, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
+	}
+	
+	@Test
+	public void registerService_maxConnections1025OverAllowedMaximum_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port9000, serviceName, 1025, 1025, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test

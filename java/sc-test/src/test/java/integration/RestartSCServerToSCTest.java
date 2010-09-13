@@ -19,7 +19,7 @@ import com.stabilit.scm.srv.SCServer;
 
 public class RestartSCServerToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(RestartSCServerToSCTest.class);
 	
 	private static ISCServer server;
 	private static Process p;
@@ -46,7 +46,7 @@ public class RestartSCServerToSCTest {
 			logger.error("oneTimeSetUp", e);
 		}
 		server = new SCServer();
-		server.startListener(host, 30000, 0);
+		server.startListener(host, 30000, 60);
 	}
 
 	@After
@@ -123,7 +123,7 @@ public class RestartSCServerToSCTest {
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 	}
-
+	
 	private class CallBack implements ISCServerCallback {
 	}
 }

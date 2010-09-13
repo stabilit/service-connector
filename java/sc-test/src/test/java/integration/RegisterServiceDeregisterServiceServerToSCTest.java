@@ -21,8 +21,9 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 
 	private static Process p;
 	private ISCServer server;
-	private String serviceName = "simulation";
-	private String serviceNameAlt = "P01_RTXS_sc1";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameAlt = "P01_RTXS_sc1";
+	
 	private String host = "localhost";
 	private int port8080 = 8080;
 	private int port9000 = 9000;
@@ -57,6 +58,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 
 	@After
 	public void tearDown() throws Exception {
+		server.destroyServer();
 		server = null;
 	}
 
@@ -140,13 +142,17 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	public void registerServiceDeregisterService_cycle500Times_registeredThenNotRegistered()
 			throws Exception {
 		server.startListener(host, 9001, 1);
-		int cycles = 500;
+		int cycles = 200;
 		for (int i = 0; i < cycles / 10; i++) {
 			System.out.println("RegisterDeregister service iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
+				System.out.println(i);
 				server.registerService(host, port9000, serviceName, 1, 1, new CallBack());
+				//TODO this sleep 1) is not helping 2) shouldnt be needed
+				Thread.sleep(1000);
 				assertEquals(true, server.isRegistered(serviceName));
 				server.deregisterService(serviceName);
+				Thread.sleep(1000);
 				assertEquals(false, server.isRegistered(serviceName));
 			}
 		}

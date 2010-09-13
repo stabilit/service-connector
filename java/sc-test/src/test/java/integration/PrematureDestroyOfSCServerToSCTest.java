@@ -1,5 +1,7 @@
 package integration;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +26,8 @@ public class PrematureDestroyOfSCServerToSCTest {
 	private String host = "localhost";
 	private int port9000 = 9000;
 
-	private String serviceName = "simulation";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameAlt = "P01_RTXS_sc1";
 
 	private static final String log4jSC0Properties = "log4jSC0.properties";
 	private static final String scProperties0 = "scIntegration.properties";
@@ -77,7 +80,7 @@ public class PrematureDestroyOfSCServerToSCTest {
 	}
 
 	@Test
-	public void deregisterService_afterSCDestroy_passes() throws Exception {
+	public void deregisterService_afterSCDestroyWithoutPreviousRegister_passes() throws Exception {
 		p.destroy();
 		server.deregisterService(serviceName);
 	}
@@ -87,6 +90,27 @@ public class PrematureDestroyOfSCServerToSCTest {
 		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
 		p.destroy();
 		server.deregisterService(serviceName);
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void registerService_afterRegisterAfterSCDestroy_throwsException() throws Exception {
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		p.destroy();
+		server.registerService(host, port9000, serviceNameAlt, 10, 10, new CallBack());
+	}
+	
+	@Test
+	public void isRegistered_afterRegisterAfterSCDestroy_thinksThatItIsRegistered() throws Exception {
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		p.destroy();
+		assertEquals(true, server.isRegistered(serviceName));
+	}
+	
+	@Test
+	public void setImmediateConnect_afterRegisterAfterSCDestroy_passes() throws Exception {
+		server.registerService(host, port9000, serviceName, 10, 10, new CallBack());
+		p.destroy();
+		server.setImmediateConnect(false);
 	}
 
 	private class CallBack implements ISCServerCallback {

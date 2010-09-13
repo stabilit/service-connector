@@ -685,7 +685,7 @@ public class ExecuteClientToSCTest {
 		sessionService.deleteSession();
 	}
 	
-	//TODO adjust these tests
+	//TODO adjust these tests from here
 
 	@Test
 	public void execute_timeoutExpires_throwsException() throws Exception {

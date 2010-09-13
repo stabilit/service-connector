@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
+import com.stabilit.scm.common.net.SCMPCommunicationException;
 import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.srv.ISCServer;
 import com.stabilit.scm.srv.ISCServerCallback;
@@ -28,7 +29,9 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 	private static Process p;
 	private ISCServer server;
 	private Exception ex;
-	private String serviceName = "simulation";
+	private static final String serviceName = "simulation";
+	private static final String serviceNameNotEnabled = "notEnabledService";
+
 	private String host = "localhost";
 	private int port8080 = 8080;
 
@@ -60,10 +63,10 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 
 	@After
 	public void tearDown() throws Exception {
+		server.destroyServer();
 		server = null;
 	}
 
-	// TODO solve issue with listeners on taken ports
 	// region host == "localhost" (set as only one in
 	// scIntegration.properties), all ports
 	@Test
@@ -84,7 +87,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, ex instanceof SCMPCommunicationException);
 		try {
 			server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -96,49 +99,23 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void registerService_sameHostDifferentPortSCalreadyListeningOnGivenPort_notRegisteredthrowsException()
-			throws Exception {
-		try {
-			server.startListener(host, 9000, 1);
-		} catch (Exception e) {
-			ex = e;
-		}
-		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
-		assertEquals(false, server.isRegistered(serviceName));
-		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(serviceName);
-	}
-
-	@Test
-	public void registerService_ToDifferentHostSamePortServiceNameNotInSCProperties_throwsException()
-			throws Exception {
-		server.startListener(host, 9000, 1);
-		try {
-			server.registerService(host, port8080, "Name", 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered("Name"));
-		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(serviceName);
-	}
-
-	@Test
 	public void registerService_withValidParamsInSCProperties_registered() throws Exception {
 		server.startListener(host, 9001, 0);
 		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
 	}
-
+	
 	@Test
-	public void registerService_differentHostForListenerParamsInSCProperties_registered()
-			throws Exception {
-		server.startListener("host", 9001, 0);
-		server.registerService(host, port8080, serviceName, 1, 1, new CallBack());
-		assertEquals(true, server.isRegistered(serviceName));
-		server.deregisterService(serviceName);
-		server.deregisterService(serviceName);
+	public void registerService_withNotEnabledService_throwsException() throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port8080, serviceNameNotEnabled, 1, 1, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(false, server.isRegistered(serviceNameNotEnabled));
 	}
 
 	@Test
@@ -551,12 +528,25 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void registerService_maxConnections1024LessThanSessions1025_notRegisteredThrowsException()
+	public void registerService_maxConnections1024LessThanSessions1025_isRegistered()
 			throws Exception {
 		server.startListener(host, 9001, 0);
 		server.registerService(host, port8080, serviceName, 1025, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(serviceName));
 		server.deregisterService(serviceName);
+	}
+	
+	@Test
+	public void registerService_maxConnections1025OverAllowedMaximum_notRegisteredThrowsException()
+			throws Exception {
+		server.startListener(host, 9001, 0);
+		try {
+			server.registerService(host, port8080, serviceName, 1025, 1025, new CallBack());
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(false, server.isRegistered(serviceName));
+		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
 	@Test

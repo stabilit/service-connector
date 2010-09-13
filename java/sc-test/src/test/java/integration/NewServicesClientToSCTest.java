@@ -141,6 +141,11 @@ public class NewServicesClientToSCTest {
 	}
 	
 	@Test
+	public void newPublishService_validNotEnabledServiceName_returnsIPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(serviceNameNotEnabled) instanceof IPublishService);
+	}
+	
+	@Test
 	public void newPublishService_twice_returnsIPublishService() throws Exception {
 		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
 		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
@@ -185,6 +190,11 @@ public class NewServicesClientToSCTest {
 	@Test
 	public void newFileService_validServiceName_returnsIFileService() throws Exception {
 		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+	}
+	
+	@Test
+	public void newFileService_validNotEnabledServiceName_returnsIFileService() throws Exception {
+		assertEquals(true, client.newFileService(serviceNameNotEnabled) instanceof IFileService);
 	}
 	
 	@Test

@@ -17,7 +17,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 public class RestartSCClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(PrematureDestroyOfSCClientToSCTest.class);
+			.getLogger(RestartSCClientToSCTest.class);
 
 	private static ISCClient client;
 	private static Process p;
@@ -98,6 +98,15 @@ public class RestartSCClientToSCTest {
 		client.attach(host, port8080);
 		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
 		client.setMaxConnections(10);
+		assertEquals(10, client.getMaxConnections());
+	}
+	
+	@Test
+	public void isAttached_afterAttachAfterSCRestart_true() throws Exception {
+		client.attach(host, port8080);
+		assertEquals(true, client.isAttached());
+		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		assertEquals(true, client.isAttached());
 	}
 	
 	@Test
@@ -112,5 +121,20 @@ public class RestartSCClientToSCTest {
 		assertEquals(false, client.isAttached());
 		client.attach(host, port8080);
 		assertEquals(true, client.isAttached());
+	}
+	
+	@Test
+	public void isServiceDisabled_afterDisablingItBeforeSCRestart_enabled() throws Exception {
+		client.attach(host, port8080);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		assertEquals(false, client.isServiceEnabled(serviceName));
+		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		try {
+			client.detach();
+		} catch (SCServiceException e) {
+		}
+		client.attach(host, port8080);
+		assertEquals(true, client.isServiceEnabled(serviceName));
 	}
 }

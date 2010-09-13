@@ -67,6 +67,21 @@ public class EnableDisableServiceClientToSCTest {
 	public void tearDown() throws Exception {
 		client.detach();
 	}
+	
+	@Test
+	public void isEnabled_enabledService_isEnabled() throws SCServiceException {
+		assertEquals(true, client.isServiceEnabled(serviceName));
+	}
+	
+	@Test
+	public void isEnabled_disabledService_isNotEnabled() throws SCServiceException {
+		assertEquals(false, client.isServiceEnabled(newServiceName));
+	}
+	
+	@Test(expected = SCServiceException.class)
+	public void isEnabled_notExistingService_throwsException() throws SCServiceException {
+		client.isServiceEnabled("notExistingService");
+	}
 
 	@Test
 	public void enableService_withoutAttach_throwsException() throws Exception {
@@ -123,16 +138,17 @@ public class EnableDisableServiceClientToSCTest {
 		client.enableService(serviceName);
 	}
 	
+	//TODO allows enable to pass without exception but not isServiceEnabled
 	@Test
 	public void enableService_notExistingService_notEnabled() throws Exception {
-		assertEquals(false, client.isServiceEnabled("notExistingService"));
+//		assertEquals(false, client.isServiceEnabled("notExistingService"));
 		client.enableService("notExistingService");
 		assertEquals(false, client.isServiceEnabled("notExistingService"));
 	}
 	
 	@Test
 	public void disableService_notExistingService_notEnabled() throws Exception {
-		assertEquals(false, client.isServiceEnabled("notExistingService"));
+//		assertEquals(false, client.isServiceEnabled("notExistingService"));
 		client.disableService("notExistingService");
 		assertEquals(false, client.isServiceEnabled("notExistingService"));
 	}
