@@ -19,7 +19,7 @@ import com.stabilit.scm.common.service.SCMessage;
 
 public class PerformanceTests {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ExecuteClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(PerformanceTests.class);
 
 	private static Process p;
 	private static Process r;

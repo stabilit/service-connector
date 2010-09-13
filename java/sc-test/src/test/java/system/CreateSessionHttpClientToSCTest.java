@@ -121,7 +121,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_notEnabledService_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
 		try {
-			sessionService.createSession("somehting", 300, 60);
+			sessionService.createSession("something", 300, 60);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1259,7 +1259,6 @@ public class CreateSessionHttpClientToSCTest {
 	
 	@Test
 	public void createSession_1001SessionsAtOnce_exceedsConnectionsLimitThrowsException() throws Exception {
-		System.out.println(client.workload(serviceName));
 		int sessionsCount = 1001;
 		int ctr = 0;
 		String[] sessions = new String[sessionsCount];

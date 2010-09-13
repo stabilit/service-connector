@@ -1265,7 +1265,6 @@ public class CreateSessionTcpClientToSCTest {
 	
 	@Test
 	public void createSession_1001SessionsAtOnce_exceedsConnectionsLimitThrowsException() throws Exception {
-		System.out.println(client.workload(serviceName));
 		int sessionsCount = 1001;
 		int ctr = 0;
 		String[] sessions = new String[sessionsCount];

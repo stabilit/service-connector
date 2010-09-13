@@ -27,7 +27,7 @@ public class StartSCSessionServer {
 
 	public static void main(String[] args) throws Exception {
 		StartSCSessionServer sessionServer = new StartSCSessionServer();
-		
+
 		sessionServer.runSessionServer(args);
 	}
 
@@ -44,24 +44,25 @@ public class StartSCSessionServer {
 				System.arraycopy(args, 4, serviceNames, 0, args.length - 4);
 			} catch (Exception e) {
 				logger.error("incorrect parameters", e);
-				throw e;
+				shutdown();
 			}
-			
+
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", listenerPort, 0);
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			
+
 			for (int i = 0; i < serviceNames.length; i++) {
 				this.scSrv.registerService("localhost", port, serviceNames[i], 1000, getMaxCons(),
 						srvCallback);
 			}
 
-			//for testing whether the server already started 
+			// for testing whether the server already started
 			new TestEnvironmentController().createFile(startFile);
-			
-			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+
+			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean()
+					.getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 			FileWriter fw = null;
 			try {
@@ -75,7 +76,7 @@ public class StartSCSessionServer {
 					fw.close();
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 			this.shutdown();
@@ -159,11 +160,60 @@ public class StartSCSessionServer {
 					} else if (dataString.startsWith("timeout")) {
 						int millis = Integer.parseInt(dataString.split(" ")[1]);
 						try {
-							logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
+							logger.info("Sleeping " + dataString.split(" ")[1]
+									+ "ms in order to timeout.");
 							Thread.sleep(millis);
 						} catch (InterruptedException e) {
 							logger.error("sleep in execute", e);
 						}
+					} else if (dataString.startsWith("register")) {
+						String serviceName = dataString.split(" ")[1];
+						boolean alreadyPresentService = false;
+						for (int i = 0; i < serviceNames.length; i++) {
+							if (serviceName.equals(serviceNames[i])) {
+								alreadyPresentService = true;
+								break;
+							}
+						}
+						if (!alreadyPresentService) {
+							if (!scSrv.isRegistered(serviceName)) {
+								try {
+									scSrv.registerService("localhost", port, serviceName, 1000,
+											getMaxCons(), new SrvCallback(
+													new SessionServerContext()));
+									String[] services = new String[serviceNames.length + 1];
+									System.arraycopy(serviceNames, 0, services, 0,
+											serviceNames.length);
+									services[serviceNames.length] = serviceName;
+									serviceNames = services;
+								} catch (Exception e) {
+									logger.error("register service " + serviceName, e);
+								}
+							}
+						}
+					} else if (dataString.startsWith("deregister")) {
+						String serviceName = dataString.split(" ")[1];
+
+						if (scSrv.isRegistered(serviceName)) {
+							try {
+								scSrv.deregisterService(serviceName);
+								String[] services = new String[serviceNames.length - 1];
+								boolean alreadyDeleted = false;
+								for (int i = 0; i < serviceNames.length; i++) {
+									if (serviceName.equals(serviceNames[i])) {
+										alreadyDeleted = true;
+									} else if (alreadyDeleted) {
+										services[i-1] = serviceNames[i]; 
+									} else {
+										services[i] = serviceNames[i];
+									}
+								}
+								serviceNames = services;
+							} catch (Exception e) {
+								logger.error("deregister service " + serviceName, e);
+							}
+						}
+
 					}
 				}
 			}

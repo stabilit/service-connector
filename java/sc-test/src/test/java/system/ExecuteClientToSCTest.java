@@ -70,6 +70,11 @@ public class ExecuteClientToSCTest {
 		ctrl.stopProcess(r, log4jSrvProperties);
 	}
 
+	@Test(expected = SCServiceException.class)
+	public void execute_beforeCreateSession_throwsException() throws Exception {
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.execute(new SCMessage());
+	}
 
 	@Test
 	public void execute_messageDataNull_returnsTheSameMessageData() throws Exception {
@@ -685,10 +690,23 @@ public class ExecuteClientToSCTest {
 		sessionService.deleteSession();
 	}
 	
-	//TODO adjust these tests from here
-
 	@Test
-	public void execute_timeoutExpires_throwsException() throws Exception {
+	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
+
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
+
+		try {
+			sessionService.execute(new SCMessage("timeout 4000"), 2);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		sessionService.deleteSession();
+	}
+	
+	@Test
+	public void execute_timeoutCloselyExpires_throwsException() throws Exception {
 
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
@@ -697,70 +715,23 @@ public class ExecuteClientToSCTest {
 			sessionService.execute(new SCMessage("timeout 2000"), 2);
 		} catch (Exception e) {
 			ex = e;
-			e.printStackTrace();
 		}
 		assertEquals(true, ex instanceof SCServiceException);
+		sessionService.deleteSession();
 	}
 	
 	@Test
-	public void execute_timeoutExpires1_throwsException() throws Exception {
-
+	public void execute_timeoutIsEnough_returnsSameMessage() throws Exception {
+		ISCMessage message = new SCMessage("timeout 1500");
+		
 		ISessionService sessionService = client.newSessionService(serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
-		try {
-			sessionService.execute(new SCMessage("timeout 1500"), 2);
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertEquals(true, ex instanceof SCServiceException);
+		ISCMessage response = sessionService.execute(message, 2);
+		assertEquals(message.getData().toString(), response.getData().toString());
+		assertEquals(message.getMessageInfo(), response.getMessageInfo());
+		assertEquals(message.isCompressed(), response.isCompressed());
+		assertEquals(message.isFault(), response.isFault());
+		sessionService.deleteSession();
 	}
-	
-	@Test
-	public void execute_timeoutExpires2_throwsException() throws Exception {
-
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
-
-		try {
-			sessionService.execute(new SCMessage("timeout 1000"), 2);
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-	
-	@Test
-	public void execute_timeoutExpires3_throwsException() throws Exception {
-
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
-
-		try {
-			sessionService.execute(new SCMessage("timeout 900"), 2);
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-	
-	@Test
-	public void execute_timeoutExpires4_throwsException() throws Exception {
-
-		ISessionService sessionService = client.newSessionService(serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
-
-		try {
-			sessionService.execute(new SCMessage("timeout 500"), 2);
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-	
-	//TODO up to here.
 }

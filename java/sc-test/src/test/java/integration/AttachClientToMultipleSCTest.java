@@ -3,6 +3,7 @@ package integration;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -53,15 +54,16 @@ public class AttachClientToMultipleSCTest {
 		ctrl.stopProcess(r, log4jSC1Properties);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 * 
-	 *             Create a new SCClient for each test method.
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client1 = new SCClient();
 		client2 = new SCClient();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		client1 = null;
+		client2 = null;
 	}
 
 	@Test

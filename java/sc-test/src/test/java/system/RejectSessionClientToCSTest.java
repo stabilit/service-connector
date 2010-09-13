@@ -20,7 +20,7 @@ import com.stabilit.scm.common.service.SCServiceException;
 public class RejectSessionClientToCSTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CreateSessionHttpClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(RejectSessionClientToCSTest.class);
 
 	private static Process sc;
 	private static Process srv;
@@ -32,7 +32,6 @@ public class RejectSessionClientToCSTest {
 	private static final int port9000 = 9000;
 	private static final String serviceName = "simulation";
 	private static final String serviceNameAlt = "P01_RTXS_sc1";
-	private static final String serviceNameNotEnabled = "notEnabledService";
 
 	private Exception ex;
 
@@ -74,19 +73,24 @@ public class RejectSessionClientToCSTest {
 
 	
 	@Test
-	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsException() throws Exception {
+	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		
-		// message "reject" translates on the server to reject the session
-		sessionService.createSession("sessionInfo", 300, 10, "reject");
+		try {
+			// message "reject" translates on the server to reject the session
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (SCServiceException e) {
+			ex = e;
+		}
 		
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		
-		sessionService.deleteSession();
+		//TODO appErrorCode & appErrorText should be maybe in the exception message rather than attributes of exception
+		assertEquals(0, Integer.parseInt(((SCServiceException)ex).getAppErrorCode()));
+		assertEquals("\"This is the app error text\"", ((SCServiceException)ex).getAppErrorText());
 	}
 	
 	@Test
@@ -102,8 +106,9 @@ public class RejectSessionClientToCSTest {
 		sessionService.deleteSession();
 	}
 	
-	@Test
-	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
+	//TODO throws NullPointerException
+	@Test(expected = SCServiceException.class)
+	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(serviceName);
 		
 		try {
@@ -113,49 +118,34 @@ public class RejectSessionClientToCSTest {
 					|| sessionService.getSessionId().isEmpty());
 		}
 
-		//send execute
-		try {
-			sessionService.execute(new SCMessage());
-		} catch (Exception e) {
-			ex = e;
-		}
-		
-		assertEquals(true, ex instanceof SCServiceException);
-		sessionService.deleteSession();
+		sessionService.execute(new SCMessage());
 	}
 	
-	@Test
-	public void createSession_forNotExistingService_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService("notExistingService");
-	}
+	
 	
 	@Test
-	public void createSession_forNotEnabledService_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
-		//TODO create session
-	}
-
-	
-	@Test
-	public void createSession_TcpRejectTheSession_sessionIdIsNotSetThrowsException() throws Exception {
+	public void createSession_TcpRejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(host, port9000);
 		ISessionService sessionService = client.newSessionService(serviceName);
 		
+		try {
+			// message "reject" translates on the server to reject the session
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (SCServiceException e) {
+			ex = e;
+		}
+		
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		
-		// message "reject" translates on the server to reject the session
-		sessionService.createSession("sessionInfo", 300, 10, "reject");
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
+		assertEquals(0, Integer.parseInt(((SCServiceException)ex).getAppErrorCode()));
+		assertEquals("\"This is the app error text\"", ((SCServiceException)ex).getAppErrorText());
 	}
 	
 	@Test
 	public void createSession_TcpRejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
+		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(host, port9000);
 		ISessionService sessionService = client.newSessionService(serviceName);
@@ -166,11 +156,11 @@ public class RejectSessionClientToCSTest {
 		}
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
 	}
 	
-	@Test
+	@Test(expected = SCServiceException.class)
 	public void createSession_TcpRejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
+		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(host, port9000);
 		ISessionService sessionService = client.newSessionService(serviceName);
@@ -182,14 +172,6 @@ public class RejectSessionClientToCSTest {
 					|| sessionService.getSessionId().isEmpty());
 		}
 
-		//send execute
-		try {
-			sessionService.execute(new SCMessage());
-		} catch (Exception e) {
-			ex = e;
-		}
-		
-		assertEquals(true, ex instanceof SCServiceException);
-		sessionService.deleteSession();
+		sessionService.execute(new SCMessage());
 	}
 }

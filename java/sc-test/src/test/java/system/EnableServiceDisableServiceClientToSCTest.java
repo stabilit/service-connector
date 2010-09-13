@@ -13,15 +13,16 @@ import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.ISessionService;
+import com.stabilit.scm.common.service.SCMessage;
 import com.stabilit.scm.common.service.SCServiceException;
 
-public class EnableSessionDisableSessionClientToSCTest {
+public class EnableServiceDisableServiceClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(EnableSessionDisableSessionClientToSCTest.class);
+			.getLogger(EnableServiceDisableServiceClientToSCTest.class);
 
 	private static Process sc;
-	private static Process srv;
+	private Process srv;
 
 	private ISCClient client;
 
@@ -45,8 +46,6 @@ public class EnableSessionDisableSessionClientToSCTest {
 		ctrl = new TestEnvironmentController();
 		try {
 			sc = ctrl.startSC(log4jSCProperties, scProperties);
-			srv = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {
-					serviceName, serviceNameAlt, serviceNameNotEnabled });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -54,6 +53,9 @@ public class EnableSessionDisableSessionClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		srv = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {
+				serviceName, serviceNameAlt });
+
 		client = new SCClient();
 		client.attach(host, port8080);
 		assertEquals("1000/0", client.workload(serviceName));
@@ -64,12 +66,12 @@ public class EnableSessionDisableSessionClientToSCTest {
 		assertEquals("1000/0", client.workload(serviceName));
 		client.detach();
 		client = null;
+		ctrl.stopProcess(srv, log4jSrvProperties);
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(sc, log4jSCProperties);
-		ctrl.stopProcess(srv, log4jSrvProperties);
 	}
 
 	@Test
@@ -83,20 +85,62 @@ public class EnableSessionDisableSessionClientToSCTest {
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		assertEquals(true, client.isServiceEnabled(serviceName));
 	}
 
 	@Test
-	public void createSession_onDisabledSessionService_throwsException() throws Exception {
+	public void createSession_onInitiallyDisabledSessionService_clientEnablesServiceServerRegistersSessionCreated() throws Exception {
 		assertEquals(false, client.isServiceEnabled(serviceNameNotEnabled));
+		client.enableService(serviceNameNotEnabled);
+		assertEquals(true, client.isServiceEnabled(serviceNameNotEnabled));
+		
+		ISessionService sessionService0 = client.newSessionService(serviceName);
+		sessionService0.createSession("sessionInfo", 300, 60);
+		sessionService0.execute(new SCMessage("register " + serviceNameNotEnabled));
+		
+		
+		ISessionService sessionService1 = client.newSessionService(serviceNameNotEnabled);
+		sessionService1.createSession("sessionInfo", 300, 60);
 
-		ISessionService sessionService = client.newSessionService(serviceNameNotEnabled);
-		sessionService.createSession("sessionInfo", 300, 60);
-
+		assertEquals(true, client.isServiceEnabled(serviceNameNotEnabled));
+		assertEquals(false, sessionService1.getSessionId() == null
+				|| sessionService1.getSessionId().isEmpty());
+		sessionService1.deleteSession();
+		
+		sessionService0.execute(new SCMessage("deregister " + serviceNameNotEnabled));
+		sessionService0.deleteSession();
+		client.disableService(serviceNameNotEnabled);
+	}
+	
+	@Test
+	public void createSession_onInitiallyEnabledService_clientDisablesServiceServerRestartsThrowsException() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 60);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, client.isServiceEnabled(serviceName));
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		client.enableService(serviceName);
+	}
+	
+	@Test
+	public void createSession_enabledServiceDisableThenEnableAgain_createsSession() throws Exception {
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		client.enableService(serviceName);
+		assertEquals(true, client.isServiceEnabled(serviceName));
+		
+		ISessionService sessionService = client.newSessionService(serviceName);
+		sessionService.createSession("sessionInfo", 300, 60);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		assertEquals(false, client.isServiceEnabled(serviceName));
 	}
 }

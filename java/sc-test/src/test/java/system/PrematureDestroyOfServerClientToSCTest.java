@@ -137,10 +137,9 @@ public class PrematureDestroyOfServerClientToSCTest {
 			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
 			ex = e;
-			e.printStackTrace();
 		}
 		assertEquals(null, sessionService.getSessionId());
 		throw ex;
 	}
-
+	
 }

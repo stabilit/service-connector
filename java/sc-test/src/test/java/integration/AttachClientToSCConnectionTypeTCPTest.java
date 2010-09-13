@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -46,13 +47,16 @@ public class AttachClientToSCConnectionTypeTCPTest {
 		ctrl.stopProcess(p, log4jSC0Properties);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		client = null;
+		ex = null;
 	}
 
 	// region hostName == "localhost" (set as only one in
