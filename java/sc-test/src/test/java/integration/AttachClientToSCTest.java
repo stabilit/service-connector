@@ -5,11 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -21,20 +23,17 @@ public class AttachClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachClientToSCTest.class);
 	
-	private static ISCClient client;
+	private ISCClient client;
 	private static Process p;
 	private Exception ex;
 
-	private static final String log4jSC0Properties = "log4jSC0.properties";
-	private static final String scProperties0 = "scIntegration.properties";
-	
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(log4jSC0Properties, scProperties0);
+			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -42,15 +41,17 @@ public class AttachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSC0Properties);
+		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		client = null;
 	}
 
 	// region hostName == "localhost" (set as only one in
