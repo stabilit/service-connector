@@ -41,6 +41,9 @@ public class AttachClientToMultipleSCTest {
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
 		ctrl.stopProcess(r, TestConstants.log4jSC1Properties);
+		ctrl = null;
+		p = null;
+		r = null;
 	}
 
 	@Before

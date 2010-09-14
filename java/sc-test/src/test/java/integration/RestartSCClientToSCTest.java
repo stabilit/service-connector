@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -19,15 +20,8 @@ public class RestartSCClientToSCTest {
 	protected final static Logger logger = Logger
 			.getLogger(RestartSCClientToSCTest.class);
 
-	private static ISCClient client;
-	private static Process p;
-
-	private String host = "localhost";
-	private int port8080 = 8080;
-
-	private String serviceName = "simulation";
-	private static final String log4jSCProperties = "log4jSC0.properties";
-	private static final String scProperties = "scIntegration.properties";
+	private ISCClient client;
+	private Process p;
 
 	private static TestEnvironmentController ctrl;
 
@@ -39,7 +33,7 @@ public class RestartSCClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			p = ctrl.startSC(log4jSCProperties, scProperties);
+			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -48,93 +42,95 @@ public class RestartSCClientToSCTest {
 
 	@After
 	public void tearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSCProperties);
+		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		client = null;
+		p = null;
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSCProperties);
+		ctrl = null;
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void attach_againAfterSCRestart_throwsException() throws Exception {
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 
 		// restart SC
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
-		client.attach(host, port8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void detach_afterSCRestart_throwsException() throws Exception {
-		client.attach(host, port8080);
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		client.detach();
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void enableService_afterSCRestart_throwsException() throws Exception {
-		client.attach(host, port8080);
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
-		client.enableService(serviceName);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		client.enableService(TestConstants.serviceName);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCRestart_throwsException() throws Exception {
-		client.attach(host, port8080);
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
-		client.enableService(serviceName);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		client.enableService(TestConstants.serviceName);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCRestart_throwsException() throws Exception {
-		client.attach(host, port8080);
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
-		client.workload(serviceName);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		client.workload(TestConstants.serviceName);
 	}
 
 	@Test
 	public void setMaxConnection_afterAttachAfterSCRestart_passes() throws Exception {
-		client.attach(host, port8080);
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		client.setMaxConnections(10);
 		assertEquals(10, client.getMaxConnections());
 	}
 	
 	@Test
 	public void isAttached_afterAttachAfterSCRestart_true() throws Exception {
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 		assertEquals(true, client.isAttached());
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		assertEquals(true, client.isAttached());
 	}
 	
 	@Test
 	public void attach_afterAttachAndSCRestartAndDetach_attached() throws Exception {
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 		assertEquals(true, client.isAttached());
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
 		}
 		assertEquals(false, client.isAttached());
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 		assertEquals(true, client.isAttached());
 	}
 	
 	@Test
 	public void isServiceDisabled_afterDisablingItBeforeSCRestart_enabled() throws Exception {
-		client.attach(host, port8080);
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		assertEquals(false, client.isServiceEnabled(serviceName));
-		p = ctrl.restartSC(p, log4jSCProperties, scProperties);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		client.disableService(TestConstants.serviceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+		p = ctrl.restartSC(p, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
 		}
-		client.attach(host, port8080);
-		assertEquals(true, client.isServiceEnabled(serviceName));
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 	}
 }

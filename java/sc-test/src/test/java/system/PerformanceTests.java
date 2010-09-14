@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -21,27 +22,19 @@ public class PerformanceTests {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PerformanceTests.class);
 
-	private static Process p;
-	private static Process r;
+	private static Process sc;
+	private static Process srv;
 
 	private ISCClient client;
 
-	private static final String host = "localhost";
-	private static final int port9000 = 9000;
-	private static final String serviceName = "simulation";
-	private static final String serviceNameAlt = "P01_RTXS_sc1";
-
 	private static TestEnvironmentController ctrl;
-	private static final String log4jSCProperties = "log4jSC0.properties";
-	private static final String scProperties = "scIntegration.properties";
-	private static final String log4jSrvProperties = "log4jSrv.properties";
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(log4jSCProperties, scProperties);
-			r = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
+			sc = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -51,18 +44,23 @@ public class PerformanceTests {
 	public void setUp() throws Exception {
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(host, port9000);
+		client.attach(TestConstants.HOST, TestConstants.PORT9000);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		client.detach();
+		client = null;
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSCProperties);
-		ctrl.stopProcess(r, log4jSrvProperties);
+		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
+		ctrl = null;
+		sc = null;
+		srv = null;
+		System.gc();
 	}
 
 
@@ -71,7 +69,7 @@ public class PerformanceTests {
 
 		ISCMessage message = new SCMessage(new byte[128]);
 
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		long start = System.currentTimeMillis();

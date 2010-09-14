@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -28,22 +29,13 @@ public class PrematureDestroyOfServerClientToSCTest {
 
 	private Exception ex;
 
-	private static final String host = "localhost";
-	private static final int port8080 = 8080;
-	private static final int port9000 = 9000;
-	private static final String serviceName = "simulation";
-	private static final String serviceNameAlt = "P01_RTXS_sc1";
-
 	private static TestEnvironmentController ctrl;
-	private static final String log4jSCProperties = "log4jSC0.properties";
-	private static final String scProperties = "scIntegration.properties";
-	private static final String log4jSrvProperties = "log4jSrv.properties";
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			sc = ctrl.startSC(log4jSCProperties, scProperties);
+			sc = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -52,29 +44,35 @@ public class PrematureDestroyOfServerClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			srv = ctrl.startServer(log4jSrvProperties, 30000, port9000, 100, new String[] {serviceName, serviceNameAlt});
+			srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
 		client = new SCClient();
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		client.detach();
-		ctrl.stopProcess(srv, log4jSrvProperties);
+		client = null;
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
+		srv = null;
+		ex = null;
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(sc, log4jSCProperties);
+		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
+		ctrl = null;
+		sc = null;
+		System.gc();
 	}
 	
 	@Test
 	public void createSession_withoutServer_throwsException() throws Exception {
-		ctrl.stopProcess(srv, log4jSrvProperties);
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		try {
 			sessionService.createSession("sessionInfo", 300, 5);
 		} catch (Exception e) {
@@ -86,10 +84,10 @@ public class PrematureDestroyOfServerClientToSCTest {
 	
 	@Test
 	public void deleteSession_withoutServer_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 5);
 
-		ctrl.stopProcess(srv, log4jSrvProperties);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
 
 		try {
 			sessionService.deleteSession();
@@ -101,10 +99,10 @@ public class PrematureDestroyOfServerClientToSCTest {
 	
 	@Test
 	public void execute_withoutServer_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 5);
 
-		ctrl.stopProcess(srv, log4jSrvProperties);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
 
 		try {
 			sessionService.execute(new SCMessage());
@@ -117,10 +115,10 @@ public class PrematureDestroyOfServerClientToSCTest {
 	
 	@Test
 	public void deleteSession_withoutServerTimeoutTakes5Seconds_passes() throws Exception {
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 5, 5);
 
-		ctrl.stopProcess(srv, log4jSrvProperties);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
 		
 		Thread.sleep(5000);
 		sessionService.deleteSession();
@@ -128,8 +126,8 @@ public class PrematureDestroyOfServerClientToSCTest {
 	
 	@Test(expected = SCServiceException.class)
 	public void execute_withoutServer_timeoutTakes5SecondsThrowsException() throws Exception {
-		ctrl.stopProcess(srv, log4jSrvProperties);
-		ISessionService sessionService = client.newSessionService(serviceName);
+		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 5, 5);
 		
 		Thread.sleep(5000);

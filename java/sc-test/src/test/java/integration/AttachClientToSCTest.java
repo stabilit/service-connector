@@ -42,6 +42,8 @@ public class AttachClientToSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl = null;
+		p = null;
 	}
 
 	@Before

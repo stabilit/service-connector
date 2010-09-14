@@ -24,8 +24,8 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachClientToSCConnectionTypeTCPTest.class);
 	
-	private ISCClient client;
 	private static Process p;
+	private ISCClient client;
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
@@ -43,6 +43,8 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl = null;
+		p = null;
 	}
 
 	@Before

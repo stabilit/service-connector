@@ -8,6 +8,8 @@ public class TestConstants {
 	public static final int PORT9000 = 9000;
 	public static final int PORT65535 = 65535;
 
+	public static final String log4jSrvProperties = "log4jSrv.properties";
+
 	public static final String log4jSC0Properties = "log4jSC0.properties";
 	public static final String log4jSC1Properties = "log4jSC1.properties";
 	public static final String scProperties0 = "scIntegration.properties";

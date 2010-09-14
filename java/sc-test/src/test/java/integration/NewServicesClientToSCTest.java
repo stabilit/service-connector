@@ -5,11 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.IFileService;
@@ -24,24 +26,13 @@ public class NewServicesClientToSCTest {
 	private static ISCClient client;
 	private static Process p;
 
-	private static final String serviceName = "simulation";
-	private static final String serviceNameAlt = "P01_RTXS_sc1";
-	private static final String serviceNameNotEnabled = "notEnabledService";
-	
-	private String host = "localhost";
-
-	private int port8080 = 8080;
-
-	private static final String log4jSC0Properties = "log4jSC0.properties";
-	private static final String scProperties0 = "scIntegration.properties";
-	
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(log4jSC0Properties, scProperties0);
+			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -49,18 +40,23 @@ public class NewServicesClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSC0Properties);
+		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl = null;
+		p = null;
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 	}
 
+	@After
+	public void tearDown() throws Exception {
+		client.detach();
+		client = null;
+	}
+	
 	@Test(expected = InvalidParameterException.class)
 	public void newSessionService_NullParam_throwsInvalidParamException() throws Exception {
 		client.newSessionService(null);
@@ -85,31 +81,31 @@ public class NewServicesClientToSCTest {
 
 	@Test
 	public void newSessionService_validServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
 	}
 	
 	@Test
 	public void newSessionService_validNotEnabledServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(serviceNameNotEnabled) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameNotEnabled) instanceof ISessionService);
 	}
 	
 	@Test
 	public void newSessionService_twice_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
-		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
 	}
 	
 	@Test
 	public void newSessionService_twiceDifferentServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
-		assertEquals(true, client.newSessionService(serviceNameAlt) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof ISessionService);
 	}
 	
 	@Test
 	public void newSessionService_1000TimesDifferentServiceName_returnsISessionService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newSessionService(serviceName) instanceof ISessionService);
-			assertEquals(true, client.newSessionService(serviceNameAlt) instanceof ISessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof ISessionService);
 		}
 	}
 
@@ -137,31 +133,31 @@ public class NewServicesClientToSCTest {
 
 	@Test
 	public void newPublishService_validServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
 	}
 	
 	@Test
 	public void newPublishService_validNotEnabledServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(serviceNameNotEnabled) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameNotEnabled) instanceof IPublishService);
 	}
 	
 	@Test
 	public void newPublishService_twice_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
-		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
 	}
 	
 	@Test
 	public void newPublishService_twiceDifferentServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
-		assertEquals(true, client.newPublishService(serviceNameAlt) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof IPublishService);
 	}
 	
 	@Test
 	public void newPublishService_1000TimesDifferentServiceName_returnsIPublishService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newPublishService(serviceName) instanceof IPublishService);
-			assertEquals(true, client.newPublishService(serviceNameAlt) instanceof IPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof IPublishService);
 		}
 	}
 
@@ -189,31 +185,31 @@ public class NewServicesClientToSCTest {
 
 	@Test
 	public void newFileService_validServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
 	}
 	
 	@Test
 	public void newFileService_validNotEnabledServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(serviceNameNotEnabled) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameNotEnabled) instanceof IFileService);
 	}
 	
 	@Test
 	public void newFileService_twice_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
-		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
 	}
 	
 	@Test
 	public void newFileService_twiceDifferentServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
-		assertEquals(true, client.newFileService(serviceNameAlt) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof IFileService);
 	}
 	
 	@Test
 	public void newFileService_1000TimesDifferentServiceName_returnsIFileService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newFileService(serviceName) instanceof IFileService);
-			assertEquals(true, client.newFileService(serviceNameAlt) instanceof IFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof IFileService);
 		}
 	}
 }

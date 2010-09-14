@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
@@ -22,26 +23,15 @@ public class EnableDisableServiceClientToSCTest {
 
 	private ISCClient client;
 
-	private String serviceName = "simulation";
-	private String serviceNameAlt = "P01_RTXS_sc1";
-	private String newServiceName = "notEnabledService";
-
 	private Exception ex;
 
-	private static final String host = "localhost";
-	private static final int port8080 = 8080;
-	private static final int port9000 = 9000;
-
-	private static final String log4jSC0Properties = "log4jSC0.properties";
-	private static final String scProperties0 = "scIntegration.properties";
-	
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(log4jSC0Properties, scProperties0);
+			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -49,33 +39,32 @@ public class EnableDisableServiceClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, log4jSC0Properties);
+		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl = null;
+		p = null;
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 * 
-	 *             Create a new SCClient for each test method.
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(host, port8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
 		client.detach();
+		client = null;
+		ex = null;
 	}
 	
 	@Test
 	public void isEnabled_enabledService_isEnabled() throws SCServiceException {
-		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 	}
 	
 	@Test
 	public void isEnabled_disabledService_isNotEnabled() throws SCServiceException {
-		assertEquals(false, client.isServiceEnabled(newServiceName));
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
 	}
 	
 	@Test(expected = SCServiceException.class)
@@ -87,7 +76,7 @@ public class EnableDisableServiceClientToSCTest {
 	public void enableService_withoutAttach_throwsException() throws Exception {
 		client.detach();
 		try {
-			client.enableService(serviceName);
+			client.enableService(TestConstants.serviceName);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
@@ -98,7 +87,7 @@ public class EnableDisableServiceClientToSCTest {
 	public void disableService_withoutAttach_throwsException() throws Exception {
 		client.detach();
 		try {
-			client.disableService(serviceName);
+			client.disableService(TestConstants.serviceName);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
@@ -108,34 +97,34 @@ public class EnableDisableServiceClientToSCTest {
 	@Test
 	public void enableService_simulationAlreadyEnabled_staysEnabled()
 			throws Exception {
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		client.enableService(serviceName);
-		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		client.enableService(TestConstants.serviceName);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 	}
 	
 	@Test
 	public void enableService_unabledService_fromNotEnabledToEnabled()
 			throws Exception {
-		assertEquals(false, client.isServiceEnabled(newServiceName));
-		client.enableService(newServiceName);
-		assertEquals(true, client.isServiceEnabled(newServiceName));
-		client.disableService(newServiceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		client.enableService(TestConstants.serviceNameNotEnabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		client.disableService(TestConstants.serviceNameNotEnabled);
 	}
 	
 	@Test
 	public void disableService_unabledService_passes() throws Exception {
-		assertEquals(false, client.isServiceEnabled(newServiceName));
-		client.enableService(newServiceName);
-		assertEquals(true, client.isServiceEnabled(newServiceName));
-		client.disableService(newServiceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		client.enableService(TestConstants.serviceNameNotEnabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		client.disableService(TestConstants.serviceNameNotEnabled);
 	}
 	
 	@Test
 	public void disableService_simulationAlreadyEnabled_disabled() throws Exception {
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		assertEquals(false, client.isServiceEnabled(serviceName));
-		client.enableService(serviceName);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		client.disableService(TestConstants.serviceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+		client.enableService(TestConstants.serviceName);
 	}
 	
 	//TODO allows enable to pass without exception but not isServiceEnabled
@@ -155,23 +144,23 @@ public class EnableDisableServiceClientToSCTest {
 	
 	@Test
 	public void enableDisableService_anotherExistingService_switchesStates() throws Exception {
-		assertEquals(true, client.isServiceEnabled(serviceNameAlt));
-		client.disableService(serviceNameAlt);
-		assertEquals(false, client.isServiceEnabled(serviceNameAlt));
-		client.enableService(serviceNameAlt);
-		assertEquals(true, client.isServiceEnabled(serviceNameAlt));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameAlt));
+		client.disableService(TestConstants.serviceNameAlt);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameAlt));
+		client.enableService(TestConstants.serviceNameAlt);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameAlt));
 	}
 	
 	@Test
 	public void enableDisableService_1000Times_switchesStates() throws Exception {
-		assertEquals(true, client.isServiceEnabled(serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		for (int i = 0; i < 100; i++) {
 			System.out.println("Enabling/disabling service, iteration:\t" + i*10);
 			for (int j = 0; j < 10; j++) {
-				client.disableService(serviceName);
-				assertEquals(false, client.isServiceEnabled(serviceName));
-				client.enableService(serviceName);
-				assertEquals(true, client.isServiceEnabled(serviceName));
+				client.disableService(TestConstants.serviceName);
+				assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+				client.enableService(TestConstants.serviceName);
+				assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 			}
 		}
 	}
@@ -179,15 +168,15 @@ public class EnableDisableServiceClientToSCTest {
 	@Test
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
 		ISCClient client2 = new SCClient();
-		client2.attach(host, port8080);
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		assertEquals(true, client2.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		assertEquals(false, client.isServiceEnabled(serviceName));
-		assertEquals(false, client2.isServiceEnabled(serviceName));
-		client2.enableService(serviceName);
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client2.attach(TestConstants.HOST, TestConstants.PORT8080);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
+		client.disableService(TestConstants.serviceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceName));
+		client2.enableService(TestConstants.serviceName);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
 		client2.detach();
 	}
 	
@@ -195,15 +184,15 @@ public class EnableDisableServiceClientToSCTest {
 	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
 		ISCClient client2 = new SCClient();
 		((SCClient) client2).setConnectionType("netty.tcp");
-		client2.attach(host, port9000);
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		assertEquals(true, client2.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		assertEquals(false, client.isServiceEnabled(serviceName));
-		assertEquals(false, client2.isServiceEnabled(serviceName));
-		client2.enableService(serviceName);
-		assertEquals(true, client.isServiceEnabled(serviceName));
-		assertEquals(true, client2.isServiceEnabled(serviceName));
+		client2.attach(TestConstants.HOST, TestConstants.PORT9000);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
+		client.disableService(TestConstants.serviceName);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceName));
+		client2.enableService(TestConstants.serviceName);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
 		client2.detach();
 	}
 }
