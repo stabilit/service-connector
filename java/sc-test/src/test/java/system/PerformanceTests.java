@@ -60,7 +60,6 @@ public class PerformanceTests {
 		ctrl = null;
 		sc = null;
 		srv = null;
-		System.gc();
 	}
 
 

@@ -23,7 +23,7 @@ public class NewServicesClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NewServicesClientToSCTest.class);
 
-	private static ISCClient client;
+	private ISCClient client;
 	private static Process p;
 
 	private static TestEnvironmentController ctrl;

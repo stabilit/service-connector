@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.stabilit.sc.cln.SCClient;
 import com.stabilit.sc.cln.service.ISCClient;
 import com.stabilit.sc.cln.service.ISessionService;
+import com.stabilit.sc.common.service.ISCMessage;
 import com.stabilit.sc.common.service.SCMessage;
 import com.stabilit.sc.common.service.SCServiceException;
 import com.stabilit.sc.ctrl.util.TestConstants;
@@ -65,7 +66,6 @@ public class RejectSessionClientToSCTest {
 		ctrl = null;
 		sc = null;
 		srv = null;
-		System.gc();
 	}
 
 	
@@ -118,7 +118,25 @@ public class RejectSessionClientToSCTest {
 		sessionService.execute(new SCMessage());
 	}
 	
-	
+	@Test
+	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+			assertEquals(true, sessionService.getSessionId() == null
+					|| sessionService.getSessionId().isEmpty());
+		}
+		sessionService.createSession("sessionInfo", 300, 10);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		ISCMessage response = sessionService.execute(new SCMessage());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
 	
 	@Test
 	public void createSession_TcpRejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
@@ -170,5 +188,29 @@ public class RejectSessionClientToSCTest {
 		}
 
 		sessionService.execute(new SCMessage());
+	}
+	
+	@Test
+	public void createSession_TcpRejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
+		client.detach();
+		((SCClient) client).setConnectionType("netty.tcp");
+		client.attach(TestConstants.HOST, TestConstants.PORT9000);
+		
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		
+		try {
+			sessionService.createSession("sessionInfo", 300, 10, "reject");
+		} catch (Exception e) {
+			assertEquals(true, sessionService.getSessionId() == null
+					|| sessionService.getSessionId().isEmpty());
+		}
+		sessionService.createSession("sessionInfo", 300, 10);
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		ISCMessage response = sessionService.execute(new SCMessage());
+		assertEquals(sessionService.getSessionId(), response.getSessionId());
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
 	}
 }

@@ -20,11 +20,11 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceServerToSCTest.class);
 
+	private int threadCount = 0;
 	private ISCServer server;
 
-	private static Process p;
-	
 	private static TestEnvironmentController ctrl;
+	private static Process p;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
@@ -45,6 +45,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCServer();
 	}
 
@@ -52,6 +53,7 @@ public class RegisterServiceDeregisterServiceServerToSCTest {
 	public void tearDown() throws Exception {
 		server.destroyServer();
 		server = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	@Test

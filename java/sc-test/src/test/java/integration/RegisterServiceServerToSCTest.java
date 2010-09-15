@@ -27,11 +27,11 @@ public class RegisterServiceServerToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCTest.class);
 
-	private static Process p;
-	
+	private int threadCount = 0;	
 	private ISCServer server;
 	private Exception ex;
 
+	private static Process p;
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
@@ -53,6 +53,7 @@ public class RegisterServiceServerToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCServer();
 	}
 
@@ -61,6 +62,7 @@ public class RegisterServiceServerToSCTest {
 		server.destroyServer();
 		server = null;
 		ex = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	// region host == "localhost" (set as only one in

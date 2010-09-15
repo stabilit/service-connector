@@ -67,7 +67,6 @@ public class EnableServiceDisableServiceClientToSCTest {
 		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
 		ctrl = null;
 		sc = null;
-		System.gc();
 	}
 
 	@Test

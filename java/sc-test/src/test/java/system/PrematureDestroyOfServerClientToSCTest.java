@@ -66,7 +66,6 @@ public class PrematureDestroyOfServerClientToSCTest {
 		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
 		ctrl = null;
 		sc = null;
-		System.gc();
 	}
 	
 	@Test

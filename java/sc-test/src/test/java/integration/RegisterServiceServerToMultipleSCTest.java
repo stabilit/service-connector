@@ -20,11 +20,12 @@ public class RegisterServiceServerToMultipleSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToMultipleSCTest.class);
 	
-	private static Process p;
-	private static Process r;
+	private int threadCount = 0;
 	private ISCServer server;
 
 	private static TestEnvironmentController ctrl;
+	private static Process p;
+	private static Process r;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
@@ -48,6 +49,7 @@ public class RegisterServiceServerToMultipleSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCServer();
 	}
 
@@ -55,6 +57,7 @@ public class RegisterServiceServerToMultipleSCTest {
 	public void tearDown() throws Exception {
 		server.destroyServer();
 		server = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	@Test

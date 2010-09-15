@@ -20,11 +20,11 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest.class);
 	
+	private int threadCount = 0;
 	private ISCServer server;
 
-	private static Process p;
-
 	private static TestEnvironmentController ctrl;
+	private static Process p;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
@@ -45,6 +45,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCServer();
 		((SCServer) server).setConnectionType("netty.http");
 	}
@@ -53,6 +54,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	public void tearDown() throws Exception {
 		server.destroyServer();
 		server = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	@Test

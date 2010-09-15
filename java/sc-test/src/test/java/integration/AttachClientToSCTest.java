@@ -22,11 +22,12 @@ public class AttachClientToSCTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachClientToSCTest.class);
-	
+
+	private int threadCount = 0;
 	private ISCClient client;
-	private static Process p;
 	private Exception ex;
 
+	private static Process p;
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
@@ -48,12 +49,14 @@ public class AttachClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 	}
 	
 	@After
 	public void tearDown() throws Exception {
 		client = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	// region hostName == "localhost" (set as only one in

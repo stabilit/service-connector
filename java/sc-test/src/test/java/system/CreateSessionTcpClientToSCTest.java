@@ -58,7 +58,6 @@ public class CreateSessionTcpClientToSCTest {
 		client.detach();
 		client = null;
 		ex = null;
-		System.gc();
 	}
 
 	@AfterClass
@@ -68,7 +67,6 @@ public class CreateSessionTcpClientToSCTest {
 		sc = null;
 		srv = null;
 		ctrl = null;
-		System.gc();
 	}
 
 	@Test
@@ -1061,7 +1059,7 @@ public class CreateSessionTcpClientToSCTest {
 		ISessionService sessionService = client.newSessionService("");
 		try {
 			sessionService
-					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1077,7 +1075,7 @@ public class CreateSessionTcpClientToSCTest {
 		ISessionService sessionService = client.newSessionService(" ");
 		try {
 			sessionService
-					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1094,7 +1092,7 @@ public class CreateSessionTcpClientToSCTest {
 				.newSessionService("The quick brown fox jumps over a lazy dog.");
 		try {
 			sessionService
-					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1107,7 +1105,7 @@ public class CreateSessionTcpClientToSCTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void createSession_nullSessionInfoData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession(null, 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession(null, 300, 10, new byte[TestConstants.dataLength60kB]);
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1116,7 +1114,7 @@ public class CreateSessionTcpClientToSCTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void createSession_emptySessionInfoData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession("", 300, 10, new byte[TestConstants.dataLength60kB]);
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1126,7 +1124,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_whiteSpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty()
 			throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession(" ", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession(" ", 300, 10, new byte[TestConstants.dataLength60kB]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1137,7 +1135,7 @@ public class CreateSessionTcpClientToSCTest {
 			throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 10,
-				new byte[TestConstants.dataLength]);
+				new byte[TestConstants.dataLength60kB]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1151,7 +1149,7 @@ public class CreateSessionTcpClientToSCTest {
 			sb.append('a');
 		}
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession(sb.toString(), 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession(sb.toString(), 300, 10, new byte[TestConstants.dataLength60kB]);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1167,7 +1165,7 @@ public class CreateSessionTcpClientToSCTest {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		try {
 			sessionService
-					.createSession(sb.toString(), 300, 10, new byte[TestConstants.dataLength]);
+					.createSession(sb.toString(), 300, 10, new byte[TestConstants.dataLength60kB]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1180,7 +1178,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void deleteSession_afterValidCreateSessionData60kBByteArray_noSessionId()
 			throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
@@ -1189,7 +1187,7 @@ public class CreateSessionTcpClientToSCTest {
 	@Test
 	public void deleteSession_whiteSpaceSessionInfoData60kBByteArray_noSessionId() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession(" ", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession(" ", 300, 10, new byte[TestConstants.dataLength60kB]);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
@@ -1198,10 +1196,10 @@ public class CreateSessionTcpClientToSCTest {
 	@Test
 	public void createSession_twiceData60kBByteArray_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		try {
 			sessionService
-					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+					.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1222,14 +1220,14 @@ public class CreateSessionTcpClientToSCTest {
 		assertEquals(true, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 
-		sessionService0.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService0.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 
 		assertEquals(false, sessionService0.getSessionId() == null
 				|| sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 
-		sessionService1.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength]);
+		sessionService1.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
 
 		assertEquals(false, sessionService0.getSessionId() == null
 				|| sessionService0.getSessionId().isEmpty());
@@ -1249,7 +1247,7 @@ public class CreateSessionTcpClientToSCTest {
 			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10,
-						new byte[TestConstants.dataLength]);
+						new byte[TestConstants.dataLength60kB]);
 				assertEquals(false, sessionService.getSessionId() == null
 						|| sessionService.getSessionId().isEmpty());
 				sessionService.deleteSession();

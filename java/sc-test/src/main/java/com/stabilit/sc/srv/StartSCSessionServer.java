@@ -9,9 +9,6 @@ import com.stabilit.sc.common.cmd.SCMPValidatorException;
 import com.stabilit.sc.common.service.ISCMessage;
 import com.stabilit.sc.common.service.SCMessageFault;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.sc.srv.ISCServer;
-import com.stabilit.sc.srv.ISCSessionServerCallback;
-import com.stabilit.sc.srv.SCServer;
 
 public class StartSCSessionServer {
 

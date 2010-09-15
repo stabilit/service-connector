@@ -20,11 +20,12 @@ public class AttachDetachClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachDetachClientToSCTest.class);
 	
-	private static Process p;
+	private int threadCount = 0;
 
 	private ISCClient client;
 
 	private static TestEnvironmentController ctrl;
+	private static Process p;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
@@ -45,12 +46,14 @@ public class AttachDetachClientToSCTest {
 	
 	@Before
 	public void setUp() {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 	}
 	
 	@After
 	public void tearDown() {
 		client = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	@Test
@@ -164,7 +167,9 @@ public class AttachDetachClientToSCTest {
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
 		for (int i = 0; i < 10; i++) {
 			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			Thread.sleep(1000);
 			client.detach();
+			Thread.sleep(1000);
 		}
 		assertEquals(false, client.isAttached());
 	}

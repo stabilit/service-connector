@@ -24,11 +24,12 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachClientToSCConnectionTypeTCPTest.class);
 	
-	private static Process p;
+	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
+	private static Process p;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
@@ -49,6 +50,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 	}
@@ -57,6 +59,7 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	public void tearDown() throws Exception {
 		client = null;
 		ex = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	// region hostName == "localhost" (set as only one in

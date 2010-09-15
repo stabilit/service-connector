@@ -27,11 +27,11 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCConnectionTypeHttpTest.class);
 	
-	private static Process p;
-	
+	private int threadCount = 0;	
 	private ISCServer server;
 	private Exception ex;
 
+	private static Process p;
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
@@ -53,6 +53,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCServer();
 		((SCServer) server).setConnectionType("netty.http");
 	}
@@ -62,6 +63,7 @@ public class RegisterServiceServerToSCConnectionTypeHttpTest {
 		server.destroyServer();
 		server = null;
 		ex = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	// region host == "localhost" (set as only one in

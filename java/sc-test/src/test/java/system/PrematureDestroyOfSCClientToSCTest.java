@@ -62,7 +62,6 @@ public class PrematureDestroyOfSCClientToSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl = null;
-		System.gc();
 	}
 	
 	@Test

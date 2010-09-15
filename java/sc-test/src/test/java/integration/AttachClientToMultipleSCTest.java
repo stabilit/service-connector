@@ -19,6 +19,7 @@ public class AttachClientToMultipleSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachClientToMultipleSCTest.class);
 	
+	private int threadCount = 0;
 	private ISCClient client1;
 	private ISCClient client2;
 	private static Process p;
@@ -48,14 +49,17 @@ public class AttachClientToMultipleSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client1 = new SCClient();
 		client2 = new SCClient();
+		
 	}
 	
 	@After
 	public void tearDown() throws Exception {
 		client1 = null;
 		client2 = null;
+		assertEquals(threadCount, Thread.activeCount());
 	}
 
 	@Test

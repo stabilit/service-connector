@@ -65,7 +65,6 @@ public class ExecuteClientToSCTest {
 		ctrl = null;
 		sc = null;
 		srv = null;
-		System.gc();
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -137,7 +136,7 @@ public class ExecuteClientToSCTest {
 	@Test
 	public void execute_messageData1MBArray_returnsTheSameMessageData() throws Exception {
 
-		ISCMessage message = new SCMessage(new byte[1048576]);
+		ISCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
