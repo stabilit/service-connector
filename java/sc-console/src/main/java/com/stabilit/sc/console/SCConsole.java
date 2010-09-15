@@ -15,13 +15,8 @@
  */
 package com.stabilit.sc.console;
 
-import java.util.List;
-
 import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ConsoleUtil;
 
 public class SCConsole {
