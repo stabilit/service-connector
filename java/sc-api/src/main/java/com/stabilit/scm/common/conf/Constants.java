@@ -34,15 +34,25 @@ public final class Constants {
 
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
+	
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
-	/** The Constant DEFAULT_PROPERTY_FILE_NAME. */
-	public static final String DEFAULT_PROPERTY_FILE_NAME = "sc.properties";
+	
+	/** File qualifier for command line argument configuration file. */
+	public static final String CLI_CONFIG_ARG = "-sc.configuration";
+	
+	/** File qualifier for command line argument host */
+	public static final String CLI_HOST_ARG = "-p";
+	
+	/** File qualifier for command line argument port */
+	public static final String CLI_PORT_ARG = "-h";
+	
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE = "/";
 
 	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
 	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000;
+	
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
 	/**

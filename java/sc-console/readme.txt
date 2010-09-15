@@ -1,12 +1,10 @@
-Stabilit Service Connector Console
+Service Connector Console
 
-usage    : java -jar scconsole.jar -filename <properties file> <enable|disable|show=service>
+usage: java -jar scconsole.jar -h <host> -p <port> <enable|disable|show=service>
 
-samples: java -jar scconsole.jar -filename sc.properties enable=abc
-         java -jar scconsole.jar disable=abc
-         java -jar scconsole.jar show=abc
+samples: java -jar scconsole.jar -h localhost -p 8000 enable=abc
+         java -jar scconsole.jar -h localhost -p 8000 disable=abc
+         java -jar scconsole.jar -h localhost -p 8000 show=abc
          
-- the scconsole.jar file is located in the target folder
-- a working sc service is required
-- this console tool reads only the first found sc service in the properties file.
+- a working sc is required
 

@@ -38,6 +38,7 @@ import com.stabilit.scm.common.log.ILoggingManagerMXBean;
 import com.stabilit.scm.common.log.impl.LoggingManager;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
+import com.stabilit.scm.common.service.SCServiceException;
 import com.stabilit.scm.common.util.ConsoleUtil;
 import com.stabilit.scm.common.util.Statistics;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
@@ -71,10 +72,9 @@ public final class SC {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		String fileName = ConsoleUtil.getArg(args, "-filename");
+		String fileName = ConsoleUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		if (fileName == null) {
-			// fileName not set - use default
-			SC.run(Constants.DEFAULT_PROPERTY_FILE_NAME);
+			throw new SCServiceException("Configuration file missing");
 		} else {
 			// fileName extracted from vm arguments
 			SC.run(fileName);

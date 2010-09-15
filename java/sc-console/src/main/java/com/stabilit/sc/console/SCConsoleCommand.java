@@ -14,7 +14,7 @@
  *  limitations under the License.                                             *
  */
 
-package com.stabilit.scm.console;
+package com.stabilit.sc.console;
 
 /**
  * The Enum SCConsoleCommands.
