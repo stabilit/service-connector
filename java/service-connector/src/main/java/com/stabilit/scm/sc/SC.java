@@ -39,7 +39,7 @@ import com.stabilit.scm.common.log.impl.LoggingManager;
 import com.stabilit.scm.common.net.res.Responder;
 import com.stabilit.scm.common.res.IResponder;
 import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.common.util.ConsoleUtil;
+import com.stabilit.scm.common.util.CommandLineUtil;
 import com.stabilit.scm.common.util.Statistics;
 import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
 import com.stabilit.scm.sc.registry.ServerRegistry;
@@ -72,7 +72,7 @@ public final class SC {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		String fileName = ConsoleUtil.getArg(args, Constants.CLI_CONFIG_ARG);
+		String fileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		if (fileName == null) {
 			throw new SCServiceException("Configuration file missing");
 		} else {

@@ -16,8 +16,7 @@
 package com.stabilit.sc.console;
 
 import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.util.ConsoleUtil;
+import com.stabilit.scm.common.util.CommandLineUtil;
 
 public class SCConsole {
 
@@ -25,20 +24,20 @@ public class SCConsole {
 		System.out.println("Stabilit Service Connector Console\n");
 		// check arguments
 		if (args.length <= 0) {
-			showError("no args");
+			showError("no argumments");
 			System.exit(1);
 		}
-		String host = ConsoleUtil.getArg(args, Constants.CLI_HOST_ARG);
+		String host = CommandLineUtil.getArg(args, Constants.CLI_HOST_ARG);
 		if (host == null) {
 			showError("Host argument is missing");
 			System.exit(1);
 		}
-		String port = ConsoleUtil.getArg(args, Constants.CLI_PORT_ARG);
+		String port = CommandLineUtil.getArg(args, Constants.CLI_PORT_ARG);
 		if (port == null) {
 			showError("Port argument is missing");
 			System.exit(1);
 		}
-		SCConsoleCommand consoleCommand = SCConsoleCommand.UNDEFINED;
+		ConsoleCommand consoleCommand = ConsoleCommand.UNDEFINED;
 		String commandKey = "";
 		String commandValue = "";
 		for (int i = 0; i < args.length; i++) {
@@ -48,13 +47,13 @@ public class SCConsole {
 			}
 			commandKey = splitted[0];
 			commandValue = splitted[1];
-			consoleCommand = SCConsoleCommand.getCommand(commandKey);
-			if (consoleCommand != SCConsoleCommand.UNDEFINED) {
+			consoleCommand = ConsoleCommand.getCommand(commandKey);
+			if (consoleCommand != ConsoleCommand.UNDEFINED) {
 				break;
 			}
 		}
-		if (consoleCommand == SCConsoleCommand.UNDEFINED) {
-			showError("invalid or no command (enable|disable|show)");
+		if (consoleCommand == ConsoleCommand.UNDEFINED) {
+			showError("invalid or no command (enable|disable|state|sessions)");
 			System.exit(3);
 		}
 		// fileName extracted from vm arguments
@@ -68,7 +67,7 @@ public class SCConsole {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static void run(String host, String port, SCConsoleCommand cmd, String commandValue) throws Exception {
+	private static void run(String host, String port, ConsoleCommand cmd, String commandValue) throws Exception {
 
 		try {
 			int portNr = Integer.parseInt(port);
@@ -76,17 +75,14 @@ public class SCConsole {
 			client.attach(host, portNr);
 			switch (cmd) {
 			case DISABLE:
-				System.out.println("disable service " + commandValue + "...");
 				client.disableService(commandValue);
-				System.out.println("... service " + commandValue + " has been disabled");
+				System.out.println("Service [" + commandValue + "] has been disabled");
 				break;
 			case ENABLE:
-				System.out.println("enable service " + commandValue + "...");
 				client.enableService(commandValue);
-				System.out.println("... service " + commandValue + " has been enabled");
+				System.out.println("Service [" + commandValue + "] has been enabled");
 				break;
-			case SHOW:
-				System.out.println("show service " + commandValue + "...");
+			case STATE:
 				try {
 					boolean enabled = client.isServiceEnabled(commandValue);
 					if (enabled) {
@@ -94,7 +90,12 @@ public class SCConsole {
 					} else {
 						System.out.println("Service [" + commandValue + "] is disabled");
 					}
-					// get workload
+				} catch (Exception e) {
+					System.out.println("Serivce [" + commandValue + "] does not exist!");
+				}
+				break;
+			case SESSIONS:
+				try {
 					String sessions = client.workload(commandValue);
 					System.out.println("Service [" + commandValue + "] has " + sessions + " Sessions");
 				} catch (Exception e) {
@@ -112,9 +113,10 @@ public class SCConsole {
 
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
-		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <enable|disable|show=service>");
+		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <enable|disable|state|sessions=service>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 8000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 disable=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 show=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 state=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 sessions=abc");
 	}
 }

@@ -14,41 +14,19 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.scm.common.util;
 
-import org.apache.log4j.Logger;
+package com.stabilit.sc.console;
 
-/**
- * The Class ConsoleUtil. Helper class to extract content of virtual machine arguments.
- * 
- * @author JTraber
- */
-public class ConsoleUtil {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ConsoleUtil.class);
+public final class Constants {
 	
-	/**
-	 * Gets the arguments.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @param key
-	 *            the key
-	 * @return the arguments
-	 */
-	public static String getArg(String[] args, String key) {
-		if (args == null || args.length <= 0 || key == null) {
-			return null;
-		}
-		for (int i = 0; i < args.length; i++) {
-			if (key.equals(args[i])) {
-				if (i < args.length - 1) {
-					return args[i + 1];
-				}
-				return null;
-			}
-		}
-		return null;
+	private Constants() {
+		// instantiating not allowed
 	}
+	
+	/** File qualifier for command line argument host */
+	public static final String CLI_HOST_ARG = "-p";
+	
+	/** File qualifier for command line argument port */
+	public static final String CLI_PORT_ARG = "-h";
+
 }

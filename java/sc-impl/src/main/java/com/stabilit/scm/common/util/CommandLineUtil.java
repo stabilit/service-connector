@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,51 +13,42 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
+package com.stabilit.scm.common.util;
 
-package com.stabilit.sc.console;
+import org.apache.log4j.Logger;
 
 /**
- * The Enum SCConsoleCommands.
+ * The Class ConsoleUtil. Helper class to extract content of virtual machine arguments.
+ * 
+ * @author JTraber
  */
-public enum SCConsoleCommand {
+public class CommandLineUtil {
 
-	/** The ENABLE. */
-	ENABLE("enable"),
-	/** The DISABLE. */
-	DISABLE("disable"),
-	/** The SHOW. */
-	SHOW("show"),
-	/** The UNDEFINED. */
-	UNDEFINED("undefined");
-
-	/** The key. */
-	private String key;
-
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CommandLineUtil.class);
+	
 	/**
-	 * Instantiates a new sC console commands.
+	 * Gets the arguments.
 	 * 
+	 * @param args
+	 *            the arguments
 	 * @param key
 	 *            the key
+	 * @return the arguments
 	 */
-	private SCConsoleCommand(String key) {
-		this.key = key;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public static SCConsoleCommand getCommand(String key) {
-		if (ENABLE.key.equals(key)) {
-			return ENABLE;
+	public static String getArg(String[] args, String key) {
+		if (args == null || args.length <= 0 || key == null) {
+			return null;
 		}
-		if (DISABLE.key.equals(key)) {
-			return DISABLE;
+		for (int i = 0; i < args.length; i++) {
+			if (key.equals(args[i])) {
+				if (i < args.length - 1) {
+					return args[i + 1];
+				}
+				return null;
+			}
 		}
-		if (SHOW.key.equals(key)) {
-			return SHOW;
-		}
-		return UNDEFINED;
+		return null;
 	}
 }

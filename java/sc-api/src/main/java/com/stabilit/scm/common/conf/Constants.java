@@ -34,25 +34,14 @@ public final class Constants {
 
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
-	
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
-	
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-sc.configuration";
-	
-	/** File qualifier for command line argument host */
-	public static final String CLI_HOST_ARG = "-p";
-	
-	/** File qualifier for command line argument port */
-	public static final String CLI_PORT_ARG = "-h";
-	
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE = "/";
-
 	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
 	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000;
-	
 	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
 	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
 	/**
@@ -84,12 +73,10 @@ public final class Constants {
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
+		/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
 	public static final int CONNECT_TIMEOUT_MILLIS = 4000;
-
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILISEC_FACTOR = 1000;
-
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
