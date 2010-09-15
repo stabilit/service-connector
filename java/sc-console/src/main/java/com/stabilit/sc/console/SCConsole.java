@@ -72,6 +72,7 @@ public class SCConsole {
 		try {
 			int portNr = Integer.parseInt(port);
 			SCClient client = new SCClient();
+			client.setConnectionType("netty.tcp");
 			client.attach(host, portNr);
 			switch (cmd) {
 			case DISABLE:
