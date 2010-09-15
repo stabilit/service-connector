@@ -1,4 +1,4 @@
-package com.stabilit.scm.cln;
+package com.stabilit.sc.cln;
 
 
 public class SessionAndPublishClient {

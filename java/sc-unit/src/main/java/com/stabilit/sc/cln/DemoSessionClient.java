@@ -1,7 +1,8 @@
-package com.stabilit.scm.cln;
+package com.stabilit.sc.cln;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.scm.cln.SCClient;
 import com.stabilit.scm.cln.service.ISCClient;
 import com.stabilit.scm.cln.service.IService;
 import com.stabilit.scm.cln.service.ISessionService;
