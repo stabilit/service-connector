@@ -8,23 +8,23 @@ call mvn-source-test-install-cmd.bat ..\..\java\sc-impl
 call mvn-source-test-install-cmd.bat ..\..\java\service-connector
 call mvn-source-test-install-cmd.bat ..\..\java\sc-unit
 
-rem create service-connector sc.jar and copy to dist dir
+rem create service-connector sc.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\service-connector
-copy ..\..\java\service-connector\target\sc.jar ..\..\data\dist /y
+copy ..\..\java\service-connector\target\sc.jar ..\bin /y
 
-rem create sc-cosole scconsole.jar and copy to dist dir
+rem create sc-cosole scconsole.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-console
-copy ..\..\java\sc-console\target\scconsole.jar ..\..\data\dist /y
+copy ..\..\java\sc-console\target\scconsole.jar ..\bin /y
 
-rem create sc-simulation server.jar and copy to dist dir
+rem create sc-simulation server.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-simulation
-copy ..\..\java\sc-simulation\target\server.jar ..\..\data\dist /y
+copy ..\..\java\sc-simulation\target\server.jar ..\bin /y
 
-rem create sc-unit client.jar and copy to dist dir
+rem create sc-unit client.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-unit
-copy ..\..\java\sc-unit\target\client.jar ..\..\data\dist /y
+copy ..\..\java\sc-unit\target\client.jar ..\bin /y
 
 rem create javadoc and copies everything to documentation
 call mvn-javadoc-cmd.bat ..\..\java\service-connector
-xcopy ..\..\java\service-connector\target\site ..\documentation /y /e
+xcopy ..\..\java\service-connector\target\site ..\documentation\ /y /e
 

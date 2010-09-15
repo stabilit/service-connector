@@ -1,5 +1,4 @@
-data\logs\*.*
-data\test\*.*
-data\scripts\kit*.*
-data\documentation\*.bak
-data\config\*.bak
+logs\*.*
+scripts\kit*.*
+documentation\*.bak
+config\*.bak
