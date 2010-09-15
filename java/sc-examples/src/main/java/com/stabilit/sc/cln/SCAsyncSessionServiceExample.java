@@ -23,7 +23,6 @@ package com.stabilit.sc.cln;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.cln.SCClient;
 import com.stabilit.sc.cln.service.ISCClient;
 import com.stabilit.sc.cln.service.IService;
 import com.stabilit.sc.cln.service.IServiceContext;

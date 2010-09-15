@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.conf.Constants;
+import com.stabilit.sc.common.scmp.ISCMPSynchronousCallback;
+import com.stabilit.sc.common.scmp.SCMPError;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPMessage;
 
 /**
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the

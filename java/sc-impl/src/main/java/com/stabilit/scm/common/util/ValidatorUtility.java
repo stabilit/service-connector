@@ -23,8 +23,9 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.scmp.SCMPError;
+import com.stabilit.sc.common.cmd.SCMPValidatorException;
+import com.stabilit.sc.common.scmp.SCMPError;
+import com.stabilit.sc.common.util.DateTimeUtility;
 
 /**
  * The Class ValidatorUtility. Provides validation functions for checking header fields of requestFs.

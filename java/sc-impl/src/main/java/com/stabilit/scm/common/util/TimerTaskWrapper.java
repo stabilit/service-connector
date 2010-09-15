@@ -20,6 +20,8 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.common.util.ITimerRun;
+
 /**
  * The Class TimerTaskWrapper. Wraps TimerTaks from JDK. Is used to time a process. TimerTaks times out and calls the
  * target ITimerRun.
