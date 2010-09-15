@@ -20,6 +20,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.SC;
 import com.stabilit.sc.unit.TestUnitServerCommandFactory;
 import com.stabilit.scm.common.cmd.SCMPValidatorException;
 import com.stabilit.scm.common.cmd.factory.CommandFactory;
@@ -27,7 +28,6 @@ import com.stabilit.scm.common.conf.Constants;
 import com.stabilit.scm.common.conf.ResponderConfigPool;
 import com.stabilit.scm.common.service.ISCMessage;
 import com.stabilit.scm.common.service.SCMessageFault;
-import com.stabilit.scm.sc.SC;
 import com.stabilit.scm.srv.ISCPublishServer;
 import com.stabilit.scm.srv.ISCPublishServerCallback;
 import com.stabilit.scm.srv.ISCServer;
