@@ -30,22 +30,22 @@ import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.log.ILoggingManagerMXBean;
-import com.stabilit.scm.common.log.impl.LoggingManager;
-import com.stabilit.scm.common.net.res.Responder;
-import com.stabilit.scm.common.res.IResponder;
-import com.stabilit.scm.common.service.SCServiceException;
-import com.stabilit.scm.common.util.CommandLineUtil;
-import com.stabilit.scm.common.util.Statistics;
-import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.scm.sc.registry.ServerRegistry;
-import com.stabilit.scm.sc.registry.ServiceRegistry;
-import com.stabilit.scm.sc.registry.SessionRegistry;
-import com.stabilit.scm.sc.service.ServiceLoader;
+import com.stabilit.sc.common.cmd.factory.CommandFactory;
+import com.stabilit.sc.common.conf.Constants;
+import com.stabilit.sc.common.conf.ICommunicatorConfig;
+import com.stabilit.sc.common.conf.ResponderConfigPool;
+import com.stabilit.sc.common.log.ILoggingManagerMXBean;
+import com.stabilit.sc.common.log.impl.LoggingManager;
+import com.stabilit.sc.common.net.res.Responder;
+import com.stabilit.sc.common.res.IResponder;
+import com.stabilit.sc.common.service.SCServiceException;
+import com.stabilit.sc.common.util.CommandLineUtil;
+import com.stabilit.sc.common.util.Statistics;
+import com.stabilit.sc.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.sc.sc.registry.ServerRegistry;
+import com.stabilit.sc.sc.registry.ServiceRegistry;
+import com.stabilit.sc.sc.registry.SessionRegistry;
+import com.stabilit.sc.sc.service.ServiceLoader;
 
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.

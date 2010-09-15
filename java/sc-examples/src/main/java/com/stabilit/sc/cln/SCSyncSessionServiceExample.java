@@ -21,11 +21,11 @@
  */
 package com.stabilit.sc.cln;
 
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.sc.cln.SCClient;
+import com.stabilit.sc.cln.service.ISCClient;
+import com.stabilit.sc.cln.service.ISessionService;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.common.service.SCMessage;
 
 public class SCSyncSessionServiceExample {
 

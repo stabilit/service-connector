@@ -19,11 +19,11 @@ package com.stabilit.sc.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.cln.SCClient;
+import com.stabilit.sc.cln.service.ISCClient;
+import com.stabilit.sc.cln.service.ISessionService;
+import com.stabilit.sc.common.service.SCMessage;
 import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.SCMessage;
 
 public class PerformanceSessionServiceTestCase {
 

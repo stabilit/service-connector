@@ -24,11 +24,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.common.net.req.ConnectionPool;
+import com.stabilit.sc.common.net.req.ConnectionPoolBusyException;
+import com.stabilit.sc.common.net.req.IConnection;
+import com.stabilit.sc.common.net.req.IConnectionPool;
 import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.ConnectionPoolBusyException;
-import com.stabilit.scm.common.net.req.IConnection;
-import com.stabilit.scm.common.net.req.IConnectionPool;
 
 /**
  * @author JTraber

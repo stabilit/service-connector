@@ -22,9 +22,9 @@ import java.io.InputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.stabilit.scm.common.net.EncoderDecoderFactory;
-import com.stabilit.scm.common.net.IEncoderDecoder;
-import com.stabilit.scm.common.scmp.internal.SCMPPart;
+import com.stabilit.sc.common.net.EncoderDecoderFactory;
+import com.stabilit.sc.common.net.IEncoderDecoder;
+import com.stabilit.sc.common.scmp.internal.SCMPPart;
 
 public class DecodeSCMPVersionTestCase {
 

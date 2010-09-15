@@ -25,12 +25,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.stabilit.sc.common.conf.RequesterConfigPool;
+import com.stabilit.sc.common.net.req.IRequester;
+import com.stabilit.sc.common.net.req.IRequesterContext;
+import com.stabilit.sc.common.net.req.Requester;
+import com.stabilit.sc.common.scmp.SCMPMessageId;
 import com.stabilit.sc.unit.TestContext;
-import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.IRequesterContext;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
  * @author JTraber

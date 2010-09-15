@@ -22,16 +22,16 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.common.call.SCMPInspectCall;
+import com.stabilit.sc.common.scmp.SCMPError;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.common.call.SCMPInspectCall;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * The Class ClnCreateSessionTestCase.

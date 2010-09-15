@@ -10,10 +10,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.net.SCMPCommunicationException;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.SCServer;
+import com.stabilit.sc.common.cmd.SCMPValidatorException;
+import com.stabilit.sc.common.net.SCMPCommunicationException;
+import com.stabilit.sc.srv.ISCServer;
+import com.stabilit.sc.srv.SCServer;
 
 public class SCServerStartListenerTest {
 

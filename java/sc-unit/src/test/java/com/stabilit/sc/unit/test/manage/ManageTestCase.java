@@ -20,22 +20,22 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.common.call.SCMPClnDeleteSessionCall;
+import com.stabilit.sc.common.call.SCMPClnExecuteCall;
+import com.stabilit.sc.common.call.SCMPInspectCall;
+import com.stabilit.sc.common.call.SCMPManageCall;
+import com.stabilit.sc.common.conf.Constants;
+import com.stabilit.sc.common.scmp.SCMPError;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.call.SCMPClnDeleteSessionCall;
-import com.stabilit.scm.common.call.SCMPClnExecuteCall;
-import com.stabilit.scm.common.call.SCMPInspectCall;
-import com.stabilit.scm.common.call.SCMPManageCall;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.SynchronousCallback;
 
 public class ManageTestCase extends SuperAttachTestCase {
 

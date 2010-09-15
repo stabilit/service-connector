@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.SCServer;
+import com.stabilit.sc.common.conf.Constants;
+import com.stabilit.sc.srv.ISCServer;
+import com.stabilit.sc.srv.SCServer;
 
 public class SCServerTest {
 

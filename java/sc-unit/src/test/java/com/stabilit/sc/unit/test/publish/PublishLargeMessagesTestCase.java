@@ -21,18 +21,18 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPClnSubscribeCall;
+import com.stabilit.sc.common.call.SCMPReceivePublicationCall;
+import com.stabilit.sc.common.conf.Constants;
+import com.stabilit.sc.common.conf.RequesterConfigPool;
+import com.stabilit.sc.common.net.req.Requester;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.unit.TestContext;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.SuperTestCase;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnSubscribeCall;
-import com.stabilit.scm.common.call.SCMPReceivePublicationCall;
-import com.stabilit.scm.common.conf.Constants;
-import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.SynchronousCallback;
 
 public class PublishLargeMessagesTestCase extends SuperTestCase {
 

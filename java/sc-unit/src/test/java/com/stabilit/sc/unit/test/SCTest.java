@@ -25,19 +25,24 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.stabilit.scm.common.SCVersionTestCase;
-import test.stabilit.scm.common.net.DefaultEncoderDecoderTestCase;
-import test.stabilit.scm.common.net.DefaultFrameDecoderTestCase;
-import test.stabilit.scm.common.net.HttpFrameDecoderTestCase;
-import test.stabilit.scm.common.net.KeepAliveMessageEncoderDecoderTestCase;
-import test.stabilit.scm.common.net.LargeMessageEncoderDecoderTestCase;
-import test.stabilit.scm.common.scmp.SCMPVersionTestCase;
-import test.stabilit.scm.common.scmp.internal.SCMPCompositeTestCase;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeRequestTestCase;
-import test.stabilit.scm.common.scmp.internal.SCMPLargeResponseTestCase;
-import test.stabilit.scm.common.util.LinkedQueueTestCase;
-import test.stabilit.scm.common.util.ValidatorUtilityTestCase;
+import test.stabilit.sc.common.SCVersionTestCase;
+import test.stabilit.sc.common.net.DefaultEncoderDecoderTestCase;
+import test.stabilit.sc.common.net.DefaultFrameDecoderTestCase;
+import test.stabilit.sc.common.net.HttpFrameDecoderTestCase;
+import test.stabilit.sc.common.net.KeepAliveMessageEncoderDecoderTestCase;
+import test.stabilit.sc.common.net.LargeMessageEncoderDecoderTestCase;
+import test.stabilit.sc.common.scmp.SCMPVersionTestCase;
+import test.stabilit.sc.common.scmp.internal.SCMPCompositeTestCase;
+import test.stabilit.sc.common.scmp.internal.SCMPLargeRequestTestCase;
+import test.stabilit.sc.common.scmp.internal.SCMPLargeResponseTestCase;
+import test.stabilit.sc.common.util.LinkedQueueTestCase;
+import test.stabilit.sc.common.util.ValidatorUtilityTestCase;
 
+import com.stabilit.sc.common.scmp.SCMPError;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.unit.test.attach.AttachTestCase;
 import com.stabilit.sc.unit.test.attach.DetachTestCase;
 import com.stabilit.sc.unit.test.group.GroupCallTestCase;
@@ -55,11 +60,6 @@ import com.stabilit.sc.unit.test.srvExecute.async.SrvExecuteAsyncTestCase;
 import com.stabilit.sc.unit.test.srvExecute.async.SrvExecuteLargeAsyncTestCase;
 import com.stabilit.sc.unit.test.srvExecute.sync.SrvExecuteLargeSyncTestCase;
 import com.stabilit.sc.unit.test.srvExecute.sync.SrvExecuteSyncTestCase;
-import com.stabilit.scm.common.scmp.SCMPError;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
 
 /**
  * @author JTraber

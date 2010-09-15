@@ -23,10 +23,10 @@ package com.stabilit.sc.srv;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.srv.ISCPublishServer;
-import com.stabilit.scm.srv.ISCPublishServerCallback;
-import com.stabilit.scm.srv.ps.SCPublishServer;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.srv.ISCPublishServer;
+import com.stabilit.sc.srv.ISCPublishServerCallback;
+import com.stabilit.sc.srv.ps.SCPublishServer;
 
 public class DemoPublishServer {
 	

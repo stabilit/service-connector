@@ -10,10 +10,10 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.conf.Constants;
+import com.stabilit.sc.cln.SCClient;
+import com.stabilit.sc.cln.service.ISCClient;
+import com.stabilit.sc.common.cmd.SCMPValidatorException;
+import com.stabilit.sc.common.conf.Constants;
 
 /**
  * @author FJurnecka

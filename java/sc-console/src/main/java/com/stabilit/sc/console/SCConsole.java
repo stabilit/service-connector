@@ -15,8 +15,8 @@
  */
 package com.stabilit.sc.console;
 
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.common.util.CommandLineUtil;
+import com.stabilit.sc.cln.SCClient;
+import com.stabilit.sc.common.util.CommandLineUtil;
 
 public class SCConsole {
 

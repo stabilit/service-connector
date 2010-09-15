@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package com.stabilit.sc.unit;
 
-import com.stabilit.scm.common.cmd.factory.CommandFactory;
-import com.stabilit.scm.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
-import com.stabilit.scm.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
-import com.stabilit.scm.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
+import com.stabilit.sc.common.cmd.factory.CommandFactory;
+import com.stabilit.sc.sc.cmd.factory.impl.ServiceConnectorCommandFactory;
+import com.stabilit.sc.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
+import com.stabilit.sc.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 /**
  * A factory for creating command objects. Unifies all commands used by publish, session server and service connector.

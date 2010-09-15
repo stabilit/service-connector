@@ -19,16 +19,16 @@ package com.stabilit.sc.unit.techConnect;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.common.SCVersion;
+import com.stabilit.sc.common.net.req.ConnectionPool;
+import com.stabilit.sc.common.net.req.IConnection;
+import com.stabilit.sc.common.net.req.IConnectionPool;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.util.DateTimeUtility;
+import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.scm.common.SCVersion;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.IConnection;
-import com.stabilit.scm.common.net.req.IConnectionPool;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
-import com.stabilit.scm.common.util.DateTimeUtility;
-import com.stabilit.scm.common.util.SynchronousCallback;
 
 public class PoolConnectTestCase {
 

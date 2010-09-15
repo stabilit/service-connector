@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.stabilit.sc.ctrl.util.TestConstants;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCServerCallback;
-import com.stabilit.scm.srv.SCServer;
+import com.stabilit.sc.srv.ISCServer;
+import com.stabilit.sc.srv.ISCServerCallback;
+import com.stabilit.sc.srv.SCServer;
 
 public class RegisterServiceDeregisterServiceServerToSCTest {
 

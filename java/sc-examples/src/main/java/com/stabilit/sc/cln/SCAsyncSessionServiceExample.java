@@ -23,16 +23,16 @@ package com.stabilit.sc.cln;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.cln.SCClient;
-import com.stabilit.scm.cln.service.ISCClient;
-import com.stabilit.scm.cln.service.IService;
-import com.stabilit.scm.cln.service.IServiceContext;
-import com.stabilit.scm.cln.service.ISessionService;
-import com.stabilit.scm.common.service.ISC;
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.common.service.ISCMessageCallback;
-import com.stabilit.scm.common.service.SCMessage;
-import com.stabilit.scm.common.service.SCMessageCallback;
+import com.stabilit.sc.cln.SCClient;
+import com.stabilit.sc.cln.service.ISCClient;
+import com.stabilit.sc.cln.service.IService;
+import com.stabilit.sc.cln.service.IServiceContext;
+import com.stabilit.sc.cln.service.ISessionService;
+import com.stabilit.sc.common.service.ISC;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.common.service.ISCMessageCallback;
+import com.stabilit.sc.common.service.SCMessage;
+import com.stabilit.sc.common.service.SCMessageCallback;
 
 /**
  * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.

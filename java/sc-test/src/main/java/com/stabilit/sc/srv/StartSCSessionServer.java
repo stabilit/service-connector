@@ -5,13 +5,13 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 
+import com.stabilit.sc.common.cmd.SCMPValidatorException;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.common.service.SCMessageFault;
 import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.scm.common.cmd.SCMPValidatorException;
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.common.service.SCMessageFault;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCSessionServerCallback;
-import com.stabilit.scm.srv.SCServer;
+import com.stabilit.sc.srv.ISCServer;
+import com.stabilit.sc.srv.ISCSessionServerCallback;
+import com.stabilit.sc.srv.SCServer;
 
 public class StartSCSessionServer {
 

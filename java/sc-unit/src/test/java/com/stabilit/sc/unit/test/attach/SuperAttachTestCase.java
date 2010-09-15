@@ -19,12 +19,12 @@ package com.stabilit.sc.unit.test.attach;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.sc.common.call.SCMPAttachCall;
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPDetachCall;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.unit.test.SuperTestCase;
-import com.stabilit.scm.common.call.SCMPAttachCall;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPDetachCall;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.util.SynchronousCallback;
 
 /**
  * @author JTraber

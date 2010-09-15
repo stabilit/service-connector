@@ -21,19 +21,19 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPClnCreateSessionCall;
+import com.stabilit.sc.common.conf.RequesterConfigPool;
+import com.stabilit.sc.common.net.req.IConnectionPool;
+import com.stabilit.sc.common.net.req.Requester;
+import com.stabilit.sc.common.scmp.ISCMPSynchronousCallback;
+import com.stabilit.sc.common.scmp.SCMPFault;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.unit.TestContext;
 import com.stabilit.sc.unit.test.SetupTestCases;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPClnCreateSessionCall;
-import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.net.req.IConnectionPool;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.ISCMPSynchronousCallback;
-import com.stabilit.scm.common.scmp.SCMPFault;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.util.SynchronousCallback;
 
 public class OperationTimeoutTestCase extends SuperAttachTestCase {
 

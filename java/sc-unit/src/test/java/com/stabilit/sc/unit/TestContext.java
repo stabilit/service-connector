@@ -21,11 +21,11 @@
  */
 package com.stabilit.sc.unit;
 
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.net.req.ConnectionPool;
-import com.stabilit.scm.common.net.req.IConnectionPool;
-import com.stabilit.scm.common.net.req.IRequesterContext;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
+import com.stabilit.sc.common.conf.ICommunicatorConfig;
+import com.stabilit.sc.common.net.req.ConnectionPool;
+import com.stabilit.sc.common.net.req.IConnectionPool;
+import com.stabilit.sc.common.net.req.IRequesterContext;
+import com.stabilit.sc.common.scmp.SCMPMessageId;
 
 /**
  * @author JTraber

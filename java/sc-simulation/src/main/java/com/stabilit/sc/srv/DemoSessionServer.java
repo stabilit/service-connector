@@ -23,10 +23,10 @@ package com.stabilit.sc.srv;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.srv.ISCServer;
-import com.stabilit.scm.srv.ISCSessionServerCallback;
-import com.stabilit.scm.srv.SCServer;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.srv.ISCServer;
+import com.stabilit.sc.srv.ISCSessionServerCallback;
+import com.stabilit.sc.srv.SCServer;
 
 public class DemoSessionServer {
 	/** The Constant logger. */

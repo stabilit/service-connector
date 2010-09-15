@@ -19,19 +19,19 @@ package com.stabilit.sc.unit.test.register;
 import org.junit.After;
 import org.junit.Before;
 
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPDeRegisterServiceCall;
+import com.stabilit.sc.common.call.SCMPRegisterServiceCall;
+import com.stabilit.sc.common.conf.ICommunicatorConfig;
+import com.stabilit.sc.common.conf.RequesterConfigPool;
+import com.stabilit.sc.common.conf.ResponderConfigPool;
+import com.stabilit.sc.common.net.req.IRequester;
+import com.stabilit.sc.common.net.req.IRequesterContext;
+import com.stabilit.sc.common.net.req.Requester;
+import com.stabilit.sc.common.scmp.SCMPMessageId;
 import com.stabilit.sc.unit.TestContext;
 import com.stabilit.sc.unit.test.SCTest;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPDeRegisterServiceCall;
-import com.stabilit.scm.common.call.SCMPRegisterServiceCall;
-import com.stabilit.scm.common.conf.ICommunicatorConfig;
-import com.stabilit.scm.common.conf.RequesterConfigPool;
-import com.stabilit.scm.common.conf.ResponderConfigPool;
-import com.stabilit.scm.common.net.req.IRequester;
-import com.stabilit.scm.common.net.req.IRequesterContext;
-import com.stabilit.scm.common.net.req.Requester;
-import com.stabilit.scm.common.scmp.SCMPMessageId;
 
 /**
  * @author JTraber

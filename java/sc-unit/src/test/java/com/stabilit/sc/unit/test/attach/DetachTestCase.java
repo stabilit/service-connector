@@ -20,11 +20,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.stabilit.scm.common.call.SCMPCallFactory;
-import com.stabilit.scm.common.call.SCMPDetachCall;
-import com.stabilit.scm.common.scmp.SCMPHeaderAttributeKey;
-import com.stabilit.scm.common.scmp.SCMPMessage;
-import com.stabilit.scm.common.scmp.SCMPMsgType;
+import com.stabilit.sc.common.call.SCMPCallFactory;
+import com.stabilit.sc.common.call.SCMPDetachCall;
+import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
+import com.stabilit.sc.common.scmp.SCMPMessage;
+import com.stabilit.sc.common.scmp.SCMPMsgType;
 
 public class DetachTestCase extends SuperAttachTestCase {
 

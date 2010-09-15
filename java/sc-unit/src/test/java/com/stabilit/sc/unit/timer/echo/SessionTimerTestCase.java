@@ -19,8 +19,8 @@ package com.stabilit.sc.unit.timer.echo;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stabilit.sc.cln.service.ISCClient;
 import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.scm.cln.service.ISCClient;
 
 public class SessionTimerTestCase {
 

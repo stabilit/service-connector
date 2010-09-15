@@ -7,8 +7,8 @@ import java.security.InvalidParameterException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.scm.common.service.ISCMessage;
-import com.stabilit.scm.common.service.SCMessage;
+import com.stabilit.sc.common.service.ISCMessage;
+import com.stabilit.sc.common.service.SCMessage;
 
 /**
  * @author FJurnecka
