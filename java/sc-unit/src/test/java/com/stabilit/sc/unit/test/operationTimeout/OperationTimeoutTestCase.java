@@ -72,7 +72,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		createSessionCall.setRequestBody("wait:" + 2000);
 		ISCMPSynchronousCallback callback = new SynchronousCallback() {
 		};
-		createSessionCall.invoke(callback, 2);
+		createSessionCall.invoke(callback, 2000);
 
 		// timeout on callback must be the lowest value, 1/2 seconds
 		SCMPFault fault = (SCMPFault) callback.getMessageSync(20000);

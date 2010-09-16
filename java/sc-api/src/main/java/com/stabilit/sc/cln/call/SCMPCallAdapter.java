@@ -18,7 +18,6 @@ package com.stabilit.sc.cln.call;
 
 import org.apache.log4j.Logger;
 
-import com.stabilit.sc.common.conf.Constants;
 import com.stabilit.sc.common.net.req.IRequester;
 import com.stabilit.sc.common.scmp.ISCMPCallback;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
@@ -136,8 +135,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	@Override
 	public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OP_TIMEOUT,
-				(int) (timeoutInMillis / Constants.SEC_TO_MILISEC_FACTOR));
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, (int) timeoutInMillis);
 		this.requester.send(this.requestMessage, timeoutInMillis, callback);
 		return;
 	}

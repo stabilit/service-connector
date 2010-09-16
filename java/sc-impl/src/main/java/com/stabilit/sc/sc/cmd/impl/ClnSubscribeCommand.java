@@ -89,7 +89,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
+				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -150,9 +150,9 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed " + mask);
 				}
 				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
+				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 				ValidatorUtility.validateIpAddressList(ipAddressList);

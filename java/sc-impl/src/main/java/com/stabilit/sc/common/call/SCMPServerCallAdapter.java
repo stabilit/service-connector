@@ -72,6 +72,6 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
 		super.invoke(callback, timeoutInMillis);
 		// no OP_TIMEOUT needed to send to server
-		this.requestMessage.removeHeader(SCMPHeaderAttributeKey.OP_TIMEOUT);
+		this.requestMessage.removeHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 	}
 }

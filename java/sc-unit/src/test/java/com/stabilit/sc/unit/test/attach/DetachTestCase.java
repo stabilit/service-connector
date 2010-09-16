@@ -44,7 +44,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 
 		SCMPMessage result = null;
 		try {
-			detachCall.invoke(this.attachCallback, 3);
+			detachCall.invoke(this.attachCallback, 3000);
 			result = this.attachCallback.getMessageSync();
 		} catch (Exception e) {
 			Assert.fail();

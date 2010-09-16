@@ -74,7 +74,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		Server server = session.getServer();
 		// try sending to backend server
 		server.sendData(message, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
+				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
 		return;
 	}
 
@@ -105,9 +105,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
+				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {

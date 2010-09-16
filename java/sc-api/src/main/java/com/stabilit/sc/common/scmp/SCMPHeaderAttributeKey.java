@@ -51,8 +51,8 @@ public enum SCMPHeaderAttributeKey {
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */
 	ECHO_INTERVAL("eci"),
-	/** The ECHO_TIMEOUT. */
-	OP_TIMEOUT("oti"),
+	/** The OPERATION_TIMEOUT. */
+	OPERATION_TIMEOUT("oti"),
 	/** The IMMEDIAT_CONNECT. */
 	IMMEDIATE_CONNECT("imc"),
 	/** The IP_ADDRESS_LIST. */

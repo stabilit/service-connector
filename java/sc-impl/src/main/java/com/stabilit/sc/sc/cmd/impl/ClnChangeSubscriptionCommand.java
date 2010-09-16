@@ -78,7 +78,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		server.changeSubscription(reqMessage, callback, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
+				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -124,9 +124,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OP_TIMEOUT.getValue());
+				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OP_TIMEOUT, oti);
+				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);

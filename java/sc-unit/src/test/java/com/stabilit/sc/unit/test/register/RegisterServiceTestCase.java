@@ -212,7 +212,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 
 		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
-		deRegisterServiceCall.invoke(this.registerCallback, 3);
+		deRegisterServiceCall.invoke(this.registerCallback, 3000);
 		this.registerCallback.getMessageSync();
 	}
 

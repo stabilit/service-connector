@@ -103,8 +103,11 @@ public class SCTest {
 
 	public static void verifyError(SCMPMessage result, SCMPError error, String additionalInfo, SCMPMsgType msgType) {
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(error.getErrorText() + additionalInfo, result
-				.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		// TODO TRN refine SCMPErrors
+		/*
+		 * text must not be compared! It may be chinese
+		Assert.assertEquals(error.getErrorText() + additionalInfo, result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		*/
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 
