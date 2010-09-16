@@ -127,6 +127,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -142,6 +144,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(((byte[])message.getData()).length, ((byte[])response.getData()).length);
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -158,6 +162,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -174,6 +180,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -190,6 +198,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -207,6 +217,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -224,6 +236,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -241,6 +255,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -259,6 +275,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -277,6 +295,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -295,6 +315,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -314,6 +336,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -335,6 +359,8 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId(sessionService.getSessionId());
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -359,6 +385,9 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
 		ISCMessage response = sessionService0.execute(message);
+		sessionService0.deleteSession();
+		sessionService1.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -383,6 +412,9 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
 		ISCMessage response = sessionService0.execute(message);
+		sessionService0.deleteSession();
+		sessionService1.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());

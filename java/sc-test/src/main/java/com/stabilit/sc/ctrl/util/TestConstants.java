@@ -25,4 +25,7 @@ public class TestConstants {
 	
 	public static final int dataLength60kB = 61440;
 	public static final int dataLength1MB = 1048576;
+	
+	public static final String pidLogFile = "pid.log";
+
 }

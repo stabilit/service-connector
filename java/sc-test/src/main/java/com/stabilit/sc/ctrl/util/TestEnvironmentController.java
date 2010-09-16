@@ -13,9 +13,8 @@ public class TestEnvironmentController {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(TestEnvironmentController.class);
 
-	private static String pidLogFile = "pid.log";
-	private static String fs;
-	private static String userDir;
+	private String fs;
+	private String userDir;
 
 	public TestEnvironmentController() {
 		fs = System.getProperty("file.separator");
@@ -38,7 +37,7 @@ public class TestEnvironmentController {
 		} catch (IOException e) {
 		}
 		String logDir = properties.getProperty("log.dir");
-		String fileName = userDir + fs + logDir + fs + pidLogFile;
+		String fileName = userDir + fs + logDir + fs + TestConstants.pidLogFile;
 
 		return fileName;
 	}
@@ -96,7 +95,7 @@ public class TestEnvironmentController {
 		deleteFile(fileName);
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar -filename " + userDir + fs
+				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar -sc.configuration " + userDir + fs
 				+ "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		Process p = Runtime.getRuntime().exec(command);
 

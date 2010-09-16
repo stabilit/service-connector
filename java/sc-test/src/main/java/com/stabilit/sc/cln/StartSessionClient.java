@@ -73,7 +73,6 @@ public class StartSessionClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-
 				ISessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 
@@ -85,12 +84,17 @@ public class StartSessionClient extends Thread {
 
 				sessionService.execute(new SCMessage());
 				sessionService.deleteSession();
-			} else if (getMethodName() == "") {
 				
-				ISCMessage message = new SCMessage("The quick brown fox jumps over a lazy dog.");
-
+			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
+				
 				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
+
+				ISCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
+				message.setCompressed(false);
+
+				sessionService.execute(message);
+				sessionService.deleteSession();
 			}
 
 		} catch (Exception e) {

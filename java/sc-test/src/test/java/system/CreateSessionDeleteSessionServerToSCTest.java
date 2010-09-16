@@ -38,6 +38,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
+			throw e;
 		}
 	}
 
@@ -197,15 +198,24 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
 		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
 		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
+		assertEquals(null, srvCallback.abortSessionMsg);
 	}
 	
 	@Test
-	public void execute_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_4messagesArrive()
+	public void execute_messageData1MBArray_3messagesArrive()
 			throws Exception {
 		StartSessionClient client = new StartSessionClient(
-				"createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes");
+				"execute_messageData1MBArray_returnsTheSameMessageData");
 		client.start();
 		client.join();
+		
+		assertEquals(3, srvCallback.messagesExchanged);
+		assertEquals(true, srvCallback.executeMsg instanceof ISCMessage);
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
+		assertEquals(TestConstants.dataLength1MB, ((byte[])srvCallback.executeMsg.getData()).length);
+		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
+		assertEquals(false, srvCallback.executeMsg.isFault());
+		assertEquals(false, srvCallback.executeMsg.isCompressed());
 	}
 
 	private class SessionServerContext {
