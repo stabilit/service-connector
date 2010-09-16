@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import com.stabilit.sc.common.net.req.IRequester;
 import com.stabilit.sc.common.net.req.IRequesterContext;
 import com.stabilit.sc.common.net.req.Requester;
 import com.stabilit.sc.common.scmp.SCMPMessageId;
-import com.stabilit.sc.unit.TestContext;
+import com.stabilit.sc.unit.test.pool.TestContext;
 
 /**
  * @author JTraber

@@ -30,10 +30,10 @@ import com.stabilit.sc.common.net.req.Requester;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMessage;
 import com.stabilit.sc.common.util.SynchronousCallback;
-import com.stabilit.sc.unit.TestContext;
-import com.stabilit.sc.unit.test.SCTest;
-import com.stabilit.sc.unit.test.SetupTestCases;
-import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.sc.unit.SCTest;
+import com.stabilit.sc.unit.SetupTestCases;
+import com.stabilit.sc.unit.SuperTestCase;
+import com.stabilit.sc.unit.test.pool.TestContext;
 
 public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 

@@ -31,9 +31,9 @@ import com.stabilit.sc.common.scmp.SCMPFault;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.scmp.SCMPMessage;
 import com.stabilit.sc.common.util.SynchronousCallback;
-import com.stabilit.sc.unit.TestContext;
-import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.SetupTestCases;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
+import com.stabilit.sc.unit.test.pool.TestContext;
 
 public class OperationTimeoutTestCase extends SuperAttachTestCase {
 

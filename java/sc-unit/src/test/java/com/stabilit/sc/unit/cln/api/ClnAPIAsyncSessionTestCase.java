@@ -29,7 +29,7 @@ import com.stabilit.sc.common.service.ISCMessage;
 import com.stabilit.sc.common.service.ISCMessageCallback;
 import com.stabilit.sc.common.service.SCMessage;
 import com.stabilit.sc.common.service.SCMessageCallback;
-import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.SetupTestCases;
 
 public class ClnAPIAsyncSessionTestCase {
 	

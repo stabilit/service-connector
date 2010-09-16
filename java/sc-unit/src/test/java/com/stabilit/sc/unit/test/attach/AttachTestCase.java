@@ -28,8 +28,8 @@ import com.stabilit.sc.common.scmp.SCMPMessage;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.common.util.ValidatorUtility;
-import com.stabilit.sc.unit.test.SCTest;
-import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.sc.unit.SCTest;
+import com.stabilit.sc.unit.SuperTestCase;
 
 public class AttachTestCase extends SuperTestCase {
 

@@ -24,7 +24,7 @@ import com.stabilit.sc.cln.service.ISCClient;
 import com.stabilit.sc.cln.service.ISessionService;
 import com.stabilit.sc.common.service.ISCMessage;
 import com.stabilit.sc.common.service.SCMessage;
-import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.SetupTestCases;
 
 public class ClnAPISyncSessionTestCase {
 

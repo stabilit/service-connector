@@ -75,7 +75,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>com.stabilit.scm.console.SCConsole</mainClass>
+							<mainClass>com.stabilit.sc.console.SCConsole</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -27,7 +27,7 @@ import com.stabilit.sc.common.call.SCMPClnDeleteSessionCall;
 import com.stabilit.sc.common.call.SCMPInspectCall;
 import com.stabilit.sc.common.scmp.SCMPMessage;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.sc.unit.SCTest;
 
 public class ClnDeleteSessionTestCase extends SuperSessionTestCase {
 

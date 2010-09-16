@@ -24,7 +24,7 @@ import com.stabilit.sc.common.call.SCMPCallFactory;
 import com.stabilit.sc.common.call.SCMPDetachCall;
 import com.stabilit.sc.common.scmp.SCMPHeaderAttributeKey;
 import com.stabilit.sc.common.util.SynchronousCallback;
-import com.stabilit.sc.unit.test.SuperTestCase;
+import com.stabilit.sc.unit.SuperTestCase;
 
 /**
  * @author JTraber

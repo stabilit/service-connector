@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.stabilit.sc.unit;
+package com.stabilit.sc.unit.test.pool;
 
 import com.stabilit.sc.common.conf.ICommunicatorConfig;
 import com.stabilit.sc.common.net.req.ConnectionPool;

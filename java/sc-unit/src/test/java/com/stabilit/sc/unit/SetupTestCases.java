@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package com.stabilit.sc.unit.test;
+package com.stabilit.sc.unit;
 
 import java.io.File;
 
@@ -33,7 +33,6 @@ import com.stabilit.sc.srv.ISCServer;
 import com.stabilit.sc.srv.ISCSessionServerCallback;
 import com.stabilit.sc.srv.SCServer;
 import com.stabilit.sc.srv.ps.SCPublishServer;
-import com.stabilit.sc.unit.TestUnitServerCommandFactory;
 
 /**
  * @author JTraber
@@ -83,7 +82,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(null);
+				SC.main(new String[] { "-sc.configuration", "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -97,7 +96,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(new String[] { "-filename", propertyFileName });
+				SC.main(new String[] { "-sc.configuration", propertyFileName });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -111,7 +110,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(new String[] { "-filename", propertyFileName });
+				SC.main(new String[] { "-sc.configuration", propertyFileName });
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -124,7 +123,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(null);
+				SC.main(new String[] { "-sc.configuration", "sc.properties"});
 				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -138,7 +137,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(null);
+				SC.main(new String[] { "-sc.configuration", "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
@@ -153,7 +152,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
-				SC.main(null);
+				SC.main(new String[] { "-sc.configuration", "sc.properties"});
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

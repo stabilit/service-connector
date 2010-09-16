@@ -19,7 +19,7 @@ package com.stabilit.sc.unit.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.SetupTestCases;
 
 public class ClnAPIFileTestCase {
 

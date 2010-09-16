@@ -35,7 +35,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>com.stabilit.scm.cln.SessionAndPublishClient</mainClass>
+							<mainClass>com.stabilit.sc.cln.SessionAndPublishClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -26,7 +26,7 @@ import com.stabilit.sc.common.call.SCMPClnExecuteCall;
 import com.stabilit.sc.common.scmp.SCMPError;
 import com.stabilit.sc.common.scmp.SCMPMessage;
 import com.stabilit.sc.common.scmp.SCMPMsgType;
-import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.sc.unit.SCTest;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
 
 public class SessionTimeoutTestCase extends SuperAttachTestCase {

@@ -135,10 +135,10 @@ public final class SC {
 		try {
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.scm.registry:type=SessionRegistry");
-			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.scm.registry:type=ServiceRegistry");
-			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.scm.registry:type=ServerRegistry");
-			ObjectName mxbeanNameLoggingManager = new ObjectName("com.stabilit.scm.logging:type=LoggingManager");
+			ObjectName mxbeanNameSessReg = new ObjectName("com.stabilit.sc.registry:type=SessionRegistry");
+			ObjectName mxbeanNameServiceReg = new ObjectName("com.stabilit.sc.registry:type=ServiceRegistry");
+			ObjectName mxbeanNameServerReg = new ObjectName("com.stabilit.sc.registry:type=ServerRegistry");
+			ObjectName mxbeanNameLoggingManager = new ObjectName("com.stabilit.sc.logging:type=LoggingManager");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);

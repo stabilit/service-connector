@@ -56,7 +56,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>com.stabilit.scm.srv.SessionAndPublishServer</mainClass>
+							<mainClass>com.stabilit.sc.srv.SessionAndPublishServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

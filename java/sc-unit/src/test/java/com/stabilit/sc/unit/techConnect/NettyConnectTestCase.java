@@ -30,7 +30,7 @@ import com.stabilit.sc.common.scmp.SCMPMsgType;
 import com.stabilit.sc.common.util.DateTimeUtility;
 import com.stabilit.sc.common.util.SynchronousCallback;
 import com.stabilit.sc.srv.IIdleCallback;
-import com.stabilit.sc.unit.test.SetupTestCases;
+import com.stabilit.sc.unit.SetupTestCases;
 
 public class NettyConnectTestCase {
 

@@ -29,9 +29,9 @@ import com.stabilit.sc.common.net.req.IRequester;
 import com.stabilit.sc.common.net.req.IRequesterContext;
 import com.stabilit.sc.common.net.req.Requester;
 import com.stabilit.sc.common.scmp.SCMPMessageId;
-import com.stabilit.sc.unit.TestContext;
-import com.stabilit.sc.unit.test.SCTest;
+import com.stabilit.sc.unit.SCTest;
 import com.stabilit.sc.unit.test.attach.SuperAttachTestCase;
+import com.stabilit.sc.unit.test.pool.TestContext;
 
 /**
  * @author JTraber
