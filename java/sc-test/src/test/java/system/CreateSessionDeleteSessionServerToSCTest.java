@@ -8,16 +8,16 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.cln.StartSessionClient;
+import org.serviceconnector.common.cmd.SCMPValidatorException;
+import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.common.service.SCMessageFault;
+import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCSessionServerCallback;
+import org.serviceconnector.srv.SCServer;
 
-import com.stabilit.sc.cln.StartSessionClient;
-import com.stabilit.sc.common.cmd.SCMPValidatorException;
-import com.stabilit.sc.common.service.ISCMessage;
-import com.stabilit.sc.common.service.SCMessageFault;
-import com.stabilit.sc.ctrl.util.TestConstants;
-import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.sc.srv.ISCServer;
-import com.stabilit.sc.srv.ISCSessionServerCallback;
-import com.stabilit.sc.srv.SCServer;
 
 public class CreateSessionDeleteSessionServerToSCTest {
 	/** The Constant logger. */

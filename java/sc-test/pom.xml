@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.stabilit.sc</groupId>
+	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -40,7 +40,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>com.stabilit.sc.srv.StartSCSessionServer</mainClass>
+							<mainClass>org.serviceconnector.srv.StartSCSessionServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -49,13 +49,13 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>com.stabilit.sc</groupId>
+			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.stabilit.sc</groupId>
+			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-impl</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>

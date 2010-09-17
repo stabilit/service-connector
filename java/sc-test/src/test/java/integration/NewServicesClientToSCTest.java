@@ -10,14 +10,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.cln.service.IFileService;
+import org.serviceconnector.cln.service.IPublishService;
+import org.serviceconnector.cln.service.ISCClient;
+import org.serviceconnector.cln.service.ISessionService;
+import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctrl.util.TestEnvironmentController;
 
-import com.stabilit.sc.cln.SCClient;
-import com.stabilit.sc.cln.service.IFileService;
-import com.stabilit.sc.cln.service.IPublishService;
-import com.stabilit.sc.cln.service.ISCClient;
-import com.stabilit.sc.cln.service.ISessionService;
-import com.stabilit.sc.ctrl.util.TestConstants;
-import com.stabilit.sc.ctrl.util.TestEnvironmentController;
 
 public class NewServicesClientToSCTest {
 	/** The Constant logger. */

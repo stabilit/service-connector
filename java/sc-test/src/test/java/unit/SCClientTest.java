@@ -9,11 +9,11 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.cln.service.ISCClient;
+import org.serviceconnector.common.cmd.SCMPValidatorException;
+import org.serviceconnector.common.conf.Constants;
 
-import com.stabilit.sc.cln.SCClient;
-import com.stabilit.sc.cln.service.ISCClient;
-import com.stabilit.sc.common.cmd.SCMPValidatorException;
-import com.stabilit.sc.common.conf.Constants;
 
 /**
  * @author FJurnecka

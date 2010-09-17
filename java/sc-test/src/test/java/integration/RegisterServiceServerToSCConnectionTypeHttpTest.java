@@ -12,15 +12,15 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.common.cmd.SCMPValidatorException;
+import org.serviceconnector.common.net.SCMPCommunicationException;
+import org.serviceconnector.common.service.SCServiceException;
+import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCServerCallback;
+import org.serviceconnector.srv.SCServer;
 
-import com.stabilit.sc.common.cmd.SCMPValidatorException;
-import com.stabilit.sc.common.net.SCMPCommunicationException;
-import com.stabilit.sc.common.service.SCServiceException;
-import com.stabilit.sc.ctrl.util.TestConstants;
-import com.stabilit.sc.ctrl.util.TestEnvironmentController;
-import com.stabilit.sc.srv.ISCServer;
-import com.stabilit.sc.srv.ISCServerCallback;
-import com.stabilit.sc.srv.SCServer;
 
 public class RegisterServiceServerToSCConnectionTypeHttpTest {
 

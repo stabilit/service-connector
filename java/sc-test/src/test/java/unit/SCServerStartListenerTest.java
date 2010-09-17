@@ -9,11 +9,11 @@ import javax.activity.InvalidActivityException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.common.cmd.SCMPValidatorException;
+import org.serviceconnector.common.net.SCMPCommunicationException;
+import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.SCServer;
 
-import com.stabilit.sc.common.cmd.SCMPValidatorException;
-import com.stabilit.sc.common.net.SCMPCommunicationException;
-import com.stabilit.sc.srv.ISCServer;
-import com.stabilit.sc.srv.SCServer;
 
 public class SCServerStartListenerTest {
 
