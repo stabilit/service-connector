@@ -28,8 +28,7 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
 import org.serviceconnector.common.scmp.ResponseAdapter;
@@ -46,7 +45,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponse.class);
 
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
 	/** The event from Netty framework. */
 	private ChannelEvent event;

@@ -17,8 +17,7 @@
 package org.serviceconnector.sc.registry;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.log.ISessionLogger;
-import org.serviceconnector.common.log.impl.SessionLogger;
+import org.serviceconnector.common.log.SessionLogger;
 import org.serviceconnector.common.registry.Registry;
 import org.serviceconnector.sc.service.Session;
 
@@ -34,7 +33,7 @@ public class SubscriptionSessionRegistry extends Registry<String, Session> {
 	protected static final Logger logger = Logger.getLogger(SubscriptionSessionRegistry.class);
 	
 	/** The Constant sessionLogger. */
-	private final static ISessionLogger sessionLogger = SessionLogger.getInstance();
+	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 	
 	/** The instance. */
 	private static SubscriptionSessionRegistry instance = new SubscriptionSessionRegistry();

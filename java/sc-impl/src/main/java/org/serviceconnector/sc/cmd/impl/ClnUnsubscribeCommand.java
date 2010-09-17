@@ -20,8 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.common.cmd.ICommandValidator;
 import org.serviceconnector.common.cmd.IPassThroughPartMsg;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.log.ISubscriptionLogger;
-import org.serviceconnector.common.log.impl.SubscriptionLogger;
+import org.serviceconnector.common.log.SubscriptionLogger;
 import org.serviceconnector.common.scmp.HasFaultResponseException;
 import org.serviceconnector.common.scmp.IRequest;
 import org.serviceconnector.common.scmp.IResponse;
@@ -47,7 +46,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
 
 	/** The Constant subscriptionLogger. */
-	private final static ISubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 
 	public ClnUnsubscribeCommand() {
 		this.commandValidator = new ClnUnsubscribeCommandValidator();

@@ -32,10 +32,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.IMessageLogger;
-import org.serviceconnector.common.log.impl.MessageLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.net.IFrameDecoder;
+import org.serviceconnector.common.log.MessageLogger;
 import org.serviceconnector.common.scmp.SCMPBodyType;
 import org.serviceconnector.common.scmp.SCMPFault;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
@@ -54,7 +51,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 
 	/** The Constant messageLogger. */
-	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
+	private final static MessageLogger messageLogger = MessageLogger.getInstance();
 
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);

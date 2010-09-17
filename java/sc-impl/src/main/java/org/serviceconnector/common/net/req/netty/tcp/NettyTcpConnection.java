@@ -29,8 +29,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.CommunicationException;
 import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
@@ -52,7 +51,7 @@ public class NettyTcpConnection implements IConnection {
 	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
 
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	/** The bootstrap. */
 	private ClientBootstrap bootstrap;

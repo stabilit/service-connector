@@ -35,8 +35,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.CommunicationException;
 import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
@@ -61,7 +60,7 @@ public class NettyHttpConnection implements IConnection {
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
 
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
 	/** The url. */
 	private URL url;

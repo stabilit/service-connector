@@ -23,8 +23,7 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
 import org.serviceconnector.common.scmp.ResponseAdapter;
@@ -41,7 +40,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
 	
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	/** The event from Netty framework. */
 	private ChannelEvent event;

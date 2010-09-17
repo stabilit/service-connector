@@ -25,8 +25,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
 import org.serviceconnector.common.net.req.netty.IdleTimeoutException;
@@ -45,7 +44,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterResponseHandler.class);
 
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
 	private ISCMPCallback scmpCallback;
 	private volatile boolean pendingRequest;

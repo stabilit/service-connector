@@ -1,8 +1,7 @@
-package org.serviceconnector.common.log.impl;
+package org.serviceconnector.common.log;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
-import org.serviceconnector.common.log.ILoggingManagerMXBean;
 
 
 /**

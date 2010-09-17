@@ -14,19 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.common.log.impl;
+package org.serviceconnector.common.log;
 
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.log.IPerformanceLogger;
-import org.serviceconnector.common.log.Loggers;
 
 
-public class PerformanceLogger implements IPerformanceLogger {
+public class PerformanceLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
-	private static final IPerformanceLogger PERFORMANCE_LOGGER = new PerformanceLogger();
+	private static final PerformanceLogger PERFORMANCE_LOGGER = new PerformanceLogger();
 
 	/** The thread local is needed to save time in running thread. */
 	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
@@ -38,20 +36,20 @@ public class PerformanceLogger implements IPerformanceLogger {
 	private PerformanceLogger() {
 	}
 
-	public static IPerformanceLogger getInstance() {
+	public static PerformanceLogger getInstance() {
 		return PerformanceLogger.PERFORMANCE_LOGGER;
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public synchronized void begin(String className, String methodName) {
 		if (logger.isDebugEnabled()) {
 			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @param className
+	 * @param methodName
+	 */
 	public synchronized void end(String className, String methodName) {
 		if (logger.isDebugEnabled()) {
 			PerformanceItem beginItem = this.threadLocal.get();
@@ -72,9 +70,10 @@ public class PerformanceLogger implements IPerformanceLogger {
 
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean isDebugEnabled() {
+	/**
+	 * @return
+	 */
+	public boolean S() {
 		return logger.isDebugEnabled();
 	}
 

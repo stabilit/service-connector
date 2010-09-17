@@ -16,11 +16,55 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.common.log;
 
-public interface IPerformanceLogger {
+import java.util.Formatter;
 
-	public abstract void begin(String className, String methodName);
+import org.apache.log4j.Logger;
+import org.serviceconnector.common.scmp.SCMPMessage;
 
-	public abstract void end(String className, String methodName);
-	
-	public abstract boolean isDebugEnabled();
+
+public class MessageLogger {
+
+	private static final Logger logger = Logger.getLogger(Loggers.MESSAGE.getValue());
+	private static final MessageLogger MESSAGE_LOGGER = new MessageLogger();
+
+	private String MSG_LONG_STR = "msg:%s";
+	private String MSG_SHORT_STR = "msg:%s";
+
+	/**
+	 * Instantiates a new connection logger. Private for singelton use.
+	 */
+	private MessageLogger() {
+	}
+
+	public static MessageLogger getInstance() {
+		return MessageLogger.MESSAGE_LOGGER;
+	}
+
+	/**
+	 * @param className
+	 * @param message
+	 */
+	public synchronized void logMessage(String className, SCMPMessage message) {
+		if (logger.isInfoEnabled()) {
+			// TODO TRN (write out important attributes)
+			Formatter format = new Formatter();
+			format.format(MSG_SHORT_STR, message);
+			logger.info(format.toString());
+			format.close();
+		}
+		if (logger.isDebugEnabled()) {
+			// TODO TRN (write out all attributes)
+			Formatter format = new Formatter();
+			format.format(MSG_LONG_STR, message);
+			logger.debug(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isDebugEnabled() {
+		return logger.isDebugEnabled();
+	}
 }

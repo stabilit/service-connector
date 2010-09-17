@@ -14,56 +14,75 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.common.log.impl;
+package org.serviceconnector.common.log;
 
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.log.IMessageLogger;
-import org.serviceconnector.common.log.Loggers;
-import org.serviceconnector.common.scmp.SCMPMessage;
 
 
-public class MessageLogger implements IMessageLogger {
+public class SessionLogger {
 
-	private static final Logger logger = Logger.getLogger(Loggers.MESSAGE.getValue());
-	private static final IMessageLogger MESSAGE_LOGGER = new MessageLogger();
+	private static final Logger logger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final SessionLogger SESSION_LOGGER = new SessionLogger();
 
-	private String MSG_LONG_STR = "msg:%s";
-	private String MSG_SHORT_STR = "msg:%s";
+	private String CREATE_SESSION_STR = "create session:%s";
+	private String DELETE_SESSION_STR = "delete session:%s";
+	private String ABORT_SESSION_STR = "abort session:%s";
 
 	/**
 	 * Instantiates a new connection logger. Private for singelton use.
 	 */
-	private MessageLogger() {
+	private SessionLogger() {
 	}
 
-	public static IMessageLogger getInstance() {
-		return MessageLogger.MESSAGE_LOGGER;
+	public static SessionLogger getInstance() {
+		return SessionLogger.SESSION_LOGGER;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void logMessage(String className, SCMPMessage message) {
+	/**
+	 * @param className
+	 * @param sessionId
+	 */
+	public synchronized void logCreateSession(String className, String sessionId) {
 		if (logger.isInfoEnabled()) {
-			// TODO TRN (write out important attributes)
 			Formatter format = new Formatter();
-			format.format(MSG_SHORT_STR, message);
+			format.format(CREATE_SESSION_STR, sessionId);
 			logger.info(format.toString());
 			format.close();
 		}
-		if (logger.isDebugEnabled()) {
-			// TODO TRN (write out all attributes)
+	}
+
+	/**
+	 * @param className
+	 * @param sessionId
+	 */
+	public synchronized void logDeleteSession(String className, String sessionId) {
+		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
-			format.format(MSG_LONG_STR, message);
-			logger.debug(format.toString());
+			format.format(DELETE_SESSION_STR, sessionId);
+			logger.info(format.toString());
 			format.close();
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean isDebugEnabled() {
-		return logger.isDebugEnabled();
+	/**
+	 * @param className
+	 * @param sessionId
+	 */
+	public synchronized void logAbortSession(String className, String sessionId) {
+		if (logger.isInfoEnabled()) {
+			Formatter format = new Formatter();
+			format.format(ABORT_SESSION_STR, sessionId);
+			logger.info(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isInfoEnabled() {
+		return logger.isInfoEnabled();
 	}
 }

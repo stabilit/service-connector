@@ -26,8 +26,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.impl.ConnectionLogger;
+import org.serviceconnector.common.log.ConnectionLogger;
 import org.serviceconnector.common.net.req.IConnection;
 import org.serviceconnector.common.net.req.IConnectionContext;
 import org.serviceconnector.srv.IIdleCallback;
@@ -42,7 +41,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 	protected final static Logger logger = Logger.getLogger(NettyIdleHandler.class);
 
 	/** The Constant connectionLogger. */
-	private final static IConnectionLogger connectionLogger = ConnectionLogger.getInstance();
+	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
 	private IConnectionContext connectionContext;
 

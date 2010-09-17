@@ -14,19 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.common.log.impl;
+package org.serviceconnector.common.log;
 
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.log.ISubscriptionLogger;
-import org.serviceconnector.common.log.Loggers;
 
 
-public class SubscriptionLogger implements ISubscriptionLogger {
+public class SubscriptionLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-	private static final ISubscriptionLogger SUBSCRIPTION_LOGGER = new SubscriptionLogger();
+	private static final SubscriptionLogger SUBSCRIPTION_LOGGER = new SubscriptionLogger();
 
 	private static String SUBSCRIBE_STR = "session:%s - subscribing to:%s - with mask:%s";
 	private static String CHANGE_SUBSCRIBE_STR = "session:%s - subscribed to:%s - new mask:%s";
@@ -38,12 +36,15 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 	private SubscriptionLogger() {
 	}
 
-	public static ISubscriptionLogger getInstance() {
+	public static SubscriptionLogger getInstance() {
 		return SubscriptionLogger.SUBSCRIPTION_LOGGER;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @param serviceName
+	 * @param sessionId
+	 * @param mask
+	 */
 	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
 		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
@@ -53,8 +54,11 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @param serviceName
+	 * @param sessionId
+	 * @param mask
+	 */
 	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
 		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
@@ -64,8 +68,10 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @param serviceName
+	 * @param sessionId
+	 */
 	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
 		if (logger.isInfoEnabled()) {
 			Formatter format = new Formatter();
@@ -75,8 +81,9 @@ public class SubscriptionLogger implements ISubscriptionLogger {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @return
+	 */
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}

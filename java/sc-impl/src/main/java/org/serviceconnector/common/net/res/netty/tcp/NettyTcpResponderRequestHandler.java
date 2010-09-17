@@ -32,8 +32,7 @@ import org.serviceconnector.common.cmd.ICommand;
 import org.serviceconnector.common.cmd.ICommandValidator;
 import org.serviceconnector.common.cmd.IPassThroughPartMsg;
 import org.serviceconnector.common.cmd.factory.CommandFactory;
-import org.serviceconnector.common.log.IPerformanceLogger;
-import org.serviceconnector.common.log.impl.PerformanceLogger;
+import org.serviceconnector.common.log.PerformanceLogger;
 import org.serviceconnector.common.net.IResponderCallback;
 import org.serviceconnector.common.net.res.ResponderRegistry;
 import org.serviceconnector.common.net.res.SCMPSessionCompositeRegistry;
@@ -70,7 +69,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	private final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
 
 	/** The Constant performanceLogger. */
-	private final static IPerformanceLogger performanceLogger = PerformanceLogger.getInstance();
+	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();

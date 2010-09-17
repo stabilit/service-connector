@@ -14,19 +14,17 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.common.log.impl;
+package org.serviceconnector.common.log;
 
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.log.IConnectionLogger;
-import org.serviceconnector.common.log.Loggers;
 
 
-public class ConnectionLogger implements IConnectionLogger {
+public class ConnectionLogger {
 
 	private static final Logger logger = Logger.getLogger(Loggers.CONNECTION.getValue());
-	private static final IConnectionLogger CONNECTION_LOGGER = new ConnectionLogger();
+	private static final ConnectionLogger CONNECTION_LOGGER = new ConnectionLogger();
 
 	private static String CONNECT_STR = "%s connect to:%s/%s";
 	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
@@ -40,12 +38,15 @@ public class ConnectionLogger implements IConnectionLogger {
 	private ConnectionLogger() {
 	}
 
-	public static IConnectionLogger getInstance() {
+	public static ConnectionLogger getInstance() {
 		return ConnectionLogger.CONNECTION_LOGGER;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * @param className
+	 * @param hostName
+	 * @param port
+	 */
 	public synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
 		format.format(CONNECT_STR, className, hostName, String.valueOf(port));
@@ -53,8 +54,12 @@ public class ConnectionLogger implements IConnectionLogger {
 		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @param className
+	 * @param hostName
+	 * @param port
+	 */
 	public synchronized void logDisconnect(String className, String hostName, int port) {
 
 		Formatter format = new Formatter();
@@ -63,8 +68,15 @@ public class ConnectionLogger implements IConnectionLogger {
 		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @param className
+	 * @param hostName
+	 * @param port
+	 * @param data
+	 * @param offset
+	 * @param length
+	 */
 	public synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
 		if (length > 100) {
@@ -76,8 +88,15 @@ public class ConnectionLogger implements IConnectionLogger {
 		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @param className
+	 * @param hostName
+	 * @param port
+	 * @param data
+	 * @param offset
+	 * @param length
+	 */
 	public synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
 		if (length > 100) {
@@ -89,8 +108,13 @@ public class ConnectionLogger implements IConnectionLogger {
 		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @param className
+	 * @param hostName
+	 * @param port
+	 * @param nrOfIdles
+	 */
 	public synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
 		format.format(KEEP_ALIVE_STR, className, hostName, String.valueOf(port), nrOfIdles);
@@ -98,14 +122,18 @@ public class ConnectionLogger implements IConnectionLogger {
 		format.close();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @return
+	 */
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * @return
+	 */
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}

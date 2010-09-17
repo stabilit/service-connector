@@ -34,7 +34,7 @@ import org.serviceconnector.common.conf.Constants;
 import org.serviceconnector.common.conf.ICommunicatorConfig;
 import org.serviceconnector.common.conf.ResponderConfigPool;
 import org.serviceconnector.common.log.ILoggingManagerMXBean;
-import org.serviceconnector.common.log.impl.LoggingManager;
+import org.serviceconnector.common.log.LoggingManager;
 import org.serviceconnector.common.net.res.Responder;
 import org.serviceconnector.common.res.IResponder;
 import org.serviceconnector.common.service.SCServiceException;

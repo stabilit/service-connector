@@ -23,8 +23,7 @@ import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.log.IMessageLogger;
-import org.serviceconnector.common.log.impl.MessageLogger;
+import org.serviceconnector.common.log.MessageLogger;
 import org.serviceconnector.common.scmp.SCMPHeadlineKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.internal.SCMPInternalStatus;
@@ -42,7 +41,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	protected final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
 
 	/** The Constant messageLogger. */
-	private final static IMessageLogger messageLogger = MessageLogger.getInstance();
+	private final static MessageLogger messageLogger = MessageLogger.getInstance();
 
 	/**
 	 * Instantiates a new default encoder decoder.

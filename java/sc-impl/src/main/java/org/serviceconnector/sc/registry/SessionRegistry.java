@@ -21,8 +21,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.ISessionLogger;
-import org.serviceconnector.common.log.impl.SessionLogger;
+import org.serviceconnector.common.log.SessionLogger;
 import org.serviceconnector.common.registry.Registry;
 import org.serviceconnector.common.scmp.ISCMPCallback;
 import org.serviceconnector.common.scmp.SCMPError;
@@ -46,7 +45,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
 
 	/** The Constant sessionLogger. */
-	private final static ISessionLogger sessionLogger = SessionLogger.getInstance();
+	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 
 	/** The instance. */
 	private static SessionRegistry instance = new SessionRegistry();
@@ -217,7 +216,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			server.serverAbortSession(abortMessage, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			// removes session on server
 			session.getServer().removeSession(session);
-			ISessionLogger sessionLogger = SessionLogger.getInstance();
+			SessionLogger sessionLogger = SessionLogger.getInstance();
 			sessionLogger.logAbortSession(this.getClass().getName(), session.getId());
 		}
 
