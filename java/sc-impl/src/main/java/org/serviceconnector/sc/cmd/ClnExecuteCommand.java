@@ -19,23 +19,23 @@ package org.serviceconnector.sc.cmd;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.IAsyncCommand;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.IPassThroughPartMsg;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.IResponderCallback;
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.cmd.IAsyncCommand;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.IPassThroughPartMsg;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.net.IResponderCallback;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 

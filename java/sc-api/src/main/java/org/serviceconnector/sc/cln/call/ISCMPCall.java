@@ -17,10 +17,10 @@
 
 package org.serviceconnector.sc.cln.call;
 
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**

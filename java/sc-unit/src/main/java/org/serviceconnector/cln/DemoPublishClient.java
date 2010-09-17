@@ -5,7 +5,7 @@ import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cln.service.IPublishService;
 import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.IService;
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageCallback;
 
 

@@ -28,18 +28,18 @@ import org.serviceconnector.cln.service.IFileService;
 import org.serviceconnector.cln.service.IPublishService;
 import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.ISessionService;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.req.IConnectionPool;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.service.ISCContext;
-import org.serviceconnector.common.service.SCServiceException;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.ISCContext;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 

@@ -17,13 +17,13 @@
 package org.serviceconnector.sc.cln.call;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.scmp.internal.SCMPInternalStatus;
-import org.serviceconnector.common.scmp.internal.SCMPPart;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scm.internal.SCMPInternalStatus;
+import org.serviceconnector.scm.internal.SCMPPart;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**

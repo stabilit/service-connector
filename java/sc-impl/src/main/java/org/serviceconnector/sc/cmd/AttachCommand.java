@@ -19,16 +19,16 @@ package org.serviceconnector.sc.cmd;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.IPassThroughPartMsg;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.util.DateTimeUtility;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.IPassThroughPartMsg;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 

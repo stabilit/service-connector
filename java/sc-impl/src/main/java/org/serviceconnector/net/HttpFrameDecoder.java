@@ -17,8 +17,8 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.factory.IFactoryable;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.factory.IFactoryable;
 
 
 /**

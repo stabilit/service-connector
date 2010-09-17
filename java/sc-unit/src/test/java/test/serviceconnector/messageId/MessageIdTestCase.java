@@ -21,9 +21,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 
 import test.serviceconnector.session.SuperSessionTestCase;
 

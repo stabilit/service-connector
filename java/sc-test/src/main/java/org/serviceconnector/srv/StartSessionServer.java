@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;

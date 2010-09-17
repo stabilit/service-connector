@@ -17,8 +17,8 @@
 package org.serviceconnector.srv.rr.cmd.factory.impl;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommand;
-import org.serviceconnector.common.cmd.factory.CommandFactory;
+import org.serviceconnector.cmd.ICommand;
+import org.serviceconnector.cmd.factory.CommandFactory;
 import org.serviceconnector.srv.cmd.impl.SrvAbortSessionCommand;
 import org.serviceconnector.srv.rr.cmd.impl.SrvCreateSessionCommand;
 import org.serviceconnector.srv.rr.cmd.impl.SrvDeleteSessionCommand;

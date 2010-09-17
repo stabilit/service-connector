@@ -17,23 +17,23 @@
 package org.serviceconnector.sc.cmd;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.IPassThroughPartMsg;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.log.SubscriptionLogger;
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.ISCMPSynchronousCallback;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.service.IFilterMask;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.IPassThroughPartMsg;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
 import org.serviceconnector.sc.service.SCMPMessageFilterMask;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPSynchronousCallback;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.IFilterMask;
 import org.serviceconnector.util.ValidatorUtility;
 
 

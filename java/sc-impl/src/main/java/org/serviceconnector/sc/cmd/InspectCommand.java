@@ -17,21 +17,21 @@
 package org.serviceconnector.sc.cmd;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.registry.Registry;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.registry.Registry;
 import org.serviceconnector.sc.registry.DisabledServiceRegistry;
 import org.serviceconnector.sc.registry.ServerRegistry;
 import org.serviceconnector.sc.registry.ServiceRegistry;
 import org.serviceconnector.sc.registry.SessionRegistry;
 import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**

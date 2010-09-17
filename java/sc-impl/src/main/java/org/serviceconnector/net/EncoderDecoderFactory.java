@@ -17,9 +17,9 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.factory.Factory;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.factory.Factory;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

@@ -26,9 +26,9 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.common.log.ConnectionLogger;
-import org.serviceconnector.common.net.req.IConnection;
-import org.serviceconnector.common.net.req.IConnectionContext;
+import org.serviceconnector.log.ConnectionLogger;
+import org.serviceconnector.net.req.IConnection;
+import org.serviceconnector.net.req.IConnectionContext;
 import org.serviceconnector.srv.IIdleCallback;
 
 

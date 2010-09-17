@@ -21,9 +21,9 @@ import java.io.InputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.internal.SCMPPart;
 import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scm.internal.SCMPPart;
 
 
 public class DecodeSCMPVersionTestCase {

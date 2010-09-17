@@ -21,10 +21,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.SCMPHeadlineKey;
-import org.serviceconnector.common.scmp.SCMPKeepAlive;
+import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPKeepAlive;
 
 
 /**

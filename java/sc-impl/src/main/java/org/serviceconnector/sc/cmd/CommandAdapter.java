@@ -17,16 +17,11 @@
 package org.serviceconnector.sc.cmd;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommand;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.NullCommandValidator;
-import org.serviceconnector.common.cmd.SCMPCommandException;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.cmd.ICommand;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.NullCommandValidator;
+import org.serviceconnector.cmd.SCMPCommandException;
+import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.sc.registry.ServerRegistry;
 import org.serviceconnector.sc.registry.ServiceRegistry;
 import org.serviceconnector.sc.registry.SessionRegistry;
@@ -37,6 +32,11 @@ import org.serviceconnector.sc.service.Service;
 import org.serviceconnector.sc.service.ServiceType;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.sc.service.SessionService;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**

@@ -22,7 +22,7 @@
 package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.net.req.IRequester;
+import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.srv.ISCServerCallback;
 
 

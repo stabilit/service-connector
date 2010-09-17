@@ -17,11 +17,11 @@
 package org.serviceconnector.sc.service;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.SCMPCommandException;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

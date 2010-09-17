@@ -26,16 +26,16 @@ import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cln.service.IPublishService;
 import org.serviceconnector.cln.service.Service;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.service.ISCContext;
-import org.serviceconnector.common.service.ISCMessageCallback;
-import org.serviceconnector.common.service.SCServiceException;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.ISCContext;
+import org.serviceconnector.service.ISCMessageCallback;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 

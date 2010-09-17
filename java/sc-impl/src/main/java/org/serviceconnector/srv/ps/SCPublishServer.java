@@ -24,7 +24,7 @@ package org.serviceconnector.srv.ps;
 import org.apache.log4j.Logger;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
-import org.serviceconnector.common.conf.Constants;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SCServer;

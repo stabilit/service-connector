@@ -19,12 +19,12 @@ package org.serviceconnector.call;
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.sc.cln.call.ISCMPCall;
 import org.serviceconnector.sc.cln.call.SCMPCallAdapter;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**

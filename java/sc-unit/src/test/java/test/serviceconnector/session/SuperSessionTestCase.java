@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.attach.SuperAttachTestCase;

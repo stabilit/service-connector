@@ -22,13 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
-import org.serviceconnector.common.net.req.IConnectionPool;
-import org.serviceconnector.common.scmp.ISCMPSynchronousCallback;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.conf.RequesterConfigPool;
+import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.scmp.ISCMPSynchronousCallback;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.attach.SuperAttachTestCase;

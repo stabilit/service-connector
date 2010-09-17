@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.unit.SuperTestCase;

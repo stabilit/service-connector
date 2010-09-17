@@ -20,16 +20,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.SessionLogger;
-import org.serviceconnector.common.registry.Registry;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.util.ITimerRun;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.registry.Registry;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 

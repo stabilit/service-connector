@@ -22,9 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.util.DateTimeUtility;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.DateTimeUtility;
 
 
 /**

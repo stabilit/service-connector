@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.ISessionService;
-import org.serviceconnector.common.service.ISCMessage;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 
 

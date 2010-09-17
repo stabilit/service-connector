@@ -17,7 +17,7 @@
 package org.serviceconnector.srv.cmd.factory.impl;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.factory.CommandFactory;
+import org.serviceconnector.cmd.factory.CommandFactory;
 import org.serviceconnector.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 import org.serviceconnector.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 

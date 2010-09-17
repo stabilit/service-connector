@@ -28,11 +28,11 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.serviceconnector.common.log.ConnectionLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.ResponseAdapter;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scmp.ResponseAdapter;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.SCMPError;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class SCMPCommunicationException. Communication on SCMP level failed.

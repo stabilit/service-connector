@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 
 

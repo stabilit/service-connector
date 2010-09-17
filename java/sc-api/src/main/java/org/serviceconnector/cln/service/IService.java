@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln.service;
 
-import org.serviceconnector.common.ctx.IContext;
+import org.serviceconnector.ctx.IContext;
 
 /**
  * The Interface IService. Top interface for services.

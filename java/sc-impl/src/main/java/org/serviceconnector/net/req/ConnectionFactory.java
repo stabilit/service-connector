@@ -22,10 +22,10 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.factory.Factory;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.net.req.IConnection;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.factory.Factory;
+import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 

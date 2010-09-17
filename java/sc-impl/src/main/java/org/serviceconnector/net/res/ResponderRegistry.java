@@ -17,8 +17,8 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.registry.Registry;
-import org.serviceconnector.common.res.IResponder;
+import org.serviceconnector.registry.Registry;
+import org.serviceconnector.res.IResponder;
 
 
 /**

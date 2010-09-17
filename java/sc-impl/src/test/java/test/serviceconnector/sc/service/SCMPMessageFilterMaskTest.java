@@ -23,9 +23,9 @@ package test.serviceconnector.sc.service;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.sc.service.SCMPMessageFilterMask;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 public class SCMPMessageFilterMaskTest {

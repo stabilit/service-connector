@@ -22,11 +22,11 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.MessageEvent;
-import org.serviceconnector.common.log.ConnectionLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.RequestAdapter;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scmp.RequestAdapter;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

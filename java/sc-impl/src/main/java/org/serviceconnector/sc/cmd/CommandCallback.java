@@ -3,10 +3,10 @@ package org.serviceconnector.sc.cmd;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
 
 

@@ -28,18 +28,18 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.ConnectionLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.net.req.IConnection;
-import org.serviceconnector.common.net.req.IConnectionContext;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.req.IConnection;
+import org.serviceconnector.net.req.IConnectionContext;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

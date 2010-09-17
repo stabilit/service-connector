@@ -21,7 +21,7 @@
  */
 package org.serviceconnector.srv;
 
-import org.serviceconnector.common.net.req.IConnection;
+import org.serviceconnector.net.req.IConnection;
 
 /**
  * @author JTraber

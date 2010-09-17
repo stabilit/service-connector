@@ -19,7 +19,7 @@ package org.serviceconnector.service;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.service.ISCMessage;
 
 
 /**

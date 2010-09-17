@@ -21,11 +21,11 @@
  */
 package test.serviceconnector.pool;
 
-import org.serviceconnector.common.conf.ICommunicatorConfig;
-import org.serviceconnector.common.net.req.IConnectionPool;
-import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.scmp.SCMPMessageId;
+import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.IRequesterContext;
+import org.serviceconnector.scmp.SCMPMessageId;
 
 
 /**

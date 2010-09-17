@@ -22,11 +22,11 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.IFrameDecoder;
-import org.serviceconnector.common.scmp.SCMPError;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.net.FrameDecoderException;
 import org.serviceconnector.net.FrameDecoderFactory;
+import org.serviceconnector.net.IFrameDecoder;
+import org.serviceconnector.scmp.SCMPError;
 
 
 /**

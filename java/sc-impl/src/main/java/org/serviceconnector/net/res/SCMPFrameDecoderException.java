@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPFrameDecoderException. Decoding SCMP frame fails.

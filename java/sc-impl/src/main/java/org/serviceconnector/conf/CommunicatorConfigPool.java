@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.conf.ICommunicatorConfig;
-import org.serviceconnector.common.scmp.SCMPError;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.scmp.SCMPError;
 
 
 /**

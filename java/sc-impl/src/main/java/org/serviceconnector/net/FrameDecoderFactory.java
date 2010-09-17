@@ -17,9 +17,9 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.factory.Factory;
-import org.serviceconnector.common.net.IFrameDecoder;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.factory.Factory;
+import org.serviceconnector.net.IFrameDecoder;
 
 
 /**

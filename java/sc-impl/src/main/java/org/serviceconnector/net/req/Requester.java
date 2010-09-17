@@ -20,20 +20,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.net.req.IConnection;
-import org.serviceconnector.common.net.req.IConnectionContext;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMessageId;
-import org.serviceconnector.common.scmp.internal.SCMPCompositeReceiver;
-import org.serviceconnector.common.scmp.internal.SCMPCompositeSender;
-import org.serviceconnector.common.util.ITimerRun;
+import org.serviceconnector.net.req.IConnection;
+import org.serviceconnector.net.req.IConnectionContext;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.scm.internal.SCMPCompositeReceiver;
+import org.serviceconnector.scm.internal.SCMPCompositeSender;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 

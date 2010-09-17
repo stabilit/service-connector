@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package test.serviceconnector.unit;
 
-import org.serviceconnector.common.cmd.factory.CommandFactory;
+import org.serviceconnector.cmd.factory.CommandFactory;
 import org.serviceconnector.sc.cmd.ServiceConnectorCommandFactory;
 import org.serviceconnector.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
 import org.serviceconnector.srv.rr.cmd.factory.impl.SessionServerCommandFactory;

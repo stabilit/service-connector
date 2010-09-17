@@ -19,19 +19,19 @@ package org.serviceconnector.sc.cmd;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.ICommandValidator;
-import org.serviceconnector.common.cmd.IPassThroughPartMsg;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.scmp.HasFaultResponseException;
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.scmp.internal.SCMPPart;
+import org.serviceconnector.cmd.ICommandValidator;
+import org.serviceconnector.cmd.IPassThroughPartMsg;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
 import org.serviceconnector.sc.service.PublishService;
+import org.serviceconnector.scm.internal.SCMPPart;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 

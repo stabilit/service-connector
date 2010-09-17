@@ -17,10 +17,10 @@
 package org.serviceconnector.cln.service;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.scmp.ISCMPSynchronousCallback;
-import org.serviceconnector.common.scmp.SCMPMessageId;
-import org.serviceconnector.common.service.ISCContext;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.ISCMPSynchronousCallback;
+import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.service.ISCContext;
 
 
 /**

@@ -31,17 +31,17 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.log.MessageLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.net.IFrameDecoder;
-import org.serviceconnector.common.scmp.SCMPBodyType;
-import org.serviceconnector.common.scmp.SCMPFault;
-import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.common.scmp.SCMPHeadlineKey;
-import org.serviceconnector.common.scmp.SCMPKeepAlive;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.internal.SCMPPart;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.log.MessageLogger;
+import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.net.IFrameDecoder;
+import org.serviceconnector.scm.internal.SCMPPart;
+import org.serviceconnector.scmp.SCMPBodyType;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPKeepAlive;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

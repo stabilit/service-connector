@@ -20,11 +20,11 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SC;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.cmd.factory.CommandFactory;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.factory.CommandFactory;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;

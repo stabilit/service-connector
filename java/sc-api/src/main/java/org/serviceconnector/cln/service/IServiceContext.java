@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln.service;
 
-import org.serviceconnector.common.ctx.IContext;
-import org.serviceconnector.common.service.ISC;
+import org.serviceconnector.ctx.IContext;
+import org.serviceconnector.service.ISC;
 
 
 /**

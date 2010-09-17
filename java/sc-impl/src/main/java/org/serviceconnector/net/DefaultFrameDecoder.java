@@ -17,10 +17,10 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.net.IFrameDecoder;
-import org.serviceconnector.common.scmp.SCMPHeadlineKey;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.IFrameDecoder;
+import org.serviceconnector.scmp.SCMPHeadlineKey;
 
 
 /**

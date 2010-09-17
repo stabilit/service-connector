@@ -31,17 +31,17 @@ import org.serviceconnector.call.SCMPSrvDeleteSessionCall;
 import org.serviceconnector.call.SCMPSrvExecuteCall;
 import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
-import org.serviceconnector.common.conf.ICommunicatorConfig;
-import org.serviceconnector.common.ctx.IContext;
-import org.serviceconnector.common.net.req.IConnectionPool;
-import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.res.IResponder;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.ctx.IContext;
 import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.res.ResponderRegistry;
+import org.serviceconnector.res.IResponder;
 import org.serviceconnector.sc.req.SCRequester;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

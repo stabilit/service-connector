@@ -25,12 +25,12 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.serviceconnector.common.log.ConnectionLogger;
-import org.serviceconnector.common.net.IEncoderDecoder;
-import org.serviceconnector.common.scmp.ISCMPCallback;
-import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

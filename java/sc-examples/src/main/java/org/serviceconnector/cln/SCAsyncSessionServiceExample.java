@@ -27,9 +27,9 @@ import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.IService;
 import org.serviceconnector.cln.service.IServiceContext;
 import org.serviceconnector.cln.service.ISessionService;
-import org.serviceconnector.common.service.ISC;
-import org.serviceconnector.common.service.ISCMessage;
-import org.serviceconnector.common.service.ISCMessageCallback;
+import org.serviceconnector.service.ISC;
+import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageCallback;
 

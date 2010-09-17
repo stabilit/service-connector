@@ -17,7 +17,7 @@
 package org.serviceconnector.conf;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.ICommunicatorConfig;
 
 
 /**

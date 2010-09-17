@@ -22,11 +22,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.log.MessageLogger;
-import org.serviceconnector.common.scmp.SCMPHeadlineKey;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.internal.SCMPInternalStatus;
+import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.log.MessageLogger;
+import org.serviceconnector.scm.internal.SCMPInternalStatus;
+import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPMessage;
 
 
 /**

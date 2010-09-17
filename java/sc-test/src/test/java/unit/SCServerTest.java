@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.common.conf.Constants;
+import org.serviceconnector.conf.Constants;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.SCServer;
 

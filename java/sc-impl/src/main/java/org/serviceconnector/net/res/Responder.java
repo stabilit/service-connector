@@ -17,9 +17,9 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.ICommunicatorConfig;
-import org.serviceconnector.common.res.IEndpoint;
-import org.serviceconnector.common.res.IResponder;
+import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.res.IEndpoint;
+import org.serviceconnector.res.IResponder;
 
 
 /**

@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln.service;
 
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.service.ISCMessage;
 
 
 /**

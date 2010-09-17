@@ -22,8 +22,8 @@
 package org.serviceconnector.sc.service;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.util.IReversibleEnum;
-import org.serviceconnector.common.util.ReverseEnumMap;
+import org.serviceconnector.util.IReversibleEnum;
+import org.serviceconnector.util.ReverseEnumMap;
 
 
 /**

@@ -19,8 +19,8 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cln.service.IServiceContext;
 import org.serviceconnector.cln.service.Service;
-import org.serviceconnector.common.service.ISC;
-import org.serviceconnector.common.service.ISCContext;
+import org.serviceconnector.service.ISC;
+import org.serviceconnector.service.ISCContext;
 
 
 /**

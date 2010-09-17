@@ -21,7 +21,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.common.net.req.IConnectionContext;
+import org.serviceconnector.net.req.IConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
 import org.serviceconnector.net.res.SCMPBasedFrameDecoder;
 

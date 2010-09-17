@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.ISessionService;
-import org.serviceconnector.common.service.SCServiceException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.service.SCServiceException;
 
 
 public class PrematureDestroyOfSCClientToSCTest {

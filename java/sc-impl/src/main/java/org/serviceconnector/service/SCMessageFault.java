@@ -17,8 +17,8 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.scmp.SCMPError;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
 
 

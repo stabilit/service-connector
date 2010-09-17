@@ -22,9 +22,9 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnEchoCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
-import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 import test.serviceconnector.attach.SuperAttachTestCase;
 import test.serviceconnector.unit.SCTest;

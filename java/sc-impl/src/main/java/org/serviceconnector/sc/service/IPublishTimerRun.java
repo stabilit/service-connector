@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.sc.service;
 
-import org.serviceconnector.common.scmp.IRequest;
-import org.serviceconnector.common.scmp.IResponse;
-import org.serviceconnector.common.util.ITimerRun;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.util.ITimerRun;
 
 
 

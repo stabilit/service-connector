@@ -17,13 +17,13 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.factory.Factory;
-import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.res.IEndpoint;
+import org.serviceconnector.conf.Constants;
+import org.serviceconnector.factory.Factory;
+import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.NettyTcpEndpoint;
 import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
+import org.serviceconnector.res.IEndpoint;
 
 
 /**

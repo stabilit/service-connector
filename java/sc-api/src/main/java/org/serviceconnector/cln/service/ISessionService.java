@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln.service;
 
-import org.serviceconnector.common.service.ISCMessage;
-import org.serviceconnector.common.service.ISCMessageCallback;
+import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.service.ISCMessageCallback;
 
 /**
  * The Interface ISessionService. Basic interface for session services.

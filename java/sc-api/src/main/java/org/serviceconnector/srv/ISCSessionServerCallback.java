@@ -21,7 +21,7 @@
  */
 package org.serviceconnector.srv;
 
-import org.serviceconnector.common.service.ISCMessage;
+import org.serviceconnector.service.ISCMessage;
 
 /**
  * @author JTraber

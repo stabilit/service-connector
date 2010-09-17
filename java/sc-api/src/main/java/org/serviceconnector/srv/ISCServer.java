@@ -18,7 +18,7 @@ package org.serviceconnector.srv;
 
 import java.security.InvalidParameterException;
 
-import org.serviceconnector.common.service.ISC;
+import org.serviceconnector.service.ISC;
 
 
 /**

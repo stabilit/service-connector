@@ -21,7 +21,7 @@
  */
 package org.serviceconnector.cln.service;
 
-import org.serviceconnector.common.service.ISCMessageCallback;
+import org.serviceconnector.service.ISCMessageCallback;
 
 /**
  * The Interface IPublishService.
