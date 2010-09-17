@@ -13,10 +13,10 @@ import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SCServer;
 
 
-public class StartSCSessionServer {
+public class StartSessionServer {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(StartSCSessionServer.class);
+	protected final static Logger logger = Logger.getLogger(StartSessionServer.class);
 
 	private ISCServer scSrv = null;
 	private String startFile = null;
@@ -26,7 +26,7 @@ public class StartSCSessionServer {
 	private int maxCons = 10;
 
 	public static void main(String[] args) throws Exception {
-		StartSCSessionServer sessionServer = new StartSCSessionServer();
+		StartSessionServer sessionServer = new StartSessionServer();
 
 		sessionServer.runSessionServer(args);
 	}
