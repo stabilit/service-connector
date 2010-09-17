@@ -81,7 +81,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -95,7 +95,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -109,7 +109,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -122,7 +122,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
@@ -136,7 +136,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
@@ -151,7 +151,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestUnitServerCommandFactory());
+				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 			} catch (Exception e) {
 				e.printStackTrace();

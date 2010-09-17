@@ -27,9 +27,9 @@ import org.serviceconnector.srv.cmd.SessionServerCommandFactory;
  * 
  * @author JTraber
  */
-public class TestUnitServerCommandFactory extends CommandFactory {
+public class TestServerCommandFactory extends CommandFactory {
 	@SuppressWarnings("unused")
-	public TestUnitServerCommandFactory() {
+	public TestServerCommandFactory() {
 		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);
 		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
 		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
