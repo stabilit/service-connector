@@ -17,6 +17,7 @@
 package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.factory.CommandFactory;
 
 
@@ -30,9 +31,44 @@ public class ServerCommandFactory extends CommandFactory {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
 	
-	@SuppressWarnings("unused")
+	/**
+	 * Instantiates a new session server command factory.
+	 */
 	public ServerCommandFactory() {
-		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
-		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
+		init(this);
+	}
+
+	/**
+	 * Instantiates a new session server command factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
+	public ServerCommandFactory(CommandFactory commandFactory) {
+		init(commandFactory);
+	}
+
+	/**
+	 * Initialize factory.
+	 * 
+	 * @param commandFactory
+	 *            the command factory
+	 */
+	public void init(CommandFactory commandFactory) {
+		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
+		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
+		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();
+		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
+		ICommand srvExecuteCommand = new SrvExecuteCommand();
+		commandFactory.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
+		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
+		commandFactory.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
+		
+		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
+		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
+		ICommand srvUnsubscribeCommand = new SrvUnsubscribeCommand();
+		commandFactory.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
+		ICommand srvChangeSubscriptionCommand = new SrvChangeSubscriptionCommand();
+		commandFactory.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
 	}
 }

@@ -18,8 +18,7 @@ package test.serviceconnector.unit;
 
 import org.serviceconnector.cmd.factory.CommandFactory;
 import org.serviceconnector.sc.cmd.ServiceConnectorCommandFactory;
-import org.serviceconnector.srv.cmd.PublishServerCommandFactory;
-import org.serviceconnector.srv.cmd.SessionServerCommandFactory;
+import org.serviceconnector.srv.cmd.ServerCommandFactory;
 
 
 /**
@@ -31,7 +30,6 @@ public class TestServerCommandFactory extends CommandFactory {
 	@SuppressWarnings("unused")
 	public TestServerCommandFactory() {
 		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);
-		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
-		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
+		ServerCommandFactory sessionServerCommandFactory = new ServerCommandFactory(this);
 	}
 }
