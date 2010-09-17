@@ -27,7 +27,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
-	public void oneTimeSetUp() throws Exception {
+	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 	}
 	
@@ -49,7 +49,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	}
 	
 	@AfterClass
-	public void oneTimeTearDown() throws Exception {
+	public static void oneTimeTearDown() throws Exception {
 		ctrl = null;
 	}
 

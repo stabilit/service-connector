@@ -169,7 +169,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
 	}
 
-	//TODO Should exchange 4 messages in total 
+	// TODO Should exchange 4 messages in total
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_4messagesArrive()
 			throws Exception {
@@ -177,7 +177,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 				"createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes");
 		client.start();
 		client.join();
-		
+
 		assertEquals(4, srvCallback.messagesExchanged);
 		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
@@ -187,35 +187,49 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
 		assertEquals(true, srvCallback.executeMsg instanceof ISCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
+				.getSessionId());
 		assertEquals(null, srvCallback.executeMsg.getData());
 		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
 		assertEquals(false, srvCallback.executeMsg.isFault());
 		assertEquals(true, srvCallback.executeMsg.isCompressed());
 		assertEquals(true, srvCallback.deleteSessionMsg instanceof ISCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg.getSessionId());
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg
+				.getSessionId());
 		assertEquals(null, srvCallback.deleteSessionMsg.getData());
 		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
 		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
 		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
 		assertEquals(null, srvCallback.abortSessionMsg);
 	}
-	
+
 	@Test
-	public void execute_messageData1MBArray_3messagesArrive()
-			throws Exception {
+	public void execute_messageData1MBArray_3messagesArrive() throws Exception {
 		StartSessionClient client = new StartSessionClient(
 				"execute_messageData1MBArray_returnsTheSameMessageData");
 		client.start();
 		client.join();
-		
+
 		assertEquals(3, srvCallback.messagesExchanged);
 		assertEquals(true, srvCallback.executeMsg instanceof ISCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
-		assertEquals(TestConstants.dataLength1MB, ((byte[])srvCallback.executeMsg.getData()).length);
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
+				.getSessionId());
+		assertEquals(TestConstants.dataLength1MB,
+				((byte[]) srvCallback.executeMsg.getData()).length);
 		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
 		assertEquals(false, srvCallback.executeMsg.isFault());
 		assertEquals(false, srvCallback.executeMsg.isCompressed());
+	}
+
+	//TODO how can I access echo messages from the API? probably not...
+	@Test
+	public void echo_waitFor3EchoMessages_5MessagesArrive() throws Exception {
+		StartSessionClient client = new StartSessionClient(
+				"echo_waitFor3EchoMessages_5MessagesArrive");
+		client.start();
+		client.join();
+
+		assertEquals(5, srvCallback.messagesExchanged);
 	}
 
 	private class SessionServerContext {

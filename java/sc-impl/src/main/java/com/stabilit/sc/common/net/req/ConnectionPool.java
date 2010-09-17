@@ -178,6 +178,7 @@ public class ConnectionPool implements IConnectionPool {
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
 		IIdleCallback idleCallback = new IdleCallback();
+		//TODO FJU odd context construction
 		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
 		connection.setContext(connectionContext);
 		try {

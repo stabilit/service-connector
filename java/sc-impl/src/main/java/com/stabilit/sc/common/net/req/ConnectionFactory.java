@@ -97,6 +97,8 @@ public class ConnectionFactory extends Factory {
 		return (IConnection) factoryInstance; // should be a clone if implemented
 	}
 
+	//TODO FJU this shutdown is never called
+	//TODO FJU http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	/**
 	 * Shutdown connection factory.<br>
 	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down.

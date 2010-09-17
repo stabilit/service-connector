@@ -36,7 +36,7 @@ public enum ConsoleCommand {
 	private String key;
 
 	/**
-	 * Instantiates a new sC console commands.
+	 * Instantiates a new SC console commands.
 	 * 
 	 * @param key
 	 *            the key

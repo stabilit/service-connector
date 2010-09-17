@@ -24,9 +24,9 @@ public final class Constants {
 	}
 	
 	/** File qualifier for command line argument host */
-	public static final String CLI_HOST_ARG = "-p";
+	public static final String CLI_HOST_ARG = "-h";
 	
 	/** File qualifier for command line argument port */
-	public static final String CLI_PORT_ARG = "-h";
+	public static final String CLI_PORT_ARG = "-p";
 
 }

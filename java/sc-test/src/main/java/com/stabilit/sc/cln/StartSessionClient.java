@@ -86,7 +86,6 @@ public class StartSessionClient extends Thread {
 				sessionService.deleteSession();
 				
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				
 				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 
@@ -94,6 +93,12 @@ public class StartSessionClient extends Thread {
 				message.setCompressed(false);
 
 				sessionService.execute(message);
+				sessionService.deleteSession();
+				
+			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
+				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				sessionService.createSession("sessionInfo", 2, 1);
+				Thread.sleep(6000);
 				sessionService.deleteSession();
 			}
 

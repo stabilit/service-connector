@@ -21,10 +21,15 @@ import com.stabilit.sc.common.util.CommandLineUtil;
 public class SCConsole {
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("Stabilit Service Connector Console\n");
 		// check arguments
-		if (args.length <= 0) {
+		if (args == null || args.length <= 0) {
 			showError("no argumments");
+			System.exit(1);
+		} else if (args.length < 5) {
+			showError("not enough argumments");
+			System.exit(1);
+		} else if (args.length > 5) {
+			showError("too many argumments");
 			System.exit(1);
 		}
 		String host = CommandLineUtil.getArg(args, Constants.CLI_HOST_ARG);
@@ -114,7 +119,7 @@ public class SCConsole {
 
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
-		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <enable|disable|state|sessions=service>");
+		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<enable|disable|state|sessions>=service>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 8000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 disable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 state=abc");
