@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.common.cmd.ICommandValidator;
 import org.serviceconnector.common.cmd.IPassThroughPartMsg;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.conf.Constants;
 import org.serviceconnector.common.log.ISubscriptionLogger;
 import org.serviceconnector.common.log.impl.SubscriptionLogger;
 import org.serviceconnector.common.scmp.HasFaultResponseException;
