@@ -14,41 +14,37 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.ps.cmd.factory.impl;
+package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.factory.CommandFactory;
-import org.serviceconnector.srv.cmd.impl.SrvAbortSessionCommand;
-import org.serviceconnector.srv.ps.cmd.impl.SrvChangeSubscriptionCommand;
-import org.serviceconnector.srv.ps.cmd.impl.SrvSubscribeCommand;
-import org.serviceconnector.srv.ps.cmd.impl.SrvUnsubscribeCommand;
 
 
 /**
- * A factory for creating PublishServerCommand objects. Unifies commands used by publish services.
+ * A factory for creating SessionServerCommand objects. Unifies commands used by session service.
  * 
  * @author JTraber
  */
-public class PublishServerCommandFactory extends CommandFactory {
+public class SessionServerCommandFactory extends CommandFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishServerCommandFactory.class);
-	
+	protected final static Logger logger = Logger.getLogger(SessionServerCommandFactory.class);
+
 	/**
-	 * Instantiates a new publish server command factory.
+	 * Instantiates a new session server command factory.
 	 */
-	public PublishServerCommandFactory() {
+	public SessionServerCommandFactory() {
 		init(this);
 	}
 
 	/**
-	 * Instantiates a new publish server command factory.
+	 * Instantiates a new session server command factory.
 	 * 
 	 * @param commandFactory
 	 *            the command factory
 	 */
-	public PublishServerCommandFactory(CommandFactory commandFactory) {
+	public SessionServerCommandFactory(CommandFactory commandFactory) {
 		init(commandFactory);
 	}
 
@@ -59,12 +55,12 @@ public class PublishServerCommandFactory extends CommandFactory {
 	 *            the command factory
 	 */
 	public void init(CommandFactory commandFactory) {
-		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
-		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
-		ICommand srvUnsubscribeCommand = new SrvUnsubscribeCommand();
-		commandFactory.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
-		ICommand srvChangeSubscriptionCommand = new SrvChangeSubscriptionCommand();
-		commandFactory.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
+		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
+		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
+		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();
+		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
+		ICommand srvExecuteCommand = new SrvExecuteCommand();
+		commandFactory.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
 		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
 		commandFactory.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
 	}

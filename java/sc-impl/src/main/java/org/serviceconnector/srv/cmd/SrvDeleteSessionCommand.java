@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.rr.cmd.impl;
+package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;

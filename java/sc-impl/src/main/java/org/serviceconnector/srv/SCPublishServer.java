@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.srv.ps;
+package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.call.SCMPCallFactory;
@@ -27,8 +27,6 @@ import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.conf.Constants;
 import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;
-import org.serviceconnector.srv.SCServer;
-import org.serviceconnector.srv.SrvService;
 
 
 /**

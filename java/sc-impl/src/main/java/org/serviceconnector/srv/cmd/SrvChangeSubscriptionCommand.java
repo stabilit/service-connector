@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.ps.cmd.impl;
+package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -32,23 +32,30 @@ import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SrvService;
-import org.serviceconnector.srv.rr.cmd.impl.SrvCommandAdapter;
-import org.serviceconnector.util.ValidatorUtility;
 
 
-public class SrvSubscribeCommand extends SrvCommandAdapter {
+/**
+ * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription
+ * command. Allows changing subscription mask of a subscription.
+ * 
+ * @author JTraber
+ */
+public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvSubscribeCommand.class);
+	protected final static Logger logger = Logger.getLogger(SrvChangeSubscriptionCommand.class);
 	
-	public SrvSubscribeCommand() {
-		this.commandValidator = new SrvSubscribeCommandValidator();
+	/**
+	 * Instantiates a new SrvChangeSubscriptionCommand.
+	 */
+	public SrvChangeSubscriptionCommand() {
+		this.commandValidator = new SrvChangeSubscriptionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_SUBSCRIBE;
+		return SCMPMsgType.SRV_CHANGE_SUBSCRIPTION;
 	}
 
 	/** {@inheritDoc} */
@@ -59,27 +66,20 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
-		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(sessionId);
+		scMessage.setSessionId(scmpMessage.getSessionId());
+		scmpMessage.setServiceName(serviceName);
 
 		// inform callback with scMessages
-		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).subscribe(scMessage);
-
-		// create session in SCMPSessionCompositeRegistry
-		this.sessionCompositeRegistry.addSession(sessionId);
+		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).changeSubscription(scMessage);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
-
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
-		reply.setSessionId(sessionId);
 		reply.setMessageType(this.getKey());
 
 		if (scReply.isFault()) {
@@ -91,7 +91,10 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		response.setSCMP(reply);
 	}
 
-	private class SrvSubscribeCommandValidator implements ICommandValidator {
+	/**
+	 * The Class SrvChangeSubscriptionCommandValidator.
+	 */
+	private class SrvChangeSubscriptionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -104,37 +107,24 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
-				// mask
-				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-				if (mask.indexOf("%") != -1) {
-					// percent sign in mask not allowed
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed");
+				// serviceName
+				String serviceName = message.getServiceName();
+				if (serviceName == null || serviceName.equals("")) {
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
-				// ipAddressList
-				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-				ValidatorUtility.validateIpAddressList(ipAddressList);
-				// sessionInfo
-				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
-				ex.setMessageType(SrvSubscribeCommand.this.getKey());
+				ex.setMessageType(getKey());
 				throw ex;
 			} catch (Throwable th) {
 				logger.error("validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
+				validatorException.setMessageType(getKey());
 				throw validatorException;
 			}
 		}

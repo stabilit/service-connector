@@ -18,8 +18,8 @@ package test.serviceconnector.unit;
 
 import org.serviceconnector.cmd.factory.CommandFactory;
 import org.serviceconnector.sc.cmd.ServiceConnectorCommandFactory;
-import org.serviceconnector.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
-import org.serviceconnector.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
+import org.serviceconnector.srv.cmd.PublishServerCommandFactory;
+import org.serviceconnector.srv.cmd.SessionServerCommandFactory;
 
 
 /**

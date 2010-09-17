@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.ps.cmd.impl;
+package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SrvService;
-import org.serviceconnector.srv.rr.cmd.impl.SrvCommandAdapter;
 
 
 /**

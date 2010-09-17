@@ -30,8 +30,8 @@ import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;
+import org.serviceconnector.srv.SCPublishServer;
 import org.serviceconnector.srv.SCServer;
-import org.serviceconnector.srv.ps.SCPublishServer;
 
 
 /**

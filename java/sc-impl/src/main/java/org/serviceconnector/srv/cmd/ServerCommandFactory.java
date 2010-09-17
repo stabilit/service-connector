@@ -14,12 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.cmd.factory.impl;
+package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.factory.CommandFactory;
-import org.serviceconnector.srv.ps.cmd.factory.impl.PublishServerCommandFactory;
-import org.serviceconnector.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
 
 
 /**
@@ -27,13 +25,13 @@ import org.serviceconnector.srv.rr.cmd.factory.impl.SessionServerCommandFactory;
  * 
  * @author JTraber
  */
-public class UnitServerCommandFactory extends CommandFactory {
+public class ServerCommandFactory extends CommandFactory {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(UnitServerCommandFactory.class);
+	protected final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
 	
 	@SuppressWarnings("unused")
-	public UnitServerCommandFactory() {
+	public ServerCommandFactory() {
 		SessionServerCommandFactory sessionServerCommandFactory = new SessionServerCommandFactory(this);
 		PublishServerCommandFactory publishServerCommandFactory = new PublishServerCommandFactory(this);
 	}

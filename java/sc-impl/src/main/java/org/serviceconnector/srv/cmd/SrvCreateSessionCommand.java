@@ -14,7 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.ps.cmd.impl;
+package org.serviceconnector.srv.cmd;
+
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -30,33 +32,33 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageFault;
-import org.serviceconnector.srv.ISCPublishServerCallback;
+import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SrvService;
-import org.serviceconnector.srv.rr.cmd.impl.SrvCommandAdapter;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription
- * command. Allows changing subscription mask of a subscription.
+ * The Class SrvCreateSessionCommand. Responsible for validation and execution of server create session command. Allows
+ * creating session on backend server.
  * 
  * @author JTraber
  */
-public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
+public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvChangeSubscriptionCommand.class);
+	protected final static Logger logger = Logger.getLogger(SrvCreateSessionCommand.class);
 	
 	/**
-	 * Instantiates a new SrvChangeSubscriptionCommand.
+	 * Instantiates a new SrvCreateSessionCommand.
 	 */
-	public SrvChangeSubscriptionCommand() {
-		this.commandValidator = new SrvChangeSubscriptionCommandValidator();
+	public SrvCreateSessionCommand() {
+		this.commandValidator = new SrvCreateSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_CHANGE_SUBSCRIPTION;
+		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
 
 	/** {@inheritDoc} */
@@ -67,21 +69,29 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionId(scmpMessage.getSessionId());
-		scmpMessage.setServiceName(serviceName);
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).changeSubscription(scMessage);
+		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
+
+		// create session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.addSession(sessionId);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
-		messageId.incrementMsgSequenceNr();
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey());
+		reply.setBody(scReply.getData());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
@@ -93,31 +103,37 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 	}
 
 	/**
-	 * The Class SrvChangeSubscriptionCommandValidator.
+	 * The Class SrvCreateSessionCommandValidator.
 	 */
-	private class SrvChangeSubscriptionCommandValidator implements ICommandValidator {
+	public class SrvCreateSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
-
+			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				String messageId = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+				}
+				// serviceName
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				if (serviceName == null || serviceName.equals("")) {
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
+				// ipAddressList
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+				ValidatorUtility.validateIpAddressList(ipAddressList);
+				// sessionInfo
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

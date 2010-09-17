@@ -42,7 +42,7 @@ import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.cmd.factory.impl.UnitServerCommandFactory;
+import org.serviceconnector.srv.cmd.ServerCommandFactory;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -93,7 +93,7 @@ public class SCServer implements ISCServer {
 
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new UnitServerCommandFactory());
+			CommandFactory.setCurrentCommandFactory(new ServerCommandFactory());
 		}
 	}
 
