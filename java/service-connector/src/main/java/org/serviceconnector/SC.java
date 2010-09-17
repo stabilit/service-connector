@@ -33,8 +33,7 @@ import org.serviceconnector.common.cmd.factory.CommandFactory;
 import org.serviceconnector.common.conf.Constants;
 import org.serviceconnector.common.conf.ICommunicatorConfig;
 import org.serviceconnector.common.conf.ResponderConfigPool;
-import org.serviceconnector.common.log.ILoggingManagerMXBean;
-import org.serviceconnector.common.log.LoggingManager;
+import org.serviceconnector.common.log.JMXLoggingManager;
 import org.serviceconnector.common.net.res.Responder;
 import org.serviceconnector.common.res.IResponder;
 import org.serviceconnector.common.service.SCServiceException;
@@ -144,7 +143,7 @@ public final class SC {
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
-			ILoggingManagerMXBean loggingManager = new LoggingManager();
+			JMXLoggingManager loggingManager = new JMXLoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 		} catch (Throwable th) {
 			logger.error("initializeJMX", th);

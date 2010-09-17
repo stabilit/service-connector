@@ -9,17 +9,24 @@ import org.apache.log4j.LogManager;
  * 
  * @author JTraber
  */
-public class LoggingManager implements ILoggingManagerMXBean {
+public class JMXLoggingManager {
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the connection logger level.
+	 * 
+	 * @param level
+	 *            the new connection logger level
+	 */
 	public void setConnectionLoggerLevel(String levelValue) {
-		Level level = LoggingManager.convertLevelValue(levelValue);
+		Level level = JMXLoggingManager.convertLevelValue(levelValue);
 		LogManager.getLogger("ConnectionLogger").setLevel(level);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the connection logger level.
+	 * 
+	 * @return the connection logger level
+	 */
 	public String getConnectionLoggerLevel() {
 		return LogManager.getLogger("ConnectionLogger").getLevel().toString();
 	}
