@@ -28,9 +28,9 @@ import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.util.ITimerRun;
-import org.serviceconnector.common.util.TimerTaskWrapper;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
+import org.serviceconnector.util.TimerTaskWrapper;
 
 
 /**

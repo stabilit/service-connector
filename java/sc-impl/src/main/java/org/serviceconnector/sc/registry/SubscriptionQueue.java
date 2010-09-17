@@ -26,10 +26,10 @@ import org.serviceconnector.common.scmp.IRequest;
 import org.serviceconnector.common.scmp.IResponse;
 import org.serviceconnector.common.service.IFilterMask;
 import org.serviceconnector.common.util.ITimerRun;
-import org.serviceconnector.common.util.LinkedNode;
-import org.serviceconnector.common.util.LinkedQueue;
-import org.serviceconnector.common.util.TimerTaskWrapper;
 import org.serviceconnector.sc.service.IPublishTimerRun;
+import org.serviceconnector.util.LinkedNode;
+import org.serviceconnector.util.LinkedQueue;
+import org.serviceconnector.util.TimerTaskWrapper;
 
 
 /**

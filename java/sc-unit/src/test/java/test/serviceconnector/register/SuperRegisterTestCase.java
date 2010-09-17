@@ -18,16 +18,16 @@ package test.serviceconnector.register;
 
 import org.junit.After;
 import org.junit.Before;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPDeRegisterServiceCall;
-import org.serviceconnector.common.call.SCMPRegisterServiceCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPDeRegisterServiceCall;
+import org.serviceconnector.call.SCMPRegisterServiceCall;
 import org.serviceconnector.common.conf.ICommunicatorConfig;
-import org.serviceconnector.common.conf.RequesterConfigPool;
-import org.serviceconnector.common.conf.ResponderConfigPool;
 import org.serviceconnector.common.net.req.IRequester;
 import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.net.req.Requester;
 import org.serviceconnector.common.scmp.SCMPMessageId;
+import org.serviceconnector.conf.RequesterConfigPool;
+import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.net.req.Requester;
 
 import test.serviceconnector.attach.SuperAttachTestCase;
 import test.serviceconnector.pool.TestContext;

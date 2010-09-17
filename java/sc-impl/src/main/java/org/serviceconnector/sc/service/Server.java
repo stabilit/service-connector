@@ -23,24 +23,24 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPSrvAbortSessionCall;
-import org.serviceconnector.common.call.SCMPSrvChangeSubscriptionCall;
-import org.serviceconnector.common.call.SCMPSrvCreateSessionCall;
-import org.serviceconnector.common.call.SCMPSrvDeleteSessionCall;
-import org.serviceconnector.common.call.SCMPSrvExecuteCall;
-import org.serviceconnector.common.call.SCMPSrvSubscribeCall;
-import org.serviceconnector.common.call.SCMPSrvUnsubscribeCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPSrvAbortSessionCall;
+import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
+import org.serviceconnector.call.SCMPSrvCreateSessionCall;
+import org.serviceconnector.call.SCMPSrvDeleteSessionCall;
+import org.serviceconnector.call.SCMPSrvExecuteCall;
+import org.serviceconnector.call.SCMPSrvSubscribeCall;
+import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.common.conf.ICommunicatorConfig;
 import org.serviceconnector.common.ctx.IContext;
-import org.serviceconnector.common.net.req.ConnectionPool;
 import org.serviceconnector.common.net.req.IConnectionPool;
 import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.net.req.RequesterContext;
-import org.serviceconnector.common.net.res.ResponderRegistry;
 import org.serviceconnector.common.res.IResponder;
 import org.serviceconnector.common.scmp.ISCMPCallback;
 import org.serviceconnector.common.scmp.SCMPMessage;
+import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.sc.req.SCRequester;
 
 

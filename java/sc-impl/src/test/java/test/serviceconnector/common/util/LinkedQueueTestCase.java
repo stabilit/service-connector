@@ -26,8 +26,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.util.LinkedNode;
-import org.serviceconnector.common.util.LinkedQueue;
+import org.serviceconnector.util.LinkedNode;
+import org.serviceconnector.util.LinkedQueue;
 
 
 /**

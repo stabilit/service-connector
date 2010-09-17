@@ -27,7 +27,7 @@ import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.IService;
 import org.serviceconnector.common.service.ISCMessage;
 import org.serviceconnector.common.service.ISCMessageCallback;
-import org.serviceconnector.common.service.SCMessageCallback;
+import org.serviceconnector.service.SCMessageCallback;
 
 
 public class SCPublishingServiceExample {

@@ -18,11 +18,11 @@ package test.serviceconnector.session;
 
 import org.junit.After;
 import org.junit.Before;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPClnCreateSessionCall;
-import org.serviceconnector.common.call.SCMPClnDeleteSessionCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPClnCreateSessionCall;
+import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.common.scmp.SCMPMessage;
-import org.serviceconnector.common.util.SynchronousCallback;
+import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.attach.SuperAttachTestCase;
 

@@ -21,18 +21,13 @@ import java.security.InvalidParameterException;
 import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPDeRegisterServiceCall;
-import org.serviceconnector.common.call.SCMPRegisterServiceCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPDeRegisterServiceCall;
+import org.serviceconnector.call.SCMPRegisterServiceCall;
 import org.serviceconnector.common.cmd.factory.CommandFactory;
-import org.serviceconnector.common.conf.CommunicatorConfig;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.req.ConnectionPool;
 import org.serviceconnector.common.net.req.IConnectionPool;
 import org.serviceconnector.common.net.req.IRequester;
-import org.serviceconnector.common.net.req.Requester;
-import org.serviceconnector.common.net.req.RequesterContext;
-import org.serviceconnector.common.net.res.Responder;
 import org.serviceconnector.common.res.IResponder;
 import org.serviceconnector.common.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.common.scmp.SCMPError;
@@ -40,11 +35,16 @@ import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMessageId;
 import org.serviceconnector.common.service.SCServiceException;
-import org.serviceconnector.common.util.SynchronousCallback;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.cmd.factory.impl.UnitServerCommandFactory;
+import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**

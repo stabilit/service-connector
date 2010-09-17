@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.common.net.EncoderDecoderFactory;
 import org.serviceconnector.common.net.IEncoderDecoder;
 import org.serviceconnector.common.scmp.SCMPBodyType;
 import org.serviceconnector.common.scmp.SCMPFault;
@@ -32,6 +31,7 @@ import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPHeadlineKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.net.EncoderDecoderFactory;
 
 import test.serviceconnector.test.SCImplTest;
 

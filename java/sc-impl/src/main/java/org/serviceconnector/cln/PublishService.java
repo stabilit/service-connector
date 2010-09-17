@@ -19,16 +19,14 @@ package org.serviceconnector.cln;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
+import org.serviceconnector.call.SCMPClnSubscribeCall;
+import org.serviceconnector.call.SCMPClnUnsubscribeCall;
+import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cln.service.IPublishService;
 import org.serviceconnector.cln.service.Service;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPClnChangeSubscriptionCall;
-import org.serviceconnector.common.call.SCMPClnSubscribeCall;
-import org.serviceconnector.common.call.SCMPClnUnsubscribeCall;
-import org.serviceconnector.common.call.SCMPReceivePublicationCall;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.req.Requester;
-import org.serviceconnector.common.net.req.RequesterContext;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPFault;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
@@ -36,7 +34,9 @@ import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.service.ISCContext;
 import org.serviceconnector.common.service.ISCMessageCallback;
 import org.serviceconnector.common.service.SCServiceException;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**

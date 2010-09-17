@@ -24,11 +24,11 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.serviceconnector.common.conf.RequesterConfigPool;
 import org.serviceconnector.common.net.req.IRequester;
 import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.net.req.Requester;
 import org.serviceconnector.common.scmp.SCMPMessageId;
+import org.serviceconnector.conf.RequesterConfigPool;
+import org.serviceconnector.net.req.Requester;
 
 import test.serviceconnector.pool.TestContext;
 

@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
-import org.serviceconnector.common.net.SCMPCommunicationException;
+import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.srv.ISCServer;
 import org.serviceconnector.srv.SCServer;
 

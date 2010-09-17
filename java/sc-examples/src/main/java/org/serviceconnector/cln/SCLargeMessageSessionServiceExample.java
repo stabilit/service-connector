@@ -25,7 +25,7 @@ import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.ISessionService;
 import org.serviceconnector.common.service.ISCMessage;
-import org.serviceconnector.common.service.SCMessage;
+import org.serviceconnector.service.SCMessage;
 
 
 public class SCLargeMessageSessionServiceExample {

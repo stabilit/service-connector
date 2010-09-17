@@ -23,10 +23,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.common.net.req.ConnectionPool;
-import org.serviceconnector.common.net.req.ConnectionPoolBusyException;
 import org.serviceconnector.common.net.req.IConnection;
 import org.serviceconnector.common.net.req.IConnectionPool;
+import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.req.ConnectionPoolBusyException;
 
 import test.serviceconnector.unit.SetupTestCases;
 

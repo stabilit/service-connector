@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
 import org.serviceconnector.common.scmp.SCMPError;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**

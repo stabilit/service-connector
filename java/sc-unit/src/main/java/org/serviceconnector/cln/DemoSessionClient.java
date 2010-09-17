@@ -7,8 +7,8 @@ import org.serviceconnector.cln.service.IService;
 import org.serviceconnector.cln.service.ISessionService;
 import org.serviceconnector.common.service.ISCMessage;
 import org.serviceconnector.common.service.ISCMessageCallback;
-import org.serviceconnector.common.service.SCMessage;
-import org.serviceconnector.common.service.SCMessageCallback;
+import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.service.SCMessageCallback;
 
 
 public class DemoSessionClient extends Thread {

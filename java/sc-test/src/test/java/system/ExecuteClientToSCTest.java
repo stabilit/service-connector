@@ -13,10 +13,10 @@ import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cln.service.ISessionService;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
 import org.serviceconnector.common.service.ISCMessage;
-import org.serviceconnector.common.service.SCMessage;
 import org.serviceconnector.common.service.SCServiceException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.service.SCMessage;
 
 
 

@@ -27,7 +27,7 @@ import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMessageId;
 import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.service.SCMessage;
+import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SrvService;
 

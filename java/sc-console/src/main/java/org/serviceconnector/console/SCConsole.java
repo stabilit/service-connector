@@ -16,7 +16,7 @@
 package org.serviceconnector.console;
 
 import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.common.util.CommandLineUtil;
+import org.serviceconnector.util.CommandLineUtil;
 
 
 public class SCConsole {

@@ -19,14 +19,14 @@ package test.serviceconnector.attach;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.common.call.SCMPAttachCall;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPDetachCall;
+import org.serviceconnector.call.SCMPAttachCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.util.SynchronousCallback;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnector.util.ValidatorUtility;
 
 import test.serviceconnector.unit.SCTest;
 import test.serviceconnector.unit.SuperTestCase;

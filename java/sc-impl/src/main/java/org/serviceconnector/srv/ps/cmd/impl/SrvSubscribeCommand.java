@@ -28,12 +28,12 @@ import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMessageId;
 import org.serviceconnector.common.scmp.SCMPMsgType;
 import org.serviceconnector.common.service.ISCMessage;
-import org.serviceconnector.common.service.SCMessage;
-import org.serviceconnector.common.service.SCMessageFault;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SrvService;
 import org.serviceconnector.srv.rr.cmd.impl.SrvCommandAdapter;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 public class SrvSubscribeCommand extends SrvCommandAdapter {

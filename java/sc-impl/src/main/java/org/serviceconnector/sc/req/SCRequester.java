@@ -24,13 +24,13 @@ import org.serviceconnector.common.net.req.IConnection;
 import org.serviceconnector.common.net.req.IConnectionContext;
 import org.serviceconnector.common.net.req.IRequester;
 import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.common.scmp.ISCMPCallback;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPFault;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.util.ITimerRun;
-import org.serviceconnector.common.util.TimerTaskWrapper;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.util.TimerTaskWrapper;
 
 
 /**

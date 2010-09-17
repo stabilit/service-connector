@@ -20,9 +20,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.common.conf.Constants;
 import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.net.FrameDecoderException;
-import org.serviceconnector.common.net.FrameDecoderFactory;
 import org.serviceconnector.common.net.IFrameDecoder;
+import org.serviceconnector.net.FrameDecoderException;
+import org.serviceconnector.net.FrameDecoderFactory;
 
 
 /**

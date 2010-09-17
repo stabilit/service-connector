@@ -21,21 +21,21 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPDeRegisterServiceCall;
-import org.serviceconnector.common.call.SCMPInspectCall;
-import org.serviceconnector.common.call.SCMPRegisterServiceCall;
-import org.serviceconnector.common.conf.CommunicatorConfig;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPDeRegisterServiceCall;
+import org.serviceconnector.call.SCMPInspectCall;
+import org.serviceconnector.call.SCMPRegisterServiceCall;
 import org.serviceconnector.common.conf.ICommunicatorConfig;
 import org.serviceconnector.common.net.req.IRequester;
 import org.serviceconnector.common.net.req.IRequesterContext;
-import org.serviceconnector.common.net.req.Requester;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPFault;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.util.SynchronousCallback;
+import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.pool.TestContext;
 import test.serviceconnector.unit.SCTest;

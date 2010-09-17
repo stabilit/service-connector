@@ -26,8 +26,8 @@ import org.serviceconnector.cln.service.Service;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.service.ISCMessageCallback;
-import org.serviceconnector.common.service.SCMessage;
-import org.serviceconnector.common.util.SynchronousCallback;
+import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.util.SynchronousCallback;
 
 
 /**

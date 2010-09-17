@@ -19,19 +19,19 @@ package test.serviceconnector.manage;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPClnCreateSessionCall;
-import org.serviceconnector.common.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.common.call.SCMPClnExecuteCall;
-import org.serviceconnector.common.call.SCMPInspectCall;
-import org.serviceconnector.common.call.SCMPManageCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPClnCreateSessionCall;
+import org.serviceconnector.call.SCMPClnDeleteSessionCall;
+import org.serviceconnector.call.SCMPClnExecuteCall;
+import org.serviceconnector.call.SCMPInspectCall;
+import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.common.conf.Constants;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPFault;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMsgType;
-import org.serviceconnector.common.util.SynchronousCallback;
+import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.attach.SuperAttachTestCase;
 import test.serviceconnector.unit.SCTest;

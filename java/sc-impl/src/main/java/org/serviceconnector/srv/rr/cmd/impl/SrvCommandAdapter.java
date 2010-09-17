@@ -21,11 +21,11 @@ import org.serviceconnector.common.cmd.ICommand;
 import org.serviceconnector.common.cmd.ICommandValidator;
 import org.serviceconnector.common.cmd.SCMPCommandException;
 import org.serviceconnector.common.factory.IFactoryable;
-import org.serviceconnector.common.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.common.scmp.IRequest;
 import org.serviceconnector.common.scmp.IResponse;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPMsgType;
+import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.srv.SrvService;
 import org.serviceconnector.srv.SrvServiceRegistry;
 

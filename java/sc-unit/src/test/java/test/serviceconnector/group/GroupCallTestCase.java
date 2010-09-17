@@ -19,8 +19,8 @@ package test.serviceconnector.group;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPClnExecuteCall;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.common.scmp.SCMPBodyType;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;

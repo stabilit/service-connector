@@ -21,17 +21,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPClnCreateSessionCall;
+import org.serviceconnector.call.SCMPClnDeleteSessionCall;
+import org.serviceconnector.call.SCMPClnEchoCall;
+import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.cln.service.ISessionService;
 import org.serviceconnector.cln.service.Service;
-import org.serviceconnector.common.call.SCMPCallFactory;
-import org.serviceconnector.common.call.SCMPClnCreateSessionCall;
-import org.serviceconnector.common.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.common.call.SCMPClnEchoCall;
-import org.serviceconnector.common.call.SCMPClnExecuteCall;
 import org.serviceconnector.common.cmd.SCMPValidatorException;
 import org.serviceconnector.common.conf.Constants;
-import org.serviceconnector.common.net.req.Requester;
-import org.serviceconnector.common.net.req.RequesterContext;
 import org.serviceconnector.common.scmp.ISCMPCallback;
 import org.serviceconnector.common.scmp.SCMPError;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
@@ -39,11 +37,13 @@ import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.service.ISCContext;
 import org.serviceconnector.common.service.ISCMessage;
 import org.serviceconnector.common.service.ISCMessageCallback;
-import org.serviceconnector.common.service.SCMessage;
 import org.serviceconnector.common.service.SCServiceException;
 import org.serviceconnector.common.util.ITimerRun;
-import org.serviceconnector.common.util.TimerTaskWrapper;
-import org.serviceconnector.common.util.ValidatorUtility;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**

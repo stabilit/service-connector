@@ -19,7 +19,7 @@ package org.serviceconnector.sc.service;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.common.util.TimerTaskWrapper;
+import org.serviceconnector.util.TimerTaskWrapper;
 
 
 /**

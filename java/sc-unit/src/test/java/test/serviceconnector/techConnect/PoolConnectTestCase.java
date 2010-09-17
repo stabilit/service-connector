@@ -19,14 +19,14 @@ package test.serviceconnector.techConnect;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.common.SCVersion;
-import org.serviceconnector.common.net.req.ConnectionPool;
 import org.serviceconnector.common.net.req.IConnection;
 import org.serviceconnector.common.net.req.IConnectionPool;
 import org.serviceconnector.common.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.common.scmp.SCMPMessage;
 import org.serviceconnector.common.scmp.SCMPMsgType;
 import org.serviceconnector.common.util.DateTimeUtility;
-import org.serviceconnector.common.util.SynchronousCallback;
+import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.util.SynchronousCallback;
 
 import test.serviceconnector.unit.SetupTestCases;
 
