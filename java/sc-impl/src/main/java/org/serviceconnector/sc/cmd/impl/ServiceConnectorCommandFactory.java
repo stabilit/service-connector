@@ -14,26 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd.factory.impl;
+package org.serviceconnector.sc.cmd.impl;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.common.cmd.ICommand;
 import org.serviceconnector.common.cmd.factory.CommandFactory;
-import org.serviceconnector.sc.cmd.impl.AttachCommand;
-import org.serviceconnector.sc.cmd.impl.ClnChangeSubscriptionCommand;
-import org.serviceconnector.sc.cmd.impl.ClnCreateSessionCommand;
-import org.serviceconnector.sc.cmd.impl.ClnDeleteSessionCommand;
-import org.serviceconnector.sc.cmd.impl.ClnEchoCommand;
-import org.serviceconnector.sc.cmd.impl.ClnExecuteCommand;
-import org.serviceconnector.sc.cmd.impl.ClnSubscribeCommand;
-import org.serviceconnector.sc.cmd.impl.ClnUnsubscribeCommand;
-import org.serviceconnector.sc.cmd.impl.DeRegisterServiceCommand;
-import org.serviceconnector.sc.cmd.impl.DetachCommand;
-import org.serviceconnector.sc.cmd.impl.InspectCommand;
-import org.serviceconnector.sc.cmd.impl.ManageCommand;
-import org.serviceconnector.sc.cmd.impl.PublishCommand;
-import org.serviceconnector.sc.cmd.impl.ReceivePublicationCommand;
-import org.serviceconnector.sc.cmd.impl.RegisterServiceCommand;
 
 
 /**
