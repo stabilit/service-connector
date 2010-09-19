@@ -46,7 +46,7 @@ public class Requester implements IRequester {
 	/** The context. */
 	private IRequesterContext reqContext;
 	/** The Constant timer, triggers all operation timeout for sending. */
-	protected final static Timer timer = new Timer("OperationTimerSCRequester");
+	protected final static Timer timer = new Timer("OperationTimerRequester");
 
 	public Requester(IRequesterContext context) {
 		this.reqContext = context;
@@ -58,10 +58,10 @@ public class Requester implements IRequester {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
-		ISCMPCallback requesterCallback = new SCRequesterSCMPCallback(callback, connectionContext);
+		ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
 		// setting up operation timeout after successful send
 		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-		SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
+		RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 		reqCallback.setOperationTimeoutTask(task);
 		reqCallback.setTimeoutMillis(timeoutInMillis);
 		timer.schedule(task, (long) timeoutInMillis);
@@ -84,7 +84,7 @@ public class Requester implements IRequester {
 	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
 	 * reply is received. Handles freeing up earlier requested connections.
 	 */
-	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimerRun {
+	private class RequesterSCMPCallback implements ISCMPCallback, ITimerRun {
 
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
@@ -95,7 +95,7 @@ public class Requester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public SCRequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
+		public RequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
 			this.operationTimeoutTask = null;

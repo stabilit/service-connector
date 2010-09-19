@@ -48,7 +48,7 @@ public class SCRequester implements IRequester {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCRequester.class);
 	/** The Constant timer, triggers all operation timeout for sending. */
-	protected final static Timer timer = new Timer("OperationTimer");
+	protected final static Timer timer = new Timer("OperationTimerSCRequester");
 	/** The context. */
 	protected IRequesterContext reqContext;
 
@@ -75,11 +75,11 @@ public class SCRequester implements IRequester {
 		if (message.isLargeMessage()) {
 			// SCMPCompositeSender handles splitting, works like an iterator
 			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
+			requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
 					msgId);
 			// setting up operation timeout after successful send
 			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 			reqCallback.setOperationTimeoutTask(task);
 			reqCallback.setTimeoutMillis(timeoutInMillis);
 			timer.schedule(task, (long) timeoutInMillis);
@@ -93,10 +93,10 @@ public class SCRequester implements IRequester {
 			// send
 			connection.send(part, requesterCallback);
 		} else {
-			requesterCallback = new RequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
+			requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
 			// setting up operation timeout after successful send
 			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 			reqCallback.setOperationTimeoutTask(task);
 			reqCallback.setTimeoutMillis(timeoutInMillis);
 			timer.schedule(task, (long) timeoutInMillis);
@@ -130,7 +130,7 @@ public class SCRequester implements IRequester {
 	 * reply is received. Handles freeing up earlier requested connections. Provides functionality to deal with large
 	 * messages.
 	 */
-	private class RequesterSCMPCallback implements ISCMPCallback, ITimerRun {
+	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimerRun {
 
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
@@ -149,12 +149,12 @@ public class SCRequester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
 				SCMPMessageId msgId) {
 			this(reqMsg, scmpCallback, conCtx, null, msgId);
 		}
 
-		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
 				SCMPCompositeSender compositeSender, SCMPMessageId msgId) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
