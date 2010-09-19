@@ -22,8 +22,8 @@ public class EnableServiceDisableServiceClientToSCTest {
 	protected final static Logger logger = Logger
 			.getLogger(EnableServiceDisableServiceClientToSCTest.class);
 
-	private static Process sc;
-	private Process srv;
+	private static Process scProcess;
+	private Process srvProcess;
 
 	private ISCClient client;
 
@@ -36,7 +36,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			sc = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -44,7 +44,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {
+		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {
 				TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		client = new SCClient();
@@ -57,16 +57,16 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals("1000/0", client.workload(TestConstants.serviceName));
 		client.detach();
 		client = null;
-		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
-		srv = null;
+		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		srvProcess = null;
 		ex = null;
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl = null;
-		sc = null;
+		scProcess = null;
 	}
 
 	@Test

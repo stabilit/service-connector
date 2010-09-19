@@ -21,8 +21,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	protected final static Logger logger = Logger
 			.getLogger(PrematureDestroyOfSCClientToSCTest.class);
 
-	private Process sc;
-	private Process srv;
+	private Process scProcess;
+	private Process srvProcess;
 
 	private ISCClient client;
 
@@ -36,8 +36,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			sc = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
 					100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("setUp", e);
@@ -51,11 +51,11 @@ public class PrematureDestroyOfSCClientToSCTest {
 		try {
 			client.detach();
 		} finally {
-			ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
-			ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
+			ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+			ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 			client = null;
-			srv = null;
-			sc = null;
+			srvProcess = null;
+			scProcess = null;
 		}
 	}
 
@@ -66,9 +66,9 @@ public class PrematureDestroyOfSCClientToSCTest {
 	
 	@Test
 	public void detach_afterSCRestart_notAttached() throws Exception {
-		sc = ctrl.restartSC(sc, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
-		srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
 				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
@@ -77,9 +77,9 @@ public class PrematureDestroyOfSCClientToSCTest {
 
 	@Test
 	public void createSession_afterSCRestart_createsSessionService() throws Exception {
-		sc = ctrl.restartSC(sc, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
-		srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
 				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
@@ -88,9 +88,9 @@ public class PrematureDestroyOfSCClientToSCTest {
 	
 	@Test(expected = SCServiceException.class)
 	public void newSessionService_afterSCRestart_ThrowsSCServiceException() throws Exception {
-		sc = ctrl.restartSC(sc, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
-		srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
 				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached

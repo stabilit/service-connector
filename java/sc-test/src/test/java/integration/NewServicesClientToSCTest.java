@@ -24,7 +24,7 @@ public class NewServicesClientToSCTest {
 	protected final static Logger logger = Logger.getLogger(NewServicesClientToSCTest.class);
 
 	private ISCClient client;
-	private static Process p;
+	private static Process scProcess;
 
 	private static TestEnvironmentController ctrl;
 
@@ -32,7 +32,7 @@ public class NewServicesClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -40,9 +40,9 @@ public class NewServicesClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl = null;
-		p = null;
+		scProcess = null;
 	}
 
 	@Before

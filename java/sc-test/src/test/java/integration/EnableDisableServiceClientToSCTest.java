@@ -19,7 +19,7 @@ public class EnableDisableServiceClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EnableDisableServiceClientToSCTest.class);
 
-	private static Process p;
+	private static Process scProcess;
 
 	private ISCClient client;
 
@@ -31,7 +31,7 @@ public class EnableDisableServiceClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -39,9 +39,9 @@ public class EnableDisableServiceClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl = null;
-		p = null;
+		scProcess = null;
 	}
 
 	@Before

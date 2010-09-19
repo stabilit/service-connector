@@ -27,14 +27,14 @@ public class AttachClientToSCTest {
 	private ISCClient client;
 	private Exception ex;
 
-	private static Process p;
+	private static Process scProcess;
 	private static TestEnvironmentController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -42,9 +42,9 @@ public class AttachClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl = null;
-		p = null;
+		scProcess = null;
 	}
 
 	@Before
@@ -55,6 +55,9 @@ public class AttachClientToSCTest {
 	
 	@After
 	public void tearDown() throws Exception {
+		try {
+			client.detach();
+		} catch (Exception e) {} 
 		client = null;
 		assertEquals(threadCount, Thread.activeCount());
 	}

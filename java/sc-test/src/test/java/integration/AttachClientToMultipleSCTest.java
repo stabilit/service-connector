@@ -22,8 +22,8 @@ public class AttachClientToMultipleSCTest {
 	private int threadCount = 0;
 	private ISCClient client1;
 	private ISCClient client2;
-	private static Process p;
-	private static Process r;
+	private static Process scProcess0;
+	private static Process scProcess1;
 
 	private static TestEnvironmentController ctrl;
 
@@ -31,8 +31,8 @@ public class AttachClientToMultipleSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			r = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
+			scProcess0 = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess1 = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -40,11 +40,11 @@ public class AttachClientToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
-		ctrl.stopProcess(r, TestConstants.log4jSC1Properties);
+		ctrl.stopProcess(scProcess0, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess1, TestConstants.log4jSC1Properties);
 		ctrl = null;
-		p = null;
-		r = null;
+		scProcess0 = null;
+		scProcess1 = null;
 	}
 
 	@Before

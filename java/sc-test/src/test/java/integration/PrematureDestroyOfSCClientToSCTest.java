@@ -22,7 +22,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCClientToSCTest.class);
 	
 	private ISCClient client;
-	private Process p;
+	private Process scProcess;
 
 	private static TestEnvironmentController ctrl;
 
@@ -34,7 +34,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -43,9 +43,9 @@ public class PrematureDestroyOfSCClientToSCTest {
 
 	@After
 	public void tearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		client = null;
-		p = null;
+		scProcess = null;
 	}
 	
 	@AfterClass
@@ -55,20 +55,20 @@ public class PrematureDestroyOfSCClientToSCTest {
 
 	@Test(expected = SCServiceException.class)
 	public void attach_afterSCDestroy_throwsException() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
 	}
 	
 	@Test
 	public void detach_beforeAttachAfterSCDestroy_passes() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		client.detach();
 	}
 	
 	@Test
 	public void detach_afterSCDestroy_passes() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
-		p.destroy();
+		scProcess.destroy();
 		client.detach();
 		assertEquals(false, client.isAttached());
 	}
@@ -76,28 +76,28 @@ public class PrematureDestroyOfSCClientToSCTest {
 	@Test(expected = SCServiceException.class)
 	public void enableService_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
-		p.destroy();
+		scProcess.destroy();
 		client.enableService(TestConstants.serviceName);
 	}
 	
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
-		p.destroy();
+		scProcess.destroy();
 		client.enableService(TestConstants.serviceName);
 	}
 	
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
-		p.destroy();
+		scProcess.destroy();
 		client.workload(TestConstants.serviceName);
 	}
 	
 	@Test
 	public void setMaxConnection_afterAttachAfterSCDestroy_passes() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
-		p.destroy();
+		scProcess.destroy();
 		client.setMaxConnections(10);
 	}
 }

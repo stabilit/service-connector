@@ -24,14 +24,14 @@ public class RegisterServiceServerToMultipleSCTest {
 	private ISCSessionServer server;
 
 	private static TestEnvironmentController ctrl;
-	private static Process p;
+	private static Process scProcess;
 	private static Process r;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			r = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -40,10 +40,10 @@ public class RegisterServiceServerToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl.stopProcess(r, TestConstants.log4jSC1Properties);
 		ctrl = null;
-		p = null;
+		scProcess = null;
 		r = null;
 	}
 

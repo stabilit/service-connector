@@ -25,8 +25,8 @@ public class ExecuteClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ExecuteClientToSCTest.class);
 
-	private static Process sc;
-	private static Process srv;
+	private static Process scProcess;
+	private static Process srvProcess;
 
 	private ISCClient client;
 
@@ -38,8 +38,8 @@ public class ExecuteClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			sc = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srv = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -60,11 +60,11 @@ public class ExecuteClientToSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(sc, TestConstants.log4jSC0Properties);
-		ctrl.stopProcess(srv, TestConstants.log4jSrvProperties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl = null;
-		sc = null;
-		srv = null;
+		scProcess = null;
+		srvProcess = null;
 	}
 
 	@Test(expected = SCServiceException.class)

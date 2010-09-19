@@ -29,13 +29,13 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
-	private static Process p;
+	private static Process scProcess;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -43,9 +43,9 @@ public class AttachClientToSCConnectionTypeTCPTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		ctrl = null;
-		p = null;
+		scProcess = null;
 	}
 
 	@Before

@@ -24,7 +24,7 @@ public class PrematureDestroyOfSCServerToSCTest {
 			.getLogger(PrematureDestroyOfSCServerToSCTest.class);
 
 	private ISCSessionServer server;
-	private Process p;
+	private Process scProcess;
 
 	private static TestEnvironmentController ctrl;
 
@@ -37,7 +37,7 @@ public class PrematureDestroyOfSCServerToSCTest {
 	public void setUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 		try {
-			p = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -50,8 +50,8 @@ public class PrematureDestroyOfSCServerToSCTest {
 	public void tearDown() throws Exception {
 		server.destroyServer();
 		server = null;
-		ctrl.stopProcess(p, TestConstants.log4jSC0Properties);
-		p = null;
+		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		scProcess = null;
 	}
 	
 	@AfterClass
@@ -61,19 +61,19 @@ public class PrematureDestroyOfSCServerToSCTest {
 
 	@Test(expected = SCServiceException.class)
 	public void registerService_afterSCDestroyValidValues_throwsException() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void registerService_afterSCDestroyInvalidMaxSessions_throwsException() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, -1, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerService_afterSCDestroyInvalidHost_throwsException() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		server.registerService("something", TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
 	}
 
@@ -81,20 +81,20 @@ public class PrematureDestroyOfSCServerToSCTest {
 	public void registerService_withImmediateConnectFalseAfterSCDestroyInvalidHost_throwsException()
 			throws Exception {
 		server.setImmediateConnect(false);
-		p.destroy();
+		scProcess.destroy();
 		server.registerService("something", TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
 	}
 
 	@Test
 	public void deregisterService_afterSCDestroyWithoutPreviousRegister_passes() throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
 	public void deregisterService_afterRegisterAfterSCDestroy_notRegistered() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		p.destroy();
+		scProcess.destroy();
 		server.deregisterService(TestConstants.serviceName);
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 	}
@@ -102,21 +102,21 @@ public class PrematureDestroyOfSCServerToSCTest {
 	@Test(expected = SCServiceException.class)
 	public void registerService_afterRegisterAfterSCDestroy_throwsException() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		p.destroy();
+		scProcess.destroy();
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceNameAlt, 10, 10, new CallBack());
 	}
 	
 	@Test
 	public void isRegistered_afterRegisterAfterSCDestroy_thinksThatItIsRegistered() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		p.destroy();
+		scProcess.destroy();
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 	}
 	
 	@Test
 	public void setImmediateConnect_afterRegisterAfterSCDestroy_passes() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		p.destroy();
+		scProcess.destroy();
 		server.setImmediateConnect(false);
 	}
 
