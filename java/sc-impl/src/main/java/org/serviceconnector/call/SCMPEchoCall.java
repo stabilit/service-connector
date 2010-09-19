@@ -27,24 +27,24 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**
- * The Class SCMPClnEchoCall. Call sends an echo.
+ * The Class SCMPEchoCall. Call sends an echo.
  * 
  * @author JTraber
  */
-public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
+public class SCMPEchoCall extends SCMPSessionCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnEchoCall.class);
+	protected final static Logger logger = Logger.getLogger(SCMPEchoCall.class);
 	
 	/**
 	 * Instantiates a SCMPClnEchoCall.
 	 */
-	public SCMPClnEchoCall() {
+	public SCMPEchoCall() {
 		this(null, null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPClnEchoCall.
+	 * Instantiates a new SCMPEchoCall.
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call
@@ -53,13 +53,13 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	 * @param sessionId
 	 *            the session id
 	 */
-	public SCMPClnEchoCall(IRequester req, String serviceName, String sessionId) {
+	public SCMPEchoCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CLN_REQ_ID, requester.hashCode());
@@ -69,13 +69,13 @@ public class SCMPClnEchoCall extends SCMPSessionCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
-		return new SCMPClnEchoCall(req, serviceName, sessionId);
+		return new SCMPEchoCall(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 
 	/**

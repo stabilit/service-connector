@@ -44,7 +44,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);

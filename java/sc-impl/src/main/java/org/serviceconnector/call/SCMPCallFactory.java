@@ -55,8 +55,8 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall MANAGE_CALL = new SCMPManageCall();
 	/** The CLN_EXECUTE_CALL. */
 	public static final ISCMPCall CLN_EXECUTE_CALL = new SCMPClnExecuteCall();
-	/** The CLN_ECHO_CALL. */
-	public static final ISCMPCall CLN_ECHO_CALL = new SCMPClnEchoCall();
+	/** The ECHO_CALL. */
+	public static final ISCMPCall ECHO_CALL = new SCMPEchoCall();
 
 	/** The CLN_SUBSCRIBE_CALL. */
 	public static final ISCMPCall CLN_SUBSCRIBE_CALL = new SCMPClnSubscribeCall();

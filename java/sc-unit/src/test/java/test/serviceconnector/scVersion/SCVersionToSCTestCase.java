@@ -44,7 +44,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionIsEmpty() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "";
@@ -66,7 +66,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionIsIncompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "2.0-000";
@@ -88,7 +88,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersion1_1_000() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.1-000";
@@ -110,7 +110,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersion0_9_000() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "0.9-000";
@@ -132,7 +132,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 	public void scVersionCompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(req) {
 			@Override
-			public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+			public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.0-000";

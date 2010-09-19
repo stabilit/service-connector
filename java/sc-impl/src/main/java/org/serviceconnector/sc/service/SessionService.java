@@ -63,7 +63,7 @@ public class SessionService extends Service {
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session, double timeoutInMillis) throws Exception {
+			Session session, int timeoutInMillis) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {

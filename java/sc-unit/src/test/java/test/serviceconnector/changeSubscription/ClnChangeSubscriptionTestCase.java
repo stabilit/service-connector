@@ -25,7 +25,7 @@ import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.conf.RequesterConfigPool;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
@@ -55,7 +55,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
-			req = new Requester(this.testContext);
+			req = new SCRequester(this.testContext);
 			if (run != -1) {
 				run = 5;
 			} else {

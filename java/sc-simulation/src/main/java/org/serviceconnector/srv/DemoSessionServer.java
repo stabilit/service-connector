@@ -91,6 +91,7 @@ public class DemoSessionServer {
 		@Override
 		public ISCMessage execute(ISCMessage request) {
 			Object data = request.getData();
+			int executionTimeout = request.getOperationTimeout();
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
 				String dataString = (String) data;

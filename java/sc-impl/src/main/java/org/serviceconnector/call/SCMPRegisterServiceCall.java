@@ -60,7 +60,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, double timeoutInMillis) throws Exception {
+	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		super.invoke(scmpCallback, timeoutInMillis);

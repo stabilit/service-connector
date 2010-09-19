@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.call.SCMPClnEchoCall;
+import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -78,7 +78,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		String sessionId = responseMessage.getSessionId();
 
 		for (int i = 0; i < 5; i++) {
-			SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(req,
+			SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(req,
 					"simulation", sessionId);
 			clnEchoCall.invoke(this.attachCallback, 1000);
 			SCTest.checkReply(this.attachCallback.getMessageSync());

@@ -39,7 +39,9 @@ public class SCMessage implements ISCMessage {
 	private Object data;
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
-
+	/** The operation timeout in milliseconds - time to execute */
+	private int operationTimeout;
+	
 	/**
 	 * Instantiates a new SCMessage.
 	 */
@@ -124,5 +126,15 @@ public class SCMessage implements ISCMessage {
 	@Override
 	public boolean isFault() {
 		return false;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public int getOperationTimeout() {
+		return operationTimeout;
+	}
+
+	public void setOperationTimeout(int operationTimeout) {
+		this.operationTimeout = operationTimeout;
 	}
 }

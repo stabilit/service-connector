@@ -25,10 +25,10 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.call.SCMPClnEchoCall;
+import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.sc.service.ISCMessageCallback;
@@ -76,7 +76,7 @@ public class SessionService extends Service implements ISessionService {
 	 */
 	public SessionService(String serviceName, ISCContext context) {
 		super(serviceName, context);
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 		this.timerRun = null;
 		this.timer = new Timer("SessionServiceTimeout");
@@ -128,7 +128,7 @@ public class SessionService extends Service implements ISessionService {
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		createSessionCall.setRequestBody(data);
 		try {
-			createSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			createSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			throw new SCServiceException("create session failed", e);
@@ -146,7 +146,7 @@ public class SessionService extends Service implements ISessionService {
 		// trigger session timeout
 		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILISEC_FACTOR));
+		this.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
 	}
 
 	/** {@inheritDoc} */
@@ -177,7 +177,7 @@ public class SessionService extends Service implements ISessionService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				deleteSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+				deleteSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				if (this.sessionDead) {
 					// ignore errors in state of dead session
@@ -237,7 +237,7 @@ public class SessionService extends Service implements ISessionService {
 		// invoke asynchronous
 		this.callback = new ServiceCallback(true);
 		try {
-			clnExecuteCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			clnExecuteCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -298,7 +298,7 @@ public class SessionService extends Service implements ISessionService {
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		ISCMPCallback scmpCallback = new ServiceCallback(this, callback);
 		try {
-			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
@@ -339,7 +339,7 @@ public class SessionService extends Service implements ISessionService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnEchoCall clnEchoCall = (SCMPClnEchoCall) SCMPCallFactory.CLN_ECHO_CALL.newInstance(this.requester,
+		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		this.callback = new ServiceCallback(true);
 		try {
@@ -400,7 +400,7 @@ public class SessionService extends Service implements ISessionService {
 
 		/** {@inheritDoc} */
 		@Override
-		public double getTimeoutMillis() {
+		public int getTimeoutMillis() {
 			return this.timeoutInSeconds;
 		}
 	}

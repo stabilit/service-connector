@@ -141,7 +141,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
 		session.setSessionTimeouter(sessionTimeouter);
 		// schedule sessionTimeouter in registry timer
-		this.timer.schedule(sessionTimeouter, session.getEchoIntervalSeconds() * Constants.SEC_TO_MILISEC_FACTOR);
+		this.timer.schedule(sessionTimeouter, session.getEchoIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			// aborts session on server
 			abortMessage.setServiceName(server.getServiceName());
 			abortMessage.setSessionId(session.getId());
-			server.serverAbortSession(abortMessage, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
+			server.serverAbortSession(abortMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 			// removes session on server
 			session.getServer().removeSession(session);
 			SessionLogger sessionLogger = SessionLogger.getInstance();
@@ -221,7 +221,7 @@ public class SessionRegistry extends Registry<String, Session> {
 
 		/** {@inheritDoc} */
 		@Override
-		public double getTimeoutMillis() {
+		public int getTimeoutMillis() {
 			return this.timeoutSeconds;
 		}
 

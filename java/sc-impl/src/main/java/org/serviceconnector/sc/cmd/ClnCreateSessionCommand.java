@@ -80,7 +80,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		Server server = null;
 		try {
 			server = service.allocateServerAndCreateSession(reqMessage, callback, session, 
-					((Double) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+					((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {
@@ -140,7 +140,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 				}
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());

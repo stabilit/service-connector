@@ -72,7 +72,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.addCommand(registerServiceCommand.getKey(), registerServiceCommand);
 		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
 		commandFactory.addCommand(deRegisterServiceCommand.getKey(), deRegisterServiceCommand);
-		ICommand clnEchoCommand = new ClnEchoCommand();
+		ICommand clnEchoCommand = new EchoCommand();
 		commandFactory.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnExecuteCommand = new ClnExecuteCommand();
 		commandFactory.addCommand(clnExecuteCommand.getKey(), clnExecuteCommand);

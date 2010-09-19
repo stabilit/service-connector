@@ -19,7 +19,6 @@ package org.serviceconnector.sc.cmd;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
@@ -73,8 +72,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 
 		Server server = session.getServer();
 		// try sending to the server
-		server.sendData(message, callback,
-				((Double) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		server.execute(message, callback, ((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		return;
 	}
 
@@ -106,7 +104,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 				}
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();

@@ -149,7 +149,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 				}
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
@@ -181,7 +181,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 	private class PublishTimerRun implements IPublishTimerRun {
 
 		/** The timeout. */
-		private double timeoutMillis;
+		private int timeoutMillis;
 		/** The subscription queue. */
 		private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 		/** The request. */
@@ -197,7 +197,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 		 * @param timeoutMillis
 		 *            the timeout
 		 */
-		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, double timeoutMillis) {
+		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, int timeoutMillis) {
 			this.request = null;
 			this.response = null;
 			this.timeoutMillis = timeoutMillis;
@@ -206,7 +206,7 @@ public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughP
 
 		/** {@inheritDoc} */
 		@Override
-		public double getTimeoutMillis() {
+		public int getTimeoutMillis() {
 			return this.timeoutMillis;
 		}
 

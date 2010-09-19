@@ -35,22 +35,22 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnEchoCommand.class);
+	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
 
 	/**
 	 * Instantiates a new ClnEchoCommand.
 	 */
-	public ClnEchoCommand() {
+	public EchoCommand() {
 		this.commandValidator = new ClnEchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_ECHO;
+		return SCMPMsgType.ECHO;
 	}
 
 	/** {@inheritDoc} */
@@ -87,7 +87,7 @@ public class ClnEchoCommand extends CommandAdapter implements IPassThroughPartMs
 				}
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();

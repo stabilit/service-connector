@@ -76,7 +76,7 @@ public final class Constants {
 		/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
 	public static final int CONNECT_TIMEOUT_MILLIS = 4000;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
-	public static final int SEC_TO_MILISEC_FACTOR = 1000;
+	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */

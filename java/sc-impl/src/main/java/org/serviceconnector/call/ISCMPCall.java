@@ -85,7 +85,7 @@ public interface ISCMPCall {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void invoke(ISCMPCallback callback, double timeoutMillis) throws Exception;
+	public void invoke(ISCMPCallback callback, int timeoutMillis) throws Exception;
 
 	/**
 	 * Sets the body.
@@ -136,5 +136,5 @@ public interface ISCMPCall {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void closeGroup(ISCMPCallback callback, double timeoutMillis) throws Exception;
+	public void closeGroup(ISCMPCallback callback, int timeoutMillis) throws Exception;
 }

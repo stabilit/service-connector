@@ -46,7 +46,7 @@ public class SCPublishServer extends SCSessionServer implements ISCPublishServer
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
 		publishCall
-				.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILISEC_FACTOR);
+				.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.callback.getMessageSync();
 	}
 

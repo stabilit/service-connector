@@ -25,7 +25,7 @@ import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.sc.service.ISCMessageCallback;
@@ -60,7 +60,7 @@ public class PublishService extends Service implements IPublishService {
 	 */
 	public PublishService(String serviceName, ISCContext context) {
 		super(serviceName, context);
-		this.requester = new Requester(new RequesterContext(context.getConnectionPool(), this.msgId));
+		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 		this.noDataInterval = 0;
 	}
@@ -85,7 +85,7 @@ public class PublishService extends Service implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.callback.getMessageSync();
 	}
 
@@ -139,7 +139,7 @@ public class PublishService extends Service implements IPublishService {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
 		try {
-			subscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+			subscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			throw new SCServiceException("subscribe failed", e);
 		}
@@ -168,7 +168,7 @@ public class PublishService extends Service implements IPublishService {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
-		receivePublicationCall.invoke(this.callback, Constants.SEC_TO_MILISEC_FACTOR
+		receivePublicationCall.invoke(this.callback, Constants.SEC_TO_MILLISEC_FACTOR
 				* Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval);
 	}
 
@@ -192,7 +192,7 @@ public class PublishService extends Service implements IPublishService {
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				unsubscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILISEC_FACTOR);
+				unsubscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("subscribe failed", e);
 			}

@@ -136,14 +136,17 @@ public final class SC {
 			ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
 			ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
 			ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
-			ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
+			//ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=JMXLoggingManager");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
+			/*
+			 * TODO TRN log4j logging JMX
 			JMXLoggingManager loggingManager = new JMXLoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
+			*/
 		} catch (Throwable th) {
 			logger.error("initializeJMX", th);
 		}

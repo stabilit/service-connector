@@ -30,7 +30,7 @@ import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
@@ -138,7 +138,7 @@ public class SCSessionServer implements ISCSessionServer {
 				this.keepAliveIntervalInSeconds);
 		// register service only needs one connection
 		connectionPool.setMaxConnections(1);
-		IRequester requester = new Requester(new RequesterContext(connectionPool, this.msgId));
+		IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgId));
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(requester, serviceName);
@@ -150,7 +150,7 @@ public class SCSessionServer implements ISCSessionServer {
 		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		try {
 			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILISEC_FACTOR);
+					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			connectionPool.destroy();
 			throw new SCServiceException("register service failed", e);
@@ -182,7 +182,7 @@ public class SCSessionServer implements ISCSessionServer {
 					.newInstance(req, serviceName);
 			try {
 				deRegisterServiceCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-						* Constants.SEC_TO_MILISEC_FACTOR);
+						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("deregister service failed", e);
 			}

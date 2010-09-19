@@ -74,7 +74,7 @@ public class PublishService extends Service {
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session, double timeoutMillis) throws Exception {
+			Session session, int timeoutMillis) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {

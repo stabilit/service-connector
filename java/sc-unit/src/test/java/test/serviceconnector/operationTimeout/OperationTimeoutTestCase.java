@@ -24,7 +24,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.net.req.IConnectionPool;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -50,7 +50,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
-			req = new Requester(this.testContext);
+			req = new SCRequester(this.testContext);
 			IConnectionPool cp = this.testContext.getConnectionPool();
 			cp.setCloseOnFree(true);
 			cp.setMinConnections(5);

@@ -123,7 +123,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				}
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(1, otiValue, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// mask
 				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);

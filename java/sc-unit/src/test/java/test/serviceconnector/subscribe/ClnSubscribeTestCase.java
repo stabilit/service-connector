@@ -24,7 +24,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.conf.RequesterConfigPool;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -57,7 +57,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
-			req = new Requester(this.testContext);
+			req = new SCRequester(this.testContext);
 			if (ClnSubscribeTestCase.index != 0) {
 				ClnSubscribeTestCase.index = 4;
 			} else {

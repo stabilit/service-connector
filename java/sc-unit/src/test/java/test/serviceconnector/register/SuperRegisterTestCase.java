@@ -26,7 +26,7 @@ import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessageId;
 
 import test.serviceconnector.attach.SuperAttachTestCase;
@@ -64,7 +64,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		this.registerConfig.load(registerFileName);
 		this.responderConfig.load(registerFileName);
 		this.registerContext = new RegisterServiceContext(registerConfig.getRequesterConfig(), this.msgId);
-		this.registerRequester = new Requester(registerContext);
+		this.registerRequester = new SCRequester(registerContext);
 		registerServiceBefore();
 	}
 

@@ -67,7 +67,7 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback callback, double timeoutInMillis) throws Exception {
+	public void invoke(ISCMPCallback callback, int timeoutInMillis) throws Exception {
 		super.invoke(callback, timeoutInMillis);
 		// no OP_TIMEOUT needed to send to server
 		this.requestMessage.removeHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

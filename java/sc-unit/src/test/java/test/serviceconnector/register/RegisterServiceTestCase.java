@@ -29,7 +29,7 @@ import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
-import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -132,7 +132,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
 				"netty.tcp", 1000, 60, 10);
 		IRequesterContext context = new TestContext(config, this.msgId);
-		IRequester req = new Requester(context);
+		IRequester req = new SCRequester(context);
 
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
@@ -183,7 +183,7 @@ public class RegisterServiceTestCase extends SuperTestCase {
 		ICommunicatorConfig config = new CommunicatorConfig("RegisterServiceCallTester", "localhost", 9000,
 				"netty.tcp", 1, 60, 10);
 		IRequesterContext context = new TestContext(config, this.msgId);
-		IRequester req = new Requester(context);
+		IRequester req = new SCRequester(context);
 		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
 				.newInstance(req, "publish-simulation");
 

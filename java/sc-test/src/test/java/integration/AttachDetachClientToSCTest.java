@@ -204,7 +204,7 @@ public class AttachDetachClientToSCTest {
 		ISCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
 		for (; i < clientsCount / 10; i++) {
-			System.out.println("Attaching client " + i*10);
+			// TODO FJU System.out.println("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
 				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT8080);

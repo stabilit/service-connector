@@ -43,10 +43,10 @@ import org.serviceconnector.util.TimerTaskWrapper;
  * 
  * @author JTraber
  */
-public class Requester implements IRequester {
+public class SCRequester implements IRequester {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(Requester.class);
+	protected final static Logger logger = Logger.getLogger(SCRequester.class);
 	/** The Constant timer, triggers all operation timeout for sending. */
 	protected final static Timer timer = new Timer("OperationTimer");
 	/** The context. */
@@ -58,13 +58,13 @@ public class Requester implements IRequester {
 	 * @param context
 	 *            the context
 	 */
-	public Requester(IRequesterContext outerContext) {
+	public SCRequester(IRequesterContext outerContext) {
 		this.reqContext = outerContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, double timeoutInMillis, ISCMPCallback scmpCallback) throws Exception {
+	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback scmpCallback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
@@ -147,7 +147,7 @@ public class Requester implements IRequester {
 		/** The operation timeout task. */
 		private TimerTask operationTimeoutTask;
 		/** The timeout in milliseconds. */
-		private double timeoutInMillis;
+		private int timeoutInMillis;
 
 		public RequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
 				SCMPMessageId msgId) {
@@ -331,7 +331,7 @@ public class Requester implements IRequester {
 		 */
 		private void freeConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
+				SCRequester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				logger.error("freeConnection", e);
 			}
@@ -343,7 +343,7 @@ public class Requester implements IRequester {
 		 */
 		private void disconnectConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
+				SCRequester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
 				logger.error("disconnectConnection", e);
 			}
@@ -361,7 +361,7 @@ public class Requester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public double getTimeoutMillis() {
+		public int getTimeoutMillis() {
 			return this.timeoutInMillis;
 		}
 
@@ -371,7 +371,7 @@ public class Requester implements IRequester {
 		 * @param timeoutInMillis
 		 *            the new timeout milliseconds
 		 */
-		public void setTimeoutMillis(double timeoutInMillis) {
+		public void setTimeoutMillis(int timeoutInMillis) {
 			this.timeoutInMillis = timeoutInMillis;
 		}
 

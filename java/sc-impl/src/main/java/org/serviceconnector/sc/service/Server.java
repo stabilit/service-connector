@@ -39,7 +39,7 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
-import org.serviceconnector.sc.req.SCRequester;
+import org.serviceconnector.sc.req.Requester;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -105,7 +105,7 @@ public class Server {
 		this.host = socketAddress.getHostName();
 		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
 		this.cp.setMaxConnections(maxConnections);
-		this.requester = new SCRequester(new RequesterContext(this.cp, null));
+		this.requester = new Requester(new RequesterContext(this.cp, null));
 	}
 
 	/**
@@ -139,11 +139,11 @@ public class Server {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback, double timeoutMillis) {
+	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
 		try {
-			createSessionCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			createSessionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception e) {
 			// create session failed
 			callback.callback(e);
@@ -158,12 +158,12 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPCallback callback, double timeoutMillis) {
+	public void deleteSession(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(requester, message);
 
 		try {
-			deleteSessionCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			deleteSessionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception e) {
 			// delete session failed
 			callback.callback(e);
@@ -178,11 +178,11 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, double timeoutMillis) {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
-			subscribeCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			subscribeCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception e) {
 			// subscribe failed
 			callback.callback(e);
@@ -197,12 +197,12 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, double timeoutMillis) {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
 		try {
-			unsubscribeCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			unsubscribeCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception e) {
 			// unsubscribe failed
 			callback.callback(e);
@@ -219,12 +219,12 @@ public class Server {
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
 	 */
-	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, double timeoutMillis) {
+	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(requester, message);
 
 		try {
-			changeSubscriptionCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			changeSubscriptionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception e) {
 			// changeSubscription failed
 			callback.callback(e);
@@ -239,11 +239,11 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void sendData(SCMPMessage message, ISCMPCallback callback, double timeoutMillis) {
+	public void execute(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvExecuteCall srvExecuteCall = (SCMPSrvExecuteCall) SCMPCallFactory.SRV_EXECUTE_CALL.newInstance(
 				requester, message);
 		try {
-			srvExecuteCall.invoke(callback, this.operationTimeoutMultiplier * timeoutMillis);
+			srvExecuteCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
 		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);
@@ -258,7 +258,7 @@ public class Server {
 	 * @param callback
 	 *            the callback
 	 */
-	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback, double timeoutMillis) {
+	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION
 				.newInstance(requester, message);
 		try {

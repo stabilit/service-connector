@@ -84,4 +84,10 @@ public interface ISCMessage {
 	 * @return true, if is fault
 	 */
 	public abstract boolean isFault();
+	
+	/**
+	 * Gets the operation timeout, equals to the time accepted for request execution
+	 * @return
+	 */
+	public abstract int getOperationTimeout();
 }
