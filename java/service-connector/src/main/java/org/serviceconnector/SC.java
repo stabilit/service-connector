@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
@@ -136,17 +137,14 @@ public final class SC {
 			ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
 			ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
 			ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
-			//ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=JMXLoggingManager");
+			ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 			// Register the Queue Sampler MXBean
 			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
 			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
 			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
-			/*
-			 * TODO TRN log4j logging JMX
-			JMXLoggingManager loggingManager = new JMXLoggingManager();
+			ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
-			*/
 		} catch (Throwable th) {
 			logger.error("initializeJMX", th);
 		}
