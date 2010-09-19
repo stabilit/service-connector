@@ -143,7 +143,7 @@ public class Server {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
 		try {
-			createSessionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
 			// create session failed
 			callback.callback(e);
@@ -163,7 +163,7 @@ public class Server {
 				.newInstance(requester, message);
 
 		try {
-			deleteSessionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
 			// delete session failed
 			callback.callback(e);
@@ -182,7 +182,7 @@ public class Server {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
-			subscribeCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
 			// subscribe failed
 			callback.callback(e);
@@ -202,7 +202,7 @@ public class Server {
 				.newInstance(requester, message);
 
 		try {
-			unsubscribeCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
 			// unsubscribe failed
 			callback.callback(e);
@@ -224,7 +224,7 @@ public class Server {
 				.newInstance(requester, message);
 
 		try {
-			changeSubscriptionCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
 			// changeSubscription failed
 			callback.callback(e);
@@ -243,7 +243,7 @@ public class Server {
 		SCMPSrvExecuteCall srvExecuteCall = (SCMPSrvExecuteCall) SCMPCallFactory.SRV_EXECUTE_CALL.newInstance(
 				requester, message);
 		try {
-			srvExecuteCall.invoke(callback, (int) this.operationTimeoutMultiplier * timeoutMillis);
+			srvExecuteCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);
