@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.SC;
 import org.serviceconnector.cln.StartSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -36,6 +37,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		ctrl = new TestEnvironmentController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+//			SC.main(new String[] { "-sc.configuration", "sc.properties"});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 			throw e;
