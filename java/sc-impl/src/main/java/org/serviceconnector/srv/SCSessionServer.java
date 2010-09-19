@@ -26,6 +26,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServiceCall;
 import org.serviceconnector.call.SCMPRegisterServiceCall;
 import org.serviceconnector.cmd.CommandFactory;
+import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IConnectionPool;
@@ -42,7 +43,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.cmd.ServerCommandFactory;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 

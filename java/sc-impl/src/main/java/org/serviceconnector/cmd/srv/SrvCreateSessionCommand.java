@@ -14,7 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.cmd;
+package org.serviceconnector.cmd.srv;
+
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -27,33 +29,36 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.srv.ISCPublishServerCallback;
+import org.serviceconnector.service.SCMessageFault;
+import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SrvService;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class SrvUnsubscribeCommand. Responsible for validation and execution of server unsubscribe command. Allows
- * unsubscribing from service.
+ * The Class SrvCreateSessionCommand. Responsible for validation and execution of server create session command. Allows
+ * creating session on backend server.
  * 
  * @author JTraber
  */
-public class SrvUnsubscribeCommand extends SrvCommandAdapter {
+public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvUnsubscribeCommand.class);
+	protected final static Logger logger = Logger.getLogger(SrvCreateSessionCommand.class);
 	
 	/**
-	 * Instantiates a new SrvUnsubscribeCommand.
+	 * Instantiates a new SrvCreateSessionCommand.
 	 */
-	public SrvUnsubscribeCommand() {
-		this.commandValidator = new SrvUnsubscribeCommandValidator();
+	public SrvCreateSessionCommand() {
+		this.commandValidator = new SrvCreateSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_UNSUBSCRIBE;
+		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
 
 	/** {@inheritDoc} */
@@ -68,42 +73,54 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		((ISCPublishServerCallback) srvService.getCallback()).unsubscribe(scMessage);
+		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
+
+		// create session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.addSession(sessionId);
 		// handling messageId
 		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
-		messageId.incrementMsgSequenceNr();
+
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey());
+		reply.setBody(scReply.getData());
+
+		if (scReply.isFault()) {
+			SCMessageFault scFault = (SCMessageFault) scReply;
+			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		}
 		response.setSCMP(reply);
-		// delete session in SCMPSessionCompositeRegistry
-		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	/**
-	 * The Class SrvUnsubscribeCommandValidator.
+	 * The Class SrvCreateSessionCommandValidator.
 	 */
-	private class SrvUnsubscribeCommandValidator implements ICommandValidator {
+	public class SrvCreateSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
+			Map<String, String> scmpHeader = message.getHeader();
 			try {
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				String messageId = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
-				String serviceName = message.getServiceName();
+				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
@@ -112,6 +129,12 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
+				// ipAddressList
+				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+				ValidatorUtility.validateIpAddressList(ipAddressList);
+				// sessionInfo
+				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());

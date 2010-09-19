@@ -14,15 +14,22 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.log.SubscriptionLogger;
+import org.serviceconnector.sc.registry.SubscriptionQueue;
+import org.serviceconnector.sc.service.IFilterMask;
+import org.serviceconnector.sc.service.SCMPMessageFilterMask;
+import org.serviceconnector.sc.service.Server;
+import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -31,44 +38,73 @@ import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
+ * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
+ * Allows changing subscription mask on SC.
  * 
  * @author JTraber
  */
-public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
+	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
+
+	/** The Constant subscriptionLogger. */
+	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 
 	/**
-	 * Instantiates a new ClnEchoCommand.
+	 * Instantiates a new ClnChangeSubscriptionCommand.
 	 */
-	public EchoCommand() {
-		this.commandValidator = new ClnEchoCommandValidator();
+	public ClnChangeSubscriptionCommand() {
+		this.commandValidator = new ClnChangeSubscriptionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ECHO;
+		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		// refreshes the session timeout
-		this.getSessionById(sessionId);
-		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
-		message.setIsReply(true);
-		response.setSCMP(message);
+		SCMPMessage reqMessage = request.getMessage();
+		String sessionId = reqMessage.getSessionId();
+		String serviceName = reqMessage.getServiceName();
+
+		Session session = this.getSubscriptionSessionById(sessionId);
+		Server server = session.getServer();
+
+		ISCMPSynchronousCallback callback = new CommandCallback(true);
+		server.changeSubscription(reqMessage, callback, ((Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		SCMPMessage reply = callback.getMessageSync();
+
+		if (reply.isFault() == false) {
+			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+				// session has not been rejected
+				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
+				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
+				subscriptionLogger.logChangeSubscribe(serviceName, sessionId, newMask);
+				queue.changeSubscription(sessionId, filterMask);
+			} else {
+				// session has been rejected - remove session id from header
+				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			}
+		} else {
+			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+		}
+		// forward reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
 	}
 
 	/**
-	 * The Class ClnEchoCommandValidator.
+	 * The Class ClnChangeSubscriptionCommandValidator.
 	 */
-	private class ClnEchoCommandValidator implements ICommandValidator {
+	private class ClnChangeSubscriptionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -89,13 +125,14 @@ public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-				// sessionId
-				String sessionId = message.getSessionId();
-				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+				if (mask.indexOf("%") != -1) {
+					// percent sign in mask not allowed
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed " + mask);
 				}
 			} catch (HasFaultResponseException ex) {
-				logger.error("validate", ex);
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;

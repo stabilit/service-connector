@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 import java.util.List;

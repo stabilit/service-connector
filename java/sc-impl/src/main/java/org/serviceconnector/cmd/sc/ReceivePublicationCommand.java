@@ -14,95 +14,98 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
+import org.serviceconnector.net.IResponderCallback;
+import org.serviceconnector.sc.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.scmp.SCMPPart;
 
 
 /**
- * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a
- * session means: Free up backend server from session and delete session entry in SC session registry.
+ * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
+ * listen is set up. Receive publication command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
-public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnDeleteSessionCommand.class);
-
+	protected final static Logger logger = Logger.getLogger(ReceivePublicationCommand.class);
+	
 	/**
-	 * Instantiates a new ClnDeleteSessionCommand.
+	 * Instantiates a new ReceivePublicationCommand.
 	 */
-	public ClnDeleteSessionCommand() {
-		this.commandValidator = new ClnDeleteSessionCommandValidator();
+	public ReceivePublicationCommand() {
+		this.commandValidator = new ClnReceivePublicationCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
+		return SCMPMsgType.RECEIVE_PUBLICATION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		// lookup session and checks properness
-		Session session = this.getSessionById(sessionId);
-		// delete entry from session registry
-		this.sessionRegistry.removeSession(session);
+	public boolean isAsynchronous() {
+		return true;
+	}
 
-		Server server = session.getServer();
-		SCMPMessage reply = null;
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.deleteSession(message, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		reply = callback.getMessageSync();
+	/** {@inheritDoc} */
+	@Override
+	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
+		SCMPMessage reqMessage = request.getMessage();
+		String sessionId = reqMessage.getSessionId();
 
-		if (reply.isFault()) {
-			/**
-			 * error in deleting session process<br>
-			 * 1. deregister server from service<br>
-			 * 3. SRV_ABORT_SESSION (SAS) to server<br>
-			 * 4. destroy server<br>
-			 **/
-			server.getService().removeServer(server);
-			// set up server abort session message - don't forward messageId & include error stuff
-			message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
-					+ " [delete session failed]");
-			server.serverAbortSession(message, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
-			server.destroy();
+		// looks up subscription queue
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
+		// tries polling message
+		SCMPMessage message = subscriptionQueue.getMessage(sessionId);
+		if (message != null) {
+			// message found in subscription queue set up reply
+			SCMPMessage reply = new SCMPMessage();
+			if (message.isPart()) {
+				// message is part
+				reply = new SCMPPart();
+			}
+			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
+			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
+			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+			reply.setIsReply(true);
+			reply.setBody(message.getBody());
+			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			if (messageInfo != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+			}
+			reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
+			reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
+					.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
+			response.setSCMP(reply);
+			// message already gotten from queue no asynchronous process necessary call callback right away
+			communicatorCallback.callback(request, response);
+			return;
 		}
-		// free server from session
-		server.removeSession(session);
-		// forward server reply to client
-		reply.setIsReply(true);
-		reply.setMessageType(getKey());
-		response.setSCMP(reply);
+		// no message available, start listening for new message
+		subscriptionQueue.listen(sessionId, request, response);
 	}
 
 	/**
-	 * The Class ClnDeleteSessionCommandValidator.
+	 * The Class ClnReceivePublicationCommandValidator.
 	 */
-	private class ClnDeleteSessionCommandValidator implements ICommandValidator {
+	private class ClnReceivePublicationCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -115,14 +118,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
-				String serviceName = (String) message.getServiceName();
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 				// sessionId
 				String sessionId = message.getSessionId();
 				if (sessionId == null || sessionId.equals("")) {

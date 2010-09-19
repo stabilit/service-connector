@@ -1,4 +1,4 @@
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 

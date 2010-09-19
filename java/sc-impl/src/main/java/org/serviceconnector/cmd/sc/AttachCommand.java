@@ -14,40 +14,46 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
+
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class DetachCommand. Responsible for validation and execution of detach command. Allows detaching (virtual
- * detach) from SC.
+ * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual
+ * attach) to SC.
  * 
  * @author JTraber
  */
-public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class AttachCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DetachCommand.class);
+	protected final static Logger logger = Logger.getLogger(AttachCommand.class);
 	
 	/**
-	 * Instantiates a new DetachCommand.
+	 * Instantiates a new AttachCommand.
 	 */
-	public DetachCommand() {
-		this.commandValidator = new DetachCommandValidator();
+	public AttachCommand() {
+		this.commandValidator = new AttachCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.DETACH;
+		return SCMPMsgType.ATTACH;
 	}
 
 	/** {@inheritDoc} */
@@ -57,18 +63,42 @@ public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
 	}
 
 	/**
-	 * The Class DetachCommandValidator.
+	 * The Class AttachCommandValidator.
 	 */
-	private class DetachCommandValidator implements ICommandValidator {
+	private class AttachCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// no validation in case of detach command
+		public void validate(IRequest request) throws Exception {
+			SCMPMessage message = request.getMessage();
+
+			try {
+				// scVersion
+				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+				SCMPMessage.SC_VERSION.isSupported(scVersion);
+
+				// localDateTime
+				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
+						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+
+			} catch (HasFaultResponseException ex) {
+				// needs to set message type at this point
+				ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
+				ex.setMessageType(getKey());
+				throw ex;
+			} catch (Throwable ex) {
+				logger.error("validate", ex);
+				SCMPValidatorException valExc = new SCMPValidatorException();
+				valExc.setMessageType(getKey());
+				valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
+				throw valExc;
+			}
 		}
 	}
 }

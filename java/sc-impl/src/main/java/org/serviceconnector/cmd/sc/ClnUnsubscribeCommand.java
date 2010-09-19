@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -22,8 +22,7 @@ import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
-import org.serviceconnector.sc.service.IFilterMask;
-import org.serviceconnector.sc.service.SCMPMessageFilterMask;
+import org.serviceconnector.sc.registry.SubscriptionSessionRegistry;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -38,30 +37,25 @@ import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
- * Allows changing subscription mask on SC.
- * 
- * @author JTraber
+ * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
+ * unsubscribing from a publish service.
  */
-public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
+	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
 
 	/** The Constant subscriptionLogger. */
 	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 
-	/**
-	 * Instantiates a new ClnChangeSubscriptionCommand.
-	 */
-	public ClnChangeSubscriptionCommand() {
-		this.commandValidator = new ClnChangeSubscriptionCommandValidator();
+	public ClnUnsubscribeCommand() {
+		this.commandValidator = new ClnUnsubscribeCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
+		return SCMPMsgType.CLN_UNSUBSCRIBE;
 	}
 
 	/** {@inheritDoc} */
@@ -69,42 +63,39 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
-		String serviceName = reqMessage.getServiceName();
+		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
 
+		// lookup session and checks properness
 		Session session = this.getSubscriptionSessionById(sessionId);
+		// looks up subscription queue and stops publish mechanism
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
+		subscriptionQueue.unsubscribe(sessionId);
+		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
+		subscriptionLogger.logUnsubscribe(serviceName, sessionId);
+		// delete entry from session registry
+		this.subscriptionRegistry.removeSession(session);
+
+		// unsubscribe on backend server
 		Server server = session.getServer();
-
+		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.changeSubscription(reqMessage, callback, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		SCMPMessage reply = callback.getMessageSync();
+		server.unsubscribe(reqMessage, callback,
+				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		reply = callback.getMessageSync();
+		// no specific error handling in case of fault - everything is done anyway
 
-		if (reply.isFault() == false) {
-			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSessionFlag)) {
-				// session has not been rejected
-				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
-				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
-				subscriptionLogger.logChangeSubscribe(serviceName, sessionId, newMask);
-				queue.changeSubscription(sessionId, filterMask);
-			} else {
-				// session has been rejected - remove session id from header
-				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-			}
-		} else {
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-		}
+		server.removeSession(session);
 		// forward reply to client
+		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		reply.setIsReply(true);
-		reply.setMessageType(getKey());
+		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 	}
 
 	/**
-	 * The Class ClnChangeSubscriptionCommandValidator.
+	 * The Class ClnUnsubscribeCommandValidator.
 	 */
-	private class ClnChangeSubscriptionCommandValidator implements ICommandValidator {
+	private class ClnUnsubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -125,12 +116,10 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter implements IPas
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-				// mask
-				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-				if (mask.indexOf("%") != -1) {
-					// percent sign in mask not allowed
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed " + mask);
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point

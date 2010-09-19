@@ -14,114 +14,113 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
-
-import java.net.SocketAddress;
+package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.registry.SubscriptionQueue;
-import org.serviceconnector.sc.service.PublishService;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.srv.ISCSessionServerCallback;
+import org.serviceconnector.srv.SrvService;
 
 
 /**
- * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to
- * clients.
+ * The Class SrvDeleteSessionCommand. Responsible for validation and execution of server delete session command. Allows
+ * deleting session on backend server.
  * 
  * @author JTraber
  */
-public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishCommand.class);
+	protected final static Logger logger = Logger.getLogger(SrvDeleteSessionCommand.class);
 	
 	/**
-	 * Instantiates a new PublishCommand.
+	 * Instantiates a new SrvDeleteSessionCommand.
 	 */
-	public PublishCommand() {
-		this.commandValidator = new PublishCommandValidator();
+	public SrvDeleteSessionCommand() {
+		this.commandValidator = new SrvDeleteSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.PUBLISH;
+		return SCMPMsgType.SRV_DELETE_SESSION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SocketAddress socketAddress = request.getRemoteSocketAddress();
-		request.setAttribute(SocketAddress.class.getName(), socketAddress);
+		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		// look up srvService
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage message = request.getMessage();
-		String serviceName = message.getServiceName();
-		// lookup service and checks properness
-		PublishService service = this.validatePublishService(serviceName);
-		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
-		// throws an exception if failed
-		queue.insert(message);
+		SCMPMessage scmpMessage = request.getMessage();
+		String sessionId = scmpMessage.getSessionId();
+		// create scMessage
+		SCMessage scMessage = new SCMessage();
+		scMessage.setData(scmpMessage.getBody());
+		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setSessionId(sessionId);
 
-		// reply to server
-		SCMPMessage reply = null;
-		if (message.isPart()) {
-			// incoming message is of type part - outgoing must be part too
-			reply = new SCMPPart();
-		} else {
-			reply = new SCMPMessage();
-		}
+		// inform callback with scMessages
+		((ISCSessionServerCallback) srvService.getCallback()).deleteSession(scMessage);
+		// handling messageId
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		messageId.incrementMsgSequenceNr();
+		// set up reply
+		SCMPMessage reply = new SCMPMessage();
+		reply.setServiceName(serviceName);
+		reply.setSessionId(scmpMessage.getSessionId());
 		reply.setMessageType(this.getKey());
-		reply.setIsReply(true);
-		reply.setServiceName(message.getServiceName());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		response.setSCMP(reply);
+		// delete session in SCMPSessionCompositeRegistry
+		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	/**
-	 * The Class PublishCommandValidator.
+	 * The Class SrvDeleteSessionCommandValidator.
 	 */
-	private class PublishCommandValidator implements ICommandValidator {
+	private class SrvDeleteSessionCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
+
 			try {
 				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
-				String serviceName = message.getServiceName();
+				String serviceName = (String) message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
-				// message info
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				if (messageInfo != null) {
-					ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+				// sessionId
+				String sessionId = message.getSessionId();
+				if (sessionId == null || sessionId.equals("")) {
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
-				// mask
-				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
+			} catch (Throwable th) {
+				logger.error("validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
 				validatorException.setMessageType(getKey());
 				throw validatorException;

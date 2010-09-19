@@ -14,9 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv.cmd;
-
-import java.util.Map;
+package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -32,33 +30,24 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageFault;
-import org.serviceconnector.srv.ISCSessionServerCallback;
+import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SrvService;
 import org.serviceconnector.util.ValidatorUtility;
 
 
-/**
- * The Class SrvCreateSessionCommand. Responsible for validation and execution of server create session command. Allows
- * creating session on backend server.
- * 
- * @author JTraber
- */
-public class SrvCreateSessionCommand extends SrvCommandAdapter {
+public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvCreateSessionCommand.class);
+	protected final static Logger logger = Logger.getLogger(SrvSubscribeCommand.class);
 	
-	/**
-	 * Instantiates a new SrvCreateSessionCommand.
-	 */
-	public SrvCreateSessionCommand() {
-		this.commandValidator = new SrvCreateSessionCommandValidator();
+	public SrvSubscribeCommand() {
+		this.commandValidator = new SrvSubscribeCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_CREATE_SESSION;
+		return SCMPMsgType.SRV_SUBSCRIBE;
 	}
 
 	/** {@inheritDoc} */
@@ -79,7 +68,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
+		ISCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).subscribe(scMessage);
 
 		// create session in SCMPSessionCompositeRegistry
 		this.sessionCompositeRegistry.addSession(sessionId);
@@ -90,9 +79,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
-		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setSessionId(sessionId);
 		reply.setMessageType(this.getKey());
-		reply.setBody(scReply.getData());
 
 		if (scReply.isFault()) {
 			SCMessageFault scFault = (SCMessageFault) scReply;
@@ -103,24 +91,21 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		response.setSCMP(reply);
 	}
 
-	/**
-	 * The Class SrvCreateSessionCommandValidator.
-	 */
-	public class SrvCreateSessionCommandValidator implements ICommandValidator {
+	private class SrvSubscribeCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
 		public void validate(IRequest request) throws Exception {
 			SCMPMessage message = request.getMessage();
-			Map<String, String> scmpHeader = message.getHeader();
+
 			try {
 				// messageId
-				String messageId = (String) scmpHeader.get(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 				if (messageId == null || messageId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 				}
 				// serviceName
-				String serviceName = (String) scmpHeader.get(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+				String serviceName = message.getServiceName();
 				if (serviceName == null || serviceName.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 				}
@@ -129,20 +114,27 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				if (sessionId == null || sessionId.equals("")) {
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
+				// mask
+				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+				if (mask.indexOf("%") != -1) {
+					// percent sign in mask not allowed
+					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed");
+				}
 				// ipAddressList
-				String ipAddressList = (String) scmpHeader.get(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 				ValidatorUtility.validateIpAddressList(ipAddressList);
 				// sessionInfo
-				String sessionInfo = (String) scmpHeader.get(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
+				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
-				ex.setMessageType(getKey());
+				ex.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw ex;
 			} catch (Throwable th) {
 				logger.error("validate", th);
 				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
+				validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
 				throw validatorException;
 			}
 		}

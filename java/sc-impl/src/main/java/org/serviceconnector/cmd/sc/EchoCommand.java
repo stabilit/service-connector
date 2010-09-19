@@ -14,21 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.cmd;
+package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.log.SubscriptionLogger;
-import org.serviceconnector.sc.registry.SubscriptionQueue;
-import org.serviceconnector.sc.registry.SubscriptionSessionRegistry;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -37,65 +31,44 @@ import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
- * unsubscribing from a publish service.
+ * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
+ * 
+ * @author JTraber
  */
-public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
+	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
 
-	/** The Constant subscriptionLogger. */
-	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-
-	public ClnUnsubscribeCommand() {
-		this.commandValidator = new ClnUnsubscribeCommandValidator();
+	/**
+	 * Instantiates a new ClnEchoCommand.
+	 */
+	public EchoCommand() {
+		this.commandValidator = new ClnEchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_UNSUBSCRIBE;
+		return SCMPMsgType.ECHO;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage reqMessage = request.getMessage();
-		String sessionId = reqMessage.getSessionId();
-		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
-
-		// lookup session and checks properness
-		Session session = this.getSubscriptionSessionById(sessionId);
-		// looks up subscription queue and stops publish mechanism
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
-		subscriptionQueue.unsubscribe(sessionId);
-		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		subscriptionLogger.logUnsubscribe(serviceName, sessionId);
-		// delete entry from session registry
-		this.subscriptionRegistry.removeSession(session);
-
-		// unsubscribe on backend server
-		Server server = session.getServer();
-		SCMPMessage reply = null;
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.unsubscribe(reqMessage, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		reply = callback.getMessageSync();
-		// no specific error handling in case of fault - everything is done anyway
-
-		server.removeSession(session);
-		// forward reply to client
-		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-		reply.setIsReply(true);
-		reply.setMessageType(this.getKey());
-		response.setSCMP(reply);
+		SCMPMessage message = request.getMessage();
+		String sessionId = message.getSessionId();
+		// refreshes the session timeout
+		this.getSessionById(sessionId);
+		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
+		message.setIsReply(true);
+		response.setSCMP(message);
 	}
 
 	/**
-	 * The Class ClnUnsubscribeCommandValidator.
+	 * The Class ClnEchoCommandValidator.
 	 */
-	private class ClnUnsubscribeCommandValidator implements ICommandValidator {
+	private class ClnEchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -122,6 +95,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter implements IPassThroug
 					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 				}
 			} catch (HasFaultResponseException ex) {
+				logger.error("validate", ex);
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
 				throw ex;
