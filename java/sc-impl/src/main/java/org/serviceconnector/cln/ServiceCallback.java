@@ -26,7 +26,7 @@ import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SCService;
 import org.serviceconnector.util.SynchronousCallback;
 
 
@@ -43,7 +43,7 @@ public class ServiceCallback extends SynchronousCallback {
 	/** The message callback. */
 	private ISCMessageCallback messageCallback;
 	/** The service which is using the callback. */
-	private Service service;
+	private SCService service;
 
 	/**
 	 * Instantiates a new ServiceCallback.
@@ -69,7 +69,7 @@ public class ServiceCallback extends SynchronousCallback {
 	 * @param messageCallback
 	 *            the message callback
 	 */
-	public ServiceCallback(Service service, ISCMessageCallback messageCallback) {
+	public ServiceCallback(SCService service, ISCMessageCallback messageCallback) {
 		this.service = service;
 		this.messageCallback = messageCallback;
 	}

@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SCService;
 import org.serviceconnector.util.ValidatorUtility;
 
 
@@ -42,10 +42,10 @@ import org.serviceconnector.util.ValidatorUtility;
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
  * communication functions.
  */
-public class PublishService extends Service implements IPublishService {
+public class SCPublishService extends SCService implements IPublishService {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishService.class);
+	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
 
 	private boolean subscribed = false;
 	private int noDataInterval;
@@ -58,7 +58,7 @@ public class PublishService extends Service implements IPublishService {
 	 * @param context
 	 *            the context
 	 */
-	public PublishService(String serviceName, ISCContext context) {
+	public SCPublishService(String serviceName, ISCContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
@@ -221,7 +221,7 @@ public class PublishService extends Service implements IPublishService {
 		 *            the message callback
 		 */
 		public PublishServiceCallback(ISCMessageCallback messageCallback) {
-			super(PublishService.this, messageCallback);
+			super(SCPublishService.this, messageCallback);
 		}
 
 		/** {@inheritDoc} */
@@ -232,7 +232,7 @@ public class PublishService extends Service implements IPublishService {
 				super.callback(reply);
 				return;
 			}
-			if (PublishService.this.subscribed == false) {
+			if (SCPublishService.this.subscribed == false) {
 				// client is not subscribed anymore - stop continuing
 				return;
 			}
@@ -248,10 +248,10 @@ public class PublishService extends Service implements IPublishService {
 				// data reply received - give to application
 				super.callback(reply);
 			}
-			if (PublishService.this.subscribed) {
+			if (SCPublishService.this.subscribed) {
 				// client is still subscribed - CRP again
 				try {
-					PublishService.this.receivePublication();
+					SCPublishService.this.receivePublication();
 				} catch (Exception e) {
 					logger.info("callback " + e.getMessage());
 					SCMPFault fault = new SCMPFault(e);

@@ -37,5 +37,5 @@ public interface IServiceContext extends IContext {
 	 * 
 	 * @return the service
 	 */
-	public abstract Service getService();
+	public abstract SCService getService();
 }

@@ -228,7 +228,7 @@ public class SCClient implements ISCClient {
 		if (this.callback == null) {
 			throw new SCServiceException("newSessionService not possible - client not attached.");
 		}
-		return new SessionService(serviceName, this.context);
+		return new SCSessionService(serviceName, this.context);
 	}
 
 	/** {@inheritDoc} */
@@ -240,7 +240,7 @@ public class SCClient implements ISCClient {
 		if (this.callback == null) {
 			throw new SCServiceException("newPublishService not possible - client not attached.");
 		}
-		return new PublishService(serviceName, this.context);
+		return new SCPublishService(serviceName, this.context);
 	}
 
 	/** {@inheritDoc} */

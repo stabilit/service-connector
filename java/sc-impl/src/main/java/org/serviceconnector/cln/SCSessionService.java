@@ -39,7 +39,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SCService;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 import org.serviceconnector.util.ValidatorUtility;
@@ -51,10 +51,10 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class SessionService extends Service implements ISessionService {
+public class SCSessionService extends SCService implements ISessionService {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SessionService.class);
+	private final static Logger logger = Logger.getLogger(SCSessionService.class);
 	/** The timer, which observes the session timeout of service. */
 	private Timer timer;
 	/** The timer run, runs when session need to be refreshed on SC. */
@@ -74,7 +74,7 @@ public class SessionService extends Service implements ISessionService {
 	 * @param context
 	 *            the context
 	 */
-	public SessionService(String serviceName, ISCContext context) {
+	public SCSessionService(String serviceName, ISCContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
@@ -380,21 +380,21 @@ public class SessionService extends Service implements ISessionService {
 		 */
 		@Override
 		public void timeout() {
-			if (SessionService.this.pendingRequest) {
+			if (SCSessionService.this.pendingRequest) {
 				// no echo will be sent in state of pending request
 				return;
 			}
 			try {
 				// send echo to SC
-				SessionService.this.echo();
+				SCSessionService.this.echo();
 				// trigger session timeout
-				SessionService.this.timerTask = new TimerTaskWrapper(SessionService.this.timerRun);
-				SessionService.this.timer.schedule(new TimerTaskWrapper(SessionService.this.timerRun), (long) this
+				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.timerRun);
+				SCSessionService.this.timer.schedule(new TimerTaskWrapper(SCSessionService.this.timerRun), (long) this
 						.getTimeoutMillis());
 			} catch (Exception e) {
 				// echo failed - mark session as dead
-				SessionService.this.sessionDead = true;
-				SessionService.this.timer.cancel();
+				SCSessionService.this.sessionDead = true;
+				SCSessionService.this.timer.cancel();
 			}
 		}
 

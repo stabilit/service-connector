@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.sc.service.ISC;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.service.IServiceContext;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SCService;
 
 
 /**
@@ -35,7 +35,7 @@ public class ServiceContext implements IServiceContext {
 	/** The service connector context. */
 	private ISCContext serviceConnectorContext;
 	/** The service. */
-	private Service service;
+	private SCService service;
 
 	/**
 	 * Instantiates a new service context.
@@ -45,7 +45,7 @@ public class ServiceContext implements IServiceContext {
 	 * @param service
 	 *            the service
 	 */
-	public ServiceContext(ISCContext serviceConnectorContext, Service service) {
+	public ServiceContext(ISCContext serviceConnectorContext, SCService service) {
 		this.serviceConnectorContext = serviceConnectorContext;
 		this.service = service;
 	}
@@ -58,7 +58,7 @@ public class ServiceContext implements IServiceContext {
 
 	/** {@inheritDoc} */
 	@Override
-	public Service getService() {
+	public SCService getService() {
 		return this.service;
 	}
 }

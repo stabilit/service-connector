@@ -26,10 +26,10 @@ import org.serviceconnector.scmp.SCMPMessageId;
 /**
  * The Class Service. Provides basic stuff for every kind of remote service interfaces.
  */
-public abstract class Service {
+public abstract class SCService {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(Service.class);
+	protected static final Logger logger = Logger.getLogger(SCService.class);
 
 	/** The service name. */
 	protected String serviceName;
@@ -54,7 +54,7 @@ public abstract class Service {
 	 * @param context
 	 *            the context
 	 */
-	public Service(String serviceName, ISCContext context) {
+	public SCService(String serviceName, ISCContext context) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.callback = null;
