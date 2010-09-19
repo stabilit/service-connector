@@ -17,8 +17,8 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.scm.internal.SCMPCompositeReceiver;
-import org.serviceconnector.scm.internal.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
+import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageId;
 
 

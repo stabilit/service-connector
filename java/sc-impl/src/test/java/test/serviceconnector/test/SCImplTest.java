@@ -26,7 +26,7 @@ import java.text.DecimalFormat;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 
 import test.serviceconnector.net.DefaultEncoderDecoderTestCase;

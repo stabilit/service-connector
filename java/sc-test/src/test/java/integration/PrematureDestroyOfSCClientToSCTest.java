@@ -8,11 +8,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.cln.ISCClient;
 import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.sc.service.SCServiceException;
 
 
 

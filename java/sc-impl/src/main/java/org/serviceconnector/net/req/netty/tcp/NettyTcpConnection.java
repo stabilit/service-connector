@@ -28,7 +28,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.EncoderDecoderFactory;

@@ -24,7 +24,6 @@ import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
 import org.serviceconnector.sc.service.PublishService;
-import org.serviceconnector.scm.internal.SCMPPart;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -32,6 +31,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.ValidatorUtility;
 
 

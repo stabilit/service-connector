@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.scm.internal.SCMPPart;
+import org.serviceconnector.scmp.SCMPPart;
 
 
 public class DecodeSCMPVersionTestCase {

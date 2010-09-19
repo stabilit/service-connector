@@ -4,21 +4,21 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.srv.ISCServer;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.ISCSessionServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 
 public class SCServerDestroyServerTest {
 
-	ISCServer server;
+	ISCSessionServer server;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		server = new SCServer();
+		server = new SCSessionServer();
 	}
 	
 	@Test

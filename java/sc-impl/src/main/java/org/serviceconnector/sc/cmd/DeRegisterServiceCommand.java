@@ -20,11 +20,11 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;

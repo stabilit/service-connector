@@ -17,7 +17,7 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.IFrameDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;

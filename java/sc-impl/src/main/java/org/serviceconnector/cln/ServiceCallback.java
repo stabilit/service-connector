@@ -22,11 +22,11 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cln.service.Service;
+import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.util.SynchronousCallback;
 
 

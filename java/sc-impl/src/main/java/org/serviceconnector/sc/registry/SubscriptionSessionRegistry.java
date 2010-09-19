@@ -18,7 +18,6 @@ package org.serviceconnector.sc.registry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.registry.Registry;
 import org.serviceconnector.sc.service.Session;
 
 

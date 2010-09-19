@@ -17,10 +17,10 @@
 package org.serviceconnector.sc.cmd;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.sc.registry.SessionRegistry;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
@@ -79,8 +79,8 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = null;
 		try {
-			server = service.allocateServerAndCreateSession(reqMessage, callback, session, ((Integer) request
-					.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
+			server = service.allocateServerAndCreateSession(reqMessage, callback, session, 
+					((Double) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {

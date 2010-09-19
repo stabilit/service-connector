@@ -8,9 +8,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageFault;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class StartSessionServer {
@@ -18,7 +18,7 @@ public class StartSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(StartSessionServer.class);
 
-	private ISCServer scSrv = null;
+	private ISCSessionServer scSrv = null;
 	private String startFile = null;
 	private String[] serviceNames;
 	private int port = 9000;
@@ -33,7 +33,7 @@ public class StartSessionServer {
 
 	public void runSessionServer(String[] args) {
 		try {
-			this.scSrv = new SCServer();
+			this.scSrv = new SCSessionServer();
 
 			try {
 				this.listenerPort = Integer.parseInt(args[0]);
@@ -222,16 +222,16 @@ public class StartSessionServer {
 	}
 
 	private class SessionServerContext {
-		public ISCServer getServer() {
+		public ISCSessionServer getServer() {
 			return scSrv;
 		}
 	}
 
 	private class KillThread extends Thread {
 
-		private ISCServer server;
+		private ISCSessionServer server;
 
-		public KillThread(ISCServer server) {
+		public KillThread(ISCSessionServer server) {
 			this.server = server;
 		}
 

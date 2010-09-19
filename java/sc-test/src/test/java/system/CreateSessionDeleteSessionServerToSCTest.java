@@ -14,9 +14,9 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageFault;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class CreateSessionDeleteSessionServerToSCTest {
@@ -25,7 +25,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 			.getLogger(CreateSessionDeleteSessionServerToSCTest.class);
 
 	private SrvCallback srvCallback;
-	private ISCServer server;
+	private ISCSessionServer server;
 
 	private static Process p;
 
@@ -51,7 +51,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		server = new SCServer();
+		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
 		srvCallback = new SrvCallback(new SessionServerContext());
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000,
@@ -233,7 +233,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 	}
 
 	private class SessionServerContext {
-		public ISCServer getServer() {
+		public ISCSessionServer getServer() {
 			return server;
 		}
 	}

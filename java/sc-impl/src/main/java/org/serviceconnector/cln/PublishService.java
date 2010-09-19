@@ -19,23 +19,22 @@ package org.serviceconnector.cln;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.cln.service.IPublishService;
-import org.serviceconnector.cln.service.Service;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.sc.service.ISCContext;
+import org.serviceconnector.sc.service.ISCMessageCallback;
+import org.serviceconnector.sc.service.SCServiceException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCContext;
-import org.serviceconnector.service.ISCMessageCallback;
-import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.util.ValidatorUtility;
 
 

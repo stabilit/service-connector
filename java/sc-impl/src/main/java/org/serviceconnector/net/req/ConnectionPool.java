@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionContext;
 import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.scmp.SCMPKeepAlive;
-import org.serviceconnector.srv.IIdleCallback;
 import org.serviceconnector.util.SynchronousCallback;
 
 

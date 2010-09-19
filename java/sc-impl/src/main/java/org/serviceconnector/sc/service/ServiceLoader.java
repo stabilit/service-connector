@@ -29,8 +29,8 @@ import java.security.InvalidParameterException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.sc.registry.DisabledServiceRegistry;
 import org.serviceconnector.sc.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;

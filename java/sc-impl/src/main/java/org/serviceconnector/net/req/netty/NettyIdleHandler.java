@@ -29,7 +29,7 @@ import org.jboss.netty.util.Timer;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionContext;
-import org.serviceconnector.srv.IIdleCallback;
+import org.serviceconnector.net.req.IIdleCallback;
 
 
 /**

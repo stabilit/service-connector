@@ -20,12 +20,12 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.cln.ISCClient;
+import org.serviceconnector.cln.IService;
+import org.serviceconnector.cln.ISessionService;
 import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.cln.service.ISCClient;
-import org.serviceconnector.cln.service.IService;
-import org.serviceconnector.cln.service.ISessionService;
+import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageCallback;
 

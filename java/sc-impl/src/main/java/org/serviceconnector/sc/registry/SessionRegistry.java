@@ -20,9 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.registry.Registry;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.ISCMPCallback;
@@ -80,7 +79,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 		if (session.getEchoIntervalSeconds() != 0) {
-			// session timeout necessary needs to be set up
+			// TODO TRN handle = session timeout necessary needs to be set up
 			this.scheduleSessionTimeout(session);
 		}
 	}

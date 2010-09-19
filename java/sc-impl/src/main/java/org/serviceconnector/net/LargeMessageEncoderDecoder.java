@@ -24,8 +24,8 @@ import java.io.OutputStreamWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.log.MessageLogger;
-import org.serviceconnector.scm.internal.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
 

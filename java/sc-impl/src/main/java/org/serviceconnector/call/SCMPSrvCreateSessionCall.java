@@ -20,7 +20,6 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.sc.cln.call.ISCMPCall;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;

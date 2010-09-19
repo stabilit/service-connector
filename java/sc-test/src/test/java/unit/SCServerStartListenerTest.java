@@ -11,13 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.SCMPCommunicationException;
-import org.serviceconnector.srv.ISCServer;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.ISCSessionServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class SCServerStartListenerTest {
 
-	private ISCServer server;
+	private ISCSessionServer server;
 	private Exception ex;
 	
 	private static final String googleIP = "74.125.43.104"; 
@@ -27,7 +27,7 @@ public class SCServerStartListenerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		server = new SCServer();
+		server = new SCSessionServer();
 	}
 	
 	@After
@@ -58,7 +58,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive0_listening()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		server.startListener("localhost", 9000, 0);
 		assertEquals(true, server.isListening());
 		assertEquals("localhost", server.getHost());
@@ -741,7 +741,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive3600_listening()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		server.startListener("localhost", 9000, 3600);
 		assertEquals(true, server.isListening());
 		assertEquals("localhost", server.getHost());
@@ -1307,7 +1307,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
 			server.startListener("localhost", 9000, -1);
 		} catch (Exception e) {
@@ -1877,7 +1877,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive3601_notListeningThrowsException()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
 			server.startListener("localhost", 9000, 3601);
 		} catch (Exception e) {
@@ -2447,7 +2447,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
 			server.startListener("localhost", 9000, Integer.MAX_VALUE);
 		} catch (Exception e) {
@@ -3026,7 +3026,7 @@ public class SCServerStartListenerTest {
 	@Test
 	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
-		((SCServer) server).setConnectionType("netty.tcp");
+		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
 			server.startListener("localhost", 9000, Integer.MIN_VALUE);
 		} catch (Exception e) {

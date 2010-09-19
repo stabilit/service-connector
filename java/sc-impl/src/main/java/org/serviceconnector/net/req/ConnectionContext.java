@@ -19,7 +19,6 @@ package org.serviceconnector.net.req;
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionContext;
-import org.serviceconnector.srv.IIdleCallback;
 
 
 /**

@@ -17,11 +17,11 @@
 package org.serviceconnector.sc.cmd;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
-import org.serviceconnector.registry.Registry;
 import org.serviceconnector.sc.registry.DisabledServiceRegistry;
+import org.serviceconnector.sc.registry.Registry;
 import org.serviceconnector.sc.registry.ServerRegistry;
 import org.serviceconnector.sc.registry.ServiceRegistry;
 import org.serviceconnector.sc.registry.SessionRegistry;

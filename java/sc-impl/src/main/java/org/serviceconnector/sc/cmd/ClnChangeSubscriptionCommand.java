@@ -22,6 +22,7 @@ import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.sc.registry.SubscriptionQueue;
+import org.serviceconnector.sc.service.IFilterMask;
 import org.serviceconnector.sc.service.SCMPMessageFilterMask;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
@@ -33,7 +34,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.IFilterMask;
 import org.serviceconnector.util.ValidatorUtility;
 
 

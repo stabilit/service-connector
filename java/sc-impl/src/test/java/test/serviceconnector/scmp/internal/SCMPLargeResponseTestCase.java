@@ -19,9 +19,9 @@ package test.serviceconnector.scmp.internal;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.scm.internal.SCMPCompositeSender;
-import org.serviceconnector.scm.internal.SCMPSendPart;
+import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPSendPart;
 
 
 /**

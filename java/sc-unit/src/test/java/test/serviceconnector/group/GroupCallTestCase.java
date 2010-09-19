@@ -19,9 +19,9 @@ package test.serviceconnector.group;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.call.ISCMPCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
-import org.serviceconnector.sc.cln.call.ISCMPCall;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;

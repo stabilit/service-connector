@@ -19,19 +19,19 @@ package test.serviceconnector.unit;
 import java.io.File;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
+import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.factory.CommandFactory;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SCPublishServer;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 /**
@@ -45,9 +45,9 @@ public class SetupTestCases {
 	private static SetupTestCases setupTestCases = null;
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
-	private static ISCServer scSim1ConSrv;
-	private static ISCServer scSim10ConSrv;
-	private static ISCServer scSimEnableSrv;
+	private static ISCSessionServer scSim1ConSrv;
+	private static ISCSessionServer scSim10ConSrv;
+	private static ISCSessionServer scSimEnableSrv;
 
 	private SetupTestCases() {
 	}
@@ -56,7 +56,7 @@ public class SetupTestCases {
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load("sc.properties");
 		deleteLog();
-		scSimEnableSrv = new SCServer();
+		scSimEnableSrv = new SCSessionServer();
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
 		scSimEnableSrv.startListener("localhost", 7001, 0);
@@ -160,7 +160,7 @@ public class SetupTestCases {
 	}
 
 	private static void startSessionServer1Connections() throws Exception {
-		scSim1ConSrv = new SCServer();
+		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.startListener("localhost", 7000, 0);
@@ -169,7 +169,7 @@ public class SetupTestCases {
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
-		scSim10ConSrv = new SCServer();
+		scSim10ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.startListener("localhost", 7000, 0);

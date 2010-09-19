@@ -22,9 +22,9 @@
 package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 
@@ -32,7 +32,7 @@ import org.serviceconnector.srv.ISCPublishServerCallback;
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
  */
-public class SCPublishServer extends SCServer implements ISCPublishServer {
+public class SCPublishServer extends SCSessionServer implements ISCPublishServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);

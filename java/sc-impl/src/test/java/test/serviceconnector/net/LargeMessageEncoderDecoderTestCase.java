@@ -26,13 +26,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.scm.internal.SCMPPart;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPPart;
 
 import test.serviceconnector.test.SCImplTest;
 

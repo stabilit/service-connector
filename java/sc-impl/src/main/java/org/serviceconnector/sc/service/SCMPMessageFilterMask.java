@@ -19,7 +19,6 @@ package org.serviceconnector.sc.service;
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.IFilterMask;
 
 
 /**

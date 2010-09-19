@@ -9,10 +9,10 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cln.ISCClient;
 import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.cln.service.ISCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
 
 
 /**

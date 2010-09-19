@@ -19,13 +19,13 @@ package test.serviceconnector.manage;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;

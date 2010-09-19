@@ -16,10 +16,10 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.net.SCMPCommunicationException;
-import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class RegisterServiceServerToSCTest {
@@ -28,7 +28,7 @@ public class RegisterServiceServerToSCTest {
 	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCTest.class);
 
 	private int threadCount = 0;	
-	private ISCServer server;
+	private ISCSessionServer server;
 	private Exception ex;
 
 	private static Process p;
@@ -54,7 +54,7 @@ public class RegisterServiceServerToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
-		server = new SCServer();
+		server = new SCSessionServer();
 	}
 
 	@After

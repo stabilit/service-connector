@@ -4,21 +4,21 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.conf.Constants;
-import org.serviceconnector.srv.ISCServer;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.Constants;
+import org.serviceconnector.srv.ISCSessionServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class SCServerTest {
 
-	private ISCServer server;
+	private ISCSessionServer server;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		server = new SCServer();
+		server = new SCSessionServer();
 	}
 	
 	@Test
@@ -33,31 +33,31 @@ public class SCServerTest {
 
 	@Test
 	public void setConnectionType_nullParam_null() {
-		((SCServer) server).setConnectionType(null);
+		((SCSessionServer) server).setConnectionType(null);
 		assertEquals(null, server.getConnectionType());
 	}
 
 	@Test
 	public void setConnectionType_emptyString_emptyString() {
-		((SCServer) server).setConnectionType("");
+		((SCSessionServer) server).setConnectionType("");
 		assertEquals("", server.getConnectionType());
 	}
 
 	@Test
 	public void setConnectionType_whiteSpaceString_emptyString() {
-		((SCServer) server).setConnectionType(" ");
+		((SCSessionServer) server).setConnectionType(" ");
 		assertEquals(" ", server.getConnectionType());
 	}
 
 	@Test
 	public void setConnectionType_oneCharString_givenString() {
-		((SCServer) server).setConnectionType("a");
+		((SCSessionServer) server).setConnectionType("a");
 		assertEquals("a", server.getConnectionType());
 	}
 
 	@Test
 	public void setConnectionType_arbitraryString_givenString() {
-		((SCServer) server).setConnectionType("aaa");
+		((SCSessionServer) server).setConnectionType("aaa");
 		assertEquals("aaa", server.getConnectionType());
 	}
 
@@ -67,7 +67,7 @@ public class SCServerTest {
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
-		((SCServer) server).setConnectionType(sb.toString());
+		((SCSessionServer) server).setConnectionType(sb.toString());
 		assertEquals(sb.toString(), server.getConnectionType());
 	}
 

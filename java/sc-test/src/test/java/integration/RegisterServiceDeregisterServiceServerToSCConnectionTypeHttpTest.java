@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
@@ -21,7 +21,7 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest.class);
 	
 	private int threadCount = 0;
-	private ISCServer server;
+	private ISCSessionServer server;
 
 	private static TestEnvironmentController ctrl;
 	private static Process p;
@@ -46,8 +46,8 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 	@Before
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
-		server = new SCServer();
-		((SCServer) server).setConnectionType("netty.http");
+		server = new SCSessionServer();
+		((SCSessionServer) server).setConnectionType("netty.http");
 	}
 	
 	@After
@@ -155,8 +155,8 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 		for (int i = 0; i < cycles / 10; i++) {
 			System.out.println("RegisterDeregister changing connection type iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
-				server = new SCServer();
-				((SCServer) server).setConnectionType("netty.http");
+				server = new SCSessionServer();
+				((SCSessionServer) server).setConnectionType("netty.http");
 				server.startListener(TestConstants.HOST, 9001, 0);
 				server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
@@ -164,8 +164,8 @@ public class RegisterServiceDeregisterServiceServerToSCConnectionTypeHttpTest {
 				assertEquals(false, server.isRegistered(TestConstants.serviceName));
 				server.destroyServer();
 				server = null;
-				server = new SCServer();
-				((SCServer) server).setConnectionType("netty.tcp");
+				server = new SCSessionServer();
+				((SCSessionServer) server).setConnectionType("netty.tcp");
 				server.startListener(TestConstants.HOST, 9001, 0);
 				server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));

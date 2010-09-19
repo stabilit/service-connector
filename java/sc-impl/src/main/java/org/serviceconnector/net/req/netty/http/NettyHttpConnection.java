@@ -34,7 +34,7 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.EncoderDecoderFactory;

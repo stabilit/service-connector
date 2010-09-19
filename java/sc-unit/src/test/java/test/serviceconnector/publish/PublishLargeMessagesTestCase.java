@@ -20,10 +20,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPMessage;

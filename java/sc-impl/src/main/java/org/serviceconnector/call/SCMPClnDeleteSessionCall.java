@@ -18,7 +18,6 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.sc.cln.call.ISCMPCall;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 

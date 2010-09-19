@@ -56,14 +56,14 @@ public class SessionService extends Service {
 	 *            the callback
 	 * @param session
 	 *            the session
-	 * @param timeout
-	 *            the timeout
+	 * @param timeoutInMillis
+	 *            the timeout in milliseconds
 	 * @return the server
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session, int timeout) throws Exception {
+			Session session, double timeoutInMillis) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -72,7 +72,7 @@ public class SessionService extends Service {
 			}
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.createSession(msgToForward, callback, timeout);
+				server.createSession(msgToForward, callback, timeoutInMillis);
 				// store session - successful creation is not done here remove in command if not successful!!
 				server.addSession(session);
 				return server;

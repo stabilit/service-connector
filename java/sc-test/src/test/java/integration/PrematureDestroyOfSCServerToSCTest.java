@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.srv.ISCServer;
+import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.SCServer;
+import org.serviceconnector.srv.SCSessionServer;
 
 
 public class PrematureDestroyOfSCServerToSCTest {
@@ -23,7 +23,7 @@ public class PrematureDestroyOfSCServerToSCTest {
 	protected final static Logger logger = Logger
 			.getLogger(PrematureDestroyOfSCServerToSCTest.class);
 
-	private ISCServer server;
+	private ISCSessionServer server;
 	private Process p;
 
 	private static TestEnvironmentController ctrl;
@@ -42,7 +42,7 @@ public class PrematureDestroyOfSCServerToSCTest {
 			logger.error("oneTimeSetUp", e);
 		}
 
-		server = new SCServer();
+		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 30000, 0);
 	}
 

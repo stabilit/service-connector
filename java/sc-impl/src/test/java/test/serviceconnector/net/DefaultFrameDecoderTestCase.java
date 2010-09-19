@@ -18,7 +18,7 @@ package test.serviceconnector.net;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.FrameDecoderException;
 import org.serviceconnector.net.FrameDecoderFactory;

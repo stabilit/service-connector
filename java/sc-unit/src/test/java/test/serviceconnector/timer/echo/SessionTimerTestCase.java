@@ -18,7 +18,7 @@ package test.serviceconnector.timer.echo;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.cln.service.ISCClient;
+import org.serviceconnector.cln.ISCClient;
 
 import test.serviceconnector.unit.SetupTestCases;
 

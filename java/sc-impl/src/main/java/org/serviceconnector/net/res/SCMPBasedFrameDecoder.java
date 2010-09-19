@@ -22,7 +22,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.FrameDecoderException;
 import org.serviceconnector.net.FrameDecoderFactory;
 import org.serviceconnector.net.IFrameDecoder;

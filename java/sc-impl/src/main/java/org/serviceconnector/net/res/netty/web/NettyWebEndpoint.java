@@ -25,11 +25,11 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.ResponderRegistry;
-import org.serviceconnector.res.EndpointAdapter;
 import org.serviceconnector.scmp.SCMPError;
 
 

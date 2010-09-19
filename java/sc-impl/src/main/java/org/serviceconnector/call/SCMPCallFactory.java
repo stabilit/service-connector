@@ -17,7 +17,6 @@
 package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.sc.cln.call.ISCMPCall;
 
 
 /**

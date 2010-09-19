@@ -2,8 +2,6 @@ package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.cln.service.ISCClient;
-import org.serviceconnector.cln.service.ISessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;

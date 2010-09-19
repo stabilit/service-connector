@@ -23,10 +23,10 @@ import org.serviceconnector.net.req.ConnectionContext;
 import org.serviceconnector.net.req.ConnectionFactory;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionContext;
+import org.serviceconnector.net.req.IIdleCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.srv.IIdleCallback;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
 

@@ -23,7 +23,7 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
-import org.serviceconnector.conf.Constants;
+import org.serviceconnector.Constants;
 
 
 /**

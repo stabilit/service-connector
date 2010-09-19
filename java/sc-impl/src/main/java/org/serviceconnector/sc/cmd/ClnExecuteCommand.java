@@ -19,11 +19,11 @@ package org.serviceconnector.sc.cmd;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.Constants;
 import org.serviceconnector.net.IResponderCallback;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.sc.service.Server;
@@ -72,9 +72,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		Session session = this.getSessionById(sessionId);
 
 		Server server = session.getServer();
-		// try sending to backend server
+		// try sending to the server
 		server.sendData(message, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT) * Constants.SEC_TO_MILISEC_FACTOR));
+				((Double) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		return;
 	}
 

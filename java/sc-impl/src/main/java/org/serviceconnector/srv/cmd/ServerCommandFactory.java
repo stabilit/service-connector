@@ -17,8 +17,8 @@
 package org.serviceconnector.srv.cmd;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.cmd.factory.CommandFactory;
 
 
 /**
