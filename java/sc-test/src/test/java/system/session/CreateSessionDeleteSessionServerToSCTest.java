@@ -1,4 +1,4 @@
-package system;
+package system.session;
 
 import static org.junit.Assert.assertEquals;
 

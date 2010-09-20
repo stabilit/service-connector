@@ -40,7 +40,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>org.serviceconnector.srv.StartSessionServer</mainClass>
+							<mainClass>org.serviceconnector.srv.SessionAndPublishServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

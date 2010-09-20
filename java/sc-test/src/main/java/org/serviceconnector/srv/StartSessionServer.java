@@ -54,7 +54,7 @@ public class StartSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.registerService("localhost", port, serviceNames[i], 1000, getMaxCons(),
+				this.scSrv.registerService("localhost", port, serviceNames[i], 1000, maxCons,
 						srvCallback);
 			}
 
@@ -91,14 +91,6 @@ public class StartSessionServer {
 		} catch (Exception e) {
 			this.scSrv = null;
 		}
-	}
-
-	public void setMaxCons(int maxCons) {
-		this.maxCons = maxCons;
-	}
-
-	public int getMaxCons() {
-		return maxCons;
 	}
 
 	class SrvCallback implements ISCSessionServerCallback {
@@ -179,7 +171,7 @@ public class StartSessionServer {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
 									scSrv.registerService("localhost", port, serviceName, 1000,
-											getMaxCons(), new SrvCallback(
+											maxCons, new SrvCallback(
 													new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
 									System.arraycopy(serviceNames, 0, services, 0,

@@ -44,7 +44,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {
 				TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		client = new SCClient();
@@ -84,26 +84,26 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Test
 	public void createSession_onInitiallyDisabledSessionService_clientEnablesServiceServerRegistersSessionCreated() throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
-		client.enableService(TestConstants.serviceNameNotEnabled);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		client.enableService(TestConstants.serviceNameSessionNotEnabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
 		
 		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
 		sessionService0.createSession("sessionInfo", 300, 60);
-		sessionService0.execute(new SCMessage("register " + TestConstants.serviceNameNotEnabled));
+		sessionService0.execute(new SCMessage("register " + TestConstants.serviceNameSessionNotEnabled));
 		
 		
-		ISessionService sessionService1 = client.newSessionService(TestConstants.serviceNameNotEnabled);
+		ISessionService sessionService1 = client.newSessionService(TestConstants.serviceNameSessionNotEnabled);
 		sessionService1.createSession("sessionInfo", 300, 60);
 
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
 		assertEquals(false, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 		sessionService1.deleteSession();
 		
-		sessionService0.execute(new SCMessage("deregister " + TestConstants.serviceNameNotEnabled));
+		sessionService0.execute(new SCMessage("deregister " + TestConstants.serviceNameSessionNotEnabled));
 		sessionService0.deleteSession();
-		client.disableService(TestConstants.serviceNameNotEnabled);
+		client.disableService(TestConstants.serviceNameSessionNotEnabled);
 	}
 	
 	@Test

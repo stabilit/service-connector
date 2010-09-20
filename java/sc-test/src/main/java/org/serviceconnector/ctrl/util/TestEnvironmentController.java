@@ -115,8 +115,20 @@ public class TestEnvironmentController {
 		deleteFile(getPidLogPath(log4jProperties));
 	}
 
-	public Process startServer(String log4jSCProperties, int listenerPort, int port,
-			int maxConnections, String[] serviceNames) throws Exception {
+	/**
+	 * Creates a new JVM and starts a SCServer process in that JVM
+	 * 
+	 * @param serverType "session" or "publish"
+	 * @param log4jSCProperties
+	 * @param listenerPort
+	 * @param port
+	 * @param maxConnections
+	 * @param serviceNames
+	 * @return Process with JVM in which the server is started
+	 * @throws Exception
+	 */
+	public Process startServer(String serverType, String log4jSCProperties, int listenerPort,
+			int port, int maxConnections, String[] serviceNames) throws Exception {
 		String log4jPath = getLog4jPath(log4jSCProperties);
 		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
@@ -126,7 +138,7 @@ public class TestEnvironmentController {
 		}
 
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ "target" + fs + "test-server.jar " + listenerPort + " " + port + " "
+				+ "target" + fs + "test-server.jar " + serverType + " " + listenerPort + " " + port + " "
 				+ maxConnections + " " + fileName + services;
 		Process p = Runtime.getRuntime().exec(command);
 

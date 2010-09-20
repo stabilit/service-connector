@@ -86,7 +86,7 @@ public class NewServicesTest {
 	
 	@Test
 	public void newSessionService_validNotEnabledServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceNameNotEnabled) instanceof ISessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSessionNotEnabled) instanceof ISessionService);
 	}
 	
 	@Test
@@ -132,13 +132,18 @@ public class NewServicesTest {
 	}
 
 	@Test
-	public void newPublishService_validServiceName_returnsIPublishService() throws Exception {
+	public void newPublishService_serviceNameInSCPropertiesNotPublish_returnsIPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+	}
+	
+	@Test
+	public void newPublishService_serviceNameInSCPropertiesPublish_returnsIPublishService() throws Exception {
 		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
 	}
 	
 	@Test
 	public void newPublishService_validNotEnabledServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceNameNotEnabled) instanceof IPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSessionNotEnabled) instanceof IPublishService);
 	}
 	
 	@Test
@@ -190,7 +195,7 @@ public class NewServicesTest {
 	
 	@Test
 	public void newFileService_validNotEnabledServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceNameNotEnabled) instanceof IFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionNotEnabled) instanceof IFileService);
 	}
 	
 	@Test

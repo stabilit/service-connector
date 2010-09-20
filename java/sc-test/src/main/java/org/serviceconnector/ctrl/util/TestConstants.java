@@ -17,7 +17,9 @@ public class TestConstants {
 	
 	public static final String serviceName = "simulation";
 	public static final String serviceNameAlt = "P01_RTXS_sc1";
-	public static final String serviceNameNotEnabled = "notEnabledService";
+	public static final String serviceNameSessionNotEnabled = "notEnabledService";
+	public static final String serviceNamePublish = "publish-simulation";
+	public static final String serviceNamePublishNotEnabled = "notEnabledPublish";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -27,5 +29,10 @@ public class TestConstants {
 	public static final int dataLength1MB = 1048576;
 	
 	public static final String pidLogFile = "pid.log";
+	
+	public static final String sessionSrv = "session";
+	public static final String publishSrv = "publish";
+	
+	public static final String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 
 }

@@ -1,4 +1,4 @@
-package system;
+package system.session;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,8 +37,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void setUp() throws Exception {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
-					100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+					TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
@@ -68,8 +68,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void detach_afterSCRestart_notAttached() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
-				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		client.detach();
@@ -79,8 +79,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void createSession_afterSCRestart_createsSessionService() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
-				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
@@ -90,8 +90,8 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void newSessionService_afterSCRestart_ThrowsSCServiceException() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
-				100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);

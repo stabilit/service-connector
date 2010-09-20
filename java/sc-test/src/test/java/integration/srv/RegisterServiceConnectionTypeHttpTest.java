@@ -109,12 +109,12 @@ public class RegisterServiceConnectionTypeHttpTest {
 	public void registerService_withNotEnabledService_throwsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceNameNotEnabled, 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceNameSessionNotEnabled, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, server.isRegistered(TestConstants.serviceNameNotEnabled));
+		assertEquals(false, server.isRegistered(TestConstants.serviceNameSessionNotEnabled));
 	}
 
 	@Test

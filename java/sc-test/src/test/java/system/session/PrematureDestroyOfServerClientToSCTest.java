@@ -1,4 +1,4 @@
-package system;
+package system.session;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +44,7 @@ public class PrematureDestroyOfServerClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}

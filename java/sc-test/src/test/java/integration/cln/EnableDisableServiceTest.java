@@ -64,7 +64,7 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void isEnabled_disabledService_isNotEnabled() throws SCServiceException {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
 	}
 	
 	@Test(expected = SCServiceException.class)
@@ -105,18 +105,18 @@ public class EnableDisableServiceTest {
 	@Test
 	public void enableService_unabledService_fromNotEnabledToEnabled()
 			throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
-		client.enableService(TestConstants.serviceNameNotEnabled);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
-		client.disableService(TestConstants.serviceNameNotEnabled);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		client.enableService(TestConstants.serviceNameSessionNotEnabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		client.disableService(TestConstants.serviceNameSessionNotEnabled);
 	}
 	
 	@Test
 	public void disableService_unabledService_passes() throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
-		client.enableService(TestConstants.serviceNameNotEnabled);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameNotEnabled));
-		client.disableService(TestConstants.serviceNameNotEnabled);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		client.enableService(TestConstants.serviceNameSessionNotEnabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		client.disableService(TestConstants.serviceNameSessionNotEnabled);
 	}
 	
 	@Test

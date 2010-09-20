@@ -1,4 +1,4 @@
-package system;
+package system.session;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,8 +37,8 @@ public class CreateSessionHttpClientToSCTest {
 		ctrl = new TestEnvironmentController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000,
-					100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+					TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -115,7 +115,7 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void createSession_notEnabledService_throwsException() throws Exception {
 		ISessionService sessionService = client
-				.newSessionService(TestConstants.serviceNameNotEnabled);
+				.newSessionService(TestConstants.serviceNameSessionNotEnabled);
 		try {
 			sessionService.createSession("something", 300, 60);
 		} catch (Exception e) {
