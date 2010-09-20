@@ -1,4 +1,4 @@
-package integration;
+package integration.srv;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,11 +17,12 @@ import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
 
 
+public class PrematureDestroyOfSCSrvTest {
 
-public class RestartSCServerToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RestartSCServerToSCTest.class);
-	
+	protected final static Logger logger = Logger
+			.getLogger(PrematureDestroyOfSCSrvTest.class);
+
 	private ISCSessionServer server;
 	private Process scProcess;
 
@@ -31,16 +32,18 @@ public class RestartSCServerToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new TestEnvironmentController();
 	}
-
+	
 	@Before
 	public void setUp() throws Exception {
+		ctrl = new TestEnvironmentController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
+
 		server = new SCSessionServer();
-		server.startListener(TestConstants.HOST, 30000, 60);
+		server.startListener(TestConstants.HOST, 30000, 0);
 	}
 
 	@After
@@ -56,70 +59,67 @@ public class RestartSCServerToSCTest {
 		ctrl = null;
 	}
 
-	@Test
-	public void registerService_afterSCRestartValidValues_isRegistered() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+	@Test(expected = SCServiceException.class)
+	public void registerService_afterSCDestroyValidValues_throwsException() throws Exception {
+		scProcess.destroy();
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void registerService_afterSCRestartInvalidMaxSessions_throwsException() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+	public void registerService_afterSCDestroyInvalidMaxSessions_throwsException() throws Exception {
+		scProcess.destroy();
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, -1, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void registerService_afterSCRestartInvalidHost_throwsException() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+	public void registerService_afterSCDestroyInvalidHost_throwsException() throws Exception {
+		scProcess.destroy();
 		server.registerService("something", TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void registerService_withImmediateConnectFalseAfterSCRestartInvalidHost_throwsException()
+	public void registerService_withImmediateConnectFalseAfterSCDestroyInvalidHost_throwsException()
 			throws Exception {
 		server.setImmediateConnect(false);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess.destroy();
 		server.registerService("something", TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
 	}
 
 	@Test
-	public void deregisterService_afterSCRestart_passes() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+	public void deregisterService_afterSCDestroyWithoutPreviousRegister_passes() throws Exception {
+		scProcess.destroy();
 		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
-	public void deregisterService_afterRegisterAfterSCRestart_isRegistered() throws Exception {
+	public void deregisterService_afterRegisterAfterSCDestroy_notRegistered() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		try { 
-			server.deregisterService(TestConstants.serviceName);
-		} catch (SCServiceException e) {
-		}
+		scProcess.destroy();
+		server.deregisterService(TestConstants.serviceName);
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 	}
 	
-	@Test
-	public void isRegistered_afterRegisterAfterSCRestart_isRegistered() throws Exception {
+	@Test(expected = SCServiceException.class)
+	public void registerService_afterRegisterAfterSCDestroy_throwsException() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess.destroy();
+		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceNameAlt, 10, 10, new CallBack());
+	}
+	
+	@Test
+	public void isRegistered_afterRegisterAfterSCDestroy_thinksThatItIsRegistered() throws Exception {
+		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
+		scProcess.destroy();
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 	}
 	
 	@Test
-	public void registerService_afterRegisterAfterSCRestart_isRegistered() throws Exception {
+	public void setImmediateConnect_afterRegisterAfterSCDestroy_passes() throws Exception {
 		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 10, 10, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		server.deregisterService(TestConstants.serviceName);
+		scProcess.destroy();
+		server.setImmediateConnect(false);
 	}
-	
+
 	private class CallBack implements ISCServerCallback {
 	}
 }

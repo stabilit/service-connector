@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,10 +14,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 
 
-public class AttachClientToMultipleSCTest {
+public class AttachToMultipleSCTest {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachClientToMultipleSCTest.class);
+	protected final static Logger logger = Logger.getLogger(AttachToMultipleSCTest.class);
 	
 	private int threadCount = 0;
 	private ISCClient client1;

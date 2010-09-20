@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,9 +15,9 @@ import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
-public class EnableDisableServiceClientToSCTest {
+public class EnableDisableServiceTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EnableDisableServiceClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(EnableDisableServiceTest.class);
 
 	private static Process scProcess;
 
@@ -155,7 +155,7 @@ public class EnableDisableServiceClientToSCTest {
 	public void enableDisableService_1000Times_switchesStates() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		for (int i = 0; i < 100; i++) {
-			System.out.println("Enabling/disabling service, iteration:\t" + i*10);
+//			System.out.println("Enabling/disabling service, iteration:\t" + i*10);
 			for (int j = 0; j < 10; j++) {
 				client.disableService(TestConstants.serviceName);
 				assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));

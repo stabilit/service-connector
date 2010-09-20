@@ -69,18 +69,18 @@ public class ValidatorUtilityTestCase {
 	@Test
 	public void validateIpAddressList() {
 		try {
-			// simply one ip adress
+			// simply one ip address
 			ValidatorUtility.validateIpAddressList("127.0.0.1");
-			// two ip adresses
+			// two ip addresses
 			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.13");
-			// five ip adresses, serveral correct formats
+			// five ip addresses, several correct formats
 			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
 		} catch (SCMPValidatorException e) {
 			Assert.fail("Should not throw exception");
 		}
 
 		try {
-			// wrong format of ip address, too many digets
+			// wrong format of ip address, too many digits
 			ValidatorUtility.validateIpAddressList("127.0.0.1545");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
@@ -88,7 +88,7 @@ public class ValidatorUtilityTestCase {
 		}
 
 		try {
-			// wrong format of ip address, missing digets
+			// wrong format of ip address, missing digits
 			ValidatorUtility.validateIpAddressList("127.0.0");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {

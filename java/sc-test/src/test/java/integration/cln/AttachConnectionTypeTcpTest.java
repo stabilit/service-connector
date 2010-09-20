@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,10 +19,10 @@ import org.serviceconnector.sc.service.SCServiceException;
 
 
 
-public class AttachClientToSCConnectionTypeTCPTest {
+public class AttachConnectionTypeTcpTest {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachClientToSCConnectionTypeTCPTest.class);
+	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeTcpTest.class);
 	
 	private int threadCount = 0;
 	private ISCClient client;
@@ -57,6 +57,9 @@ public class AttachClientToSCConnectionTypeTCPTest {
 	
 	@After
 	public void tearDown() throws Exception {
+		try {
+			client.detach();
+		} catch (Exception e) {} 
 		client = null;
 		ex = null;
 		assertEquals(threadCount, Thread.activeCount());

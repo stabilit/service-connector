@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,10 +18,10 @@ import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
-public class AttachClientToSCTest {
+public class AttachConnectionTypeHttpTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeHttpTest.class);
 
 	private int threadCount = 0;
 	private ISCClient client;

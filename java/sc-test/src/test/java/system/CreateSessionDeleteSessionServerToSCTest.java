@@ -37,7 +37,6 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		ctrl = new TestEnvironmentController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-//			SC.main(new String[] { "-sc.configuration", "sc.properties"});
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 			throw e;

@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,9 +19,9 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 
 
-public class NewServicesClientToSCTest {
+public class NewServicesTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NewServicesClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(NewServicesTest.class);
 
 	private ISCClient client;
 	private static Process scProcess;

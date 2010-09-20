@@ -52,7 +52,7 @@ public class SCConsoleTest {
 	}
 
 	@Test
-	public void main_nullParameters_dontKnowYetProbablyThrowsException() throws Exception {
+	public void main_nullParameters_exitCode1() throws Exception {
 		try {
 			SCConsole.main(null);
 		} catch (ExitException e) {
@@ -279,7 +279,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validShowCommandPort9000ServiceSimulation_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.STATE.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", "9000", ConsoleCommand.STATE.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}

@@ -77,7 +77,7 @@ public class PerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 		
-		System.out.println("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+//		System.out.println("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
 		assertEquals(true, stop - start < 25000);
 	}
 }

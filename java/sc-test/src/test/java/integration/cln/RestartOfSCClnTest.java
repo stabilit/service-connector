@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,10 +15,10 @@ import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
-public class RestartSCClientToSCTest {
+public class RestartOfSCClnTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(RestartSCClientToSCTest.class);
+			.getLogger(RestartOfSCClnTest.class);
 
 	private ISCClient client;
 	private Process scProcess;

@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,10 +16,10 @@ import org.serviceconnector.sc.service.SCServiceException;
 
 
 
-public class PrematureDestroyOfSCClientToSCTest {
+public class PrematureDestroyOfSCClnTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCClnTest.class);
 	
 	private ISCClient client;
 	private Process scProcess;

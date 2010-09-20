@@ -1,4 +1,4 @@
-package integration;
+package integration.srv;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,10 +15,10 @@ import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
 
 
-public class RegisterServiceServerToMultipleSCTest {
+public class RegisterServiceToMultipleSCTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToMultipleSCTest.class);
+	protected final static Logger logger = Logger.getLogger(RegisterServiceToMultipleSCTest.class);
 	
 	private int threadCount = 0;
 	private ISCSessionServer server;

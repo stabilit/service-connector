@@ -279,7 +279,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_10000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 1000; i++) {
-			System.out.println("createSession_10000times cycle:\t" + i * 10);
+//			System.out.println("createSession_10000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);
 				assertEquals(false, sessionService.getSessionId() == null
@@ -652,7 +652,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_1000timesDataNull_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-			System.out.println("createSession_1000times cycle:\t" + i * 10);
+//			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, null);
 				assertEquals(false, sessionService.getSessionId() == null
@@ -847,7 +847,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-			System.out.println("createSession_1000times cycle:\t" + i * 10);
+//			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, " ");
 				assertEquals(false, sessionService.getSessionId() == null
@@ -1040,7 +1040,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_1000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-			System.out.println("createSession_1000times cycle:\t" + i * 10);
+//			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, "a");
 				assertEquals(false, sessionService.getSessionId() == null
@@ -1235,7 +1235,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_1000timesData60kBByteArray_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-			System.out.println("createSession_1000times cycle:\t" + i * 10);
+//			System.out.println("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10,
 						new byte[TestConstants.dataLength60kB]);
@@ -1370,7 +1370,7 @@ public class CreateSessionHttpClientToSCTest {
 		String[] sessions = new String[clientsCount];
 
 		for (int i = 0; i < clientsCount / 10; i++) {
-			System.out.println("Creating session " + i * 10);
+//			System.out.println("Creating session " + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 60);
 				sessions[j + (10 * i)] = sessionService.getSessionId();

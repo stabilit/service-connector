@@ -1,4 +1,4 @@
-package integration;
+package integration.cln;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,10 +15,10 @@ import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
-public class AttachDetachClientToSCTest {
+public class AttachDetachTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachDetachClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
 	
 	private int threadCount = 0;
 
@@ -204,7 +204,8 @@ public class AttachDetachClientToSCTest {
 		ISCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
 		for (; i < clientsCount / 10; i++) {
-			// TODO FJU System.out.println("Attaching client " + i*10);
+//			TODO FJU either delete or comment out all outputs to console from sc-test 
+//			System.out.println("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
 				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT8080);
@@ -216,7 +217,7 @@ public class AttachDetachClientToSCTest {
 		}
 		i = 0;
 		for (; i < clientsCount / 10; i++) {
-			System.out.println("Detaching client " + i*10);
+//			System.out.println("Detaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)].detach();
 			}

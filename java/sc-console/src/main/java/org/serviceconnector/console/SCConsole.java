@@ -16,7 +16,9 @@
 package org.serviceconnector.console;
 
 import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 public class SCConsole {
@@ -33,16 +35,26 @@ public class SCConsole {
 			showError("too many argumments");
 			System.exit(1);
 		}
+		
+		// check host
 		String host = CommandLineUtil.getArg(args, Constants.CLI_HOST_ARG);
 		if (host == null) {
 			showError("Host argument is missing");
 			System.exit(1);
+		} else if (host == "localhost") {
+		} else {
+			ValidatorUtility.validateIpAddressList(host);
 		}
+		
+		//check port
 		String port = CommandLineUtil.getArg(args, Constants.CLI_PORT_ARG);
 		if (port == null) {
 			showError("Port argument is missing");
 			System.exit(1);
+		} else {
+			ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
+		
 		ConsoleCommand consoleCommand = ConsoleCommand.UNDEFINED;
 		String commandKey = "";
 		String commandValue = "";

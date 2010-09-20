@@ -1,4 +1,4 @@
-package integration;
+package integration.srv;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,11 +22,11 @@ import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
 
 
-public class RegisterServiceServerToSCTest {
+public class RegisterServiceConnectionTypeHttpTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RegisterServiceServerToSCTest.class);
-
+	protected final static Logger logger = Logger.getLogger(RegisterServiceConnectionTypeHttpTest.class);
+	
 	private int threadCount = 0;	
 	private ISCSessionServer server;
 	private Exception ex;
@@ -55,6 +55,7 @@ public class RegisterServiceServerToSCTest {
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
+		((SCSessionServer) server).setConnectionType("netty.http");
 	}
 
 	@After
@@ -68,39 +69,38 @@ public class RegisterServiceServerToSCTest {
 	// region host == "localhost" (set as only one in
 	// scIntegration.properties), all ports
 	@Test
-	public void registerService_withoutStartListener_throwsException() throws Exception {
+	public void registerService_withoutStartListener_throwsException() {
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof InvalidActivityException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
 	public void registerService_withStartListenerToSameHostAndPort_throwsException()
 			throws Exception {
 		try {
-			server.startListener(TestConstants.HOST, TestConstants.PORT9000, 1);
+			server.startListener(TestConstants.HOST, TestConstants.PORT8080, 1);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCMPCommunicationException);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
-		assertEquals(true, ex instanceof InvalidActivityException);
+		// assertEquals(true, ex instanceof SCServiceException);
 		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
 	public void registerService_withValidParamsInSCProperties_registered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -109,7 +109,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_withNotEnabledService_throwsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceNameNotEnabled, 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceNameNotEnabled, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -121,32 +121,30 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_nullCallBack_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, null);
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof InvalidParameterException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
 	public void registerService_invalidHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService("something", TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerService("something", TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
-	public void registerService_emptyHostTranslatesAsLocalHost_registered() throws Exception {
+	public void registerService_emptyHostTranslatesAsLocalhost_registered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService("", TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+		server.registerService("", TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -155,7 +153,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_whiteSpaceHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(" ", TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerService(" ", TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -167,7 +165,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_noHost_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(null, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerService(null, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -186,7 +184,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -199,7 +196,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -212,7 +208,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -226,7 +221,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCMPValidatorException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -240,7 +234,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -253,7 +246,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCMPValidatorException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -267,7 +259,6 @@ public class RegisterServiceServerToSCTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCMPValidatorException);
-		server.deregisterService(TestConstants.serviceName);
 	}
 
 	@Test
@@ -287,7 +278,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_noServiceName_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, null, 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, null, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -298,7 +289,7 @@ public class RegisterServiceServerToSCTest {
 	@Test
 	public void registerService_validServiceNameInSCProps_registered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, "P01_RTXS_sc1", 1, 1, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, "P01_RTXS_sc1", 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
 		server.deregisterService("P01_RTXS_sc1");
 	}
@@ -307,13 +298,12 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_emptyServiceName_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, "", 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, "", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(""));
 		assertEquals(true, ex instanceof SCMPValidatorException);
-		server.deregisterService("");
 	}
 
 	@Test
@@ -321,13 +311,12 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, " ", 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, " ", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(" "));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService(" ");
 	}
 
 	@Test
@@ -335,13 +324,12 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, "Name", 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered("Name"));
 		assertEquals(true, ex instanceof SCServiceException);
-		server.deregisterService("Name");
 	}
 
 	@Test
@@ -353,7 +341,7 @@ public class RegisterServiceServerToSCTest {
 		}
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, sb.toString(), 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, sb.toString(), 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -370,7 +358,7 @@ public class RegisterServiceServerToSCTest {
 		}
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, sb.toString(), 1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, sb.toString(), 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -382,7 +370,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxSessions0_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 0, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 0, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -394,7 +382,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxSessionsMinus1_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, -1, 1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, -1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -405,7 +393,7 @@ public class RegisterServiceServerToSCTest {
 	@Test
 	public void registerService_maxSessionsIntMax_registered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, Integer.MAX_VALUE, 1, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, Integer.MAX_VALUE, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -414,7 +402,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxSessionsIntMin_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, Integer.MIN_VALUE, 1,
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, Integer.MIN_VALUE, 1,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -427,7 +415,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnections0_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 0, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 0, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -440,7 +428,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, -1, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, -1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -453,7 +441,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, Integer.MIN_VALUE,
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, Integer.MIN_VALUE,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -467,7 +455,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, Integer.MAX_VALUE,
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, Integer.MAX_VALUE,
 					new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -481,7 +469,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 2, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -494,7 +482,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		server
-				.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, Integer.MAX_VALUE, 1024,
+				.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, Integer.MAX_VALUE, 1024,
 						new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
@@ -504,7 +492,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnectionsSameAsSessions1024_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1024, 1024, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1024, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -513,7 +501,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnectionsSameAsSessions2_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 2, 2, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 2, 2, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -523,7 +511,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		server
-				.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, Integer.MAX_VALUE, 1023,
+				.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, Integer.MAX_VALUE, 1023,
 						new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
@@ -533,7 +521,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnections1023LessThanSessions1024_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1024, 1023, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1024, 1023, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -542,7 +530,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnections1024LessThanSessions1025_isRegistered()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1025, 1024, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1025, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -552,7 +540,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1025, 1025, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1025, 1025, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -564,7 +552,7 @@ public class RegisterServiceServerToSCTest {
 	public void registerService_maxConnectionsLessThanSessions2_notRegisteredThrowsException()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 2, 1, new CallBack());
+		server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 2, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterService(TestConstants.serviceName);
 	}
@@ -574,7 +562,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, Integer.MAX_VALUE - 1,
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, Integer.MAX_VALUE - 1,
 					Integer.MAX_VALUE, new CallBack());
 		} catch (Exception e) {
 			ex = e;
@@ -588,7 +576,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 2, new CallBack());
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -626,7 +614,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, "Name", -1, -1, null);
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, "Name", -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -639,7 +627,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, -1, -1, null);
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -652,7 +640,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, -1, null);
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -665,7 +653,7 @@ public class RegisterServiceServerToSCTest {
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, null);
+			server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
