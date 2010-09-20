@@ -25,7 +25,7 @@ import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.unit.SetupTestCases;
+import org.serviceconnector.test.SetupTestCases;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
 

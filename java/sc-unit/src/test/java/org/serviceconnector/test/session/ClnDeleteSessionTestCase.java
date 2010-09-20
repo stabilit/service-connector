@@ -26,7 +26,7 @@ import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.unit.SCTest;
+import org.serviceconnector.test.SCTest;
 
 
 

@@ -25,8 +25,8 @@ import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.unit.SCTest;
-import org.serviceconnector.test.unit.SuperTestCase;
+import org.serviceconnector.test.SCTest;
+import org.serviceconnector.test.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 

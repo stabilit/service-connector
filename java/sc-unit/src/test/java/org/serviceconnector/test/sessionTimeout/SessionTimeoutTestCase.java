@@ -25,8 +25,8 @@ import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.SCTest;
 import org.serviceconnector.test.attach.SuperAttachTestCase;
-import org.serviceconnector.test.unit.SCTest;
 
 
 

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.unit;
+package org.serviceconnector.test;
 
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;

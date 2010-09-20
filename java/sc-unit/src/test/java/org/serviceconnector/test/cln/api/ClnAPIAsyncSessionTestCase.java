@@ -28,7 +28,7 @@ import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 import org.serviceconnector.service.SCMessageCallback;
-import org.serviceconnector.test.unit.SetupTestCases;
+import org.serviceconnector.test.SetupTestCases;
 
 
 

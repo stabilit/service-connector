@@ -18,7 +18,7 @@ package org.serviceconnector.test.cln.api;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.test.unit.SetupTestCases;
+import org.serviceconnector.test.SetupTestCases;
 
 
 

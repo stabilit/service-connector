@@ -27,7 +27,7 @@ import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionPool;
-import org.serviceconnector.test.unit.SetupTestCases;
+import org.serviceconnector.test.SetupTestCases;
 
 
 

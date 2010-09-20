@@ -28,10 +28,10 @@ import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.test.SCTest;
+import org.serviceconnector.test.SetupTestCases;
+import org.serviceconnector.test.SuperTestCase;
 import org.serviceconnector.test.pool.TestContext;
-import org.serviceconnector.test.unit.SCTest;
-import org.serviceconnector.test.unit.SetupTestCases;
-import org.serviceconnector.test.unit.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
 

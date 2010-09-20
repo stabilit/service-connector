@@ -28,9 +28,9 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.test.SCTest;
 import org.serviceconnector.test.attach.SuperAttachTestCase;
 import org.serviceconnector.test.pool.TestContext;
-import org.serviceconnector.test.unit.SCTest;
 
 
 

@@ -22,7 +22,7 @@ import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.test.unit.SuperTestCase;
+import org.serviceconnector.test.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
 

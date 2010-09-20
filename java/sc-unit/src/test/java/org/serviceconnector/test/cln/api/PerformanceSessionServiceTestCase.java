@@ -22,7 +22,7 @@ import org.serviceconnector.cln.ISCClient;
 import org.serviceconnector.cln.ISessionService;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.test.unit.SetupTestCases;
+import org.serviceconnector.test.SetupTestCases;
 
 
 
