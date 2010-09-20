@@ -19,7 +19,7 @@
 /**
  * 
  */
-package test.serviceconnector.sc.service;
+package org.serviceconnector.test.sc.service;
 
 import org.junit.Assert;
 import org.junit.Test;
