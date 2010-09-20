@@ -1,4 +1,4 @@
-package test.serviceconnector.console;
+package org.serviceconnector.test.console;
 
 import static org.junit.Assert.assertEquals;
 
