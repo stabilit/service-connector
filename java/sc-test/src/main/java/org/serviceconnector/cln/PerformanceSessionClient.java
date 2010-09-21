@@ -3,8 +3,11 @@ package org.serviceconnector.cln;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.service.SCMessage;
 
 
 public class PerformanceSessionClient implements Runnable {
@@ -34,8 +37,11 @@ public class PerformanceSessionClient implements Runnable {
 				for (int j = 0; j < 10; j++) {
 					service.execute(new SCMessage(new byte[128]));
 				}
+				service.deleteSession();
 			}
 			
+			//signal that this worker is done
+			doneSignal.countDown();
 
 		} catch (Exception e) {
 			logger.error("run", e);

@@ -2,20 +2,22 @@ package org.serviceconnector.test.system.perf;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.cln.ISCClient;
-import org.serviceconnector.cln.ISessionService;
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessage;
 
 
 
@@ -100,5 +102,16 @@ public class PerformanceTests {
 		long stop = System.currentTimeMillis();
 		testLogger.info("Time to create session and delete session 10000 times was:\t" + (stop - start));
 		assertEquals(true, stop - start < 25000);
+	}
+	
+	@Test
+	public void createSessionExecuteDeleteSession_10000MessagesDividedInto10ParallelClients_outputsTime() throws Exception {
+		
+		CountDownLatch startSignal = new CountDownLatch(1);
+		CountDownLatch doneSignal = new CountDownLatch(10);
+		
+//		 for (int i = 0; i < 10; ++i) // create and start threads
+//		       new Thread(new PerformanceSessionClient(startSignal, doneSignal)).start();
+	     
 	}
 }
