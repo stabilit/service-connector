@@ -25,7 +25,8 @@ public enum Loggers {
 	SESSION("SessionLogger"), //
 	SUBSCRIPTION("SubscriptionLogger"), //
 	MESSAGE("MessageLogger"), //
-	PERFORMANCE("PerformanceLogger");
+	PERFORMANCE("PerformanceLogger"),
+	TEST("TestLogger");
 
 	/** The value. */
 	private String value;

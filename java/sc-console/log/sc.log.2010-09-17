@@ -1,0 +1,1046 @@
+2010-09-17T13:39:03.602+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5615
+2010-09-17T13:39:03.795+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5615 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:39:03.027+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:39:03.893+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T13:39:03.928+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5615
+2010-09-17T13:42:58.073+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5637
+2010-09-17T13:42:58.145+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5637 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:42:57.918+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:42:58.160+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T13:42:58.171+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5637
+2010-09-17T13:44:33.682+0200 [main] ERROR (com.stabilit.sc.common.net.req.netty.tcp.NettyTcpConnection:143) - connect
+com.stabilit.sc.common.net.CommunicationException: Operation could not be completed
+	at com.stabilit.sc.common.net.req.netty.NettyOperationListener.awaitUninterruptibly(NettyOperationListener.java:58)
+	at com.stabilit.sc.common.net.req.netty.tcp.NettyTcpConnection.connect(NettyTcpConnection.java:138)
+	at com.stabilit.sc.common.net.req.ConnectionPool.createNewConnection(ConnectionPool.java:184)
+	at com.stabilit.sc.common.net.req.ConnectionPool.getConnection(ConnectionPool.java:155)
+	at com.stabilit.sc.common.net.req.Requester.send(Requester.java:69)
+	at com.stabilit.sc.cln.call.SCMPCallAdapter.invoke(SCMPCallAdapter.java:139)
+	at com.stabilit.sc.common.call.SCMPAttachCall.invoke(SCMPAttachCall.java:62)
+	at com.stabilit.sc.cln.SCClient.attach(SCClient.java:127)
+	at com.stabilit.sc.cln.SCClient.attach(SCClient.java:101)
+	at com.stabilit.sc.console.SCConsole.run(SCConsole.java:76)
+	at com.stabilit.sc.console.SCConsole.main(SCConsole.java:60)
+	at com.stabilit.sc.console.SCConsoleTest.main_validShowCommandPort8080_exitCode0State(SCConsoleTest.java:256)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:76)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:46)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+2010-09-17T13:44:57.238+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5651
+2010-09-17T13:44:57.291+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5651 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:44:57.072+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:45:49.848+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5660
+2010-09-17T13:45:49.906+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5660 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:45:49.684+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:45:49.930+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:45:49.923+0200
+mty=ATT
+
+2010-09-17T13:45:50.018+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5660 buffer:REQ 0000056 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=something
+2010-09-17T13:45:50.023+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:EXC 0000048 00048 1.0
+set=Not found. [serviceName :something]
+sec=404
+
+2010-09-17T13:45:50.025+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5660 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:45:50.027+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:45:50.029+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5660
+2010-09-17T13:47:59.867+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5682
+2010-09-17T13:47:59.923+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5682 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:47:59.709+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:48:21.529+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5682
+2010-09-17T13:48:28.862+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5698
+2010-09-17T13:48:28.917+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5698 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:48:28.687+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:49:14.649+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5707
+2010-09-17T13:49:14.718+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5707 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:49:14.467+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:49:26.781+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5716
+2010-09-17T13:49:26.895+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5716 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:49:26.225+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:49:34.887+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5725
+2010-09-17T13:49:35.162+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5725 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:49:34.260+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:49:35.401+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:49:35.377+0200
+mty=ATT
+
+2010-09-17T13:49:35.447+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5725 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T13:49:35.454+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T13:49:35.467+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5725 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:49:35.475+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:49:35.521+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5725
+2010-09-17T13:50:08.428+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5734
+2010-09-17T13:50:08.690+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:50:08.561+0200
+mty=ATT
+
+2010-09-17T13:50:08.761+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5734 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:50:07.560+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:50:08.938+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5734 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T13:50:08.944+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T13:50:08.945+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:50:08.947+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5734 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:50:08.948+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5734
+2010-09-17T13:58:07.487+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5815
+2010-09-17T13:58:07.545+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5815 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:58:07.285+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:58:07.574+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:58:07.564+0200
+mty=ATT
+
+2010-09-17T13:58:07.580+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5815 buffer:REQ 0000044 00026 1.0
+oti=60000
+bty=txt
+mty=MGT
+disable=simulation
+2010-09-17T13:58:07.584+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=MGT
+
+2010-09-17T13:58:07.586+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:58:07.586+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5815 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:58:07.593+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5815
+2010-09-17T13:58:07.708+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/5822
+2010-09-17T13:58:07.762+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5822 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:58:07.594+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:58:07.793+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:58:07.773+0200
+mty=ATT
+
+2010-09-17T13:58:07.796+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5822 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T13:58:07.798+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000021 00016 1.0
+bty=txt
+mty=INS
+false
+2010-09-17T13:58:07.801+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5827
+2010-09-17T13:58:07.802+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5827 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:58:07.799+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:58:07.803+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:58:07.802+0200
+mty=ATT
+
+2010-09-17T13:58:07.805+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5827 buffer:REQ 0000043 00026 1.0
+oti=60000
+bty=txt
+mty=MGT
+enable=simulation
+2010-09-17T13:58:07.806+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=MGT
+
+2010-09-17T13:58:07.807+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5827 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:58:07.808+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:58:07.808+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5827
+2010-09-17T13:58:07.813+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T13:58:07.813+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5822 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T13:58:07.814+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5822 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:58:07.815+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:58:07.816+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/5822
+2010-09-17T13:59:02.609+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5836
+2010-09-17T13:59:02.663+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5836 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:59:02.451+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:59:02.669+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:59:02.662+0200
+mty=ATT
+
+2010-09-17T13:59:02.682+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T13:59:02.686+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5836 buffer:REQ 0000060 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=simulation
+2010-09-17T13:59:02.689+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:59:02.690+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5836 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:59:02.692+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5836
+2010-09-17T13:59:02.733+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/5843
+2010-09-17T13:59:02.755+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5843 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:59:02.692+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:59:02.771+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:59:02.756+0200
+mty=ATT
+
+2010-09-17T13:59:02.773+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5843 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T13:59:02.774+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T13:59:02.775+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5843 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:59:02.776+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:59:02.777+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/5843
+2010-09-17T13:59:36.414+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5850
+2010-09-17T13:59:36.477+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5850 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:59:36.250+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:59:36.483+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:59:36.476+0200
+mty=ATT
+
+2010-09-17T13:59:36.494+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5850 buffer:REQ 0000060 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=simulation
+2010-09-17T13:59:36.495+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T13:59:36.497+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:59:36.498+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5850 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:59:36.499+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5850
+2010-09-17T13:59:36.540+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/5857
+2010-09-17T13:59:36.562+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5857 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T13:59:36.499+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T13:59:36.578+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T13:59:36.563+0200
+mty=ATT
+
+2010-09-17T13:59:36.580+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5857 buffer:REQ 0000060 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=simulation
+2010-09-17T13:59:36.581+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T13:59:36.583+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/5857 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T13:59:36.583+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T13:59:36.584+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/5857
+2010-09-17T14:00:55.722+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5865
+2010-09-17T14:00:55.788+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5865 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:00:55.565+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:00:55.789+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T14:00:55.780+0200
+mty=ATT
+
+2010-09-17T14:00:55.801+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T14:00:55.806+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5865 buffer:REQ 0000068 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=publish-simulation
+2010-09-17T14:00:55.808+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T14:00:55.808+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5865 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T14:00:55.809+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5865
+2010-09-17T14:02:35.303+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5881
+2010-09-17T14:02:35.359+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5881 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:02:35.141+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:02:35.366+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T14:02:35.358+0200
+mty=ATT
+
+2010-09-17T14:02:35.382+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5881 buffer:REQ 0000068 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=notExistingService
+2010-09-17T14:02:35.383+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=INS
+
+2010-09-17T14:02:35.384+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T14:02:35.385+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5881 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T14:02:35.386+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5881
+2010-09-17T14:04:47.614+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5896
+2010-09-17T14:04:47.672+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5896 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:04:47.461+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:04:47.692+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T14:04:47.700+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5896
+2010-09-17T14:04:47.715+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5903
+2010-09-17T14:04:47.723+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5903 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:04:47.705+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:04:47.726+0200 [New I/O client worker #1-2] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T14:04:47.728+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5903
+2010-09-17T14:04:47.747+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5908
+2010-09-17T14:04:47.748+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5908 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:04:47.740+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:05:47.751+0200 [OperationTimer] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5908
+2010-09-17T14:05:47.782+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5950
+2010-09-17T14:05:47.783+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/5950 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:05:47.774+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:05:47.878+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T14:05:47.784+0200
+mty=ATT
+
+2010-09-17T14:05:47.913+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5950
+2010-09-17T14:05:47.931+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5957
+2010-09-17T14:05:47.933+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5957
+2010-09-17T14:05:47.939+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5962
+2010-09-17T14:05:47.940+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5962
+2010-09-17T14:05:47.945+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5967
+2010-09-17T14:05:47.946+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5967
+2010-09-17T14:05:47.998+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/5970
+2010-09-17T14:05:47.999+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/5970
+2010-09-17T14:05:48.005+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5973
+2010-09-17T14:05:48.006+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5973
+2010-09-17T14:05:48.012+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/5974
+2010-09-17T14:05:48.012+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/5974
+2010-09-17T14:05:48.020+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5977
+2010-09-17T14:05:48.021+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5977
+2010-09-17T14:05:48.030+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5978
+2010-09-17T14:05:48.031+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5978
+2010-09-17T14:05:48.041+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/5979
+2010-09-17T14:05:48.042+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/5979
+2010-09-17T14:08:45.203+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6004
+2010-09-17T14:08:45.261+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6004 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:08:45.051+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:08:45.274+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T14:08:45.281+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6004
+2010-09-17T14:08:45.291+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6011
+2010-09-17T14:08:45.292+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6011 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T14:08:45.286+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T14:09:45.301+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6011
+2010-09-17T14:09:45.309+0200 [OperationTimer] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6011
+2010-09-17T14:09:45.332+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6017
+2010-09-17T14:09:45.333+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6017
+2010-09-17T14:09:45.338+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6024
+2010-09-17T14:09:45.339+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6024
+2010-09-17T14:09:45.346+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6029
+2010-09-17T14:09:45.347+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6029
+2010-09-17T14:09:45.432+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6034
+2010-09-17T14:09:45.433+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6034
+2010-09-17T14:09:45.449+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6037
+2010-09-17T14:09:45.450+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6037
+2010-09-17T14:09:45.458+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6040
+2010-09-17T14:09:45.459+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6040
+2010-09-17T14:09:45.463+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6043
+2010-09-17T14:09:45.464+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6043
+2010-09-17T14:09:45.467+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6044
+2010-09-17T14:09:45.468+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6044
+2010-09-17T14:09:45.476+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6045
+2010-09-17T14:09:45.477+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6045
+2010-09-17T15:13:06.579+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6272
+2010-09-17T15:13:06.681+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6272 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:13:06.147+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:13:10.846+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T15:13:10.918+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6272
+2010-09-17T15:13:10.926+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6279
+2010-09-17T15:13:10.927+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6279 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:13:10.921+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:14:10.928+0200 [OperationTimer] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6279
+2010-09-17T15:14:10.936+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6365
+2010-09-17T15:14:10.942+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6365 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:14:10.931+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:14:11.188+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:14:11.137+0200
+mty=ATT
+
+2010-09-17T15:14:11.245+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6365
+2010-09-17T15:14:11.249+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6372
+2010-09-17T15:14:11.249+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6372
+2010-09-17T15:14:11.264+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6375
+2010-09-17T15:14:11.265+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6375
+2010-09-17T15:14:11.550+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6382
+2010-09-17T15:14:11.550+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6382
+2010-09-17T15:14:11.553+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6385
+2010-09-17T15:14:11.553+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6385
+2010-09-17T15:14:11.556+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6386
+2010-09-17T15:14:11.556+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6386
+2010-09-17T15:14:11.559+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6387
+2010-09-17T15:14:11.559+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6387
+2010-09-17T15:14:11.562+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6388
+2010-09-17T15:14:11.562+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6388
+2010-09-17T15:14:11.565+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6389
+2010-09-17T15:14:11.566+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6389
+2010-09-17T15:32:02.850+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6475
+2010-09-17T15:32:02.903+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6475 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:32:02.694+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:32:02.986+0200 [New I/O client worker #1-1] ERROR (com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder:75) - decode
+com.stabilit.sc.common.net.FrameDecoderException: invalid scmp header line
+	at com.stabilit.sc.common.net.DefaultFrameDecoder.parseFrameSize(DefaultFrameDecoder.java:58)
+	at com.stabilit.sc.common.net.res.SCMPBasedFrameDecoder.decode(SCMPBasedFrameDecoder.java:69)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.callDecode(FrameDecoder.java:282)
+	at org.jboss.netty.handler.codec.frame.FrameDecoder.messageReceived(FrameDecoder.java:216)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline$DefaultChannelHandlerContext.sendUpstream(DefaultChannelPipeline.java:754)
+	at org.jboss.netty.handler.timeout.IdleStateHandler.messageReceived(IdleStateHandler.java:276)
+	at org.jboss.netty.channel.SimpleChannelUpstreamHandler.handleUpstream(SimpleChannelUpstreamHandler.java:80)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:545)
+	at org.jboss.netty.channel.DefaultChannelPipeline.sendUpstream(DefaultChannelPipeline.java:540)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:274)
+	at org.jboss.netty.channel.Channels.fireMessageReceived(Channels.java:261)
+	at org.jboss.netty.channel.socket.nio.NioWorker.read(NioWorker.java:349)
+	at org.jboss.netty.channel.socket.nio.NioWorker.processSelectedKeys(NioWorker.java:281)
+	at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:201)
+	at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.jboss.netty.util.internal.IoWorkerRunnable.run(IoWorkerRunnable.java:46)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+2010-09-17T15:32:02.995+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6475
+2010-09-17T15:32:03.005+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6482
+2010-09-17T15:32:03.006+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6482 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:32:02.997+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:03.005+0200 [OperationTimer] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6482
+2010-09-17T15:33:03.033+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6488
+2010-09-17T15:33:03.035+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6488 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:03.008+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:03.109+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:03.038+0200
+mty=ATT
+
+2010-09-17T15:33:03.155+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6488 buffer:REQ 0000056 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=something
+2010-09-17T15:33:03.157+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:EXC 0000048 00048 1.0
+set=Not found. [serviceName :something]
+sec=404
+
+2010-09-17T15:33:03.158+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6488 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:03.159+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:03.160+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6488
+2010-09-17T15:33:03.166+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6495
+2010-09-17T15:33:03.168+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6495 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:03.161+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:03.171+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:03.170+0200
+mty=ATT
+
+2010-09-17T15:33:03.310+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6495 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T15:33:03.310+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T15:33:03.312+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:03.350+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6495 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:03.351+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6495
+2010-09-17T15:33:03.402+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6500
+2010-09-17T15:33:03.404+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6500 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:03.352+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:03.506+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:03.420+0200
+mty=ATT
+
+2010-09-17T15:33:03.510+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6500 buffer:REQ 0000043 00026 1.0
+oti=60000
+bty=txt
+mty=MGT
+enable=simulation
+2010-09-17T15:33:03.511+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=MGT
+
+2010-09-17T15:33:03.513+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6500 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:03.514+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:03.517+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6500
+2010-09-17T15:33:03.686+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6505
+2010-09-17T15:33:03.931+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6505 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:03.517+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:03.954+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:03.939+0200
+mty=ATT
+
+2010-09-17T15:33:04.246+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6505 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T15:33:04.249+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T15:33:04.254+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6505 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.254+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.255+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6505
+2010-09-17T15:33:04.380+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6510
+2010-09-17T15:33:04.381+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6510 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.256+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.383+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.382+0200
+mty=ATT
+
+2010-09-17T15:33:04.384+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6510 buffer:REQ 0000044 00026 1.0
+oti=60000
+bty=txt
+mty=MGT
+disable=simulation
+2010-09-17T15:33:04.385+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=MGT
+
+2010-09-17T15:33:04.387+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6510 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.387+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.389+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6510
+2010-09-17T15:33:04.424+0200 [main] INFO  (ConnectionLogger:52) - NettyHttpConnection connect to:127.0.0.1/6515
+2010-09-17T15:33:04.427+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6515 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.389+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.497+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.429+0200
+mty=ATT
+
+2010-09-17T15:33:04.502+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6515 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T15:33:04.506+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000021 00016 1.0
+bty=txt
+mty=INS
+false
+2010-09-17T15:33:04.509+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6518
+2010-09-17T15:33:04.510+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6518 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.507+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.511+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.511+0200
+mty=ATT
+
+2010-09-17T15:33:04.515+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6518 buffer:REQ 0000043 00026 1.0
+oti=60000
+bty=txt
+mty=MGT
+enable=simulation
+2010-09-17T15:33:04.516+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=MGT
+
+2010-09-17T15:33:04.517+0200 [New I/O client worker #1-1] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.518+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6518 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.518+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6518
+2010-09-17T15:33:04.520+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6515 buffer:REQ 0000057 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+state=simulation
+2010-09-17T15:33:04.521+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000020 00016 1.0
+bty=txt
+mty=INS
+true
+2010-09-17T15:33:04.522+0200 [main] DEBUG (ConnectionLogger:88) - NettyHttpConnection write to:127.0.0.1/6515 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.523+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyHttpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.523+0200 [main] INFO  (ConnectionLogger:62) - NettyHttpConnection disconnect from:127.0.0.1/6515
+2010-09-17T15:33:04.525+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6521
+2010-09-17T15:33:04.526+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6521 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.524+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.529+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.529+0200
+mty=ATT
+
+2010-09-17T15:33:04.531+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6521 buffer:REQ 0000060 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=simulation
+2010-09-17T15:33:04.532+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T15:33:04.533+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6521 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.533+0200 [New I/O client worker #1-2] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.534+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6521
+2010-09-17T15:33:04.536+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6524
+2010-09-17T15:33:04.537+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6524 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.534+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.538+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.538+0200
+mty=ATT
+
+2010-09-17T15:33:04.540+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000019 00016 1.0
+bty=txt
+mty=INS
+0/0
+2010-09-17T15:33:04.541+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6524 buffer:REQ 0000068 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=publish-simulation
+2010-09-17T15:33:04.541+0200 [New I/O client worker #1-3] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.543+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6524 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.543+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6524
+2010-09-17T15:33:04.559+0200 [main] INFO  (ConnectionLogger:52) - NettyTcpConnection connect to:127.0.0.1/6527
+2010-09-17T15:33:04.560+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6527 buffer:REQ 0000063 00063 1.0
+oti=60000
+ldt=2010-09-17T15:33:04.544+0200
+ver=1.0-003
+mty=ATT
+
+2010-09-17T15:33:04.562+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000041 00041 1.0
+ldt=2010-09-17T15:33:04.561+0200
+mty=ATT
+
+2010-09-17T15:33:04.564+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6527 buffer:REQ 0000068 00041 1.0
+oti=60000
+bty=txt
+mty=INS
+ipl=10.0.0.130
+sessions=notExistingService
+2010-09-17T15:33:04.564+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=INS
+
+2010-09-17T15:33:04.565+0200 [main] DEBUG (ConnectionLogger:88) - NettyTcpConnection write to:127.0.0.1/6527 buffer:REQ 0000018 00018 1.0
+oti=60000
+mty=DET
+
+2010-09-17T15:33:04.568+0200 [New I/O client worker #1-4] DEBUG (ConnectionLogger:75) - NettyTcpRequesterResponseHandler read from:/-1 buffer:RES 0000008 00008 1.0
+mty=DET
+
+2010-09-17T15:33:04.568+0200 [main] INFO  (ConnectionLogger:62) - NettyTcpConnection disconnect from:127.0.0.1/6527
