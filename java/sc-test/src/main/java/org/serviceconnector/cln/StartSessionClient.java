@@ -1,10 +1,12 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessage;
 
 
 public class StartSessionClient extends Thread {
