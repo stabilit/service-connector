@@ -17,9 +17,9 @@ import org.serviceconnector.srv.ISCPublishServer;
 import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCPublishServer;
 
-public class PublishConnectionTypeHttpTest {
+public class PublishConnectionTypeTcpTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishConnectionTypeHttpTest.class);
+	protected final static Logger logger = Logger.getLogger(PublishConnectionTypeTcpTest.class);
 
 	private int threadCount = 0;
 	private ISCPublishServer server;
@@ -49,9 +49,8 @@ public class PublishConnectionTypeHttpTest {
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
-		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT8080,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
 				TestConstants.serviceNamePublish, 1, 1, new CallBack());
 	}
 
@@ -118,7 +117,7 @@ public class PublishConnectionTypeHttpTest {
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
 			throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT8080,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
 				TestConstants.serviceName, 1, 1, new CallBack());
 		try {
 			server.publish(TestConstants.serviceName, TestConstants.mask, "something");

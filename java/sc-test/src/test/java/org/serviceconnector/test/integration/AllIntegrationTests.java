@@ -12,6 +12,8 @@ import org.serviceconnector.test.integration.cln.NewServicesTest;
 import org.serviceconnector.test.integration.cln.PrematureDestroyOfSCClnTest;
 import org.serviceconnector.test.integration.cln.RestartOfSCClnTest;
 import org.serviceconnector.test.integration.srv.PrematureDestroyOfSCSrvTest;
+import org.serviceconnector.test.integration.srv.PublishConnectionTypeHttpTest;
+import org.serviceconnector.test.integration.srv.PublishConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
@@ -29,7 +31,9 @@ import org.serviceconnector.test.integration.srv.RestartSCServerToSCTest;
 		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
 		RegisterServerToMultipleSCTest.class,
 		RegisterServerConnectionTypeHttpTest.class, RegisterServerConnectionTypeTcpTest.class,
-		RestartOfSCClnTest.class, RestartSCServerToSCTest.class
+		RestartOfSCClnTest.class, RestartSCServerToSCTest.class,
+		
+		PublishConnectionTypeHttpTest.class, PublishConnectionTypeTcpTest.class
 })
 public class AllIntegrationTests {
 }

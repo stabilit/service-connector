@@ -1010,6 +1010,21 @@ public class SubscribeClientToSCTest {
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
 	}
+	
+	@Test
+	public void subscribe_twiceInARow_throwsSCExceptionRemainsSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		try {
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex.getMessage().equals("already subscribed"));
+		assertEquals(SCServiceException.class, ex.getClass());
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {
 

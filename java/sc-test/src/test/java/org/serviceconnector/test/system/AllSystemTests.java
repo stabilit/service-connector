@@ -14,11 +14,16 @@ import org.serviceconnector.test.system.session.RejectSessionClientToSCTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { CreateSessionHttpClientToSCTest.class,
+	//session tests
 	CreateSessionTcpClientToSCTest.class, EnableServiceDisableServiceClientToSCTest.class,
-	ExecuteClientToSCTest.class, PerformanceTests.class, PrematureDestroyOfSCClientToSCTest.class,
+	ExecuteClientToSCTest.class, PrematureDestroyOfSCClientToSCTest.class,
 	PrematureDestroyOfServerClientToSCTest.class, RejectSessionClientToSCTest.class,
 	
-	SubscribeClientToSCTest.class
+	//publish tests
+	SubscribeClientToSCTest.class,
+	
+	//performance tests
+	PerformanceTests.class 
 })
 public class AllSystemTests {
 }
