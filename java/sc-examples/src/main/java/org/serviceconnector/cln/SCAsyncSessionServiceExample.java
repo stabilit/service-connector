@@ -22,7 +22,6 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.ISCClient;
@@ -62,7 +61,7 @@ public class SCAsyncSessionServiceExample {
 			// creates a session
 			sessionServiceA.createSession("sessionInfo", 300, 60);
 
-			ISCMessage requestMsg = new SCMessage();
+			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
 			ISCMessageCallback callback = new ExampleCallback(sessionServiceA);
@@ -95,7 +94,7 @@ public class SCAsyncSessionServiceExample {
 		}
 
 		@Override
-		public void callback(ISCMessage msg) {
+		public void callback(SCMessage msg) {
 			IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
 			ISC serviceConnector = sessionContext.getServiceConnector();
 			System.out.println(msg);

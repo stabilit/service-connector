@@ -21,7 +21,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
@@ -191,12 +191,12 @@ public class SetupTestCases {
 		private static int count = 100;
 
 		@Override
-		public void abortSession(ISCMessage message) {
+		public void abortSession(SCMessage message) {
 			this.waitABit();
 		}
 
 		@Override
-		public ISCMessage createSession(ISCMessage message) {
+		public SCMessage createSession(SCMessage message) {
 			this.waitABit();
 			Object data = message.getData();
 			if (data instanceof String) {
@@ -210,7 +210,7 @@ public class SetupTestCases {
 						e.printStackTrace();
 					}
 				} else if (body.startsWith("reject")) {
-					ISCMessage fault = new SCMessageFault();
+					SCMessageFault fault = new SCMessageFault();
 					return fault;
 				}
 			}
@@ -220,12 +220,12 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public void deleteSession(ISCMessage message) {
+		public void deleteSession(SCMessage message) {
 			this.waitABit();
 		}
 
 		@Override
-		public ISCMessage execute(ISCMessage message) {
+		public SCMessage execute(SCMessage message) {
 			if (message.getData().toString().startsWith("Performance")) {
 				return message;
 			}
@@ -283,12 +283,12 @@ public class SetupTestCases {
 	private static class PublishServerCallback implements ISCPublishServerCallback {
 
 		@Override
-		public ISCMessage changeSubscription(ISCMessage message) {
+		public SCMessage changeSubscription(SCMessage message) {
 			return message;
 		}
 
 		@Override
-		public ISCMessage subscribe(ISCMessage message) {
+		public SCMessage subscribe(SCMessage message) {
 			Object obj = message.getData();
 			if (obj != null && obj instanceof String) {
 				String data = (String) obj;
@@ -301,7 +301,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public void unsubscribe(ISCMessage message) {
+		public void unsubscribe(SCMessage message) {
 		}
 	}
 

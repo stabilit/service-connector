@@ -21,16 +21,16 @@
  */
 package org.serviceconnector.api.srv;
 
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 
 /**
  * @author JTraber
  */
 public interface ISCPublishServerCallback extends ISCServerCallback {
 
-	public abstract ISCMessage subscribe(ISCMessage message);
+	public abstract SCMessage subscribe(SCMessage message);
 
-	public abstract void unsubscribe(ISCMessage message);
+	public abstract void unsubscribe(SCMessage message);
 
-	public abstract ISCMessage changeSubscription(ISCMessage message);
+	public abstract SCMessage changeSubscription(SCMessage message);
 }

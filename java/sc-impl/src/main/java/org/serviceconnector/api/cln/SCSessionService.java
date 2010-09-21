@@ -22,17 +22,16 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
-import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
+import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.sc.service.SCServiceException;
@@ -203,12 +202,12 @@ public class SCSessionService extends SCService implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized ISCMessage execute(ISCMessage requestMsg) throws Exception {
+	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
 		return this.execute(requestMsg, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	@Override
-	public synchronized ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception {
+	public synchronized SCMessage execute(SCMessage requestMsg, int timeoutInSeconds) throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");
 		}
@@ -261,12 +260,12 @@ public class SCSessionService extends SCService implements ISessionService {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback) throws Exception {
+	public synchronized void execute(SCMessage requestMsg, ISCMessageCallback callback) throws Exception {
 		this.execute(requestMsg, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	@Override
-	public synchronized void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
+	public synchronized void execute(SCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
 			throws Exception {
 		if (this.sessionDead) {
 			throw new SCServiceException("execute not possible, broken session.");

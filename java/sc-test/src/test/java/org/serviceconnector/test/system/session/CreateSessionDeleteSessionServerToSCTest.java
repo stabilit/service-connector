@@ -8,7 +8,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
@@ -78,7 +78,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
@@ -96,7 +96,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
@@ -114,7 +114,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals("a", srvCallback.createSessionMsg.getData().toString());
@@ -132,7 +132,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals(byte[].class, srvCallback.createSessionMsg.getData().getClass());
@@ -163,7 +163,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.deleteSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.deleteSessionMsg.getSessionId() == null
 				|| srvCallback.deleteSessionMsg.getSessionId().isEmpty());
 		assertEquals(null, srvCallback.deleteSessionMsg.getData());
@@ -182,21 +182,21 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(4, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals(null, srvCallback.createSessionMsg.getData());
 		assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(true, srvCallback.executeMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
 		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
 				.getSessionId());
 		assertEquals(null, srvCallback.executeMsg.getData());
 		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
 		assertEquals(false, srvCallback.executeMsg.isFault());
 		assertEquals(true, srvCallback.executeMsg.isCompressed());
-		assertEquals(true, srvCallback.deleteSessionMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
 		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg
 				.getSessionId());
 		assertEquals(null, srvCallback.deleteSessionMsg.getData());
@@ -214,7 +214,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		client.join();
 
 		assertEquals(3, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.executeMsg instanceof ISCMessage);
+		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
 		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
 				.getSessionId());
 		assertEquals(TestConstants.dataLength1MB,
@@ -244,10 +244,10 @@ public class CreateSessionDeleteSessionServerToSCTest {
 	class SrvCallback implements ISCSessionServerCallback {
 
 		private int messagesExchanged = 0;
-		private ISCMessage createSessionMsg = null;
-		private ISCMessage deleteSessionMsg = null;
-		private ISCMessage abortSessionMsg = null;
-		private ISCMessage executeMsg = null;
+		private SCMessage createSessionMsg = null;
+		private SCMessage deleteSessionMsg = null;
+		private SCMessage abortSessionMsg = null;
+		private SCMessage executeMsg = null;
 		private SessionServerContext outerContext;
 
 		public SrvCallback(SessionServerContext context) {
@@ -255,7 +255,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		}
 
 		@Override
-		public ISCMessage createSession(ISCMessage message) {
+		public SCMessage createSession(SCMessage message) {
 			messagesExchanged++;
 			createSessionMsg = message;
 			if (message.getData() != null && message.getData() instanceof String) {
@@ -279,19 +279,19 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		}
 
 		@Override
-		public void deleteSession(ISCMessage message) {
+		public void deleteSession(SCMessage message) {
 			messagesExchanged++;
 			deleteSessionMsg = message;
 		}
 
 		@Override
-		public void abortSession(ISCMessage message) {
+		public void abortSession(SCMessage message) {
 			messagesExchanged++;
 			abortSessionMsg = message;
 		}
 
 		@Override
-		public ISCMessage execute(ISCMessage request) {
+		public SCMessage execute(SCMessage request) {
 			messagesExchanged++;
 			Object data = request.getData();
 			// watch out for timeout server message

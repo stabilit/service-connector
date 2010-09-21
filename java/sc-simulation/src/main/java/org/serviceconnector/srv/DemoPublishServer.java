@@ -22,7 +22,7 @@
 package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -108,13 +108,13 @@ public class DemoPublishServer {
 		}
 
 		@Override
-		public ISCMessage changeSubscription(ISCMessage message) {
+		public SCMessage changeSubscription(SCMessage message) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public ISCMessage subscribe(ISCMessage message) {
+		public SCMessage subscribe(SCMessage message) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
@@ -125,7 +125,7 @@ public class DemoPublishServer {
 		}
 
 		@Override
-		public void unsubscribe(ISCMessage message) {
+		public void unsubscribe(SCMessage message) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message

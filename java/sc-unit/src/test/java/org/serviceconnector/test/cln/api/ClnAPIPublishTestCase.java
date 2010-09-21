@@ -20,7 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.IPublishService;
 import org.serviceconnector.api.cln.ISCClient;
@@ -101,7 +101,7 @@ public class ClnAPIPublishTestCase {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) {
+		public void callback(SCMessage reply) {
 			publishedMessageCounter++;
 			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
 					+ publishedMessageCounter);

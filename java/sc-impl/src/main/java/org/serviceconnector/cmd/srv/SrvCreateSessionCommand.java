@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.srv;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
@@ -79,7 +78,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
+		SCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).createSession(scMessage);
 
 		// create session in SCMPSessionCompositeRegistry
 		this.sessionCompositeRegistry.addSession(sessionId);

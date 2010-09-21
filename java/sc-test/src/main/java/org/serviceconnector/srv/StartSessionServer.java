@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
@@ -102,7 +102,7 @@ public class StartSessionServer {
 		}
 
 		@Override
-		public ISCMessage createSession(ISCMessage message) {
+		public SCMessage createSession(SCMessage message) {
 			logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
 			if (message.getData() != null && message.getData() instanceof String) {
 				String dataString = (String) message.getData();
@@ -125,17 +125,17 @@ public class StartSessionServer {
 		}
 
 		@Override
-		public void deleteSession(ISCMessage message) {
+		public void deleteSession(SCMessage message) {
 			logger.debug("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
-		public void abortSession(ISCMessage message) {
+		public void abortSession(SCMessage message) {
 			logger.debug("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
-		public ISCMessage execute(ISCMessage request) {
+		public SCMessage execute(SCMessage request) {
 			Object data = request.getData();
 
 			if (data != null) {

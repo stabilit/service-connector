@@ -18,7 +18,6 @@ package org.serviceconnector.test.cln.api;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -52,7 +51,7 @@ public class ClnAPISyncSessionTestCase {
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
-			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg);
 

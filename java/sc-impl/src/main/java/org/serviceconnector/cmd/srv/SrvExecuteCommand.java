@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
@@ -75,7 +74,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(scmpMessage.getSessionId());
 
 		// inform callback with scMessages
-		ISCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).execute(scMessage);
+		SCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).execute(scMessage);
 
 		// handling messageId
 		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());

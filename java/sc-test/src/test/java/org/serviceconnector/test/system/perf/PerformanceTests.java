@@ -10,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -72,7 +71,7 @@ public class PerformanceTests {
 	@Test
 	public void execute_10000MessagesWith128BytesLongBody_outputTime() throws Exception {
 
-		ISCMessage message = new SCMessage(new byte[128]);
+		SCMessage message = new SCMessage(new byte[128]);
 
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);

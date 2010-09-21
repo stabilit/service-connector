@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -133,7 +132,7 @@ public class RejectSessionClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 10);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		ISCMessage response = sessionService.execute(new SCMessage());
+		SCMessage response = sessionService.execute(new SCMessage());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
@@ -209,7 +208,7 @@ public class RejectSessionClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 10);
 		assertEquals(false, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		ISCMessage response = sessionService.execute(new SCMessage());
+		SCMessage response = sessionService.execute(new SCMessage());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null

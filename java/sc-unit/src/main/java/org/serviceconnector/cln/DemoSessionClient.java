@@ -1,7 +1,6 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.ISCClient;
@@ -65,7 +64,7 @@ public class DemoSessionClient extends Thread {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) {
+		public void callback(SCMessage reply) {
 			System.out.println("Session client received: " + reply.getData());
 			DemoSessionClient.pendingRequest = false;
 		}

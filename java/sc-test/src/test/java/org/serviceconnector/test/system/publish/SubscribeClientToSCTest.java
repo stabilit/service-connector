@@ -8,7 +8,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.IPublishService;
 import org.serviceconnector.api.cln.ISCClient;
@@ -1033,7 +1033,7 @@ public class SubscribeClientToSCTest {
 		}
 
 		@Override
-		public void callback(ISCMessage reply) {
+		public void callback(SCMessage reply) {
 			testLogger.info("Publish client received: " + reply.getData());
 		}
 

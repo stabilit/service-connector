@@ -6,7 +6,6 @@ import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 
 
@@ -17,7 +16,7 @@ import org.serviceconnector.api.SCMessage;
 
 public class SCMessageTest {
 
-	private ISCMessage message;
+	private SCMessage message;
 
 	/**
 	 * @throws java.lang.Exception

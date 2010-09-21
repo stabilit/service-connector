@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -158,19 +158,19 @@ public class StartPublishServer {
 		}
 
 		@Override
-		public ISCMessage changeSubscription(ISCMessage message) {
+		public SCMessage changeSubscription(SCMessage message) {
 			logger.debug("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public ISCMessage subscribe(ISCMessage message) {
+		public SCMessage subscribe(SCMessage message) {
 			logger.debug("PublishServer.SrvCallback.subscribe()");
 			return message;
 		}
 
 		@Override
-		public void unsubscribe(ISCMessage message) {
+		public void unsubscribe(SCMessage message) {
 			logger.debug("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message

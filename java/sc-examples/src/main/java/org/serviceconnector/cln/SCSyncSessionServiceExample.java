@@ -21,7 +21,6 @@
  */
 package org.serviceconnector.cln;
 
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -47,10 +46,10 @@ public class SCSyncSessionServiceExample {
 			// creates a session
 			sessionServiceA.createSession("sessionInfo", 300, 60);
 
-			ISCMessage requestMsg = new SCMessage();
+			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
-			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session

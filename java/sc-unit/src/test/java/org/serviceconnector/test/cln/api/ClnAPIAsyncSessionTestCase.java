@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.ISCClient;
@@ -82,7 +81,7 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 
 		@Override
-		public void callback(ISCMessage msg) {
+		public void callback(SCMessage msg) {
 			System.out.println(msg);
 		}
 

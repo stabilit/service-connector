@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * 
  * @author JTraber
  */
-public class SCMessage implements ISCMessage {
+public class SCMessage{
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessage.class);
@@ -64,8 +64,15 @@ public class SCMessage implements ISCMessage {
 		this.data = data;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param messageInfo
+	 *            Optional information passed together with the message body that helps to identify the message content
+	 *            without investigating the body.<br>
+	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 *            Example: SECURITY_MARKET_QUERY
+	 */
 	public void setMessageInfo(String messageInfo) {
 		if (messageInfo != null) {
 			int messageInfoLength = messageInfo.getBytes().length;
@@ -76,38 +83,58 @@ public class SCMessage implements ISCMessage {
 		this.messageInfo = messageInfo;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the message info.
+	 * 
+	 * @return the message info
+	 */
 	public String getMessageInfo() {
 		return messageInfo;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is compressed.
+	 * 
+	 * @return the boolean
+	 */
 	public boolean isCompressed() {
 		return compressed;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the compressed. Default is true.
+	 * 
+	 * @param compressed
+	 *            Regards the data part of the message.
+	 */
 	public void setCompressed(boolean compressed) {
 		this.compressed = compressed;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the data.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public void setData(Object data) {
 		this.data = data;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the data.
+	 * 
+	 * @return the data
+	 */
 	public Object getData() {
 		return this.data;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
 	public String getSessionId() {
 		return this.sessionId;
 	}
@@ -122,14 +149,19 @@ public class SCMessage implements ISCMessage {
 		this.sessionId = sessionId;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is fault.
+	 * 
+	 * @return true, if is fault
+	 */
 	public boolean isFault() {
 		return false;
 	}
 	
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the operation timeout, equals to the time accepted for request execution
+	 * @return
+	 */
 	public int getOperationTimeout() {
 		return operationTimeout;
 	}

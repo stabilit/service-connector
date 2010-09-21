@@ -21,18 +21,18 @@
  */
 package org.serviceconnector.api.srv;
 
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 
 /**
  * @author JTraber
  */
 public interface ISCSessionServerCallback extends ISCServerCallback {
 
-	public abstract ISCMessage createSession(ISCMessage message);
+	public abstract SCMessage createSession(SCMessage message);
 
-	public abstract void deleteSession(ISCMessage message);
+	public abstract void deleteSession(SCMessage message);
 
-	public abstract void abortSession(ISCMessage message);
+	public abstract void abortSession(SCMessage message);
 
-	public abstract ISCMessage execute(ISCMessage message);
+	public abstract SCMessage execute(SCMessage message);
 }

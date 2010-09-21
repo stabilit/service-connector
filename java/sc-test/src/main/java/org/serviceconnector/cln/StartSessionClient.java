@@ -1,7 +1,6 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -90,7 +89,7 @@ public class StartSessionClient extends Thread {
 				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 
-				ISCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
+				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 				message.setCompressed(false);
 
 				sessionService.execute(message);

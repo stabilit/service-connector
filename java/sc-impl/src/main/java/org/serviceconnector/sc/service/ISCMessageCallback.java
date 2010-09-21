@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.sc.service;
 
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.IService;
 
 /**
@@ -33,7 +33,7 @@ public interface ISCMessageCallback {
 	 * @param reply
 	 *            the reply
 	 */
-	public abstract void callback(ISCMessage reply);
+	public abstract void callback(SCMessage reply);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.

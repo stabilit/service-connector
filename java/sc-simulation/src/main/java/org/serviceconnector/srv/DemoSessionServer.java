@@ -22,7 +22,7 @@
 package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -73,23 +73,23 @@ public class DemoSessionServer {
 		}
 
 		@Override
-		public ISCMessage createSession(ISCMessage message) {
+		public SCMessage createSession(SCMessage message) {
 			logger.info("SessionServer.SrvCallback.createSession()");
 			return message;
 		}
 
 		@Override
-		public void deleteSession(ISCMessage message) {
+		public void deleteSession(SCMessage message) {
 			logger.info("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
-		public void abortSession(ISCMessage message) {
+		public void abortSession(SCMessage message) {
 			logger.info("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
-		public ISCMessage execute(ISCMessage request) {
+		public SCMessage execute(SCMessage request) {
 			Object data = request.getData();
 			int executionTimeout = request.getOperationTimeout();
 			// watch out for kill server message

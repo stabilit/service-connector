@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.service.IServiceContext;
 
@@ -98,7 +98,7 @@ public interface ISessionService extends IService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract ISCMessage execute(ISCMessage requestMsg) throws Exception;
+	public abstract SCMessage execute(SCMessage requestMsg) throws Exception;
 
 	/**
 	 * Execute.
@@ -107,29 +107,29 @@ public interface ISessionService extends IService {
 	 *            the request message
 	 * @param timeoutInSeconds
 	 *            the timeout in seconds
-	 * @return the ISCMessage
+	 * @return the SCMessage
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract ISCMessage execute(ISCMessage requestMsg, int timeoutInSeconds) throws Exception;
+	public abstract SCMessage execute(SCMessage requestMsg, int timeoutInSeconds) throws Exception;
 
 	/**
 	 * Execute.
 	 * 
 	 * @param requestMsg
-	 *            the request ISCMessage
+	 *            the request SCMessage
 	 * @param callback
 	 *            the callback
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void execute(ISCMessage requestMsg, ISCMessageCallback callback) throws Exception;
+	public abstract void execute(SCMessage requestMsg, ISCMessageCallback callback) throws Exception;
 
 	/**
 	 * Execute.
 	 * 
 	 * @param requestMsg
-	 *            the request ISCMessage
+	 *            the request SCMessage
 	 * @param callback
 	 *            the callback
 	 * @param timeoutInSeconds
@@ -137,7 +137,7 @@ public interface ISessionService extends IService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void execute(ISCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
+	public abstract void execute(SCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
 			throws Exception;
 
 	/**

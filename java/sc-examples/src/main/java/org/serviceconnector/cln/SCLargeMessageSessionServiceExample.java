@@ -21,7 +21,6 @@
  */
 package org.serviceconnector.cln;
 
-import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
@@ -47,7 +46,7 @@ public class SCLargeMessageSessionServiceExample {
 			// creates a session
 			sessionServiceA.createSession("sessionInfo", 300, 60);
 
-			ISCMessage requestMsg = new SCMessage();
+			SCMessage requestMsg = new SCMessage();
 			// set up large buffer
 			byte[] buffer = new byte[100000];
 			for (int i = 0; i < buffer.length; i++) {
@@ -55,7 +54,7 @@ public class SCLargeMessageSessionServiceExample {
 			}
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
-			ISCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
