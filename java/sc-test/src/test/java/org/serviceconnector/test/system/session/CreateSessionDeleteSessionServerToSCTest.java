@@ -10,13 +10,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.srv.ISCSessionServerCallback;
+import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cln.StartSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-import org.serviceconnector.srv.ISCSessionServer;
-import org.serviceconnector.srv.ISCSessionServerCallback;
-import org.serviceconnector.srv.SCSessionServer;
 
 
 public class CreateSessionDeleteSessionServerToSCTest {

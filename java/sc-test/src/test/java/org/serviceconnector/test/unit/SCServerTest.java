@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
-import org.serviceconnector.srv.ISCSessionServer;
-import org.serviceconnector.srv.SCSessionServer;
+import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServer;
 
 
 public class SCServerTest {

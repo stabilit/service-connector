@@ -23,8 +23,9 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.ISCMessage;
-import org.serviceconnector.srv.ISCPublishServer;
-import org.serviceconnector.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.ISCPublishServer;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.SCPublishServer;
 
 
 public class DemoPublishServer {

@@ -8,12 +8,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.api.srv.ISCServerCallback;
+import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnector.srv.ISCSessionServer;
-import org.serviceconnector.srv.ISCServerCallback;
-import org.serviceconnector.srv.SCSessionServer;
 
 
 public class RegisterServerDeregisterServerConnectionTypeHttpTest {

@@ -17,6 +17,8 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.srv.SrvService;
+import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -26,8 +28,6 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.srv.SrvService;
-import org.serviceconnector.srv.SrvServiceRegistry;
 
 
 /**

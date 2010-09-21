@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.srv;
+package org.serviceconnector.api.srv;
 
 import java.security.InvalidParameterException;
 
@@ -22,6 +22,8 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.srv.ISCServerCallback;
+import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
@@ -41,8 +43,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
-import org.serviceconnector.srv.ISCSessionServer;
-import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 

@@ -26,6 +26,9 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.srv.ISCPublishServer;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 
 public class StartPublishServer {

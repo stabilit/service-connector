@@ -19,11 +19,18 @@
 /**
  * 
  */
-package org.serviceconnector.srv;
+package org.serviceconnector.api.srv;
 
+import org.serviceconnector.api.ISCMessage;
 
 /**
  * @author JTraber
  */
-public interface ISCServerCallback {
+public interface ISCPublishServerCallback extends ISCServerCallback {
+
+	public abstract ISCMessage subscribe(ISCMessage message);
+
+	public abstract void unsubscribe(ISCMessage message);
+
+	public abstract ISCMessage changeSubscription(ISCMessage message);
 }

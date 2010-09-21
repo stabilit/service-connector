@@ -19,11 +19,11 @@
 /**
  * 
  */
-package org.serviceconnector.srv;
+package org.serviceconnector.api.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.srv.ISCServerCallback;
 
 
 /**

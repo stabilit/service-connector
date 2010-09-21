@@ -23,15 +23,15 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.srv.ISCPublishServer;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.srv.ISCSessionServerCallback;
+import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
-import org.serviceconnector.srv.ISCPublishServer;
-import org.serviceconnector.srv.ISCPublishServerCallback;
-import org.serviceconnector.srv.ISCSessionServer;
-import org.serviceconnector.srv.ISCSessionServerCallback;
-import org.serviceconnector.srv.SCPublishServer;
-import org.serviceconnector.srv.SCSessionServer;
 
 
 /**

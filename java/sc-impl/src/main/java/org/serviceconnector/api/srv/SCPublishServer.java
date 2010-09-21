@@ -19,14 +19,14 @@
 /**
  * 
  */
-package org.serviceconnector.srv;
+package org.serviceconnector.api.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.srv.ISCPublishServer;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
-import org.serviceconnector.srv.ISCPublishServer;
-import org.serviceconnector.srv.ISCPublishServerCallback;
 
 
 /**
