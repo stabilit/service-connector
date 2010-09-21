@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -39,7 +38,7 @@ public class PoolConnectTestCase {
 	}
 
 	public void connect() throws Exception {
-		IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 0);
+		ConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 0);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
 		for (int i = 0; i < 500000; i++) {
@@ -64,7 +63,7 @@ public class PoolConnectTestCase {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
 		for (int i = 0; i < 500000; i++) {
-			IConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 0);
+			ConnectionPool cp = new ConnectionPool("localhost", 8080, "netty.http", 0);
 			IConnection connection = cp.getConnection();
 			SCMPMessage message = new SCMPMessage();
 			message.setMessageType(SCMPMsgType.ATTACH);

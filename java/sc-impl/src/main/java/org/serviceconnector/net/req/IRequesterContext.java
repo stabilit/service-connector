@@ -33,7 +33,7 @@ public interface IRequesterContext extends IContext {
 	 * 
 	 * @return the connection pool
 	 */
-	public abstract IConnectionPool getConnectionPool();
+	public abstract ConnectionPool getConnectionPool();
 
 	/**
 	 * Gets the message id.

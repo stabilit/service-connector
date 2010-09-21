@@ -27,10 +27,9 @@ import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.ConnectionPool;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.sc.service.SCServiceException;
 import org.serviceconnector.scmp.SCMPError;
@@ -58,7 +57,7 @@ public class SCClient implements ISCClient {
 	/** The keep alive interval. */
 	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
-	private IConnectionPool connectionPool;
+	private ConnectionPool connectionPool;
 	/** Identifies low level component to use for communication default for clients is {netty.http}. */
 	private String conType;
 	/** The requester. */
@@ -369,7 +368,7 @@ public class SCClient implements ISCClient {
 
 		/** {@inheritDoc} */
 		@Override
-		public IConnectionPool getConnectionPool() {
+		public ConnectionPool getConnectionPool() {
 			return SCClient.this.connectionPool;
 		}
 

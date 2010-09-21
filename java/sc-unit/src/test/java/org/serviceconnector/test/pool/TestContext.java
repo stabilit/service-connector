@@ -23,7 +23,6 @@ package org.serviceconnector.test.pool;
 
 import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
 
@@ -33,7 +32,7 @@ import org.serviceconnector.scmp.SCMPMessageId;
  */
 public class TestContext implements IRequesterContext {
 
-	protected IConnectionPool connectionPool;
+	protected ConnectionPool connectionPool;
 	private SCMPMessageId msgId;
 
 	public TestContext(ICommunicatorConfig config, SCMPMessageId msgId) {
@@ -47,7 +46,7 @@ public class TestContext implements IRequesterContext {
 	}
 
 	@Override
-	public IConnectionPool getConnectionPool() {
+	public ConnectionPool getConnectionPool() {
 		return this.connectionPool;
 	}
 

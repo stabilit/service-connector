@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.conf.RequesterConfigPool;
-import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPFault;
@@ -51,7 +51,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new SCRequester(this.testContext);
-			IConnectionPool cp = this.testContext.getConnectionPool();
+			ConnectionPool cp = this.testContext.getConnectionPool();
 			cp.setCloseOnFree(true);
 			cp.setMinConnections(5);
 			cp.initMinConnections();
@@ -84,7 +84,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		// wait for CCS to be received to late but initiates freeing the connection
 		Thread.sleep(2000);
 		// verify all connections freed properly
-		IConnectionPool pool = this.testContext.getConnectionPool();
+		ConnectionPool pool = this.testContext.getConnectionPool();
 		int busyConnections = pool.getBusyConnections();
 		Assert.assertEquals(0, busyConnections);
 	}
@@ -111,7 +111,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		// wait for idle connection to be received to initiates freeing the connection
 		Thread.sleep(3000);
 		// verify all connections freed properly
-		IConnectionPool pool = this.testContext.getConnectionPool();
+		ConnectionPool pool = this.testContext.getConnectionPool();
 		int busyConnections = pool.getBusyConnections();
 		Assert.assertEquals(0, busyConnections);
 	}
@@ -145,7 +145,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 					.getMessage());
 		}
 		// wait for freeing the connection not necessary - connection already freed - verify
-		IConnectionPool pool = this.testContext.getConnectionPool();
+		ConnectionPool pool = this.testContext.getConnectionPool();
 		int busyConnections = pool.getBusyConnections();
 		Assert.assertEquals(0, busyConnections);
 	}
@@ -166,7 +166,7 @@ public class OperationTimeoutTestCase extends SuperAttachTestCase {
 		// wait for CCS to be received to late but initiates freeing the connection
 		Thread.sleep(3000);
 		// verify all connections freed properly
-		IConnectionPool pool = this.testContext.getConnectionPool();
+		ConnectionPool pool = this.testContext.getConnectionPool();
 		int busyConnections = pool.getBusyConnections();
 		Assert.assertEquals(0, busyConnections);
 	}

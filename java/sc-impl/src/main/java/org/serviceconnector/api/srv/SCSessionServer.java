@@ -22,8 +22,6 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.srv.ISCServerCallback;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
@@ -31,10 +29,9 @@ import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.sc.service.SCServiceException;
@@ -134,7 +131,7 @@ public class SCSessionServer implements ISCSessionServer {
 			throw new InvalidParameterException("callback must be set");
 		}
 		// register called first time - initialize connection pool & requester
-		IConnectionPool connectionPool = new ConnectionPool(scHost, scPort, this.conType,
+		ConnectionPool connectionPool = new ConnectionPool(scHost, scPort, this.conType,
 				this.keepAliveIntervalInSeconds);
 		// register server only needs one connection
 		connectionPool.setMaxConnections(1);

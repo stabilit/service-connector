@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IConnection;
 import org.serviceconnector.net.req.IConnectionContext;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -47,7 +46,7 @@ import org.serviceconnector.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-public class ConnectionPool implements IConnectionPool {
+public class ConnectionPool {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ConnectionPool.class);
@@ -140,8 +139,13 @@ public class ConnectionPool implements IConnectionPool {
 		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets a connection of the pool.
+	 * 
+	 * @return the connection
+	 * @throws Exception
+	 *             the exception
+	 */
 	public IConnection getConnection() throws Exception {
 		IConnection connection = null;
 		synchronized (freeConnections) {
@@ -189,8 +193,14 @@ public class ConnectionPool implements IConnectionPool {
 		return connection;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Free connection. Gives connection back for other interested parties.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
 			logger.warn("connection does not exist in pool - not possible to free");
@@ -206,14 +216,19 @@ public class ConnectionPool implements IConnectionPool {
 		this.freeConnections.add(connection);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the max connections for the pool.
+	 * 
+	 * @param maxConnections
+	 *            the new max connections
+	 */
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Destroy the pool.
+	 */
 	public void destroy() {
 		this.destroyConnections(this.usedConnections);
 		this.destroyConnections(this.freeConnections);
@@ -264,8 +279,14 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Force closing specific connection.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void forceClosingConnection(IConnection connection) {
 		// assure connection is nowhere registered
 		this.usedConnections.remove(connection);
@@ -278,20 +299,29 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the close on free. Indicates that connection should be closed at the time they get freed.
+	 * 
+	 * @param closeOnFree
+	 *            the new close on free
+	 */
 	public void setCloseOnFree(boolean closeOnFree) {
 		this.closeOnFree = closeOnFree;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the minimum connections for the pool.
+	 * 
+	 * @param minConnections
+	 *            the new minimum connections
+	 */
 	public void setMinConnections(int minConnections) {
 		this.minConnections = minConnections;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Initiates the minimum connections. The minimum of connections gets active immediately.
+	 */
 	public void initMinConnections() {
 		IConnection connection = null;
 		int con = usedConnections.size() + freeConnections.size();
@@ -310,20 +340,29 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the max connections.
+	 * 
+	 * @return the max connections
+	 */
 	public int getMaxConnections() {
 		return maxConnections;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the number of busy connections at this time.
+	 * 
+	 * @return the busy connections
+	 */
 	public int getBusyConnections() {
 		return this.usedConnections.size();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks for free connections in the pool.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean hasFreeConnections() {
 		if (freeConnections.size() > 0) {
 			// we have free connections left
@@ -336,8 +375,14 @@ public class ConnectionPool implements IConnectionPool {
 		return false;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Connection idle. Process idle event of connection.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void connectionIdle(IConnection connection) {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
@@ -364,20 +409,29 @@ public class ConnectionPool implements IConnectionPool {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the keep alive interval the pool is observing. 0 means disabled.
+	 * 
+	 * @return the keep alive interval
+	 */
 	public int getKeepAliveInterval() {
 		return this.keepAliveInterval;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return this.host;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public int getPort() {
 		return this.port;
 	}

@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.test.SetupTestCases;
 
 
@@ -43,112 +42,112 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testPoolSuccesful() {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080, "netty.http", 60);
-		localCp.setMaxConnections(10);
-		localCp.setMinConnections(1);
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080, "netty.http", 60);
+		connectionPool.setMaxConnections(10);
+		connectionPool.setMinConnections(1);
 
-		localCp.setCloseOnFree(true);
-		localCp.initMinConnections();
-		localCp.destroy();
+		connectionPool.setCloseOnFree(true);
+		connectionPool.initMinConnections();
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testMinMaxWrong() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080);
-		localCp.setMaxConnections(2);
-		localCp.setMinConnections(3);
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080);
+		connectionPool.setMaxConnections(2);
+		connectionPool.setMinConnections(3);
 		for (int i = 0; i < 2; i++) {
-			localCp.getConnection();
+			connectionPool.getConnection();
 		}
 		try {
 			// only two connections should be created, third connection fails
-			localCp.getConnection();
+			connectionPool.getConnection();
 			Assert.fail("Should throw exception");
 		} catch (ConnectionPoolBusyException es) {
 		}
-		localCp.destroy();
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testGetAndFreeConnection() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080);
-		IConnection connection = localCp.getConnection();
-		localCp.freeConnection(connection);
-		localCp.destroy();
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080);
+		IConnection connection = connectionPool.getConnection();
+		connectionPool.freeConnection(connection);
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testReachConnectionLimit() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080);
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080);
 		int maxConnections = 2;
-		localCp.setMaxConnections(maxConnections);
-		localCp.getConnection();
-		localCp.getConnection();
+		connectionPool.setMaxConnections(maxConnections);
+		connectionPool.getConnection();
+		connectionPool.getConnection();
 
 		try {
 			// only two connections should be created, third connection fails
-			localCp.getConnection();
+			connectionPool.getConnection();
 			Assert.fail("Should throw exception");
 		} catch (ConnectionPoolBusyException es) {
 		}
-		Assert.assertFalse(localCp.hasFreeConnections());
-		localCp.destroy();
+		Assert.assertFalse(connectionPool.hasFreeConnections());
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testKeepAliveInactive() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080, 0);
-		localCp.setMaxConnections(2);
-		localCp.setMinConnections(2);
-		IConnection connection = localCp.getConnection();
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080, 0);
+		connectionPool.setMaxConnections(2);
+		connectionPool.setMinConnections(2);
+		IConnection connection = connectionPool.getConnection();
 		// check log if no keep alive has been sent
-		localCp.freeConnection(connection);
-		localCp.destroy();
+		connectionPool.freeConnection(connection);
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testKeepAliveActive() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080, 5);
-		localCp.setMaxConnections(1);
-		localCp.setMinConnections(1);
-		localCp.initMinConnections();
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080, 5);
+		connectionPool.setMaxConnections(1);
+		connectionPool.setMinConnections(1);
+		connectionPool.initMinConnections();
 		// check log if keep alive has been sent for connection
-		IConnection connection = localCp.getConnection();
+		IConnection connection = connectionPool.getConnection();
 		// check log if no keep alive has been sent for connection
-		localCp.freeConnection(connection);
-		localCp.destroy();
+		connectionPool.freeConnection(connection);
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testConnectionCloseAfterTenKeepAlive() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080, 1);
-		localCp.setMaxConnections(2);
-		localCp.setMinConnections(2);
-		localCp.initMinConnections();
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080, 1);
+		connectionPool.setMaxConnections(2);
+		connectionPool.setMinConnections(2);
+		connectionPool.initMinConnections();
 		Thread.sleep(10000);
-		localCp.destroy();
+		connectionPool.destroy();
 	}
 
 	@Test
 	public void testCloseAfterFreeConnection() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080);
-		localCp.setCloseOnFree(true);
-		IConnection connection = localCp.getConnection();
-		localCp.freeConnection(connection);
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080);
+		connectionPool.setCloseOnFree(true);
+		IConnection connection = connectionPool.getConnection();
+		connectionPool.freeConnection(connection);
 	}
 
 	@Test
 	public void testHundredConnectionsInUse() throws Exception {
-		IConnectionPool localCp = new ConnectionPool("localhost", 8080, 5);
+		ConnectionPool connectionPool = new ConnectionPool("localhost", 8080, 5);
 		List<IConnection> connections = new ArrayList<IConnection>();
 		for (int i = 0; i < 100; i++) {
-			connections.add(localCp.getConnection());
+			connections.add(connectionPool.getConnection());
 		}
-		Assert.assertFalse(localCp.hasFreeConnections());
+		Assert.assertFalse(connectionPool.hasFreeConnections());
 		Thread.sleep(8000);
 		for (int i = 0; i < 100; i++) {
-			localCp.freeConnection(connections.remove(0));
+			connectionPool.freeConnection(connections.remove(0));
 		}
-		localCp.destroy();
+		connectionPool.destroy();
 	}
 }

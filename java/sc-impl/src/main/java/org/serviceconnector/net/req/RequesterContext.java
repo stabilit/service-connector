@@ -22,7 +22,7 @@
 package org.serviceconnector.net.req;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
 
@@ -35,16 +35,16 @@ public class RequesterContext implements IRequesterContext {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
 	
-	private IConnectionPool connectionPool;
+	private ConnectionPool connectionPool;
 	private SCMPMessageId msgId;
 
-	public RequesterContext(IConnectionPool connectionPool, SCMPMessageId msgId) {
+	public RequesterContext(ConnectionPool connectionPool, SCMPMessageId msgId) {
 		this.connectionPool = connectionPool;
 		this.msgId = msgId;
 	}
 
 	@Override
-	public IConnectionPool getConnectionPool() {
+	public ConnectionPool getConnectionPool() {
 		return this.connectionPool;
 	}
 

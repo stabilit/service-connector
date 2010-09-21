@@ -34,7 +34,6 @@ import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.ctx.IContext;
 import org.serviceconnector.net.req.ConnectionPool;
-import org.serviceconnector.net.req.IConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.res.IResponder;
@@ -72,7 +71,7 @@ public class Server {
 	/** The requester. */
 	private IRequester requester;
 	/** The connectionPool. */
-	private IConnectionPool cp;
+	private ConnectionPool connectionPool;
 	/** The sessions, list of sessions allocated to the server. */
 	private List<Session> sessions;
 	/** The operation timeout multiplier. */
@@ -103,9 +102,9 @@ public class Server {
 		String connectionType = respConfig.getConnectionType();
 		this.operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
 		this.host = socketAddress.getHostName();
-		this.cp = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
-		this.cp.setMaxConnections(maxConnections);
-		this.requester = new Requester(new RequesterContext(this.cp, null));
+		this.connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
+		this.connectionPool.setMaxConnections(maxConnections);
+		this.requester = new Requester(new RequesterContext(this.connectionPool, null));
 	}
 
 	/**
@@ -125,10 +124,10 @@ public class Server {
 	 */
 	public void immediateConnect() throws Exception {
 		// set minimum connections to max for initial process
-		this.cp.setMinConnections(cp.getMaxConnections());
-		this.cp.initMinConnections();
+		this.connectionPool.setMinConnections(connectionPool.getMaxConnections());
+		this.connectionPool.initMinConnections();
 		// initial done - set it back to 0
-		this.cp.setMinConnections(0);
+		this.connectionPool.setMinConnections(0);
 	}
 
 	/**
@@ -272,7 +271,7 @@ public class Server {
 	 * Destroy server.
 	 */
 	public void destroy() {
-		this.cp.destroy();
+		this.connectionPool.destroy();
 		this.sessions = null;
 		this.requester = null;
 	}

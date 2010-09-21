@@ -22,7 +22,7 @@
 package org.serviceconnector.sc.service;
 
 import org.serviceconnector.ctx.IContext;
-import org.serviceconnector.net.req.IConnectionPool;
+import org.serviceconnector.net.req.ConnectionPool;
 
 
 /**
@@ -37,7 +37,7 @@ public interface ISCContext extends IContext {
 	 * 
 	 * @return the connection pool
 	 */
-	public IConnectionPool getConnectionPool();
+	public ConnectionPool getConnectionPool();
 
 	/**
 	 * Gets the service connector.
