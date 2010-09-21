@@ -1,13 +1,13 @@
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
-import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.service.SCMessage;
 
 
 /**

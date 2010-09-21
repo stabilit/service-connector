@@ -8,17 +8,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.ISCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.cln.IPublishService;
+import org.serviceconnector.cln.ISCClient;
+import org.serviceconnector.cln.IService;
+import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.service.SCMessageCallback;
 
 public class SubscribeClientToSCTest {
 	

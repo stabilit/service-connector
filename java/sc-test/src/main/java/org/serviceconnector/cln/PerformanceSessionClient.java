@@ -4,6 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.service.SCMessage;
 
 
 public class PerformanceSessionClient implements Runnable {
@@ -27,9 +28,12 @@ public class PerformanceSessionClient implements Runnable {
 			//wait for signal to start cycle
 			startSignal.await();
 			
-			for(int i = 0; i < 100; i++) {
+			for (int i = 0; i < 100; i++) {
 				ISessionService service = client.newSessionService(TestConstants.serviceName);
 				service.createSession("sessionInfo", 300);
+				for (int j = 0; j < 10; j++) {
+					service.execute(new SCMessage(new byte[128]));
+				}
 			}
 			
 
