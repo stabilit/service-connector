@@ -12,10 +12,14 @@ import org.serviceconnector.cln.ISCClient;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
 public class EnableDisableServiceTest {
+	
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EnableDisableServiceTest.class);
 
@@ -155,7 +159,7 @@ public class EnableDisableServiceTest {
 	public void enableDisableService_1000Times_switchesStates() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		for (int i = 0; i < 100; i++) {
-//			System.out.println("Enabling/disabling service, iteration:\t" + i*10);
+			testLogger.info("Enabling/disabling service, iteration:\t" + i*10);
 			for (int j = 0; j < 10; j++) {
 				client.disableService(TestConstants.serviceName);
 				assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));

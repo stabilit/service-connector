@@ -13,12 +13,16 @@ import org.serviceconnector.cln.ISessionService;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.SCMessage;
 
 
 
 public class PerformanceTests {
+	
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PerformanceTests.class);
 
@@ -77,7 +81,24 @@ public class PerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 		
-//		System.out.println("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+		testLogger.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+		assertEquals(true, stop - start < 25000);
+	}
+	
+	@Test
+	public void createSessionDeleteSession_10000Times_outputTime() throws Exception {
+		
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 1000; i++) {
+			for (int j = 0; j < 10; j++) {
+				sessionService.createSession("sessionInfo", 300, 10);
+				sessionService.deleteSession();
+			}
+		}
+		long stop = System.currentTimeMillis();
+		testLogger.info("Time to create session and delete session 10000 times was:\t" + (stop - start));
 		assertEquals(true, stop - start < 25000);
 	}
 }

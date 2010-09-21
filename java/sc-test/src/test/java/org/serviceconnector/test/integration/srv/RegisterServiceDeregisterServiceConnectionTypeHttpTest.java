@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
@@ -17,6 +18,8 @@ import org.serviceconnector.srv.SCSessionServer;
 
 public class RegisterServiceDeregisterServiceConnectionTypeHttpTest {
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceConnectionTypeHttpTest.class);
 	
@@ -139,7 +142,7 @@ public class RegisterServiceDeregisterServiceConnectionTypeHttpTest {
 		server.startListener(TestConstants.HOST, 9001, 100);
 		int cycles = 500;
 		for (int i = 0; i < cycles / 10; i++) {
-//			System.out.println("RegisterDeregister service iteration:\t" + i * 10);
+			testLogger.info("RegisterDeregister service iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				server.registerService(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
@@ -153,7 +156,7 @@ public class RegisterServiceDeregisterServiceConnectionTypeHttpTest {
 	public void registerService_500CyclesWithChangingConnectionType_registeredThenNotRegistered() throws Exception {
 		int cycles = 250;
 		for (int i = 0; i < cycles / 10; i++) {
-//			System.out.println("RegisterDeregister changing connection type iteration:\t" + i * 10);
+			testLogger.info("RegisterDeregister changing connection type iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				server = new SCSessionServer();
 				((SCSessionServer) server).setConnectionType("netty.http");

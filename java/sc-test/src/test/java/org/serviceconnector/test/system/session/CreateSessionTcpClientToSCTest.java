@@ -16,10 +16,14 @@ import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
 public class CreateSessionTcpClientToSCTest {
+	
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CreateSessionTcpClientToSCTest.class);
 
@@ -280,7 +284,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_10000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 1000; i++) {
-//			System.out.println("createSession_10000times cycle:\t" + i * 10);
+			testLogger.info("createSession_10000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10);
 				assertEquals(false, sessionService.getSessionId() == null
@@ -653,7 +657,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_1000timesDataNull_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-//			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			testLogger.info("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, null);
 				assertEquals(false, sessionService.getSessionId() == null
@@ -848,7 +852,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-//			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			testLogger.info("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, " ");
 				assertEquals(false, sessionService.getSessionId() == null
@@ -1041,7 +1045,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_1000times_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-//			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			testLogger.info("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10, "a");
 				assertEquals(false, sessionService.getSessionId() == null
@@ -1244,7 +1248,7 @@ public class CreateSessionTcpClientToSCTest {
 	public void createSession_1000timesData60kBByteArray_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 100; i++) {
-//			System.out.println("createSession_1000times cycle:\t" + i * 10);
+			testLogger.info("createSession_1000times cycle:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 10,
 						new byte[TestConstants.dataLength60kB]);
@@ -1377,7 +1381,7 @@ public class CreateSessionTcpClientToSCTest {
 		String[] sessions = new String[clientsCount];
 
 		for (int i = 0; i < clientsCount / 10; i++) {
-//			System.out.println("Creating session " + i * 10);
+			testLogger.info("Creating session " + i * 10);
 			for (int j = 0; j < 10; j++) {
 				sessionService.createSession("sessionInfo", 300, 60);
 				sessions[j + (10 * i)] = sessionService.getSessionId();

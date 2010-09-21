@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
@@ -17,6 +18,8 @@ import org.serviceconnector.srv.SCSessionServer;
 
 public class RegisterServiceDeregisterServiceConnectionTypeTcpTest {
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceDeregisterServiceConnectionTypeTcpTest.class);
 
@@ -138,9 +141,9 @@ public class RegisterServiceDeregisterServiceConnectionTypeTcpTest {
 		server.startListener(TestConstants.HOST, 9001, 1);
 		int cycles = 200;
 		for (int i = 0; i < cycles / 10; i++) {
-//			System.out.println("RegisterDeregister service iteration:\t" + i * 10);
+			testLogger.info("RegisterDeregister service iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
-//				System.out.println(i*10 + j);
+				testLogger.info(i*10 + j);
 				server.registerService(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
 				//TODO this sleep 1) is not helping 2) shouldnt be needed
 				Thread.sleep(1000);
@@ -157,7 +160,7 @@ public class RegisterServiceDeregisterServiceConnectionTypeTcpTest {
 			throws Exception {
 		int cycles = 250;
 		for (int i = 0; i < cycles / 10; i++) {
-//			System.out.println("RegisterDeregister changing connection type iteration:\t" + i * 10);
+			testLogger.info("RegisterDeregister changing connection type iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				server = new SCSessionServer();
 				((SCSessionServer) server).setConnectionType("netty.tcp");

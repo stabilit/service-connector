@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.sc.service.SCServiceException;
 import org.serviceconnector.srv.ISCSessionServer;
@@ -24,6 +25,8 @@ import org.serviceconnector.srv.SCSessionServer;
 
 public class RegisterServiceConnectionTypeHttpTest {
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServiceConnectionTypeHttpTest.class);
 	

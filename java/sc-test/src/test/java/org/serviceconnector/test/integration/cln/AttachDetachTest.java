@@ -12,11 +12,14 @@ import org.serviceconnector.cln.ISCClient;
 import org.serviceconnector.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
 public class AttachDetachTest {
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
 	
@@ -204,8 +207,7 @@ public class AttachDetachTest {
 		ISCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
 		for (; i < clientsCount / 10; i++) {
-//			TODO FJU either delete or comment out all outputs to console from sc-test 
-//			System.out.println("Attaching client " + i*10);
+			testLogger.info("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
 				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT8080);
@@ -217,7 +219,7 @@ public class AttachDetachTest {
 		}
 		i = 0;
 		for (; i < clientsCount / 10; i++) {
-//			System.out.println("Detaching client " + i*10);
+			testLogger.info("Detaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)].detach();
 			}

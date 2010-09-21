@@ -19,7 +19,7 @@ import org.serviceconnector.sc.service.SCServiceException;
 
 
 public class AttachConnectionTypeHttpTest {
-
+	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeHttpTest.class);
 
