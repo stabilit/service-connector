@@ -15,7 +15,7 @@
  */
 package org.serviceconnector.console;
 
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.ValidatorUtility;

@@ -7,7 +7,7 @@ import java.security.Permission;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.console.ConsoleCommand;
 import org.serviceconnector.console.SCConsole;
 
