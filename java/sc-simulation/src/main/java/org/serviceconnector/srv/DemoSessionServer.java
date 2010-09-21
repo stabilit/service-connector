@@ -22,7 +22,7 @@
 package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.srv.ISCSessionServer;
 import org.serviceconnector.srv.ISCSessionServerCallback;
 import org.serviceconnector.srv.SCSessionServer;
