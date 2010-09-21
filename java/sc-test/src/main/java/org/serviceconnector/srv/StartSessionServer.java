@@ -5,13 +5,13 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-
 
 public class StartSessionServer {
 
@@ -24,6 +24,7 @@ public class StartSessionServer {
 	private int port = 9000;
 	private int listenerPort = 30000;
 	private int maxCons = 10;
+	private Counter ctr;
 
 	public static void main(String[] args) throws Exception {
 		StartSessionServer sessionServer = new StartSessionServer();
@@ -46,6 +47,7 @@ public class StartSessionServer {
 				logger.error("incorrect parameters", e);
 				shutdown();
 			}
+			ctr = new Counter();
 
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
@@ -93,6 +95,22 @@ public class StartSessionServer {
 		}
 	}
 
+	class Counter {
+		private int counter = 0;
+		
+		public synchronized void increment() {
+			counter++;
+		}
+		
+		public synchronized void decrement() {
+			counter--;
+		}
+
+		public synchronized int value() {
+			return counter;
+		}
+	}
+
 	class SrvCallback implements ISCSessionServerCallback {
 
 		private SessionServerContext outerContext;
@@ -136,6 +154,8 @@ public class StartSessionServer {
 
 		@Override
 		public SCMessage execute(SCMessage request) {
+			ctr.increment();
+
 			Object data = request.getData();
 
 			if (data != null) {
@@ -149,6 +169,9 @@ public class StartSessionServer {
 						} catch (Exception e) {
 							logger.error("execute", e);
 						}
+					} else if (dataString.equals("executed")) {
+						ctr.decrement();
+						return new SCMessage(String.valueOf(ctr.value()));
 					} else if (dataString.startsWith("timeout")) {
 						int millis = Integer.parseInt(dataString.split(" ")[1]);
 						try {
@@ -171,8 +194,7 @@ public class StartSessionServer {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
 									scSrv.registerServer("localhost", port, serviceName, 1000,
-											maxCons, new SrvCallback(
-													new SessionServerContext()));
+											maxCons, new SrvCallback(new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
 									System.arraycopy(serviceNames, 0, services, 0,
 											serviceNames.length);
@@ -195,7 +217,7 @@ public class StartSessionServer {
 									if (serviceName.equals(serviceNames[i])) {
 										alreadyDeleted = true;
 									} else if (alreadyDeleted) {
-										services[i-1] = serviceNames[i]; 
+										services[i - 1] = serviceNames[i];
 									} else {
 										services[i] = serviceNames[i];
 									}
@@ -205,7 +227,6 @@ public class StartSessionServer {
 								logger.error("deregister server " + serviceName, e);
 							}
 						}
-
 					}
 				}
 			}
