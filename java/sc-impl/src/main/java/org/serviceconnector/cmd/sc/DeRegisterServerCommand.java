@@ -38,30 +38,30 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**
- * The Class DeRegisterServiceCommand. Responsible for validation and execution of deregister command. Used to
- * deregister backend server from SC service. Backend server will be removed from server registry of SC.
+ * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
+ * deregisters server from SC service. Server will be removed from server registry.
  * 
  * @author JTraber
  */
-public class DeRegisterServiceCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class DeRegisterServerCommand extends CommandAdapter implements IPassThroughPartMsg {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DeRegisterServiceCommand.class);
+	protected final static Logger logger = Logger.getLogger(DeRegisterServerCommand.class);
 
 	private static final String ABORT_SESSION_ERROR_STRING = SCMPError.SESSION_ABORT.getErrorText()
-			+ "[deregister service]";
+			+ "[deregister server]";
 
 	/**
-	 * Instantiates a new DeRegisterServiceCommand.
+	 * Instantiates a new DeRegisterServerCommand.
 	 */
-	public DeRegisterServiceCommand() {
-		this.commandValidator = new DeRegisterServiceCommandValidator();
+	public DeRegisterServerCommand() {
+		this.commandValidator = new DeRegisterServerCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.DEREGISTER_SERVICE;
+		return SCMPMsgType.DEREGISTER_SERVER;
 	}
 
 	/** {@inheritDoc} */
@@ -78,12 +78,12 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 		server.getService().removeServer(server);
 
 		List<Session> serverSessions = server.getSessions();
-		ISCMPCallback callback = new DeRegisterServiceCommmandCallback();
+		ISCMPCallback callback = new DeRegisterServerCommmandCallback();
 		// set up abort message
 		SCMPMessage abortMsg = new SCMPMessage();
 		abortMsg.setServiceName(serviceName);
 		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServiceCommand.ABORT_SESSION_ERROR_STRING);
+		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServerCommand.ABORT_SESSION_ERROR_STRING);
 
 		// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
 		for (Session session : serverSessions) {
@@ -125,9 +125,9 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	}
 
 	/**
-	 * The Class DeRegisterServiceCommandValidator.
+	 * The Class DeRegisterServerCommandValidator.
 	 */
-	private class DeRegisterServiceCommandValidator implements ICommandValidator {
+	private class DeRegisterServerCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override
@@ -154,9 +154,9 @@ public class DeRegisterServiceCommand extends CommandAdapter implements IPassThr
 	}
 
 	/**
-	 * The Class DeRegisterServiceCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.
+	 * The Class DeRegisterServerCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.
 	 */
-	private class DeRegisterServiceCommmandCallback implements ISCMPCallback {
+	private class DeRegisterServerCommmandCallback implements ISCMPCallback {
 
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {

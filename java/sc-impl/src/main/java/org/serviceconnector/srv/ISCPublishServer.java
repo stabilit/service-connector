@@ -41,7 +41,7 @@ public interface ISCPublishServer extends ISCSessionServer {
 	public abstract void publish(String serviceName, String mask, Object data) throws Exception;
 
 	/**
-	 * Register service on SC.
+	 * Register server for a service.
 	 * 
 	 * @param scHost
 	 *            the sc host
@@ -56,6 +56,6 @@ public interface ISCPublishServer extends ISCSessionServer {
 	 * @throws InvalidParameterException
 	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
-	public abstract void registerService(String scHost, int scPort, String serviceName, int maxSessions,
+	public abstract void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
 			int maxConnections, ISCPublishServerCallback scCallback) throws Exception;
 }

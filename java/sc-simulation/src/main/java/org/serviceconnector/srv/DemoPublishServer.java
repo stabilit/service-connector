@@ -48,7 +48,7 @@ public class DemoPublishServer {
 			this.publishSrv.setImmediateConnect(true);
 			this.publishSrv.startListener("localhost", 7200, 0);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerService("localhost", 9000, serviceName, 10, 10, srvCallback);
+			this.publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();
@@ -91,7 +91,7 @@ public class DemoPublishServer {
 	private void shutdown() {
 		DemoPublishServer.killPublishServer = true;
 		try {
-			this.publishSrv.deregisterService(serviceName);
+			this.publishSrv.deregisterServer(serviceName);
 		} catch (Exception ex) {
 			logger.error("shutdown", ex);
 			this.publishSrv = null;
@@ -132,7 +132,7 @@ public class DemoPublishServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.outerContext.getServer().deregisterService(serviceName);
+						this.outerContext.getServer().deregisterServer(serviceName);
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

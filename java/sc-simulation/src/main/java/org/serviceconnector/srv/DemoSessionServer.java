@@ -48,7 +48,7 @@ public class DemoSessionServer {
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 7100, 0);
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
-			this.scSrv.registerService("localhost", 9000, serviceName, 10, 10, srvCallback);
+			this.scSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 			this.shutdown();
@@ -57,7 +57,7 @@ public class DemoSessionServer {
 
 	private void shutdown() {
 		try {
-			this.scSrv.deregisterService(serviceName);
+			this.scSrv.deregisterServer(serviceName);
 		} catch (Exception e) {
 			logger.error("shutdown", e);
 			this.scSrv = null;
@@ -133,7 +133,7 @@ public class DemoSessionServer {
 			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
-				this.server.deregisterService(serviceName);
+				this.server.deregisterServer(serviceName);
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

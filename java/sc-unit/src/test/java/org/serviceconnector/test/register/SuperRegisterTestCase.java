@@ -19,8 +19,8 @@ package org.serviceconnector.test.register;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.call.SCMPCallFactory;
-import org.serviceconnector.call.SCMPDeRegisterServiceCall;
-import org.serviceconnector.call.SCMPRegisterServiceCall;
+import org.serviceconnector.call.SCMPDeRegisterServerCall;
+import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.ICommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.conf.ResponderConfigPool;
@@ -63,43 +63,43 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		this.responderConfig = new ResponderConfigPool();
 		this.registerConfig.load(registerFileName);
 		this.responderConfig.load(registerFileName);
-		this.registerContext = new RegisterServiceContext(registerConfig.getRequesterConfig(), this.msgId);
+		this.registerContext = new RegisterServerContext(registerConfig.getRequesterConfig(), this.msgId);
 		this.registerRequester = new SCRequester(registerContext);
-		registerServiceBefore();
+		registerServerBefore();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		deRegisterServiceAfter();
+		deRegisterServerAfter();
 		super.tearDown();
 	}
 
-	public void registerServiceBefore() throws Exception {
-		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+	public void registerServerBefore() throws Exception {
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
 				.newInstance(registerRequester, "publish-simulation");
-		registerServiceCall.setMaxSessions(10);
-		registerServiceCall.setMaxConnections(10);
-		registerServiceCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
-		registerServiceCall.setImmediateConnect(true);
-		registerServiceCall.setKeepAliveInterval(360);
-		registerServiceCall.invoke(this.attachCallback, 1000);
+		registerServerCall.setMaxSessions(10);
+		registerServerCall.setMaxConnections(10);
+		registerServerCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
+		registerServerCall.setImmediateConnect(true);
+		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
-	public void deRegisterServiceAfter() throws Exception {
-		this.deRegisterServiceAfter("publish-simulation");
+	public void deRegisterServerAfter() throws Exception {
+		this.deRegisterServerAfter("publish-simulation");
 	}
 
-	public void deRegisterServiceAfter(String serviceName) throws Exception {
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+	public void deRegisterServerAfter(String serviceName) throws Exception {
+		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(registerRequester, serviceName);
-		deRegisterServiceCall.invoke(this.attachCallback, 1000);
+		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 	}
 
-	private class RegisterServiceContext extends TestContext {
+	private class RegisterServerContext extends TestContext {
 
-		public RegisterServiceContext(ICommunicatorConfig config, SCMPMessageId msgId) {
+		public RegisterServerContext(ICommunicatorConfig config, SCMPMessageId msgId) {
 			super(config, msgId);
 			// for register only 1 connection is allowed
 			this.connectionPool.setMaxConnections(1);

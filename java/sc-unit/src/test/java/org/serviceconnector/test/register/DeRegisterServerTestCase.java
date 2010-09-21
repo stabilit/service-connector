@@ -22,7 +22,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
-import org.serviceconnector.call.SCMPDeRegisterServiceCall;
+import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -32,7 +32,7 @@ import org.serviceconnector.test.SCTest;
 
 
 
-public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
+public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 
 	/**
 	 * The Constructor.
@@ -40,16 +40,16 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 	 * @param fileName
 	 *            the file name
 	 */
-	public DeRegisterServiceTestCase(String fileName) {
+	public DeRegisterServerTestCase(String fileName) {
 		super(fileName);
 	}
 
 	@Test
-	public void deRegisterServiceCall() throws Exception {
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+	public void deRegisterServerCall() throws Exception {
+		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
-		deRegisterServiceCall.invoke(this.attachCallback, 1000);
+		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
@@ -63,22 +63,22 @@ public class DeRegisterServiceTestCase extends SuperRegisterTestCase {
 		String scEntry = (String) inspectMap.get("serviceRegistry");
 		String expectedEntry = "P01_logging:0|publish-simulation:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:7000 : 10|P01_BCST_CH_sc1:0|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
-		super.registerServiceBefore();
+		super.registerServerBefore();
 	}
 
 	@Test
-	public void secondDeRegisterServiceCall() throws Exception {
-		super.deRegisterServiceAfter();
-		SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+	public void secondDeRegisterServerCall() throws Exception {
+		super.deRegisterServerAfter();
+		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(this.registerRequester, "publish-simulation");
 
-		deRegisterServiceCall.invoke(this.attachCallback, 1000);
+		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		Assert
-				.assertEquals(SCMPMsgType.DEREGISTER_SERVICE.getValue(), fault
+				.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), fault
 						.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-		super.registerServiceBefore();
+		super.registerServerBefore();
 	}
 }

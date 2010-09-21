@@ -71,7 +71,7 @@ public class StartPublishServer {
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.publishSrv.registerService("localhost", port, serviceNames[i], 1000, maxCons,
+				this.publishSrv.registerServer("localhost", port, serviceNames[i], 1000, maxCons,
 						srvCallback);
 			}
 
@@ -140,7 +140,7 @@ public class StartPublishServer {
 		StartPublishServer.killPublishServer = true;
 		try {
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.publishSrv.deregisterService(serviceNames[i]);
+				this.publishSrv.deregisterServer(serviceNames[i]);
 			}
 		} catch (Exception ex) {
 			logger.error("shutdown", ex);
@@ -178,7 +178,7 @@ public class StartPublishServer {
 				if (dataString.equals("kill server")) {
 					try {
 						for (int i = 0; i < serviceNames.length; i++) {
-							this.outerContext.getServer().deregisterService(serviceNames[i]);
+							this.outerContext.getServer().deregisterServer(serviceNames[i]);
 						}
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);

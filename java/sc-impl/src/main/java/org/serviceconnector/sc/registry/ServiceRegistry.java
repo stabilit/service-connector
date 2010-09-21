@@ -21,7 +21,7 @@ import org.serviceconnector.sc.service.Service;
 
 
 /**
- * The Class ServiceRegistry. Registry stores entries for properly registered services.
+ * The Class ServiceRegistry. Registry stores entries for properly configured services.
  * 
  * @author JTraber
  */

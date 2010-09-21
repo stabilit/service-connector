@@ -26,36 +26,36 @@ import org.serviceconnector.util.DateTimeUtility;
 
 
 /**
- * The Class SCMPRegisterServiceCall. Call registers a server.
+ * The Class SCMPRegisterServerCall. Registers a server to a service.
  * 
  * @author JTraber
  */
-public class SCMPRegisterServiceCall extends SCMPCallAdapter {
+public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPRegisterServiceCall.class);
+	protected final static Logger logger = Logger.getLogger(SCMPRegisterServerCall.class);
 	
 	/**
-	 * Instantiates a new SCMPRegisterServiceCall.
+	 * Instantiates a new SCMPRegisterServerCall.
 	 */
-	public SCMPRegisterServiceCall() {
+	public SCMPRegisterServerCall() {
 		this(null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPRegisterServiceCall.
+	 * Instantiates a new SCMPRegisterServerCall.
 	 * 
 	 * @param req
 	 *            the requesters to use when invoking call
 	 */
-	public SCMPRegisterServiceCall(IRequester req, String serviceName) {
+	public SCMPRegisterServerCall(IRequester req, String serviceName) {
 		super(req, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName) {
-		return new SCMPRegisterServiceCall(req, serviceName);
+		return new SCMPRegisterServerCall(req, serviceName);
 	}
 
 	/** {@inheritDoc} */
@@ -69,7 +69,7 @@ public class SCMPRegisterServiceCall extends SCMPCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REGISTER_SERVICE;
+		return SCMPMsgType.REGISTER_SERVER;
 	}
 
 	/**

@@ -38,27 +38,27 @@ import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class RegisterServiceCommand. Responsible for validation and execution of register command. Used to register
+ * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register
  * backend server in SC. Backend server will be registered in server registry of SC.
  * 
  * @author JTraber
  */
-public class RegisterServiceCommand extends CommandAdapter {
+public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RegisterServiceCommand.class);
+	protected final static Logger logger = Logger.getLogger(RegisterServerCommand.class);
 	
 	/**
-	 * Instantiates a new RegisterServiceCommand.
+	 * Instantiates a new RegisterServerCommand.
 	 */
-	public RegisterServiceCommand() {
-		this.commandValidator = new RegisterServiceCommandValidator();
+	public RegisterServerCommand() {
+		this.commandValidator = new RegisterServerCommandValidator();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.REGISTER_SERVICE;
+		return SCMPMsgType.REGISTER_SERVER;
 	}
 
 	/** {@inheritDoc} */
@@ -131,9 +131,9 @@ public class RegisterServiceCommand extends CommandAdapter {
 	}
 
 	/**
-	 * The Class RegisterServiceCommandValidator.
+	 * The Class RegisterServerCommandValidator.
 	 */
-	private class RegisterServiceCommandValidator implements ICommandValidator {
+	private class RegisterServerCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override

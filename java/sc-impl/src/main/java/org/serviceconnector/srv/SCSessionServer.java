@@ -23,8 +23,8 @@ import javax.activity.InvalidActivityException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
-import org.serviceconnector.call.SCMPDeRegisterServiceCall;
-import org.serviceconnector.call.SCMPRegisterServiceCall;
+import org.serviceconnector.call.SCMPDeRegisterServerCall;
+import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
@@ -67,7 +67,7 @@ public class SCSessionServer implements ISCSessionServer {
 	private boolean listening;
 	/** The responder. */
 	private IResponder responder;
-	// fields for register service
+	// fields for register server
 	protected ISCMPSynchronousCallback callback;
 	/** The immediate connect. */
 	private boolean immediateConnect;
@@ -81,7 +81,7 @@ public class SCSessionServer implements ISCSessionServer {
 	public SCSessionServer() {
 		this.listening = false;
 		this.conType = Constants.DEFAULT_SERVER_CON;
-		// attributes for registerService
+		// attributes for registerServer
 		this.immediateConnect = true;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.localServerHost = null;
@@ -117,7 +117,7 @@ public class SCSessionServer implements ISCSessionServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void registerService(String scHost, int scPort, String serviceName, int maxSessions,
+	public synchronized void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
 			int maxConnections, ISCServerCallback scCallback) throws Exception {
 		if (this.listening == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
@@ -136,29 +136,29 @@ public class SCSessionServer implements ISCSessionServer {
 		// register called first time - initialize connection pool & requester
 		IConnectionPool connectionPool = new ConnectionPool(scHost, scPort, this.conType,
 				this.keepAliveIntervalInSeconds);
-		// register service only needs one connection
+		// register server only needs one connection
 		connectionPool.setMaxConnections(1);
 		IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgId));
 
-		SCMPRegisterServiceCall registerServiceCall = (SCMPRegisterServiceCall) SCMPCallFactory.REGISTER_SERVICE_CALL
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
 				.newInstance(requester, serviceName);
 
-		registerServiceCall.setMaxSessions(maxSessions);
-		registerServiceCall.setMaxConnections(maxConnections);
-		registerServiceCall.setPortNumber(this.localServerPort);
-		registerServiceCall.setImmediateConnect(this.immediateConnect);
-		registerServiceCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
+		registerServerCall.setMaxSessions(maxSessions);
+		registerServerCall.setMaxConnections(maxConnections);
+		registerServerCall.setPortNumber(this.localServerPort);
+		registerServerCall.setImmediateConnect(this.immediateConnect);
+		registerServerCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
 		try {
-			registerServiceCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+			registerServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			connectionPool.destroy();
-			throw new SCServiceException("register service failed", e);
+			throw new SCServiceException("register server failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			connectionPool.destroy();
-			throw new SCServiceException("register service failed : "
+			throw new SCServiceException("register server failed : "
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		// creating srvService & adding to registry
@@ -168,7 +168,7 @@ public class SCSessionServer implements ISCSessionServer {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void deregisterService(String serviceName) throws Exception {
+	public synchronized void deregisterServer(String serviceName) throws Exception {
 		if (this.srvServiceRegistry.containsKey(serviceName) == false) {
 			// sc server not registered - deregister not necessary
 			return;
@@ -178,17 +178,17 @@ public class SCSessionServer implements ISCSessionServer {
 			// remove srvService from registry
 			SrvService srvService = this.srvServiceRegistry.removeSrvService(serviceName);
 			req = srvService.getRequester();
-			SCMPDeRegisterServiceCall deRegisterServiceCall = (SCMPDeRegisterServiceCall) SCMPCallFactory.DEREGISTER_SERVICE_CALL
+			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, serviceName);
 			try {
-				deRegisterServiceCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+				deRegisterServerCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("deregister service failed", e);
+				throw new SCServiceException("deregister server failed", e);
 			}
 			SCMPMessage reply = this.callback.getMessageSync();
 			if (reply.isFault()) {
-				throw new SCServiceException("deregister service failed : "
+				throw new SCServiceException("deregister server failed : "
 						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {

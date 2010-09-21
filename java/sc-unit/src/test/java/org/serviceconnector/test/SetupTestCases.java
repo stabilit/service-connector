@@ -165,7 +165,7 @@ public class SetupTestCases {
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerService("localhost", 9000, "simulation", 10, 10, srvCallback);
+		scSim1ConSrv.registerServer("localhost", 9000, "simulation", 10, 10, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -174,16 +174,16 @@ public class SetupTestCases {
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.startListener("localhost", 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerService("localhost", 9000, "simulation", 10, 10, srvCallback);
+		scSim10ConSrv.registerServer("localhost", 9000, "simulation", 10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSimEnableSrv.registerService("localhost", 9000, "enableService", 10, 10, srvCallback);
+		scSimEnableSrv.registerServer("localhost", 9000, "enableService", 10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSimEnableSrv.deregisterService("enableService");
+		scSimEnableSrv.deregisterServer("enableService");
 	}
 
 	private static class SessionServerCallback implements ISCSessionServerCallback {
@@ -274,7 +274,7 @@ public class SetupTestCases {
 		publishSrv.setImmediateConnect(true);
 		publishSrv.startListener("localhost", 7000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerService("localhost", 9000, serviceName, 10, 10, publishCallback);
+		publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

@@ -44,18 +44,18 @@ public interface ISCSessionServer extends ISC {
 	 * @throws InvalidParameterException
 	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
-	public abstract void registerService(String scHost, int scPort, String serviceName, int maxSessions,
+	public abstract void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
 			int maxConnections, ISCServerCallback scCallback) throws Exception;
 
 	/**
-	 * Deregister service from SC.
+	 * Deregister server.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void deregisterService(String serviceName) throws Exception;
+	public abstract void deregisterServer(String serviceName) throws Exception;
 
 	/**
 	 * Gets the max sessions.
@@ -95,7 +95,7 @@ public interface ISCSessionServer extends ISC {
 
 	/**
 	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
-	 * connection to server at the time registerService is received.
+	 * connection to server at the time registerServer is received.
 	 * 
 	 * @param immediateConnect
 	 *            the new immediate connect

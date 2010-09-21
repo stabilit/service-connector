@@ -55,14 +55,14 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
 		srvCallback = new SrvCallback(new SessionServerContext());
-		server.registerService(TestConstants.HOST, TestConstants.PORT9000,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
 				TestConstants.serviceName, 10, 10, srvCallback);
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterService(TestConstants.serviceName);
+		server.deregisterServer(TestConstants.serviceName);
 		server.destroyServer();
 		server = null;
 		srvCallback = null;

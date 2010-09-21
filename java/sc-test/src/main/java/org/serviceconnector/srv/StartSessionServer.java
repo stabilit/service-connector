@@ -54,7 +54,7 @@ public class StartSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.registerService("localhost", port, serviceNames[i], 1000, maxCons,
+				this.scSrv.registerServer("localhost", port, serviceNames[i], 1000, maxCons,
 						srvCallback);
 			}
 
@@ -86,7 +86,7 @@ public class StartSessionServer {
 	private void shutdown() {
 		try {
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.deregisterService(serviceNames[i]);
+				this.scSrv.deregisterServer(serviceNames[i]);
 			}
 		} catch (Exception e) {
 			this.scSrv = null;
@@ -170,7 +170,7 @@ public class StartSessionServer {
 						if (!alreadyPresentService) {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
-									scSrv.registerService("localhost", port, serviceName, 1000,
+									scSrv.registerServer("localhost", port, serviceName, 1000,
 											maxCons, new SrvCallback(
 													new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
@@ -179,7 +179,7 @@ public class StartSessionServer {
 									services[serviceNames.length] = serviceName;
 									serviceNames = services;
 								} catch (Exception e) {
-									logger.error("register service " + serviceName, e);
+									logger.error("register server " + serviceName, e);
 								}
 							}
 						}
@@ -188,7 +188,7 @@ public class StartSessionServer {
 
 						if (scSrv.isRegistered(serviceName)) {
 							try {
-								scSrv.deregisterService(serviceName);
+								scSrv.deregisterServer(serviceName);
 								String[] services = new String[serviceNames.length - 1];
 								boolean alreadyDeleted = false;
 								for (int i = 0; i < serviceNames.length; i++) {
@@ -202,7 +202,7 @@ public class StartSessionServer {
 								}
 								serviceNames = services;
 							} catch (Exception e) {
-								logger.error("deregister service " + serviceName, e);
+								logger.error("deregister server " + serviceName, e);
 							}
 						}
 
@@ -233,7 +233,7 @@ public class StartSessionServer {
 			try {
 				Thread.sleep(100);
 				for (int i = 0; i < serviceNames.length; i++) {
-					this.server.deregisterService(serviceNames[i]);
+					this.server.deregisterServer(serviceNames[i]);
 				}
 				this.server.destroyServer();
 			} catch (Exception e) {

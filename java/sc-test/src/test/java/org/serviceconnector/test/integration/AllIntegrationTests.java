@@ -12,11 +12,11 @@ import org.serviceconnector.test.integration.cln.NewServicesTest;
 import org.serviceconnector.test.integration.cln.PrematureDestroyOfSCClnTest;
 import org.serviceconnector.test.integration.cln.RestartOfSCClnTest;
 import org.serviceconnector.test.integration.srv.PrematureDestroyOfSCSrvTest;
-import org.serviceconnector.test.integration.srv.RegisterServiceConnectionTypeHttpTest;
-import org.serviceconnector.test.integration.srv.RegisterServiceConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.RegisterServiceDeregisterServiceConnectionTypeHttpTest;
-import org.serviceconnector.test.integration.srv.RegisterServiceDeregisterServiceConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.RegisterServiceToMultipleSCTest;
+import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeHttpTest;
+import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeTcpTest;
+import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
+import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
+import org.serviceconnector.test.integration.srv.RegisterServerToMultipleSCTest;
 import org.serviceconnector.test.integration.srv.RestartSCServerToSCTest;
 
 @RunWith(Suite.class)
@@ -25,10 +25,10 @@ import org.serviceconnector.test.integration.srv.RestartSCServerToSCTest;
 		AttachDetachTest.class, EnableDisableServiceTest.class,
 		NewServicesTest.class, PrematureDestroyOfSCClnTest.class,
 		PrematureDestroyOfSCSrvTest.class,
-		RegisterServiceDeregisterServiceConnectionTypeHttpTest.class,
-		RegisterServiceDeregisterServiceConnectionTypeTcpTest.class,
-		RegisterServiceToMultipleSCTest.class,
-		RegisterServiceConnectionTypeHttpTest.class, RegisterServiceConnectionTypeTcpTest.class,
+		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
+		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
+		RegisterServerToMultipleSCTest.class,
+		RegisterServerConnectionTypeHttpTest.class, RegisterServerConnectionTypeTcpTest.class,
 		RestartOfSCClnTest.class, RestartSCServerToSCTest.class
 })
 public class AllIntegrationTests {

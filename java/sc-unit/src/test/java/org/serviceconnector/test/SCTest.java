@@ -41,8 +41,8 @@ import org.serviceconnector.test.net.HttpFrameDecoderTestCase;
 import org.serviceconnector.test.net.KeepAliveMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.net.LargeMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.pool.ConnectionPoolTestCase;
-import org.serviceconnector.test.register.DeRegisterServiceTestCase;
-import org.serviceconnector.test.register.RegisterServiceTestCase;
+import org.serviceconnector.test.register.DeRegisterServerTestCase;
+import org.serviceconnector.test.register.RegisterServerTestCase;
 import org.serviceconnector.test.scVersion.SCVersionToSCTestCase;
 import org.serviceconnector.test.scmp.SCMPVersionTestCase;
 import org.serviceconnector.test.scmp.internal.SCMPCompositeTestCase;
@@ -69,8 +69,8 @@ import org.serviceconnector.test.util.ValidatorUtilityTestCase;
 		DetachTestCase.class, // 
 		ClnCreateSessionTestCase.class, // 
 		ClnDeleteSessionTestCase.class, // 
-		RegisterServiceTestCase.class, // 
-		DeRegisterServiceTestCase.class, // 
+		RegisterServerTestCase.class, // 
+		DeRegisterServerTestCase.class, // 
 		SrvExecuteSyncTestCase.class, // 
 		SrvExecuteLargeSyncTestCase.class, // 
 		SrvExecuteAsyncTestCase.class,// 

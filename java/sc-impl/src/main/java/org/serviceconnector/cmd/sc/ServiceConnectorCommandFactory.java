@@ -68,10 +68,10 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 		commandFactory.addCommand(clnCreateSessionCommand.getKey(), clnCreateSessionCommand);
 		ICommand clnDeleteSessionCommand = new ClnDeleteSessionCommand();
 		commandFactory.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
-		ICommand registerServiceCommand = new RegisterServiceCommand();
-		commandFactory.addCommand(registerServiceCommand.getKey(), registerServiceCommand);
-		ICommand deRegisterServiceCommand = new DeRegisterServiceCommand();
-		commandFactory.addCommand(deRegisterServiceCommand.getKey(), deRegisterServiceCommand);
+		ICommand registerServerCommand = new RegisterServerCommand();
+		commandFactory.addCommand(registerServerCommand.getKey(), registerServerCommand);
+		ICommand deRegisterServerCommand = new DeRegisterServerCommand();
+		commandFactory.addCommand(deRegisterServerCommand.getKey(), deRegisterServerCommand);
 		ICommand clnEchoCommand = new EchoCommand();
 		commandFactory.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnExecuteCommand = new ClnExecuteCommand();

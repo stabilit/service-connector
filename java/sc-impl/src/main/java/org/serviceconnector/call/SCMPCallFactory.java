@@ -41,10 +41,10 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall ATTACH_CALL = new SCMPAttachCall();
 	/** The DETACH_CALL. */
 	public static final ISCMPCall DETACH_CALL = new SCMPDetachCall();
-	/** The REGISTER_SERVICE_CALL. */
-	public static final ISCMPCall REGISTER_SERVICE_CALL = new SCMPRegisterServiceCall();
-	/** The DEREGISTER_SERVICE_CALL. */
-	public static final ISCMPCall DEREGISTER_SERVICE_CALL = new SCMPDeRegisterServiceCall();
+	/** The REGISTER_SERVER_CALL. */
+	public static final ISCMPCall REGISTER_SERVER_CALL = new SCMPRegisterServerCall();
+	/** The DEREGISTER_SERVER_CALL. */
+	public static final ISCMPCall DEREGISTER_SERVER_CALL = new SCMPDeRegisterServerCall();
 	/** The CLN_CREATE_SESSION_CALL. */
 	public static final ISCMPCall CLN_CREATE_SESSION_CALL = new SCMPClnCreateSessionCall();
 	/** The CLN_DELETE_SESSION_CALL. */

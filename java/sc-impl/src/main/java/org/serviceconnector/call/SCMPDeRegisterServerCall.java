@@ -22,43 +22,43 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**
- * The Class SCMPDeRegisterServiceCall. Call deregisters service.
+ * The Class SCMPDeRegisterServerCall. Deregisters server.
  * 
  * @author JTraber
  */
-public class SCMPDeRegisterServiceCall extends SCMPCallAdapter {
+public class SCMPDeRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPDeRegisterServiceCall.class);
+	protected final static Logger logger = Logger.getLogger(SCMPDeRegisterServerCall.class);
 	
 	/**
-	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 * Instantiates a new SCMPDeRegisterServerCall.
 	 */
-	public SCMPDeRegisterServiceCall() {
+	public SCMPDeRegisterServerCall() {
 		this(null, null);
 	}
 
 	/**
-	 * Instantiates a new SCMPDeRegisterServiceCall.
+	 * Instantiates a new SCMPDeRegisterServerCall.
 	 * 
 	 * @param requester
 	 *            the requester to use when invoking call
 	 * @param serviceName
 	 *            the service name
 	 */
-	public SCMPDeRegisterServiceCall(IRequester requester, String serviceName) {
+	public SCMPDeRegisterServerCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPDeRegisterServiceCall(requester, serviceName);
+		return new SCMPDeRegisterServerCall(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.DEREGISTER_SERVICE;
+		return SCMPMsgType.DEREGISTER_SERVER;
 	}
 }
