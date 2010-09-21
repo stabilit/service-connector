@@ -1,11 +1,14 @@
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.sc.service.ISCMessageCallback;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.service.SCMessageCallback;
 
 
 public class DemoSessionClient extends Thread {

@@ -18,10 +18,10 @@ package org.serviceconnector.test.cln.api;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.cln.ISCClient;
-import org.serviceconnector.cln.ISessionService;
-import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.test.SetupTestCases;
 
 
