@@ -17,6 +17,9 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -27,9 +30,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.service.SCMessageFault;
 import org.serviceconnector.srv.ISCPublishServerCallback;
 import org.serviceconnector.srv.SrvService;
 import org.serviceconnector.util.ValidatorUtility;

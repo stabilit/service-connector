@@ -14,13 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.cln;
+package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.sc.service.ISC;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.service.IServiceContext;
-import org.serviceconnector.service.SCService;
 
 
 /**

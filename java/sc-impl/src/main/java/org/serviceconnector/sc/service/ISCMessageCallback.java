@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.sc.service;
 
-import org.serviceconnector.cln.IService;
-import org.serviceconnector.service.ISCMessage;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.cln.IService;
 
 /**
  * The Interface ISCMessageCallback. Represents basic functionality for callbacks to be used in asynchronous

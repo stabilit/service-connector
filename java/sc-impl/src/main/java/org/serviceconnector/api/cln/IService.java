@@ -14,47 +14,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
+package org.serviceconnector.api.cln;
 
-import org.apache.log4j.Logger;
-import org.serviceconnector.cln.IService;
-import org.serviceconnector.sc.service.ISCMessageCallback;
-
+import org.serviceconnector.ctx.IContext;
 
 /**
- * The Class SCMessageCallback.
+ * The Interface IService. Top interface for services.
  * 
  * @author JTraber
  */
-public abstract class SCMessageCallback implements ISCMessageCallback {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMessageCallback.class);
-	
-	/** The service which is using the message callback. */
-	private IService service;
+public interface IService {
 
 	/**
-	 * Instantiates a new SCMessageCallback.
+	 * Gets the context.
 	 * 
-	 * @param service
-	 *            the service
+	 * @return the context
 	 */
-	public SCMessageCallback(IService service) {
-		this.service = service;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public abstract void callback(ISCMessage reply);
+	public abstract IContext getContext();
 
-	/** {@inheritDoc} */
-	@Override
-	public abstract void callback(Exception ex);
-
-	/** {@inheritDoc} */
-	@Override
-	public IService getService() {
-		return service;
-	}
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
+	public abstract String getSessionId();
 }

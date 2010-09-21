@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.cln;
+package org.serviceconnector.api.cln;
 
+import org.serviceconnector.api.ISCMessage;
 import org.serviceconnector.sc.service.ISCMessageCallback;
-import org.serviceconnector.service.ISCMessage;
 import org.serviceconnector.service.IServiceContext;
 
 /**

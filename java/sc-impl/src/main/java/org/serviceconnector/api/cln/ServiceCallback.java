@@ -19,14 +19,14 @@
 /**
  * 
  */
-package org.serviceconnector.cln;
+package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.sc.service.ISCMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCMessage;
-import org.serviceconnector.service.SCService;
 import org.serviceconnector.util.SynchronousCallback;
 
 

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
+package org.serviceconnector.api;
 
 /**
  * The Interface ISCMessage. ISCMessage represents basic message interface for a request/ response to/from a SC.

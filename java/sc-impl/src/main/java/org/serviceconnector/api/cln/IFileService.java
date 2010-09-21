@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.cln;
+package org.serviceconnector.api.cln;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -14,12 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.cln;
+package org.serviceconnector.api.cln;
 
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
@@ -34,7 +35,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCService;
 import org.serviceconnector.util.ValidatorUtility;
 
 
