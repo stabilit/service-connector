@@ -21,10 +21,13 @@
  */
 package org.serviceconnector.cln;
 
-import org.serviceconnector.cln.SCClient;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.cln.IPublishService;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.sc.service.ISCMessageCallback;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessageCallback;
 
 
 public class SCPublishingServiceExample {

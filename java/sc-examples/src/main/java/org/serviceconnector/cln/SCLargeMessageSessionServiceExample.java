@@ -21,9 +21,11 @@
  */
 package org.serviceconnector.cln;
 
-import org.serviceconnector.cln.SCClient;
-import org.serviceconnector.service.ISCMessage;
-import org.serviceconnector.service.SCMessage;
+import org.serviceconnector.api.ISCMessage;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.cln.SCClient;
 
 
 public class SCLargeMessageSessionServiceExample {
