@@ -1,4 +1,4 @@
-package org.serviceconnector.test.system;
+package org.serviceconnector.test.system.perf;
 
 import static org.junit.Assert.assertEquals;
 

@@ -28,8 +28,8 @@ public class ExecuteClientToSCTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
+	private int threadCount = 0;
 	private ISCClient client;
-
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
@@ -47,15 +47,19 @@ public class ExecuteClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 		client.detach();
 		client = null;
 		ex = null;
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -82,6 +86,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -97,6 +103,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(null, response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -112,6 +120,8 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		ISCMessage response = sessionService.execute(message);
+		sessionService.deleteSession();
+		
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());

@@ -62,7 +62,7 @@ public class RegisterServerConnectionTypeTcpTest {
 		server.destroyServer();
 		server = null;
 		ex = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	// region host == "localhost" (set as only one in

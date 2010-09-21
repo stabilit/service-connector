@@ -2,6 +2,7 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.test.system.perf.PerformanceTests;
 import org.serviceconnector.test.system.publish.SubscribeClientToSCTest;
 import org.serviceconnector.test.system.session.CreateSessionHttpClientToSCTest;
 import org.serviceconnector.test.system.session.CreateSessionTcpClientToSCTest;

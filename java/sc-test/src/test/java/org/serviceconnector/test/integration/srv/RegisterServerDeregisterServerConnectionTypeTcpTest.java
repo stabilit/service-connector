@@ -56,7 +56,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	public void tearDown() throws Exception {
 		server.destroyServer();
 		server = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test

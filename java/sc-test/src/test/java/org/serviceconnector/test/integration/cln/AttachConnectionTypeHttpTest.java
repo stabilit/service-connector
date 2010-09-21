@@ -59,7 +59,7 @@ public class AttachConnectionTypeHttpTest {
 			client.detach();
 		} catch (Exception e) {} 
 		client = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	// region hostName == "localhost" (set as only one in

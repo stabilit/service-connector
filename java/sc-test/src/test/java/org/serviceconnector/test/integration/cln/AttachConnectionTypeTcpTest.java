@@ -62,7 +62,7 @@ public class AttachConnectionTypeTcpTest {
 		} catch (Exception e) {} 
 		client = null;
 		ex = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	// region hostName == "localhost" (set as only one in

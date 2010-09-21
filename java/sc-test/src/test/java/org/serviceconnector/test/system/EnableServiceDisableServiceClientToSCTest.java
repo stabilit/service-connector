@@ -24,9 +24,9 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	private static Process scProcess;
 	private Process srvProcess;
-
+	
+	private int threadCount = 0;
 	private ISCClient client;
-
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
@@ -44,6 +44,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100, new String[] {
 				TestConstants.serviceName, TestConstants.serviceNameAlt });
 
@@ -60,6 +61,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		srvProcess = null;
 		ex = null;
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass

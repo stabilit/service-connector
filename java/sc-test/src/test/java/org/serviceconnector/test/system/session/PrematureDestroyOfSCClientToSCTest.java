@@ -24,6 +24,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	private Process scProcess;
 	private Process srvProcess;
 
+	private int threadCount = 0;
 	private ISCClient client;
 
 	private static TestEnvironmentController ctrl;
@@ -35,6 +36,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
@@ -57,6 +59,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 			srvProcess = null;
 			scProcess = null;
 		}
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass

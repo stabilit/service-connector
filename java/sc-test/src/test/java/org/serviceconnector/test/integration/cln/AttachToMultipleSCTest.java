@@ -59,7 +59,7 @@ public class AttachToMultipleSCTest {
 	public void tearDown() throws Exception {
 		client1 = null;
 		client2 = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test

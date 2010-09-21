@@ -25,6 +25,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 	protected final static Logger logger = Logger
 			.getLogger(CreateSessionDeleteSessionServerToSCTest.class);
 
+	private int threadCount = 0;
 	private SrvCallback srvCallback;
 	private ISCSessionServer server;
 
@@ -52,6 +53,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
 		srvCallback = new SrvCallback(new SessionServerContext());
@@ -66,6 +68,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		server.destroyServer();
 		server = null;
 		srvCallback = null;
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test

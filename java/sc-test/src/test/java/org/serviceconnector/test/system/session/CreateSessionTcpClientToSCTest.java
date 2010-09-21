@@ -30,8 +30,8 @@ public class CreateSessionTcpClientToSCTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
+	private int threadCount = 0;
 	private ISCClient client;
-
 	private Exception ex;
 
 	private static TestEnvironmentController ctrl;
@@ -50,18 +50,20 @@ public class CreateSessionTcpClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT9000);
-		assertEquals("1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		assertEquals("1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 		client.detach();
 		client = null;
 		ex = null;
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass

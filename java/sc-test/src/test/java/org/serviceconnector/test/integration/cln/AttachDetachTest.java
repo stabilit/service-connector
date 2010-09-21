@@ -56,7 +56,7 @@ public class AttachDetachTest {
 	@After
 	public void tearDown() {
 		client = null;
-		assertEquals(threadCount, Thread.activeCount());
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test
