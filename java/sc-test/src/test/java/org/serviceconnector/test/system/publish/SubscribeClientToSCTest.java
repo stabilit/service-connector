@@ -17,12 +17,9 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.sc.service.SCServiceException;
 
 public class SubscribeClientToSCTest {
-	
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscribeClientToSCTest.class);
@@ -947,7 +944,6 @@ public class SubscribeClientToSCTest {
 			service.subscribe(TestConstants.mask, "sessionInfo", 300,
 					new DemoPublishClientCallback(service), 1);
 		} catch (Exception e) {
-			testLogger.info(e.getMessage());
 			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
 			assertEquals(false, service.isSubscribed());
 			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -1034,7 +1030,7 @@ public class SubscribeClientToSCTest {
 
 		@Override
 		public void callback(SCMessage reply) {
-			testLogger.info("Publish client received: " + reply.getData());
+			logger.info("Publish client received: " + reply.getData());
 		}
 
 		@Override

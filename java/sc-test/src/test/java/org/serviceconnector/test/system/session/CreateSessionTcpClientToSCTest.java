@@ -76,6 +76,46 @@ public class CreateSessionTcpClientToSCTest {
 	}
 
 	@Test
+	public void deleteSession_sessionServiceNameEmpty_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService("");
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void deleteSession_sessionServiceNameWhiteSpace_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(" ");
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void deleteSession_sessionServiceNameSingleChar_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService("a");
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void deleteSession_sessionServiceNamePangram_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(TestConstants.pangram);
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
+	public void deleteSession_sessionServiceNameNotEnabled_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionNotEnabled);
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+	}
+	
+	@Test
 	public void createSession_emptySessionServiceName_throwsException() throws Exception {
 		ISessionService sessionService = client.newSessionService("");
 		try {

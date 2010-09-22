@@ -11,6 +11,7 @@ import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
 public class StartSessionServer {
 
@@ -23,7 +24,7 @@ public class StartSessionServer {
 	private int port = 9000;
 	private int listenerPort = 30000;
 	private int maxCons = 10;
-	private Counter ctr;
+	private ThreadSafeCounter ctr;
 
 	public static void main(String[] args) throws Exception {
 		StartSessionServer sessionServer = new StartSessionServer();
@@ -46,7 +47,7 @@ public class StartSessionServer {
 				logger.error("incorrect parameters", e);
 				shutdown();
 			}
-			ctr = new Counter();
+			ctr = new ThreadSafeCounter();
 
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
@@ -91,22 +92,6 @@ public class StartSessionServer {
 			}
 		} catch (Exception e) {
 			this.scSrv = null;
-		}
-	}
-
-	class Counter {
-		private int counter = 0;
-		
-		public synchronized void increment() {
-			counter++;
-		}
-		
-		public synchronized void decrement() {
-			counter--;
-		}
-
-		public synchronized int value() {
-			return counter;
 		}
 	}
 

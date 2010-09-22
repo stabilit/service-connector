@@ -17,6 +17,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cln.PerformanceSessionClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 
 public class PerformanceTests {
@@ -108,7 +109,7 @@ public class PerformanceTests {
 	@Test
 	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime()
 			throws Exception {
-		int[] messages = new int[10];
+		ThreadSafeCounter[] messages = new ThreadSafeCounter[10];
 
 		CountDownLatch startSignal = new CountDownLatch(1);
 		CountDownLatch doneSignal = new CountDownLatch(10);
@@ -116,6 +117,7 @@ public class PerformanceTests {
 		int threadCount = Thread.activeCount();
 		// create and start threads
 		for (int i = 0; i < 10; i++) {
+			messages[i] = new ThreadSafeCounter();
 			new Thread(new PerformanceSessionClient(startSignal, doneSignal, messages[i])).start();
 		}
 
@@ -131,15 +133,15 @@ public class PerformanceTests {
 		
 		int sum = 0;
 		for (int i = 0; i < 10; i++) {
-			sum += messages[i];
+			sum += messages[i].value();
 		}
 		
 		testLogger.info("Messages executed successfuly (clients):\t" + sum);
 		testLogger.info("Messages executed successfuly (server):\t" + response.getData().toString());
 		testLogger		
 				.info("Time to create session execute and delete session:\t" + (stop - start) + "ms");
-		testLogger.info("Threads before initializing clients:\t" + threadCount
-				+ "\nThreads after execution completed:\t" + Thread.activeCount());
+		testLogger.info("Threads before initializing clients:\t" + threadCount);
+		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
 		assertEquals(true, stop - start < 25000);
 	}
 	
@@ -148,7 +150,7 @@ public class PerformanceTests {
 		int threadCount = Thread.activeCount();
 		
 		long start = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			ISessionService service = client.newSessionService(TestConstants.serviceName);
 			service.createSession("sessionInfo", 300);
 			for (int j = 0; j < 10; j++) {

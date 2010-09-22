@@ -8,6 +8,7 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 
 public class PerformanceSessionClient implements Runnable {
@@ -19,11 +20,12 @@ public class PerformanceSessionClient implements Runnable {
 	private final CountDownLatch startSignal;
 	private final CountDownLatch doneSignal;
 	
-	private int counter = 0;
+	private ThreadSafeCounter counter;
 
-	public PerformanceSessionClient(CountDownLatch startSignal, CountDownLatch doneSignal, int counter) {
+	public PerformanceSessionClient(CountDownLatch startSignal, CountDownLatch doneSignal, ThreadSafeCounter counter) {
 		this.startSignal = startSignal;
 		this.doneSignal = doneSignal;
+		this.counter = counter;
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class PerformanceSessionClient implements Runnable {
 				service.createSession("sessionInfo", 300);
 				for (int j = 0; j < 10; j++) {
 					service.execute(new SCMessage(new byte[128]));
-					counter++;
+					counter.increment();
 				}
 				service.deleteSession();
 			}
