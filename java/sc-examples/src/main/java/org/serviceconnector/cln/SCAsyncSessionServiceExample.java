@@ -95,8 +95,8 @@ public class SCAsyncSessionServiceExample {
 
 		@Override
 		public void callback(SCMessage msg) {
-			IServiceContext sessionContext = (IServiceContext) this.getService().getContext();
-			ISC serviceConnector = sessionContext.getServiceConnector();
+			IServiceContext serviceContext = (IServiceContext) this.getService().getContext();
+			ISC serviceConnector = serviceContext.getServiceConnector();
 			System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}
