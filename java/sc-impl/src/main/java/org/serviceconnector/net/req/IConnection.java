@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
-import org.serviceconnector.net.ICommunicationPoint;
+import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -26,12 +26,29 @@ import org.serviceconnector.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public interface IConnection extends ICommunicationPoint {
+public interface IConnection extends IFactoryable {
 
 	public abstract IConnectionContext getContext();
 
 	public abstract void setContext(IConnectionContext connectionContext);
 
+	/**
+	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the host
+	 */
+	
+	public void setHost(String host);
+
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the port
+	 */
+	public void setPort(int port);
+	
 	/**
 	 * Connect.
 	 * 

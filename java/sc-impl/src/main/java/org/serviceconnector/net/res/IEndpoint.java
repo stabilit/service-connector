@@ -16,15 +16,31 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.net.ICommunicationPoint;
+import org.serviceconnector.factory.IFactoryable;
 
 /**
  * The Interface IEndpoint.
  * 
  * @author JTraber
  */
-public interface IEndpoint extends ICommunicationPoint {
+public interface IEndpoint extends IFactoryable {
 
+	/**
+	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the host
+	 */
+	public void setHost(String host);
+
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the port
+	 */
+	public void setPort(int port);
+	
 	/**
 	 * Destroys endpoint.
 	 */
