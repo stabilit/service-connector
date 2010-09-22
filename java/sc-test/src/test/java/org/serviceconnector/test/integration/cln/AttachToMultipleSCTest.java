@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 
 
 public class AttachToMultipleSCTest {
@@ -25,11 +25,11 @@ public class AttachToMultipleSCTest {
 	private static Process scProcess0;
 	private static Process scProcess1;
 
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess0 = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			scProcess1 = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);

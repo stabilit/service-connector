@@ -13,30 +13,27 @@ import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.IPublishService;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 public class SubscribeUnsubscribe {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscribeClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribe.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;
 
 	private ISCClient client;
 
-	private Exception ex;
-
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.publishSrv,
@@ -170,6 +167,27 @@ public class SubscribeUnsubscribe {
 		service.unsubscribe();
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
+	}
+	
+	@Test
+	public void subscribeUnsubscribe_twice_isSubscribedThanNot() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+
+			service.subscribe(TestConstants.mask, "sessionInfo", 300,
+					new DemoPublishClientCallback(service));
+			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(true, service.isSubscribed());
+			service.unsubscribe();
+			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(false, service.isSubscribed());
+			
+			service.subscribe(TestConstants.mask, "sessionInfo", 300,
+					new DemoPublishClientCallback(service));
+			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(true, service.isSubscribed());
+			service.unsubscribe();
+			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(false, service.isSubscribed());
 	}
 
 	@Test

@@ -10,7 +10,7 @@ import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
 public class StartSessionServer {
@@ -61,7 +61,7 @@ public class StartSessionServer {
 			}
 
 			// for testing whether the server already started
-			new TestEnvironmentController().createFile(startFile);
+			new ProcessesController().createFile(startFile);
 
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean()
 					.getName();

@@ -12,7 +12,7 @@ import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 
 
@@ -26,12 +26,12 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	private int threadCount = 0;
 	private ISCSessionServer server;
 
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 	private static Process scProcess;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {

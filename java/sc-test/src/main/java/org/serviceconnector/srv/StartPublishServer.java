@@ -29,7 +29,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 
 public class StartPublishServer {
 
@@ -77,7 +77,7 @@ public class StartPublishServer {
 			}
 
 			// for testing whether the server already started
-			new TestEnvironmentController().createFile(startFile);
+			new ProcessesController().createFile(startFile);
 
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean()
 					.getName();

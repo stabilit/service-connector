@@ -13,7 +13,7 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
@@ -29,12 +29,12 @@ public class EnableServiceDisableServiceClientToSCTest {
 	private ISCClient client;
 	private Exception ex;
 
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 
 	//TODO registering notEnabled service fails
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {

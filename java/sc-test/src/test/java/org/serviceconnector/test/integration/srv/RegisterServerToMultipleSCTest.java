@@ -12,7 +12,7 @@ import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 
 
 public class RegisterServerToMultipleSCTest {
@@ -23,13 +23,13 @@ public class RegisterServerToMultipleSCTest {
 	private int threadCount = 0;
 	private ISCSessionServer server;
 
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 	private static Process scProcess;
 	private static Process r;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			r = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);

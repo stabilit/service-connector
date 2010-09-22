@@ -15,8 +15,9 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cln.PerformanceSessionClient;
+import org.serviceconnector.ctrl.util.ClientThreadController;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 
@@ -32,11 +33,11 @@ public class PerformanceTests {
 
 	private ISCClient client;
 
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv,
@@ -70,7 +71,7 @@ public class PerformanceTests {
 	}
 
 	@Test
-	public void execute_10000MessagesWith128BytesLongBody_outputTime() throws Exception {
+	public void execute_10000MessagesWith128BytesLongBody_outputsTime() throws Exception {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
@@ -87,89 +88,85 @@ public class PerformanceTests {
 				.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
 		assertEquals(true, stop - start < 25000);
 	}
+	
+	@Test
+	public void execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength() throws Exception {
+		long previousResult = Long.MAX_VALUE;
+		long result = Long.MAX_VALUE - 1;
+		int dataLength = 10 * TestConstants.dataLength1MB;
+		int messages = 0;
+
+		while (result < previousResult) {
+			previousResult = result;
+			messages++;
+
+			ClientThreadController clientCtrl = new ClientThreadController(false, true,
+					1, 1, messages, dataLength / messages);
+
+			result = clientCtrl.perform();
+		}
+
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + " using " + --messages
+				+ " messages of " + dataLength/messages + "B data each.");
+		assertEquals(true, previousResult < 25000);
+	}
+
 
 	@Test
 	public void createSessionDeleteSession_10000Times_outputsTime() throws Exception {
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
-
-		long start = System.currentTimeMillis();
-		for (int i = 0; i < 1000; i++) {
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10);
-				sessionService.deleteSession();
-			}
-		}
-		long stop = System.currentTimeMillis();
-		testLogger.info("Time to create session and delete session 10000 times was:\t"
-				+ (stop - start));
-		assertEquals(true, stop - start < 25000);
+		ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 10000, 0, 0);
+		long result = clientCtrl.perform();
+		assertEquals(true, result < 25000);
 	}
 
 	@Test
 	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime()
 			throws Exception {
-		ThreadSafeCounter[] messages = new ThreadSafeCounter[10];
-
-		CountDownLatch startSignal = new CountDownLatch(1);
-		CountDownLatch doneSignal = new CountDownLatch(10);
-
 		int threadCount = Thread.activeCount();
-		// create and start threads
-		for (int i = 0; i < 10; i++) {
-			messages[i] = new ThreadSafeCounter();
-			new Thread(new PerformanceSessionClient(startSignal, doneSignal, messages[i])).start();
-		}
 
-		long start = System.currentTimeMillis();
-		startSignal.countDown();
-		doneSignal.await();
-		long stop = System.currentTimeMillis();
+		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100,
+				128);
+		long result = clientCtrl.perform();
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
-		service.createSession("sessionInfo", 300);
-		SCMessage response = service.execute(new SCMessage("executed"));
-		service.deleteSession();
-		
-		int sum = 0;
-		for (int i = 0; i < 10; i++) {
-			sum += messages[i].value();
-		}
-		
-		testLogger.info("Messages executed successfuly (clients):\t" + sum);
-		testLogger.info("Messages executed successfuly (server):\t" + response.getData().toString());
-		testLogger		
-				.info("Time to create session execute and delete session:\t" + (stop - start) + "ms");
 		testLogger.info("Threads before initializing clients:\t" + threadCount);
 		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-		assertEquals(true, stop - start < 25000);
+		assertEquals(true, result < 25000);
 	}
-	
-	@Test
-	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime() throws Exception {
-		int threadCount = Thread.activeCount();
-		
-		long start = System.currentTimeMillis();
-		for (int i = 0; i < 1000; i++) {
-			ISessionService service = client.newSessionService(TestConstants.serviceName);
-			service.createSession("sessionInfo", 300);
-			for (int j = 0; j < 10; j++) {
-				service.execute(new SCMessage(new byte[128]));
-			}
-			service.deleteSession();
-		}
-		long stop = System.currentTimeMillis();
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
-		service.createSession("sessionInfo", 300);
-		SCMessage response = service.execute(new SCMessage("executed"));
-		service.deleteSession();
-		
-		testLogger
-				.info("Time to create session execute and delete session " + response.getData().toString() + " times single client was:\t"
-						+ (stop - start));
-		testLogger.info("Threads before initializing clients:\t" + threadCount
-				+ "\nThreads after execution completed:\t" + Thread.activeCount());
-		assertEquals(true, stop - start < 25000);
+	@Test
+	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime()
+			throws Exception {
+		int threadCount = Thread.activeCount();
+
+		ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100,
+				128);
+		long result = clientCtrl.perform();
+
+		testLogger.info("Threads before initializing clients:\t" + threadCount);
+		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
+		assertEquals(true, result < 25000);
+	}
+
+	@Test
+	public void createSessionExecuteDeleteSession_roughly10000ExecuteMessagesByParallelClients_outputsBestTimeAndNumberOfClients()
+			throws Exception {
+		long previousResult = Long.MAX_VALUE;
+		long result = Long.MAX_VALUE - 1;
+		int clientsCount = 0;
+
+		while (result < previousResult) {
+			previousResult = result;
+			clientsCount++;
+
+			ClientThreadController clientCtrl = new ClientThreadController(false, true,
+					clientsCount, 10000 / (100 * clientsCount), 100, 128);
+
+			result = clientCtrl.perform();
+		}
+
+		testLogger.info("Best performance to execute roughly 10000 messages was " + previousResult + " using " + --clientsCount
+				+ " parallel clients");
+		assertEquals(true, previousResult < 25000);
 	}
 }

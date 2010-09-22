@@ -8,15 +8,15 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
-public class TestEnvironmentController {
+public class ProcessesController {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestEnvironmentController.class);
+	protected final static Logger logger = Logger.getLogger(ProcessesController.class);
 
 	private String fs;
 	private String userDir;
 
-	public TestEnvironmentController() {
+	public ProcessesController() {
 		fs = System.getProperty("file.separator");
 		userDir = System.getProperty("user.dir");
 	}

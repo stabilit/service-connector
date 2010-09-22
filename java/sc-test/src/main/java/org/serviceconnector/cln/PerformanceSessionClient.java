@@ -17,15 +17,29 @@ public class PerformanceSessionClient implements Runnable {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PerformanceSessionClient.class);
-	private final CountDownLatch startSignal;
+	private final CountDownLatch beforeAttachSignal;
+	private final CountDownLatch afterAttachSignal;
+	private final CountDownLatch attachedSignal;
 	private final CountDownLatch doneSignal;
-	
+
 	private ThreadSafeCounter counter;
 
-	public PerformanceSessionClient(CountDownLatch startSignal, CountDownLatch doneSignal, ThreadSafeCounter counter) {
-		this.startSignal = startSignal;
+	private final int sessionCycles;
+	private final int executeCycles;
+	private final int messageSize;
+
+	public PerformanceSessionClient(CountDownLatch beforeAttachSignal,
+			CountDownLatch afterAttachSignal, CountDownLatch attachedSignal,
+			CountDownLatch doneSignal, ThreadSafeCounter counter, int sessionCycles,
+			int executeCycles, int messageSize) {
+		this.beforeAttachSignal = beforeAttachSignal;
+		this.afterAttachSignal = afterAttachSignal;
+		this.attachedSignal = attachedSignal;
 		this.doneSignal = doneSignal;
 		this.counter = counter;
+		this.sessionCycles = sessionCycles;
+		this.executeCycles = executeCycles;
+		this.messageSize = messageSize;
 	}
 
 	@Override
@@ -35,20 +49,28 @@ public class PerformanceSessionClient implements Runnable {
 		long start = System.currentTimeMillis();
 
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT9000);
 			// wait for signal to start cycle
-			startSignal.await();
+			beforeAttachSignal.await();
 
-			for (int i = 0; i < 100; i++) {
+			try {
+				client.attach(TestConstants.HOST, TestConstants.PORT9000);
+			} catch (Exception e) {
+				testLogger.info("attach failed");
+			} finally {
+				attachedSignal.countDown();
+			}
+
+			afterAttachSignal.await();
+
+			for (int i = 0; i < sessionCycles; i++) {
 				ISessionService service = client.newSessionService(TestConstants.serviceName);
 				service.createSession("sessionInfo", 300);
-				for (int j = 0; j < 10; j++) {
-					service.execute(new SCMessage(new byte[128]));
+				for (int j = 0; j < executeCycles; j++) {
+					service.execute(new SCMessage(new byte[messageSize]));
 					counter.increment();
 				}
 				service.deleteSession();
 			}
-			// signal that this worker is done
 
 		} catch (Exception e) {
 			logger.fatal("run", e);
@@ -56,13 +78,15 @@ public class PerformanceSessionClient implements Runnable {
 			try {
 				client.detach();
 			} catch (Exception e) {
-				logger.error("run", e);
+				testLogger.info("detach failed");
 			}
 			long stop = System.currentTimeMillis();
-			testLogger.info("Performance client threadId: " + Thread.currentThread().getId()
-					+ " has taken " + (stop - start)
-					+ "ms to execute " + counter + "messages.\nCurrent number on the latch:\t" + doneSignal.getCount());
+			// signal that this worker is done
 			doneSignal.countDown();
+
+			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute "
+					+ counter + " messages.\nCurrent number on the latch:\t"
+					+ doneSignal.getCount());
 		}
 	}
 }

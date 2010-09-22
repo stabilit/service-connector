@@ -14,7 +14,7 @@ import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctrl.util.TestEnvironmentController;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.sc.service.SCServiceException;
 
 public class PublishConnectionTypeHttpTest {
@@ -26,11 +26,11 @@ public class PublishConnectionTypeHttpTest {
 	private Exception ex;
 
 	private static Process scProcess;
-	private static TestEnvironmentController ctrl;
+	private static ProcessesController ctrl;
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		ctrl = new TestEnvironmentController();
+		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		} catch (Exception e) {
