@@ -21,7 +21,7 @@
  */
 package org.serviceconnector.test.pool;
 
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
@@ -35,7 +35,7 @@ public class TestContext implements IRequesterContext {
 	protected ConnectionPool connectionPool;
 	private SCMPMessageId msgId;
 
-	public TestContext(ICommunicatorConfig config, SCMPMessageId msgId) {
+	public TestContext(CommunicatorConfig config, SCMPMessageId msgId) {
 		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
 		this.connectionPool.setMinConnections(1);
 		this.msgId = msgId;

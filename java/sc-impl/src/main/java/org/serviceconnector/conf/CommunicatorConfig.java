@@ -17,7 +17,6 @@
 package org.serviceconnector.conf;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.ICommunicatorConfig;
 
 
 /**
@@ -25,7 +24,7 @@ import org.serviceconnector.conf.ICommunicatorConfig;
  * 
  * @author JTraber
  */
-public class CommunicatorConfig implements ICommunicatorConfig {
+public class CommunicatorConfig {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
@@ -72,8 +71,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.communicatorName = respName;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the communicator name.
+	 * 
+	 * @return the communicator name
+	 */
 	public String getCommunicatorName() {
 		return communicatorName;
 	}
@@ -88,8 +90,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.communicatorName = respName;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public int getPort() {
 		return port;
 	}
@@ -104,8 +109,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.port = port;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return host;
 	}
@@ -120,8 +128,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.host = host;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the connection type.
+	 *
+	 * @return the connection type
+	 */
 	public String getConnectionType() {
 		return this.connectionType;
 	}
@@ -155,8 +166,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.maxPoolSize = maxPoolSize;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the keep alive interval.
+	 * 
+	 * @return the keep alive interval
+	 */
 	public int getKeepAliveInterval() {
 		return keepAliveInterval;
 	}
@@ -179,8 +193,11 @@ public class CommunicatorConfig implements ICommunicatorConfig {
 		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the operation timeout multiplier.
+	 * 
+	 * @return the operation timeout multiplier
+	 */
 	public double getOperationTimeoutMultiplier() {
 		return operationTimeoutMultiplier;
 	}

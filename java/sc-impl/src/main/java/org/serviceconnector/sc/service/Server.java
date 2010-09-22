@@ -31,7 +31,7 @@ import org.serviceconnector.call.SCMPSrvDeleteSessionCall;
 import org.serviceconnector.call.SCMPSrvExecuteCall;
 import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.IContext;
 import org.serviceconnector.net.req.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
@@ -98,7 +98,7 @@ public class Server {
 		this.maxConnections = maxConnections;
 		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
 		IResponder responder = responderRegistry.getCurrentResponder();
-		ICommunicatorConfig respConfig = responder.getResponderConfig();
+		CommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
 		this.operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
 		this.host = socketAddress.getHostName();

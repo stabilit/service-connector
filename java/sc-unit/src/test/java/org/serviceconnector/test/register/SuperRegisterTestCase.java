@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.net.req.IRequester;
@@ -99,7 +99,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	private class RegisterServerContext extends TestContext {
 
-		public RegisterServerContext(ICommunicatorConfig config, SCMPMessageId msgId) {
+		public RegisterServerContext(CommunicatorConfig config, SCMPMessageId msgId) {
 			super(config, msgId);
 			// for register only 1 connection is allowed
 			this.connectionPool.setMaxConnections(1);

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 
 
 /**
@@ -51,7 +51,7 @@ public class ResponderConfigPool extends CommunicatorConfigPool {
 	 * 
 	 * @return the responder configuration list
 	 */
-	public List<ICommunicatorConfig> getResponderConfigList() {
+	public List<CommunicatorConfig> getResponderConfigList() {
 		return this.getCommunicatorConfigList();
 	}
 }

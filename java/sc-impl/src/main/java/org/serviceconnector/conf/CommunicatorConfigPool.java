@@ -27,7 +27,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.scmp.SCMPError;
 
 
@@ -44,7 +44,7 @@ public abstract class CommunicatorConfigPool {
 	/** The properties. */
 	private Properties props;
 	/** The requester configuration list. */
-	private List<ICommunicatorConfig> comConfigList;
+	private List<CommunicatorConfig> comConfigList;
 	/** The writePID flag. */
 	private boolean writePIDFlag;
 
@@ -90,7 +90,7 @@ public abstract class CommunicatorConfigPool {
 		}
 
 		String[] communicators = respNames.split(Constants.COMMA_OR_SEMICOLON);
-		comConfigList = new ArrayList<ICommunicatorConfig>();
+		comConfigList = new ArrayList<CommunicatorConfig>();
 
 		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
 		double operationTimeoutMultiplier = Constants.OPERATION_TIMEOUT_MULTIPLIER;
@@ -170,7 +170,7 @@ public abstract class CommunicatorConfigPool {
 	 * 
 	 * @return the requester configuration list
 	 */
-	public List<ICommunicatorConfig> getCommunicatorConfigList() {
+	public List<CommunicatorConfig> getCommunicatorConfigList() {
 		return comConfigList;
 	}
 

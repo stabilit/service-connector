@@ -31,7 +31,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
@@ -107,9 +107,9 @@ public final class SC {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
 		}
 
-		List<ICommunicatorConfig> respConfigList = config.getResponderConfigList();
+		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
 
-		for (ICommunicatorConfig respConfig : respConfigList) {
+		for (CommunicatorConfig respConfig : respConfigList) {
 			IResponder responder = new Responder(respConfig);
 			try {
 				responder.create();

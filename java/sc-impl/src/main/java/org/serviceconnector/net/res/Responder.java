@@ -17,7 +17,7 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 
 
 /**
@@ -32,14 +32,14 @@ public class Responder implements IResponder {
 	protected final static Logger logger = Logger.getLogger(Responder.class);	
 	
 	/** The responder configuration. */
-	private ICommunicatorConfig respConfig;
+	private CommunicatorConfig respConfig;
 	/** The endpoint connection. */
 	private IEndpoint endpoint;
 
 	public Responder() {
 	}
 
-	public Responder(ICommunicatorConfig respConfig) {
+	public Responder(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
 	}
 
@@ -79,12 +79,12 @@ public class Responder implements IResponder {
 	}
 
 	@Override
-	public ICommunicatorConfig getResponderConfig() {
+	public CommunicatorConfig getResponderConfig() {
 		return this.respConfig;
 	}
 
 	@Override
-	public void setResponderConfig(ICommunicatorConfig respConfig) {
+	public void setResponderConfig(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
 	}
 }

@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.conf.ICommunicatorConfig;
+import org.serviceconnector.conf.CommunicatorConfig;
 
 /**
  * The Interface IRequester.
@@ -68,12 +68,12 @@ public interface IResponder {
 	 * @param respConfig
 	 *            the new responder configuration
 	 */
-	public void setResponderConfig(ICommunicatorConfig respConfig);
+	public void setResponderConfig(CommunicatorConfig respConfig);
 
 	/**
 	 * Gets the responder configuration.
 	 * 
 	 * @return the responder configuration
 	 */
-	public ICommunicatorConfig getResponderConfig();
+	public CommunicatorConfig getResponderConfig();
 }
