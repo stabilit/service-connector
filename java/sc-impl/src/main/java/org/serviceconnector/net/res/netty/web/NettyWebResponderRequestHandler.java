@@ -25,9 +25,16 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.serviceconnector.web.IWebRequest;
+import org.serviceconnector.web.IWebResponse;
+import org.serviceconnector.web.cmd.IWebCommand;
+import org.serviceconnector.web.cmd.WebCommandFactory;
+import org.serviceconnector.web.netty.NettyWebRequest;
+import org.serviceconnector.web.netty.NettyWebResponse;
 
 public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
@@ -39,17 +46,20 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		writeResponse(event, "Hello World " + ++counter);
-	}
-
-	private void writeResponse(MessageEvent event, String msg) {
+		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(msg.getBytes());
+		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
+		IWebRequest webRequest = new NettyWebRequest(httpRequest);
+		IWebResponse webResponse = new NettyWebResponse(httpResponse);
+		IWebCommand webCommand = webCommandFactory.getWebCommand(webRequest);
+		webCommand.run(webRequest, webResponse);
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
 		httpResponse.setContent(buffer);
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);		
 	}
+
 
 	/** {@inheritDoc} */
 	@Override

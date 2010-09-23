@@ -44,6 +44,8 @@ import org.serviceconnector.sc.service.SCServiceException;
 import org.serviceconnector.sc.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
+import org.serviceconnector.web.cmd.WebCommandFactory;
+import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
 
 
 /**
@@ -105,6 +107,12 @@ public final class SC {
 		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
 		if (commandFactory == null) {
 			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
+		}
+
+		// init web command factory
+		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
+		if (webCommandFactory == null) {
+			WebCommandFactory.setCurrentWebCommandFactory(new ServiceConnectorWebCommandFactory());
 		}
 
 		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
