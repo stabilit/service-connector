@@ -29,6 +29,7 @@ import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionSessionRegistry;
 import org.serviceconnector.sc.service.PublishService;
 import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.sc.service.ServiceType;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.sc.service.SessionService;
@@ -139,7 +140,6 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected Service validateService(String serviceName) throws SCMPCommandException {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-
 		Service service = serviceRegistry.getService(serviceName);
 		if (service == null) {
 			// no service known with incoming serviceName
@@ -148,6 +148,14 @@ public abstract class CommandAdapter implements ICommand {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
+		if (service.getState() == ServiceState.DISABLED) {
+			// no session allowed for DISABLED service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.DISABLED,
+					"service: "+serviceName+" is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		
 		return service;
 	}
 

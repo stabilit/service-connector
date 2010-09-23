@@ -68,7 +68,7 @@ public class ClnCreateSessionCommand extends CommandAdapter implements IPassThro
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		SessionService service = this.validateSessionService(serviceName);
-
+		
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());

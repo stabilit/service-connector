@@ -30,9 +30,12 @@ public enum SCMPError {
 	BAD_REQUEST("400", "Bad request. The request could not be understood by the server due to malformed syntax."),
 	/** The NOT_FOUND. */
 	NOT_FOUND("404", "Not found."),
+	/** The DISABLED. */
+	DISABLED("405", "Disabled."),
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT("408",
 			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
+			
 	/** 420 Validation errors */
 	/** The header validation error. */
 	HV_ERROR("420", "Validation error occured."),
