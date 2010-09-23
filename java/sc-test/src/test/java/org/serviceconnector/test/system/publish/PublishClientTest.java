@@ -26,8 +26,6 @@ public class PublishClientTest {
 
 	private ISCClient client;
 
-	private Exception ex;
-
 	private static ProcessesController ctrl;
 
 	@BeforeClass
@@ -138,7 +136,6 @@ public class PublishClientTest {
 		int counter = 0;
 
 		for (int i = 0; i < 600 && callback.getMessageCounter() < 20; i++) {
-			System.out.println("" + i + "\ncounter:\t\t" + counter + "\ncallback counter:\t" + callback.messageCounter);
 			if (counter == callback.getMessageCounter()) {
 				Thread.sleep(100);
 			} else if (counter < callback.getMessageCounter()) {
