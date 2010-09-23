@@ -14,81 +14,70 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry;
+package org.serviceconnector.registry;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.sc.service.Server;
 
 
 /**
- * The Class ServiceRegistry. Registry stores entries for properly configured services.
+ * The Class ServerRegistry. Stores an entry for every registered server in system.
  * 
  * @author JTraber
  */
-public final class ServiceRegistry extends Registry<String, Service> {
+public class ServerRegistry extends Registry<String, Server> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceRegistry.class);
+	protected final static Logger logger = Logger.getLogger(ServerRegistry.class);
 	
 	/** The instance. */
-	private static ServiceRegistry instance = new ServiceRegistry();
+	private static ServerRegistry instance = new ServerRegistry();
 
 	/**
-	 * Instantiates a new service registry.
+	 * Instantiates a new server registry.
 	 */
-	private ServiceRegistry() {
+	private ServerRegistry() {
 	}
 
 	/**
-	 * Gets the current instance.
+	 * Gets the current instance of server registry.
 	 * 
 	 * @return the current instance
 	 */
-	public static ServiceRegistry getCurrentInstance() {
+	public static ServerRegistry getCurrentInstance() {
 		return instance;
 	}
 
 	/**
-	 * Adds the service.
+	 * Adds an entry of a server.
 	 * 
 	 * @param key
 	 *            the key
-	 * @param service
-	 *            the service
+	 * @param server
+	 *            the server
 	 */
-	public void addService(String key, Service service) {
-		super.put(key, service);
+	public void addServer(String key, Server server) {
+		this.put(key, server);
 	}
 
 	/**
-	 * Gets the service.
+	 * Gets the server.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the service
+	 * @return the server
 	 */
-	public Service getService(String key) {
-		return this.get(key);
+	public Server getServer(String key) {
+		return super.get(key);
 	}
 
 	/**
-	 * Removes the service.
-	 * 
-	 * @param service
-	 *            the service
-	 */
-	public void removeService(Service service) {
-		this.removeService(service.getServiceName());
-	}
-
-	/**
-	 * Removes the service.
+	 * Removes the server.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the service
 	 */
-	public Service removeService(String key) {
-		return super.remove(key);
+	public void removeServer(String key) {
+		super.remove(key);
 	}
 }

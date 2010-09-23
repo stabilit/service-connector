@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry;
+package org.serviceconnector.registry;
 
 import java.util.Timer;
 import java.util.TimerTask;

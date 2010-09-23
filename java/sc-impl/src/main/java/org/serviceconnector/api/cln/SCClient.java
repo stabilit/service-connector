@@ -32,6 +32,7 @@ import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -283,7 +284,7 @@ public class SCClient implements ISCClient {
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
 		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
-		if (Boolean.TRUE.toString().equalsIgnoreCase(body)) {
+		if (ServiceState.ENABLED.toString().equalsIgnoreCase(body)) {
 			return true;
 		}
 		return false;

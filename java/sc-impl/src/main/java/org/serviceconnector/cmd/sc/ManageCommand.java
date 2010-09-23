@@ -23,11 +23,12 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.registry.DisabledServiceRegistry;
-import org.serviceconnector.sc.registry.ServiceRegistry;
-import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
@@ -46,7 +47,7 @@ public class ManageCommand extends CommandAdapter {
 	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")=(.*)";
 	/** The Constant MANAGE_PATTER. */
-	private static final Pattern MANAGE_PATTER = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
+	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Instantiates a new manage command.
@@ -65,7 +66,6 @@ public class ManageCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
 
 		// TODO not found error message JOT
 
@@ -84,29 +84,30 @@ public class ManageCommand extends CommandAdapter {
 			System.exit(0);
 		}
 
-		Matcher m = MANAGE_PATTER.matcher(bodyString);
+		Matcher m = MANAGE_PATTERN.matcher(bodyString);
 		if (!m.matches()) {
-			// given string has bad format
+			logger.error("wrong body syntax:" + bodyString); 		// body has bad syntax
+			scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "wrong body syntax");
 			return;
 		}
 
 		String stateString = m.group(1);
 		String serviceName = m.group(2);
 
-		if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
-			// enable service
-			if (disabledServiceRegistry.containsKey(serviceName)) {
-				logger.info("enable service: " + serviceName);
-				Service service = disabledServiceRegistry.removeService(serviceName);
-				serviceRegistry.addService(serviceName, service);
-			}
-			return;
-		}
 		if (serviceRegistry.containsKey(serviceName)) {
-			// disable service
-			logger.info("disable service: " + serviceName);
-			Service service = serviceRegistry.removeService(serviceName);
-			disabledServiceRegistry.addService(serviceName, service);
+			// service exists
+			if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
+				// enable service
+				logger.info("enable service:" + serviceName);
+				serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);
+			} else {
+				// disable service
+				logger.info("disable service:" + serviceName);
+				serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
+			}
+		} else {
+			logger.debug("service:" + serviceName + " not found");
+			scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
 		}
 	}
 

@@ -21,7 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.registry.SessionRegistry;
+import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.sc.service.Server;
 import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.sc.service.SessionService;

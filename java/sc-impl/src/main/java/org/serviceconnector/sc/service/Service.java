@@ -39,6 +39,8 @@ public abstract class Service {
 
 	/** The type. */
 	private ServiceType type;
+	/** The state. */
+	private ServiceState state;
 	/** The name. */
 	private String name;
 	/** The location. */
@@ -122,6 +124,22 @@ public abstract class Service {
 		return type;
 	}
 
+	/**
+	 * Gets the current service state
+	 * 
+	 * @return
+	 */
+	public ServiceState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 */
+	public void setState(ServiceState state) {
+		this.state = state;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
@@ -161,4 +179,6 @@ public abstract class Service {
 		}
 		return availableSessions;
 	}
+	
+
 }

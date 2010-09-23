@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry.jmx;
+package org.serviceconnector.registry.jmx;
 
 /**
  * The Interface IRegistryMXBean. Needed for JMX access to registries.

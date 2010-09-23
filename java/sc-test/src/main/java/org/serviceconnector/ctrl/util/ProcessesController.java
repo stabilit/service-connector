@@ -140,11 +140,11 @@ public class ProcessesController {
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
 				+ "target" + fs + "test-server.jar " + serverType + " " + listenerPort + " " + port + " "
 				+ maxConnections + " " + fileName + services;
-		Process p = Runtime.getRuntime().exec(command);
+		Process srvProcess = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);
 
-		return p;
+		return srvProcess;
 	}
 	
 	public Process restartServer(Process server, String serverType, String log4jSrvProperties, int listenerPort,

@@ -31,8 +31,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.registry.DisabledServiceRegistry;
-import org.serviceconnector.sc.registry.ServiceRegistry;
+import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
 
@@ -72,7 +71,6 @@ public class ServiceLoader {
 		String[] serviceNames = serviceNamesString.split(Constants.COMMA_OR_SEMICOLON);
 
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		DisabledServiceRegistry disabledServiceRegistry = DisabledServiceRegistry.getCurrentInstance();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName
@@ -91,8 +89,8 @@ public class ServiceLoader {
 				break;
 			case FILE_SERVICE:
 				// TODO implement file services -wrong at this time
-				service = new PublishService(serviceName);
-				break;
+				// service = new PublishService(serviceName);
+				// break;
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
@@ -101,14 +99,15 @@ public class ServiceLoader {
 
 			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
+				service.setState(ServiceState.ENABLED);
 				logger.debug("state enable for service: " + serviceName);
-				// enable is not set - means true or true itself
-				serviceRegistry.addService(service.getServiceName(), service);
+				
 			} else {
+				service.setState(ServiceState.UNDEFINED);
 				logger.debug("state disable for service: " + serviceName);
 				// enable is false - so add to disabledServiceRegistry
-				disabledServiceRegistry.addService(service.getServiceName(), service);
 			}
+			serviceRegistry.addService(service.getServiceName(), service);
 		}
 	}
 }

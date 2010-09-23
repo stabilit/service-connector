@@ -14,70 +14,26 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry;
-
-import org.apache.log4j.Logger;
-import org.serviceconnector.sc.service.Server;
-
+package org.serviceconnector.registry.jmx;
 
 /**
- * The Class ServerRegistry. Stores an entry for every registered server in system.
+ * The Interface IMapBeanWrapperMXBean. Interface provides access for JMX clients.
  * 
  * @author JTraber
  */
-public class ServerRegistry extends Registry<String, Server> {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServerRegistry.class);
-	
-	/** The instance. */
-	private static ServerRegistry instance = new ServerRegistry();
+public interface IRegistryEntryWrapperMXBean {
 
 	/**
-	 * Instantiates a new server registry.
-	 */
-	private ServerRegistry() {
-	}
-
-	/**
-	 * Gets the current instance of server registry.
+	 * Gets the entry.
 	 * 
-	 * @return the current instance
+	 * @return the entry
 	 */
-	public static ServerRegistry getCurrentInstance() {
-		return instance;
-	}
+	String getEntry();
 
 	/**
-	 * Adds an entry of a server.
+	 * Gets the key.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param server
-	 *            the server
+	 * @return the key
 	 */
-	public void addServer(String key, Server server) {
-		this.put(key, server);
-	}
-
-	/**
-	 * Gets the server.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the server
-	 */
-	public Server getServer(String key) {
-		return super.get(key);
-	}
-
-	/**
-	 * Removes the server.
-	 * 
-	 * @param key
-	 *            the key
-	 */
-	public void removeServer(String key) {
-		super.remove(key);
-	}
+	String getKey();
 }

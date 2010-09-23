@@ -14,27 +14,29 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry;
+package org.serviceconnector.registry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.sc.service.Service;
 
 
 /**
- * The Class DisabledServiceRegistry.
+ * The Class ServiceRegistry. Registry stores entries for properly configured services.
+ * 
+ * @author JTraber
  */
-public final class DisabledServiceRegistry extends Registry<String, Service> {
+public final class ServiceRegistry extends Registry<String, Service> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DisabledServiceRegistry.class);
+	protected final static Logger logger = Logger.getLogger(ServiceRegistry.class);
 	
 	/** The instance. */
-	private static DisabledServiceRegistry instance = new DisabledServiceRegistry();
+	private static ServiceRegistry instance = new ServiceRegistry();
 
 	/**
-	 * Instantiates a new disabled service registry.
+	 * Instantiates a new service registry.
 	 */
-	private DisabledServiceRegistry() {
+	private ServiceRegistry() {
 	}
 
 	/**
@@ -42,7 +44,7 @@ public final class DisabledServiceRegistry extends Registry<String, Service> {
 	 * 
 	 * @return the current instance
 	 */
-	public static DisabledServiceRegistry getCurrentInstance() {
+	public static ServiceRegistry getCurrentInstance() {
 		return instance;
 	}
 

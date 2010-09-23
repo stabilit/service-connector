@@ -20,12 +20,12 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.registry.DisabledServiceRegistry;
-import org.serviceconnector.sc.registry.Registry;
-import org.serviceconnector.sc.registry.ServerRegistry;
-import org.serviceconnector.sc.registry.ServiceRegistry;
-import org.serviceconnector.sc.registry.SessionRegistry;
+import org.serviceconnector.registry.Registry;
+import org.serviceconnector.registry.ServerRegistry;
+import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -85,16 +85,22 @@ public class InspectCommand extends CommandAdapter {
 		if (bodyString.startsWith(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
-			logger.debug("state requested for service : " + serviceName);
+			logger.debug("state request for service:" + serviceName);
+
 			if (serviceRegistry.containsKey(serviceName)) {
-				scmpReply.setBody(Boolean.TRUE.toString());
-				logger.debug("state true for service : " + serviceName);
-			} else if (DisabledServiceRegistry.getCurrentInstance().containsKey(serviceName)) {
-				scmpReply.setBody(Boolean.FALSE.toString());
-				logger.debug("state false for service : " + serviceName);
+				if (serviceRegistry.getService(serviceName).getState() == ServiceState.ENABLED) {
+					scmpReply.setBody(ServiceState.ENABLED.toString());
+					logger.debug("service:" + serviceName + "is enabled");
+				} else if (serviceRegistry.getService(serviceName).getState() == ServiceState.DISABLED) {
+					scmpReply.setBody(ServiceState.DISABLED.toString());
+					logger.debug("service:" + serviceName + "is disabled");
+				} else {
+					scmpReply.setBody("?");
+					logger.debug("service:" + serviceName + "is state unknown");
+				}
 			} else {
-				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "serviceName :" + serviceName);
-				logger.debug("not found for service : " + serviceName);
+				logger.debug("service:" + serviceName+" not found");
+				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName+" not found");
 			}
 			response.setSCMP(scmpReply);
 			return;
@@ -103,7 +109,7 @@ public class InspectCommand extends CommandAdapter {
 		if (bodyString.startsWith(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
-			logger.debug("sessions requested for service : " + serviceName);
+			logger.debug("sessions request for service:" + serviceName);
 			if (serviceRegistry.containsKey(serviceName)) {
 				Service service = serviceRegistry.getService(serviceName);
 				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());

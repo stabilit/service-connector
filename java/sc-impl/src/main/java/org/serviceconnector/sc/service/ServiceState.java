@@ -27,7 +27,7 @@ import org.serviceconnector.util.ReverseEnumMap;
 
 public enum ServiceState implements IReversibleEnum<String, ServiceState> {
 
-	ENABLED("enabled"), DISABLED("disabled"),UNDEFINED("undefined");
+	ENABLED("enabled"), DISABLED("disabled"), UNDEFINED("undefined");
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceType.class);

@@ -21,7 +21,7 @@ import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
-import org.serviceconnector.sc.registry.SubscriptionQueue;
+import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.sc.service.IFilterMask;
 import org.serviceconnector.sc.service.SCMPMessageFilterMask;
 import org.serviceconnector.sc.service.Server;

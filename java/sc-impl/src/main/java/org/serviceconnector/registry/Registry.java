@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.registry;
+package org.serviceconnector.registry;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.sc.registry.jmx.IRegistryMXBean;
-import org.serviceconnector.sc.registry.jmx.RegistryEntryWrapperJMX;
+import org.serviceconnector.registry.jmx.IRegistryMXBean;
+import org.serviceconnector.registry.jmx.RegistryEntryWrapperJMX;
 
 
 /**
