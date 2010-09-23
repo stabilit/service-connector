@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
 
 import java.util.concurrent.Executors;
 
@@ -25,7 +25,7 @@ import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.net.req.IConnection;
+import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 

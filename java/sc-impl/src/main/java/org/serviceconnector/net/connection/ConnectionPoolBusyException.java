@@ -14,23 +14,25 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package org.serviceconnector.net;
-
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+ *-----------------------------------------------------------------------------*/
+package org.serviceconnector.net.connection;
 
 /**
- * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous
- * commands.
- * 
- * @author JTraber
+ * The Class ConnectionPoolBusyException. Connection pool has no available connection to give back. Creating is not
+ * possible because allowed limit is reached.
  */
-public interface IResponderCallback {
+public class ConnectionPoolBusyException extends Exception {
 
-	public abstract void callback(IRequest request, IResponse response);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 3224481703543165851L;
+
+	/**
+	 * Instantiates a new connection pool busy exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public ConnectionPoolBusyException(String message) {
+		super(message);
+	}
 }

@@ -19,14 +19,15 @@
 /**
  * 
  */
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
+
 
 
 /**
  * @author JTraber
  *
  */
-public interface IIdleCallback {
+public interface IIdleConnectionCallback {
 	
 	public abstract void connectionIdle(IConnection connection);
 }

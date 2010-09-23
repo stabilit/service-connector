@@ -22,7 +22,7 @@
 package org.serviceconnector.sc.service;
 
 import org.serviceconnector.ctx.IContext;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 
 
 /**

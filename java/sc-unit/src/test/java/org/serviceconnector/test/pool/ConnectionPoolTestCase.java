@@ -23,9 +23,9 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.net.req.ConnectionPool;
-import org.serviceconnector.net.req.ConnectionPoolBusyException;
-import org.serviceconnector.net.req.IConnection;
+import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
+import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.test.SetupTestCases;
 
 

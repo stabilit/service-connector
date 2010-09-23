@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
 
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.scmp.ISCMPCallback;

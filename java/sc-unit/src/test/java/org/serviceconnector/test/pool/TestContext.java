@@ -22,7 +22,7 @@
 package org.serviceconnector.test.pool;
 
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
 

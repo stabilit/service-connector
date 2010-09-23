@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
 
 import org.serviceconnector.ctx.IContext;
 
@@ -45,5 +45,5 @@ public interface IConnectionContext extends IContext {
 	 * 
 	 * @return the idle callback
 	 */
-	public abstract IIdleCallback getIdleCallback();
+	public abstract IIdleConnectionCallback getIdleCallback();
 }

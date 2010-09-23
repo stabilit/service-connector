@@ -20,8 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionContext;
+import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -38,8 +38,9 @@ import org.serviceconnector.util.TimerTaskWrapper;
 
 
 /**
- * The Class Requester. Implements a general behavior of a requester. Defines how to connect/disconnect, send/receive
- * has to process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server.
+ * Defines how to connect/disconnect, send/receive has to process. 
+ * Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */

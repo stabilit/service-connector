@@ -14,16 +14,14 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.req;
+package org.serviceconnector.net.req;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionContext;
-import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.IRequesterContext;
+import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;

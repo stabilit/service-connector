@@ -17,6 +17,7 @@
 package org.serviceconnector.net.req;
 
 import org.serviceconnector.ctx.IContext;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.scmp.SCMPMessageId;
 
 

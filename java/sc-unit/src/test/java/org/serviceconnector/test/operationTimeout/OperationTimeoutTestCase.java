@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.conf.RequesterConfigPool;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPFault;

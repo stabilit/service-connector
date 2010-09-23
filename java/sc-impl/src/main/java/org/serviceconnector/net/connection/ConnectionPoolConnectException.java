@@ -15,24 +15,27 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
 
 /**
- * The Class ConnectionPoolBusyException. Connection pool has no available connection to give back. Creating is not
- * possible because allowed limit is reached.
+ * The Class ConnectionPoolConnectException. Connection pool failed when establish a connection.
+ * 
+ * @author JTraber
  */
-public class ConnectionPoolBusyException extends Exception {
+public class ConnectionPoolConnectException extends Exception {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 3224481703543165851L;
+	private static final long serialVersionUID = -4611941547421470420L;
 
 	/**
-	 * Instantiates a new connection pool busy exception.
+	 * Instantiates a new connection pool connect exception.
 	 * 
 	 * @param message
 	 *            the message
+	 * @param exception
+	 *            the cause
 	 */
-	public ConnectionPoolBusyException(String message) {
-		super(message);
+	public ConnectionPoolConnectException(String message, Exception exception) {
+		super(message, exception);
 	}
 }

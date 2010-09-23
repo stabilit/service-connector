@@ -14,28 +14,23 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package org.serviceconnector.net.res;
+
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
 
 /**
- * The Class ConnectionPoolConnectException. Connection pool failed when establish a connection.
+ * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous
+ * commands.
  * 
  * @author JTraber
  */
-public class ConnectionPoolConnectException extends Exception {
+public interface IResponderCallback {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -4611941547421470420L;
-
-	/**
-	 * Instantiates a new connection pool connect exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param exception
-	 *            the cause
-	 */
-	public ConnectionPoolConnectException(String message, Exception exception) {
-		super(message, exception);
-	}
+	public abstract void callback(IRequest request, IResponse response);
 }

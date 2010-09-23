@@ -19,11 +19,11 @@ package org.serviceconnector.test.techConnect;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.net.req.ConnectionContext;
-import org.serviceconnector.net.req.ConnectionFactory;
-import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionContext;
-import org.serviceconnector.net.req.IIdleCallback;
+import org.serviceconnector.net.connection.ConnectionContext;
+import org.serviceconnector.net.connection.ConnectionFactory;
+import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.net.connection.IConnectionContext;
+import org.serviceconnector.net.connection.IIdleConnectionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -46,7 +46,7 @@ public class NettyConnectTestCase {
 		connection.setHost("localhost");
 		connection.setPort(8080);
 		connection.setIdleTimeout(0);
-		IIdleCallback idleCallback = new IdleCallback();
+		IIdleConnectionCallback idleCallback = new IdleCallback();
 		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 		connection.setContext(connectionContext);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
@@ -76,7 +76,7 @@ public class NettyConnectTestCase {
 			connection.setHost("localhost");
 			connection.setPort(8080);
 			connection.setIdleTimeout(0);
-			IIdleCallback idleCallback = new IdleCallback();
+			IIdleConnectionCallback idleCallback = new IdleCallback();
 			IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
 			String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
@@ -102,7 +102,7 @@ public class NettyConnectTestCase {
 		// nothing to implement in this case - everything is done by super-class
 	}
 
-	private class IdleCallback implements IIdleCallback {
+	private class IdleCallback implements IIdleConnectionCallback {
 
 		/** {@inheritDoc} */
 		@Override

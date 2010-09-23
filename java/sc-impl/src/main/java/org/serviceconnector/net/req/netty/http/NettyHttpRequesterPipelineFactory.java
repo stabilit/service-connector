@@ -25,7 +25,7 @@ import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
-import org.serviceconnector.net.req.IConnectionContext;
+import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
 
 

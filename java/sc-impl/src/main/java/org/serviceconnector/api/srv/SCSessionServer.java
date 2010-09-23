@@ -28,7 +28,7 @@ import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;

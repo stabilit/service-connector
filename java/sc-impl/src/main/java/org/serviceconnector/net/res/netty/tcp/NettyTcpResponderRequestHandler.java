@@ -33,7 +33,7 @@ import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.log.PerformanceLogger;
-import org.serviceconnector.net.IResponderCallback;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.net.res.netty.NettyTcpRequest;

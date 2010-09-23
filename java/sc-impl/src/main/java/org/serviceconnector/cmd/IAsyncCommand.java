@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd;
 
-import org.serviceconnector.net.IResponderCallback;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 

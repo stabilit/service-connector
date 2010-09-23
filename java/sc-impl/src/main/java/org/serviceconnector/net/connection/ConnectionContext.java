@@ -14,11 +14,11 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req;
+package org.serviceconnector.net.connection;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.req.IConnection;
-import org.serviceconnector.net.req.IConnectionContext;
+import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.net.connection.IConnectionContext;
 
 
 /**
@@ -36,7 +36,7 @@ public class ConnectionContext implements IConnectionContext {
 	/** The idle timeout. */
 	private int idleTimeout;
 	/** The idle callback. */
-	private IIdleCallback idleCallback;
+	private IIdleConnectionCallback idleCallback;
 
 	/**
 	 * Instantiates a new connection context.
@@ -48,7 +48,7 @@ public class ConnectionContext implements IConnectionContext {
 	 * @param idleTimeout
 	 *            the idle timeout
 	 */
-	public ConnectionContext(IConnection connection, IIdleCallback idleCallback, int idleTimeout) {
+	public ConnectionContext(IConnection connection, IIdleConnectionCallback idleCallback, int idleTimeout) {
 		this.connection = connection;
 		this.idleTimeout = idleTimeout;
 		this.idleCallback = idleCallback;
@@ -68,7 +68,7 @@ public class ConnectionContext implements IConnectionContext {
 
 	/** {@inheritDoc} */
 	@Override
-	public IIdleCallback getIdleCallback() {
+	public IIdleConnectionCallback getIdleCallback() {
 		return this.idleCallback;
 	}
 }

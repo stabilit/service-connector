@@ -22,7 +22,7 @@
 package org.serviceconnector.net.req;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
 

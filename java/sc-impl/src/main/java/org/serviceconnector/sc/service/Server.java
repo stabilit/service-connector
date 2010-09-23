@@ -33,12 +33,12 @@ import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.IContext;
-import org.serviceconnector.net.req.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
-import org.serviceconnector.sc.req.Requester;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
