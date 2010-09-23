@@ -250,6 +250,13 @@ public class PublishConnectionTypeHttpTest {
 				new byte[TestConstants.dataLength1MB]);
 	}
 
+	@Test
+	public void publish_10000Messages_passes() throws Exception {
+		for (int i = 0; i < 10000; i++) {
+			server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new byte[128]);
+		}
+	}
+
 	private class CallBack implements ISCServerCallback {
 	}
 }

@@ -129,7 +129,7 @@ public class StartPublishServer {
 					Object data = "publish message nr " + ++index;
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
-					logger.debug("message nr " + index + " sent.");
+					logger.info("message nr " + index + " sent.");
 				} catch (Exception ex) {
 					logger.error("run", ex);
 					return;
