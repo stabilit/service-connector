@@ -79,7 +79,7 @@ public class PublishClientTest {
 
 		service.unsubscribe();
 
-		assertEquals(1, callback.messageCounter);
+		assertEquals(1, callback.getMessageCounter());
 		assertEquals(true, callback.getLastMessage().getData().toString().startsWith(
 				"publish message nr "));
 		assertEquals(null, callback.getLastMessage().getMessageInfo());
@@ -112,7 +112,7 @@ public class PublishClientTest {
 
 		service.unsubscribe();
 
-		assertEquals(2, callback.messageCounter);
+		assertEquals(2, callback.getMessageCounter());
 		assertEquals(true, firstMessage.getData().toString().startsWith("publish message nr "));
 		assertEquals(true, callback.getLastMessage().getData().toString().startsWith(
 				"publish message nr "));
@@ -125,20 +125,50 @@ public class PublishClientTest {
 		assertEquals(false, firstMessage.getSessionId() == null
 				|| callback.getLastMessage().getSessionId().equals(""));
 	}
-	
+
 	@Test
-	public void publish_waitFor20MessagesToBePublished_bodyEndsWithConsequentNumbers()
+	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers()
 			throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
 
-		SCMessage firstMessage = null;
+		SCMessage previousMessage = null;
+		SCMessage newMessage = null;
+		int counter = 0;
+
+		for (int i = 0; i < 600 && callback.getMessageCounter() < 20; i++) {
+			System.out.println("" + i + "\ncounter:\t\t" + counter + "\ncallback counter:\t" + callback.messageCounter);
+			if (counter == callback.getMessageCounter()) {
+				Thread.sleep(100);
+			} else if (counter < callback.getMessageCounter()) {
+				previousMessage = newMessage;
+				newMessage = callback.getLastMessage();
+				counter++;
+				if (counter > 1) {
+					assertEquals(Integer
+							.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1,
+							Integer.parseInt(newMessage.getData().toString().split(" ")[3]));
+				}
+			}
+		}
+		assertEquals("recieved messages", 20, counter);
 	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
-		private volatile int messageCounter = 0;
+		private int messageCounter = 0;
+		/**
+		 * @return the messageCounter
+		 */
+		public synchronized int getMessageCounter() {
+			return messageCounter;
+		}
+
+		public synchronized void increment() {
+			messageCounter++;
+		}
+
 		private SCMessage lastMessage = null;
 
 		/**
@@ -149,7 +179,8 @@ public class PublishClientTest {
 		}
 
 		/**
-		 * @param lastMessage the lastMessage to set
+		 * @param lastMessage
+		 *            the lastMessage to set
 		 */
 		public synchronized void setLastMessage(SCMessage lastMessage) {
 			this.lastMessage = lastMessage;
@@ -161,7 +192,7 @@ public class PublishClientTest {
 
 		@Override
 		public void callback(SCMessage message) {
-			messageCounter++;
+			increment();
 			setLastMessage(message);
 		}
 
