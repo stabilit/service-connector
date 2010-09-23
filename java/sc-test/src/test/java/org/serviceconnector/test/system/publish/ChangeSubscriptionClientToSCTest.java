@@ -14,6 +14,7 @@ import org.serviceconnector.api.cln.IPublishService;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.IService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.sc.service.SCServiceException;
@@ -65,7 +66,7 @@ public class ChangeSubscriptionClientToSCTest {
 		srvProcess = null;
 	}
 
-	//TODO FJU in most of these tests is needed assertion of the changed mask 
+	// TODO FJU in most of these tests is needed assertion of the changed mask
 	@Test
 	public void changeSubscription_serviceNameEmptyNotEstablishedPreviousSubscription_throwsSCException()
 			throws Exception {
@@ -119,9 +120,145 @@ public class ChangeSubscriptionClientToSCTest {
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
 				service));
 		service.changeSubscription(TestConstants.mask);
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
+		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
+	}
+
+	@Test
+	public void changeSubscription_toMaskNull_throwsValidatorException() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		try {
+			service.changeSubscription(null);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(SCMPValidatorException.class, ex.getClass());
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMaskEmpty_throwsValidatorException() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		try {
+			service.changeSubscription("");
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(SCMPValidatorException.class, ex.getClass());
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMaskWhiteSpace_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		service.changeSubscription(" ");
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMaskOneChar_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		service.changeSubscription("a");
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMaskPangram_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		service.changeSubscription(TestConstants.pangram);
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMask256LongString_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		service.changeSubscription(TestConstants.stringLength256);
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_toMask257LongString_throwsValidatorException() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		try {
+			service.changeSubscription(TestConstants.stringLength257);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(SCMPValidatorException.class, ex.getClass());
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_twice_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		
+		service.changeSubscription(TestConstants.mask);
+		service.changeSubscription(TestConstants.mask);
+		
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+
+	@Test
+	public void changeSubscription_10000Times_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		for (int i = 0; i < 10000; i++) {
+			service.changeSubscription(TestConstants.mask);
+		}
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
+	}
+	
+	@Test
+	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
+				service));
+		for (int i = 0; i < 1000; i++) {
+			for (int j = 0; j < 1000; j++) {
+				service.changeSubscription(TestConstants.mask);
+			}
+		}
+		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		assertEquals(true, service.isSubscribed());
+		service.unsubscribe();
 	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {

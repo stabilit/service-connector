@@ -18,11 +18,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
-
-public class CreateSessionDeleteSessionServerToSCTest {
+public class SessionServerTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(CreateSessionDeleteSessionServerToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
 
 	private int threadCount = 0;
 	private SrvCallback srvCallback;
@@ -55,7 +53,7 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
-		srvCallback = new SrvCallback(new SessionServerContext());
+		srvCallback = new SrvCallback();
 		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
 				TestConstants.serviceName, 10, 10, srvCallback);
 
@@ -224,7 +222,17 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		assertEquals(false, srvCallback.executeMsg.isCompressed());
 	}
 
-	//TODO how can I access echo messages from the API? probably not...
+	@Test
+	public void createSessionExecuteDeleteSession_twice_6MessagesArrive() throws Exception {
+		StartSessionClient client = new StartSessionClient(
+				"createSessionExecuteDeleteSession_twice_6MessagesArrive");
+		client.start();
+		client.join();
+
+		assertEquals(6, srvCallback.messagesExchanged);
+	}
+
+	// TODO FJU how can I access echo messages from the API? probably not...
 	@Test
 	public void echo_waitFor3EchoMessages_5MessagesArrive() throws Exception {
 		StartSessionClient client = new StartSessionClient(
@@ -235,23 +243,15 @@ public class CreateSessionDeleteSessionServerToSCTest {
 		assertEquals(5, srvCallback.messagesExchanged);
 	}
 
-	private class SessionServerContext {
-		public ISCSessionServer getServer() {
-			return server;
-		}
-	}
-
-	class SrvCallback implements ISCSessionServerCallback {
+	private class SrvCallback implements ISCSessionServerCallback {
 
 		private int messagesExchanged = 0;
 		private SCMessage createSessionMsg = null;
 		private SCMessage deleteSessionMsg = null;
 		private SCMessage abortSessionMsg = null;
 		private SCMessage executeMsg = null;
-		private SessionServerContext outerContext;
 
-		public SrvCallback(SessionServerContext context) {
-			this.outerContext = context;
+		public SrvCallback() {
 		}
 
 		@Override

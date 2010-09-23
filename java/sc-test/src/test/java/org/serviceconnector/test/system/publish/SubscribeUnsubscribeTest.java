@@ -127,7 +127,7 @@ public class SubscribeUnsubscribeTest {
 	}
 
 	@Test
-	public void subscribeUnsubscribe_subscriptionValid_isSubscribedThanNot() throws Exception {
+	public void subscribeUnsubscribe_subscriptionValid_isSubscribedThenNot() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
 				service));
@@ -171,7 +171,7 @@ public class SubscribeUnsubscribeTest {
 	
 	//TODO FJU after subscrube -> unsubscribe -> subscribe, NullPointer is thrown
 	@Test
-	public void subscribeUnsubscribe_twice_isSubscribedThanNot() throws Exception {
+	public void subscribeUnsubscribe_twice_isSubscribedThenNot() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 
 			service.subscribe(TestConstants.mask, "sessionInfo", 300,
@@ -192,7 +192,7 @@ public class SubscribeUnsubscribeTest {
 	}
 
 	@Test
-	public void subscribeUnsubscribe_10000Times_isSubscribedThanNot() throws Exception {
+	public void subscribeUnsubscribe_10000Times_isSubscribedThenNot() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 
 		for (int i = 0; i < 10000; i++) {

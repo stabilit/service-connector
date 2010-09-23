@@ -95,6 +95,17 @@ public class StartSessionClient extends Thread {
 				sessionService.execute(message);
 				sessionService.deleteSession();
 				
+			} else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
+				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+
+				sessionService.createSession("sessionInfo", 300, 60);
+				sessionService.execute(new SCMessage(new byte[128]));
+				sessionService.deleteSession();
+				
+				sessionService.createSession("sessionInfo", 300, 60);
+				sessionService.execute(new SCMessage(new byte[128]));
+				sessionService.deleteSession();
+
 			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
 				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 2, 1);
