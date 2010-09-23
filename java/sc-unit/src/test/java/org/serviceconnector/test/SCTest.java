@@ -29,7 +29,6 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.SCVersionTestCase;
 import org.serviceconnector.test.attach.AttachTestCase;
 import org.serviceconnector.test.attach.DetachTestCase;
 import org.serviceconnector.test.group.GroupCallTestCase;
