@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.net.InetAddress;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
@@ -30,6 +32,7 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
@@ -67,8 +70,11 @@ public class InspectCommand extends CommandAdapter {
 
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
+		
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
+		InetAddress localHost = InetAddress.getLocalHost();
+		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		scmpReply.setMessageType(getKey());
 
 		if (bodyString == null) {

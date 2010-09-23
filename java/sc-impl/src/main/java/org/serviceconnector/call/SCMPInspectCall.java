@@ -16,12 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import java.net.InetAddress;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
@@ -42,14 +38,6 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		this(null);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
-		InetAddress localHost = InetAddress.getLocalHost();
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
-		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
 	/**
 	 * Instantiates a new SCMPInspectCall.
 	 * 
@@ -59,7 +47,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 	public SCMPInspectCall(IRequester req) {
 		super(req);
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req) {

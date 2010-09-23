@@ -263,7 +263,10 @@ public class SCClient implements ISCClient {
 			// disableService not possible - client not attached
 			throw new SCServiceException("client not attached - disableService not possible.");
 		}
-		this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
+		if (body != null) {
+			throw new SCServiceException(body.toString());
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -273,7 +276,10 @@ public class SCClient implements ISCClient {
 			// enableService not possible - client not attached
 			throw new SCServiceException("client not attached - enableService not possible.");
 		}
-		this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
+		if (body != null) {
+			throw new SCServiceException(body.toString());
+		}
 	}
 
 	/** {@inheritDoc} */

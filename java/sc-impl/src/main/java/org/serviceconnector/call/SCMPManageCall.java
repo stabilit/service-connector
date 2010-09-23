@@ -16,8 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
+import java.net.InetAddress;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
@@ -45,7 +49,7 @@ public class SCMPManageCall extends SCMPCallAdapter {
 	public SCMPManageCall(IRequester req) {
 		super(req);
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req) {

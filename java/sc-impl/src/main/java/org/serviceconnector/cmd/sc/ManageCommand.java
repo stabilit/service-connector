@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.net.InetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,7 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
@@ -67,16 +69,15 @@ public class ManageCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
-		// TODO not found error message JOT
-
+		SCMPMessage reqMsg = request.getMessage();
+		String bodyString = (String) reqMsg.getBody();
+		
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
-		response.setSCMP(scmpReply);
-
-		SCMPMessage reqMsg = request.getMessage();
-		String bodyString = (String) reqMsg.getBody();
+		InetAddress localHost = InetAddress.getLocalHost();
+		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 
 		if (bodyString.equalsIgnoreCase(Constants.KILL)) {
 			logger.info("SC exiting ...");
@@ -88,6 +89,7 @@ public class ManageCommand extends CommandAdapter {
 		if (!m.matches()) {
 			logger.error("wrong body syntax:" + bodyString); 		// body has bad syntax
 			scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "wrong body syntax");
+			response.setSCMP(scmpReply);
 			return;
 		}
 
@@ -109,6 +111,7 @@ public class ManageCommand extends CommandAdapter {
 			logger.debug("service:" + serviceName + " not found");
 			scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
 		}
+		response.setSCMP(scmpReply);
 	}
 
 	/**
