@@ -85,7 +85,7 @@ public class PerformanceSessionClient implements Runnable {
 			doneSignal.countDown();
 
 			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute "
-					+ counter + " messages.\nCurrent number on the latch:\t"
+					+ counter + " messages of " + messageSize + "B.\nCurrent number on the latch:\t"
 					+ doneSignal.getCount());
 		}
 	}

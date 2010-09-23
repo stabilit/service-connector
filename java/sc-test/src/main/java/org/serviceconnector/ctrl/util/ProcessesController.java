@@ -119,7 +119,7 @@ public class ProcessesController {
 	 * Creates a new JVM and starts a SCServer process in that JVM
 	 * 
 	 * @param serverType "session" or "publish"
-	 * @param log4jSCProperties
+	 * @param log4jSrvProperties
 	 * @param listenerPort
 	 * @param port
 	 * @param maxConnections
@@ -127,10 +127,10 @@ public class ProcessesController {
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public Process startServer(String serverType, String log4jSCProperties, int listenerPort,
+	public Process startServer(String serverType, String log4jSrvProperties, int listenerPort,
 			int port, int maxConnections, String[] serviceNames) throws Exception {
-		String log4jPath = getLog4jPath(log4jSCProperties);
-		String fileName = getPidLogPath(log4jSCProperties);
+		String log4jPath = getLog4jPath(log4jSrvProperties);
+		String fileName = getPidLogPath(log4jSrvProperties);
 		deleteFile(fileName);
 		String services = "";
 		for (String service : serviceNames) {
@@ -145,5 +145,13 @@ public class ProcessesController {
 		existsFile(fileName);
 
 		return p;
+	}
+	
+	public Process restartServer(Process server, String serverType, String log4jSrvProperties, int listenerPort,
+			int port, int maxConnections, String[] serviceNames) throws Exception {
+		stopProcess(server, log4jSrvProperties);
+		server = null;
+		server = startServer(serverType, log4jSrvProperties, listenerPort, port, maxConnections, serviceNames);
+		return server;
 	}
 }

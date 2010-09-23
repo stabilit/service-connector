@@ -19,10 +19,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.sc.service.SCServiceException;
 
-public class SubscribeUnsubscribe {
+public class SubscribeUnsubscribeTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribe.class);
+	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribeTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;
@@ -169,6 +169,7 @@ public class SubscribeUnsubscribe {
 		assertEquals(false, service.isSubscribed());
 	}
 	
+	//TODO FJU after subscrube -> unsubscribe -> subscribe, NullPointer is thrown
 	@Test
 	public void subscribeUnsubscribe_twice_isSubscribedThanNot() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
