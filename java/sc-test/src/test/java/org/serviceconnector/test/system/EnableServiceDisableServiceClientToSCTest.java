@@ -85,11 +85,12 @@ public class EnableServiceDisableServiceClientToSCTest {
 	}
 
 	@Test
-	public void createSession_onInitiallyDisabledSessionService_clientEnablesServiceServerRegistersSessionCreated() throws Exception {
+	public void createSession_onInitiallyDisabledService_clientEnablesServiceServerRegisters_SessionCreated() throws Exception {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
 		client.enableService(TestConstants.serviceNameSessionNotEnabled);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
 		
+		//this session is only to tell the server that he has to register the new service
 		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
 		sessionService0.createSession("sessionInfo", 300, 60);
 		sessionService0.execute(new SCMessage("register " + TestConstants.serviceNameSessionNotEnabled));
@@ -109,8 +110,9 @@ public class EnableServiceDisableServiceClientToSCTest {
 	}
 	
 	@Test
-	public void createSession_onInitiallyEnabledService_clientDisablesServiceServerRestartsThrowsException() throws Exception {
+	public void createSession_onInitiallyEnabledService_clientDisablesService_ThrowsException() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		
 		client.disableService(TestConstants.serviceName);
 		
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
@@ -124,11 +126,12 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
+		
 		client.enableService(TestConstants.serviceName);
 	}
 	
 	@Test
-	public void createSession_enabledServiceDisableThenEnableAgain_createsSession() throws Exception {
+	public void createSession_onEnabledService_disableThenEnableAgain_createsSession() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);
 		client.enableService(TestConstants.serviceName);

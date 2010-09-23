@@ -1,9 +1,6 @@
 package org.serviceconnector.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
-import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.cln.IPublishService;
@@ -107,12 +104,6 @@ public class StartPublishClient extends Thread {
 				sessionService.execute(message);
 				sessionService.deleteSession();
 
-			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
-				ISessionService sessionService = client
-						.newSessionService(TestConstants.serviceName);
-				sessionService.createSession("sessionInfo", 2, 1);
-				Thread.sleep(6000);
-				sessionService.deleteSession();
 			}
 
 		} catch (Exception e) {
