@@ -45,7 +45,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 		threadCount = Thread.activeCount();
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 				30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
-						TestConstants.serviceNameAlt });
+						TestConstants.serviceNameAlt, TestConstants.serviceNameSessionDisabled });
 
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT8080);
@@ -90,26 +90,16 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 		client.enableService(TestConstants.serviceNameSessionDisabled);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
-
-		// this session is only to tell the server that he has to register the
-		// new service
-		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
-		sessionService0.createSession("sessionInfo", 300, 60);
-		sessionService0.execute(new SCMessage("register "
-				+ TestConstants.serviceNameSessionDisabled));
-
-		ISessionService sessionService1 = client
+		
+		ISessionService sessionService = client
 				.newSessionService(TestConstants.serviceNameSessionDisabled);
-		sessionService1.createSession("sessionInfo", 300, 60);
+		sessionService.createSession("sessionInfo", 300, 60);
 
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
-		assertEquals(false, sessionService1.getSessionId() == null
-				|| sessionService1.getSessionId().isEmpty());
-		sessionService1.deleteSession();
+		assertEquals(false, sessionService.getSessionId() == null
+				|| sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 
-		sessionService0.execute(new SCMessage("deregister "
-				+ TestConstants.serviceNameSessionDisabled));
-		sessionService0.deleteSession();
 		client.disableService(TestConstants.serviceNameSessionDisabled);
 	}
 
