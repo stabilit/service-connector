@@ -14,6 +14,7 @@ public class TestConstants {
 	public static final String log4jSC1Properties = "log4jSC1.properties";
 	public static final String scProperties0 = "scIntegration.properties";
 	public static final String scProperties1 = "scIntegrationChanged.properties";
+	public static final String scPropertiesCascaded = "scCascaded.properties";
 	
 	public static final String serviceName = "simulation";
 	public static final String serviceNameAlt = "P01_RTXS_sc1";

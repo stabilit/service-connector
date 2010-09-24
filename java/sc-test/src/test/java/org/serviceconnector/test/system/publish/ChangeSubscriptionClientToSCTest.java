@@ -19,6 +19,8 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.sc.service.SCServiceException;
 
+//TODO FJU missing method to get current subscription to verify correct changes
+
 public class ChangeSubscriptionClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionClientToSCTest.class);
