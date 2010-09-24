@@ -30,7 +30,6 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	private static ProcessesController ctrl;
 
-	// TODO registering notEnabled service fails
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
@@ -88,30 +87,30 @@ public class EnableServiceDisableServiceClientToSCTest {
 	@Test
 	public void createSession_onInitiallyDisabledService_clientEnablesServiceServerRegisters_SessionCreated()
 			throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
-		client.enableService(TestConstants.serviceNameSessionNotEnabled);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
+		client.enableService(TestConstants.serviceNameSessionDisabled);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 
 		// this session is only to tell the server that he has to register the
 		// new service
 		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
 		sessionService0.createSession("sessionInfo", 300, 60);
 		sessionService0.execute(new SCMessage("register "
-				+ TestConstants.serviceNameSessionNotEnabled));
+				+ TestConstants.serviceNameSessionDisabled));
 
 		ISessionService sessionService1 = client
-				.newSessionService(TestConstants.serviceNameSessionNotEnabled);
+				.newSessionService(TestConstants.serviceNameSessionDisabled);
 		sessionService1.createSession("sessionInfo", 300, 60);
 
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionNotEnabled));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 		assertEquals(false, sessionService1.getSessionId() == null
 				|| sessionService1.getSessionId().isEmpty());
 		sessionService1.deleteSession();
 
 		sessionService0.execute(new SCMessage("deregister "
-				+ TestConstants.serviceNameSessionNotEnabled));
+				+ TestConstants.serviceNameSessionDisabled));
 		sessionService0.deleteSession();
-		client.disableService(TestConstants.serviceNameSessionNotEnabled);
+		client.disableService(TestConstants.serviceNameSessionDisabled);
 	}
 
 	@Test

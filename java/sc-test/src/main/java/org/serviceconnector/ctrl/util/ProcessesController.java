@@ -97,16 +97,16 @@ public class ProcessesController {
 		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
 				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar -sc.configuration " + userDir + fs
 				+ "src" + fs + "main" + fs + "resources" + fs + scProperties;
-		Process p = Runtime.getRuntime().exec(command);
+		Process scProcess = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);
 
-		return p;
+		return scProcess;
 	}
 
-	public Process restartSC(Process p, String log4jSCProperties, String scProperties)
+	public Process restartSC(Process scProcess, String log4jSCProperties, String scProperties)
 			throws Exception {
-		p.destroy();
+		scProcess.destroy();
 		return startSC(log4jSCProperties, scProperties);
 	}
 
@@ -147,11 +147,11 @@ public class ProcessesController {
 		return srvProcess;
 	}
 	
-	public Process restartServer(Process server, String serverType, String log4jSrvProperties, int listenerPort,
+	public Process restartServer(Process srvProcess, String serverType, String log4jSrvProperties, int listenerPort,
 			int port, int maxConnections, String[] serviceNames) throws Exception {
-		stopProcess(server, log4jSrvProperties);
-		server = null;
-		server = startServer(serverType, log4jSrvProperties, listenerPort, port, maxConnections, serviceNames);
-		return server;
+		stopProcess(srvProcess, log4jSrvProperties);
+		srvProcess = null;
+		srvProcess = startServer(serverType, log4jSrvProperties, listenerPort, port, maxConnections, serviceNames);
+		return srvProcess;
 	}
 }

@@ -101,7 +101,7 @@ public class SubscribeUnsubscribeTest {
 	public void unsubscribe_serviceNameDisabledService_notSubscribedEmptySessionId()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNamePublishNotEnabled);
+				.newPublishService(TestConstants.serviceNamePublishDisabled);
 		service.unsubscribe();
 		assertEquals(null, service.getSessionId());
 		assertEquals(false, service.isSubscribed());

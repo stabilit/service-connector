@@ -17,9 +17,9 @@ public class TestConstants {
 	
 	public static final String serviceName = "simulation";
 	public static final String serviceNameAlt = "P01_RTXS_sc1";
-	public static final String serviceNameSessionNotEnabled = "notEnabledService";
+	public static final String serviceNameSessionDisabled = "disabledService";
 	public static final String serviceNamePublish = "publish-simulation";
-	public static final String serviceNamePublishNotEnabled = "notEnabledPublish";
+	public static final String serviceNamePublishDisabled = "disabledPublish";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

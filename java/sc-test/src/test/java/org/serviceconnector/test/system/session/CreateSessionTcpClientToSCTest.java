@@ -108,8 +108,8 @@ public class CreateSessionTcpClientToSCTest {
 	}
 	
 	@Test
-	public void deleteSession_sessionServiceNameNotEnabled_passes() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionNotEnabled);
+	public void deleteSession_sessionServiceNameDisabled_passes() throws Exception {
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
@@ -160,9 +160,9 @@ public class CreateSessionTcpClientToSCTest {
 	}
 
 	@Test
-	public void createSession_notEnabledService_throwsException() throws Exception {
+	public void createSession_disabledService_throwsException() throws Exception {
 		ISessionService sessionService = client
-				.newSessionService(TestConstants.serviceNameSessionNotEnabled);
+				.newSessionService(TestConstants.serviceNameSessionDisabled);
 		try {
 			sessionService.createSession("something", 300, 60);
 		} catch (Exception e) {

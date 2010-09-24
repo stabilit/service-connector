@@ -85,8 +85,8 @@ public class NewServicesTest {
 	}
 	
 	@Test
-	public void newSessionService_validNotEnabledServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceNameSessionNotEnabled) instanceof ISessionService);
+	public void newSessionService_validDisabledServiceName_returnsISessionService() throws Exception {
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSessionDisabled) instanceof ISessionService);
 	}
 	
 	@Test
@@ -142,8 +142,8 @@ public class NewServicesTest {
 	}
 	
 	@Test
-	public void newPublishService_validNotEnabledServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceNameSessionNotEnabled) instanceof IPublishService);
+	public void newPublishService_validDisabledServiceName_returnsIPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSessionDisabled) instanceof IPublishService);
 	}
 	
 	@Test
@@ -194,8 +194,8 @@ public class NewServicesTest {
 	}
 	
 	@Test
-	public void newFileService_validNotEnabledServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionNotEnabled) instanceof IFileService);
+	public void newFileService_validDisabledServiceName_returnsIFileService() throws Exception {
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionDisabled) instanceof IFileService);
 	}
 	
 	@Test

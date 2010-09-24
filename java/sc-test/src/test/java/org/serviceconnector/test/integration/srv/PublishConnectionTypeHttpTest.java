@@ -101,7 +101,7 @@ public class PublishConnectionTypeHttpTest {
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameDisabled_throwsSCException() throws Exception {
-		server.publish(TestConstants.serviceNamePublishNotEnabled, TestConstants.mask, "something");
+		server.publish(TestConstants.serviceNamePublishDisabled, TestConstants.mask, "something");
 	}
 
 	@Test
@@ -181,8 +181,6 @@ public class PublishConnectionTypeHttpTest {
 		server.publish(TestConstants.serviceNamePublish,
 				"0000121%%%%%%%%%%%%%%%-----------X-----------", "something");
 	}
-
-	// TODO a
 
 	@Test
 	public void publish_dataNull_passes() throws Exception {

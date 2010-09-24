@@ -104,9 +104,9 @@ public class SubscribeClientToSCTest {
 	}
 
 	@Test
-	public void isSubscribed_serviceNameNotEnabled_false() throws Exception {
+	public void isSubscribed_serviceNameDisabled_false() throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		assertEquals(false, service.isSubscribed());
 	}
 
@@ -459,7 +459,7 @@ public class SubscribeClientToSCTest {
 	@Test
 	public void subscribe_serviceNameDisabledMaskNull_throwsValidatorException() throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -473,7 +473,7 @@ public class SubscribeClientToSCTest {
 	@Test
 	public void subscribe_serviceNameDisabledMaskEmpty_throwsValidatorException() throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -488,7 +488,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -503,7 +503,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -518,7 +518,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
@@ -534,7 +534,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
@@ -550,7 +550,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionNotEnabled);
+				.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("0000121ABCDEFGHIJKLMNO%-----------X-----------", "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
@@ -566,7 +566,7 @@ public class SubscribeClientToSCTest {
 	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed()
 			throws Exception {
 		IPublishService service = client
-				.newPublishService(TestConstants.serviceNamePublishNotEnabled);
+				.newPublishService(TestConstants.serviceNamePublishDisabled);
 		try {
 			service.subscribe(TestConstants.mask, "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
