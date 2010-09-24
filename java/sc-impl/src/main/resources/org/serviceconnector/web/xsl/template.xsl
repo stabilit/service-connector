@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:variable name="head" select="/sc-web/head"/>
 	<xsl:variable name="body" select="/sc-web/body"/>
+	<xsl:variable name="userid" select="/sc-web/head/meta/@userid"/>
 	<xsl:template match="/">
 		<html>
 			<head>
@@ -16,11 +17,13 @@
 					   <xsl:call-template name="sc_header"/> 
 					</div>
 					<div id="sc_menu">
-					   <xsl:call-template name="sc_menu"/> 
+				       <xsl:call-template name="sc_menu"/>
 					</div>
-					<div id="sc_navigation">
-					   <xsl:call-template name="sc_navigation"/> 
-					</div>
+					<xsl:if test="string-length($userid) &gt; 0">
+					   <div id="sc_navigation">
+				          <xsl:call-template name="sc_navigation"/> 
+					   </div>
+					</xsl:if>
 					<div id="sc_content">
 					   <xsl:call-template name="sc_content"/> 
 					</div>
@@ -41,12 +44,16 @@
 	      <xsl:with-param name="dateTime" select="$head/meta/@creation"/>
 	    </xsl:call-template>
 	    <br/>
+	    <xsl:if test="string-length($userid) &gt; 0">
+	       User [<xsl:value-of select="$userid"/>]
+	       <br/>
+	    </xsl:if>
 	    V <xsl:value-of select="$head/meta/@scversion"/>
 	  </div>
 	</xsl:template>
 	<xsl:template name="sc_menu">
 	   <div id="sc_menu_left"><xsl:call-template name="sc_menu_left"/></div>
-	   <div id="sc_menu_right"><a href="logout">Logout</a></div>
+	   <div id="sc_menu_right"><a href="?action=logout">Logout</a></div>
 	</xsl:template>
 	<xsl:template name="sc_navigation">
 	  <div class="sc_navigation_item"><a href="status">Status</a></div>

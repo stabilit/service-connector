@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,42 +13,26 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
-package org.serviceconnector.web;
+ *-----------------------------------------------------------------------------*/
+package org.serviceconnector.web.cmd;
 
-import java.io.OutputStream;
-import java.util.Map;
 
-import org.serviceconnector.factory.IFactoryable;
-
-// TODO: Auto-generated Javadoc
 /**
- * The Interface IXMLLoader.
+ * The Interface IWebAccessibleContext.
  */
-public interface IXMLLoader extends IFactoryable{
+public interface IWebCommandAccessibleContext {
 
 	/**
-	 * Load.
+	 * Gets the userid.
 	 *
-	 * @param request the request
-	 * @param os the os
-	 * @throws Exception 
+	 * @return the userid
 	 */
-	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
-
-	/**
-	 * Adds the meta.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 */
-	public abstract void addMeta(String name, String value);
+	public abstract String getUserid();
 	
 	/**
-	 * Adds the meta.
+	 * Gets the password.
 	 *
-	 * @param map the map
+	 * @return the password
 	 */
-	public abstract void addMeta(Map<String, String> map);
-	
+	public abstract String getPassword();
 }

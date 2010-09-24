@@ -19,16 +19,19 @@ package org.serviceconnector.net.res.netty.web;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
@@ -36,36 +39,57 @@ import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.netty.NettyWebRequest;
 import org.serviceconnector.web.netty.NettyWebResponse;
 
-public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
+public class NettyWebResponderRequestHandler extends
+		SimpleChannelUpstreamHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyWebResponderRequestHandler.class);
+	protected final static Logger logger = Logger
+			.getLogger(NettyWebResponderRequestHandler.class);
 
 	private int counter = 0;
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event)
+			throws Exception {
+		// needs to set a key in thread local to identify thread later and get
+		// access to the responder
+		Channel channel = ctx.getChannel();
+		ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
+		respRegistry.setThreadLocal(channel.getParent().getId());
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
+		HttpResponse httpResponse = new DefaultHttpResponse(
+				HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+		WebCommandFactory webCommandFactory = WebCommandFactory
+				.getCurrentWebCommandFactory();
 		IWebRequest webRequest = new NettyWebRequest(httpRequest);
 		IWebResponse webResponse = new NettyWebResponse(httpResponse);
 		IWebCommand webCommand = webCommandFactory.getWebCommand(webRequest);
 		webCommand.run(webRequest, webResponse);
-		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse
+				.getBytes());
 		httpResponse.setContent(buffer);
-		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH,
+				String.valueOf(buffer.readableBytes()));
+		// encode any cookies
+		CookieEncoder ce = ((NettyWebResponse) webResponse).getCookieEncoder();
+		if (ce != null) {
+			String encodedCookies = ce.encode();
+			if (encodedCookies != null && encodedCookies.length() > 0) {
+				logger.info(encodedCookies);
+				httpResponse.addHeader("Set-Cookie", encodedCookies);
+			}
+		}
 		// Write the response.
-		event.getChannel().write(httpResponse);		
+		event.getChannel().write(httpResponse);
 	}
-
 
 	/** {@inheritDoc} */
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		e.getChannel().write("Hello Error World!");
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
+			throws Exception {
+		logger.error(e.toString());
+//		e.getChannel().write("Hello Error World!");
 	}
-	
-	
+
 }

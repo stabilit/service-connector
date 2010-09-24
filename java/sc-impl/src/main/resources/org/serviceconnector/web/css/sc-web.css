@@ -54,7 +54,7 @@ div#sc_meta {
 	padding:4px;
 	color:white;	
 	float:right;
-	font-size:14px;
+	font-size:12px;
 }
 
 div#sc_menu {
@@ -66,7 +66,7 @@ div#sc_menu {
 }
 
 div#sc_menu_left {
-	padding-left:160px;
+	padding-left:160px;	
 	float:left;
 }
 
@@ -77,18 +77,85 @@ div#sc_menu_right {
 
 div#sc_navigation {
 	background-color:#EEEEEE;
-	border-right:1px solid #666666;	
-	float:left;
+    float:left;
 	width: 160px;
 }
 
 .sc_navigation_item {
 	border-bottom:1px solid #666666;
+	border-right:1px solid #666666;	
 	text-align:center;
 	padding:2px;
 }
 
 div#sc_content {
+	position:absolute;
 	float:left;
 	background-color: white;
+	top:100px;
+	right:160px;
+	bottom:0px;
+	left: 160px;
+}
+
+div#sc_login {
+	background: #EEEEEE;
+	border:1px solid #666666;
+	width:400px;
+	height:300px;
+	margin-top:40px;
+	margin-left: auto;
+    margin-right: auto;	
+}
+
+div#sc_login_title {
+	background: #FF0000;
+	color:white;
+	font-size:18px;
+	font-weight:bold;
+	height:28px;
+	width:400px;
+	text-align:center;
+}
+
+div#sc_login_form {
+	background: #EEEEEE;
+	color:black;
+	font-size:14px;
+	width:400px;
+}
+
+.sc_form {
+	background: transparent;
+	color:black;
+	font-size:16px;
+}
+
+.sc_form_text {
+	background: transparent;
+	color:black;
+	font-size:18px;
+}
+
+.sc_form_field {
+	background: #DDDDDD;
+	padding:2px;
+	height:28px;
+	color:black;
+	font-size:16px;
+}
+
+.sc_form_button {
+	background: #FF0000;
+	color: #FFFFFF;
+	padding:4px;
+	font-size:16px;
+}
+
+.sc_error {
+	background: #FFDDDD;
+	border-bottom:1px solid red;
+	text-align:center;
+	font-size:16px;
+	color:red;
 }

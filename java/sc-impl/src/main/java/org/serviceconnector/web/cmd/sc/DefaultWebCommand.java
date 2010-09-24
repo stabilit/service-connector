@@ -21,9 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -33,11 +35,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.SCVersion;
-import org.serviceconnector.util.DateTimeUtility;
+import org.jboss.netty.handler.codec.http.Cookie;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
+import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.IXMLLoader;
+import org.serviceconnector.web.LoginException;
+import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,27 +63,23 @@ public class DefaultWebCommand extends WebCommandAdapter {
 	public DefaultWebCommand() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.serviceconnector.web.cmd.sc.WebCommandAdapter#getKey()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getKey() {
 		return "default";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.serviceconnector.web.cmd.sc.WebCommandAdapter#run(org.serviceconnector
-	 * .web.IWebRequest, org.serviceconnector.web.IWebResponse)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void run(IWebRequest request, IWebResponse response)
 			throws Exception {
+		// check if session is available
 		String url = request.getURL();
+		if (url != null) {
+		   logger.info(url);
+		} else {
+			logger.info("url is null");
+		}
 		OutputStream responseOutputStream = response.getOutputStream();
 		if (isResource(url)) {
 			String resourcePath = getResourcePath(url);
@@ -87,9 +87,58 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			dumpStream(is, responseOutputStream);
 			return;
 		}
+		IWebSession webSession = request.getSession(false);
+		if (webSession == null) {
+			Cookie jsessionidCookie = request.getCookie("JSESSIONID");
+			if (jsessionidCookie != null) {
+				jsessionidCookie.setMaxAge(0);
+				response.addCookie(jsessionidCookie);
+			} else {
+			   webSession = request.getSession(true);
+			   response.addCookie("JSESSIONID", webSession.getSessionId());
+			   request.setAttribute("JSESSIONID", webSession.getSessionId());
+			}
+		}
 		// load xml model as stream
 		ByteArrayOutputStream xmlOS = new ByteArrayOutputStream();
 		XMLDocument xmlDocument = new XMLDocument(request);
+		if (this.isLoginAction(request)) {
+			try {
+				this.webCommandAccessible.login(request);
+				response.redirect("/");
+				return;
+			} catch (LoginException e) {
+				xmlDocument.addException(e);
+				xmlDocument.addErrorMessage("not authorized");
+			} catch (Exception e) {
+				xmlDocument.addException(e);
+				xmlDocument.addErrorMessage(e.getMessage());
+			}
+		}
+		if (this.isLogoutAction(request)) {
+			try {
+				this.webCommandAccessible.logout(request);
+				response.redirect("/");
+				return;
+			} catch (Exception e) {
+				xmlDocument.addException(e);
+				xmlDocument.addErrorMessage("not authorized");
+			}
+		}
+		// load stylesheet as stream
+		XSLDocument xslDocument = new XSLDocument(request);
+		// check if this web command is accessible
+		if (this.webCommandAccessible.isAccessible(request)) {
+			IWebCommandAccessibleContext accessibleContext = this.webCommandAccessible
+					.getAccessibleContext();
+			xmlDocument.setAccessibleContext(accessibleContext);
+			xslDocument.setAccessibleContext(accessibleContext);
+		}
+		try {
+			this.webCommandValidator.validate(request);
+		} catch (Exception e) {
+			xmlDocument.addException(e);
+		}
 		xmlDocument.load(xmlOS);
 		// check if xmlview is yes or true
 		if (isXMLView(request)) {
@@ -98,19 +147,58 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			response.setContentType("text/xml");
 			return;
 		}
-		// load stylesheet as stream
-		XSLDocument xslDocument = new XSLDocument(request);
 		// transform
 		xslDocument.transform(new ByteArrayInputStream(xmlOS.toByteArray()),
 				responseOutputStream);
 		response.setContentType("text/html");
 	}
 
+	/**
+	 * Checks if is xML view.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return true, if is xML view
+	 */
 	private boolean isXMLView(IWebRequest request) {
-        String xmlView = request.getParameter("xmlview");
-        return "yes".equals(xmlView); 
+		String xmlView = request.getParameter("xmlview");
+		return "yes".equals(xmlView);
 	}
 
+	/**
+	 * Checks if is login action.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return true, if is login action
+	 */
+	private boolean isLoginAction(IWebRequest request) {
+		String action = request.getParameter("action");
+		return "login".equals(action);
+	}
+
+	/**
+	 * Checks if is logout action.
+	 * 
+	 * @param request
+	 *            the request
+	 * @return true, if is logout action
+	 */
+	private boolean isLogoutAction(IWebRequest request) {
+		String action = request.getParameter("action");
+		return "logout".equals(action);
+	}
+
+	/**
+	 * Dump stream.
+	 * 
+	 * @param is
+	 *            the is
+	 * @param os
+	 *            the os
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	private void dumpStream(InputStream is, OutputStream os) throws IOException {
 		byte[] buffer = new byte[1 << 16];
 		int readBytes = -1;
@@ -120,24 +208,45 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		return;
 	}
 
+	/**
+	 * Checks if is resource.
+	 * 
+	 * @param url
+	 *            the url
+	 * @return true, if is resource
+	 */
 	private boolean isResource(String url) {
-	   return isCSS(url) || isScript(url) || isImage(url);	
+		return isCSS(url) || isScript(url) || isImage(url);
 	}
-	
+
+	/**
+	 * Gets the resource path.
+	 * 
+	 * @param url
+	 *            the url
+	 * @return the resource path
+	 */
 	public String getResourcePath(String url) {
-	   String path = "/org/serviceconnector/web";
-	   if (isCSS(url)) {
-		   return path + "/css" + url;		   
-	   }
-	   if (isImage(url)) {
-		   return path + "/images" + url;		   
-	   }
-	   if (isScript(url)) {
-		   return path + "/js" + url;		   
-	   }
-	   return null;
+		String path = "/org/serviceconnector/web";
+		if (isCSS(url)) {
+			return path + "/css" + url;
+		}
+		if (isImage(url)) {
+			return path + "/images" + url;
+		}
+		if (isScript(url)) {
+			return path + "/js" + url;
+		}
+		return null;
 	}
-	
+
+	/**
+	 * Checks if is cSS.
+	 * 
+	 * @param url
+	 *            the url
+	 * @return true, if is cSS
+	 */
 	private boolean isCSS(String url) {
 		if (url == null) {
 			return false;
@@ -145,6 +254,13 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		return url.endsWith(".css");
 	}
 
+	/**
+	 * Checks if is script.
+	 * 
+	 * @param url
+	 *            the url
+	 * @return true, if is script
+	 */
 	private boolean isScript(String url) {
 		if (url == null) {
 			return false;
@@ -152,6 +268,13 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		return url.endsWith(".js");
 	}
 
+	/**
+	 * Checks if is image.
+	 * 
+	 * @param url
+	 *            the url
+	 * @return true, if is image
+	 */
 	private boolean isImage(String url) {
 		if (url == null) {
 			return false;
@@ -166,7 +289,18 @@ public class DefaultWebCommand extends WebCommandAdapter {
 
 		/** The request. */
 		private IWebRequest request;
+
+		/** The loader. */
 		private IXMLLoader loader;
+
+		/** The exception list. */
+		private List<Exception> exceptionList;
+
+		/** The message list. */
+		private List<Message> messageList;
+
+		/** The accessible context. */
+		private IWebCommandAccessibleContext accessibleContext;
 
 		/**
 		 * Instantiates a new xML document.
@@ -176,7 +310,52 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public XMLDocument(IWebRequest request) {
 			this.request = request;
-			this.loader = DefaultXMLLoaderFactory.getXMLLoader(this.request.getURL());
+			this.exceptionList = new ArrayList<Exception>();
+			this.messageList = new ArrayList<Message>();
+			this.accessibleContext = null;
+			this.loader = DefaultXMLLoaderFactory.getXMLLoader(this.request
+					.getURL());
+		}
+
+		/**
+		 * Sets the accessible context.
+		 * 
+		 * @param accessibleContext
+		 *            the new accessible context
+		 */
+		public void setAccessibleContext(
+				IWebCommandAccessibleContext accessibleContext) {
+			this.accessibleContext = accessibleContext;
+		}
+
+		/**
+		 * Adds the exception which will be render into xml meta tag
+		 * 
+		 * @param ex
+		 *            the ex
+		 */
+		public void addException(Exception ex) {
+			this.exceptionList.add(ex);
+		}
+
+		/**
+		 * Adds the message.
+		 * 
+		 * @param msg
+		 *            the msg
+		 */
+		public void addMessage(String msg) {
+			this.messageList.add(new Message(msg, "info"));
+		}
+
+		/**
+		 * Adds the error message.
+		 * 
+		 * @param msg
+		 *            the msg
+		 */
+		public void addErrorMessage(String msg) {
+			this.messageList.add(new Message(msg, "error"));
 		}
 
 		/**
@@ -188,9 +367,52 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 *             the exception
 		 */
 		public void load(OutputStream os) throws Exception {
+			for (Exception e : exceptionList) {
+				this.loader.addMeta("exception", e.toString());
+			}
+			for (Message msg : messageList) {
+				this.loader.addMeta(msg.getMap());
+			}
+			if (this.accessibleContext != null) {
+				String userid = this.accessibleContext.getUserid();
+				if (userid != null) {
+					this.loader.addMeta("userid", userid);
+				}
+			}
 			this.loader.load(request, os);
 		}
-		
+
+		/**
+		 * The Class Message.
+		 */
+		private class Message {
+
+			private Map<String, String> map;
+
+			/**
+			 * Instantiates a new message.
+			 * 
+			 * @param text
+			 *            the text
+			 * @param type
+			 *            the type
+			 */
+			public Message(String text, String type) {
+				this.map = new HashMap<String, String>();
+				this.map.put("message", text);
+				this.map.put("type", type);
+			}
+
+			/**
+			 * Gets the map.
+			 * 
+			 * @return the map
+			 */
+			public Map<String, String> getMap() {
+				return map;
+			}
+		}
+
 	}
 
 	/**
@@ -204,6 +426,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		/** The xsl input stream. */
 		private InputStream xslInputStream;
 
+		/** The accessible context. */
+		private IWebCommandAccessibleContext accessibleContext;
+
 		/**
 		 * Instantiates a new xSL document.
 		 * 
@@ -212,29 +437,49 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public XSLDocument(IWebRequest request) {
 			this.request = request;
-			String url = this.request.getURL();
-			String xslPath = this.getXSLPath(url);
-			// load xsl input stream for given request
-			xslInputStream = this.getClass().getResourceAsStream(xslPath);
-			if (xslInputStream == null) {
-				xslPath = this.getXSLPath("");
-				xslInputStream = this.getClass().getResourceAsStream(xslPath);			
-			}
+			this.accessibleContext = null;
 		}
 
+		/**
+		 * Sets the accessible context.
+		 * 
+		 * @param accessibleContext
+		 *            the new accessible context
+		 */
+		public void setAccessibleContext(
+				IWebCommandAccessibleContext accessibleContext) {
+			this.accessibleContext = accessibleContext;
+		}
+
+		/**
+		 * Gets the xSL path.
+		 * 
+		 * @param url
+		 *            the url
+		 * @return the xSL path
+		 */
 		private String getXSLPath(String url) {
 			String rootPath = "/org/serviceconnector/web/xsl/";
+			if (this.accessibleContext == null) {
+				return rootPath + "login.xsl";
+			}
 			String[] splitted = url.split("\\?");
 			if (splitted.length <= 0) {
 				return rootPath + "main.xsl";
 			}
 			if (splitted[0].startsWith("/")) {
 				String name = splitted[0].substring(1);
-				return rootPath + name + ".xsl";				
+				return rootPath + name + ".xsl";
 			}
 			return rootPath + "main.xsl";
 		}
-		
+
+		private boolean isAjax(String url) {
+			if (url == null) {
+				return false;
+			}
+			return false;
+		}
 
 		/**
 		 * Transform.
@@ -248,6 +493,14 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public void transform(InputStream xmlInputStream,
 				OutputStream resultOutputStream) throws Exception {
+			String url = this.request.getURL();
+			String xslPath = this.getXSLPath(url);
+			// load xsl input stream for given request
+			xslInputStream = this.getClass().getResourceAsStream(xslPath);
+			if (xslInputStream == null) {
+				xslPath = this.getXSLPath("");
+				xslInputStream = this.getClass().getResourceAsStream(xslPath);
+			}
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			tFactory.setURIResolver(new XSLURIResolver());
 			StreamSource xslSourceStream = new StreamSource(xslInputStream);
@@ -257,7 +510,17 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			transformer.transform(xmlSourceStream, resultStream);
 		}
 
+		/**
+		 * The Class XSLURIResolver.
+		 */
 		private class XSLURIResolver implements URIResolver {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see javax.xml.transform.URIResolver#resolve(java.lang.String,
+			 * java.lang.String)
+			 */
 			public Source resolve(String href, String base)
 					throws TransformerException {
 				InputStream is = getClass().getResourceAsStream(

@@ -18,9 +18,15 @@ package org.serviceconnector.web.netty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jboss.netty.handler.codec.http.Cookie;
+import org.jboss.netty.handler.codec.http.CookieEncoder;
+import org.jboss.netty.handler.codec.http.DefaultCookie;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
 
 // TODO: Auto-generated Javadoc
@@ -30,27 +36,30 @@ import org.serviceconnector.web.IWebResponse;
 public class NettyWebResponse implements IWebResponse {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyWebResponse.class);
-	
+	protected final static Logger logger = Logger
+			.getLogger(NettyWebResponse.class);
+
 	/** The response. */
 	private HttpResponse response;
-	
+
 	/** The os. */
 	private ByteArrayOutputStream os;
 
+	CookieEncoder ce = null;
+
 	/**
 	 * Instantiates a new netty web response.
-	 *
-	 * @param httpResponse the response
+	 * 
+	 * @param httpResponse
+	 *            the response
 	 */
 	public NettyWebResponse(HttpResponse httpResponse) {
 		this.response = httpResponse;
 		this.os = null;
+		this.ce = null; // server side encoding
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.web.IWebResponse#getOutputStream()
-	 */
+
+	/** {@inheritDoc} */
 	@Override
 	public OutputStream getOutputStream() {
 		if (this.os == null) {
@@ -58,10 +67,8 @@ public class NettyWebResponse implements IWebResponse {
 		}
 		return this.os;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.web.IWebResponse#getBytes()
-	 */
+
+	/** {@inheritDoc} */
 	@Override
 	public byte[] getBytes() {
 		if (this.os == null) {
@@ -70,12 +77,45 @@ public class NettyWebResponse implements IWebResponse {
 		return this.os.toByteArray();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.web.IWebResponse#setContentType(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setContentType(String contentType) {
 		this.response.addHeader("Content-Type", contentType);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void addCookie(String key, String value) {
+		DefaultCookie cookie = new DefaultCookie(key, value);
+		cookie.setPath("/");
+		if (this.ce == null) {
+			this.ce = new CookieEncoder(true);
+		}
+		this.ce.addCookie(cookie);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void addCookie(Cookie cookie) {
+		if (this.ce == null) {
+			this.ce = new CookieEncoder(true);
+		}
+		this.ce.addCookie(cookie);
+	}
+
+	@Override
+	public void redirect(String path) {
+		logger.info("redirect location = " + path);
+		response.setStatus(HttpResponseStatus.FOUND);
+		response.addHeader("Location", path);
+	}
+
+	@Override
+	public boolean isRedirect() {
+		return response.getStatus() == HttpResponseStatus.FOUND;
+	}
+
+	public CookieEncoder getCookieEncoder() {
+		return this.ce;
+	}
 }

@@ -13,41 +13,28 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.web;
-
-import java.io.OutputStream;
-import java.util.Map;
-
-import org.serviceconnector.factory.IFactoryable;
+package org.serviceconnector.conf;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface IXMLLoader.
+ * The Class SystemConfigurationException.
  */
-public interface IXMLLoader extends IFactoryable{
+public class SystemConfigurationException extends Exception {
 
 	/**
-	 * Load.
-	 *
-	 * @param request the request
-	 * @param os the os
-	 * @throws Exception 
+	 * Instantiates a new system configuration exception.
 	 */
-	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
+	public SystemConfigurationException() {
+		super(); 
+	}
 
 	/**
-	 * Adds the meta.
+	 * Instantiates a new system configuration exception.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param message the message
 	 */
-	public abstract void addMeta(String name, String value);
-	
-	/**
-	 * Adds the meta.
-	 *
-	 * @param map the map
-	 */
-	public abstract void addMeta(Map<String, String> map);
-	
+	public SystemConfigurationException(String message) {
+		super(message);
+	}
+
 }

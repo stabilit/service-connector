@@ -15,39 +15,26 @@
  */
 package org.serviceconnector.web;
 
-import java.io.OutputStream;
-import java.util.Map;
-
-import org.serviceconnector.factory.IFactoryable;
-
 // TODO: Auto-generated Javadoc
 /**
- * The Interface IXMLLoader.
+ * The Class LoginException.
  */
-public interface IXMLLoader extends IFactoryable{
+public class LoginException extends Exception {
 
 	/**
-	 * Load.
-	 *
-	 * @param request the request
-	 * @param os the os
-	 * @throws Exception 
+	 * Instantiates a new login exception.
 	 */
-	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
+	public LoginException() {
+	}
 
 	/**
-	 * Adds the meta.
+	 * Instantiates a new login exception.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param message the message
 	 */
-	public abstract void addMeta(String name, String value);
-	
-	/**
-	 * Adds the meta.
-	 *
-	 * @param map the map
-	 */
-	public abstract void addMeta(Map<String, String> map);
-	
+	public LoginException(String message) {
+		super(message);
+	}
+
+
 }

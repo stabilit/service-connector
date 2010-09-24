@@ -18,6 +18,8 @@ package org.serviceconnector.web;
 
 import java.io.OutputStream;
 
+import org.jboss.netty.handler.codec.http.Cookie;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -32,8 +34,42 @@ public interface IWebResponse {
 	 */
 	public abstract OutputStream getOutputStream();
 
+	/**
+	 * Gets the bytes.
+	 *
+	 * @return the bytes
+	 */
 	public abstract byte[] getBytes();
 
+	/**
+	 * Sets the content type.
+	 *
+	 * @param string the new content type
+	 */
 	public abstract void setContentType(String string);
+	
+	/**
+	 * Adds the cookie.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
+	public abstract void addCookie(String key, String value);
+	
+	/**
+	 * Adds the cookie.
+	 *
+	 * @param cookie the cookie
+	 */
+	public abstract void addCookie(Cookie cookie);
 
+	/**
+	 * Redirect.
+	 *
+	 * @param string the string
+	 */
+	public abstract void redirect(String path);
+
+	public abstract boolean isRedirect();
+	
 }

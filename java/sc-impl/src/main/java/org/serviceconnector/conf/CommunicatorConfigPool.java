@@ -122,6 +122,8 @@ public abstract class CommunicatorConfigPool {
 			commConfig.setPort(port);
 			commConfig.setHost((String) props.get(commName + Constants.HOST_QUALIFIER));
 			commConfig.setConnectionType((String) props.get(commName + Constants.CONNECTION_TYPE_QUALIFIER));
+			commConfig.setUserid((String) props.get(commName + Constants.CONNECTION_USERNAME));
+			commConfig.setPassword((String) props.get(commName + Constants.CONNECTION_PASSWORD));
 			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
 

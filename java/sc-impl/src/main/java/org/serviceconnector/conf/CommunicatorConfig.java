@@ -18,7 +18,6 @@ package org.serviceconnector.conf;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * The Class CommunicatorConfig.
  * 
@@ -27,7 +26,8 @@ import org.apache.log4j.Logger;
 public class CommunicatorConfig {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
+	protected final static Logger logger = Logger
+			.getLogger(CommunicatorConfig.class);
 
 	/** The communicator name. */
 	private String communicatorName;
@@ -42,6 +42,10 @@ public class CommunicatorConfig {
 	/** The keep alive interval. */
 	private int keepAliveInterval;
 	private double operationTimeoutMultiplier;
+	/** The userid. */
+	private String userid;
+	/** The password. */
+	private String password;
 
 	/**
 	 * Instantiates a new communicator configuration.
@@ -49,8 +53,9 @@ public class CommunicatorConfig {
 	CommunicatorConfig() {
 	}
 
-	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
-			int keepAliveInterval, int keepAliveTimeout) {
+	public CommunicatorConfig(String communicatorName, String host, int port,
+			String connectionType, int maxPoolSize, int keepAliveInterval,
+			int keepAliveTimeout) {
 		super();
 		this.communicatorName = communicatorName;
 		this.port = port;
@@ -130,7 +135,7 @@ public class CommunicatorConfig {
 
 	/**
 	 * Gets the connection type.
-	 *
+	 * 
 	 * @return the connection type
 	 */
 	public String getConnectionType() {
@@ -145,6 +150,44 @@ public class CommunicatorConfig {
 	 */
 	public void setConnectionType(String connectionType) {
 		this.connectionType = connectionType;
+	}
+
+	/**
+	 * Sets the userid.
+	 * 
+	 * @param userid
+	 *            the new userid
+	 */
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	/**
+	 * Gets the userid.
+	 *
+	 * @return the userid
+	 */
+	public String getUserid() {
+		return userid;
+	}
+
+	/**
+	 * Sets the password.
+	 * 
+	 * @param password
+	 *            the new password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * Gets the password.
+	 *
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
 	}
 
 	/**
@@ -177,8 +220,9 @@ public class CommunicatorConfig {
 
 	/**
 	 * Sets the keep alive interval.
-	 *
-	 * @param keepAliveInterval the new keep alive interval
+	 * 
+	 * @param keepAliveInterval
+	 *            the new keep alive interval
 	 */
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
@@ -186,8 +230,9 @@ public class CommunicatorConfig {
 
 	/**
 	 * Sets the operation timeout multiplier.
-	 *
-	 * @param operationTimeoutMultiplier the new operation timeout multiplier
+	 * 
+	 * @param operationTimeoutMultiplier
+	 *            the new operation timeout multiplier
 	 */
 	public void setOperationTimeoutMultiplier(double operationTimeoutMultiplier) {
 		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
@@ -201,4 +246,5 @@ public class CommunicatorConfig {
 	public double getOperationTimeoutMultiplier() {
 		return operationTimeoutMultiplier;
 	}
+
 }

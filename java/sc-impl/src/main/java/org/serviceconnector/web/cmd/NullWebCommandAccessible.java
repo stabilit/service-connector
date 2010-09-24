@@ -16,66 +16,56 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd;
 
-import org.serviceconnector.factory.IFactoryable;
+import org.apache.log4j.Logger;
 import org.serviceconnector.web.IWebRequest;
-import org.serviceconnector.web.IWebResponse;
-
+import org.serviceconnector.web.LoginException;
 
 /**
- * The Interface ICommand.
+ * The Class NullWebCommandAccessible. Prevents null pointer exception when
+ * command does not implement the accessible interface. Throws more specific
+ * exception (AccessibleException).
+ * 
+ * @author JTraber
  */
-public interface IWebCommand extends IFactoryable {
+public final class NullWebCommandAccessible implements IWebCommandAccessible {
+
+	/** The Constant logger. */
+	protected static final Logger logger = Logger
+			.getLogger(NullWebCommandAccessible.class);
+
+	/** The null command accessible. */
+	private static IWebCommandAccessible nullCommandAccessible = new NullWebCommandAccessible();
 
 	/**
-	 * Gets the key.
+	 * New instance.
 	 * 
-	 * @return the key
-	 */
-	public String getKey();
-
-	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	public IWebCommandValidator getCommandValidator();
-	
-	/**
-	 * Sets the command validator.
-	 *
-	 * @param commandValidator the new command validator
-	 */
-	public void setCommandValidator(IWebCommandValidator commandValidator);
-
-	/**
-	 * Gets the command accessible.
-	 *
 	 * @return the command accessible
 	 */
-	public IWebCommandAccessible getCommandAccessible();
-	
-	/**
-	 * Sets the command accessible.
-	 *
-	 * @param commandAccessible the new command accessible
-	 */
-	public void setCommandAccessible(IWebCommandAccessible commandAccessible);
-	/**
-	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void run(IWebRequest request, IWebResponse response) throws Exception;
+	public static IWebCommandAccessible newInstance() {
+		return nullCommandAccessible;
+	}
 
-	/**
-	 * Checks if command is asynchronous.
-	 * 
-	 * @return true, if command is asynchronous
-	 */
-	public boolean isAsynchronous();
+	/** {@inheritDoc} */
+	@Override
+	public void login(IWebRequest request) throws Exception {
+		throw new LoginException("not authorized");
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAccessible(IWebRequest request) throws Exception {
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void logout(IWebRequest request) throws Exception {
+		throw new LoginException("not authorized");
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IWebCommandAccessibleContext getAccessibleContext() {
+		return null;
+	}
 }

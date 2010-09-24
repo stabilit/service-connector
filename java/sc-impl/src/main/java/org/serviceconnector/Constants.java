@@ -89,6 +89,10 @@ public final class Constants {
 	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
+	/** The USERID. */
+	public static final String CONNECTION_USERNAME = ".username";
+	/** The PASSWORD. */
+	public static final String CONNECTION_PASSWORD = ".password";
 	/** The HOST. */
 	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */

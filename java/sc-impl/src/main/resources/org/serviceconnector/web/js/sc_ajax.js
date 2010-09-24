@@ -12,7 +12,7 @@ function timerCall() {
 	ajaxTimer.ajaxCall();
 }
 
-var ajaxTimer = new AjaxCallObject('Timer', 'timer', timerCallback);
+var ajaxTimer = new AjaxCallObject('Timer', 'ajax/timer', timerCallback);
 
 setInterval('timerCall()', 59000);
 

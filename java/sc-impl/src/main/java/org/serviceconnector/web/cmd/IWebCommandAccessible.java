@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,42 +13,46 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
-package org.serviceconnector.web;
+ *-----------------------------------------------------------------------------*/
+package org.serviceconnector.web.cmd;
 
-import java.io.OutputStream;
-import java.util.Map;
-
-import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.web.IWebRequest;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface IXMLLoader.
+ * The Interface IAuthorized.
+ * 
+ * @author JTraber
  */
-public interface IXMLLoader extends IFactoryable{
+public interface IWebCommandAccessible {
 
 	/**
-	 * Load.
+	 * Login.
 	 *
 	 * @param request the request
-	 * @param os the os
-	 * @throws Exception 
+	 * @throws Exception the exception
 	 */
-	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
-
+	public abstract void login(IWebRequest request) throws Exception;
 	/**
-	 * Adds the meta.
+	 * Checks if is accessible.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param request the request
+	 * @return true, if is accessible
+	 * @throws Exception the exception
 	 */
-	public abstract void addMeta(String name, String value);
+	public abstract boolean isAccessible(IWebRequest request) throws Exception;
 	
 	/**
-	 * Adds the meta.
+	 * Logout.
 	 *
-	 * @param map the map
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
-	public abstract void addMeta(Map<String, String> map);
-	
+	public abstract void logout(IWebRequest request) throws Exception;
+	/**
+	 * Gets the accessible context.
+	 *
+	 * @return the accessible context
+	 */
+	public abstract IWebCommandAccessibleContext getAccessibleContext();
 }
