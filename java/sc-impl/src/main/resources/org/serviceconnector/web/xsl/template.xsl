@@ -3,6 +3,10 @@
 	<xsl:variable name="head" select="/sc-web/head"/>
 	<xsl:variable name="body" select="/sc-web/body"/>
 	<xsl:variable name="userid" select="/sc-web/head/meta/@userid"/>
+	<xsl:output
+			method="html"
+			doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
+			doctype-public="-//W3C//DTD XHTML 1.1//EN"/>				
 	<xsl:template match="/">
 		<html>
 			<head>
