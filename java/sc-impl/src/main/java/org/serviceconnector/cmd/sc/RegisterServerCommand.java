@@ -69,7 +69,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
-		Service service = this.validateService(serviceName);
+		Service service = this.validateServiceName(serviceName);
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
