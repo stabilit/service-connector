@@ -86,7 +86,7 @@ public class RejectSessionClientToSCTest {
 		
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
-		//TODO appErrorCode & appErrorText should be maybe in the exception message rather than attributes of exception
+		//TODO FJU appErrorCode & appErrorText should be maybe in the exception message rather than attributes of exception
 		assertEquals(0, Integer.parseInt(((SCServiceException)ex).getAppErrorCode()));
 		assertEquals("\"This is the app error text\"", ((SCServiceException)ex).getAppErrorText());
 	}
@@ -104,7 +104,7 @@ public class RejectSessionClientToSCTest {
 		sessionService.deleteSession();
 	}
 	
-	//TODO throws NullPointerException
+	//TODO FJU throws NullPointerException
 	@Test(expected = SCServiceException.class)
 	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException() throws Exception {
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);

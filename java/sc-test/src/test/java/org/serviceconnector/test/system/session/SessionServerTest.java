@@ -170,7 +170,7 @@ public class SessionServerTest {
 		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
 	}
 
-	// TODO Should exchange 4 messages in total
+	// TODO FJU Should exchange 4 messages in total
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_4messagesArrive()
 			throws Exception {

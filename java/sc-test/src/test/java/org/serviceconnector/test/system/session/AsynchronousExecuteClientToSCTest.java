@@ -20,10 +20,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.sc.service.SCServiceException;
 
 
-public class AsynchroneExecuteClientToSCTest {
+public class AsynchronousExecuteClientToSCTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AsynchroneExecuteClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(AsynchronousExecuteClientToSCTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;
@@ -795,7 +795,7 @@ public class AsynchroneExecuteClientToSCTest {
 		@Override
 		public void callback(SCMessage msg) {
 			response = msg;
-			AsynchroneExecuteClientToSCTest.messageReceived = true;
+			AsynchronousExecuteClientToSCTest.messageReceived = true;
 		}
 
 		@Override

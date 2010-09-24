@@ -145,11 +145,8 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 			for (int j = 0; j < 10; j++) {
 				testLogger.info(i*10 + j);
 				server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
-				//TODO this sleep 1) is not helping 2) shouldnt be needed
-				Thread.sleep(1000);
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
 				server.deregisterServer(TestConstants.serviceName);
-				Thread.sleep(1000);
 				assertEquals(false, server.isRegistered(TestConstants.serviceName));
 			}
 		}
