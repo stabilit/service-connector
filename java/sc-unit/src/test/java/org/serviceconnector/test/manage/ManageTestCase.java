@@ -60,7 +60,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.MANAGE.getValue());
+		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
 		// register a server for enableService
 		SetupTestCases.registerSessionServiceEnable();
@@ -77,7 +77,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		manageCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
 		Assert.assertNull(result.getBody());
-		Assert.assertEquals(result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE), SCMPMsgType.MANAGE.getValue());
+		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
 		// try to create another session on service enableService - should fail
 		fault = (SCMPFault) this.createSession();
