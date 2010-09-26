@@ -26,8 +26,7 @@ import org.apache.log4j.Logger;
 public class CommunicatorConfig {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(CommunicatorConfig.class);
+	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
 
 	/** The communicator name. */
 	private String communicatorName;
@@ -53,9 +52,8 @@ public class CommunicatorConfig {
 	CommunicatorConfig() {
 	}
 
-	public CommunicatorConfig(String communicatorName, String host, int port,
-			String connectionType, int maxPoolSize, int keepAliveInterval,
-			int keepAliveTimeout) {
+	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
+			int keepAliveInterval, int keepAliveTimeout) {
 		super();
 		this.communicatorName = communicatorName;
 		this.port = port;
@@ -164,7 +162,7 @@ public class CommunicatorConfig {
 
 	/**
 	 * Gets the userid.
-	 *
+	 * 
 	 * @return the userid
 	 */
 	public String getUserid() {
@@ -183,7 +181,7 @@ public class CommunicatorConfig {
 
 	/**
 	 * Gets the password.
-	 *
+	 * 
 	 * @return the password
 	 */
 	public String getPassword() {
