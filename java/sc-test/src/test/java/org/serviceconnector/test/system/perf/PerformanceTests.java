@@ -40,11 +40,11 @@ public class PerformanceTests {
 	public void setUp() throws Exception {
 		scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-				30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
+				30000, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
 						TestConstants.serviceNameAlt });
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 	}
 
 	@After
@@ -125,7 +125,7 @@ public class PerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
+					30000, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
 					TestConstants.serviceNameAlt });
 		}
 
@@ -154,7 +154,7 @@ public class PerformanceTests {
 			
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
+					30000, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
 					TestConstants.serviceNameAlt });
 		}
 
@@ -218,7 +218,7 @@ public class PerformanceTests {
 			
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
+					30000, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
 					TestConstants.serviceNameAlt });
 		}
 

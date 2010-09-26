@@ -42,7 +42,7 @@ public class CreateSessionTcpClientToSCTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-					TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+					TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -53,7 +53,7 @@ public class CreateSessionTcpClientToSCTest {
 		threadCount = Thread.activeCount();
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
@@ -1375,7 +1375,7 @@ public class CreateSessionTcpClientToSCTest {
 	@Test
 	public void createSession_overBothConnectionTypes_passes() throws Exception {
 		ISCClient client2 = new SCClient();
-		client2.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 		ISessionService session1 = client.newSessionService(TestConstants.serviceName);
 		ISessionService session2 = client2.newSessionService(TestConstants.serviceName);
@@ -1396,7 +1396,7 @@ public class CreateSessionTcpClientToSCTest {
 	@Test
 	public void createSession_overBothConnectionTypesDifferentServices_passes() throws Exception {
 		ISCClient client2 = new SCClient();
-		client2.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 		ISessionService session1 = client.newSessionService(TestConstants.serviceName);
 		ISessionService session2 = client2.newSessionService(TestConstants.serviceNameAlt);

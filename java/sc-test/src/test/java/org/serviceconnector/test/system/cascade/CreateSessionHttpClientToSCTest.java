@@ -44,7 +44,7 @@ public class CreateSessionHttpClientToSCTest {
 			sc0Process = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-					TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+					TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -54,7 +54,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
@@ -1371,7 +1371,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_overBothConnectionTypes_passes() throws Exception {
 		ISCClient client2 = new SCClient();
 		((SCClient) client2).setConnectionType("netty.tcp");
-		client2.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 
 		ISessionService session1 = client.newSessionService(TestConstants.serviceName);
 		ISessionService session2 = client2.newSessionService(TestConstants.serviceName);
@@ -1393,7 +1393,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_overBothConnectionTypesDifferentServices_passes() throws Exception {
 		ISCClient client2 = new SCClient();
 		((SCClient) client2).setConnectionType("netty.tcp");
-		client2.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 
 		ISessionService session1 = client.newSessionService(TestConstants.serviceName);
 		ISessionService session2 = client2.newSessionService(TestConstants.serviceNameAlt);

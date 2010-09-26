@@ -34,7 +34,7 @@ public class PublishClientTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.publishSrv,
-					TestConstants.log4jSrvProperties, 30000, TestConstants.PORT9000, 100,
+					TestConstants.log4jSrvProperties, 30000, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -44,7 +44,7 @@ public class PublishClientTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After

@@ -3,10 +3,10 @@ package org.serviceconnector.ctrl.util;
 public class TestConstants {
 	public static final String LOCALHOST = "localhost";
 	public static final String HOST = "localhost";
-	public static final int PORT1 = 1;
-	public static final int PORT8080 = 8080;
-	public static final int PORT9000 = 9000;
-	public static final int PORT65535 = 65535;
+	public static final int PORT_HTTP = 8080;
+	public static final int PORT_TCP = 9000;
+	public static final int PORT_MIN = 1;
+	public static final int PORT_MAX = 65535;
 
 	public static final String log4jSrvProperties = "log4jSrv.properties";
 

@@ -50,7 +50,7 @@ public class PublishConnectionTypeTcpTest {
 		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
 				TestConstants.serviceNamePublish, 1, 1, new CallBack());
 	}
 
@@ -117,7 +117,7 @@ public class PublishConnectionTypeTcpTest {
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
 			throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
 				TestConstants.serviceName, 1, 1, new CallBack());
 		try {
 			server.publish(TestConstants.serviceName, TestConstants.mask, "something");

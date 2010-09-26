@@ -109,7 +109,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	@Test
 	public void deregisterServer_afterValidRegister_registeredThenNotRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
@@ -119,7 +119,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	public void deregisterServer_afterValidRegisterDifferentServiceName_registeredThenNotRegistered()
 			throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceNameAlt, 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameAlt));
 		server.deregisterServer(TestConstants.serviceNameAlt);
 		assertEquals(false, server.isRegistered(TestConstants.serviceNameAlt));
@@ -128,7 +128,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	@Test
 	public void deregisterServer_differentThanRegistered_registered() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceNameAlt);
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
@@ -144,7 +144,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 			testLogger.info("RegisterDeregister server iteration:\t" + i * 10);
 			for (int j = 0; j < 10; j++) {
 				testLogger.info(i*10 + j);
-				server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+				server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
 				server.deregisterServer(TestConstants.serviceName);
 				assertEquals(false, server.isRegistered(TestConstants.serviceName));
@@ -162,7 +162,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 				server = new SCSessionServer();
 				((SCSessionServer) server).setConnectionType("netty.tcp");
 				server.startListener(TestConstants.HOST, 9001, 0);
-				server.registerServer(TestConstants.HOST, TestConstants.PORT9000, TestConstants.serviceName, 1, 1, new CallBack());
+				server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
 				server.deregisterServer(TestConstants.serviceName);
 				assertEquals(false, server.isRegistered(TestConstants.serviceName));
@@ -171,7 +171,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 				server = new SCSessionServer();
 				((SCSessionServer) server).setConnectionType("netty.http");
 				server.startListener(TestConstants.HOST, 9001, 0);
-				server.registerServer(TestConstants.HOST, TestConstants.PORT8080, TestConstants.serviceName, 1, 1, new CallBack());
+				server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1, new CallBack());
 				assertEquals(true, server.isRegistered(TestConstants.serviceName));
 				server.deregisterServer(TestConstants.serviceName);
 				assertEquals(false, server.isRegistered(TestConstants.serviceName));

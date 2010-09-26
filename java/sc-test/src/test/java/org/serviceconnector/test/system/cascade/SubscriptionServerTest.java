@@ -58,7 +58,7 @@ public class SubscriptionServerTest {
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
 				TestConstants.serviceNamePublish, 10, 10, srvCallback);
 
 	}

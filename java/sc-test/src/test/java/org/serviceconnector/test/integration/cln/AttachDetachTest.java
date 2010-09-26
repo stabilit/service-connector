@@ -62,7 +62,7 @@ public class AttachDetachTest {
 	@Test
 	public void attach_changesState_initiallyNotAttachedThenAttached() throws Exception {
 		assertEquals(false, client.isAttached());
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		client.detach();
 	}
@@ -70,7 +70,7 @@ public class AttachDetachTest {
 	@Test
 	public void detach_changesState_fromAttachedToNotAttached() throws Exception {
 		assertEquals(false, client.isAttached());
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		client.detach();
 		assertEquals(false, client.isAttached());
@@ -79,9 +79,9 @@ public class AttachDetachTest {
 	@Test
 	public void attach_twiceSameParams_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -93,10 +93,10 @@ public class AttachDetachTest {
 	@Test
 	public void attach_twiceDifferentParamsHttpFirst_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		((SCClient) client).setConnectionType("netty.tcp");
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT9000);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -109,10 +109,10 @@ public class AttachDetachTest {
 	public void attach_twiceDifferentParamsTcpFirst_throwsExceptionAttached() throws Exception {
 		Exception ex = null;
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		((SCClient) client).setConnectionType("netty.http");
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -128,9 +128,9 @@ public class AttachDetachTest {
 	}
 
 	@Test
-	public void detach_validAttachPort8080_notAttached() throws Exception {
+	public void detach_validAttachPortHttp_notAttached() throws Exception {
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		} finally {
 			client.detach();
 			assertEquals(false, client.isAttached());
@@ -141,7 +141,7 @@ public class AttachDetachTest {
 	public void detach_validAttachPort9000_notAttached() throws Exception {
 		((SCClient) client).setConnectionType("netty.tcp");
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT9000);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		} finally {
 			client.detach();
 			assertEquals(false, client.isAttached());
@@ -152,11 +152,11 @@ public class AttachDetachTest {
 	public void detach_afterDoubleAttemptedAttachDetach_throwsExceptionNotAttached()
 			throws Exception {
 		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		try {
 			((SCClient) client).setConnectionType("netty.tcp");
-			client.attach(TestConstants.HOST, TestConstants.PORT9000);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -169,7 +169,7 @@ public class AttachDetachTest {
 	@Test
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
 		for (int i = 0; i < 10; i++) {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			Thread.sleep(1000);
 			client.detach();
 			Thread.sleep(1000);
@@ -180,10 +180,10 @@ public class AttachDetachTest {
 	@Test
 	public void attachDetach_cycle100Times_notAttached() throws Exception {
 		for (int i = 0; i < 99; i++) {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			client.detach();
 		}
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		client.detach();
 		assertEquals(false, client.isAttached());
@@ -192,10 +192,10 @@ public class AttachDetachTest {
 	@Test
 	public void attachDetach_cycle500Times_notAttached() throws Exception {
 		for (int i = 0; i < 499; i++) {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			client.detach();
 		}
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		client.detach();
 		assertEquals(false, client.isAttached());
@@ -210,7 +210,7 @@ public class AttachDetachTest {
 			testLogger.info("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();
-				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT8080);
+				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			}
 		}
 		i = 0;

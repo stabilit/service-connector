@@ -33,7 +33,7 @@ public class StartSessionClient extends Thread {
 		ISCClient client = new SCClient();
 
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			if (getMethodName() == "createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty") {
 				ISessionService sessionService = client

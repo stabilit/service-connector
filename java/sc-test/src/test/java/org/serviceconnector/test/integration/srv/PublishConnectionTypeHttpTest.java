@@ -51,7 +51,7 @@ public class PublishConnectionTypeHttpTest {
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, 9001, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT8080,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
 				TestConstants.serviceNamePublish, 1, 1, new CallBack());
 	}
 
@@ -118,7 +118,7 @@ public class PublishConnectionTypeHttpTest {
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
 			throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT8080,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
 				TestConstants.serviceName, 1, 1, new CallBack());
 		try {
 			server.publish(TestConstants.serviceName, TestConstants.mask, "something");

@@ -48,7 +48,7 @@ public class NewServicesTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After

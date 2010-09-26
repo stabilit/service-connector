@@ -35,7 +35,7 @@ public class StartPublishClient extends Thread {
 		ISCClient client = new SCClient();
 
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			if (getMethodName() == "subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists") {
 				IPublishService service = client

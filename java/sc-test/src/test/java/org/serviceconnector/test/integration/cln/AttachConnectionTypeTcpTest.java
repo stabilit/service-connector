@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -74,9 +74,9 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080_attached() throws Exception {
+	public void attach_hostLocalhostPortHttp_attached() throws Exception {
 		try {
-			client.attach("localhost", 8080);
+			client.attach("localhost", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -188,10 +188,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test(expected = InvalidParameterException.class)
-	public void attach_hostNullPort8080_notAttachedThrowsException()
+	public void attach_hostNullPortHttp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach(null, 8080);
+			client.attach(null, TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
@@ -286,10 +286,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostEmptyPort8080_notAttachedThrowsException()
+	public void attach_hostEmptyPortHttp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("", 8080);
+			client.attach("", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -397,10 +397,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostAPort8080_notAttachedThrowsException()
+	public void attach_hostAPortHttp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("a", 8080);
+			client.attach("a", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -507,10 +507,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostArbitraryPort8080_notAttachedThrowsException()
+	public void attach_hostArbitraryPortHttp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("The quick brown fox jumps over a lazy dog.", 8080);
+			client.attach("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}

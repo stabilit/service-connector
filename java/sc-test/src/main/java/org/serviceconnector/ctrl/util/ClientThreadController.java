@@ -93,7 +93,7 @@ public class ClientThreadController {
 		}
 		try {
 			SCClient client = new SCClient();
-			client.attach(TestConstants.HOST, TestConstants.PORT8080);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			ISessionService service = client.newSessionService(TestConstants.serviceName);
 			service.createSession("sessionInfo", 300);
 			response = service.execute(new SCMessage("executed"));

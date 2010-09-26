@@ -40,12 +40,12 @@ public class PrematureDestroyOfSCClientToSCTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-					TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+					TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After
@@ -72,7 +72,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		client.detach();
@@ -83,7 +83,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
@@ -94,7 +94,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
-				TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
+				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);

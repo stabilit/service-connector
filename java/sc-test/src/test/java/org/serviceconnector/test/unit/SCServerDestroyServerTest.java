@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 
 
@@ -31,7 +32,7 @@ public class SCServerDestroyServerTest {
 	@Test
 	public void destroyServer_withValidisListening_notListening() throws Exception
 	{
-		server.startListener("localhost", 8080, 1);
+		server.startListener("localhost", TestConstants.PORT_HTTP, 1);
 		assertEquals(true, server.isListening());
 		server.destroyServer();
 		assertEquals(false, server.isListening());
@@ -41,7 +42,7 @@ public class SCServerDestroyServerTest {
 	public void startListeningDestroyServer_500Times_notListening() throws Exception
 	{
 		for (int i = 0; i < 500; i++) {
-			server.startListener("localhost", 8080, 1);
+			server.startListener("localhost", TestConstants.PORT_HTTP, 1);
 			assertEquals(true, server.isListening());
 			server.destroyServer();
 			assertEquals(false, server.isListening());

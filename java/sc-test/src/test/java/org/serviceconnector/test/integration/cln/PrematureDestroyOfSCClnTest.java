@@ -56,7 +56,7 @@ public class PrematureDestroyOfSCClnTest {
 	@Test(expected = SCServiceException.class)
 	public void attach_afterSCDestroy_throwsException() throws Exception {
 		scProcess.destroy();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 	
 	@Test
@@ -67,7 +67,7 @@ public class PrematureDestroyOfSCClnTest {
 	
 	@Test
 	public void detach_afterSCDestroy_passes() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		client.detach();
 		assertEquals(false, client.isAttached());
@@ -75,28 +75,28 @@ public class PrematureDestroyOfSCClnTest {
 	
 	@Test(expected = SCServiceException.class)
 	public void enableService_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		client.enableService(TestConstants.serviceName);
 	}
 	
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		client.enableService(TestConstants.serviceName);
 	}
 	
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		client.workload(TestConstants.serviceName);
 	}
 	
 	@Test
 	public void setMaxConnection_afterAttachAfterSCDestroy_passes() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		client.setMaxConnections(10);
 	}

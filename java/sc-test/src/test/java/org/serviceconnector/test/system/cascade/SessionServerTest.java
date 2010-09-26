@@ -58,7 +58,7 @@ public class SessionServerTest {
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, 9001, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT9000,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
 				TestConstants.serviceName, 10, 10, srvCallback);
 
 	}

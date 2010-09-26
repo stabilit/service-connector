@@ -53,7 +53,7 @@ public class PerformanceSessionClient implements Runnable {
 			beforeAttachSignal.await();
 
 			try {
-				client.attach(TestConstants.HOST, TestConstants.PORT9000);
+				client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 			} catch (Exception e) {
 				testLogger.info("attach failed");
 			} finally {

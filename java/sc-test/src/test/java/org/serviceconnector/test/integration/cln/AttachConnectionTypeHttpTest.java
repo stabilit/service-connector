@@ -65,8 +65,8 @@ public class AttachConnectionTypeHttpTest {
 	// region hostName == "localhost" (set as only one in
 	// scIntegration.properties), all ports
 	@Test
-	public void attach_localhost8080_attached() throws Exception {
-		client.attach("localhost", 8080);
+	public void attach_hostLocalhostPortHttp_attached() throws Exception {
+		client.attach("localhost", TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 	}
 
@@ -170,9 +170,9 @@ public class AttachConnectionTypeHttpTest {
 	// region hostName == "null", all ports
 
 	@Test
-	public void attach_hostNullPort8080_notAttachedThrowsException() throws Exception {
+	public void attach_hostNullPortHttp_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach(null, 8080);
+			client.attach(null, TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -265,8 +265,8 @@ public class AttachConnectionTypeHttpTest {
 	// region hostName == "", all ports
 
 	@Test
-	public void attach_hostEmptyPort8080_hostIsInterpretedAsLocalhostIsAttached() throws Exception {
-		client.attach("", 8080);
+	public void attach_hostEmptyPortHttp_hostIsInterpretedAsLocalhostIsAttached() throws Exception {
+		client.attach("", TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 	}
 
@@ -362,9 +362,9 @@ public class AttachConnectionTypeHttpTest {
 	// region hostName == "a", all ports
 
 	@Test
-	public void attach_hostAPort8080_notAttachedThrowsException() throws Exception {
+	public void attach_hostAPortHttp_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach("a", 8080);
+			client.attach("a", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -465,9 +465,9 @@ public class AttachConnectionTypeHttpTest {
 	// ports
 
 	@Test
-	public void attach_hostArbitraryPort8080_notAttachedThrowsException() throws Exception {
+	public void attach_hostArbitraryPortHttp_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach("The quick brown fox jumps over a lazy dog.", 8080);
+			client.attach("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -571,26 +571,26 @@ public class AttachConnectionTypeHttpTest {
 	// and test only those the attribute keepAlive could have some effect on
 	// other combinations are useless. Really
 
-	public void attach_hostLocalhostPort8080KeepAlive1_attached() throws Exception {
-		client.attach("localhost", 8080, 1);
+	public void attach_hostLocalhostPortHttpKeepAlive1_attached() throws Exception {
+		client.attach("localhost", TestConstants.PORT_HTTP, 1);
 		assertEquals(true, client.isAttached());
 	}
 
-	public void attach_hostLocalhostPort8080KeepAlive3600_attached() throws Exception {
-		client.attach("localhost", 8080, 3600);
+	public void attach_hostLocalhostPortHttpKeepAlive3600_attached() throws Exception {
+		client.attach("localhost", TestConstants.PORT_HTTP, 3600);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
 	public void attach_KeepAlive0_notAttached() throws Exception {
-		client.attach("localhost", 8080, 0);
+		client.attach("localhost", TestConstants.PORT_HTTP, 0);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080KeepAliveMinus1_notAttached() throws Exception {
+	public void attach_hostLocalhostPortHttpKeepAliveMinus1_notAttached() throws Exception {
 		try {
-			client.attach("localhost", 8080, -1);
+			client.attach("localhost", TestConstants.PORT_HTTP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -599,15 +599,15 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080KeepAlive1_isAttached() throws Exception {
-		client.attach("localhost", 8080, 1);
+	public void attach_hostLocalhostPortHttpKeepAlive1_isAttached() throws Exception {
+		client.attach("localhost", TestConstants.PORT_HTTP, 1);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080KeepAlive3601_notAttached() throws Exception {
+	public void attach_hostLocalhostPortHttpKeepAlive3601_notAttached() throws Exception {
 		try {
-			client.attach("localhost", 8080, 3601);
+			client.attach("localhost", TestConstants.PORT_HTTP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -616,9 +616,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080KeepAliveIntMin_notAttached() throws Exception {
+	public void attach_hostLocalhostPortHttpKeepAliveIntMin_notAttached() throws Exception {
 		try {
-			client.attach("localhost", 8080, Integer.MIN_VALUE);
+			client.attach("localhost", TestConstants.PORT_HTTP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -627,9 +627,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort8080KeepAliveIntMax_notAttached() throws Exception {
+	public void attach_hostLocalhostPortHttpKeepAliveIntMax_notAttached() throws Exception {
 		try {
-			client.attach("localhost", 8080, Integer.MAX_VALUE);
+			client.attach("localhost", TestConstants.PORT_HTTP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}

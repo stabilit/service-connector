@@ -51,7 +51,7 @@ public class EnableDisableServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 	
 	@After
@@ -172,7 +172,7 @@ public class EnableDisableServiceTest {
 	@Test
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
 		ISCClient client2 = new SCClient();
-		client2.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);
@@ -188,7 +188,7 @@ public class EnableDisableServiceTest {
 	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
 		ISCClient client2 = new SCClient();
 		((SCClient) client2).setConnectionType("netty.tcp");
-		client2.attach(TestConstants.HOST, TestConstants.PORT9000);
+		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);

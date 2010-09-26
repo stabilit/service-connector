@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,44 +13,23 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
+ *-----------------------------------------------------------------------------*/
+package org.serviceconnector.test.sc;
+
+import org.serviceconnector.cmd.CommandFactory;
+import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
+import org.serviceconnector.cmd.srv.ServerCommandFactory;
+
+
 /**
+ * A factory for creating command objects. Unifies all commands used by publish, session server and service connector.
  * 
- */
-package org.serviceconector.test.sc.connectionPool;
-
-import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.net.connection.ConnectionPool;
-import org.serviceconnector.net.req.IRequesterContext;
-import org.serviceconnector.scmp.SCMPMessageId;
-
-
-/**
  * @author JTraber
  */
-public class TestContext implements IRequesterContext {
-
-	protected ConnectionPool connectionPool;
-	private SCMPMessageId msgId;
-
-	public TestContext(CommunicatorConfig config, SCMPMessageId msgId) {
-		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
-		this.connectionPool.setMinConnections(1);
-		this.msgId = msgId;
-	}
-
-	public TestContext(String host, int port, String conType) {
-		this.connectionPool = new ConnectionPool(host, port, conType);
-	}
-
-	@Override
-	public ConnectionPool getConnectionPool() {
-		return this.connectionPool;
-	}
-
-	@Override
-	public SCMPMessageId getSCMPMessageId() {
-		return this.msgId;
+public class TestServerCommandFactory extends CommandFactory {
+	@SuppressWarnings("unused")
+	public TestServerCommandFactory() {
+		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);
+		ServerCommandFactory sessionServerCommandFactory = new ServerCommandFactory(this);
 	}
 }

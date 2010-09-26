@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconector.test.sc;
+package org.serviceconnector.test.sc;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,23 +24,6 @@ import junit.framework.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.serviceconector.test.sc.attach.AttachTestCase;
-import org.serviceconector.test.sc.attach.DetachTestCase;
-import org.serviceconector.test.sc.connectionPool.ConnectionPoolTestCase;
-import org.serviceconector.test.sc.group.GroupCallTestCase;
-import org.serviceconector.test.sc.manage.ManageTestCase;
-import org.serviceconector.test.sc.messageId.MessageIdTestCase;
-import org.serviceconector.test.sc.register.DeRegisterServerTestCase;
-import org.serviceconector.test.sc.register.RegisterServerTestCase;
-import org.serviceconector.test.sc.scVersion.SCVersionToSCTestCase;
-import org.serviceconector.test.sc.scmpVersion.DecodeSCMPVersionTestCase;
-import org.serviceconector.test.sc.session.ClnCreateSessionTestCase;
-import org.serviceconector.test.sc.session.ClnDeleteSessionTestCase;
-import org.serviceconector.test.sc.sessionTimeout.SessionTimeoutTestCase;
-import org.serviceconector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
-import org.serviceconector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
-import org.serviceconector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
-import org.serviceconector.test.sc.srvExecute.synch.SrvExecuteSyncTestCase;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -52,6 +35,23 @@ import org.serviceconnector.test.net.DefaultFrameDecoderTestCase;
 import org.serviceconnector.test.net.HttpFrameDecoderTestCase;
 import org.serviceconnector.test.net.KeepAliveMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.net.LargeMessageEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.attach.AttachTestCase;
+import org.serviceconnector.test.sc.attach.DetachTestCase;
+import org.serviceconnector.test.sc.connectionPool.ConnectionPoolTestCase;
+import org.serviceconnector.test.sc.group.GroupCallTestCase;
+import org.serviceconnector.test.sc.manage.ManageTestCase;
+import org.serviceconnector.test.sc.messageId.MessageIdTestCase;
+import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
+import org.serviceconnector.test.sc.register.RegisterServerTestCase;
+import org.serviceconnector.test.sc.scVersion.SCVersionToSCTestCase;
+import org.serviceconnector.test.sc.scmpVersion.DecodeSCMPVersionTestCase;
+import org.serviceconnector.test.sc.session.ClnCreateSessionTestCase;
+import org.serviceconnector.test.sc.session.ClnDeleteSessionTestCase;
+import org.serviceconnector.test.sc.sessionTimeout.SessionTimeoutTestCase;
+import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
+import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
+import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
+import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteSyncTestCase;
 import org.serviceconnector.test.scmp.SCMPVersionTestCase;
 import org.serviceconnector.test.scmp.internal.SCMPCompositeTestCase;
 import org.serviceconnector.test.scmp.internal.SCMPLargeRequestTestCase;

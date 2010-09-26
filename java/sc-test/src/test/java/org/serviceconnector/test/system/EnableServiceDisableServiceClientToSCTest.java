@@ -43,11 +43,11 @@ public class EnableServiceDisableServiceClientToSCTest {
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-				30000, TestConstants.PORT9000, 100, new String[] { TestConstants.serviceName,
+				30000, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
 						TestConstants.serviceNameAlt, TestConstants.serviceNameSessionDisabled });
 
 		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT8080);
+		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After

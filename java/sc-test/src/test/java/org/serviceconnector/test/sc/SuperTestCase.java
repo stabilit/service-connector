@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconector.test.sc;
+package org.serviceconnector.test.sc;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,12 +24,12 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.serviceconector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.test.sc.connectionPool.TestContext;
 
 
 
