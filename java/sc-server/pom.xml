@@ -2,10 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
-	<artifactId>sc-simluation</artifactId>
+	<artifactId>sc-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sc-simluation</name>
-	<description>sc-simluation</description>
+	<name>sc-server</name>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
@@ -33,6 +32,7 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+	<description>sc-server</description>
 	<build>
 		<plugins>
 			<plugin>
