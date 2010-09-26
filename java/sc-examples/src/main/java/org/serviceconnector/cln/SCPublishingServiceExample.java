@@ -47,7 +47,7 @@ public class SCPublishingServiceExample {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", 8080);
+			sc.attach("localhost", 7000);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);

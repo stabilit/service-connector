@@ -40,7 +40,7 @@ public class SCSyncSessionServiceExample {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", 8080);
+			sc.attach("localhost", 7000);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session

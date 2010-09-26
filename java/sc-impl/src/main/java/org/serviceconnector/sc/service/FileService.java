@@ -14,18 +14,30 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
+package org.serviceconnector.sc.service;
 
-package org.serviceconnector.console;
+import org.apache.log4j.Logger;
 
-public final class Constants {
-	
-	private Constants() {
-		// instantiating not allowed
+
+/**
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
+ * communication functions.
+ */
+public class FileService extends Service {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(FileService.class);
+
+	/**
+	 * Instantiates a new publish service.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 */
+	public FileService(String name) {
+		super(name, ServiceType.FILE_SERVICE);
 	}
-	
-	/** File qualifier for command line argument host */
-	public static final String CLI_HOST_ARG = "-h";
-	
-	/** File qualifier for command line argument port */
-	public static final String CLI_PORT_ARG = "-p";
+
 }

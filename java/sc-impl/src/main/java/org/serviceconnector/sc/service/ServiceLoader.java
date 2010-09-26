@@ -88,9 +88,8 @@ public class ServiceLoader {
 				service = new PublishService(serviceName);
 				break;
 			case FILE_SERVICE:
-				// TODO implement file services -wrong at this time
-				// service = new PublishService(serviceName);
-				// break;
+				service = new FileService(serviceName);
+				break;
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,

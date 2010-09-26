@@ -41,7 +41,6 @@ public class SCConsole {
 		if (host == null) {
 			showError("Host argument is missing");
 			System.exit(1);
-		} else if (host == "localhost") {
 		} else {
 			ValidatorUtility.validateIpAddressList(host);
 		}
@@ -88,10 +87,9 @@ public class SCConsole {
 	private static void run(String host, String port, ConsoleCommand cmd, String commandValue) throws Exception {
 
 		try {
-			int portNr = Integer.parseInt(port);
 			SCClient client = new SCClient();
 			client.setConnectionType("netty.tcp");
-			client.attach(host, portNr);
+			client.attach(host, Integer.parseInt(port));
 			switch (cmd) {
 			case DISABLE:
 				client.disableService(commandValue);
@@ -133,9 +131,9 @@ public class SCConsole {
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
 		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<enable|disable|state|sessions>=service>");
-		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 8000 enable=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 disable=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 state=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 8000 sessions=abc");
+		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions=abc");
 	}
 }

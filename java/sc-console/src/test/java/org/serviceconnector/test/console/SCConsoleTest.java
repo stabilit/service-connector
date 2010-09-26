@@ -243,43 +243,43 @@ public class SCConsoleTest {
 	@Test
 	public void main_multipleValidCommandsTooManyParams_exitCode1() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "8000", ConsoleCommand.STATE.getKey() + "=something", ConsoleCommand.STATE.getKey() + "=something" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP, ConsoleCommand.STATE.getKey() + "=something", ConsoleCommand.STATE.getKey() + "=something" });
 		} catch (ExitException e) {
 			assertEquals(1, e.status);
 		}
 	}
 	
 	@Test
-	public void main_validShowCommandPort8000_exitCode0State() throws Exception {
+	public void main_validShowCommandPortHTTP_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "8000", ConsoleCommand.STATE.getKey() + "=something" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP, ConsoleCommand.STATE.getKey() + "=something" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 	
 	@Test
-	public void main_validShowCommandPort8081_exitCode0State() throws Exception {
+	public void main_validShowCommandPortMGMT_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "8081", ConsoleCommand.STATE.getKey() + "=something"});
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT, ConsoleCommand.STATE.getKey() + "=something"});
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 	
 	@Test
-	public void main_validShowCommandPort9000_exitCode0State() throws Exception {
+	public void main_validShowCommandPortTCP_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.STATE.getKey() + "=something"});
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.STATE.getKey() + "=something"});
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 	
 	@Test
-	public void main_validShowCommandPort9000ServiceSimulation_exitCode0State() throws Exception {
+	public void main_validShowCommandPortTCP_ServiceSimulation_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", "9000", ConsoleCommand.STATE.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.STATE.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -288,12 +288,12 @@ public class SCConsoleTest {
 	@Test
 	public void main_validEnableCommand_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.ENABLE.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.ENABLE.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
-		client.attach("localhost", 8000);
+		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(true, client.isServiceEnabled("simulation"));
 		client.detach();
 	}
@@ -301,16 +301,16 @@ public class SCConsoleTest {
 	@Test
 	public void main_enableDisable_changesState() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.DISABLE.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.DISABLE.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
-		client.attach("localhost", 8000);
+		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(false, client.isServiceEnabled("simulation"));
 		
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.ENABLE.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.ENABLE.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -321,7 +321,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validSessionsCommand_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.SESSIONS.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.SESSIONS.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -330,7 +330,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validSessionsCommandOnPublishService_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.SESSIONS.getKey() + "=publish-simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.SESSIONS.getKey() + "=publish-simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -339,7 +339,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validSessionsCommandOnNotExistingService_exitCode0State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.SESSIONS.getKey() + "=notExistingService" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.SESSIONS.getKey() + "=notExistingService" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -348,7 +348,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validUndefinedCommandOnNotExistingService_exitCode3State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.UNDEFINED.getKey() + "=notExistingService" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.UNDEFINED.getKey() + "=notExistingService" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
@@ -357,7 +357,7 @@ public class SCConsoleTest {
 	@Test
 	public void main_validUndefinedCommandOnServiceSimulation_exitCode3State() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "localhost", "-p", "9000", ConsoleCommand.UNDEFINED.getKey() + "=simulation" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.UNDEFINED.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
