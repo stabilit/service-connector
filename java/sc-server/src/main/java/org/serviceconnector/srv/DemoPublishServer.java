@@ -47,9 +47,9 @@ public class DemoPublishServer {
 			this.publishSrv = new SCPublishServer();
 			// connect to SC as server
 			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startListener("localhost", 7001, 0);
+			this.publishSrv.startListener("localhost", 9002, 0);
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerServer("localhost", 7000, serviceName, 10, 10, srvCallback);
+			this.publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
 			Runnable run = new PublishRun(publishSrv, serviceName);
 			Thread thread = new Thread(run);
 			thread.start();
