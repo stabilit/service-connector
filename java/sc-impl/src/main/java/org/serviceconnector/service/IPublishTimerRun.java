@@ -14,51 +14,35 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.util.ITimerRun;
+
 
 
 /**
- * The Class FilterMask.
+ * The Interface IPublishTimerRun. The interfaces allows setting current request/response on a publish timer run. the
+ * publish timer run needs to know to handle client response correctly at a timeout.
+ * 
+ * @author JTraber
  */
-public class SCMPMessageFilterMask implements IFilterMask<SCMPMessage> {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPMessageFilterMask.class);
-	
-	/** The mask in bytes. */
-	private byte[] mask;
+public interface IPublishTimerRun extends ITimerRun {
 
 	/**
-	 * Instantiates a new filter mask.
+	 * Sets the request.
 	 * 
-	 * @param mask
-	 *            the mask
+	 * @param request
+	 *            the new request
 	 */
-	public SCMPMessageFilterMask(String mask) {
-		this.mask = mask.getBytes();
-	}
+	public abstract void setRequest(IRequest request);
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean matches(SCMPMessage message) {
-		String msgMask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-		byte[] msgMaskByte = msgMask.getBytes();
-
-		if (mask.length != msgMaskByte.length) {
-			return false;
-		}
-		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
-			if (msgMaskByte[byteIndex] == 0x25) {
-				continue;
-			}
-			if (mask[byteIndex] != msgMaskByte[byteIndex]) {
-				return false;
-			}
-		}
-		return true;
-	}
+	/**
+	 * Sets the response.
+	 * 
+	 * @param response
+	 *            the new response
+	 */
+	public abstract void setResponse(IResponse response);
 }

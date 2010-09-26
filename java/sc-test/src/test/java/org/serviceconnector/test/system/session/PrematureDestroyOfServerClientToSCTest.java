@@ -14,7 +14,7 @@ import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.service.SCServiceException;
 
 public class PrematureDestroyOfServerClientToSCTest {
 	/** The Constant logger. */

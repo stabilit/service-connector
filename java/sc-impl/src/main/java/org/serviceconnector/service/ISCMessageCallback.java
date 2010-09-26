@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,35 +13,40 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
-package org.serviceconnector.sc.service;
+ *-----------------------------------------------------------------------------*/
+package org.serviceconnector.service;
 
-import org.serviceconnector.ctx.IContext;
-import org.serviceconnector.net.connection.ConnectionPool;
-
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.IService;
 
 /**
- * The Interface ISCContext. Service Connector context.
+ * The Interface ISCMessageCallback. Represents basic functionality for callbacks to be used in asynchronous
+ * communication with an SC.
  * 
  * @author JTraber
  */
-public interface ISCContext extends IContext {
+public interface ISCMessageCallback {
 
 	/**
-	 * Gets the connection pool.
+	 * Callback. Method gets called when reply arrives.
 	 * 
-	 * @return the connection pool
+	 * @param reply
+	 *            the reply
 	 */
-	public ConnectionPool getConnectionPool();
+	public abstract void callback(SCMessage reply);
 
 	/**
-	 * Gets the service connector.
+	 * Callback. Method gets called when an error shows up in communication process.
 	 * 
-	 * @return the service connector
+	 * @param ex
+	 *            the exception
 	 */
-	public ISC getServiceConnector();
+	public abstract void callback(Exception ex);
+
+	/**
+	 * Gets the service which is using the message callback.
+	 * 
+	 * @return the service
+	 */
+	public abstract IService getService();
 }

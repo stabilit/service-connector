@@ -17,7 +17,7 @@
 package org.serviceconnector.api.cln;
 
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.sc.service.ISCMessageCallback;
+import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.IServiceContext;
 
 /**

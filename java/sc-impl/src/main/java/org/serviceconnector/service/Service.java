@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
 import java.util.ArrayList;
 import java.util.Collections;

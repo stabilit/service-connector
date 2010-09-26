@@ -30,12 +30,12 @@ import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.sc.service.ISCContext;
-import org.serviceconnector.sc.service.SCServiceException;
-import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.ISCContext;
+import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
 
 

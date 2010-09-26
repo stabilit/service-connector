@@ -66,21 +66,21 @@ public abstract class CommunicatorConfigPool {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void load(String fileName, String topLevelPropsKey) throws Exception {
-		InputStream is = null;
+		InputStream inputStream = null;
 		try {
 			// try to find file outside of jar archive
-			is = new FileInputStream(fileName);
+			inputStream = new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
 			// try to find file inside jar archive
-			is = ClassLoader.getSystemResourceAsStream(fileName);
+			inputStream = ClassLoader.getSystemResourceAsStream(fileName);
 		}
 
-		if (is == null) {
+		if (inputStream == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "could not find property file: "
 					+ fileName);
 		}
 		props = new Properties();
-		props.load(is);
+		props.load(inputStream);
 
 		String respNames = props.getProperty(topLevelPropsKey);
 

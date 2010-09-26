@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,36 +14,45 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.service;
-
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.util.ITimerRun;
-
-
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package org.serviceconnector.service;
 
 /**
- * The Interface IPublishTimerRun. The interfaces allows setting current request/response on a publish timer run. the
- * publish timer run needs to know to handle client response correctly at a timeout.
+ * The Interface ISC. Top interface for any kind of communication part (client, server) to an SC.
  * 
  * @author JTraber
  */
-public interface IPublishTimerRun extends ITimerRun {
+public interface ISC {
 
 	/**
-	 * Sets the request.
+	 * Gets the connection type. Possible values {netty.http, netty.tcp}.
 	 * 
-	 * @param request
-	 *            the new request
+	 * @return the connection type which identifies low level communication technology
 	 */
-	public abstract void setRequest(IRequest request);
+	public abstract String getConnectionType();
 
 	/**
-	 * Sets the response.
+	 * Gets the host.
 	 * 
-	 * @param response
-	 *            the new response
+	 * @return the host
 	 */
-	public abstract void setResponse(IResponse response);
+	public abstract String getHost();
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public abstract int getPort();
+
+	/**
+	 * Gets the keep alive interval in seconds.
+	 * 
+	 * @return the keep alive interval in seconds
+	 */
+	public abstract int getKeepAliveIntervalInSeconds();
 }

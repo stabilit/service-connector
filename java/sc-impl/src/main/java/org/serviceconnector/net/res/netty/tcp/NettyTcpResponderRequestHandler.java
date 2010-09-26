@@ -40,8 +40,6 @@ import org.serviceconnector.net.res.netty.NettyTcpRequest;
 import org.serviceconnector.net.res.netty.NettyTcpResponse;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -54,6 +52,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
 
 
 /**

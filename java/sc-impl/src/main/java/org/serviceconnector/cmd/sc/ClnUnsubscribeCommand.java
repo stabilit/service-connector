@@ -23,8 +23,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionSessionRegistry;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -33,6 +31,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 

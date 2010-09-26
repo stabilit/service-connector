@@ -16,22 +16,18 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*
 /*
-/**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
 
-/**
- * @author JTraber
- */
-public enum ServiceType implements IReversibleEnum<String, ServiceType> {
+public enum ServiceState implements IReversibleEnum<String, ServiceState> {
 
-	SESSION_SERVICE("session"), PUBLISH_SERVICE("publish"), FILE_SERVICE("file"), UNDEFINED("undefined");
+	ENABLED("enabled"), DISABLED("disabled"), UNDEFINED("undefined");
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceType.class);
@@ -39,20 +35,20 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ServiceType> reverseMap = new ReverseEnumMap<String, ServiceType>(
-			ServiceType.class);
+	private static final ReverseEnumMap<String, ServiceState> reverseMap = new ReverseEnumMap<String, ServiceState>(
+			ServiceState.class);
 
-	private ServiceType(String value) {
+	private ServiceState(String value) {
 		this.value = value;
 	}
 
-	public static ServiceType getServiceType(String typeString) {
-		ServiceType type = reverseMap.get(typeString);
-		if (type == null) {
+	public static ServiceState getServiceState(String stateString) {
+		ServiceState state = reverseMap.get(stateString);
+		if (state == null) {
 			// typeString doesn't match to a valid serviceType
-			return ServiceType.UNDEFINED;
+			return ServiceState.UNDEFINED;
 		}
-		return type;
+		return state;
 	}
 
 	@Override
@@ -61,7 +57,7 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	}
 
 	@Override
-	public ServiceType reverse(String typeString) {
-		return ServiceType.getServiceType(typeString);
+	public ServiceState reverse(String stateString) {
+		return ServiceState.getServiceState(stateString);
 	}
 }

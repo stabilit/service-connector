@@ -22,12 +22,12 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 

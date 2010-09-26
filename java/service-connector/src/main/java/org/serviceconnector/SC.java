@@ -19,6 +19,8 @@ package org.serviceconnector;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.management.ManagementFactory;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -40,8 +42,8 @@ import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.sc.service.SCServiceException;
-import org.serviceconnector.sc.service.ServiceLoader;
+import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.web.cmd.WebCommandFactory;
@@ -73,12 +75,12 @@ public final class SC {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		String fileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
-		if (fileName == null) {
-			throw new SCServiceException("Configuration file missing");
-		} else {
-			// fileName extracted from vm arguments
-			SC.run(fileName);
+		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
+		try {
+			SC.run(configFileName);
+		} catch (Exception ex) {
+			logger.fatal(ex.getMessage(), ex);
+			throw ex;
 		}
 	}
 
@@ -88,18 +90,24 @@ public final class SC {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static void run(String fileName) throws Exception {
+	private static void run(String configFileName) throws Exception {
+		
+		if (configFileName == null) {
+			throw new SCServiceException("Configuration file is missing");
+		}
+		
 		ResponderConfigPool config = new ResponderConfigPool();
-		config.load(fileName);
+		config.load(configFileName);
 
 		// initialize JMX
 		SC.initializeJMX();
 
 		// initialize statistics
 		Statistics statistics =  Statistics.getInstance();
+		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		
 		// load services
-		ServiceLoader.load(fileName);
+		ServiceLoader.load(configFileName);
 		
 		// clean up and initialize cache
 		//Cache cache = Cache.initialize();

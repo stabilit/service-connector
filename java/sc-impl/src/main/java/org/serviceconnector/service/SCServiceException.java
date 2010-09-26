@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
 /**
  * The Class SCServiceException. Used to notify errors on SC service level.
@@ -37,7 +37,7 @@ public class SCServiceException extends Exception {
 	private String appErrorText;
 
 	/**
-	 * Instantiates a new sC service exception.
+	 * Instantiates a new SC service exception.
 	 * 
 	 * @param message
 	 *            the message
@@ -49,7 +49,7 @@ public class SCServiceException extends Exception {
 	}
 
 	/**
-	 * Instantiates a new sC service exception.
+	 * Instantiates a new SC service exception.
 	 * 
 	 * @param message
 	 *            the message

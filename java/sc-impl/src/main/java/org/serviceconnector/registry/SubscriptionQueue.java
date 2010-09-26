@@ -22,10 +22,10 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.sc.service.IFilterMask;
-import org.serviceconnector.sc.service.IPublishTimerRun;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.service.IFilterMask;
+import org.serviceconnector.service.IPublishTimerRun;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;

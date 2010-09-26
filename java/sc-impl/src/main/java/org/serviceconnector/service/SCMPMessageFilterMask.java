@@ -14,39 +14,51 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
-import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.IService;
+import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+
 
 /**
- * The Interface ISCMessageCallback. Represents basic functionality for callbacks to be used in asynchronous
- * communication with an SC.
- * 
- * @author JTraber
+ * The Class FilterMask.
  */
-public interface ISCMessageCallback {
+public class SCMPMessageFilterMask implements IFilterMask<SCMPMessage> {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMPMessageFilterMask.class);
+	
+	/** The mask in bytes. */
+	private byte[] mask;
 
 	/**
-	 * Callback. Method gets called when reply arrives.
+	 * Instantiates a new filter mask.
 	 * 
-	 * @param reply
-	 *            the reply
+	 * @param mask
+	 *            the mask
 	 */
-	public abstract void callback(SCMessage reply);
+	public SCMPMessageFilterMask(String mask) {
+		this.mask = mask.getBytes();
+	}
 
-	/**
-	 * Callback. Method gets called when an error shows up in communication process.
-	 * 
-	 * @param ex
-	 *            the exception
-	 */
-	public abstract void callback(Exception ex);
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(SCMPMessage message) {
+		String msgMask = message.getHeader(SCMPHeaderAttributeKey.MASK);
+		byte[] msgMaskByte = msgMask.getBytes();
 
-	/**
-	 * Gets the service which is using the message callback.
-	 * 
-	 * @return the service
-	 */
-	public abstract IService getService();
+		if (mask.length != msgMaskByte.length) {
+			return false;
+		}
+		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
+			if (msgMaskByte[byteIndex] == 0x25) {
+				continue;
+			}
+			if (mask[byteIndex] != msgMaskByte[byteIndex]) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

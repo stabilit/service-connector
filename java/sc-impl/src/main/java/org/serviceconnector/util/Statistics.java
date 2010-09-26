@@ -31,7 +31,7 @@ public class Statistics {
 	
 	private double totalMessages = 0;
 	private double totalBytes = 0;
-	private Timestamp creationDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+	private Timestamp startupDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 	private double cachedMessages = 0;
 	private double cachedBytes = 0;
 	private int cachedFiles = 0;
@@ -82,8 +82,12 @@ public class Statistics {
 		return totalBytes;
 	}
 
-	public Timestamp getCreationDateTime() {
-		return creationDateTime;
+	public Timestamp getStartupDateTime() {
+		return startupDateTime;
+	}
+
+	public void setStartupDateTime(Timestamp startupDateTime) {
+		this.startupDateTime = startupDateTime;
 	}
 
 	public double getCachedMessages() {

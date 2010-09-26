@@ -22,9 +22,6 @@ import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.sc.service.Server;
-import org.serviceconnector.sc.service.Session;
-import org.serviceconnector.sc.service.SessionService;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -33,6 +30,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
 
 

@@ -25,7 +25,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.sc.service.ServiceState;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -33,6 +32,7 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.ServiceState;
 
 
 /**

@@ -15,7 +15,7 @@ import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.service.SCServiceException;
 
 public class PublishConnectionTypeHttpTest {
 	/** The Constant logger. */

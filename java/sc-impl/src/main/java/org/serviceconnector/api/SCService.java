@@ -18,9 +18,9 @@ package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.sc.service.ISCContext;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.service.ISCContext;
 import org.serviceconnector.service.IServiceContext;
 
 

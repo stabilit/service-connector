@@ -19,40 +19,49 @@
 /**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
+
+import org.apache.log4j.Logger;
+import org.serviceconnector.util.IReversibleEnum;
+import org.serviceconnector.util.ReverseEnumMap;
+
 
 /**
- * The Interface ISC. Top interface for any kind of communication part (client, server) to an SC.
- * 
  * @author JTraber
  */
-public interface ISC {
+public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
-	/**
-	 * Gets the connection type. Possible values {netty.http, netty.tcp}.
-	 * 
-	 * @return the connection type which identifies low level communication technology
-	 */
-	public abstract String getConnectionType();
+	SESSION_SERVICE("session"), PUBLISH_SERVICE("publish"), FILE_SERVICE("file"), UNDEFINED("undefined");
 
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public abstract String getHost();
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(ServiceType.class);
+	
+	/** The value. */
+	private String value;
+	/** The reverseMap, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, ServiceType> reverseMap = new ReverseEnumMap<String, ServiceType>(
+			ServiceType.class);
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public abstract int getPort();
+	private ServiceType(String value) {
+		this.value = value;
+	}
 
-	/**
-	 * Gets the keep alive interval in seconds.
-	 * 
-	 * @return the keep alive interval in seconds
-	 */
-	public abstract int getKeepAliveIntervalInSeconds();
+	public static ServiceType getServiceType(String typeString) {
+		ServiceType type = reverseMap.get(typeString);
+		if (type == null) {
+			// typeString doesn't match to a valid serviceType
+			return ServiceType.UNDEFINED;
+		}
+		return type;
+	}
+
+	@Override
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public ServiceType reverse(String typeString) {
+		return ServiceType.getServiceType(typeString);
+	}
 }

@@ -27,17 +27,17 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionSessionRegistry;
-import org.serviceconnector.sc.service.PublishService;
-import org.serviceconnector.sc.service.Service;
-import org.serviceconnector.sc.service.ServiceState;
-import org.serviceconnector.sc.service.ServiceType;
-import org.serviceconnector.sc.service.Session;
-import org.serviceconnector.sc.service.SessionService;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.Service;
+import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.service.ServiceType;
+import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionService;
 
 
 /**

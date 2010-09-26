@@ -12,7 +12,7 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.service.SCServiceException;
 
 
 public class RestartOfSCClnTest {

@@ -18,7 +18,7 @@ package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.sc.service.ISCMessageCallback;
+import org.serviceconnector.service.ISCMessageCallback;
 
 
 /**

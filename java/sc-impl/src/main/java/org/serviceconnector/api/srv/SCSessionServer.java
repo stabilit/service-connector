@@ -34,12 +34,12 @@ import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
-import org.serviceconnector.sc.service.SCServiceException;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 

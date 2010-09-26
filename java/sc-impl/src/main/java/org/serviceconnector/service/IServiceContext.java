@@ -18,7 +18,6 @@ package org.serviceconnector.service;
 
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.ctx.IContext;
-import org.serviceconnector.sc.service.ISC;
 
 
 /**

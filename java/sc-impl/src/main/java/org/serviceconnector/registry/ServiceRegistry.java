@@ -17,7 +17,7 @@
 package org.serviceconnector.registry;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.sc.service.Service;
+import org.serviceconnector.service.Service;
 
 
 /**

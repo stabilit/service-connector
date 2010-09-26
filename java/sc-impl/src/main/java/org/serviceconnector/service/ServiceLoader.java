@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

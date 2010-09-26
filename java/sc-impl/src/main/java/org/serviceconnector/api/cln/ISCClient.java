@@ -19,9 +19,9 @@ package org.serviceconnector.api.cln;
 import java.security.InvalidParameterException;
 
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.sc.service.ISC;
-import org.serviceconnector.sc.service.ISCContext;
-import org.serviceconnector.sc.service.SCServiceException;
+import org.serviceconnector.service.ISC;
+import org.serviceconnector.service.ISCContext;
+import org.serviceconnector.service.SCServiceException;
 
 
 /**

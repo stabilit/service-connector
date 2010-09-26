@@ -16,48 +16,33 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*
 /*
+/**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
-import org.serviceconnector.util.IReversibleEnum;
-import org.serviceconnector.util.ReverseEnumMap;
+import org.serviceconnector.ctx.IContext;
+import org.serviceconnector.net.connection.ConnectionPool;
 
 
-public enum ServiceState implements IReversibleEnum<String, ServiceState> {
+/**
+ * The Interface ISCContext. Service Connector context.
+ * 
+ * @author JTraber
+ */
+public interface ISCContext extends IContext {
 
-	ENABLED("enabled"), DISABLED("disabled"), UNDEFINED("undefined");
+	/**
+	 * Gets the connection pool.
+	 * 
+	 * @return the connection pool
+	 */
+	public ConnectionPool getConnectionPool();
 
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceType.class);
-	
-	/** The value. */
-	private String value;
-	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ServiceState> reverseMap = new ReverseEnumMap<String, ServiceState>(
-			ServiceState.class);
-
-	private ServiceState(String value) {
-		this.value = value;
-	}
-
-	public static ServiceState getServiceState(String stateString) {
-		ServiceState state = reverseMap.get(stateString);
-		if (state == null) {
-			// typeString doesn't match to a valid serviceType
-			return ServiceState.UNDEFINED;
-		}
-		return state;
-	}
-
-	@Override
-	public String getValue() {
-		return this.value;
-	}
-
-	@Override
-	public ServiceState reverse(String stateString) {
-		return ServiceState.getServiceState(stateString);
-	}
+	/**
+	 * Gets the service connector.
+	 * 
+	 * @return the service connector
+	 */
+	public ISC getServiceConnector();
 }

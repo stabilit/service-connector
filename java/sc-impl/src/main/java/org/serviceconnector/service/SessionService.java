@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.sc.service;
+package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;

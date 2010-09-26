@@ -27,7 +27,7 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.IService;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.sc.service.ISCMessageCallback;
+import org.serviceconnector.service.ISCMessageCallback;
 
 
 
