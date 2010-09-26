@@ -35,7 +35,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>org.serviceconnector.cln.SessionAndPublishClient</mainClass>
+							<mainClass>org.serviceconnector.cln.DemoSessionAndPublishClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -26,7 +26,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.util.DateTimeUtility;
 
 

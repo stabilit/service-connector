@@ -15,11 +15,8 @@
  */
 package org.serviceconnector.web.cmd.sc;
 
-import java.io.OutputStream;
-
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.SCVersion;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.web.AbstractXMLLoader;

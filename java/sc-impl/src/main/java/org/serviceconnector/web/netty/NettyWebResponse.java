@@ -18,8 +18,6 @@ package org.serviceconnector.web.netty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.Cookie;
