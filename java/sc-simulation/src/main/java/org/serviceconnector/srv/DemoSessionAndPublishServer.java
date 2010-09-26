@@ -1,7 +1,7 @@
 package org.serviceconnector.srv;
 
 
-public class SessionAndPublishServer {
+public class DemoSessionAndPublishServer {
 
 	public static void main(String[] args) {
 		DemoSessionServer sessionServer = new DemoSessionServer();
