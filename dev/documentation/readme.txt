@@ -17,9 +17,9 @@ List of functions NOT implemented in current version:
 
 
 Special configuration in current version
-- keep alive timeout (kpi) is default set to 0 means inactive
+- keep alive interval (kpi) is default set to 0 means inactive
 - echo interval (eci) for demo client is set to 60 seconds
 - no data interval (noi) for receive publication is set to 300 seconds 
-- the SC is configured by sc.properties default: http localhost/8000 tcp localhost/9000¨
-- demo client connects to port 8000
-- demo server connects to port 9000
+- the SC is configured by sc.properties: http localhost/7000 tcp localhost/9000
+- demo client is hardcoded to connects to port 7000
+- demo server is hardcoded connects to port 7000
