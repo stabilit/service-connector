@@ -25,7 +25,7 @@ public class DemoPublishClient extends Thread {
 		IPublishService publishService = null;
 		try {
 			((SCClient) sc).setConnectionType("netty.tcp");
-			sc.attach("localhost", 9000);
+			sc.attach("localhost", 7000);
 			publishService = sc.newPublishService("publish-simulation");
 			publishService.subscribe("0000121ABCDEFGHIJKLMNO-----------X-----------", "sessionInfo", 300,
 					new DemoSessionClientCallback(publishService));
