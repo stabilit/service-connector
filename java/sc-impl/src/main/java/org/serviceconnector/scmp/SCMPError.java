@@ -30,8 +30,6 @@ public enum SCMPError {
 	BAD_REQUEST("400", "Bad request. The request could not be understood by the server due to malformed syntax."),
 	/** The NOT_FOUND. */
 	NOT_FOUND("404", "Not found."),
-	/** The DISABLED. */
-	DISABLED("405", "Disabled."),
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT("408",
 			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
@@ -95,6 +93,8 @@ public enum SCMPError {
 	/** 5xx errors caused by server */
 	/** The SERVER_ERROR. */
 	SERVER_ERROR("500", "Server error occured."),
+	/** The service is DISABLED. */
+	DISABLED("501", "Service is disabled."),
 	/** The GATEWAY_TIMEOUT. */
 	GATEWAY_TIMEOUT(
 			"504",

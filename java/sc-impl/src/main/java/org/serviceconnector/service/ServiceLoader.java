@@ -96,9 +96,10 @@ public class ServiceLoader {
 						"wrong serviceType, serviceName/serviceType: " + serviceName + "/" + serviceTypeString);
 			}
 
+			// set service state
 			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
-				service.setState(ServiceState.ENABLED);
+				service.setState(ServiceState.ENABLED);		// default is enabled
 				logger.debug("state enable for service: " + serviceName);
 				
 			} else {
