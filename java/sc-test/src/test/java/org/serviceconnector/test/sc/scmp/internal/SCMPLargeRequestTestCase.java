@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.scmp.internal;
+package org.serviceconnector.test.sc.scmp.internal;
 
 import junit.framework.Assert;
 
@@ -25,39 +25,38 @@ import org.serviceconnector.scmp.SCMPSendPart;
 
 
 /**
- * The Class SCMPLargeResponseTest.
+ * The Class SCMPLargeRequestTest.
  * 
  * @author JTraber
  */
-public class SCMPLargeResponseTestCase extends SCMPMessage {
+public class SCMPLargeRequestTestCase extends SCMPMessage {
 
 	/** The MAX_ANZ. */
 	private static final int MAX_ANZ = 100000;
 
 	/**
-	 * Scmp large response test.
+	 * Scmp large request test.
 	 */
 	@Test
-	public final void scmpLargeResponseTest() {
+	public void scmpLargeRequestTest() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i = 0; i < MAX_ANZ; i++) {
 			sb.append(i);
 		}
 
 		SCMPMessage largeScmp = new SCMPMessage();
 		largeScmp.setBody(sb.toString());
-		largeScmp.setIsReply(true);
 
-		SCMPCompositeSender largeResponse = new SCMPCompositeSender(largeScmp);
+		SCMPCompositeSender largeRequest = new SCMPCompositeSender(largeScmp);
 
 		int offset = 0;
-		while (largeResponse.hasNext()) {
+		while (largeRequest.hasNext()) {
 
 			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset);
 			offset += responsePart.getBodyLength();
 
-			SCMPMessage message = largeResponse.getNext();
+			SCMPMessage message = largeRequest.getNext();
 			Assert.assertEquals(responsePart.getBody().toString(), message.getBody().toString());
 			Assert.assertEquals(responsePart.getBodyLength(), message.getBodyLength());
 			Assert.assertEquals(responsePart.getBodyOffset(), message.getBodyOffset());
@@ -65,7 +64,7 @@ public class SCMPLargeResponseTestCase extends SCMPMessage {
 		}
 
 		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0);
-		SCMPMessage message = largeResponse.getFirst();
+		SCMPMessage message = largeRequest.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());
 		Assert.assertEquals(firstPart.getBodyLength(), message.getBodyLength());
 		Assert.assertEquals(firstPart.getBodyOffset(), message.getBodyOffset());

@@ -91,7 +91,7 @@ public class RegisterServerConnectionTypeHttpTest {
 			ex = e;
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
-		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, ex instanceof InvalidActivityException);
 		server.deregisterServer(TestConstants.serviceName);
 	}
 

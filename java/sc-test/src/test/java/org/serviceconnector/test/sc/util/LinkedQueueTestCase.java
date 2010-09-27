@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.test.util;
+package org.serviceconnector.test.sc.util;
 
 import junit.framework.Assert;
 

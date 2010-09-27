@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.scmp.internal;
+package org.serviceconnector.test.sc.scmp.internal;
 
 import junit.framework.Assert;
 

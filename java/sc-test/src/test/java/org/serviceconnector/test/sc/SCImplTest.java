@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.test;
+package org.serviceconnector.test.sc;
 
 import java.text.DecimalFormat;
 
@@ -28,15 +28,15 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
-import org.serviceconnector.test.net.DefaultEncoderDecoderTestCase;
-import org.serviceconnector.test.net.DefaultFrameDecoderTestCase;
-import org.serviceconnector.test.net.HttpFrameDecoderTestCase;
-import org.serviceconnector.test.net.KeepAliveMessageEncoderDecoderTestCase;
-import org.serviceconnector.test.net.LargeMessageEncoderDecoderTestCase;
-import org.serviceconnector.test.scmp.internal.SCMPCompositeTestCase;
-import org.serviceconnector.test.scmp.internal.SCMPLargeRequestTestCase;
-import org.serviceconnector.test.scmp.internal.SCMPLargeResponseTestCase;
-import org.serviceconnector.test.util.ValidatorUtilityTestCase;
+import org.serviceconnector.test.sc.net.DefaultEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.net.DefaultFrameDecoderTestCase;
+import org.serviceconnector.test.sc.net.HttpFrameDecoderTestCase;
+import org.serviceconnector.test.sc.net.KeepAliveMessageEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.net.LargeMessageEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.scmp.internal.SCMPCompositeTestCase;
+import org.serviceconnector.test.sc.scmp.internal.SCMPLargeRequestTestCase;
+import org.serviceconnector.test.sc.scmp.internal.SCMPLargeResponseTestCase;
+import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 
 
 
