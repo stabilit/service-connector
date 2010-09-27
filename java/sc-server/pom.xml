@@ -13,19 +13,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
-			<artifactId>service-connector</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.serviceconnector</groupId>
-			<artifactId>sc-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-impl</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
