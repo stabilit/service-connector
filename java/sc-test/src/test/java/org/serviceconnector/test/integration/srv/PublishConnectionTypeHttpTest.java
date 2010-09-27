@@ -50,7 +50,7 @@ public class PublishConnectionTypeHttpTest {
 		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
 				TestConstants.serviceNamePublish, 1, 1, new CallBack());
 	}

@@ -24,13 +24,12 @@ import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
-
-
 
 public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 
@@ -52,7 +51,8 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
+				.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 1000);
 		SCMPMessage inspect = this.attachCallback.getMessageSync();
 
@@ -61,7 +61,8 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		String scEntry = (String) inspectMap.get("serviceRegistry");
-		String expectedEntry = "P01_logging:0|publish-simulation:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:7000 : 10|P01_BCST_CH_sc1:0|";
+		String expectedEntry = "P01_logging:0|publish-simulation:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:"
+				+ TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}
@@ -75,10 +76,10 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		Assert
-				.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), fault
-						.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), fault
+				.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
+		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), fault
+				.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 		super.registerServerBefore();
 	}
 }

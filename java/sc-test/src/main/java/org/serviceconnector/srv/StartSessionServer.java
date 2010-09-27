@@ -23,7 +23,7 @@ public class StartSessionServer {
 	private String startFile = null;
 	private String[] serviceNames;
 	private int port = TestConstants.PORT_TCP;
-	private int listenerPort = 30000;
+	private int listenerPort = TestConstants.PORT_LISTENER;
 	private int maxCons = 10;
 	private ThreadSafeCounter ctr;
 

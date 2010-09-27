@@ -49,7 +49,7 @@ public class PublishConnectionTypeTcpTest {
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
 				TestConstants.serviceNamePublish, 1, 1, new CallBack());
 	}

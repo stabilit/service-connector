@@ -64,7 +64,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(7000);
+		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
@@ -139,7 +139,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(7000);
+		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
@@ -154,11 +154,11 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:7000 : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:7000 : 10|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:7000 : 10|simulation_localhost/:simulation_localhost/:7000 : 10|";
+		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|simulation_localhost/:simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
@@ -173,7 +173,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "simulation_localhost/:simulation_localhost/:7000 : 10|";
+		expectedScEntry = "simulation_localhost/:simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
@@ -189,7 +189,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(7000);
+		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 		registerServerCall.invoke(this.registerCallback, 1000);
@@ -199,7 +199,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 				"publish-simulation");
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(7000);
+		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 

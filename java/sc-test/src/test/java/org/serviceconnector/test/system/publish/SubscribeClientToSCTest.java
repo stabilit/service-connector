@@ -39,7 +39,7 @@ public class SubscribeClientToSCTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.startServer(TestConstants.publishSrv,
-					TestConstants.log4jSrvProperties, 30000, TestConstants.PORT_TCP, 100,
+					TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);

@@ -39,7 +39,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 		threadCount = Thread.activeCount();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 					TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("setUp", e);
@@ -71,7 +71,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void detach_afterSCRestart_notAttached() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
@@ -82,7 +82,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void createSession_afterSCRestart_createsSessionService() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached
@@ -93,7 +93,7 @@ public class PrematureDestroyOfSCClientToSCTest {
 	public void newSessionService_afterSCRestart_ThrowsSCServiceException() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, 30000,
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName, TestConstants.serviceNameAlt });
 
 		// client thinks he is attached

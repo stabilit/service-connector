@@ -43,7 +43,7 @@ public class PrematureDestroyOfSCSrvTest {
 		}
 
 		server = new SCSessionServer();
-		server.startListener(TestConstants.HOST, 30000, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 	}
 
 	@After
@@ -91,8 +91,9 @@ public class PrematureDestroyOfSCSrvTest {
 		server.deregisterServer(TestConstants.serviceName);
 	}
 
+	//TODO FJU I am not sure about intended behavior in this test 
 	@Test
-	public void deregisterServer_afterRegisterAfterSCDestroy_notRegistered() throws Exception {
+	public void deregisterServer_afterRegisterAndSCDestroy_notRegistered() throws Exception {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10, new CallBack());
 		scProcess.destroy();
 		server.deregisterServer(TestConstants.serviceName);

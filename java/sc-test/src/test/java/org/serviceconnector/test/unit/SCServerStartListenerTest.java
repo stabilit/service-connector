@@ -705,7 +705,7 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPortHttpKeepAlive3600_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAlive3600_listening() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 3600);
 		assertEquals(true, server.isListening());
 		assertEquals(TestConstants.HOST, server.getHost());
@@ -1250,7 +1250,7 @@ public class SCServerStartListenerTest {
 	}
 	
 	@Test
-	public void startListener_hostDefaultPortHttpKeepAliveMinus1_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveMinus1_listening() throws Exception {
 		try {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, -1);
 		} catch (Exception e) {
@@ -1804,7 +1804,7 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPortHttpKeepAlive3601_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAlive3601_listening() throws Exception {
 		try {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 3601);
 		} catch (Exception e) {
@@ -2358,7 +2358,7 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPortHttpKeepAliveIntMax_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveIntMax_listening() throws Exception {
 		try {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MAX_VALUE);
 		} catch (Exception e) {
@@ -2927,7 +2927,7 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPortHttpKeepAliveIntMin_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveIntMin_listening() throws Exception {
 		try {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MIN_VALUE);
 		} catch (Exception e) {

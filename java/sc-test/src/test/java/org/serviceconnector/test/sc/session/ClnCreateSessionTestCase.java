@@ -25,6 +25,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -117,7 +118,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/:7000 : 10|";
+		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
 		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 

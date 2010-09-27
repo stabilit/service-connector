@@ -40,7 +40,7 @@ public class RestartSCServerToSCTest {
 			logger.error("oneTimeSetUp", e);
 		}
 		server = new SCSessionServer();
-		server.startListener(TestConstants.HOST, 30000, 60);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 60);
 	}
 
 	@After

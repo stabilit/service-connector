@@ -164,7 +164,7 @@ public class SetupTestCases {
 		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startListener(TestConstants.HOST, 7000, 0);
+		scSim1ConSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
 	}
@@ -173,7 +173,7 @@ public class SetupTestCases {
 		scSim10ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.startListener(TestConstants.HOST, 7000, 0);
+		scSim10ConSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSim10ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
 	}
@@ -273,7 +273,7 @@ public class SetupTestCases {
 		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startListener(TestConstants.HOST, 7000, 0);
+		publishSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
 		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 10, 10, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);

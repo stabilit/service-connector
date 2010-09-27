@@ -97,7 +97,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_withValidParamsInSCProperties_registered() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -105,7 +105,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	
 	@Test
 	public void registerServer_withDisabledService_throwsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
 		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
@@ -113,7 +113,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_nullCallBack_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, null);
 		} catch (Exception e) {
@@ -126,7 +126,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_invalidHost_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer("something", TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -139,7 +139,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_emptyHostTranslatesAsLocalHost_registered() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer("", TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -147,7 +147,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_whiteSpaceHost_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(" ", TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -159,7 +159,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_noHost_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(null, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -172,7 +172,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_portNotInSCProperties_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, 9002, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -185,7 +185,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_port0NotInSCProps_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, 0, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -198,7 +198,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_portMinNotInSCProps_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -212,7 +212,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_portMinus1OutOfRange_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, -1, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -226,7 +226,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_portMaxAllowedNotInSCProps_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, 0xFFFF, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -239,7 +239,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_portMaxAllowedPlus1_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, 0xFFFF + 1, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -253,7 +253,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_portIntMaxOutOfRange_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, Integer.MAX_VALUE, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -267,7 +267,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_portIntMinOutOfRange_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, Integer.MIN_VALUE, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -279,7 +279,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_noServiceName_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, null, 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -291,7 +291,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_validServiceNameInSCProps_registered() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "P01_RTXS_sc1", 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
 		server.deregisterServer("P01_RTXS_sc1");
@@ -299,7 +299,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_emptyServiceName_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "", 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -313,7 +313,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_whiteSpaceServiceName_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, " ", 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -327,7 +327,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_arbitraryServiceNameNotInSCProps_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -345,7 +345,7 @@ public class RegisterServerConnectionTypeTcpTest {
 		for (int i = 0; i < 32; i++) {
 			sb.append("a");
 		}
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, sb.toString(), 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -362,7 +362,7 @@ public class RegisterServerConnectionTypeTcpTest {
 		for (int i = 0; i < 33; i++) {
 			sb.append("a");
 		}
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, sb.toString(), 1, 1, new CallBack());
 		} catch (Exception e) {
@@ -374,7 +374,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_maxSessions0_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 0, 1, new CallBack());
 		} catch (Exception e) {
@@ -386,7 +386,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_maxSessionsMinus1_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, -1, 1, new CallBack());
 		} catch (Exception e) {
@@ -398,7 +398,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_maxSessionsIntMax_registered() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, Integer.MAX_VALUE, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -406,7 +406,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_maxSessionsIntMin_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, Integer.MIN_VALUE, 1,
 					new CallBack());
@@ -419,7 +419,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_maxConnections0_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 0, new CallBack());
 		} catch (Exception e) {
@@ -432,7 +432,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsMinus1_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, -1, new CallBack());
 		} catch (Exception e) {
@@ -445,7 +445,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsIntMin_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, Integer.MIN_VALUE,
 					new CallBack());
@@ -459,7 +459,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsIntMaxSessions1_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, Integer.MAX_VALUE,
 					new CallBack());
@@ -473,7 +473,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnections2Sessions1_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
@@ -486,7 +486,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsMAX1024SessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server
 				.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, Integer.MAX_VALUE, 1024,
 						new CallBack());
@@ -497,7 +497,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsSameAsSessions1024_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1024, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -506,7 +506,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsSameAsSessions2_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 2, 2, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -515,7 +515,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnections1023LessThanSessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server
 				.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, Integer.MAX_VALUE, 1023,
 						new CallBack());
@@ -526,7 +526,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnections1023LessThanSessions1024_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1024, 1023, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -535,7 +535,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnections1024LessThanSessions1025_isRegistered()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1025, 1024, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -544,7 +544,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnections1025OverAllowedMaximum_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1025, 1025, new CallBack());
 		} catch (Exception e) {
@@ -557,7 +557,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsLessThanSessions2_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 2, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
@@ -566,7 +566,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsMoreThanSessionsIntMax_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, Integer.MAX_VALUE - 1,
 					Integer.MAX_VALUE, new CallBack());
@@ -580,7 +580,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_maxConnectionsMoreThanSessions2_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 2, new CallBack());
 		} catch (Exception e) {
@@ -592,9 +592,9 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@Test
 	public void registerServer_allParamsWrong_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
-			server.registerServer("host", 9001, "Name", -1, -1, null);
+			server.registerServer("host", TestConstants.PORT_LISTENER, "Name", -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -605,9 +605,9 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptHost_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
-			server.registerServer(TestConstants.HOST, 9001, "Name", -1, -1, null);
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_LISTENER, "Name", -1, -1, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -618,7 +618,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptHostAndPort_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "Name", -1, -1, null);
 		} catch (Exception e) {
@@ -631,7 +631,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptHostAndPortAndServiceName_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, -1, -1, null);
 		} catch (Exception e) {
@@ -644,7 +644,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExcepHostPortServiceNameMaxSessions_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, -1, null);
 		} catch (Exception e) {
@@ -657,7 +657,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptHostPortServiceNameMaxSessionsMaxConnections_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, null);
 		} catch (Exception e) {
@@ -670,9 +670,9 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptCallBack_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
-			server.registerServer("host", 9001, "Name", -1, -1, new CallBack());
+			server.registerServer("host", TestConstants.PORT_LISTENER, "Name", -1, -1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -683,9 +683,9 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptCallBackMaxConnectionsMaxSessions_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
-			server.registerServer("host", 9001, "Name", 1, 1, new CallBack());
+			server.registerServer("host", TestConstants.PORT_LISTENER, "Name", 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -696,9 +696,9 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_allParamsWrongExceptCallBackMaxConnectionsMaxSessionsServiceName_notRegisteredThrowsException()
 			throws Exception {
-		server.startListener(TestConstants.HOST, 9001, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		try {
-			server.registerServer("host", 9001, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerServer("host", TestConstants.PORT_LISTENER, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}
