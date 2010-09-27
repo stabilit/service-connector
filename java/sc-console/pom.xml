@@ -46,7 +46,7 @@
 				<configuration>
 					<includeDependencySources>true</includeDependencySources>
 					<dependencySourceIncludes>
-						<dependency-source>com.stabilit.*</dependency-source>
+						<dependency-source>org.serviceconnector.*</dependency-source>
 					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
