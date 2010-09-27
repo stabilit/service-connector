@@ -4,5 +4,5 @@
     <xsl:template name="sc_content">
       Services Content
     </xsl:template>
-	<xsl:template name="sc_menu_left">Services</xsl:template>
+	<xsl:template name="sc_menu_left">&gt;&#160;Services</xsl:template>
 </xsl:stylesheet>

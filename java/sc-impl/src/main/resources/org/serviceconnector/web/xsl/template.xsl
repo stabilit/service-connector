@@ -35,13 +35,12 @@
 			</body>
 		</html>
 	</xsl:template>
-	<xsl:template name="sc_title">Service Connector</xsl:template>
+	<xsl:template name="sc_title">
+	  Service Connector <xsl:value-of select="$head/meta/@scversion"/> on <xsl:value-of select="$head/meta/@hostname"/> 
+	</xsl:template>
 	<xsl:template name="sc_header">
 	   <div id="sc_logo">
-	     <a href="." class="sc_reload">Service Connector</a>
-	   </div>
-	   <div id="sc_logo_img">
-         <a href="." class="sc_reload"><img border="0" src="stabilit.png"/></a>
+	     <xsl:call-template name="sc_title"/>
 	   </div>
 	  <div id="sc_meta">
 	    <xsl:call-template name="sc_dateTime">
@@ -50,13 +49,14 @@
 	    <br/>
 	    <xsl:if test="string-length($userid) &gt; 0">
 	       User [<xsl:value-of select="$userid"/>]
-	       <br/>
 	    </xsl:if>
-	    V <xsl:value-of select="$head/meta/@scversion"/>
+	    <br/>
+	    <br/>
+	    Service Connector provided by <a href="www.stabilit.ch" class="sc_header" target="stabilit">Stabilit</a>
 	  </div>
 	</xsl:template>
 	<xsl:template name="sc_menu">
-	   <div id="sc_menu_left"><xsl:call-template name="sc_menu_left"/></div>
+	   <div id="sc_menu_left"><a href="Home">Home</a>&#160;<xsl:call-template name="sc_menu_left"/></div>
 	   <div id="sc_menu_right"><a href="?action=logout">Logout</a></div>
 	</xsl:template>
 	<xsl:template name="sc_navigation">
@@ -72,8 +72,7 @@
 	<xsl:template name="sc_menu_left"></xsl:template>
 	<xsl:template name="sc_dateTime">
 	    <xsl:param name="dateTime"/>
-	    <xsl:value-of select="substring($dateTime,0,11)"/>
-	    <br/>
+	    <xsl:value-of select="substring($dateTime,0,11)"/>&#160;
 	    <xsl:value-of select="substring($dateTime,12,8)"/>
 	</xsl:template>
 </xsl:stylesheet>

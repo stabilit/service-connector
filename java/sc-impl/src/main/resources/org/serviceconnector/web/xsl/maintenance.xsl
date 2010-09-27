@@ -4,5 +4,5 @@
     <xsl:template name="sc_content">
       Maintenance Content
     </xsl:template>
-	<xsl:template name="sc_menu_left">Maintenance</xsl:template>
+	<xsl:template name="sc_menu_left">&gt;&#160;Maintenance</xsl:template>
 </xsl:stylesheet>

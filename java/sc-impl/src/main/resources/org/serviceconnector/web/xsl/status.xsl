@@ -4,5 +4,5 @@
     <xsl:template name="sc_content">
       Status Content
     </xsl:template>
-	<xsl:template name="sc_menu_left">Status</xsl:template>
+	<xsl:template name="sc_menu_left">&gt;&#160;Status</xsl:template>
 </xsl:stylesheet>

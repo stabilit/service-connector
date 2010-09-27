@@ -22,21 +22,29 @@ a.sc_reload:hover {
 	color:#FFFF00;
 }
 
+.sc_header {
+	color:#FFFFFF;
+}
+
+a.sc_header:hover {
+	color:#FFFF00;
+}
+
 div#sc_root {
 	width:100%;
 	height: 100%;
 }
 
 div#sc_header {
-	background-color:#CC0000;
+	background-color: #B61F34;
 	width:100%;
-	height:64px;
+	height:66px;
 }
 
 div#sc_logo {
 	background:transparent;
 	color:white;
-	padding:15px;
+	padding:18px;
 	float:left;
 	font-size:20px;
 }
@@ -55,11 +63,12 @@ div#sc_meta {
 	color:white;	
 	float:right;
 	font-size:12px;
+	text-align:right;
 }
 
 div#sc_menu {
 	background-color:#EEEEEE;
-	border-bottom: solid 4px #FF0000;
+	border-bottom: solid 4px #B61F34;
 	color:#666666;
 	padding:4px;
 	height: 20px;
@@ -96,6 +105,7 @@ div#sc_content {
 	right:160px;
 	bottom:0px;
 	left: 160px;
+	padding:4px;
 }
 
 div#sc_login {
@@ -109,8 +119,9 @@ div#sc_login {
 }
 
 div#sc_login_title {
-	background: #FF0000;
+	background: #B61F34;
 	color:white;
+	padding-top:4px;
 	font-size:18px;
 	font-weight:bold;
 	height:28px;
@@ -146,15 +157,14 @@ div#sc_login_form {
 }
 
 .sc_form_button {
-	background: #FF0000;
-	color: #FFFFFF;
+	color: black;
 	padding:4px;
 	font-size:16px;
 }
 
 .sc_error {
 	background: #FFDDDD;
-	border-bottom:1px solid red;
+	border-bottom:1px solid #B61F34;
 	text-align:center;
 	font-size:16px;
 	color:red;

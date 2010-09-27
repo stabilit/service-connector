@@ -16,6 +16,7 @@
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,9 +81,15 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("meta");
 		writer.writeAttribute("creation",
 				DateTimeUtility.getCurrentTimeZoneMillis());
+		// write sc version
 		writer.writeEndElement(); // close meta tag
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
+		writer.writeEndElement(); // close meta tag
+		// write current ip host
+		String hostName = InetAddress.getLocalHost().getHostName();
+	    writer.writeStartElement("meta");
+		writer.writeAttribute("hostname", hostName);
 		writer.writeEndElement(); // close meta tag
 		if (webSession != null) {
 			writer.writeStartElement("meta");

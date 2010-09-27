@@ -4,5 +4,5 @@
     <xsl:template name="sc_content">
       Network Content
     </xsl:template>
-	<xsl:template name="sc_menu_left">Network</xsl:template>
+	<xsl:template name="sc_menu_left">&gt;&#160;Network</xsl:template>
 </xsl:stylesheet>
