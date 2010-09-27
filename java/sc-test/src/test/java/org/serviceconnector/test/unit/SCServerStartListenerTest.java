@@ -87,8 +87,8 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAlive0_listening() throws Exception {
-		server.startListener(TestConstants.HOST, 1, 0);
+	public void startListener_hostDefaultPortMinKeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, 0);
 		assertEquals(true, server.isListening());
 		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(1, server.getPort());
@@ -189,10 +189,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAlive0_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, 0);
+			server.startListener(null, TestConstants.PORT_MIN, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -288,8 +288,8 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAlive0_listening() throws Exception {
-		server.startListener("", 1, 0);
+	public void startListener_hostEmptyPortMinKeepAlive0_listening() throws Exception {
+		server.startListener("", TestConstants.PORT_MIN, 0);
 		assertEquals(true, server.isListening());
 		assertEquals("", server.getHost());
 		assertEquals(1, server.getPort());
@@ -396,9 +396,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostAPortMinKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("a", 1, 0);
+			server.startListener("a", TestConstants.PORT_MIN, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -514,9 +514,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostArbitraryPortMinKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 1, 0);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -637,9 +637,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostGoogleIPPort1KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostGoogleIPPortMinKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener(googleIP, 1, 0);
+			server.startListener(googleIP, TestConstants.PORT_MIN, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -755,8 +755,8 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAlive3600_listening() throws Exception {
-		server.startListener(TestConstants.HOST, 1, 3600);
+	public void startListener_hostDefaultPortMinKeepAlive3600_listening() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, 3600);
 		assertEquals(true, server.isListening());
 		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(1, server.getPort());
@@ -857,10 +857,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAlive3600_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, 3600);
+			server.startListener(null, TestConstants.PORT_MIN, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -956,8 +956,8 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAlive3600_listening() throws Exception {
-		server.startListener("", 1, 3600);
+	public void startListener_hostEmptyPortMinKeepAlive3600_listening() throws Exception {
+		server.startListener("", TestConstants.PORT_MIN, 3600);
 		assertEquals(true, server.isListening());
 		assertEquals("", server.getHost());
 		assertEquals(1, server.getPort());
@@ -1064,9 +1064,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAlive3600_notListeningThrowsException() throws Exception {
+	public void startListener_hostAPortMinKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("a", 1, 3600);
+			server.startListener("a", TestConstants.PORT_MIN, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1182,9 +1182,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAlive3600_notListeningThrowsException() throws Exception {
+	public void startListener_hostArbitraryPortMinKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 1, 3600);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1310,10 +1310,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(TestConstants.HOST, 1, -1);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1418,10 +1418,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, -1);
+			server.startListener(null, TestConstants.PORT_MIN, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1526,10 +1526,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostEmptyPortMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 1, -1);
+			server.startListener("", TestConstants.PORT_MIN, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1634,10 +1634,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostAPortMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 1, -1);
+			server.startListener("a", TestConstants.PORT_MIN, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1742,10 +1742,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostArbitraryPortMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 1, -1);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1864,10 +1864,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(TestConstants.HOST, 1, 3601);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1972,10 +1972,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, 3601);
+			server.startListener(null, TestConstants.PORT_MIN, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2080,10 +2080,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostEmptyPortMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 1, 3601);
+			server.startListener("", TestConstants.PORT_MIN, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2188,10 +2188,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostAPortMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 1, 3601);
+			server.startListener("a", TestConstants.PORT_MIN, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2296,10 +2296,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostArbitraryPortMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 1, 3601);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2418,10 +2418,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(TestConstants.HOST, 1, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2529,10 +2529,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, Integer.MAX_VALUE);
+			server.startListener(null, TestConstants.PORT_MIN, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2640,10 +2640,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostEmptyPortMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 1, Integer.MAX_VALUE);
+			server.startListener("", TestConstants.PORT_MIN, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2748,10 +2748,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostAPortMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 1, Integer.MAX_VALUE);
+			server.startListener("a", TestConstants.PORT_MIN, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2861,11 +2861,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostArbitraryPortMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
 			server
-					.startListener("The quick brown fox jumps over a lazy dog.", 1,
+					.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN,
 							Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -2987,10 +2987,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostDefaultPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(TestConstants.HOST, 1, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_MIN, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3095,10 +3095,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostNullPortMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 1, Integer.MIN_VALUE);
+			server.startListener(null, TestConstants.PORT_MIN, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3203,10 +3203,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostEmptyPortMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 1, Integer.MIN_VALUE);
+			server.startListener("", TestConstants.PORT_MIN, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3311,10 +3311,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostAPortMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 1, Integer.MIN_VALUE);
+			server.startListener("a", TestConstants.PORT_MIN, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3428,11 +3428,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostArbitraryPortMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
 			server
-					.startListener("The quick brown fox jumps over a lazy dog.", 1,
+					.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN,
 							Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;

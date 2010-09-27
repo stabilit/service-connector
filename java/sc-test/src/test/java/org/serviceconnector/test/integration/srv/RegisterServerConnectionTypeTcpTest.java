@@ -197,10 +197,10 @@ public class RegisterServerConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void registerServer_port1NotInSCProps_notRegisteredThrowsException() throws Exception {
+	public void registerServer_portMinNotInSCProps_notRegisteredThrowsException() throws Exception {
 		server.startListener(TestConstants.HOST, 9001, 0);
 		try {
-			server.registerServer(TestConstants.HOST, 1, TestConstants.serviceName, 1, 1, new CallBack());
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.serviceName, 1, 1, new CallBack());
 		} catch (Exception e) {
 			ex = e;
 		}

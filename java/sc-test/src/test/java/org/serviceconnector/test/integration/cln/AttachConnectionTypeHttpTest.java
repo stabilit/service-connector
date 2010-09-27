@@ -109,9 +109,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostDefaultPort1_notAttachedThrowsException() throws Exception {
+	public void attach_hostDefaultPortMin_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach(TestConstants.HOST, 1);
+			client.attach(TestConstants.HOST, TestConstants.PORT_MIN);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -207,9 +207,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test(expected = InvalidParameterException.class)
-	public void attach_hostNullPort1_notAttachedThrowsException() throws Exception {
+	public void attach_hostNullPortMin_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach(null, 1);
+			client.attach(null, TestConstants.PORT_MIN);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
@@ -296,9 +296,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostEmptyPort1_notAttachedThrowsException() throws Exception {
+	public void attach_hostEmptyPortMin_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach("", 1);
+			client.attach("", TestConstants.PORT_MIN);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -395,9 +395,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostAPort1_notAttachedThrowsException() throws Exception {
+	public void attach_hostAPortMin_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach("a", 1);
+			client.attach("a", TestConstants.PORT_MIN);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -494,9 +494,9 @@ public class AttachConnectionTypeHttpTest {
 	}
 
 	@Test
-	public void attach_hostArbitraryPort1_notAttachedThrowsException() throws Exception {
+	public void attach_hostArbitraryPortMin_notAttachedThrowsException() throws Exception {
 		try {
-			client.attach("The quick brown fox jumps over a lazy dog.", 1);
+			client.attach("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_MIN);
 		} catch (Exception e) {
 			ex = e;
 		}
