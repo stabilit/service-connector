@@ -17,8 +17,6 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
-
-
 public class AttachConnectionTypeTcpTest {
 	
 	/** The Constant logger. */
@@ -65,18 +63,16 @@ public class AttachConnectionTypeTcpTest {
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void attach_localhost9000_attached() throws Exception {
-		client.attach("localhost", 9000);
+	public void attach_hostDefaultPortTcp_attached() throws Exception {
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
-	public void attach_hostLocalhostPortHttp_attached() throws Exception {
+	public void attach_hostDefaultPortHttp_attached() throws Exception {
 		try {
-			client.attach("localhost", TestConstants.PORT_HTTP);
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -85,18 +81,18 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_changeConnectionTypeHostLocalhostPort9000_attached()
+	public void attach_changeConnectionTypeHostDefaultPortTcp_attached()
 			throws Exception {
 		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach("localhost", 9000);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
-	public void attach_hostLocalhostPort0_notAttachedThrowsException()
+	public void attach_hostDefaultPort0_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", 0);
+			client.attach(TestConstants.HOST, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -105,10 +101,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPortMinus1_notAttachedThrowsException()
+	public void attach_hostDefaultPortMinus1_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", -1);
+			client.attach(TestConstants.HOST, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -117,10 +113,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort1_notAttachedThrowsException()
+	public void attach_hostDefaultPort1_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", 1);
+			client.attach(TestConstants.HOST, 1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -129,10 +125,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPortMaxAllowed_notAttachedThrowsException()
+	public void attach_hostDefaultPortMaxAllowed_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", 0xFFFF);
+			client.attach(TestConstants.HOST, 0xFFFF);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -141,10 +137,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void attach_hostLocalhostPortMaxAllowedPlus1_notAttachedThrowsException()
+	public void attach_hostDefaultPortMaxAllowedPlus1_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", 0xFFFF + 1);
+			client.attach(TestConstants.HOST, 0xFFFF + 1);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
@@ -152,10 +148,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void attach_hostLocalhostPortIntMin_notAttachedThrowsException()
+	public void attach_hostDefaultPortIntMin_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", Integer.MIN_VALUE);
+			client.attach(TestConstants.HOST, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
@@ -163,24 +159,21 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test(expected = SCMPValidatorException.class)
-	public void attach_hostLocalhostPortIntMax_notAttachedThrowsException()
+	public void attach_hostDefaultPortIntMax_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("localhost", Integer.MAX_VALUE);
+			client.attach(TestConstants.HOST, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
 		}
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test(expected = InvalidParameterException.class)
-	public void attach_hostNullPort9000_notAttachedThrowsException()
+	public void attach_hostNullPortTcp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach(null, 9000);
+			client.attach(null, TestConstants.PORT_TCP);
 		} catch (Exception e) {
 			assertEquals(false, client.isAttached());
 			throw e;
@@ -275,13 +268,10 @@ public class AttachConnectionTypeTcpTest {
 		}
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
-	public void attach_hostEmptyPort9000_hostIsInterpretedAsLocalhostIsAttached()
+	public void attach_hostEmptyPortTcp_hostIsInterpretedAsLocalhostIsAttached()
 			throws Exception {
-		client.attach("", 9000);
+		client.attach("", TestConstants.PORT_TCP);
 		assertEquals(true, client.isAttached());
 	}
 
@@ -381,14 +371,11 @@ public class AttachConnectionTypeTcpTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
-	public void attach_hostAPort9000_notAttachedThrowsException()
+	public void attach_hostAPortTcp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("a", 9000);
+			client.attach("a", TestConstants.PORT_TCP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -490,15 +477,11 @@ public class AttachConnectionTypeTcpTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
-
 	@Test
-	public void attach_hostArbitraryPort9000_notAttachedThrowsException()
+	public void attach_hostArbitraryPortTcp_notAttachedThrowsException()
 			throws Exception {
 		try {
-			client.attach("The quick brown fox jumps over a lazy dog.", 9000);
+			client.attach("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -605,29 +588,22 @@ public class AttachConnectionTypeTcpTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region attach with 3 parameters
-
-	// since all mandatory combinations are tested, we can omit all combinations
-	// and test only those the attribute keepAlive could have some effect on
-	// other combinations are useless. Really
-
-	public void attach_hostLocalhostPort9000KeepAlive1_attached()
+	public void attach_hostDefaultPortTcpKeepAlive1_attached()
 			throws Exception {
-		client.attach("localhost", 9000, 1);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP, 1);
 		assertEquals(true, client.isAttached());
 	}
 
-	public void attach_hostLocalhostPort9000KeepAlive3600_attached()
+	public void attach_hostDefaultPortTcpKeepAlive3600_attached()
 			throws Exception {
-		client.attach("localhost", 9000, 3600);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP, 3600);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
 	public void attach_KeepAlive0_notAttached() throws Exception {
 		try {
-			client.attach("localhost", 9000, 0);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP, 0);
 		} catch (Exception e) {
 			assertEquals(true, client.isAttached());
 			throw e;
@@ -635,10 +611,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort9000KeepAliveMinus1_notAttached()
+	public void attach_hostDefaultPortTcpKeepAliveMinus1_notAttached()
 			throws Exception {
 		try {
-			client.attach("localhost", 9000, -1);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -647,17 +623,17 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort9000KeepAlive1_isAttached()
+	public void attach_hostDefaultPortTcpKeepAlive1_isAttached()
 			throws Exception {
-		client.attach("localhost", 9000, 1);
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP, 1);
 		assertEquals(true, client.isAttached());
 	}
 
 	@Test
-	public void attach_hostLocalhostPort9000KeepAlive3601_notAttached()
+	public void attach_hostDefaultPortTcpKeepAlive3601_notAttached()
 			throws Exception {
 		try {
-			client.attach("localhost", 9000, 3601);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -666,10 +642,10 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort9000KeepAliveIntMin_notAttached()
+	public void attach_hostDefaultPortTcpKeepAliveIntMin_notAttached()
 			throws Exception {
 		try {
-			client.attach("localhost", 9000, Integer.MIN_VALUE);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -678,16 +654,14 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	@Test
-	public void attach_hostLocalhostPort9000KeepAliveIntMax_notAttached()
+	public void attach_hostDefaultPortTcpKeepAliveIntMax_notAttached()
 			throws Exception {
 		try {
-			client.attach("localhost", 9000, Integer.MAX_VALUE);
+			client.attach(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, client.isAttached());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
 }

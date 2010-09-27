@@ -43,7 +43,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testPoolSuccesful() {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP, "netty.http", 60);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, "netty.http", 60);
 		connectionPool.setMaxConnections(10);
 		connectionPool.setMinConnections(1);
 
@@ -54,7 +54,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testMinMaxWrong() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP);
 		connectionPool.setMaxConnections(2);
 		connectionPool.setMinConnections(3);
 		for (int i = 0; i < 2; i++) {
@@ -71,7 +71,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testGetAndFreeConnection() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP);
 		IConnection connection = connectionPool.getConnection();
 		connectionPool.freeConnection(connection);
 		connectionPool.destroy();
@@ -79,7 +79,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testReachConnectionLimit() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP);
 		int maxConnections = 2;
 		connectionPool.setMaxConnections(maxConnections);
 		connectionPool.getConnection();
@@ -97,7 +97,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testKeepAliveInactive() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP, 0);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, 0);
 		connectionPool.setMaxConnections(2);
 		connectionPool.setMinConnections(2);
 		IConnection connection = connectionPool.getConnection();
@@ -108,7 +108,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testKeepAliveActive() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP, 5);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, 5);
 		connectionPool.setMaxConnections(1);
 		connectionPool.setMinConnections(1);
 		connectionPool.initMinConnections();
@@ -121,7 +121,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testConnectionCloseAfterTenKeepAlive() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP, 1);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, 1);
 		connectionPool.setMaxConnections(2);
 		connectionPool.setMinConnections(2);
 		connectionPool.initMinConnections();
@@ -131,7 +131,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testCloseAfterFreeConnection() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP);
 		connectionPool.setCloseOnFree(true);
 		IConnection connection = connectionPool.getConnection();
 		connectionPool.freeConnection(connection);
@@ -139,7 +139,7 @@ public class ConnectionPoolTestCase {
 
 	@Test
 	public void testHundredConnectionsInUse() throws Exception {
-		ConnectionPool connectionPool = new ConnectionPool("localhost", TestConstants.PORT_HTTP, 5);
+		ConnectionPool connectionPool = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, 5);
 		List<IConnection> connections = new ArrayList<IConnection>();
 		for (int i = 0; i < 100; i++) {
 			connections.add(connectionPool.getConnection());

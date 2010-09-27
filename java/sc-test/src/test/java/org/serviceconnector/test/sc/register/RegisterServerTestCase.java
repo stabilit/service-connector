@@ -26,6 +26,7 @@ import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -128,7 +129,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void registerServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", "localhost", 9000,
+		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
 				"netty.tcp", 1000, 60, 10);
 		IRequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
@@ -179,7 +180,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void secondRegisterServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", "localhost", 9000,
+		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
 				"netty.tcp", 1, 60, 10);
 		IRequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);

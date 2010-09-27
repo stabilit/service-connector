@@ -138,7 +138,7 @@ public class AttachDetachTest {
 	}
 
 	@Test
-	public void detach_validAttachPort9000_notAttached() throws Exception {
+	public void detach_validAttachPortTcp_notAttached() throws Exception {
 		((SCClient) client).setConnectionType("netty.tcp");
 		try {
 			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);

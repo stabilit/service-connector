@@ -13,6 +13,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 
 /**
@@ -23,7 +24,6 @@ public class SCClientTest {
 
 	private ISCClient client;
 
-	private static final String host = "localhost";
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -75,8 +75,8 @@ public class SCClientTest {
 	@Test
 	public void setConnectionType_ArbitraryStringParam_returnGivenParam()
 	{
-		((SCClient)client).setConnectionType(host);
-		assertEquals(host, client.getConnectionType());
+		((SCClient)client).setConnectionType(TestConstants.HOST);
+		assertEquals(TestConstants.HOST, client.getConnectionType());
 	}
 	
 	@Test(expected = SCMPValidatorException.class)

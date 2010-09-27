@@ -42,7 +42,7 @@ public class ClnAPISyncSessionTestCase {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", TestConstants.PORT_HTTP);
+			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 10, 10);

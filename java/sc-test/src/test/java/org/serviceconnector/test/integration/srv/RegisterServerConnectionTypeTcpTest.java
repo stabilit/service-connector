@@ -65,8 +65,6 @@ public class RegisterServerConnectionTypeTcpTest {
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
-	// region host == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
 	public void registerServer_withoutStartListener_throwsException() throws Exception {
 		try {
@@ -707,8 +705,6 @@ public class RegisterServerConnectionTypeTcpTest {
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
-
-	// region end
 
 	private class CallBack implements ISCServerCallback {
 	}

@@ -39,7 +39,7 @@ public class PoolConnectTestCase {
 	}
 
 	public void connect() throws Exception {
-		ConnectionPool cp = new ConnectionPool("localhost", TestConstants.PORT_HTTP, "netty.http", 0);
+		ConnectionPool cp = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, "netty.http", 0);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
 		for (int i = 0; i < 500000; i++) {
@@ -64,7 +64,7 @@ public class PoolConnectTestCase {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
 		for (int i = 0; i < 500000; i++) {
-			ConnectionPool cp = new ConnectionPool("localhost", TestConstants.PORT_HTTP, "netty.http", 0);
+			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, TestConstants.PORT_HTTP, "netty.http", 0);
 			IConnection connection = cp.getConnection();
 			SCMPMessage message = new SCMPMessage();
 			message.setMessageType(SCMPMsgType.ATTACH);

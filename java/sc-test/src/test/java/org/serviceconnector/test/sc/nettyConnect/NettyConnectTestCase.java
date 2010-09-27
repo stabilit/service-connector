@@ -44,7 +44,7 @@ public class NettyConnectTestCase {
 	@Test
 	public void connectDisconnect50000() throws Exception {
 		IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
-		connection.setHost("localhost");
+		connection.setHost(TestConstants.HOST);
 		connection.setPort(TestConstants.PORT_HTTP);
 		connection.setIdleTimeout(0);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
@@ -74,7 +74,7 @@ public class NettyConnectTestCase {
 		for (int i = 0; i < 1000; i++) {
 			IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
 			connections[i] = connection;
-			connection.setHost("localhost");
+			connection.setHost(TestConstants.HOST);
 			connection.setPort(TestConstants.PORT_HTTP);
 			connection.setIdleTimeout(0);
 			IIdleConnectionCallback idleCallback = new IdleCallback();

@@ -35,52 +35,50 @@ public class SCServerStartListenerTest {
 	public void tearDown() {
 		server.destroyServer();
 	}
-
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
+	
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAlive0_listening() throws Exception {
-		server.startListener("localhost", TestConstants.PORT_HTTP, 0);
+	public void startListener_hostDefaultPortHttpKeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(TestConstants.PORT_HTTP, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAlive0_listening() throws Exception {
-		server.startListener("localhost", 9000, 0);
+	public void startListener_hostDefaultPortTcpKeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.HOST, server.getHost());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive0_listening()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAlive0_listening()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
-		server.startListener("localhost", 9000, 0);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.HOST, server.getHost());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAlive0_listening() throws Exception {
-		server.startListener("localhost", 0, 0);
+	public void startListener_hostDefaultPort0KeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 0, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(0, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMinus1KeepAlive0_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinus1KeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", -1, 0);
+			server.startListener(TestConstants.HOST, -1, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -89,28 +87,28 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAlive0_listening() throws Exception {
-		server.startListener("localhost", 1, 0);
+	public void startListener_hostDefaultPort1KeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 1, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(1, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAlive0_listening() throws Exception {
-		server.startListener("localhost", 0xFFFF, 0);
+	public void startListener_hostDefaultPortMaxAllowedKeepAlive0_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 0xFFFF, 0);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(0xFFFF, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAlive0_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, 0);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -119,10 +117,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAlive0_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, 0);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -131,19 +129,16 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAlive0_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, 0);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test
 	public void startListener_hostNullPortHttpKeepAlive0_notListeningThrowsException()
@@ -158,10 +153,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAlive0_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAlive0_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, 0);
+			server.startListener(null, TestConstants.PORT_TCP, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -253,9 +248,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
 	public void startListener_hostEmptyPortHttpKeepAlive0_listening() throws Exception {
 		server.startListener("", TestConstants.PORT_HTTP, 0);
@@ -266,11 +258,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAlive0_listening() throws Exception {
-		server.startListener("", 9000, 0);
+	public void startListener_hostEmptyPortTcpKeepAlive0_listening() throws Exception {
+		server.startListener("", TestConstants.PORT_TCP, 0);
 		assertEquals(true, server.isListening());
 		assertEquals("", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(0, server.getKeepAliveIntervalInSeconds());
 	}
 
@@ -349,9 +341,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
@@ -367,9 +356,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostAPortTcpKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("a", 9000, 0);
+			server.startListener("a", TestConstants.PORT_TCP, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -470,9 +459,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
 	@Test
 	public void startListener_hostArbitraryPortHttpKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
@@ -488,9 +474,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostArbitraryPortTcpKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 0);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -611,9 +597,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostGoogleIPPort9000KeepAlive0_notListeningThrowsException() throws Exception {
+	public void startListener_hostGoogleIPPortTcpKeepAlive0_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener(googleIP, 9000, 0);
+			server.startListener(googleIP, TestConstants.PORT_TCP, 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -718,52 +704,49 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAlive3600_startListenered() throws Exception {
-		server.startListener("localhost", TestConstants.PORT_HTTP, 3600);
+	public void startListener_hostDefaultPortHttpKeepAlive3600_startListenered() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(TestConstants.PORT_HTTP, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAlive3600_listening() throws Exception {
-		server.startListener("localhost", 9000, 3600);
+	public void startListener_hostDefaultPortTcpKeepAlive3600_listening() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.HOST, server.getHost());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive3600_listening()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAlive3600_listening()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
-		server.startListener("localhost", 9000, 3600);
+		server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.HOST, server.getHost());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAlive3600_listening() throws Exception {
-		server.startListener("localhost", 0, 3600);
+	public void startListener_hostDefaultPort0KeepAlive3600_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 0, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(0, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMinus1KeepAlive3600_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinus1KeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", -1, 3600);
+			server.startListener(TestConstants.HOST, -1, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -772,28 +755,28 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAlive3600_listening() throws Exception {
-		server.startListener("localhost", 1, 3600);
+	public void startListener_hostDefaultPort1KeepAlive3600_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 1, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(1, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAlive3600_listening() throws Exception {
-		server.startListener("localhost", 0xFFFF, 3600);
+	public void startListener_hostDefaultPortMaxAllowedKeepAlive3600_listening() throws Exception {
+		server.startListener(TestConstants.HOST, 0xFFFF, 3600);
 		assertEquals(true, server.isListening());
-		assertEquals("localhost", server.getHost());
+		assertEquals(TestConstants.HOST, server.getHost());
 		assertEquals(0xFFFF, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAlive3600_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, 3600);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -802,10 +785,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAlive3600_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, 3600);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -814,19 +797,16 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAlive3600_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, 3600);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test
 	public void startListener_hostNullPortHttpKeepAlive3600_notListeningThrowsException()
@@ -841,10 +821,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAlive3600_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAlive3600_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, 3600);
+			server.startListener(null, TestConstants.PORT_TCP, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -936,9 +916,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
 	public void startListener_hostEmptyPortHttpKeepAlive3600_listening() throws Exception {
 		server.startListener("", TestConstants.PORT_HTTP, 3600);
@@ -949,11 +926,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAlive3600_listening() throws Exception {
-		server.startListener("", 9000, 3600);
+	public void startListener_hostEmptyPortTcpKeepAlive3600_listening() throws Exception {
+		server.startListener("", TestConstants.PORT_TCP, 3600);
 		assertEquals(true, server.isListening());
 		assertEquals("", server.getHost());
-		assertEquals(9000, server.getPort());
+		assertEquals(TestConstants.PORT_TCP, server.getPort());
 		assertEquals(3600, server.getKeepAliveIntervalInSeconds());
 	}
 
@@ -1032,9 +1009,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
@@ -1050,9 +1024,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAlive3600_notListeningThrowsException() throws Exception {
+	public void startListener_hostAPortTcpKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("a", 9000, 3600);
+			server.startListener("a", TestConstants.PORT_TCP, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1153,10 +1127,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
-
 	@Test
 	public void startListener_hostArbitraryPortHttpKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
@@ -1172,9 +1142,9 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAlive3600_notListeningThrowsException() throws Exception {
+	public void startListener_hostArbitraryPortTcpKeepAlive3600_notListeningThrowsException() throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 3600);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP, 3600);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1279,13 +1249,10 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 	
-	// region end
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAliveMinus1_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveMinus1_startListenered() throws Exception {
 		try {
-			server.startListener("localhost", TestConstants.PORT_HTTP, -1);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1294,10 +1261,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 9000, -1);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1306,11 +1273,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
-			server.startListener("localhost", 9000, -1);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1319,10 +1286,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPort0KeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0, -1);
+			server.startListener(TestConstants.HOST, 0, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1331,10 +1298,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMinus1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortMinus1KeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", -1, -1);
+			server.startListener(TestConstants.HOST, -1, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1343,10 +1310,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPort1KeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 1, -1);
+			server.startListener(TestConstants.HOST, 1, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1355,10 +1322,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF, -1);
+			server.startListener(TestConstants.HOST, 0xFFFF, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1367,10 +1334,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, -1);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1379,10 +1346,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, -1);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1391,19 +1358,16 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, -1);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test
 	public void startListener_hostNullPortHttpKeepAliveMinus1_notListeningThrowsException()
@@ -1418,10 +1382,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, -1);
+			server.startListener(null, TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1513,9 +1477,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
 	public void startListener_hostEmptyPortHttpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
@@ -1529,10 +1490,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostEmptyPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 9000, -1);
+			server.startListener("", TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1624,9 +1585,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
@@ -1640,10 +1598,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostAPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 9000, -1);
+			server.startListener("a", TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1735,10 +1693,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
-
 	@Test
 	public void startListener_hostArbitraryPortHttpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
@@ -1752,10 +1706,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAliveMinus1_notListeningThrowsException()
+	public void startListener_hostArbitraryPortTcpKeepAliveMinus1_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, -1);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP, -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1849,13 +1803,10 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAlive3601_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAlive3601_startListenered() throws Exception {
 		try {
-			server.startListener("localhost", TestConstants.PORT_HTTP, 3601);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1864,10 +1815,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 9000, 3601);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1876,11 +1827,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
-			server.startListener("localhost", 9000, 3601);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1889,10 +1840,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPort0KeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0, 3601);
+			server.startListener(TestConstants.HOST, 0, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1901,10 +1852,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort3601KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPort3601KeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 3601, 3601);
+			server.startListener(TestConstants.HOST, 3601, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1913,10 +1864,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPort1KeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 1, 3601);
+			server.startListener(TestConstants.HOST, 1, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1925,10 +1876,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF, 3601);
+			server.startListener(TestConstants.HOST, 0xFFFF, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1937,10 +1888,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, 3601);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1949,10 +1900,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, 3601);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1961,19 +1912,16 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAlive3601_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, 3601);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test
 	public void startListener_hostNullPortHttpKeepAlive3601_notListeningThrowsException()
@@ -1988,10 +1936,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, 3601);
+			server.startListener(null, TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2083,9 +2031,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
 	public void startListener_hostEmptyPortHttpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
@@ -2099,10 +2044,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostEmptyPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 9000, 3601);
+			server.startListener("", TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2194,9 +2139,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
@@ -2210,10 +2152,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostAPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 9000, 3601);
+			server.startListener("a", TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2305,10 +2247,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
-
 	@Test
 	public void startListener_hostArbitraryPortHttpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
@@ -2322,10 +2260,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAlive3601_notListeningThrowsException()
+	public void startListener_hostArbitraryPortTcpKeepAlive3601_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000, 3601);
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP, 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2419,13 +2357,10 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAliveIntMax_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveIntMax_startListenered() throws Exception {
 		try {
-			server.startListener("localhost", TestConstants.PORT_HTTP, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2434,10 +2369,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 9000, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2446,11 +2381,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
-			server.startListener("localhost", 9000, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2459,10 +2394,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPort0KeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, 0, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2471,10 +2406,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort3601KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPort3601KeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 3601, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, 3601, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2483,10 +2418,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPort1KeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 1, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, 1, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2495,10 +2430,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, 0xFFFF, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2507,10 +2442,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2519,10 +2454,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2531,10 +2466,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, Integer.MAX_VALUE);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2542,7 +2477,7 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
+	
 	// region hostName == "null", all ports
 
 	@Test
@@ -2558,10 +2493,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, Integer.MAX_VALUE);
+			server.startListener(null, TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2653,7 +2588,7 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
+	
 	// region hostName == "", all ports
 
 	@Test
@@ -2669,10 +2604,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostEmptyPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 9000, Integer.MAX_VALUE);
+			server.startListener("", TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2764,9 +2699,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
@@ -2780,10 +2712,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostAPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 9000, Integer.MAX_VALUE);
+			server.startListener("a", TestConstants.PORT_TCP, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -2875,10 +2807,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "The quick brown fox jumps over a lazy dog.", all
-	// ports
-
 	@Test
 	public void startListener_hostArbitraryPortHttpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
@@ -2893,10 +2821,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAliveIntMax_notListeningThrowsException()
+	public void startListener_hostArbitraryPortTcpKeepAliveIntMax_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000,
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP,
 					Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -2998,13 +2926,10 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "localhost" (set as only one in
-	// scIntegration.properties), all ports
 	@Test
-	public void startListener_hostLocalhostPortHttpKeepAliveIntMin_startListenered() throws Exception {
+	public void startListener_hostDefaultPortHttpKeepAliveIntMin_startListenered() throws Exception {
 		try {
-			server.startListener("localhost", TestConstants.PORT_HTTP, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3013,10 +2938,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 9000, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3025,11 +2950,11 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_changeConnectionTypeHostLocalhostPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_changeConnectionTypeHostDefaultPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		((SCSessionServer) server).setConnectionType("netty.tcp");
 		try {
-			server.startListener("localhost", 9000, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3038,10 +2963,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort0KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPort0KeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, 0, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3050,10 +2975,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort3601KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPort3601KeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 3601, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, 3601, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3062,10 +2987,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPort1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPort1KeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 1, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, 1, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3074,10 +2999,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedKeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, 0xFFFF, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3086,10 +3011,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortMaxAllowedPlus1KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortMaxAllowedPlus1KeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", 0xFFFF + 1, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, 0xFFFF + 1, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3098,10 +3023,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMinKeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMinKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MIN_VALUE, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, Integer.MIN_VALUE, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3110,19 +3035,16 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostLocalhostPortIntMaxKeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostDefaultPortIntMaxKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("localhost", Integer.MAX_VALUE, Integer.MIN_VALUE);
+			server.startListener(TestConstants.HOST, Integer.MAX_VALUE, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
 		assertEquals(false, server.isListening());
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
-
-	// region end
-	// region hostName == "null", all ports
 
 	@Test
 	public void startListener_hostNullPortHttpKeepAliveIntMin_notListeningThrowsException()
@@ -3137,10 +3059,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostNullPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostNullPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener(null, 9000, Integer.MIN_VALUE);
+			server.startListener(null, TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3232,9 +3154,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof InvalidParameterException);
 	}
 
-	// region end
-	// region hostName == "", all ports
-
 	@Test
 	public void startListener_hostEmptyPortHttpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
@@ -3248,10 +3167,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostEmptyPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostEmptyPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("", 9000, Integer.MIN_VALUE);
+			server.startListener("", TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3343,9 +3262,6 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
-	// region hostName == "a", all ports
-
 	@Test
 	public void startListener_hostAPortHttpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
@@ -3359,10 +3275,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostAPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostAPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("a", 9000, Integer.MIN_VALUE);
+			server.startListener("a", TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -3454,7 +3370,7 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
+	
 	// region hostName == "The quick brown fox jumps over a lazy dog.", all
 	// ports
 
@@ -3472,10 +3388,10 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPort9000KeepAliveIntMin_notListeningThrowsException()
+	public void startListener_hostArbitraryPortTcpKeepAliveIntMin_notListeningThrowsException()
 			throws Exception {
 		try {
-			server.startListener("The quick brown fox jumps over a lazy dog.", 9000,
+			server.startListener("The quick brown fox jumps over a lazy dog.", TestConstants.PORT_TCP,
 					Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -3577,12 +3493,12 @@ public class SCServerStartListenerTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 	}
 
-	// region end
+	
 
 	@Test
 	public void startListener_twiceWithValidParams_listeningThrowsException() throws Exception
 	{
-		server.startListener("localhost", 0, 0);
+		server.startListener(TestConstants.HOST, 0, 0);
 		try {
 			server.startListener("another", 1, 1);
 		} catch (Exception e) {

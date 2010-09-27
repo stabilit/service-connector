@@ -50,7 +50,7 @@ public class ClnAPIAsyncSessionTestCase {
 			sc.setMaxConnections(100);
 			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", TestConstants.PORT_HTTP);
+			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			ISessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 360);
 			SCMessage requestMsg = new SCMessage();

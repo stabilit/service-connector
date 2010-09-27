@@ -11,6 +11,7 @@ import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
 public class StartSessionServer {
@@ -21,7 +22,7 @@ public class StartSessionServer {
 	private ISCSessionServer scSrv = null;
 	private String startFile = null;
 	private String[] serviceNames;
-	private int port = 9000;
+	private int port = TestConstants.PORT_TCP;
 	private int listenerPort = 30000;
 	private int maxCons = 10;
 	private ThreadSafeCounter ctr;
@@ -51,12 +52,12 @@ public class StartSessionServer {
 
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
-			this.scSrv.startListener("localhost", listenerPort, 0);
+			this.scSrv.startListener(TestConstants.HOST, listenerPort, 0);
 
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.registerServer("localhost", port, serviceNames[i], 1000, maxCons,
+				this.scSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons,
 						srvCallback);
 			}
 
@@ -177,7 +178,7 @@ public class StartSessionServer {
 						if (!alreadyPresentService) {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
-									scSrv.registerServer("localhost", port, serviceName, 1000,
+									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000,
 											maxCons, new SrvCallback(new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
 									System.arraycopy(serviceNames, 0, services, 0,

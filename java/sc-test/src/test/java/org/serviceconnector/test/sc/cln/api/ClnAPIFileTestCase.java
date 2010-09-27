@@ -35,7 +35,7 @@ public class ClnAPIFileTestCase {
 
 //		ISCClient sc = null;
 		try {
-//			sc = ServiceConnectorFactory.newInstance("localhost", TestConstants.PORT_HTTP);
+//			sc = ServiceConnectorFactory.newInstance(TestConstants.HOST, TestConstants.PORT_HTTP);
 //			sc.attach();	// connects to SC, starts observing connection
 //			
 //			IFileService fileServiceA = sc.newFileService("logs");

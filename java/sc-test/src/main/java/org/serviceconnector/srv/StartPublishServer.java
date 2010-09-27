@@ -30,6 +30,7 @@ import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 public class StartPublishServer {
 
@@ -39,7 +40,7 @@ public class StartPublishServer {
 	private ISCPublishServer publishSrv = null;
 	private String startFile = null;
 	private String[] serviceNames;
-	private int port = 9000;
+	private int port = TestConstants.PORT_TCP;
 	private int listenerPort = 30000;
 	private int maxCons = 10;
 	private static boolean killPublishServer = false;
@@ -67,12 +68,12 @@ public class StartPublishServer {
 
 			// connect to SC as server
 			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startListener("localhost", listenerPort, 0);
+			this.publishSrv.startListener(TestConstants.HOST, listenerPort, 0);
 
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.publishSrv.registerServer("localhost", port, serviceNames[i], 1000, maxCons,
+				this.publishSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons,
 						srvCallback);
 			}
 

@@ -32,6 +32,7 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 
 /**
@@ -59,7 +60,7 @@ public class SetupTestCases {
 		scSimEnableSrv = new SCSessionServer();
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
-		scSimEnableSrv.startListener("localhost", 7001, 0);
+		scSimEnableSrv.startListener(TestConstants.HOST, 7001, 0);
 	}
 
 	public static void deleteLog() {
@@ -163,23 +164,23 @@ public class SetupTestCases {
 		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startListener("localhost", 7000, 0);
+		scSim1ConSrv.startListener(TestConstants.HOST, 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerServer("localhost", 9000, "simulation", 10, 10, srvCallback);
+		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
 		scSim10ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.startListener("localhost", 7000, 0);
+		scSim10ConSrv.startListener(TestConstants.HOST, 7000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerServer("localhost", 9000, "simulation", 10, 10, srvCallback);
+		scSim10ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSimEnableSrv.registerServer("localhost", 9000, "enableService", 10, 10, srvCallback);
+		scSimEnableSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "enableService", 10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
@@ -272,9 +273,9 @@ public class SetupTestCases {
 		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startListener("localhost", 7000, 0);
+		publishSrv.startListener(TestConstants.HOST, 7000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, publishCallback);
+		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 10, 10, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

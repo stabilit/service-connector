@@ -50,7 +50,7 @@ public class ClnAPIPublishTestCase {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", TestConstants.PORT_HTTP);
+			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
@@ -77,7 +77,7 @@ public class ClnAPIPublishTestCase {
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", TestConstants.PORT_HTTP);
+			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
