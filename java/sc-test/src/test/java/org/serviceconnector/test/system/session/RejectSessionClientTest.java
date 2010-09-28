@@ -18,10 +18,10 @@ import org.serviceconnector.service.SCServiceException;
 
 
 
-public class RejectSessionClientToSCTest {
+public class RejectSessionClientTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RejectSessionClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(RejectSessionClientTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;

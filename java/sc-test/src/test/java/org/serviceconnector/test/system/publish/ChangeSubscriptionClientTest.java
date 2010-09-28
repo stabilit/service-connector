@@ -21,9 +21,9 @@ import org.serviceconnector.service.SCServiceException;
 
 //TODO FJU missing method to get current subscription to verify correct changes
 
-public class ChangeSubscriptionClientToSCTest {
+public class ChangeSubscriptionClientTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionClientTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;

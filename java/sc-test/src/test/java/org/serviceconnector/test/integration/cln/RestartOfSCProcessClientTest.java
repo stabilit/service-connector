@@ -15,10 +15,10 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
 
-public class RestartOfSCClnTest {
+public class RestartOfSCProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(RestartOfSCClnTest.class);
+			.getLogger(RestartOfSCProcessClientTest.class);
 
 	private ISCClient client;
 	private Process scProcess;

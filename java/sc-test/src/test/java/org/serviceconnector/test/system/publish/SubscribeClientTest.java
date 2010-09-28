@@ -19,10 +19,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class SubscribeClientToSCTest {
+public class SubscribeClientTest {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscribeClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(SubscribeClientTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;

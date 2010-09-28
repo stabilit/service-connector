@@ -16,10 +16,10 @@ import org.serviceconnector.service.SCServiceException;
 
 
 
-public class PrematureDestroyOfSCClnTest {
+public class PrematureDestroyOfSCProcessClientTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCClnTest.class);
+	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 	
 	private ISCClient client;
 	private Process scProcess;
