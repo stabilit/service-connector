@@ -6,14 +6,14 @@ import org.serviceconnector.test.system.perf.PerformanceTests;
 import org.serviceconnector.test.system.publish.ChangeSubscriptionClientToSCTest;
 import org.serviceconnector.test.system.publish.PublishClientTest;
 import org.serviceconnector.test.system.publish.SubscribeClientToSCTest;
-import org.serviceconnector.test.system.publish.SubscribeUnsubscribeTest;
+import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscriptionServerTest;
 import org.serviceconnector.test.system.session.AsynchronousExecuteClientToSCTest;
 import org.serviceconnector.test.system.session.CreateSessionHttpClientToSCTest;
 import org.serviceconnector.test.system.session.CreateSessionTcpClientToSCTest;
 import org.serviceconnector.test.system.session.ExecuteClientToSCTest;
-import org.serviceconnector.test.system.session.PrematureDestroyOfSCClientToSCTest;
-import org.serviceconnector.test.system.session.PrematureDestroyOfServerClientToSCTest;
+import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
+import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
 import org.serviceconnector.test.system.session.RejectSessionClientToSCTest;
 import org.serviceconnector.test.system.session.SessionServerTest;
 
@@ -22,12 +22,12 @@ import org.serviceconnector.test.system.session.SessionServerTest;
 		// session tests
 		CreateSessionHttpClientToSCTest.class, CreateSessionTcpClientToSCTest.class,
 		ExecuteClientToSCTest.class, AsynchronousExecuteClientToSCTest.class,
-		PrematureDestroyOfSCClientToSCTest.class, PrematureDestroyOfServerClientToSCTest.class,
+		PrematureDestroyOfSCProcessClientTest.class, PrematureDestroyOfServerProcessClientTest.class,
 		RejectSessionClientToSCTest.class,
 		SessionServerTest.class,
 
 		// publish tests
-		SubscribeClientToSCTest.class, SubscribeUnsubscribeTest.class,
+		SubscribeClientToSCTest.class, SubscribeUnsubscribeClientTest.class,
 		ChangeSubscriptionClientToSCTest.class, PublishClientTest.class,
 		SubscriptionServerTest.class,
 

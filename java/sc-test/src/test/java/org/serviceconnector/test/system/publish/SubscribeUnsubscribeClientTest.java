@@ -19,10 +19,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class SubscribeUnsubscribeTest {
+public class SubscribeUnsubscribeClientTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribeTest.class);
+	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribeClientTest.class);
 
 	private static Process scProcess;
 	private static Process srvProcess;

@@ -23,6 +23,7 @@ public class NewServicesTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NewServicesTest.class);
 
+	private int threadCount = 0;
 	private ISCClient client;
 	private static Process scProcess;
 
@@ -47,6 +48,7 @@ public class NewServicesTest {
 
 	@Before
 	public void setUp() throws Exception {
+		threadCount = Thread.activeCount();
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
@@ -55,6 +57,7 @@ public class NewServicesTest {
 	public void tearDown() throws Exception {
 		client.detach();
 		client = null;
+		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 	
 	@Test(expected = InvalidParameterException.class)

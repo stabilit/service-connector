@@ -16,10 +16,10 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class PrematureDestroyOfServerClientToSCTest {
+public class PrematureDestroyOfServerProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(PrematureDestroyOfServerClientToSCTest.class);
+			.getLogger(PrematureDestroyOfServerProcessClientTest.class);
 
 	private static Process scProcess;
 	private Process srvProcess;
@@ -58,6 +58,7 @@ public class PrematureDestroyOfServerClientToSCTest {
 	public void tearDown() throws Exception {
 		try {
 			client.detach();
+		} catch (Exception e) {
 		} finally {
 			client = null;
 			ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
