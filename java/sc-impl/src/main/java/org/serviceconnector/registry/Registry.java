@@ -40,7 +40,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	protected static final Logger logger = Logger.getLogger(Registry.class);
 
 	/** The registry map. */
-	private Map<K, V> registryMap;
+	protected Map<K, V> registryMap;
 
 	/**
 	 * Instantiates a new registry.

@@ -14,6 +14,7 @@
 				<link rel="stylesheet" href="sc-web.css"></link>
 				<script type="text/javascript" src="ajax.js"></script>
 				<script type="text/javascript" src="sc_ajax.js"></script>
+				<script type="text/javascript" src="sc.js"></script>
 			</head>
 			<body>
 				<div id="sc_root" >
@@ -56,16 +57,20 @@
 	  </div>
 	</xsl:template>
 	<xsl:template name="sc_menu">
-	   <div id="sc_menu_left"><a href="Home">Home</a>&#160;<xsl:call-template name="sc_menu_left"/></div>
-	   <div id="sc_menu_right"><a href="?action=logout">Logout</a></div>
+	   <div id="sc_menu_left">
+	     <div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="Home">Home</a></div><xsl:call-template name="sc_menu_left"/>
+	   </div>
+	   <div id="sc_menu_right">
+	     <div class="sc_menu_item" style="float:right" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="?action=logout">Logout</a></div>
+	   </div>
 	</xsl:template>
 	<xsl:template name="sc_navigation">
-	  <div class="sc_navigation_item"><a href="status">Status</a></div>
-	  <div class="sc_navigation_item"><a href="services">Services</a></div>
-	  <div class="sc_navigation_item"><a href="network">Network</a></div>
-	  <div class="sc_navigation_item"><a href="cache">Cache</a></div>
-	  <div class="sc_navigation_item"><a href="maintenance">Maintenance</a></div>
-	  <div class="sc_navigation_item"><a href="logs">Logs</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item" href="status">Status</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="services">Services</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="network">Network</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="cache">Cache</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="maintenance">Maintenance</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="logs">Logs</a></div>
 	  <div class="sc_navigation_item" style="height:400px;"></div>
 	</xsl:template>
 	<xsl:template name="sc_content">Service Connector</xsl:template>

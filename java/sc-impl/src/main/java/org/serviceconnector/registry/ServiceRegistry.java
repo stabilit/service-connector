@@ -16,20 +16,24 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.service.Service;
 
-
 /**
- * The Class ServiceRegistry. Registry stores entries for properly configured services.
+ * The Class ServiceRegistry. Registry stores entries for properly configured
+ * services.
  * 
  * @author JTraber
  */
 public final class ServiceRegistry extends Registry<String, Service> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceRegistry.class);
-	
+	protected final static Logger logger = Logger
+			.getLogger(ServiceRegistry.class);
+
 	/** The instance. */
 	private static ServiceRegistry instance = new ServiceRegistry();
 
@@ -69,6 +73,28 @@ public final class ServiceRegistry extends Registry<String, Service> {
 	 */
 	public Service getService(String key) {
 		return this.get(key);
+	}
+
+	/**
+	 * Gets the services.
+	 *
+	 * @return the services
+	 */
+	public Service[] getServices() {
+		try {
+			Set<Entry<String, Service>> entries = this.registryMap.entrySet();
+			Service[] services = new Service[entries.size()];
+			int index = 0;
+			for (Entry<String, Service> entry : entries) {
+				String key = entry.getKey();
+				Service service = entry.getValue();
+				services[index++] = service;
+			}
+			return services;
+		} catch (Exception e) {
+			logger.error("getServices", e);
+		}
+		return null;
 	}
 
 	/**

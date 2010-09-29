@@ -4,5 +4,5 @@
     <xsl:template name="sc_content">
       Cache Content
     </xsl:template>
-	<xsl:template name="sc_menu_left">&gt;&#160;Cache</xsl:template>
+	<xsl:template name="sc_menu_left"><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./cache">Cache</a></div></xsl:template>
 </xsl:stylesheet>

@@ -16,6 +16,7 @@
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +25,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.util.DateTimeUtility;
-
+import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,9 +39,13 @@ import org.serviceconnector.util.DateTimeUtility;
  */
 public abstract class AbstractXMLLoader implements IXMLLoader {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger
+			.getLogger(DefaultXMLLoaderFactory.class);
+
 	private Map<String, String> metaMap;
 	private List<Map<String, String>> metaMapList;
-	
+
 	/**
 	 * Instantiates a new abstract xml loader.
 	 */
@@ -47,7 +54,6 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		this.metaMapList = new ArrayList<Map<String, String>>();
 	}
 
-	
 	/** {@inheritDoc} */
 	@Override
 	public void addMeta(String name, String value) {
@@ -88,7 +94,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeEndElement(); // close meta tag
 		// write current ip host
 		String hostName = InetAddress.getLocalHost().getHostName();
-	    writer.writeStartElement("meta");
+		writer.writeStartElement("meta");
 		writer.writeAttribute("hostname", hostName);
 		writer.writeEndElement(); // close meta tag
 		if (webSession != null) {
@@ -99,14 +105,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		for (Entry<String, String> entry : this.metaMap.entrySet()) {
 			writer.writeStartElement("meta");
 			writer.writeAttribute(entry.getKey(), entry.getValue());
-			writer.writeEndElement(); // close meta tag             		
+			writer.writeEndElement(); // close meta tag
 		}
-		for (Map<String, String> map : this.metaMapList) {			
+		for (Map<String, String> map : this.metaMapList) {
 			writer.writeStartElement("meta");
 			for (Entry<String, String> entry : map.entrySet()) {
-			   writer.writeAttribute(entry.getKey(), entry.getValue());
+				writer.writeAttribute(entry.getKey(), entry.getValue());
 			}
-			writer.writeEndElement(); // close meta tag             		
+			writer.writeEndElement(); // close meta tag
 		}
 		// write any query params back
 		writer.writeStartElement("query");
@@ -120,16 +126,60 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			for (String value : values) {
 				writer.writeStartElement("param");
 				writer.writeAttribute(name, value);
-				writer.writeEndElement(); // close param             					
+				writer.writeEndElement(); // close param
 			}
- 		}
-		writer.writeEndElement(); // close query             					
+		}
+		writer.writeEndElement(); // close query
+		writer.writeEndElement(); // close head
 		writer.writeStartElement("body");
 		this.loadBody(writer);
 		writer.writeEndElement(); // close body tag
 		writer.writeEndElement(); // close root tag sc-web
 		writer.writeEndDocument();
 		writer.close();
+	}
+
+	public void writeBean(XMLStreamWriter writer, Object obj)
+			throws XMLStreamException {
+		if (obj == null) {
+			return;
+		}
+//		Field[] fields = obj.getClass().getDeclaredFields();
+//		for (Field field : fields) {
+//			String name = field.getName();
+//			try {
+//				writer.writeStartElement(name);
+//				try {
+//					Object value = BeanUtils.getProperty(obj, name);
+//					if (value != null) {
+//						writer.writeCData(value.toString());
+//					}
+//				} catch (Exception e) {
+//					// we ignore this exception
+//				}
+//				writer.writeEndElement();
+//			} catch (Exception e) {
+//			}
+//		}
+		Method[] methods = obj.getClass().getMethods();
+		for (Method method : methods) {
+			String name = method.getName();
+			if (name.startsWith("get") == false) {
+				continue;
+			}
+			name = String.valueOf(name.charAt(3)).toLowerCase()
+					+ name.substring(4);
+			writer.writeStartElement(name);
+			try {
+				Object value = method.invoke(obj);
+				if (value != null) {
+					writer.writeCData(value.toString());
+				}
+			} catch (Exception e) {
+				logger.error("writeObject", e);
+			}
+			writer.writeEndElement();
+		}
 	}
 
 }

@@ -17,8 +17,11 @@ package org.serviceconnector.web.cmd.sc;
 
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IXMLLoader;
 
@@ -27,6 +30,9 @@ import org.serviceconnector.web.IXMLLoader;
  * A factory for creating DefaultXMLLoader objects.
  */
 public class DefaultXMLLoaderFactory extends Factory {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
@@ -37,6 +43,8 @@ public class DefaultXMLLoaderFactory extends Factory {
 	private DefaultXMLLoaderFactory() {
 		IXMLLoader loader = new DefaultXMLLoader();
 		this.add("default", loader);
+		loader = new ServicesXMLLoader();
+		this.add("/services", loader);
 		loader = new TimerXMLLoader();
 		this.add("/timer", loader);
 	}
@@ -48,6 +56,13 @@ public class DefaultXMLLoaderFactory extends Factory {
 	 * @return the xML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {
+		if (url == null) {
+			return (IXMLLoader) loaderFactory.getInstance("default");			
+		}
+		int questionMarkPos = url.indexOf("?");
+		if (questionMarkPos > 0) {
+			url = url.substring(0, questionMarkPos);
+		}
 		IXMLLoader xmlLoader = (IXMLLoader) loaderFactory.getInstance(url);
 		if (xmlLoader == null) {
 			xmlLoader = (IXMLLoader) loaderFactory.getInstance("default");
@@ -79,6 +94,39 @@ public class DefaultXMLLoaderFactory extends Factory {
 		@Override
 		public IFactoryable newInstance() {
 			return new DefaultXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class ServicesXMLLoader.
+	 */
+	public static class ServicesXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public ServicesXMLLoader() {
+		}
+
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer) throws Exception {
+			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+			writer.writeStartElement("services");
+			Service[] services = serviceRegistry.getServices();
+			for (Service service : services) {
+				writer.writeStartElement("service");
+				this.writeBean(writer, service);
+				writer.writeEndElement(); // close services tag
+			}
+			writer.writeEndElement(); // close services tag
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new ServicesXMLLoader();
 		}
 
 	}
