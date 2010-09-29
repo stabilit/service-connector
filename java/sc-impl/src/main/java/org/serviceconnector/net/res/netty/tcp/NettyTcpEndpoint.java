@@ -24,14 +24,16 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.SCMPError;
-
 
 /**
  * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss Netty for Tcp.
@@ -44,6 +46,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	private final static Logger logger = Logger.getLogger(NettyTcpEndpoint.class);
 	/** Queue to store the answer. */
 	private ArrayBlockingQueue<Boolean> answer;
+	private Thread serverThread;
 
 	/** The bootstrap. */
 	private ServerBootstrap bootstrap;
@@ -67,6 +70,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		this.port = 0;
 		this.host = null;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
+		this.serverThread = new Thread(this);
 	}
 
 	/** {@inheritDoc} */
@@ -80,8 +84,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public void startsListenAsync() throws Exception {
-		Thread serverThread = new Thread(this);
-		serverThread.start();
+		this.serverThread.start();
 		Boolean bool = null;
 		try {
 			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
@@ -114,6 +117,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		synchronized (this) {
 			wait();
 		}
+		System.out.println("tst");
 	}
 
 	/** {@inheritDoc} */
@@ -123,7 +127,6 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 			startListenSync();
 		} catch (Exception ex) {
 			logger.error("run", ex);
-			this.destroy();
 		}
 	}
 
@@ -139,7 +142,17 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	public void stopListening() {
 		try {
 			if (this.channel != null) {
-				this.channel.close();
+				ChannelFuture future = this.channel.close();
+				NettyOperationListener operationListener = new NettyOperationListener();
+				future.addListener(operationListener);
+				try {
+					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
+				} catch (CommunicationException ex) {
+					logger.error("disconnect", ex);
+				}
+			}
+			if (this.serverThread != null) {
+				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
 			logger.error("stopListening", ex);

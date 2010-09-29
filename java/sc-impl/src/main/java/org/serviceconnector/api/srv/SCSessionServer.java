@@ -43,7 +43,6 @@ import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
  * 
@@ -191,6 +190,7 @@ public class SCSessionServer implements ISCSessionServer {
 		} finally {
 			// destroy connection pool
 			req.getContext().getConnectionPool().destroy();
+			// TODO JOT... might use shutdown here ??
 		}
 	}
 

@@ -31,7 +31,7 @@ import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
- * The Class ClnEchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
+ * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
  * 
  * @author JTraber
  */
@@ -41,10 +41,10 @@ public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
 
 	/**
-	 * Instantiates a new ClnEchoCommand.
+	 * Instantiates a new EchoCommand.
 	 */
 	public EchoCommand() {
-		this.commandValidator = new ClnEchoCommandValidator();
+		this.commandValidator = new EchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -66,9 +66,9 @@ public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 	}
 
 	/**
-	 * The Class ClnEchoCommandValidator.
+	 * The Class EchoCommandValidator.
 	 */
-	private class ClnEchoCommandValidator implements ICommandValidator {
+	private class EchoCommandValidator implements ICommandValidator {
 
 		/** {@inheritDoc} */
 		@Override

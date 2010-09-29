@@ -43,7 +43,6 @@ import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides
  * communication functions.
@@ -55,7 +54,7 @@ public class SCSessionService extends SCService implements ISessionService {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
 	/** The timer, which observes the session timeout of service. */
-	private Timer timer;
+	private final static Timer timer = new Timer("SessionServiceTimeout");
 	/** The timer run, runs when session need to be refreshed on SC. */
 	private ITimerRun timerRun;
 	/** The timer task. */
@@ -78,7 +77,6 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 		this.timerRun = null;
-		this.timer = new Timer("SessionServiceTimeout");
 		this.sessionDead = false;
 		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;
 	}

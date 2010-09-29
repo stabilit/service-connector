@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
-
 /**
  * The Enum SCMPMsgType. Defines possible message types in SCMP.
  * 
@@ -55,7 +54,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	/** The SRV_EXECUTE. */
 	SRV_EXECUTE("SXE"),
 	/** The ECHO. */
-	ECHO("CEC"),
+	ECHO("ECH"),
 
 	/** The CLN_SUBSCRIBE. */
 	CLN_SUBSCRIBE("CSU"),

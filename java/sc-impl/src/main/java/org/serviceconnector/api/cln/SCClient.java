@@ -26,6 +26,7 @@ import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -37,7 +38,6 @@ import org.serviceconnector.service.ISCContext;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class SCClient. Client to an SC.
@@ -120,7 +120,8 @@ public class SCClient implements ISCClient {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new ServiceCallback(true);
 		try {
-			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
@@ -153,7 +154,8 @@ public class SCClient implements ISCClient {
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
@@ -321,7 +323,8 @@ public class SCClient implements ISCClient {
 		this.callback = new ServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
@@ -351,7 +354,8 @@ public class SCClient implements ISCClient {
 		this.callback = new ServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
-			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
