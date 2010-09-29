@@ -131,10 +131,18 @@ div#sc_content {
 	float: left;
 	background-color: white;
 	top: 100px;
-	right: 160px;
+	right: 200px;
 	bottom: 0px;
 	left: 160px;
 	padding: 4px;
+	overflow:auto;
+}
+
+div#sc_info {
+	background-color: #EEEEEE;
+	float: right;
+	width: 200px;
+	padding-top:4px;
 }
 
 div#sc_login {
@@ -250,6 +258,16 @@ td.sc_table {
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;
 	padding: 2px;
+}
+
+a.sc_table {
+	color: inherit;
+	text-decoration: underline;
+}
+
+a.sc_table:hover {
+	color: #0000FF;
+	text-decoration: underline;
 }
 
 div.sc_table_title {

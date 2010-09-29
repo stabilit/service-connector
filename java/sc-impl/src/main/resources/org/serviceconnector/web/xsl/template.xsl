@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+    <xsl:include href="constants.xsl"/>
 	<xsl:variable name="head" select="/sc-web/head"/>
 	<xsl:variable name="body" select="/sc-web/body"/>
 	<xsl:variable name="userid" select="/sc-web/head/meta/@userid"/>
@@ -33,6 +34,9 @@
 					<div id="sc_content">
 					   <xsl:call-template name="sc_content"/> 
 					</div>
+				    <div id="sc_info">
+			          <xsl:call-template name="sc_info"/> 
+				    </div>
 				</div>
 			</body>
 		</html>
@@ -81,6 +85,37 @@
 	    <xsl:value-of select="substring($dateTime,0,11)"/>&#160;
 	    <xsl:value-of select="substring($dateTime,12,8)"/>
 	</xsl:template>
+	<xsl:template name="sc_info">
+	  <xsl:call-template name="sc_runtime"/>
+	</xsl:template>
 	<xsl:template name="sc_script">
 	</xsl:template>
+	<xsl:template name="sc_runtime">
+      <div class="sc_table" style="width:190px;">
+        <div class="sc_table_title">
+           Runtime
+        </div>             
+        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+          <xsl:apply-templates select="$body/system/runtime"/>        
+        </table>
+      </div>
+	</xsl:template>
+	<xsl:template match="runtime">
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Processors</td>	  
+	    <td class="sc_table"><xsl:value-of select="availableProcessors"/></td>	  
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table">Free Memory</td>	  
+	    <td class="sc_table"><xsl:value-of select="freeMemory"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Total Memory</td>	  
+	    <td class="sc_table"><xsl:value-of select="totalMemory"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Max Memory</td>	  
+	    <td class="sc_table"><xsl:value-of select="maxMemory"/></td>	  
+	  </tr>
+	</xsl:template> 
 </xsl:stylesheet>

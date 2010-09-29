@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     <xsl:import href="template.xsl"/>
     <xsl:template name="sc_content">
       <div class="sc_table" style="width:800px;">
@@ -27,7 +27,7 @@
 	    <td class="sc_table"><xsl:value-of select="local-name()"/></td>
 	    <td class="sc_table">
 	      <xsl:if test="local-name() = 'configFileName'">
-	         <a href="./resource?name={.}"><xsl:value-of select="."/></a>
+	         <a class="sc_table" href="./resource?name={.}"><xsl:value-of select="."/></a>
 	      </xsl:if>
 	      <xsl:if test="local-name() != 'configFileName'">
 	         <xsl:value-of select="."/>

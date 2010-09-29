@@ -104,23 +104,6 @@ public class DefaultXMLLoaderFactory extends Factory {
 		/** {@inheritDoc} */
 		@Override
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
-			SystemInfo systemInfo = new SystemInfo();
-			writer.writeStartElement("system");
-			writer.writeStartElement("info");
-			this.writeBean(writer, systemInfo);
-			writer.writeEndElement(); // close info tag
-			Properties properties = System.getProperties();
-			writer.writeStartElement("properties");
-			for (Entry<Object, Object> entry : properties.entrySet()) {
-			   String name = (String) entry.getKey();
-			   String value = (String) entry.getValue();
-			   writer.writeStartElement(name);
-			   writer.writeCData(value);
-			   writer.writeEndElement();
-			}
-			writer.writeEndElement(); // close properties tag
-			writer.writeEndElement(); // close system tag
-			
 		}
 
 		@Override

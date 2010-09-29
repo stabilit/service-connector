@@ -45,4 +45,6 @@
     </xsl:template>
     <xsl:template name="sc_navigation">
 	</xsl:template>
+    <xsl:template name="sc_info">
+	</xsl:template>
 </xsl:stylesheet>

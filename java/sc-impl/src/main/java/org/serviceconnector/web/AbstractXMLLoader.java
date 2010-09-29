@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -154,11 +155,37 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeEndElement(); // close query
 		writer.writeEndElement(); // close head
 		writer.writeStartElement("body");
+		this.writeSystem(writer);
 		this.loadBody(writer, request);
 		writer.writeEndElement(); // close body tag
 		writer.writeEndElement(); // close root tag sc-web
 		writer.writeEndDocument();
 		writer.close();
+	}
+
+	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
+		// write system info
+		SystemInfo systemInfo = new SystemInfo();
+		writer.writeStartElement("system");
+		writer.writeStartElement("info");
+		this.writeBean(writer, systemInfo);
+		writer.writeEndElement(); // close info tag
+		// write runtime info
+		writer.writeStartElement("runtime");
+		this.writeRuntime(writer);
+		writer.writeEndElement();  // end of runtime
+		Properties properties = System.getProperties();
+		writer.writeStartElement("properties");
+		for (Entry<Object, Object> entry : properties.entrySet()) {
+		   String name = (String) entry.getKey();
+		   String value = (String) entry.getValue();
+		   writer.writeStartElement(name);
+		   writer.writeCData(value);
+		   writer.writeEndElement();
+		}
+		writer.writeEndElement(); // close properties tag
+		writer.writeEndElement(); // close system tag			
+		
 	}
 
 	public void writeBean(XMLStreamWriter writer, Object obj)
@@ -185,6 +212,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 //		}
 		Method[] methods = obj.getClass().getMethods();
 		for (Method method : methods) {
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if (method.getParameterTypes() == null) {
+				continue;
+			}
+			if (parameterTypes.length > 0) {
+				continue;
+			}
 			String name = method.getName();
 			if (name.startsWith("get") == false) {
 				continue;
@@ -194,17 +228,35 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			if ("class".equals(name)) {
 				continue;
 			}
-			writer.writeStartElement(name);
 			try {
 				Object value = method.invoke(obj);
+				if (value == obj) {
+					continue;
+				}
 				if (value != null) {
+					writer.writeStartElement(name);
 					writer.writeCData(value.toString());
+					writer.writeEndElement();
 				}
 			} catch (Exception e) {
 				logger.error("writeObject", e);
 			}
-			writer.writeEndElement();
 		}
 	}
 
+	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
+		Runtime runtime = Runtime.getRuntime();
+        writer.writeStartElement("availableProcessors");
+        writer.writeCData(String.valueOf(runtime.availableProcessors()));
+        writer.writeEndElement();
+        writer.writeStartElement("freeMemory");
+        writer.writeCData(String.valueOf(runtime.freeMemory()));
+        writer.writeEndElement();
+        writer.writeStartElement("maxMemory");
+        writer.writeCData(String.valueOf(runtime.maxMemory()));
+        writer.writeEndElement();
+        writer.writeStartElement("totalMemory");
+        writer.writeCData(String.valueOf(runtime.totalMemory()));
+        writer.writeEndElement();
+	}
 }
