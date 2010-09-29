@@ -15,6 +15,10 @@
  */
 package org.serviceconnector.web.cmd.sc;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
@@ -22,6 +26,7 @@ import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IXMLLoader;
 
@@ -32,7 +37,8 @@ import org.serviceconnector.web.IXMLLoader;
 public class DefaultXMLLoaderFactory extends Factory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
+	protected final static Logger logger = Logger
+			.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
@@ -51,13 +57,14 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 	/**
 	 * Gets the xML loader.
-	 *
-	 * @param url the url
+	 * 
+	 * @param url
+	 *            the url
 	 * @return the xML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {
 		if (url == null) {
-			return (IXMLLoader) loaderFactory.getInstance("default");			
+			return (IXMLLoader) loaderFactory.getInstance("default");
 		}
 		int questionMarkPos = url.indexOf("?");
 		if (questionMarkPos > 0) {
@@ -84,12 +91,27 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public DefaultXMLLoader() {
 		}
 
-
 		/** {@inheritDoc} */
 		@Override
 		public final void loadBody(XMLStreamWriter writer) throws Exception {
+			SystemInfo systemInfo = new SystemInfo();
+			writer.writeStartElement("system");
+			writer.writeStartElement("info");
+			this.writeBean(writer, systemInfo);
+			writer.writeEndElement(); // close info tag
+			Properties properties = System.getProperties();
+			writer.writeStartElement("properties");
+			for (Entry<Object, Object> entry : properties.entrySet()) {
+			   String name = (String) entry.getKey();
+			   String value = (String) entry.getValue();
+			   writer.writeStartElement(name);
+			   writer.writeCData(value);
+			   writer.writeEndElement();
+			}
+			writer.writeEndElement(); // close properties tag
+			writer.writeEndElement(); // close system tag
+			
 		}
-
 
 		@Override
 		public IFactoryable newInstance() {
@@ -109,11 +131,11 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public ServicesXMLLoader() {
 		}
 
-
 		/** {@inheritDoc} */
 		@Override
 		public final void loadBody(XMLStreamWriter writer) throws Exception {
-			ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+			ServiceRegistry serviceRegistry = ServiceRegistry
+					.getCurrentInstance();
 			writer.writeStartElement("services");
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {

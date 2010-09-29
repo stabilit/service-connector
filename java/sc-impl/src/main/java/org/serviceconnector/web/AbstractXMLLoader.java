@@ -169,6 +169,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			}
 			name = String.valueOf(name.charAt(3)).toLowerCase()
 					+ name.substring(4);
+			if ("class".equals(name)) {
+				continue;
+			}
 			writer.writeStartElement(name);
 			try {
 				Object value = method.invoke(obj);

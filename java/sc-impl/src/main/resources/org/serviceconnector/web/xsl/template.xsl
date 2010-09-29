@@ -58,7 +58,7 @@
 	</xsl:template>
 	<xsl:template name="sc_menu">
 	   <div id="sc_menu_left">
-	     <div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="Home">Home</a></div><xsl:call-template name="sc_menu_left"/>
+	     <div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./">Home</a></div><xsl:call-template name="sc_menu_left"/>
 	   </div>
 	   <div id="sc_menu_right">
 	     <div class="sc_menu_item" style="float:right" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="?action=logout">Logout</a></div>
