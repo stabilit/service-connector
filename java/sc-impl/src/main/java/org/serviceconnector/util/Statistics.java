@@ -21,6 +21,10 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Statistics.
+ */
 public class Statistics {
 
 	/** The Constant logger. */
@@ -29,11 +33,22 @@ public class Statistics {
 	/** The instance. */
 	private static Statistics instance = new Statistics();
 	
+	/** The total messages. */
 	private double totalMessages = 0;
+	
+	/** The total bytes. */
 	private double totalBytes = 0;
+	
+	/** The startup date time. */
 	private Timestamp startupDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+	
+	/** The cached messages. */
 	private double cachedMessages = 0;
+	
+	/** The cached bytes. */
 	private double cachedBytes = 0;
+	
+	/** The cached files. */
 	private int cachedFiles = 0;
 	
 	/**
@@ -42,62 +57,144 @@ public class Statistics {
 	private Statistics() {
 	}
 
+	/**
+	 * Gets the single instance of Statistics.
+	 *
+	 * @return single instance of Statistics
+	 */
 	public static Statistics getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Increment total messages.
+	 */
 	public synchronized void incrementTotalMessages() {
 		totalMessages++;
 	}
 
+	/**
+	 * Increment total bytes.
+	 *
+	 * @param nrBytes the nr bytes
+	 */
 	public synchronized void incrementTotalBytes(double nrBytes) {
 		totalBytes = totalBytes + nrBytes;
 	}
 
+	/**
+	 * Increment cached messages.
+	 */
 	public synchronized void incrementCachedMessages() {
 		cachedMessages++;
 	}
 
+	/**
+	 * Increment cached bytes.
+	 *
+	 * @param nrBytes the nr bytes
+	 */
 	public synchronized void incrementCachedBytes(double nrBytes) {
 		cachedBytes = cachedBytes + nrBytes;
 	}
 
+	/**
+	 * Decrement cached bytes.
+	 *
+	 * @param nrBytes the nr bytes
+	 */
 	public synchronized void decrementCachedBytes(double nrBytes) {
 		cachedBytes = cachedBytes - nrBytes;
 	}
 
+	/**
+	 * Increment cached files.
+	 *
+	 * @param nrFiles the nr files
+	 */
 	public synchronized void incrementCachedFiles(int nrFiles) {
 		cachedFiles = cachedFiles + nrFiles;
 	}
 	
+	/**
+	 * Decrement cached files.
+	 *
+	 * @param nrFiles the nr files
+	 */
 	public synchronized void decrementCachedFiles(int nrFiles) {
 		cachedFiles = cachedFiles + nrFiles;
 	}
 
+	/**
+	 * Gets the total messages.
+	 *
+	 * @return the total messages
+	 */
 	public double getTotalMessages() {
 		return totalMessages;
 	}
 
+	/**
+	 * Gets the total bytes.
+	 *
+	 * @return the total bytes
+	 */
 	public double getTotalBytes() {
 		return totalBytes;
 	}
 
+	/**
+	 * Gets the startup date time.
+	 *
+	 * @return the startup date time
+	 */
 	public Timestamp getStartupDateTime() {
 		return startupDateTime;
 	}
+	
+	/**
+	 * Gets the runtime since startup millis.
+	 *
+	 * @return the runtime since startup millis
+	 */
+	public long getRuntimeSinceStartupSeconds() {
+		long current = System.currentTimeMillis();
+		long startup = this.startupDateTime.getTime();
+		return (current - startup) / 1000;
+	}
 
+	/**
+	 * Sets the startup date time.
+	 *
+	 * @param startupDateTime the new startup date time
+	 */
 	public void setStartupDateTime(Timestamp startupDateTime) {
 		this.startupDateTime = startupDateTime;
 	}
 
+	/**
+	 * Gets the cached messages.
+	 *
+	 * @return the cached messages
+	 */
 	public double getCachedMessages() {
 		return cachedMessages;
 	}
 
+	/**
+	 * Gets the cached bytes.
+	 *
+	 * @return the cached bytes
+	 */
 	public double getCachedBytes() {
 		return cachedBytes;
 	}
 
+	/**
+	 * Gets the cached files.
+	 *
+	 * @return the cached files
+	 */
 	public int getCachedFiles() {
 		return cachedFiles;
 	}

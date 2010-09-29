@@ -34,6 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 
@@ -174,6 +175,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("runtime");
 		this.writeRuntime(writer);
 		writer.writeEndElement();  // end of runtime
+		// write statistics info
+		writer.writeStartElement("statistics");
+		this.writeBean(writer, Statistics.getInstance());
+		writer.writeEndElement();  // end of statistics
 		Properties properties = System.getProperties();
 		writer.writeStartElement("properties");
 		for (Entry<Object, Object> entry : properties.entrySet()) {
@@ -259,4 +264,5 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
         writer.writeCData(String.valueOf(runtime.totalMemory()));
         writer.writeEndElement();
 	}
+		
 }

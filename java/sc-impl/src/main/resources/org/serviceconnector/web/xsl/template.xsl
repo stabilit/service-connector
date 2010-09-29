@@ -87,11 +87,12 @@
 	</xsl:template>
 	<xsl:template name="sc_info">
 	  <xsl:call-template name="sc_runtime"/>
+	  <xsl:call-template name="sc_statistics"/>
 	</xsl:template>
 	<xsl:template name="sc_script">
 	</xsl:template>
 	<xsl:template name="sc_runtime">
-      <div class="sc_table" style="width:190px;">
+      <div class="sc_table" style="width:230px;">
         <div class="sc_table_title">
            Runtime
         </div>             
@@ -116,6 +117,49 @@
 	  <tr class="sc_table_even">
 	    <td class="sc_table">Max Memory</td>	  
 	    <td class="sc_table"><xsl:value-of select="maxMemory"/></td>	  
+	  </tr>
+	</xsl:template> 
+	<xsl:template name="sc_statistics">
+      <div class="sc_table" style="width:230px;">
+        <div class="sc_table_title">
+           Statistics
+        </div>             
+        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+          <xsl:apply-templates select="$body/system/statistics"/>        
+        </table>
+      </div>
+	</xsl:template>
+	<xsl:template match="statistics">
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Startup Time</td>	  
+	    <td class="sc_table">
+	      <xsl:value-of select="substring(startupDateTime,0,11)"/><br/>
+	      <xsl:value-of select="substring(startupDateTime,12,8)"/>
+	    </td>
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table">Runtime (s)</td>	  
+	    <td class="sc_table"><xsl:value-of select="runtimeSinceStartupSeconds"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Total Messages</td>	  
+	    <td class="sc_table"><xsl:value-of select="totalMessages"/></td>	  
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table">Total Bytes</td>	  
+	    <td class="sc_table"><xsl:value-of select="totalBytes"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Cached Messages</td>	  
+	    <td class="sc_table"><xsl:value-of select="cachedMessages"/></td>	  
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table">Cached Bytes</td>	  
+	    <td class="sc_table"><xsl:value-of select="cachedBytes"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table">Cached Files</td>	  
+	    <td class="sc_table"><xsl:value-of select="cachedFiles"/></td>	  
 	  </tr>
 	</xsl:template> 
 </xsl:stylesheet>

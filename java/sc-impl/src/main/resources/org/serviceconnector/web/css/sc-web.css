@@ -131,7 +131,7 @@ div#sc_content {
 	float: left;
 	background-color: white;
 	top: 100px;
-	right: 200px;
+	right: 240px;
 	bottom: 0px;
 	left: 160px;
 	padding: 4px;
@@ -141,7 +141,7 @@ div#sc_content {
 div#sc_info {
 	background-color: #EEEEEE;
 	float: right;
-	width: 200px;
+	width: 240px;
 	padding-top:4px;
 }
 
