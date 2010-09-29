@@ -46,6 +46,7 @@ import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
+import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
 
@@ -59,7 +60,7 @@ public final class SC {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SC.class);
-
+	
 	/**
 	 * Instantiates a new service connector.
 	 */
@@ -95,6 +96,8 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
+		
+		SystemInfo.setConfigFileName(configFileName);
 		
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load(configFileName);

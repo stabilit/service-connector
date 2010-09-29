@@ -16,6 +16,8 @@
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 
 // TODO: Auto-generated Javadoc
@@ -56,6 +59,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/** {@inheritDoc} */
 	@Override
+	public boolean isText() {
+		return false;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
 	public void addMeta(String name, String value) {
 		this.metaMap.put(name, value);
 	}
@@ -72,12 +81,22 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 * @param writer
 	 *            the writer
 	 */
-	public abstract void loadBody(XMLStreamWriter writer) throws Exception;
+	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
+
+	public void loadBody(Writer writer, IWebRequest request) throws Exception {
+		
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public final void load(IWebRequest request, OutputStream os)
 			throws Exception {
+		if (this.isText()) {
+			OutputStreamWriter writer = new OutputStreamWriter(os);
+			this.loadBody(writer, request);
+			return;
+		
+		}
 		IWebSession webSession = request.getSession(false);
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		XMLStreamWriter writer = factory.createXMLStreamWriter(os);
@@ -91,6 +110,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeEndElement(); // close meta tag
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
+		writer.writeEndElement(); // close meta tag
+		writer.writeStartElement("meta");
+		writer.writeAttribute("scconfigfile", SystemInfo.getConfigFileName());
 		writer.writeEndElement(); // close meta tag
 		// write current ip host
 		String hostName = InetAddress.getLocalHost().getHostName();
@@ -132,7 +154,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeEndElement(); // close query
 		writer.writeEndElement(); // close head
 		writer.writeStartElement("body");
-		this.loadBody(writer);
+		this.loadBody(writer, request);
 		writer.writeEndElement(); // close body tag
 		writer.writeEndElement(); // close root tag sc-web
 		writer.writeEndDocument();

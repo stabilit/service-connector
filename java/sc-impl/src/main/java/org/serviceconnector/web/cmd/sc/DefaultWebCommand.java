@@ -41,6 +41,7 @@ import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.LoginException;
+import org.serviceconnector.web.NotFoundException;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 
 // TODO: Auto-generated Javadoc
@@ -84,6 +85,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		if (isResource(url)) {
 			String resourcePath = getResourcePath(url);
 			InputStream is = this.getClass().getResourceAsStream(resourcePath);
+			if (is == null) {
+				throw new NotFoundException(url);
+			}
 			dumpStream(is, responseOutputStream);
 			return;
 		}
@@ -139,7 +143,12 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		} catch (Exception e) {
 			xmlDocument.addException(e);
 		}
-		xmlDocument.load(xmlOS);
+		if (xmlDocument.isText()) {
+		    xmlDocument.load(responseOutputStream);
+			response.setContentType("text/html");
+			return;
+		}
+	    xmlDocument.load(xmlOS);
 		// check if xmlview is yes or true
 		if (isXMLView(request)) {
 			dumpStream(new ByteArrayInputStream(xmlOS.toByteArray()),
@@ -317,6 +326,10 @@ public class DefaultWebCommand extends WebCommandAdapter {
 					.getURL());
 		}
 
+		public boolean isText() {
+			return this.loader.isText();
+		}
+
 		/**
 		 * Sets the accessible context.
 		 * 
@@ -478,7 +491,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			if (url == null) {
 				return false;
 			}
-			return false;
+			return url.startsWith("/ajax/");
 		}
 
 		/**

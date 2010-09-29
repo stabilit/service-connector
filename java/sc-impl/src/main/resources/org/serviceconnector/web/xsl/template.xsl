@@ -15,6 +15,7 @@
 				<script type="text/javascript" src="ajax.js"></script>
 				<script type="text/javascript" src="sc_ajax.js"></script>
 				<script type="text/javascript" src="sc.js"></script>
+				<script type="text/javascript"><xsl:call-template name="sc_script"/></script>
 			</head>
 			<body>
 				<div id="sc_root" >
@@ -79,5 +80,7 @@
 	    <xsl:param name="dateTime"/>
 	    <xsl:value-of select="substring($dateTime,0,11)"/>&#160;
 	    <xsl:value-of select="substring($dateTime,12,8)"/>
+	</xsl:template>
+	<xsl:template name="sc_script">
 	</xsl:template>
 </xsl:stylesheet>

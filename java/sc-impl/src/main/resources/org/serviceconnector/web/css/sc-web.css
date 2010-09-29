@@ -10,10 +10,6 @@ a {
 	color:black;
 }
 
-a:hover {
-	color: #FF0000;
-}
-
 a.sc_reload {
 	color: #FFFFFF;
 }
@@ -167,6 +163,13 @@ div#sc_login_form {
 	color: black;
 	font-size: 14px;
 	width: 400px;
+}
+
+div#sc_resource {
+	background:#FFFFFF;
+	color:black;
+	overflow:auto;
+	text-align:left;
 }
 
 .sc_form {

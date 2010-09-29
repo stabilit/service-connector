@@ -15,7 +15,11 @@
  */
 package org.serviceconnector.web.cmd.sc;
 
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -28,7 +32,9 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
+import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
+import org.serviceconnector.web.NotFoundException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,8 +57,12 @@ public class DefaultXMLLoaderFactory extends Factory {
 		this.add("default", loader);
 		loader = new ServicesXMLLoader();
 		this.add("/services", loader);
+		loader = new ResourceXMLLoader();
+		this.add("/resource", loader);
+		loader = new AjaxResourceXMLLoader();
+		this.add("/ajax/resource", loader);
 		loader = new TimerXMLLoader();
-		this.add("/timer", loader);
+		this.add("/ajax/timer", loader);
 	}
 
 	/**
@@ -93,7 +103,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer) throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			SystemInfo systemInfo = new SystemInfo();
 			writer.writeStartElement("system");
 			writer.writeStartElement("info");
@@ -133,7 +143,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer) throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ServiceRegistry serviceRegistry = ServiceRegistry
 					.getCurrentInstance();
 			writer.writeStartElement("services");
@@ -154,6 +164,120 @@ public class DefaultXMLLoaderFactory extends Factory {
 	}
 
 	/**
+	 * The Class ResourceXMLLoader.
+	 */
+	public static class ResourceXMLLoader extends AbstractXMLLoader {
+		/**
+		 * Instantiates a new timer xml loader.
+		 */
+		public ResourceXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public IFactoryable newInstance() {
+			return new ResourceXMLLoader();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String name = request.getParameter("name");
+			InputStream is = null;
+			try {
+				is = ClassLoader.getSystemResourceAsStream(name);
+				if (is == null) {
+				   is = this.getClass().getResourceAsStream(name);
+				}
+				if (is == null) {
+					is = new FileInputStream(name);
+				}
+				if (is == null) {
+					this.addMeta("exception", "not found");
+					return;
+				}
+				writer.writeStartElement("resource");
+				writer.writeAttribute("name", name);
+				writer.writeEndElement();
+			} catch(Exception e) {
+				this.addMeta("exception", e.toString());
+				return;
+			} finally {
+				if (is != null) {
+				   is.close();
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * The Class AjaxResourceXMLLoader.
+	 */
+	public static class AjaxResourceXMLLoader extends AbstractXMLLoader {
+		/**
+		 * Instantiates a new timer xml loader.
+		 */
+		public AjaxResourceXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public IFactoryable newInstance() {
+			return new AjaxResourceXMLLoader();
+		}
+		
+		/** {@inheritDoc} */
+		@Override
+		public boolean isText() {
+			return true;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+            throw new UnsupportedOperationException();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(Writer writer, IWebRequest request) throws Exception {
+			String name = request.getParameter("name");
+			InputStream is = null;
+			try {
+				is = ClassLoader.getSystemResourceAsStream(name);
+				if (is == null) {
+				   is = this.getClass().getResourceAsStream(name);
+				}
+				if (is == null) {
+					is = new FileInputStream(name);
+				}
+				if (is == null) {
+					throw new NotFoundException();
+				}
+				InputStreamReader isr = new InputStreamReader(is);
+				BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while (true) {
+					line = br.readLine();
+					if (line == null) {
+						break;
+					}
+					writer.write(line);
+					writer.write("<br/>");
+				}
+				writer.flush();
+			} catch(Exception e) {
+				return;
+			} finally {
+				if (is != null) {
+				   is.close();
+				}
+			}
+		}
+	}
+
+	/**
 	 * The Class TimerXMLLoader.
 	 */
 	public static class TimerXMLLoader extends AbstractXMLLoader {
@@ -171,7 +295,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer) throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		}
 
 	}

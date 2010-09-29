@@ -15,46 +15,25 @@
  */
 package org.serviceconnector.web;
 
-import java.io.OutputStream;
-import java.util.Map;
-
-import org.serviceconnector.factory.IFactoryable;
-
 // TODO: Auto-generated Javadoc
 /**
- * The Interface IXMLLoader.
+ * The Class NotFoundException.
  */
-public interface IXMLLoader extends IFactoryable{
-
-	/**
-	 * Checks if this loader returns raw text instead of xml
-	 *
-	 * @return true, if is raw
-	 */
-	public abstract boolean isText();
-		
-	/**
-	 * Load.
-	 *
-	 * @param request the request
-	 * @param os the os
-	 * @throws Exception 
-	 */
-	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
-
-	/**
-	 * Adds the meta.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 */
-	public abstract void addMeta(String name, String value);
+public class NotFoundException extends Exception {
 	
 	/**
-	 * Adds the meta.
-	 *
-	 * @param map the map
+	 * Instantiates a new not found exception.
 	 */
-	public abstract void addMeta(Map<String, String> map);
+	public NotFoundException() {
+	}
 	
+	/**
+	 * Instantiates a new not found exception.
+	 *
+	 * @param msg the msg
+	 */
+	public NotFoundException(String msg) {
+		super(msg);
+	}
+
 }

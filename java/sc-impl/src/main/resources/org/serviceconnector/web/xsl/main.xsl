@@ -25,6 +25,13 @@
 	</xsl:template>
 	<xsl:template name="service_row">
 	    <td class="sc_table"><xsl:value-of select="local-name()"/></td>
-	    <td class="sc_table"><xsl:value-of select="."/></td>	
+	    <td class="sc_table">
+	      <xsl:if test="local-name() = 'configFileName'">
+	         <a href="./resource?name={.}"><xsl:value-of select="."/></a>
+	      </xsl:if>
+	      <xsl:if test="local-name() != 'configFileName'">
+	         <xsl:value-of select="."/>
+	      </xsl:if>
+	    </td>	
 	</xsl:template>
 </xsl:stylesheet>

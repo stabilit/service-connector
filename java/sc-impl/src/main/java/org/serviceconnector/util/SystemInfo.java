@@ -43,6 +43,7 @@ public class SystemInfo {
 	private static final String USER_COUNTRY = "user.country";
 	private static final String OS_ARCH = "os.arch";
 
+	private static String configFileName;
 	private static String javaVersion;
 	private static String vmVersion;
 	private static String serverIPAddress;
@@ -110,6 +111,24 @@ public class SystemInfo {
 		}
 	}
 
+	/**
+	 * Gets the config file name.
+	 *
+	 * @return the config file name
+	 */
+	public static String getConfigFileName() {
+		return configFileName;
+	}
+	
+	/**
+	 * Sets the config file name.
+	 *
+	 * @param configFileName the new config file name
+	 */
+	public static void setConfigFileName(String configFileName) {
+		SystemInfo.configFileName = configFileName;
+	}
+	
 	/**
 	 * Returns current used java version.
 	 * 

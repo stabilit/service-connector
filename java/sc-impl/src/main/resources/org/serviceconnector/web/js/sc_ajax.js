@@ -16,4 +16,19 @@ var ajaxTimer = new AjaxCallObject('Timer', 'ajax/timer', timerCallback);
 
 setInterval('timerCall()', 59000);
 
+function resourceCallback() {
+	//alert(this.req.responseText);
+	var scResource = document.getElementById("sc_resource");
+	if (scResource != null) {
+		scResource.innerHTML = this.req.responseText;
+	}
+}
+
+function resourceCall(name) {
+	ajaxResource.ajaxCall('ajax/resource?name='+name);
+}
+
+var ajaxResource = new AjaxCallObject('Resource', 'ajax/resource', resourceCallback);
+
+
 
