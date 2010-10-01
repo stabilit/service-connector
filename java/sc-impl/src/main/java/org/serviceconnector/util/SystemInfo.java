@@ -86,7 +86,7 @@ public class SystemInfo {
 		utcOffset = zone.getRawOffset();
 		useDST = zone.useDaylightTime();
 		localDate = new Date(System.currentTimeMillis());
-		
+
 //		Sigar sig = new Sigar();
 //		try {
 //			Mem mem = sig.getMem();

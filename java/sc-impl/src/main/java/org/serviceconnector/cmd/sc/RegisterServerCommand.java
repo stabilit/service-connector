@@ -36,7 +36,6 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register
  * backend server in SC. Backend server will be registered in server registry of SC.
@@ -47,7 +46,7 @@ public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServerCommand.class);
-	
+
 	/**
 	 * Instantiates a new RegisterServerCommand.
 	 */
@@ -73,7 +72,7 @@ public class RegisterServerCommand extends CommandAdapter {
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
-		Server server = this.getServerByKeyAndValidateNotRegistered(serverKey);
+		this.getServerByKeyAndValidateNotRegistered(serverKey);
 
 		int maxSessions = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_SESSIONS);
 		int maxConnections = (Integer) request.getAttribute(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
@@ -81,8 +80,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		boolean immediateConnect = (Boolean) request.getAttribute(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		// create new server
-		// TODO maxConnections
-		server = new Server(socketAddress, serviceName, portNr, maxSessions, maxConnections, keepAliveInterval);
+		Server server = new Server(socketAddress, serviceName, portNr, maxSessions, maxConnections, keepAliveInterval);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

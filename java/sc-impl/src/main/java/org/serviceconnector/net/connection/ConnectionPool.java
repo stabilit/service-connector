@@ -242,7 +242,8 @@ public class ConnectionPool {
 	 */
 	private void destroyConnections(List<IConnection> connections) {
 		IConnection connection;
-		for (int index = 0; index < connections.size(); index++) {
+		int size = connections.size();
+		for (int index = 0; index < size; index++) {
 			connection = connections.remove(0);
 			this.destroyConnection(connection);
 		}

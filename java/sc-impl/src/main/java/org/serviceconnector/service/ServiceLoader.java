@@ -103,7 +103,7 @@ public class ServiceLoader {
 				logger.debug("state enable for service: " + serviceName);
 				
 			} else {
-				service.setState(ServiceState.UNDEFINED);
+				service.setState(ServiceState.DISABLED);
 				logger.debug("state disable for service: " + serviceName);
 				// enable is false - so add to disabledServiceRegistry
 			}

@@ -94,7 +94,7 @@ public enum SCMPError {
 	/** The SERVER_ERROR. */
 	SERVER_ERROR("500", "Server error occured."),
 	/** The service is DISABLED. */
-	DISABLED("501", "Service is disabled."),
+	SERVICE_DISABLED("501", "Service is disabled."),
 	/** The GATEWAY_TIMEOUT. */
 	GATEWAY_TIMEOUT(
 			"504",

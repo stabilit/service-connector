@@ -58,8 +58,8 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	private int port;
 	/** The channel factory. */
 	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors
-			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER), Executors
-			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER));
+			.newCachedThreadPool(), Executors
+			.newCachedThreadPool());
 
 	/**
 	 * Instantiates a new NettyTcpEndpoint.
@@ -78,7 +78,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	public void create() {
 		this.bootstrap = new ServerBootstrap(channelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpResponderPipelineFactory());
+		this.bootstrap.setPipelineFactory(new NettyTcpResponderPipelineFactory());
 	}
 
 	/** {@inheritDoc} */
@@ -117,7 +117,6 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		synchronized (this) {
 			wait();
 		}
-		System.out.println("tst");
 	}
 
 	/** {@inheritDoc} */
@@ -134,6 +133,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void destroy() {
 		this.stopListening();
+		this.bootstrap.releaseExternalResources();
 		this.channelFactory.releaseExternalResources();
 	}
 
@@ -142,6 +142,9 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	public void stopListening() {
 		try {
 			if (this.channel != null) {
+				// removes responder to registry
+				ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+				responderRegistry.removeResponder(this.channel.getId());
 				ChannelFuture future = this.channel.close();
 				NettyOperationListener operationListener = new NettyOperationListener();
 				future.addListener(operationListener);

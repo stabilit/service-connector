@@ -32,7 +32,6 @@ import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
-
 /**
  * The Class NettyWebEndpoint.
  */
@@ -53,8 +52,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	private int port;
 	/** The channel factory. */
 	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors
-			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER), Executors
-			.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_SERVER));;
+			.newCachedThreadPool(), Executors.newCachedThreadPool());
 
 	/**
 	 * Instantiates a new netty web endpoint.

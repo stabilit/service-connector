@@ -19,7 +19,6 @@ package org.serviceconnector.net.res;
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
 
-
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
  * 
@@ -28,8 +27,8 @@ import org.serviceconnector.registry.Registry;
 public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ResponderRegistry.class);	
-	
+	protected final static Logger logger = Logger.getLogger(ResponderRegistry.class);
+
 	/** The instance. */
 	private static ResponderRegistry instance = new ResponderRegistry();
 	/** The thread local. Space to store any data for a single thread. */
@@ -74,6 +73,21 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		this.put(key, responder);
 	}
 
+	/**
+	 * Removes the responder.
+	 *
+	 * @param key the key
+	 */
+	public void removeResponder(Object key) {
+		this.remove(key);
+	}
+
+	/**
+	 * Gets the responder.
+	 *
+	 * @param key the key
+	 * @return the responder
+	 */
 	public IResponder getResponder(Object key) {
 		return super.get(key);
 	}

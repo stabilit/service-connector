@@ -274,6 +274,7 @@ public class Server {
 		this.connectionPool.destroy();
 		this.sessions = null;
 		this.requester = null;
+		this.service = null;
 	}
 
 	/**

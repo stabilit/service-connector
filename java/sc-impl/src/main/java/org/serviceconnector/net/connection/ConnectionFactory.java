@@ -22,13 +22,10 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.Constants;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
-
 
 /**
  * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types
@@ -56,9 +53,8 @@ public class ConnectionFactory extends Factory {
 	private static Timer timer;
 
 	{
-		ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors
-				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_CLIENT), Executors
-				.newFixedThreadPool(Constants.DEFAULT_NR_OF_THREADS_CLIENT));
+		ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
+				.newCachedThreadPool());
 		ConnectionFactory.timer = new HashedWheelTimer();
 	}
 
@@ -97,8 +93,9 @@ public class ConnectionFactory extends Factory {
 		return (IConnection) factoryInstance; // should be a clone if implemented
 	}
 
-	//TODO FJU this shutdown is never called
-	//TODO FJU http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
+	// TODO FJU this shutdown is never called
+	// TODO FJU
+	// http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	/**
 	 * Shutdown connection factory.<br>
 	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down.

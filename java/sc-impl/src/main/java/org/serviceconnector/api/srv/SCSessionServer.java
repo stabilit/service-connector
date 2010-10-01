@@ -125,6 +125,7 @@ public class SCSessionServer implements ISCSessionServer {
 		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
+		ValidatorUtility.validateInt(1, maxConnections, 1024, SCMPError.HV_WRONG_MAX_SESSIONS);
 		ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 		if (scCallback == null) {
 			throw new InvalidParameterException("callback must be set");
@@ -190,7 +191,6 @@ public class SCSessionServer implements ISCSessionServer {
 		} finally {
 			// destroy connection pool
 			req.getContext().getConnectionPool().destroy();
-			// TODO JOT... might use shutdown here ??
 		}
 	}
 
@@ -240,6 +240,7 @@ public class SCSessionServer implements ISCSessionServer {
 		}
 		this.listening = false;
 		this.responder.stopListening();
+		this.responder.destroy();
 	}
 
 	/** {@inheritDoc} */

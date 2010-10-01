@@ -36,7 +36,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 
-
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
  * deregisters server from SC service. Server will be removed from server registry.
