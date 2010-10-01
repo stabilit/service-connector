@@ -39,8 +39,8 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
 
 /**
- * The Class CommandAdapter. Adapter for every kind of command. Provides basic
- * functions that is used by executions of commands.
+ * The Class CommandAdapter. Adapter for every kind of command. Provides basic functions that is used by executions of
+ * commands.
  * 
  * @author JTraber
  */
@@ -63,14 +63,14 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	public CommandAdapter() {
 		this.commandValidator = NullCommandValidator.newInstance(); // www.refactoring.com
-																	// Introduce
-																	// NULL
-																	// Object
+		// Introduce
+		// NULL
+		// Object
 	}
 
 	/**
-	 * Gets the session by id. Checks properness of session, if session is null
-	 * given session id is wrong - no session found.
+	 * Gets the session by id. Checks properness of session, if session is null given session id is wrong - no session
+	 * found.
 	 * 
 	 * @param sessionId
 	 *            the session id
@@ -84,8 +84,8 @@ public abstract class CommandAdapter implements ICommand {
 		if (session == null) {
 			// incoming session not found
 			logger.warn("command error: no session found for id :" + sessionId);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no session found for "
-					+ sessionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"no session found for " + sessionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -131,8 +131,7 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Validate service. Lookup service in service registry and verify service
-	 * existence.
+	 * Validate service. Lookup service in service registry and verify service existence.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -145,8 +144,8 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = serviceRegistry.getService(serviceName);
 		if (service == null) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: " + serviceName
-					+ " not found");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " not found");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -166,15 +165,15 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = this.validateServiceName(serviceName);
 		if (service.getType() != ServiceType.SESSION_SERVICE) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: " + serviceName
-					+ " is not session service");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " is not session service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		if (service.getState() == ServiceState.DISABLED) {
 			// no session allowed for DISABLED service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.DISABLED, "service: " + serviceName
-					+ " is disabled");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED,
+					"service: " + serviceName + " is disabled");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -194,15 +193,15 @@ public abstract class CommandAdapter implements ICommand {
 		Service service = this.validateServiceName(serviceName);
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
 			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: " + serviceName
-					+ " is not publish service");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		if (service.getState() == ServiceState.DISABLED) {
 			// no session allowed for DISABLED service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.DISABLED, "service: " + serviceName
-					+ " is disabled");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED,
+					"service: " + serviceName + " is disabled");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
